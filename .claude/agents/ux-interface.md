@@ -37,19 +37,26 @@ Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
 
 ### Mi Responsabilidad Principal
 Soy el **agente principal** de este proyecto. Todas las fases están bajo mi responsabilidad:
-- ✅ FASE 1: Estructura base (página + componente + layout)
+- ✅ FASE 0: Dual Environment Setup (dev + prod placeholders)
+- ✅ FASE 1: Estructura base (layout fullscreen en dev)
 - ✅ FASE 2: Mobile optimizations (safe areas, touch, scroll)
 - ✅ FASE 3: Feature parity (streaming, markdown, photos, suggestions)
 - ✅ FASE 4: Polish & performance (animaciones, a11y, lighthouse)
+- ✅ FASE 5: Production Promotion (copiar dev → prod)
 
 ### Archivos Objetivo
 
-**A CREAR:**
-- `src/app/chat-mobile/page.tsx` - Página fullscreen (FASE 1.1)
-- `src/components/Dev/DevChatMobile.tsx` - Componente mobile (FASE 1.2)
+**DESARROLLO (Primary - FASE 0-4):**
+- `src/app/chat-mobile-dev/page.tsx` - Página dev (FASE 0)
+- `src/components/Dev/DevChatMobileDev.tsx` - Componente dev (FASE 0-4)
+
+**PRODUCCIÓN (Secondary - FASE 5):**
+- `src/app/chat-mobile/page.tsx` - Placeholder (FASE 0) → Producción (FASE 5)
+- `src/components/Dev/DevChatMobile.tsx` - Copia de DevChatMobileDev (FASE 5)
 
 **REFERENCIA (NO MODIFICAR):**
 - `src/components/Dev/DevChatInterface.tsx` - Base de código a copiar
+- `src/app/dev-chat-demo/page.tsx` - Modelo de ambiente dev (badge, estructura)
 - `src/app/api/dev/chat/route.ts` - API endpoint (revisar, no tocar)
 
 ### Layout Specifications

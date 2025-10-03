@@ -36,6 +36,100 @@ Por favor, confirma que entiendes el contexto antes de continuar.
 
 ---
 
+## FASE 0: Dual Environment Setup (1h)
+
+### Prompt 0.1: Crear Ambientes Dual (Dev + Prod)
+
+```
+@ux-interface
+
+TAREA: Crear ambientes de desarrollo y producción para /chat-mobile
+
+CONTEXTO:
+- Proyecto: Mobile-First Chat Interface
+- Estrategia: Ambiente DEV (testing) + PROD (estable)
+- Modelo: Similar a /dev-chat-demo (ya existente en el proyecto)
+- Workflow: dev → test → validate → prod promotion
+
+CREAR 4 ARCHIVOS:
+
+1. **src/app/chat-mobile-dev/page.tsx** (Development Environment)
+```tsx
+import DevChatMobileDev from '@/components/Dev/DevChatMobileDev'
+
+export default function ChatMobileDevPage() {
+  return (
+    <main className="h-screen w-screen overflow-hidden relative">
+      {/* DEV Badge */}
+      <div className="fixed top-4 right-4 z-[9999] bg-purple-600 text-white px-4 py-2 rounded-full shadow-lg">
+        <p className="text-sm font-bold">🚧 DEV MODE</p>
+      </div>
+
+      <DevChatMobileDev />
+    </main>
+  )
+}
+```
+
+2. **src/app/chat-mobile/page.tsx** (Production Placeholder - FASE 5 actualizará)
+```tsx
+import Link from 'next/link'
+
+export default function ChatMobilePage() {
+  return (
+    <main className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-cyan-50">
+      <div className="max-w-md mx-auto p-8 text-center">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          🚧 Coming Soon
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Mobile-first chat interface is currently in development.
+        </p>
+        <Link
+          href="/chat-mobile-dev"
+          className="inline-block px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors"
+        >
+          Try Dev Version →
+        </Link>
+      </div>
+    </main>
+  )
+}
+```
+
+3. **src/components/Dev/DevChatMobileDev.tsx** (Dev Component - Base)
+```tsx
+'use client'
+
+export default function DevChatMobileDev() {
+  return (
+    <div className="h-screen w-screen flex items-center justify-center bg-white">
+      <p className="text-gray-500">DevChatMobileDev - Ready for FASE 1</p>
+    </div>
+  )
+}
+```
+
+4. **docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md**
+Ver contenido completo en plan.md - Sección "Dual Environment Strategy"
+
+TEST:
+- http://localhost:3000/chat-mobile-dev → Badge "🚧 DEV MODE" visible
+- http://localhost:3000/chat-mobile → "Coming Soon" + link a dev
+- DevChatMobileDev renderiza placeholder
+- No hay errores de compilación
+
+WORKFLOW FUTURO:
+1. FASE 1-4 → Desarrollar en /chat-mobile-dev (DevChatMobileDev.tsx)
+2. Cada FASE → Testear exhaustivamente en ambiente dev
+3. FASE 4 completa → Validar todos los criterios de éxito
+4. FASE 5 → Copiar código validado a /chat-mobile (producción)
+
+SIGUIENTE: Prompt 1.1 para FASE 1 (implementar layout en DevChatMobileDev.tsx)
+```
+
+---
+
 ## FASE 1: Estructura Base (2-3h)
 
 ### Prompt 1.1: Crear página `/chat-mobile`
@@ -375,14 +469,14 @@ SIGUIENTE: Prompt 3.1 para FASE 3 (Feature Parity)
 
 ---
 
-## FASE 3: Feature Parity (2-3h)
+## FASE 3:  Feature Parity (2-3h)
 
 ### Prompt 3.1: Portar Streaming SSE
 
 ```
 @ux-interface
 
-TAREA: Implementar streaming Server-Sent Events
+TAREA: invoco a @ux-interface para Implementar streaming Server-Sent Events
 
 CONTEXTO:
 - FASE 2 completada (mobile optimizations OK)
@@ -473,7 +567,7 @@ SIGUIENTE: Prompt 3.2 para markdown + typing dots
 ### Prompt 3.2: Portar Markdown + Typing Dots
 
 ```
-@ux-interface
+invoco @ux-interface
 
 TAREA: Implementar markdown rendering + typing indicators
 
@@ -544,9 +638,7 @@ SIGUIENTE: Prompt 3.3 para photos + suggestions
 ### Prompt 3.3: Portar Photos Carousel + Suggestions
 
 ```
-@ux-interface
-
-TAREA: Implementar photo carousel y follow-up suggestions
+quiero que @ux-interface Implemente photo carousel y follow-up suggestions
 
 ARCHIVOS:
 - Leer: src/components/Dev/DevChatInterface.tsx (líneas 7-9, 362-402)
@@ -657,9 +749,7 @@ SIGUIENTE: Prompt 4.1 para FASE 4 (Polish & Performance)
 ### Prompt 4.1: Animaciones + Error Handling
 
 ```
-@ux-interface
-
-TAREA: Añadir animaciones smooth y error handling
+invoco @ux-interface para Añadir animaciones smooth y error handling
 
 ARCHIVOS:
 - Modificar: src/components/Dev/DevChatMobile.tsx
@@ -715,9 +805,7 @@ SIGUIENTE: Prompt 4.2 para accessibility
 ### Prompt 4.2: Accessibility (A11y)
 
 ```
-@ux-interface
-
-TAREA: Implementar accessibility compliance
+también para @ux-interface, lee también el plan.md para que estes bien empapado para  Implementar accessibility compliance
 
 ARCHIVOS:
 - Modificar: src/components/Dev/DevChatMobile.tsx
@@ -781,7 +869,7 @@ SIGUIENTE: Prompt 4.3 para performance check
 ### Prompt 4.3: Performance Check (Lighthouse)
 
 ```
-TAREA: Ejecutar Lighthouse audit y optimizar
+TAREA: leer plan,md y todo.md para Ejecutar Lighthouse audit y optimizar
 
 PASOS:
 

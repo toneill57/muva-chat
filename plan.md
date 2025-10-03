@@ -101,23 +101,57 @@ Crear una interfaz de chat limpia, fullscreen y mobile-first que elimine toda de
 
 ## 🔧 DESARROLLO - FASES
 
-### FASE 1: Estructura Base (2-3h)
-**Objetivo**: Crear ruta y componente mobile con layout fullscreen
+### FASE 0: Dual Environment Setup (1h)
+**Objetivo**: Establecer ambientes de desarrollo y producción separados
 
 **Entregables**:
-- Nueva ruta `/chat-mobile` funcional
-- Componente `DevChatMobile.tsx` con layout mobile
+- Ruta `/chat-mobile-dev` (testing environment)
+- Ruta `/chat-mobile` (production placeholder)
+- Componente `DevChatMobileDev.tsx` (desarrollo)
+- Componente `DevChatMobile.tsx` (producción - copia después)
+- Documentación de estrategia dual
+
+**Archivos a crear**:
+- `src/app/chat-mobile-dev/page.tsx` - Página dev con badge "🚧 DEV MODE"
+- `src/app/chat-mobile/page.tsx` - Placeholder "Coming Soon"
+- `src/components/Dev/DevChatMobileDev.tsx` - Componente dev (primary)
+- `docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md` - Documentación
+
+**Workflow**:
+1. **Desarrollo**: FASE 1-4 se ejecutan en `/chat-mobile-dev`
+2. **Testing**: Validar exhaustivamente en ambiente dev
+3. **Promotion**: FASE 5 copia código validado a `/chat-mobile` (producción)
+
+**Testing**:
+- `/chat-mobile-dev` accesible con badge visible
+- `/chat-mobile` muestra "Coming Soon" o link a dev
+- DevChatMobileDev.tsx renderiza sin errores
+
+**Beneficios**:
+- ✅ Usuarios no ven código en desarrollo
+- ✅ Testing seguro sin afectar producción
+- ✅ Workflow claro: dev → test → validate → prod
+- ✅ Sigue patrón existente de `/dev-chat-demo`
+
+---
+
+### FASE 1: Estructura Base (2-3h)
+**Objetivo**: Crear layout fullscreen mobile en ambiente de desarrollo
+
+**Entregables**:
+- Layout fullscreen funcional en `/chat-mobile-dev`
+- Componente `DevChatMobileDev.tsx` con estructura mobile
 - Header fijo + Messages área + Input fijo
 - Funcionalidad básica de chat (sin enhancements aún)
 
-**Archivos a crear**:
-- `src/app/chat-mobile/page.tsx`
-- `src/components/Dev/DevChatMobile.tsx`
+**Archivos a modificar**:
+- `src/components/Dev/DevChatMobileDev.tsx` (creado en FASE 0)
 
 **Testing**:
 - Visual en Chrome DevTools (iPhone 15, Pixel 8, Galaxy S24)
 - Layout no rompe en 360px - 430px
 - Header y input permanecen fijos al scroll
+- Testing en `/chat-mobile-dev` (NO en producción)
 
 ---
 
@@ -194,6 +228,66 @@ Crear una interfaz de chat limpia, fullscreen y mobile-first que elimine toda de
 - VoiceOver/TalkBack navigation
 - Slow 3G simulation
 - Error scenarios (offline, API fail)
+- **IMPORTANTE**: Todos los tests en `/chat-mobile-dev`
+
+---
+
+### FASE 5: Production Promotion (30min)
+**Objetivo**: Copiar código validado de desarrollo a producción
+
+**Precondiciones**:
+- ✅ FASE 1-4 completadas y testeadas
+- ✅ Lighthouse score ≥ 90 en `/chat-mobile-dev`
+- ✅ Todos los tests e2e pasando
+- ✅ No hay issues bloqueantes en ISSUES.md
+- ✅ Manual testing exitoso (iPhone, Pixel, Galaxy)
+
+**Proceso**:
+1. **Code Copy**:
+   - Copiar `DevChatMobileDev.tsx` → `DevChatMobile.tsx`
+   - Actualizar `src/app/chat-mobile/page.tsx` para usar componente real
+   - Remover badge "🚧 DEV MODE"
+   - Limpiar console.logs de desarrollo
+
+2. **Production Build & Test**:
+   ```bash
+   npm run build
+   npm start
+   # Test en http://localhost:3000/chat-mobile
+   ```
+
+3. **Production Validation**:
+   - Layout fullscreen funcional
+   - Lighthouse audit ≥ 90
+   - Manual testing en 3 dispositivos
+   - No hay errores en consola
+   - Safe areas funcionan correctamente
+
+4. **Documentation**:
+   - Crear `docs/chat-mobile/PRODUCTION_RELEASE.md`
+   - Timestamp de deployment
+   - Changelog completo (features incluidas)
+   - Known issues si los hay
+   - Next steps o mejoras futuras
+
+**Archivos a modificar**:
+- `src/app/chat-mobile/page.tsx` - Actualizar de placeholder a componente real
+- Crear `src/components/Dev/DevChatMobile.tsx` - Copia exacta de DevChatMobileDev.tsx
+
+**Archivos a crear**:
+- `docs/chat-mobile/PRODUCTION_RELEASE.md`
+
+**Testing**:
+- `/chat-mobile` funciona igual que `/chat-mobile-dev`
+- No badge de desarrollo visible
+- Build de producción sin warnings
+- Lighthouse ≥ 90 en ambiente prod
+- Todos los criterios de éxito cumplidos
+
+**Resultado**:
+- ✅ `/chat-mobile-dev` - Sigue disponible para futuras mejoras
+- ✅ `/chat-mobile` - Versión estable para usuarios finales
+- ✅ Workflow establecido para futuras actualizaciones
 
 ---
 
@@ -329,23 +423,28 @@ Crear una interfaz de chat limpia, fullscreen y mobile-first que elimine toda de
 /Users/oneill/Sites/apps/InnPilot/
 ├── src/
 │   ├── app/
+│   │   ├── chat-mobile-dev/
+│   │   │   └── page.tsx              [CREAR FASE 0] - Página dev con badge
 │   │   └── chat-mobile/
-│   │       └── page.tsx              [CREAR] - Página fullscreen mobile
+│   │       └── page.tsx              [CREAR FASE 0] - Placeholder → [ACTUALIZAR FASE 5] Producción
 │   │
 │   └── components/
 │       └── Dev/
 │           ├── DevChatInterface.tsx  [EXISTENTE] - Base de referencia
-│           └── DevChatMobile.tsx     [CREAR] - Versión mobile fullscreen
+│           ├── DevChatMobileDev.tsx  [CREAR FASE 0] - Versión dev (primary)
+│           └── DevChatMobile.tsx     [CREAR FASE 5] - Versión prod (copia de dev)
 │
 ├── docs/
-│   └── chat-mobile/                  [CREAR] - Documentación del proyecto
-│       ├── fase-1/
-│       ├── fase-2/
-│       ├── fase-3/
-│       └── fase-4/
+│   └── chat-mobile/
+│       ├── DUAL_ENVIRONMENT_STRATEGY.md  [CREAR FASE 0] - Documentación workflow
+│       ├── fase-1/                       [CREAR FASE 1] - Docs estructura
+│       ├── fase-2/                       [CREAR FASE 2] - Docs optimizations
+│       ├── fase-3/                       [CREAR FASE 3] - Docs features
+│       ├── fase-4/                       [CREAR FASE 4] - Docs polish
+│       └── PRODUCTION_RELEASE.md         [CREAR FASE 5] - Docs release
 │
 ├── plan.md                           [ESTE ARCHIVO]
-└── TODO.md                           [ACTUALIZAR]
+└── TODO.md                           [ACTUALIZADO]
 ```
 
 ---
@@ -380,11 +479,12 @@ Crear una interfaz de chat limpia, fullscreen y mobile-first que elimine toda de
 
 ## 📋 NEXT STEPS
 
-1. ✅ **Plan.md creado** - Este archivo
-2. 🔜 **TODO.md actualizado** - Tareas específicas por fase
-3. 🔜 **Ejecutar FASE 1** - Estructura base
-4. 🔜 **Testing FASE 1** - Validar layout mobile
-5. 🔜 **Documentar FASE 1** - docs/chat-mobile/fase-1/
+1. ✅ **Plan.md actualizado** - Este archivo (incluye FASE 0 y FASE 5)
+2. 🔜 **TODO.md actualizado** - Tareas específicas por fase (0-5)
+3. 🔜 **Ejecutar FASE 0** - Dual Environment Setup (1h)
+4. 🔜 **Ejecutar FASE 1-4** - Desarrollo en `/chat-mobile-dev` (8-12h)
+5. 🔜 **Ejecutar FASE 5** - Production Promotion (30min)
+6. 🔜 **Documentar completo** - docs/chat-mobile/
 
 ---
 
@@ -409,4 +509,5 @@ Crear una interfaz de chat limpia, fullscreen y mobile-first que elimine toda de
 ---
 
 **Última actualización**: 3 Octubre 2025
-**Próximo paso**: Actualizar TODO.md con tareas específicas
+**Próximo paso**: Actualizar TODO.md con tareas específicas (FASE 0-5)
+**Total estimado**: 9.5-13.5 horas (FASE 0: 1h, FASE 1-4: 8-12h, FASE 5: 30min)
