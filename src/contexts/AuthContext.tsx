@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabaseAuth, getCurrentUserWithClients, AuthUser, UserClient } from '@/lib/supabase-auth'
-import type { User } from '@supabase/supabase-js'
+import type { User, AuthChangeEvent, Session } from '@supabase/supabase-js'
 
 interface AuthContextType {
   user: AuthUser | null
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabaseAuth.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: AuthChangeEvent, session: Session | null) => {
         console.log('🔐 Auth state changed:', event, session?.user?.email)
 
         if (event === 'SIGNED_IN' && session?.user) {

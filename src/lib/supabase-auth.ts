@@ -1,12 +1,38 @@
 'use client'
 
 import { createClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Lazy initialization for client-side Supabase client
+let supabaseAuthInstance: SupabaseClient | null = null
 
-// Client-side Supabase client for authentication
-export const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey)
+function getSupabaseAuthClient(): SupabaseClient {
+  if (!supabaseAuthInstance) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+    supabaseAuthInstance = createClient(supabaseUrl, supabaseAnonKey)
+  }
+  return supabaseAuthInstance
+}
+
+// Export getter function instead of direct client
+export const supabaseAuth = {
+  get client() {
+    return getSupabaseAuthClient()
+  },
+  auth: {
+    getUser: () => getSupabaseAuthClient().auth.getUser(),
+    getSession: () => getSupabaseAuthClient().auth.getSession(),
+    onAuthStateChange: (callback: any) => getSupabaseAuthClient().auth.onAuthStateChange(callback),
+    signInWithPassword: (credentials: { email: string; password: string }) =>
+      getSupabaseAuthClient().auth.signInWithPassword(credentials),
+    signOut: () => getSupabaseAuthClient().auth.signOut(),
+    signUp: (credentials: { email: string; password: string }) =>
+      getSupabaseAuthClient().auth.signUp(credentials),
+  },
+  from: (table: string) => getSupabaseAuthClient().from(table),
+}
 
 export interface UserClient {
   id: string
