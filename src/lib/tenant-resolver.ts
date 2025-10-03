@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 /**
  * 🔒 MULTI-TENANT SECURITY ARCHITECTURE
@@ -23,11 +24,13 @@ import { createClient } from '@supabase/supabase-js'
  * - Function MUST validate tenant exists and is active before returning
  */
 
-// Supabase client with service role for tenant resolution
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Lazy initialization to avoid build-time errors
+function getSupabaseClient(): SupabaseClient {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Cache for tenant UUID to schema_name mapping
 const tenantCache = new Map<string, { schema_name: string, expires: number }>()
@@ -52,6 +55,8 @@ export async function resolveTenantSchemaName(tenantUuid: string | null | undefi
     console.log(`🎯 Cache hit: ${tenantUuid} → ${cached.schema_name}`)
     return cached.schema_name
   }
+
+  const supabase = getSupabaseClient()
 
   try {
     // 🔧 SMART TENANT RESOLUTION: Handle both UUID and schema_name inputs
@@ -115,6 +120,8 @@ export async function getTenantInfo(tenantUuid: string): Promise<{
   nombre_comercial: string
   razon_social: string
 } | null> {
+  const supabase = getSupabaseClient()
+
   try {
     const { data, error } = await supabase
       .from('tenant_registry')
