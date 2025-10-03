@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { generateDevChatResponse } from '@/lib/dev-chat-engine'
+import { generateDevChatResponse, generateDevChatResponseStream } from '@/lib/dev-chat-engine'
 
 // ============================================================================
 // Rate Limiting (Simple In-Memory)
@@ -167,7 +167,57 @@ export async function POST(request: NextRequest) {
     const headerSessionId = request.headers.get('x-session-id')
     const effectiveSessionId = session_id || headerSessionId || undefined
 
-    // Generate response
+    // Check if client wants streaming (via query param or Accept header)
+    const searchParams = new URL(request.url).searchParams
+    const wantsStream = searchParams.get('stream') === 'true' ||
+                       request.headers.get('accept')?.includes('text/event-stream')
+
+    // Handle streaming response
+    if (wantsStream) {
+      console.log('[dev-chat-api] 📡 Starting streaming response...')
+
+      const encoder = new TextEncoder()
+      const stream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of generateDevChatResponseStream(
+              message,
+              effectiveSessionId,
+              tenant_id
+            )) {
+              // Send as Server-Sent Events format
+              const data = `data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`
+              controller.enqueue(encoder.encode(data))
+            }
+
+            // Send completion event
+            const done = `data: ${JSON.stringify({ type: 'done' })}\n\n`
+            controller.enqueue(encoder.encode(done))
+            controller.close()
+          } catch (error) {
+            console.error('[dev-chat-api] Stream error:', error)
+            const errorData = `data: ${JSON.stringify({
+              type: 'error',
+              error: 'Stream failed'
+            })}\n\n`
+            controller.enqueue(encoder.encode(errorData))
+            controller.close()
+          }
+        },
+      })
+
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+          'X-RateLimit-Limit': '10',
+          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+        },
+      })
+    }
+
+    // Generate non-streaming response (legacy)
     const response = await generateDevChatResponse(
       message,
       effectiveSessionId,

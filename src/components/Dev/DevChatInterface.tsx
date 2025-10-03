@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { X, Minimize2, Send, Bot, User } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import DevIntentSummary from './DevIntentSummary'
 import DevPhotoCarousel from './DevPhotoCarousel'
 import DevAvailabilityCTA from './DevAvailabilityCTA'
@@ -104,16 +106,30 @@ export default function DevChatInterface({ onMinimize, isExpanded }: DevChatInte
       trackMessageSent(sessionId, userMessageCount)
       return newMessages
     })
+    const messageText = input.trim()
     setInput('')
     setLoading(true)
     setError(null)
 
+    // Create placeholder assistant message for streaming
+    const assistantId = `assistant-${Date.now()}`
+    const assistantMessage: Message = {
+      id: assistantId,
+      role: 'assistant',
+      content: '',
+      timestamp: new Date(),
+      suggestions: []
+    }
+
+    setMessages(prev => [...prev, assistantMessage])
+
     try {
-      const response = await fetch('/api/dev/chat', {
+      // Use streaming API
+      const response = await fetch('/api/dev/chat?stream=true', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: input.trim(),
+          message: messageText,
           session_id: sessionId,
           tenant_id: 'simmerdown'
         })
@@ -123,58 +139,66 @@ export default function DevChatInterface({ onMinimize, isExpanded }: DevChatInte
         throw new Error('Failed to send message')
       }
 
-      const data = await response.json()
+      // Handle streaming response
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
 
-      if (data.success && data.data) {
-        // Store session ID
-        if (data.data.session_id && !sessionId) {
-          setSessionId(data.data.session_id)
-          localStorage.setItem('dev_chat_session_id', data.data.session_id)
-        }
-
-        // Update current intent
-        if (data.data.travel_intent) {
-          const newIntent = {
-            ...currentIntent,
-            ...data.data.travel_intent
-          }
-          setCurrentIntent(newIntent)
-
-          // Track intent captured
-          trackIntentCaptured(newIntent)
-        }
-
-        // Parse photos from sources
-        const photos = data.data.sources
-          ?.filter((s: any) => s.photos && s.photos.length > 0)
-          .flatMap((s: any) => s.photos.map((url: string) => ({
-            url,
-            caption: s.unit_name || s.title
-          }))) || []
-
-        const assistantMessage: Message = {
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          content: data.data.response,
-          timestamp: new Date(),
-          sources: data.data.sources,
-          travel_intent: data.data.travel_intent,
-          availability_url: data.data.availability_url,
-          suggestions: data.data.suggestions
-        }
-
-        setMessages(prev => [...prev, assistantMessage])
-      } else {
-        throw new Error(data.error?.message || 'Unknown error')
+      if (!reader) {
+        throw new Error('No reader available')
       }
+
+      let fullContent = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+
+        if (done) break
+
+        // Decode chunk and parse SSE format
+        const chunk = decoder.decode(value)
+        const lines = chunk.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.substring(6))
+
+              if (data.type === 'chunk') {
+                fullContent += data.content
+
+                // Update message with new content
+                setMessages(prev =>
+                  prev.map(msg =>
+                    msg.id === assistantId
+                      ? { ...msg, content: fullContent }
+                      : msg
+                  )
+                )
+              } else if (data.type === 'done') {
+                console.log('[chat] Stream completed')
+              } else if (data.type === 'error') {
+                throw new Error(data.error)
+              }
+            } catch (parseError) {
+              console.error('Parse error:', parseError)
+            }
+          }
+        }
+      }
+
+      // Stream complete
+      setLoading(false)
+
     } catch (err) {
       console.error('Chat error:', err)
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message'
       setError(errorMessage)
 
+      // Remove failed message
+      setMessages(prev => prev.filter(msg => msg.id !== assistantId))
+
       // Track error
       trackChatError('api_error', errorMessage)
-    } finally {
       setLoading(false)
     }
   }
@@ -303,9 +327,46 @@ export default function DevChatInterface({ onMinimize, isExpanded }: DevChatInte
                     : 'bg-white text-gray-900 rounded-bl-sm border border-gray-100'
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                  {message.content}
-                </p>
+                {message.role === 'user' ? (
+                  <p className="text-sm whitespace-pre-wrap leading-relaxed text-white">
+                    {message.content}
+                  </p>
+                ) : (
+                  <>
+                    {!message.content && loading ? (
+                      // Typing dots while waiting for response
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    ) : (
+                      <div className="text-sm leading-relaxed markdown-content transition-opacity duration-150">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2 text-gray-900" {...props} />,
+                            h2: ({node, ...props}) => <h2 className="text-base font-bold mb-2 text-gray-900" {...props} />,
+                            h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-1 text-gray-900" {...props} />,
+                            p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                            ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
+                            ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+                            li: ({node, ...props}) => <li className="ml-2" {...props} />,
+                            strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+                            em: ({node, ...props}) => <em className="italic" {...props} />,
+                            a: ({node, ...props}) => <a className="text-teal-600 hover:underline" {...props} />,
+                            code: ({node, ...props}) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                        {loading && message.content && (
+                          <span className="inline-block w-2 h-4 bg-gray-900 ml-0.5 animate-pulse" />
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
 
               {/* Photos */}
@@ -360,23 +421,6 @@ export default function DevChatInterface({ onMinimize, isExpanded }: DevChatInte
             </div>
           </div>
         ))}
-
-        {/* Typing Indicator */}
-        {loading && (
-          <div className="flex gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500
-                            flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white" />
-            </div>
-            <div className="bg-white rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm border border-gray-100">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          </div>
-        )}
 
         <div ref={messagesEndRef} />
       </div>

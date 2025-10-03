@@ -163,18 +163,16 @@ export async function getOrCreateDevSession(
 }
 
 /**
- * Update session with new message and extracted intent
+ * Update session with new message
  *
  * @param sessionId - Session ID to update
  * @param userMessage - User's message
  * @param assistantResponse - Assistant's response
- * @param extractedIntent - Extracted travel intent from message
  */
 export async function updateDevSession(
   sessionId: string,
   userMessage: string,
-  assistantResponse: string,
-  extractedIntent: Partial<TravelIntent>
+  assistantResponse: string
 ): Promise<void> {
   const supabase = createServerClient()
 
@@ -183,7 +181,7 @@ export async function updateDevSession(
   // Get current session
   const { data: session, error: fetchError } = await supabase
     .from('prospective_sessions')
-    .select('conversation_history, travel_intent')
+    .select('conversation_history')
     .eq('session_id', sessionId)
     .single()
 
@@ -201,25 +199,11 @@ export async function updateDevSession(
 
   const updatedHistory = history.slice(-20) // Keep only last 20
 
-  // Merge extracted intent with existing (new values override)
-  const currentIntent = session.travel_intent || {}
-  const updatedIntent = {
-    check_in: extractedIntent.check_in ?? currentIntent.check_in,
-    check_out: extractedIntent.check_out ?? currentIntent.check_out,
-    guests: extractedIntent.guests ?? currentIntent.guests,
-    accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
-    budget_range: currentIntent.budget_range || null,
-    preferences: currentIntent.preferences || [],
-  }
-
-  console.log('[dev-session] Updated intent:', updatedIntent)
-
   // Update session
   const { error: updateError } = await supabase
     .from('prospective_sessions')
     .update({
       conversation_history: updatedHistory,
-      travel_intent: updatedIntent,
       last_activity_at: new Date().toISOString(),
     })
     .eq('session_id', sessionId)
@@ -228,73 +212,3 @@ export async function updateDevSession(
     console.error('[dev-session] Error updating session:', updateError)
   }
 }
-
-/**
- * Extract travel intent from user message using Claude Haiku
- *
- * @param message - User's message
- * @returns TravelIntent with extracted information
- */
-export async function extractTravelIntent(message: string): Promise<TravelIntent> {
-  const client = getAnthropicClient()
-
-  console.log('[intent-extraction] Extracting intent from:', message.substring(0, 50))
-
-  const prompt = `Extrae información de viaje del siguiente mensaje del usuario. Responde SOLO en JSON válido.
-
-Mensaje: "${message}"
-
-Extrae:
-- check_in: fecha de check-in en formato YYYY-MM-DD (null si no se menciona)
-- check_out: fecha de check-out en formato YYYY-MM-DD (null si no se menciona)
-- guests: número de huéspedes como número entero (null si no se menciona)
-- accommodation_type: 'apartment' | 'suite' | 'room' | null (null si no se menciona)
-
-Importante:
-- Si mencionan "diciembre", "diciembre 2025", usa el año 2025
-- Si mencionan mes sin año, asume 2025
-- Si dicen "del 15 al 20", infiere check_in=15 y check_out=20 del mes mencionado
-- Si no hay información explícita, devuelve null para ese campo
-
-Ejemplo:
-Entrada: "Busco apartamento para 4 personas del 15 al 20 de diciembre"
-Salida: {"check_in": "2025-12-15", "check_out": "2025-12-20", "guests": 4, "accommodation_type": "apartment"}
-
-JSON:`
-
-  try {
-    const response = await client.messages.create({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: 200,
-      temperature: 0,
-      messages: [{ role: 'user', content: prompt }],
-    })
-
-    const jsonText = response.content[0].type === 'text' ? response.content[0].text : '{}'
-    console.log('[intent-extraction] Claude response:', jsonText)
-
-    // Extract JSON from potential markdown code blocks
-    const jsonMatch = jsonText.match(/\{[\s\S]*\}/)
-    const cleanedJson = jsonMatch ? jsonMatch[0] : jsonText
-
-    const intent = JSON.parse(cleanedJson) as TravelIntent
-
-    console.log('[intent-extraction] Extracted intent:', intent)
-
-    return {
-      check_in: intent.check_in || null,
-      check_out: intent.check_out || null,
-      guests: intent.guests || null,
-      accommodation_type: intent.accommodation_type || null,
-    }
-  } catch (error) {
-    console.error('[intent-extraction] Parse error:', error)
-    return {
-      check_in: null,
-      check_out: null,
-      guests: null,
-      accommodation_type: null,
-    }
-  }
-}
-

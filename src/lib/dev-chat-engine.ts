@@ -10,7 +10,6 @@ import Anthropic from '@anthropic-ai/sdk'
 import {
   getOrCreateDevSession,
   updateDevSession,
-  extractTravelIntent,
   type DevSession,
 } from './dev-chat-session'
 import {
@@ -54,13 +53,6 @@ export interface DevChatResponse {
     }
     photos?: Array<{ url: string }>
   }>
-  travel_intent: {
-    check_in: string | null
-    check_out: string | null
-    guests: number | null
-    accommodation_type: string | null
-    captured_this_message: boolean
-  }
   suggestions: string[]
 }
 
@@ -95,42 +87,34 @@ export async function generateDevChatResponse(
     const searchResults = await performDevSearch(message, session)
     console.log('[dev-chat-engine] Search found:', searchResults.length, 'results')
 
-    // STEP 3: Extract travel intent
-    const extractedIntent = await extractTravelIntent(message)
-    const intentCaptured = Object.values(extractedIntent).some((v) => v !== null)
-    console.log('[dev-chat-engine] Intent captured:', intentCaptured, extractedIntent)
-
-    // STEP 4: Merge with existing intent
-    const mergedIntent: DevSession['travel_intent'] = {
-      ...session.travel_intent,
-      check_in: extractedIntent.check_in || session.travel_intent.check_in,
-      check_out: extractedIntent.check_out || session.travel_intent.check_out,
-      guests: extractedIntent.guests || session.travel_intent.guests,
-      accommodation_type: extractedIntent.accommodation_type || session.travel_intent.accommodation_type,
-      budget_range: session.travel_intent.budget_range,
-      preferences: session.travel_intent.preferences,
-    }
-
-    // STEP 5: Build system prompt (marketing-focused)
+    // STEP 3: Build system prompt (marketing-focused)
+    const promptStartTime = Date.now()
     const systemPrompt = buildMarketingSystemPrompt(
       session,
-      searchResults,
-      mergedIntent
+      searchResults
     )
+    const promptTime = Date.now() - promptStartTime
+    console.log(`[dev-chat-engine] System prompt built in ${promptTime}ms (${systemPrompt.length} chars)`)
 
-    // STEP 6: Generate response with Claude Sonnet 4.5
+    // STEP 4: Generate response with Claude Sonnet 4.5 (high quality marketing)
+    const claudeStartTime = Date.now()
+    console.log('[dev-chat-engine] 🤖 Calling Claude Sonnet 4.5 API...')
     const response = await generateMarketingResponse(message, session, systemPrompt)
-    console.log('[dev-chat-engine] Generated response:', response.length, 'chars')
+    const claudeTime = Date.now() - claudeStartTime
+    console.log(`[dev-chat-engine] ✅ Claude responded in ${claudeTime}ms (${response.length} chars)`)
 
-    // STEP 7: Generate follow-up suggestions
-    const suggestions = generateDevSuggestions(searchResults, mergedIntent)
+    // STEP 5: Generate follow-up suggestions
+    const suggestions = generateDevSuggestions(searchResults)
 
-    // STEP 8: Update session with conversation history and intent
-    await updateDevSession(session.session_id, message, response, extractedIntent)
+    // STEP 6: Update session with conversation history
+    const dbStartTime = Date.now()
+    await updateDevSession(session.session_id, message, response)
+    const dbTime = Date.now() - dbStartTime
+    console.log(`[dev-chat-engine] Session updated in ${dbTime}ms`)
 
-    // STEP 9: Prepare sources for response
-    // Increased to 15 to ensure all accommodations (8) reach the client
-    const sources = searchResults.slice(0, 15).map((result) => ({
+    // STEP 7: Prepare sources for response
+    // Return top 10 sources to client (more than the 8 sent to Claude for variety)
+    const sources = searchResults.slice(0, 10).map((result) => ({
       table: result.table,
       id: result.id,
       name: result.name || result.title || 'Unknown',
@@ -147,13 +131,6 @@ export async function generateDevChatResponse(
       session_id: session.session_id,
       response,
       sources,
-      travel_intent: {
-        check_in: mergedIntent.check_in,
-        check_out: mergedIntent.check_out,
-        guests: mergedIntent.guests,
-        accommodation_type: mergedIntent.accommodation_type,
-        captured_this_message: intentCaptured,
-      },
       suggestions,
     }
   } catch (error) {
@@ -164,13 +141,6 @@ export async function generateDevChatResponse(
       session_id: sessionId || 'error',
       response: '¡Hola! Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentarlo de nuevo? Estoy aquí para ayudarte a encontrar el alojamiento perfecto para tu estadía.',
       sources: [],
-      travel_intent: {
-        check_in: null,
-        check_out: null,
-        guests: null,
-        accommodation_type: null,
-        captured_this_message: false,
-      },
       suggestions: [
         '¿Qué apartamentos tienen disponibles?',
         '¿Cuáles son los precios?',
@@ -189,33 +159,22 @@ export async function generateDevChatResponse(
  */
 function buildMarketingSystemPrompt(
   session: DevSession,
-  searchResults: VectorSearchResult[],
-  travelIntent: DevSession['travel_intent']
+  searchResults: VectorSearchResult[]
 ): string {
   // Build search context
-  // Increased to 15 to provide Claude with all accommodations context
+  // Optimized to 8 results with 250 chars preview for faster Claude responses
   const searchContext = searchResults
-    .slice(0, 15)
+    .slice(0, 8)
     .map((result, index) => {
       const name = result.name || result.title || 'Unknown'
       const pricing = result.pricing
         ? `\nPrecio: ${result.pricing.base_price_night} ${result.pricing.currency}/noche`
         : ''
-      const preview = result.content.substring(0, 400)
+      const preview = result.content.substring(0, 250)
 
       return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}...`
     })
     .join('\n\n---\n\n')
-
-  // Build intent context
-  const intentSummary = travelIntent.check_in
-    ? `\nINTENT CAPTURADO:
-- Check-in: ${travelIntent.check_in || 'No especificado'}
-- Check-out: ${travelIntent.check_out || 'No especificado'}
-- Huéspedes: ${travelIntent.guests || 'No especificado'}
-- Tipo: ${travelIntent.accommodation_type || 'No especificado'}
-`
-    : ''
 
   return `Eres un asistente virtual de ventas para un hotel en San Andrés, Colombia. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
 
@@ -225,31 +184,30 @@ ESTILO DE COMUNICACIÓN:
 - Amigable, profesional, entusiasta
 - Marketing-focused (destaca beneficios y características únicas)
 - Usa emojis ocasionalmente para ambiente tropical (🌴, 🌊, ☀️)
+- NO uses texto en mayúsculas en tus respuestas - escribe natural
+- Usa **negritas** solo para información clave (precios, nombres) en párrafos
+- NUNCA uses **negritas** dentro de títulos (##, ###) - los títulos ya son bold
 - Respuestas concisas pero informativas (4-6 oraciones máximo)
-- Incluye CTAs (calls-to-action) cuando sea apropiado
+- Incluye CTAs cuando sea apropiado
 
 INFORMACIÓN DISPONIBLE:
-- Catálogo COMPLETO de alojamientos (con precios y fotos)
-- Políticas del hotel (check-in, check-out, cancelación)
-- Información básica de turismo en San Andrés (atracciones)
+- Solo tienes acceso a los RESULTADOS DE BÚSQUEDA abajo
+- NO inventes alojamientos, precios o información que no aparezca en los resultados
 
 RESTRICCIONES:
 - NO tengas acceso a información operacional interna
 - NO puedes ver disponibilidad en tiempo real (dirígelos al sistema de reservas)
 - NO des información de otros hoteles/competidores
-- SIEMPRE menciona precios cuando estén disponibles
-
-${intentSummary}
+- SOLO menciona precios y alojamientos que aparecen EXPLÍCITAMENTE en los resultados
 
 RESULTADOS DE BÚSQUEDA:
 ${searchContext || 'No se encontraron resultados relevantes.'}
 
 INSTRUCCIONES:
-1. Si identificas fechas/huéspedes, confirma y ofrece opciones relevantes
-2. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
-3. Incluye precios cuando estén disponibles
-4. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
-5. Siempre termina con pregunta o CTA para continuar conversación
+1. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
+2. Incluye precios cuando estén disponibles
+3. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
+4. Siempre termina con pregunta o CTA para continuar conversación
 
 Responde de manera natural, útil y orientada a conversión.`
 }
@@ -259,7 +217,7 @@ Responde de manera natural, útil y orientada a conversión.`
 // ============================================================================
 
 /**
- * Generate marketing response using Claude Sonnet 4.5
+ * Generate marketing response using Claude Sonnet 4.5 (high quality)
  */
 async function generateMarketingResponse(
   message: string,
@@ -269,8 +227,9 @@ async function generateMarketingResponse(
   const client = getAnthropicClient()
 
   // Build conversation history for Claude
+  // Optimized to last 3 messages for faster responses
   const conversationHistory = session.conversation_history
-    .slice(-5) // Last 5 messages
+    .slice(-3) // Last 3 messages (instead of 5)
     .map((msg) => ({
       role: msg.role,
       content: msg.content,
@@ -278,10 +237,11 @@ async function generateMarketingResponse(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-5-20250929', // Latest Sonnet 4.5 for marketing quality
+      model: 'claude-sonnet-4-5-20250929', // Sonnet 4.5 for marketing quality
       max_tokens: 600,
       temperature: 0.3, // Slightly creative for marketing
       top_k: 10,
+      stream: false, // Set to true for streaming (handled separately)
       system: systemPrompt,
       messages: [
         ...conversationHistory,
@@ -306,6 +266,84 @@ async function generateMarketingResponse(
   }
 }
 
+/**
+ * Generate streaming marketing response using Claude Sonnet 4.5
+ * Returns an async generator that yields text chunks
+ */
+export async function* generateDevChatResponseStream(
+  message: string,
+  sessionId: string | undefined,
+  tenantId: string
+): AsyncGenerator<string, void, unknown> {
+  const startTime = Date.now()
+
+  console.log('[dev-chat-engine-stream] Processing message:', message.substring(0, 80))
+  console.log('[dev-chat-engine-stream] Session:', sessionId, 'Tenant:', tenantId)
+
+  try {
+    // STEP 1: Get or create session
+    const session = await getOrCreateDevSession(sessionId, tenantId)
+    console.log('[dev-chat-engine-stream] Session loaded:', session.session_id)
+
+    // STEP 2: Perform dev search
+    const searchResults = await performDevSearch(message, session)
+    console.log('[dev-chat-engine-stream] Search found:', searchResults.length, 'results')
+
+    // STEP 3: Build system prompt
+    const promptStartTime = Date.now()
+    const systemPrompt = buildMarketingSystemPrompt(session, searchResults)
+    const promptTime = Date.now() - promptStartTime
+    console.log(`[dev-chat-engine-stream] System prompt built in ${promptTime}ms`)
+
+    // STEP 4: Stream response from Claude
+    const claudeStartTime = Date.now()
+    console.log('[dev-chat-engine-stream] 🤖 Starting Claude stream...')
+
+    const client = getAnthropicClient()
+    const conversationHistory = session.conversation_history
+      .slice(-3)
+      .map((msg) => ({ role: msg.role, content: msg.content }))
+
+    const stream = await client.messages.stream({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 600,
+      temperature: 0.3,
+      top_k: 10,
+      system: systemPrompt,
+      messages: [
+        ...conversationHistory,
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+    })
+
+    let fullResponse = ''
+
+    for await (const chunk of stream) {
+      if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+        const text = chunk.delta.text
+        fullResponse += text
+        yield text // Send chunk to client
+      }
+    }
+
+    const claudeTime = Date.now() - claudeStartTime
+    console.log(`[dev-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
+
+    // STEP 5: Update session with final response
+    await updateDevSession(session.session_id, message, fullResponse)
+
+    const totalTime = Date.now() - startTime
+    console.log(`[dev-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
+
+  } catch (error) {
+    console.error('[dev-chat-engine-stream] Error:', error)
+    yield '¡Hola! Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentarlo de nuevo?'
+  }
+}
+
 // ============================================================================
 // Suggestion Generation
 // ============================================================================
@@ -314,25 +352,11 @@ async function generateMarketingResponse(
  * Generate contextual follow-up suggestions
  */
 function generateDevSuggestions(
-  searchResults: VectorSearchResult[],
-  travelIntent: DevSession['travel_intent']
+  searchResults: VectorSearchResult[]
 ): string[] {
   const suggestions: string[] = []
 
-  // Strategy 1: Intent-based suggestions
-  if (!travelIntent.check_in) {
-    suggestions.push('¿Qué fechas tienen disponibles?')
-  }
-
-  if (!travelIntent.guests) {
-    suggestions.push('¿Para cuántas personas?')
-  }
-
-  if (travelIntent.check_in && !searchResults.some((r) => r.table === 'accommodation_units_public')) {
-    suggestions.push('Ver fotos de los apartamentos')
-  }
-
-  // Strategy 2: Result-based suggestions
+  // Strategy 1: Result-based suggestions
   const hasAccommodations = searchResults.some((r) => r.table === 'accommodation_units_public')
   const hasPolicies = searchResults.some((r) => r.table === 'policies')
   const hasMuva = searchResults.some((r) => r.table === 'muva_content')
