@@ -235,9 +235,9 @@ export function MotoPresConfigurationPage({ tenant, onBack, onComplete }: MotoPr
         <div className="space-y-6">
           {currentStep === 'setup' && (
             <ConfigurationForm
-              tenant={tenant}
-              onConfigSaved={handleConfigurationSaved}
-              isConfigured={configStatus.isConfigured}
+              tenantId={tenant}
+              onConfigured={handleConfigurationSaved}
+              onCancel={() => {}}
             />
           )}
 
@@ -248,7 +248,7 @@ export function MotoPresConfigurationPage({ tenant, onBack, onComplete }: MotoPr
               </CardHeader>
               <CardContent>
                 <SyncStatusIndicator
-                  tenant={tenant}
+                  tenantId={tenant}
                   onConnectionVerified={handleConnectionTested}
                   onConnectionFailed={() => setCurrentStep('setup')}
                 />
@@ -258,7 +258,7 @@ export function MotoPresConfigurationPage({ tenant, onBack, onComplete }: MotoPr
 
           {currentStep === 'preview' && (
             <AccommodationPreview
-              tenant={tenant}
+              tenantId={tenant}
               accommodations={accommodations}
               isLoading={isLoading}
               onImport={handleImportComplete}

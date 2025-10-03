@@ -3,7 +3,7 @@ import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
 import { MotoPresDataMapper } from '@/lib/integrations/motopress/data-mapper'
 
-function decrypt(configData: any): { api_key: string; site_url: string } {
+function decrypt(configData: any): { api_key: string; consumer_secret: string; site_url: string } {
   // TODO: Implement proper decryption
   // For now, using base64 decode (NEVER use in production)
   try {

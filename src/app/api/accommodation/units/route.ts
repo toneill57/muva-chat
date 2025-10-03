@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch accommodation units' }, { status: 500 })
     }
     // Process and enhance the data
-    const enhancedUnits = units?.map(unit => ({
+    const enhancedUnits = units?.map((unit: any) => ({
       ...unit,
       embedding_status: {
         has_fast: !!unit.embedding_fast,

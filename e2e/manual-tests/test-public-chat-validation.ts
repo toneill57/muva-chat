@@ -31,7 +31,7 @@ if (missingVars.length > 0) {
   process.exit(1)
 }
 
-import { extractTravelIntent, generateAvailabilityURL } from './src/lib/public-chat-session'
+import { extractTravelIntent, generateAvailabilityURL } from '../../src/lib/public-chat-session'
 
 // ANSI colors
 const green = '\x1b[32m'

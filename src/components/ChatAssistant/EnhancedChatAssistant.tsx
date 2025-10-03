@@ -50,7 +50,7 @@ export function EnhancedChatAssistant({
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // Initialize with welcome message based on chat type
-  const [messages, setMessages] = useState(() => {
+  const [messages, setMessages] = useState<Array<{ id: string; role: 'user' | 'assistant'; content: string; timestamp: Date }>>(() => {
     const initialMessage = (() => {
       switch (chatType) {
         case 'sire':

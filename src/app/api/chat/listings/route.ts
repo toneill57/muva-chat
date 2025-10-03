@@ -242,7 +242,7 @@ export async function POST(request: NextRequest) {
     // 🪆 MATRYOSHKA TIER DETECTION
     console.log(`[${timestamp}] 🪆 Analyzing query for optimal tier selection...`)
     const searchStrategy = preferred_tier ?
-      { tier: preferred_tier, dimensions: preferred_tier === 1 ? 1024 : preferred_tier === 2 ? 1536 : 3072, tables: ['auto'], description: `Manual tier ${preferred_tier}` } :
+      { tier: preferred_tier, dimensions: (preferred_tier === 1 ? 1024 : preferred_tier === 2 ? 1536 : 3072) as 1024 | 1536 | 3072, tables: ['auto'], description: `Manual tier ${preferred_tier}` } :
       determineOptimalSearch(question)
 
     console.log(`[${timestamp}] 🎯 Search strategy: ${searchStrategy.description} (Tier ${searchStrategy.tier}, ${searchStrategy.dimensions} dims)`)
@@ -444,14 +444,7 @@ export async function POST(request: NextRequest) {
         console.log(`[${timestamp}] 🎯 Combined search complete: ${data.length} total results`)
         console.log(`[${timestamp}] 📊 Sources: Tenant(${allResults.filter(r => r.source_type === 'tenant').length}), MUVA(${allResults.filter(r => r.source_type === 'muva').length})`)
 
-        const error = null
-
         const searchTime = Date.now() - searchStart
-
-        if (error) {
-          console.error(`[${timestamp}] ❌ Listings search failed:`, error)
-          throw new Error(`Listings search failed: ${error.message}`)
-        }
 
         console.log(`[${timestamp}] ✅ Found ${data?.length || 0} relevant documents - Search time: ${searchTime}ms`)
 

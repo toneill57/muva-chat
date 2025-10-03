@@ -57,6 +57,8 @@ interface MotoPresBooking {
     adults: number
     children: number
     guest_name: string
+    accommodation_price_per_days?: Array<{ price: number }>
+    discount?: number
   }>
   currency: string
   total_price: number

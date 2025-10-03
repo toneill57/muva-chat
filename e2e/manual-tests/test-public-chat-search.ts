@@ -47,7 +47,7 @@ async function testPublicSearch() {
       return
     }
 
-    console.log(`2. Tenant: ${tenant.slug} (${tenant.id})\n`)
+    console.log(`2. Tenant: ${tenant.slug} (${tenant.tenant_id})\n`)
 
     // Call RPC function
     console.log('3. Calling match_accommodations_public()...')

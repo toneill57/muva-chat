@@ -29,7 +29,7 @@ export function VoiceInput({ onTranscript, onError, disabled = false }: VoiceInp
   const [audioLevels, setAudioLevels] = useState<number[]>([0, 0, 0, 0, 0])
 
   const recognitionRef = useRef<any>(null)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     // Check browser support

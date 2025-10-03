@@ -20,9 +20,10 @@ export async function GET() {
           status: process.env.ANTHROPIC_API_KEY ? 'configured' : 'not_configured'
         },
         supabase: {
-          status: 'testing',
+          status: 'testing' as 'testing' | 'healthy' | 'error',
           responseTime: '0ms',
-          error: null
+          error: null as string | null,
+          tables: {} as Record<string, any>
         }
       },
       environment: {
@@ -42,7 +43,7 @@ export async function GET() {
         { name: 'content', schema: 'simmerdown' }
       ]
 
-      const tableHealth = {}
+      const tableHealth: Record<string, any> = {}
       let overallError = null
 
       // Test each table independently using raw SQL to support custom schemas
@@ -101,7 +102,8 @@ export async function GET() {
       health.services.supabase = {
         status: 'error',
         responseTime: `${Date.now() - startTime}ms`,
-        error: supabaseError instanceof Error ? supabaseError.message : 'Connection failed'
+        error: supabaseError instanceof Error ? supabaseError.message : 'Connection failed',
+        tables: {}
       }
       health.status = 'degraded'
     }

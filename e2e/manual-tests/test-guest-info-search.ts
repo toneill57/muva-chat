@@ -8,8 +8,8 @@
  */
 
 import { config } from 'dotenv'
-import { generateConversationalResponse, ConversationalContext } from './src/lib/conversational-chat-engine'
-import { GuestSession } from './src/lib/guest-auth'
+import { generateConversationalResponse, ConversationalContext } from '../../src/lib/conversational-chat-engine'
+import { GuestSession } from '../../src/lib/guest-auth'
 
 // Load environment variables
 config({ path: '.env.local' })
@@ -61,20 +61,17 @@ async function testGuestInfoSearch() {
     conversation_id: 'test-conversation-789',
     tenant_id: TENANT_ID,
     guest_name: 'Test Guest',
-    check_in: new Date(),
-    check_out: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    check_in: new Date().toISOString(),
+    check_out: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     reservation_code: 'TEST123',
     accommodation_unit: {
       id: 'one-love-apt',
       name: 'One Love',
       unit_number: '1A',
-      unit_type: 'apartment',
       view_type: 'garden'
     },
     tenant_features: {
-      guest_chat_enabled: true,
-      muva_access: true, // Enable MUVA access for full testing
-      premium_chat: false
+      muva_access: true // Enable MUVA access for full testing
     }
   }
 

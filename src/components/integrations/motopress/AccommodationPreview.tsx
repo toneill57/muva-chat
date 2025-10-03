@@ -59,7 +59,7 @@ export function AccommodationPreview({ tenantId, onImport, onCancel }: Accommoda
       setAccommodations(data.accommodations || [])
 
       // Select all by default
-      const allIds = new Set((data.accommodations || []).map((acc: AccommodationPreviewItem) => acc.id))
+      const allIds = new Set<number>((data.accommodations || []).map((acc: AccommodationPreviewItem) => acc.id))
       setSelectedIds(allIds)
 
     } catch (error: any) {

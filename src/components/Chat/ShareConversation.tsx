@@ -168,7 +168,7 @@ export function ShareConversation({
               {/* Options */}
               <div className="p-6 space-y-3">
                 {/* Native Share */}
-                {navigator.share && (
+                {typeof navigator !== 'undefined' && 'share' in navigator && (
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

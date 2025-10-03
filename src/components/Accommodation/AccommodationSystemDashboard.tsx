@@ -55,7 +55,7 @@ export function AccommodationSystemDashboard() {
       setIsLoading(true)
       try {
         // Get real accommodation units count (use tenant_id from user context)
-        const tenantId = user?.user_metadata?.client_id || 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'
+        const tenantId = (user as any)?.user_metadata?.client_id || 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'
 
         const response = await fetch(`/api/accommodation/units?tenant_id=${tenantId}`)
         if (response.ok) {
@@ -359,7 +359,7 @@ export function AccommodationSystemDashboard() {
             {activeTab === 'integrations' && (
               <div className="p-6">
                 <IntegrationsPanel
-                  tenantId={user?.client_id || 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'}
+                  tenantId={(user as any)?.client_id || 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'}
                   onMotoPressConfigure={() => {
                     // Navigate to dedicated MotoPress configuration page
                     window.location.href = `/dashboard/simmerdown/accommodations/integrations/motopress`
@@ -374,7 +374,7 @@ export function AccommodationSystemDashboard() {
             {activeTab === 'sync-history' && (
               <div className="p-6">
                 <SyncHistoryVisualization
-                  tenantId={user?.client_id || 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'}
+                  tenantId={(user as any)?.client_id || 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'}
                   integrationType="motopress"
                 />
               </div>

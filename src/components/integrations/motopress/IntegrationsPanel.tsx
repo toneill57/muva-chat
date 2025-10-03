@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertCircle, CheckCircle, Clock, Settings, Sync, Upload } from 'lucide-react'
+import { AlertCircle, CheckCircle, Clock, Settings, RefreshCw, Upload } from 'lucide-react'
 
 interface IntegrationStatus {
   connected: boolean
@@ -171,7 +171,7 @@ export function IntegrationsPanel({ tenantId, onConfigure, onSync, onImport }: I
                 disabled={syncing || !status.connected}
                 className="flex items-center gap-1"
               >
-                <Sync className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} />
                 {syncing ? 'Syncing...' : 'Sync Now'}
               </Button>
 
