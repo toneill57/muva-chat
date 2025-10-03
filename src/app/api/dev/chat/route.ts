@@ -163,9 +163,10 @@ export async function POST(request: NextRequest) {
       tenant_id,
     })
 
-    // Get session ID from header if not in body
+    // Get session ID from multiple sources (priority: body → cookie → header)
+    const cookieSessionId = request.cookies.get('session_id')?.value
     const headerSessionId = request.headers.get('x-session-id')
-    const effectiveSessionId = session_id || headerSessionId || undefined
+    const effectiveSessionId = session_id || cookieSessionId || headerSessionId || undefined
 
     // Check if client wants streaming (via query param or Accept header)
     const searchParams = new URL(request.url).searchParams
