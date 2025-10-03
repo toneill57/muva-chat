@@ -8,10 +8,13 @@ import { detectQueryIntent, getSearchConfig, calculateSearchCounts } from '@/lib
 
 export const runtime = 'edge'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Lazy initialization to avoid build-time errors
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Enhanced semantic cache for listings
 const listingsCache = new Map<string, { data: unknown, expires: number }>()
@@ -155,6 +158,7 @@ ${baseInstructions}
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
   const timestamp = new Date().toISOString()
+  const supabase = getSupabaseClient()
 
   try {
     console.log(`[${timestamp}] Listings Chat API request started`)

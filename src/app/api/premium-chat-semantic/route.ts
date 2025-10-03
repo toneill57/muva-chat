@@ -10,16 +10,22 @@ import {
   type CurationOutput
 } from '@/lib/premium-chat-semantic'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-})
+// Lazy initialization to avoid build-time errors
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  })
+}
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 async function generateEmbedding(text: string, dimensions: number = 3072): Promise<number[]> {
+  const openai = getOpenAIClient()
   const response = await openai.embeddings.create({
     model: 'text-embedding-3-large',
     input: text,
@@ -163,6 +169,8 @@ function formatSemanticResponse(
 }
 
 export async function POST(request: NextRequest) {
+  const supabase = getSupabaseClient()
+
   try {
     const { query, client_id, business_name } = await request.json()
 
