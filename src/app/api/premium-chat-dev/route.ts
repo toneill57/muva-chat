@@ -35,10 +35,8 @@ function getSupabaseClient() {
   return createClient(url, key)
 }
 
-const openai = getOpenAIClient()
-const supabase = getSupabaseClient()
-
 async function generateEmbedding(text: string, dimensions: number = 1024): Promise<number[]> {
+  const openai = getOpenAIClient()
   const response = await openai.embeddings.create({
     model: 'text-embedding-3-large',
     input: text,
@@ -412,6 +410,8 @@ function formatNoResults(intent: PremiumChatIntent): string {
 }
 
 export async function POST(request: NextRequest) {
+  const supabase = getSupabaseClient()
+
   try {
     const { query, client_id, business_name } = await request.json()
 
