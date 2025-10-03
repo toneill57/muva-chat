@@ -100,13 +100,19 @@ Responde ÚNICAMENTE con un JSON válido en este formato:
       throw new Error('Invalid response type from Claude')
     }
 
-    const result = JSON.parse(content.text.trim())
+    const result = JSON.parse(content.text.trim()) as { type: string; confidence: number; reasoning: string }
+
+    // Validate type is one of the expected values
+    const validIntentTypes: QueryIntent['type'][] = ['inventory_complete', 'specific_unit', 'feature_inquiry', 'pricing_inquiry', 'general']
+    const intentType: QueryIntent['type'] = validIntentTypes.includes(result.type as QueryIntent['type'])
+      ? result.type as QueryIntent['type']
+      : 'general'
 
     // Add search configuration based on detected intent
-    const config = INTENT_CONFIG_MAP[result.type] || INTENT_CONFIG_MAP.general
+    const config = INTENT_CONFIG_MAP[intentType]
 
     return {
-      type: result.type,
+      type: intentType,
       confidence: result.confidence,
       suggested_top_k: config.top_k,
       tenant_ratio: config.tenant_ratio,

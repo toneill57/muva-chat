@@ -39,7 +39,7 @@ export class MotoPresSyncManager {
     return data
   }
 
-  private decrypt(configData: any): { api_key: string; site_url: string } {
+  private decrypt(configData: any): { api_key?: string; consumer_key?: string; consumer_secret: string; site_url: string } {
     // TODO: Implement proper decryption
     // For now, using base64 decode (NEVER use in production)
     try {
@@ -78,7 +78,7 @@ export class MotoPresSyncManager {
 
       // Initialize MotoPress client
       const client = new MotoPresClient({
-        apiKey: credentials.consumer_key || credentials.api_key, // Support both field names for backwards compatibility
+        apiKey: credentials.consumer_key || credentials.api_key || '', // Support both field names for backwards compatibility
         consumerSecret: credentials.consumer_secret,
         siteUrl: credentials.site_url
       })
@@ -453,7 +453,7 @@ export class MotoPresSyncManager {
 
       // Initialize MotoPress client
       const client = new MotoPresClient({
-        apiKey: credentials.consumer_key || credentials.api_key, // Support both field names for backwards compatibility
+        apiKey: credentials.consumer_key || credentials.api_key || '', // Support both field names for backwards compatibility
         consumerSecret: credentials.consumer_secret,
         siteUrl: credentials.site_url
       })
