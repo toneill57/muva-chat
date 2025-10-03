@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateEmbedding } from '@/lib/openai'
-import { supabase } from '@/lib/supabase'  // Use supabase client directly for proper multi-tenant search
+import { createServerClient } from '@/lib/supabase'  // Use supabase client directly for proper multi-tenant search
 import { generateChatResponse } from '@/lib/claude'
 import { determineOptimalSearch } from '@/lib/search-router'
 import { detectQueryIntent, getSearchConfig, calculateSearchCounts } from '@/lib/query-intent'
@@ -95,6 +95,7 @@ function setCached(key: string, data: unknown, ttlSeconds: number = 3600) {
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
   const timestamp = new Date().toISOString()
+  const supabase = createServerClient()
 
   try {
     console.log(`[${timestamp}] Chat API request started`)

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 export const runtime = 'edge'
 
@@ -39,7 +40,7 @@ interface StatusResponse {
   }
 }
 
-async function checkSupabaseHealth(): Promise<ServiceStatus> {
+async function checkSupabaseHealth(supabase: SupabaseClient): Promise<ServiceStatus> {
   const start = performance.now()
   const timestamp = new Date().toISOString()
 
@@ -149,9 +150,11 @@ function determineOverallStatus(services: StatusResponse['services']): 'healthy'
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  const supabase = createServerClient()
+
   try {
     const [supabaseHealth, apiKeysHealth] = await Promise.all([
-      checkSupabaseHealth(),
+      checkSupabaseHealth(supabase),
       Promise.resolve(checkAPIKeysHealth())
     ])
 

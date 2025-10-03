@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 
 export const runtime = 'edge'
 
 export async function GET() {
+  const supabase = createServerClient()
+
   try {
     console.log('[Health] Starting health check...')
     const startTime = Date.now()
