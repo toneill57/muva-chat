@@ -1,12 +1,16 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, lazy, Suspense, memo, useCallback, useMemo } from 'react'
 import { Send, Bot, User } from 'lucide-react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import DevPhotoCarousel from './DevPhotoCarousel'
-import DevAvailabilityCTA from './DevAvailabilityCTA'
-import DevIntentSummary from './DevIntentSummary'
+
+// Lazy load heavy components to reduce initial bundle size and improve TTI
+const ReactMarkdown = lazy(() => import('react-markdown'))
+const DevPhotoCarousel = lazy(() => import('./DevPhotoCarousel'))
+const DevAvailabilityCTA = lazy(() => import('./DevAvailabilityCTA'))
+const DevIntentSummary = lazy(() => import('./DevIntentSummary'))
+
+// Import remarkGfm dynamically within component
+// This prevents loading it on initial page load
 
 interface Message {
   id: string
@@ -33,9 +37,17 @@ export default function DevChatMobileDev() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  // Dynamically load remarkGfm plugin after component mounts
+  useEffect(() => {
+    import('remark-gfm').then((module) => {
+      setRemarkGfmPlugin(() => module.default)
+    })
+  }, [])
 
   // Load session ID from localStorage
   useEffect(() => {
@@ -209,19 +221,34 @@ export default function DevChatMobileDev() {
     }
   }
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = useCallback((suggestion: string) => {
     setInput(suggestion)
     inputRef.current?.focus()
-  }
+  }, [])
 
-  const retryLastMessage = () => {
+  const retryLastMessage = useCallback(() => {
     const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')
     if (lastUserMessage) {
       setInput(lastUserMessage.content)
       setError(null)
       inputRef.current?.focus()
     }
-  }
+  }, [messages])
+
+  // Memoize markdown components to prevent re-renders
+  const markdownComponents = useMemo(() => ({
+    h1: ({node, ...props}: any) => <h1 className="text-lg font-bold mb-2 text-gray-900" {...props} />,
+    h2: ({node, ...props}: any) => <h2 className="text-base font-bold mb-2 text-gray-900" {...props} />,
+    h3: ({node, ...props}: any) => <h3 className="text-sm font-bold mb-1 text-gray-900" {...props} />,
+    p: ({node, ...props}: any) => <p className="mb-2 last:mb-0" {...props} />,
+    ul: ({node, ...props}: any) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
+    ol: ({node, ...props}: any) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+    li: ({node, ...props}: any) => <li className="ml-2" {...props} />,
+    strong: ({node, ...props}: any) => <strong className="font-semibold text-gray-900" {...props} />,
+    em: ({node, ...props}: any) => <em className="italic" {...props} />,
+    a: ({node, ...props}: any) => <a className="text-teal-600 hover:underline" {...props} />,
+    code: ({node, ...props}: any) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
+  }), [])
 
   return (
     <div
@@ -313,24 +340,14 @@ export default function DevChatMobileDev() {
                         </div>
                       ) : (
                         <div className="text-sm leading-relaxed markdown-content transition-opacity duration-150">
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            components={{
-                              h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2 text-gray-900" {...props} />,
-                              h2: ({node, ...props}) => <h2 className="text-base font-bold mb-2 text-gray-900" {...props} />,
-                              h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-1 text-gray-900" {...props} />,
-                              p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
-                              ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
-                              ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
-                              li: ({node, ...props}) => <li className="ml-2" {...props} />,
-                              strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
-                              em: ({node, ...props}) => <em className="italic" {...props} />,
-                              a: ({node, ...props}) => <a className="text-teal-600 hover:underline" {...props} />,
-                              code: ({node, ...props}) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
-                            }}
-                          >
-                            {message.content}
-                          </ReactMarkdown>
+                          <Suspense fallback={<div className="text-sm text-gray-600">{message.content}</div>}>
+                            <ReactMarkdown
+                              remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
+                              components={markdownComponents}
+                            >
+                              {message.content}
+                            </ReactMarkdown>
+                          </Suspense>
                           {loading && message.content && (
                             <span className="inline-block w-2 h-4 bg-gray-900 ml-0.5 animate-pulse" />
                           )}
@@ -354,7 +371,11 @@ export default function DevChatMobileDev() {
                           url,
                           caption: s.unit_name
                         })))
-                      return photos.length > 0 ? <DevPhotoCarousel photos={photos} /> : null
+                      return photos.length > 0 ? (
+                        <Suspense fallback={<div className="text-sm text-gray-500">Loading photos...</div>}>
+                          <DevPhotoCarousel photos={photos} />
+                        </Suspense>
+                      ) : null
                     })()}
                   </>
                 )}
