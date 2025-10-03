@@ -249,8 +249,7 @@ export function MotoPresConfigurationPage({ tenant, onBack, onComplete }: MotoPr
               <CardContent>
                 <SyncStatusIndicator
                   tenantId={tenant}
-                  onConnectionVerified={handleConnectionTested}
-                  onConnectionFailed={() => setCurrentStep('setup')}
+                  onRefresh={() => {}}
                 />
               </CardContent>
             </Card>
@@ -259,10 +258,8 @@ export function MotoPresConfigurationPage({ tenant, onBack, onComplete }: MotoPr
           {currentStep === 'preview' && (
             <AccommodationPreview
               tenantId={tenant}
-              accommodations={accommodations}
-              isLoading={isLoading}
-              onImport={handleImportComplete}
-              onBack={() => setCurrentStep('test')}
+              onImport={(selectedIds: number[]) => handleImportComplete()}
+              onCancel={() => setCurrentStep('test')}
             />
           )}
 

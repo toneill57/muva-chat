@@ -392,5 +392,4 @@ export {
   extractSimpleEntities,
   extractEntitiesFromHistory,
   buildContextSummary,
-  expandTechnicalTerms,
 }

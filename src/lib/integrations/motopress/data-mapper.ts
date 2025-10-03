@@ -160,8 +160,8 @@ export class MotoPresDataMapper {
 
     // Extract MotoPress accommodation type for matching
     // Use categories to determine accommodation type or fallback to a default
-    const accommodationMphbType = motoPresData.categories?.length > 0
-      ? motoPresData.categories[0].name?.toLowerCase()
+    const accommodationMphbType = (motoPresData.categories?.length ?? 0) > 0
+      ? motoPresData.categories?.[0].name?.toLowerCase()
       : 'apartamento'
 
     console.log(`🏠 Mapping ${motoPresData.id}: accommodation_mphb_type="${accommodationMphbType}", categories=${JSON.stringify(motoPresData.categories)})`)
@@ -235,7 +235,7 @@ export class MotoPresDataMapper {
 
     return {
       id: data.id,
-      name: data.title.rendered,
+      name: typeof data.title === 'string' ? data.title : data.title.rendered,
       capacity,
       price: meta.mphb_price,
       status: data.status,

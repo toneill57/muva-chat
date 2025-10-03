@@ -28,7 +28,7 @@ export const trackEvent = (eventName: string, props?: EventProps): void => {
   }
 
   try {
-    window.plausible(eventName, { props })
+    window.plausible?.(eventName, { props })
   } catch (error) {
     console.error('[Analytics] Error tracking event:', error)
   }
@@ -140,9 +140,9 @@ export const trackPageView = (path?: string): void => {
 
   try {
     if (path) {
-      window.plausible('pageview', { props: { path } })
+      window.plausible?.('pageview', { props: { path } })
     } else {
-      window.plausible('pageview')
+      window.plausible?.('pageview')
     }
   } catch (error) {
     console.error('[Analytics] Error tracking page view:', error)
