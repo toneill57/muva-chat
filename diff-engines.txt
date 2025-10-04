@@ -1,0 +1,345 @@
+2c2
+<  * Dev Chat Engine
+---
+>  * Public Chat Engine
+4d3
+<  * Development version of public chat engine for testing improvements.
+6c5
+<  * Includes travel intent extraction.
+---
+>  * Includes travel intent extraction for future API-based availability checks.
+11,14c10,13
+<   getOrCreateDevSession,
+<   updateDevSession,
+<   type DevSession,
+< } from './dev-chat-session'
+---
+>   getOrCreatePublicSession,
+>   updatePublicSession,
+>   type PublicSession,
+> } from './public-chat-session'
+16c15
+<   performDevSearch,
+---
+>   performPublicSearch,
+18c17
+< } from './dev-chat-search'
+---
+> } from './public-chat-search'
+40d38
+< 
+45c43
+< export interface DevChatResponse {
+---
+> export interface PublicChatResponse {
+59a58,64
+>   travel_intent: {
+>     check_in: string | null
+>     check_out: string | null
+>     guests: number | null
+>     accommodation_type: string | null
+>     captured_this_message: boolean
+>   }
+68c73
+<  * Generate dev chat response with marketing focus
+---
+>  * Generate public chat response with marketing focus
+73c78
+<  * @returns DevChatResponse with response, intent, sources, and suggestions
+---
+>  * @returns PublicChatResponse with response, intent, sources, and suggestions
+75c80
+< export async function generateDevChatResponse(
+---
+> export async function generatePublicChatResponse(
+79c84
+< ): Promise<DevChatResponse> {
+---
+> ): Promise<PublicChatResponse> {
+82,83c87,88
+<   console.log('[dev-chat-engine] Processing message:', message.substring(0, 80))
+<   console.log('[dev-chat-engine] Session:', sessionId, 'Tenant:', tenantId)
+---
+>   console.log('[public-chat-engine] Processing message:', message.substring(0, 80))
+>   console.log('[public-chat-engine] Session:', sessionId, 'Tenant:', tenantId)
+87,88c92,93
+<     const session = await getOrCreateDevSession(sessionId, tenantId)
+<     console.log('[dev-chat-engine] Session loaded:', session.session_id)
+---
+>     const session = await getOrCreatePublicSession(sessionId, tenantId)
+>     console.log('[public-chat-engine] Session loaded:', session.session_id)
+90,92c95,97
+<     // STEP 2: Perform dev search
+<     const searchResults = await performDevSearch(message, session)
+<     console.log('[dev-chat-engine] Search found:', searchResults.length, 'results')
+---
+>     // STEP 2: Perform public search
+>     const searchResults = await performPublicSearch(message, session)
+>     console.log('[public-chat-engine] Search found:', searchResults.length, 'results')
+98c103
+<     console.log(`[dev-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+---
+>     console.log(`[public-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+100,101c105,107
+<     // STEP 3: Build system prompt (marketing-focused)
+<     const promptStartTime = Date.now()
+---
+>     // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
+> 
+>     // STEP 4: Build system prompt (marketing-focused)
+107,108d112
+<     const promptTime = Date.now() - promptStartTime
+<     console.log(`[dev-chat-engine] System prompt built in ${promptTime}ms (${systemPrompt.length} chars)`)
+110,112c114
+<     // STEP 4: Generate response with Claude Sonnet 4.5 (high quality marketing)
+<     const claudeStartTime = Date.now()
+<     console.log('[dev-chat-engine] 🤖 Calling Claude Sonnet 4.5 API...')
+---
+>     // STEP 5: Generate response with Claude Sonnet 4.5
+114,115c116
+<     const claudeTime = Date.now() - claudeStartTime
+<     console.log(`[dev-chat-engine] ✅ Claude responded in ${claudeTime}ms (${response.length} chars)`)
+---
+>     console.log('[public-chat-engine] Generated response:', response.length, 'chars')
+117,118c118,119
+<     // STEP 5: Generate follow-up suggestions
+<     const suggestions = generateDevSuggestions(searchResults)
+---
+>     // STEP 6: Generate follow-up suggestions
+>     const suggestions = generatePublicSuggestions(searchResults, session.travel_intent)
+120,124c121,122
+<     // STEP 6: Update session with conversation history
+<     const dbStartTime = Date.now()
+<     await updateDevSession(session.session_id, message, response)
+<     const dbTime = Date.now() - dbStartTime
+<     console.log(`[dev-chat-engine] Session updated in ${dbTime}ms`)
+---
+>     // STEP 7: Update session with conversation history
+>     await updatePublicSession(session.session_id, message, response)
+126c124
+<     // STEP 7: Prepare sources for response
+---
+>     // STEP 10: Prepare sources for response
+139c137
+<     console.log(`[dev-chat-engine] ✅ Response generated in ${totalTime}ms`)
+---
+>     console.log(`[public-chat-engine] ✅ Response generated in ${totalTime}ms`)
+144a143,149
+>       travel_intent: {
+>         check_in: session.travel_intent.check_in,
+>         check_out: session.travel_intent.check_out,
+>         guests: session.travel_intent.guests,
+>         accommodation_type: session.travel_intent.accommodation_type,
+>         captured_this_message: false, // No longer extracting per message
+>       },
+148c153
+<     console.error('[dev-chat-engine] Error:', error)
+---
+>     console.error('[public-chat-engine] Error:', error)
+154a160,166
+>       travel_intent: {
+>         check_in: null,
+>         check_out: null,
+>         guests: null,
+>         accommodation_type: null,
+>         captured_this_message: false,
+>       },
+172c184
+<   session: DevSession,
+---
+>   session: PublicSession,
+205a218,221
+>   // NOTE: Travel intent is NOT included in system prompt
+>   // It's extracted, saved to session, and returned to frontend for UI display
+>   // Claude responds only to the current message context
+> 
+248c264
+<  * Generate marketing response using Claude Sonnet 4.5 (high quality)
+---
+>  * Generate marketing response using Claude Sonnet 4.5
+252c268
+<   session: DevSession,
+---
+>   session: PublicSession,
+268c284
+<       model: 'claude-sonnet-4-5-20250929', // Sonnet 4.5 for marketing quality
+---
+>       model: 'claude-sonnet-4-5-20250929', // Latest Sonnet 4.5 for marketing quality
+272d287
+<       stream: false, // Set to true for streaming (handled separately)
+290c305
+<     console.error('[dev-chat-engine] Claude error:', error)
+---
+>     console.error('[public-chat-engine] Claude error:', error)
+296a312,315
+> // ============================================================================
+> // Suggestion Generation
+> // ============================================================================
+> 
+298,299c317
+<  * Generate streaming marketing response using Claude Sonnet 4.5
+<  * Returns an async generator that yields text chunks
+---
+>  * Generate contextual follow-up suggestions
+301c319,375
+< export async function* generateDevChatResponseStream(
+---
+> function generatePublicSuggestions(
+>   searchResults: VectorSearchResult[],
+>   travelIntent: PublicSession['travel_intent']
+> ): string[] {
+>   const suggestions: string[] = []
+> 
+>   // Strategy 1: Intent-based suggestions
+>   if (!travelIntent.check_in) {
+>     suggestions.push('¿Qué fechas tienen disponibles?')
+>   }
+> 
+>   if (!travelIntent.guests) {
+>     suggestions.push('¿Para cuántas personas?')
+>   }
+> 
+>   if (travelIntent.check_in && !searchResults.some((r) => r.table === 'accommodation_units_public')) {
+>     suggestions.push('Ver fotos de los apartamentos')
+>   }
+> 
+>   // Strategy 2: Result-based suggestions
+>   const hasAccommodations = searchResults.some((r) => r.table === 'accommodation_units_public')
+>   const hasPolicies = searchResults.some((r) => r.table === 'policies')
+>   const hasMuva = searchResults.some((r) => r.table === 'muva_content')
+> 
+>   if (hasAccommodations) {
+>     suggestions.push('Comparar precios de todas las opciones')
+>     suggestions.push('¿Tienen cocina completa?')
+>   }
+> 
+>   if (hasMuva && !hasAccommodations) {
+>     suggestions.push('Volver a opciones de alojamiento')
+>   }
+> 
+>   if (hasPolicies) {
+>     suggestions.push('¿Cuál es la política de cancelación?')
+>   }
+> 
+>   // Strategy 3: Generic helpful suggestions
+>   if (suggestions.length < 3) {
+>     suggestions.push('¿Qué incluye el precio?')
+>     suggestions.push('¿Cuál tiene la mejor vista al mar?')
+>     suggestions.push('¿Qué hay cerca del hotel?')
+>   }
+> 
+>   // Return top 3 unique suggestions
+>   return Array.from(new Set(suggestions)).slice(0, 3)
+> }
+> 
+> // ============================================================================
+> // Streaming Response Generation
+> // ============================================================================
+> 
+> /**
+>  * Generate streaming marketing response using Claude Sonnet 4.5
+>  * Yields chunks of text as they arrive from Claude
+>  */
+> export async function* generatePublicChatResponseStream(
+308,309c382,383
+<   console.log('[dev-chat-engine-stream] Processing message:', message.substring(0, 80))
+<   console.log('[dev-chat-engine-stream] Session:', sessionId, 'Tenant:', tenantId)
+---
+>   console.log('[public-chat-engine-stream] Processing message:', message.substring(0, 80))
+>   console.log('[public-chat-engine-stream] Session:', sessionId, 'Tenant:', tenantId)
+313,314c387,388
+<     const session = await getOrCreateDevSession(sessionId, tenantId)
+<     console.log('[dev-chat-engine-stream] Session loaded:', session.session_id)
+---
+>     const session = await getOrCreatePublicSession(sessionId, tenantId)
+>     console.log('[public-chat-engine-stream] Session loaded:', session.session_id)
+316,318c390,392
+<     // STEP 2: Perform dev search
+<     const searchResults = await performDevSearch(message, session)
+<     console.log('[dev-chat-engine-stream] Search found:', searchResults.length, 'results')
+---
+>     // STEP 2: Perform public search
+>     const searchResults = await performPublicSearch(message, session)
+>     console.log('[public-chat-engine-stream] Search found:', searchResults.length, 'results')
+324c398
+<     console.log(`[dev-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+---
+>     console.log(`[public-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+326c400,402
+<     // STEP 3: Build system prompt
+---
+>     // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
+> 
+>     // STEP 4: Build system prompt
+334c410
+<     console.log(`[dev-chat-engine-stream] System prompt built in ${promptTime}ms`)
+---
+>     console.log(`[public-chat-engine-stream] System prompt built in ${promptTime}ms`)
+336c412
+<     // STEP 4: Stream response from Claude
+---
+>     // STEP 7: Stream response from Claude
+338c414
+<     console.log('[dev-chat-engine-stream] 🤖 Starting Claude stream...')
+---
+>     console.log('[public-chat-engine-stream] 🤖 Starting Claude stream...')
+371c447
+<     console.log(`[dev-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
+---
+>     console.log(`[public-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
+374c450
+<     await updateDevSession(session.session_id, message, fullResponse)
+---
+>     await updatePublicSession(session.session_id, message, fullResponse)
+377c453
+<     console.log(`[dev-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
+---
+>     console.log(`[public-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
+380,381c456,457
+<     console.error('[dev-chat-engine-stream] Error:', error)
+<     yield '¡Hola! Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentarlo de nuevo?'
+---
+>     console.error('[public-chat-engine-stream] Error:', error)
+>     throw error
+384,424d459
+< 
+< // ============================================================================
+< // Suggestion Generation
+< // ============================================================================
+< 
+< /**
+<  * Generate contextual follow-up suggestions
+<  */
+< function generateDevSuggestions(
+<   searchResults: VectorSearchResult[]
+< ): string[] {
+<   const suggestions: string[] = []
+< 
+<   // Strategy 1: Result-based suggestions
+<   const hasAccommodations = searchResults.some((r) => r.table === 'accommodation_units_public')
+<   const hasPolicies = searchResults.some((r) => r.table === 'policies')
+<   const hasMuva = searchResults.some((r) => r.table === 'muva_content')
+< 
+<   if (hasAccommodations) {
+<     suggestions.push('Comparar precios de todas las opciones')
+<     suggestions.push('¿Tienen cocina completa?')
+<   }
+< 
+<   if (hasMuva && !hasAccommodations) {
+<     suggestions.push('Volver a opciones de alojamiento')
+<   }
+< 
+<   if (hasPolicies) {
+<     suggestions.push('¿Cuál es la política de cancelación?')
+<   }
+< 
+<   // Strategy 3: Generic helpful suggestions
+<   if (suggestions.length < 3) {
+<     suggestions.push('¿Qué incluye el precio?')
+<     suggestions.push('¿Cuál tiene la mejor vista al mar?')
+<     suggestions.push('¿Qué hay cerca del hotel?')
+<   }
+< 
+<   // Return top 3 unique suggestions
+<   return Array.from(new Set(suggestions)).slice(0, 3)
+< }

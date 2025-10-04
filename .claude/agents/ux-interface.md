@@ -24,7 +24,63 @@ Cuando el usuario solicite cambios de interfaz o identifique problemas de UX, de
 
 ---
 
-## 🚀 PROYECTO ACTUAL: Mobile-First Chat Interface (Oct 2025)
+## 🔄 PROYECTO ACTUAL: Dev-Public Sync - Frontend Copy (Oct 2025)
+
+### Contexto del Proyecto
+**Copiar Dev → Public. Fin.**
+
+Copiar DevChatMobileDev.tsx → ChatMobile.tsx (EXACTAMENTE)
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `dev-public-sync-plan.md` - Plan simplificado (100 líneas)
+- 📋 `dev-public-sync-TODO.md` - Tareas por fase (80 líneas)
+- 🎯 `dev-public-sync-prompt-workflow.md` - Prompts copy-paste (200 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal** de FASE 2:
+- 🎨 FASE 2: Frontend Copy (1h) - Copiar Dev → Public componente
+
+### Archivos Objetivo
+
+**FASE 2 - A COPIAR:**
+- Source: `src/components/Dev/DevChatMobileDev.tsx`
+- Target: `src/components/Public/ChatMobile.tsx`
+
+**Acción:**
+1. Leer DevChatMobileDev.tsx COMPLETO
+2. Copiar EXACTAMENTE a ChatMobile.tsx
+3. Remover badge "🚧 DEV MODE" (solo para dev)
+4. Mantener TODO lo demás IDÉNTICO
+
+### Layout (Same as Dev)
+- Header cyan (mismo que Dev)
+- Layout fullscreen (mismo que Dev)
+- Streaming SSE (mismo que Dev)
+- Markdown rendering (mismo que Dev)
+- Photo carousel (mismo que Dev)
+- Suggestions (mismo que Dev)
+
+### Success Criteria
+- [ ] ChatMobile = DevChatMobileDev (visual)
+- [ ] Same header, layout, streaming
+- [ ] Visual test: /chat-mobile-dev vs /chat-mobile (idénticos)
+
+### Reglas Críticas
+**NUNCA:**
+- ❌ Agregar dropdown de travel intent
+- ❌ Cambiar colores (orange/cyan)
+- ❌ Agregar auto-fill logic
+- ❌ Inventar features nuevos
+
+**SIEMPRE:**
+- ✅ Copy-paste EXACTO de Dev
+- ✅ Public = Dev (idéntico)
+- ✅ Solo remover badge "🚧 DEV MODE"
+
+---
+
+## 🚀 PROYECTO ANTERIOR: Mobile-First Chat Interface (Oct 2025)
 
 ### Contexto del Proyecto
 Creación de una interfaz de chat **fullscreen mobile-first** que elimina toda decoración/marketing y se enfoca 100% en la conversación. El chat debe ocupar toda la pantalla y estar optimizado para dispositivos móviles de alta gama.

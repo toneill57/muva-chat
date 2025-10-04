@@ -1,0 +1,42 @@
+8,10c8,10
+< const DevPhotoCarousel = lazy(() => import('./DevPhotoCarousel'))
+< const DevAvailabilityCTA = lazy(() => import('./DevAvailabilityCTA'))
+< const DevIntentSummary = lazy(() => import('./DevIntentSummary'))
+---
+> const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
+> const DevAvailabilityCTA = lazy(() => import('../Dev/DevAvailabilityCTA'))
+> const DevIntentSummary = lazy(() => import('../Dev/DevIntentSummary'))
+34c34
+< export default function DevChatMobileDev() {
+---
+> export default function ChatMobile() {
+54c54
+<     const storedSessionId = localStorage.getItem('dev_chat_session_id')
+---
+>     const storedSessionId = localStorage.getItem('public_chat_session_id')
+92c92
+<     localStorage.removeItem('dev_chat_session_id')
+---
+>     localStorage.removeItem('public_chat_session_id')
+96c96
+<       const response = await fetch('/api/dev/reset-session', {
+---
+>       const response = await fetch('/api/public/reset-session', {
+146c146
+<       const response = await fetch('/api/dev/chat?stream=true', {
+---
+>       const response = await fetch('/api/public/chat?stream=true', {
+158c158
+<         console.error('[DevChatMobileDev] API Error:', {
+---
+>         console.error('[ChatMobile] API Error:', {
+207c207
+<                   localStorage.setItem('dev_chat_session_id', data.session_id)
+---
+>                   localStorage.setItem('public_chat_session_id', data.session_id)
+315,319d314
+<           {/* DEV Badge - integrated in header */}
+<           <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full flex-shrink-0">
+<             <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
+<           </div>
+< 

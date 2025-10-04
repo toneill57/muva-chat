@@ -20,6 +20,11 @@ import {
   searchConversationMemory,
   type ConversationMemoryResult,
 } from './conversation-memory-search'
+import {
+  extractTravelIntent,
+  mergeIntent,
+  type TravelIntent,
+} from './dev-chat-intent'
 
 // ============================================================================
 // Configuration
@@ -86,6 +91,16 @@ export async function generateDevChatResponse(
     // STEP 1: Get or create session
     const session = await getOrCreateDevSession(sessionId, tenantId)
     console.log('[dev-chat-engine] Session loaded:', session.session_id)
+
+    // STEP 1.5: Extract travel intent from message (conversational)
+    const intentStartTime = Date.now()
+    const extractedIntent = await extractTravelIntent(message)
+    const intentTime = Date.now() - intentStartTime
+    console.log(`[dev-chat-engine] Intent extracted in ${intentTime}ms:`, extractedIntent)
+
+    // Merge with existing intent (preserves previous data)
+    session.travel_intent = mergeIntent(session.travel_intent, extractedIntent)
+    console.log('[dev-chat-engine] Merged intent:', session.travel_intent)
 
     // STEP 2: Perform dev search
     const searchResults = await performDevSearch(message, session)
@@ -203,6 +218,19 @@ Preguntas clave: ${m.key_entities.key_questions?.join(', ') || 'N/A'}
 `
     : ''
 
+  // Build intent summary (only if data has been captured)
+  const hasIntent = session.travel_intent.check_in || session.travel_intent.guests || session.travel_intent.accommodation_type
+  const intentSummary = hasIntent
+    ? `
+INTENCIÓN DE VIAJE CAPTURADA:
+${session.travel_intent.check_in ? `- Check-in: ${session.travel_intent.check_in}` : ''}
+${session.travel_intent.check_out ? `- Check-out: ${session.travel_intent.check_out}` : ''}
+${session.travel_intent.guests ? `- Huéspedes: ${session.travel_intent.guests}` : ''}
+${session.travel_intent.accommodation_type ? `- Tipo de alojamiento: ${session.travel_intent.accommodation_type}` : ''}
+
+`
+    : ''
+
   return `Eres un asistente virtual de ventas para un hotel en San Andrés, Colombia. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
 
 🎯 OBJETIVO: Conversión de visitante a reserva
@@ -215,27 +243,30 @@ ESTILO DE COMUNICACIÓN:
 - Usa **negritas** solo para información clave (precios, nombres) en párrafos
 - NUNCA uses **negritas** dentro de títulos (##, ###) - los títulos ya son bold
 - Respuestas concisas pero informativas (4-6 oraciones máximo)
-- Incluye CTAs cuando sea apropiado
+- Incluye CTAs persuasivos para continuar la conversación
 
 INFORMACIÓN DISPONIBLE:
-- Solo tienes acceso a los RESULTADOS DE BÚSQUEDA abajo
-- NO inventes alojamientos, precios o información que no aparezca en los resultados
+- Catálogo COMPLETO de alojamientos (con precios y fotos)
+- Políticas del hotel (check-in, check-out, cancelación)
+- Información básica de turismo en San Andrés (atracciones)
 
-RESTRICCIONES:
-- NO tengas acceso a información operacional interna
-- NO puedes ver disponibilidad en tiempo real (dirígelos al sistema de reservas)
-- NO des información de otros hoteles/competidores
-- SOLO menciona precios y alojamientos que aparecen EXPLÍCITAMENTE en los resultados
-
-${historicalContext}RESULTADOS DE BÚSQUEDA:
+${intentSummary}${historicalContext}RESULTADOS DE BÚSQUEDA:
 ${searchContext || 'No se encontraron resultados relevantes.'}
 
 INSTRUCCIONES:
-1. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
-2. Incluye precios cuando estén disponibles
-3. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
-4. Siempre termina con pregunta o CTA para continuar conversación
-5. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
+1. Si la INTENCIÓN DE VIAJE está capturada, CONFIRMA sutilmente las fechas/huéspedes en tu respuesta
+   - Ejemplo: "Perfecto, del 7 al 13 de octubre para 2 personas..."
+   - Esto confirma al huésped que entendiste correctamente
+2. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
+3. SIEMPRE menciona precios cuando estén disponibles en los resultados
+4. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
+5. Termina con CTA persuasivo para avanzar hacia la conversión
+6. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
+
+FECHAS SIN MES ESPECIFICADO:
+- Si el usuario dice "del 7 al 13" (sin mes), el sistema asume el mes en curso
+- Confirma sutilmente: "Perfecto, del 7 al 13 de octubre..."
+- Esto avisa al huésped que entendiste correctamente
 
 Responde de manera natural, útil y orientada a conversión.`
 }

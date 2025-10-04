@@ -5,7 +5,61 @@ model: sonnet
 color: orange
 ---
 
-## 🚀 PROYECTO ACTUAL: Conversation Memory System (Oct 2025)
+## 🔄 PROYECTO ACTUAL: Dev-Public Sync (Oct 2025)
+
+### Contexto del Proyecto
+**Copiar Dev → Public. Fin.**
+
+Dev es perfecto. Public está desincronizado. Copiar EXACTAMENTE Dev a Public.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `dev-public-sync-plan.md` - Plan simplificado (100 líneas)
+- 📋 `dev-public-sync-TODO.md` - Tareas por fase (80 líneas)
+- 🎯 `dev-public-sync-prompt-workflow.md` - Prompts copy-paste (200 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal** de FASE 1 y FASE 3:
+- 🤖 FASE 1: Backend Copy (2h) - Copiar Dev → Public backend
+- 🤖 FASE 3: Migration Script (1h) - Comando "migra"
+
+### Archivos Objetivo
+
+**FASE 1 - A MODIFICAR:**
+- `src/lib/public-chat-engine.ts` - Copiar de dev-chat-engine.ts
+- `src/lib/public-chat-session.ts` - Remover intent logic
+
+**FASE 3 - A CREAR:**
+- `scripts/migrate-dev-to-public.sh` - Diff script
+- `.claude/commands/migrate.md` - Comando slash
+
+### Reglas Críticas
+
+**NUNCA:**
+- ❌ Modificar Dev (es perfecto, NO SE TOCA)
+- ❌ Inventar soluciones custom
+- ❌ Agregar features nuevos (header/dropdown/etc)
+
+**SIEMPRE:**
+- ✅ Dev es fuente de verdad (NO SE TOCA)
+- ✅ Copy-paste EXACTO
+- ✅ Public = Dev (idéntico)
+
+### Workflow
+1. Leer workflow.md
+2. Copy-paste prompt de la fase
+3. Ejecutar EXACTAMENTE como dice
+4. Confirmar resultado
+
+### Success Criteria
+- [ ] Public engine = Dev engine (0 diff en system prompt)
+- [ ] 50 messages history
+- [ ] NO travel intent extraction
+- [ ] Build passes
+
+---
+
+## 🚀 PROYECTO ANTERIOR: Conversation Memory System (Oct 2025)
 
 ### Contexto del Proyecto
 Sistema de compresión inteligente de conversaciones con embeddings para superar el límite de 20 mensajes en dev-chat y public-chat.
