@@ -8,6 +8,10 @@
 import { createServerClient } from '@/lib/supabase'
 import { resolveTenantSchemaName } from '@/lib/tenant-resolver'
 import Anthropic from '@anthropic-ai/sdk'
+import {
+  compressConversationSegment,
+  generateEmbeddingForSummary,
+} from './conversation-compressor'
 
 // ============================================================================
 // Types & Interfaces
@@ -182,7 +186,7 @@ export async function updatePublicSession(
   // Get current session
   const { data: session, error: fetchError } = await supabase
     .from('prospective_sessions')
-    .select('conversation_history, travel_intent')
+    .select('conversation_history, travel_intent, tenant_id')
     .eq('session_id', sessionId)
     .single()
 
@@ -191,40 +195,171 @@ export async function updatePublicSession(
     return
   }
 
-  // Update conversation history (keep last 20 messages)
+  // Build new history
   const history = session.conversation_history || []
   history.push(
     { role: 'user', content: userMessage, timestamp: new Date().toISOString() },
     { role: 'assistant', content: assistantResponse, timestamp: new Date().toISOString() }
   )
 
-  const updatedHistory = history.slice(-20) // Keep only last 20
-
-  // Merge extracted intent with existing (new values override)
-  const currentIntent = session.travel_intent || {}
-  const updatedIntent = {
-    check_in: extractedIntent.check_in ?? currentIntent.check_in,
-    check_out: extractedIntent.check_out ?? currentIntent.check_out,
-    guests: extractedIntent.guests ?? currentIntent.guests,
-    accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
-    budget_range: currentIntent.budget_range || null,
-    preferences: currentIntent.preferences || [],
-  }
-
-  console.log('[public-session] Updated intent:', updatedIntent)
-
-  // Update session
-  const { error: updateError } = await supabase
-    .from('prospective_sessions')
-    .update({
-      conversation_history: updatedHistory,
-      travel_intent: updatedIntent,
-      last_activity_at: new Date().toISOString(),
+  // CHECK: Did we reach compression threshold?
+  if (history.length >= 20) {
+    console.log('[compression] Triggering auto-compression...', {
+      total_messages: history.length,
+      session_id: sessionId,
     })
-    .eq('session_id', sessionId)
 
-  if (updateError) {
-    console.error('[public-session] Error updating session:', updateError)
+    try {
+      // Split: first 10 to compress, rest to keep
+      const toCompress = history.slice(0, 10)
+      const toKeep = history.slice(10)
+
+      console.log('[compression] Compressing messages 1-10...', {
+        to_compress: toCompress.length,
+        to_keep: toKeep.length,
+      })
+
+      // Generate summary + embedding
+      const compressed = await compressConversationSegment(toCompress, sessionId)
+      const embedding = await generateEmbeddingForSummary(compressed.summary)
+
+      // Save to conversation_memory
+      const { error: insertError } = await supabase
+        .from('conversation_memory')
+        .insert({
+          session_id: sessionId,
+          tenant_id: session.tenant_id,
+          summary_text: compressed.summary,
+          message_range: 'messages 1-10',
+          message_count: 10,
+          embedding_fast: embedding,
+          key_entities: compressed.entities,
+        })
+
+      if (insertError) {
+        console.error('[compression] Error saving to conversation_memory:', insertError)
+        // Fallback: keep last 20 messages
+        const updatedHistory = history.slice(-20)
+
+        // Merge travel intent
+        const currentIntent = session.travel_intent || {}
+        const updatedIntent = {
+          check_in: extractedIntent.check_in ?? currentIntent.check_in,
+          check_out: extractedIntent.check_out ?? currentIntent.check_out,
+          guests: extractedIntent.guests ?? currentIntent.guests,
+          accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
+          budget_range: currentIntent.budget_range || null,
+          preferences: currentIntent.preferences || [],
+        }
+
+        await supabase
+          .from('prospective_sessions')
+          .update({
+            conversation_history: updatedHistory,
+            travel_intent: updatedIntent,
+            last_activity_at: new Date().toISOString(),
+          })
+          .eq('session_id', sessionId)
+        return
+      }
+
+      console.log('[compression] ✓ Saved to conversation_memory:', {
+        summary_length: compressed.summary.length,
+        embedding_dims: embedding.length,
+        entities: compressed.entities,
+      })
+
+      // Update session with compressed history
+      const updatedHistory = toKeep
+
+      // Merge travel intent
+      const currentIntent = session.travel_intent || {}
+      const updatedIntent = {
+        check_in: extractedIntent.check_in ?? currentIntent.check_in,
+        check_out: extractedIntent.check_out ?? currentIntent.check_out,
+        guests: extractedIntent.guests ?? currentIntent.guests,
+        accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
+        budget_range: currentIntent.budget_range || null,
+        preferences: currentIntent.preferences || [],
+      }
+
+      console.log('[public-session] Updated intent:', updatedIntent)
+
+      const { error: updateError } = await supabase
+        .from('prospective_sessions')
+        .update({
+          conversation_history: updatedHistory,
+          travel_intent: updatedIntent,
+          last_activity_at: new Date().toISOString(),
+        })
+        .eq('session_id', sessionId)
+
+      if (updateError) {
+        console.error('[public-session] Error updating session:', updateError)
+        return
+      }
+
+      console.log('[compression] ✓ Auto-compression complete:', {
+        compressed_count: 10,
+        remaining_in_history: toKeep.length,
+        session_id: sessionId,
+      })
+    } catch (error) {
+      console.error('[compression] Fatal error during compression:', error)
+      // Fallback: keep last 20 messages without compression
+      const updatedHistory = history.slice(-20)
+
+      const currentIntent = session.travel_intent || {}
+      const updatedIntent = {
+        check_in: extractedIntent.check_in ?? currentIntent.check_in,
+        check_out: extractedIntent.check_out ?? currentIntent.check_out,
+        guests: extractedIntent.guests ?? currentIntent.guests,
+        accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
+        budget_range: currentIntent.budget_range || null,
+        preferences: currentIntent.preferences || [],
+      }
+
+      await supabase
+        .from('prospective_sessions')
+        .update({
+          conversation_history: updatedHistory,
+          travel_intent: updatedIntent,
+          last_activity_at: new Date().toISOString(),
+        })
+        .eq('session_id', sessionId)
+    }
+  } else {
+    // Normal update (no compression needed)
+    console.log('[public-session] Normal update (no compression)', {
+      current_messages: history.length,
+      threshold: 20,
+    })
+
+    // Merge extracted intent with existing (new values override)
+    const currentIntent = session.travel_intent || {}
+    const updatedIntent = {
+      check_in: extractedIntent.check_in ?? currentIntent.check_in,
+      check_out: extractedIntent.check_out ?? currentIntent.check_out,
+      guests: extractedIntent.guests ?? currentIntent.guests,
+      accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
+      budget_range: currentIntent.budget_range || null,
+      preferences: currentIntent.preferences || [],
+    }
+
+    console.log('[public-session] Updated intent:', updatedIntent)
+
+    const { error: updateError } = await supabase
+      .from('prospective_sessions')
+      .update({
+        conversation_history: history.slice(-20), // Keep last 20
+        travel_intent: updatedIntent,
+        last_activity_at: new Date().toISOString(),
+      })
+      .eq('session_id', sessionId)
+
+    if (updateError) {
+      console.error('[public-session] Error updating session:', updateError)
+    }
   }
 }
 

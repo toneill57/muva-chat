@@ -16,6 +16,10 @@ import {
   performDevSearch,
   type VectorSearchResult,
 } from './dev-chat-search'
+import {
+  searchConversationMemory,
+  type ConversationMemoryResult,
+} from './conversation-memory-search'
 
 // ============================================================================
 // Configuration
@@ -87,11 +91,18 @@ export async function generateDevChatResponse(
     const searchResults = await performDevSearch(message, session)
     console.log('[dev-chat-engine] Search found:', searchResults.length, 'results')
 
+    // STEP 2.5: Search conversation memory for historical context
+    const memoryStartTime = Date.now()
+    const conversationMemories = await searchConversationMemory(message, session.session_id)
+    const memoryTime = Date.now() - memoryStartTime
+    console.log(`[dev-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+
     // STEP 3: Build system prompt (marketing-focused)
     const promptStartTime = Date.now()
     const systemPrompt = buildMarketingSystemPrompt(
       session,
-      searchResults
+      searchResults,
+      conversationMemories
     )
     const promptTime = Date.now() - promptStartTime
     console.log(`[dev-chat-engine] System prompt built in ${promptTime}ms (${systemPrompt.length} chars)`)
@@ -159,7 +170,8 @@ export async function generateDevChatResponse(
  */
 function buildMarketingSystemPrompt(
   session: DevSession,
-  searchResults: VectorSearchResult[]
+  searchResults: VectorSearchResult[],
+  conversationMemories: ConversationMemoryResult[]
 ): string {
   // Build search context
   // Optimized to 8 results with 250 chars preview for faster Claude responses
@@ -175,6 +187,21 @@ function buildMarketingSystemPrompt(
       return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}...`
     })
     .join('\n\n---\n\n')
+
+  // Build historical context from conversation memories
+  const historicalContext = conversationMemories.length > 0
+    ? `
+CONTEXTO DE CONVERSACIONES PASADAS:
+${conversationMemories.map(m => `
+Resumen: ${m.summary_text}
+Intención de viaje: ${JSON.stringify(m.key_entities.travel_intent || {})}
+Temas discutidos: ${m.key_entities.topics_discussed?.join(', ') || 'N/A'}
+Preguntas clave: ${m.key_entities.key_questions?.join(', ') || 'N/A'}
+(${m.message_range})
+`).join('\n---\n')}
+
+`
+    : ''
 
   return `Eres un asistente virtual de ventas para un hotel en San Andrés, Colombia. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
 
@@ -200,7 +227,7 @@ RESTRICCIONES:
 - NO des información de otros hoteles/competidores
 - SOLO menciona precios y alojamientos que aparecen EXPLÍCITAMENTE en los resultados
 
-RESULTADOS DE BÚSQUEDA:
+${historicalContext}RESULTADOS DE BÚSQUEDA:
 ${searchContext || 'No se encontraron resultados relevantes.'}
 
 INSTRUCCIONES:
@@ -208,6 +235,7 @@ INSTRUCCIONES:
 2. Incluye precios cuando estén disponibles
 3. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
 4. Siempre termina con pregunta o CTA para continuar conversación
+5. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
 
 Responde de manera natural, útil y orientada a conversión.`
 }
@@ -289,9 +317,19 @@ export async function* generateDevChatResponseStream(
     const searchResults = await performDevSearch(message, session)
     console.log('[dev-chat-engine-stream] Search found:', searchResults.length, 'results')
 
+    // STEP 2.5: Search conversation memory for historical context
+    const memoryStartTime = Date.now()
+    const conversationMemories = await searchConversationMemory(message, session.session_id)
+    const memoryTime = Date.now() - memoryStartTime
+    console.log(`[dev-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+
     // STEP 3: Build system prompt
     const promptStartTime = Date.now()
-    const systemPrompt = buildMarketingSystemPrompt(session, searchResults)
+    const systemPrompt = buildMarketingSystemPrompt(
+      session,
+      searchResults,
+      conversationMemories
+    )
     const promptTime = Date.now() - promptStartTime
     console.log(`[dev-chat-engine-stream] System prompt built in ${promptTime}ms`)
 

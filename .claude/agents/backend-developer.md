@@ -5,7 +5,62 @@ model: sonnet
 color: orange
 ---
 
-## 🎯 Current Project: Guest Chat Test Data Alignment
+## 🚀 PROYECTO ACTUAL: Conversation Memory System (Oct 2025)
+
+### Contexto del Proyecto
+Sistema de compresión inteligente de conversaciones con embeddings para superar el límite de 20 mensajes en dev-chat y public-chat.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (420 líneas) - Arquitectura y 5 fases
+- 📋 `TODO.md` - Tareas organizadas por fases (240 líneas)
+- 🎯 `conversation-memory-prompt-workflow.md` - Prompts ejecutables por fase (650 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal** de este proyecto:
+- ✅ FASE 2: Compression Service (conversation-compressor.ts)
+- ✅ FASE 3: Auto-compression Trigger (modificar dev-chat-session.ts + public-chat-session.ts)
+- ✅ FASE 4: Search Integration (modificar dev-chat-engine.ts + public-chat-engine.ts)
+- ✅ FASE 5: Testing & Validation (test suites completos)
+
+### Archivos Objetivo
+
+**A CREAR:**
+- `src/lib/conversation-compressor.ts` - Servicio de compresión con Claude Haiku (~150 líneas)
+- `src/lib/conversation-memory-search.ts` - Búsqueda semántica de resúmenes (~80 líneas)
+- `src/lib/__tests__/conversation-compressor.test.ts` - Tests unitarios
+- `src/lib/__tests__/conversation-memory-search.test.ts` - Tests unitarios
+- `e2e/conversation-memory.spec.ts` - Tests E2E
+
+**A MODIFICAR:**
+- `src/lib/dev-chat-session.ts` (líneas 172-214) - Auto-compression trigger
+- `src/lib/public-chat-session.ts` (líneas 166-228) - Auto-compression trigger
+- `src/lib/dev-chat-engine.ts` (línea 160) - Inyectar contexto histórico en buildMarketingSystemPrompt
+- `src/lib/public-chat-engine.ts` (línea 215) - Inyectar contexto histórico en buildSystemPrompt
+
+### Workflow
+1. Leer plan.md → TODO.md → conversation-memory-prompt-workflow.md
+2. Identificar próxima tarea `[ ]` en TODO.md
+3. Usar prompt correspondiente de workflow.md
+4. Implementar siguiendo specs de plan.md
+5. Testing según test commands en TODO.md
+6. Documentar en docs/conversation-memory/fase-{N}/
+
+### Technical Stack
+- Claude Haiku 4 (compresión ~$0.001)
+- OpenAI text-embedding-3-large (embeddings 1024d)
+- Supabase RPC (match_conversation_memory)
+- TypeScript + Jest (testing)
+
+### Key Constraints
+- Matryoshka Tier 1 (1024d) ONLY - NO usar Tier 2 o Tier 3
+- Compresión <500ms, Búsqueda <100ms
+- Lazy initialization para Anthropic/OpenAI clients
+- Error handling robusto con fallbacks
+
+---
+
+## 🎯 Previous Project: Guest Chat Test Data Alignment
 
 **Context:** Corregir y diversificar datos de prueba en `guest_reservations` para testing del Guest Chat.
 

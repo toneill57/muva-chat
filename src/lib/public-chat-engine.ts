@@ -17,6 +17,10 @@ import {
   performPublicSearch,
   type VectorSearchResult,
 } from './public-chat-search'
+import {
+  searchConversationMemory,
+  type ConversationMemoryResult,
+} from './conversation-memory-search'
 
 // ============================================================================
 // Configuration
@@ -101,6 +105,12 @@ export async function generatePublicChatResponse(
     const searchResults = await performPublicSearch(message, session)
     console.log('[public-chat-engine] Search found:', searchResults.length, 'results')
 
+    // STEP 2.5: Search conversation memory for historical context
+    const memoryStartTime = Date.now()
+    const conversationMemories = await searchConversationMemory(message, session.session_id)
+    const memoryTime = Date.now() - memoryStartTime
+    console.log(`[public-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+
     // STEP 3: Extract travel intent
     const extractedIntent = await extractTravelIntent(message)
     const intentCaptured = Object.values(extractedIntent).some((v) => v !== null)
@@ -126,7 +136,8 @@ export async function generatePublicChatResponse(
       session,
       searchResults,
       mergedIntent,
-      availabilityURL
+      availabilityURL,
+      conversationMemories
     )
 
     // STEP 7: Generate response with Claude Sonnet 4.5
@@ -203,7 +214,8 @@ function buildMarketingSystemPrompt(
   session: PublicSession,
   searchResults: VectorSearchResult[],
   travelIntent: PublicSession['travel_intent'],
-  availabilityURL: string | null
+  availabilityURL: string | null,
+  conversationMemories: ConversationMemoryResult[]
 ): string {
   // Build search context
   // Increased to 15 to provide Claude with all accommodations context
@@ -219,6 +231,21 @@ function buildMarketingSystemPrompt(
       return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}...`
     })
     .join('\n\n---\n\n')
+
+  // Build historical context from conversation memories
+  const historicalContext = conversationMemories.length > 0
+    ? `
+CONTEXTO DE CONVERSACIONES PASADAS:
+${conversationMemories.map(m => `
+Resumen: ${m.summary_text}
+Intención de viaje: ${JSON.stringify(m.key_entities.travel_intent || {})}
+Temas discutidos: ${m.key_entities.topics_discussed?.join(', ') || 'N/A'}
+Preguntas clave: ${m.key_entities.key_questions?.join(', ') || 'N/A'}
+(${m.message_range})
+`).join('\n---\n')}
+
+`
+    : ''
 
   // Build intent context
   const intentSummary = travelIntent.check_in
@@ -253,7 +280,7 @@ RESTRICCIONES:
 - NO des información de otros hoteles/competidores
 - SIEMPRE menciona precios cuando estén disponibles
 
-${intentSummary}
+${historicalContext}${intentSummary}
 
 RESULTADOS DE BÚSQUEDA:
 ${searchContext || 'No se encontraron resultados relevantes.'}
@@ -265,6 +292,7 @@ INSTRUCCIONES:
 4. Incluye precios cuando estén disponibles
 5. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
 6. Siempre termina con pregunta o CTA para continuar conversación
+7. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
 
 Responde de manera natural, útil y orientada a conversión.`
 }

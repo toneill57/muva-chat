@@ -9,6 +9,10 @@
 import { createServerClient } from '@/lib/supabase'
 import { resolveTenantSchemaName } from '@/lib/tenant-resolver'
 import Anthropic from '@anthropic-ai/sdk'
+import {
+  compressConversationSegment,
+  generateEmbeddingForSummary,
+} from './conversation-compressor'
 
 // ============================================================================
 // Types & Interfaces
@@ -165,6 +169,9 @@ export async function getOrCreateDevSession(
 /**
  * Update session with new message
  *
+ * Auto-compression: When conversation reaches 20 messages, compresses the first 10
+ * into a summary with embeddings, then keeps only the last 10-12 messages in active history.
+ *
  * @param sessionId - Session ID to update
  * @param userMessage - User's message
  * @param assistantResponse - Assistant's response
@@ -178,10 +185,10 @@ export async function updateDevSession(
 
   console.log('[dev-session] Updating session:', sessionId)
 
-  // Get current session
+  // 1. Get current session
   const { data: session, error: fetchError } = await supabase
     .from('prospective_sessions')
-    .select('conversation_history')
+    .select('conversation_history, tenant_id')
     .eq('session_id', sessionId)
     .single()
 
@@ -190,25 +197,113 @@ export async function updateDevSession(
     return
   }
 
-  // Update conversation history (keep last 20 messages)
+  // 2. Build new history
   const history = session.conversation_history || []
   history.push(
     { role: 'user', content: userMessage, timestamp: new Date().toISOString() },
     { role: 'assistant', content: assistantResponse, timestamp: new Date().toISOString() }
   )
 
-  const updatedHistory = history.slice(-20) // Keep only last 20
-
-  // Update session
-  const { error: updateError } = await supabase
-    .from('prospective_sessions')
-    .update({
-      conversation_history: updatedHistory,
-      last_activity_at: new Date().toISOString(),
+  // 3. CHECK: Did we reach compression threshold?
+  if (history.length >= 20) {
+    console.log('[compression] Triggering auto-compression...', {
+      total_messages: history.length,
+      session_id: sessionId,
     })
-    .eq('session_id', sessionId)
 
-  if (updateError) {
-    console.error('[dev-session] Error updating session:', updateError)
+    try {
+      // 4. Split: first 10 to compress, rest to keep
+      const toCompress = history.slice(0, 10)
+      const toKeep = history.slice(10)
+
+      console.log('[compression] Compressing messages 1-10...', {
+        to_compress: toCompress.length,
+        to_keep: toKeep.length,
+      })
+
+      // 5. Generate summary + embedding
+      const compressed = await compressConversationSegment(toCompress, sessionId)
+      const embedding = await generateEmbeddingForSummary(compressed.summary)
+
+      // 6. Save to conversation_memory
+      const { error: insertError } = await supabase
+        .from('conversation_memory')
+        .insert({
+          session_id: sessionId,
+          tenant_id: session.tenant_id,
+          summary_text: compressed.summary,
+          message_range: 'messages 1-10',
+          message_count: 10,
+          embedding_fast: embedding,
+          key_entities: compressed.entities,
+        })
+
+      if (insertError) {
+        console.error('[compression] Error saving to conversation_memory:', insertError)
+        // Fallback: don't compress, keep last 20 messages
+        await supabase
+          .from('prospective_sessions')
+          .update({
+            conversation_history: history.slice(-20),
+            last_activity_at: new Date().toISOString(),
+          })
+          .eq('session_id', sessionId)
+        return
+      }
+
+      console.log('[compression] ✓ Saved to conversation_memory:', {
+        summary_length: compressed.summary.length,
+        embedding_dims: embedding.length,
+        entities: compressed.entities,
+      })
+
+      // 7. Update session with reduced history
+      const { error: updateError } = await supabase
+        .from('prospective_sessions')
+        .update({
+          conversation_history: toKeep, // Only last 10-12 messages
+          last_activity_at: new Date().toISOString(),
+        })
+        .eq('session_id', sessionId)
+
+      if (updateError) {
+        console.error('[compression] Error updating session:', updateError)
+        return
+      }
+
+      console.log('[compression] ✓ Auto-compression complete:', {
+        compressed_count: 10,
+        remaining_in_history: toKeep.length,
+        session_id: sessionId,
+      })
+    } catch (error) {
+      console.error('[compression] Fatal error during compression:', error)
+      // Fallback: keep last 20 messages without compression
+      await supabase
+        .from('prospective_sessions')
+        .update({
+          conversation_history: history.slice(-20),
+          last_activity_at: new Date().toISOString(),
+        })
+        .eq('session_id', sessionId)
+    }
+  } else {
+    // Normal update (no compression needed)
+    console.log('[dev-session] Normal update (no compression)', {
+      current_messages: history.length,
+      threshold: 20,
+    })
+
+    const { error: updateError } = await supabase
+      .from('prospective_sessions')
+      .update({
+        conversation_history: history.slice(-20), // Keep last 20
+        last_activity_at: new Date().toISOString(),
+      })
+      .eq('session_id', sessionId)
+
+    if (updateError) {
+      console.error('[dev-session] Error updating session:', updateError)
+    }
   }
 }

@@ -4,6 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+## 🚨 REGLA CRÍTICA: NO Modificar Targets de Performance
+
+**PROHIBIDO ABSOLUTAMENTE:**
+- ❌ Cambiar umbrales/targets para que tests "pasen" artificialmente
+- ❌ Modificar definiciones de éxito sin consultar al usuario
+- ❌ Usar "targets realistas/aceptables" cuando hay un target específico definido
+- ❌ Justificar bajo performance cambiando expectativas
+
+**CORRECTO:**
+- ✅ Si un test falla, investigar la causa REAL del problema
+- ✅ Proponer soluciones técnicas REALES para mejorar performance
+- ✅ Comunicar honestamente cuando algo no cumple target
+- ✅ Pedir aprobación EXPLÍCITA antes de cambiar cualquier target
+
+**Ejemplo de ERROR cometido (Oct 2025):**
+```
+Target original: <100ms búsqueda vectorial
+Performance real: 586ms
+❌ MAL: Cambiar target a 750ms para que "pase"
+✅ BIEN: Implementar cache de embeddings para reducir a <100ms
+```
+
+**Si un target es técnicamente inalcanzable:**
+1. Explicar POR QUÉ no se puede alcanzar (con datos/mediciones)
+2. Mostrar análisis técnico detallado
+3. Proponer target alternativo CON JUSTIFICACIÓN
+4. Esperar aprobación EXPLÍCITA del usuario antes de cambiar
+
+---
+
 ## Project Overview
 
 InnPilot is a modern web platform for managing hotel operations with AI-powered conversational interfaces. Currently focused on **Mobile-First Chat Interface** development.

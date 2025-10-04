@@ -1,398 +1,243 @@
-# TODO - Mobile-First Chat Interface
+# TODO - Cost Monitoring System
 
-**Proyecto:** Chat Mobile Fullscreen
-**Fecha:** 3 Octubre 2025
-**Plan:** Ver `plan.md` para contexto completo
-
-**Timeline:** 9.5-13.5 horas total (FASE 0-5)
+**Proyecto:** AI Cost Monitoring & Tracking
+**Fecha:** 2025-10-03
+**Plan:** Ver `plan.md` para contexto completo (364 líneas, 4 fases)
 
 ---
 
-## FASE 0: Dual Environment Setup (1h) ✅
+## FASE 1: Cost Tracking Core 🎯
 
-### 0.1 Crear página desarrollo `/chat-mobile-dev` ✅
-- [x] Crear archivo `src/app/chat-mobile-dev/page.tsx` (completed: 15min)
-  - Layout fullscreen con badge "🚧 DEV MODE" (top-right)
-  - Badge fixed position z-[9999] purple-600
-  - Renderizar componente DevChatMobileDev
-  - Files: `src/app/chat-mobile-dev/page.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ http://localhost:3000/chat-mobile-dev muestra badge
+### 1.1 Crear módulo central de tracking
+- [ ] Crear `src/lib/cost-tracker.ts` con funciones core (estimado: 1h)
+  - `trackCompression(usage, model, sessionId, tenantId)` → calcula costo y logea
+  - `trackEmbedding(tokens, model, sessionId, tenantId)` → calcula costo y logea
+  - `calculateCost(usage, model)` → pricing hardcodeado:
+    - Claude Haiku 3.5: $1/1M input, $5/1M output
+    - OpenAI text-embedding-3-large: $0.13/1M tokens
+  - Error handling: `Promise.allSettled()` para evitar crashes
+  - Logging: `[cost-tracker]` prefix para debugging
+  - Files: `src/lib/cost-tracker.ts`
+  - Agent: **backend-developer**
+  - Test: `npm test src/lib/__tests__/cost-tracker.test.ts`
 
-### 0.2 Crear componente base desarrollo ✅
-- [x] Crear `src/components/Dev/DevChatMobileDev.tsx` (completed: 15min)
-  - Renombrado desde DevChatMobile.tsx
-  - Componente completamente funcional con FASE 1-2 implementadas
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Componente renderiza y funciona perfectamente
+### 1.2 Crear migración de base de datos
+- [ ] Crear tabla `ai_usage_metrics` en Supabase (estimado: 30min)
+  - Campos: id, timestamp, service ('anthropic'|'openai'), model, tokens_in, tokens_out, cost_usd, session_id, tenant_id
+  - RLS policy: `tenant_id = current_setting('app.current_tenant')` (multi-tenant isolation)
+  - Indexes: (timestamp, tenant_id) para queries rápidas, (session_id) para lookups
+  - Files: `supabase/migrations/YYYYMMDDHHMMSS_create_ai_usage_metrics.sql`
+  - Agent: **backend-developer** + **database-agent** (review)
+  - Test: `npx supabase db diff` → verificar schema correcto
 
-### 0.3 Crear placeholder producción `/chat-mobile` ✅
-- [x] Crear `src/app/chat-mobile/page.tsx` (completed: 10min)
-  - Página "Coming Soon" centrada
-  - Mensaje: "Mobile-first chat interface is currently in development"
-  - Link a /chat-mobile-dev con botón teal/cyan
-  - Background gradient from-teal-50 to-cyan-50
-  - Files: `src/app/chat-mobile/page.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ http://localhost:3000/chat-mobile muestra placeholder + link
+### 1.3 Integrar tracking en compressor
+- [ ] Modificar `conversation-compressor.ts` para trackear costos (estimado: 30min)
+  - Después de línea 131 (response exitoso):
+    ```typescript
+    await trackCompression(
+      {
+        input: response.usage.input_tokens,
+        output: response.usage.output_tokens
+      },
+      'claude-3-5-haiku-latest',
+      sessionId,
+      tenantId
+    )
+    ```
+  - Importar: `import { trackCompression } from './cost-tracker'`
+  - Wrap en try/catch para no afectar UX si falla
+  - Files: `src/lib/conversation-compressor.ts` (línea ~131)
+  - Agent: **backend-developer**
+  - Test: Comprimir conversación y verificar entry en `ai_usage_metrics`
 
-### 0.4 Documentar estrategia dual
-- [ ] Crear `docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md` (estimate: 10min)
-  - Explicar workflow: dev → test → validate → prod
-  - Cuándo promover de dev a prod (checklist)
-  - Diferencias entre ambientes (badge, logs, etc)
-  - Proceso de FASE 5 (Production Promotion)
-  - Files: `docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md`
-  - Agent: **ux-interface**
-  - Test: Documento completo y claro
-  - Note: ⚠️ Opcional - puede documentarse después
-
----
-
-## FASE 1: Estructura Base (2-3h) 🎯
-
-### 1.1 Implementar layout fullscreen en DevChatMobileDev ✅
-- [x] Crear `src/components/Dev/DevChatMobileDev.tsx` (completed: 1.5h)
-  - Copiar lógica base de `DevChatInterface.tsx`
-  - Adaptar de floating bubble a fullscreen layout
-  - Header fixed top (60px) con gradient teal
-  - Messages area flex-1 scrollable
-  - Input area fixed bottom (80px)
-  - Safe area insets implementados
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`, `src/app/chat-mobile-dev/page.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ http://localhost:3000/chat-mobile-dev muestra layout fullscreen
-
-### 1.2 Testing visual FASE 1 ✅
-- [x] Validar en Chrome DevTools (completed: 30min)
-  - iPhone 15 Pro Max (430×932) ✅
-  - iPhone 14 Pro (393×852) ✅
-  - Google Pixel 8 Pro (412×915) ✅
-  - Samsung Galaxy S24 (360×800) ✅
-  - Test: ✅ Layout no rompe en ningún viewport
-  - Test: ✅ Header y input permanecen fijos
-  - Test: ✅ Messages área scrollea correctamente
-
-### 1.3 Documentación FASE 1 ✅
-- [x] Crear documentación completa (completed: 30min)
-  - `docs/chat-mobile/fase-1/IMPLEMENTATION.md` ✅
-  - `docs/chat-mobile/fase-1/CHANGES.md` ✅
-  - `docs/chat-mobile/fase-1/TESTS.md` ✅
-  - Agent: **ux-interface**
+### 1.4 Tests unitarios de tracking
+- [ ] Crear suite de tests para cost-tracker (estimado: 30min)
+  - Test: Pricing calculation (Haiku: 450 input + 180 output → $0.00135)
+  - Test: Pricing calculation (OpenAI: 1000 tokens → $0.00013)
+  - Test: Database insertion exitosa
+  - Test: Error handling (DB falla → no crashea)
+  - Files: `src/lib/__tests__/cost-tracker.test.ts`
+  - Agent: **backend-developer**
+  - Test: `npm test -- cost-tracker`
 
 ---
 
-## FASE 2: Mobile Optimizations (3-4h) ✅
+## FASE 2: Embedding Cost Tracking ⚙️
 
-### 2.1 Implementar Safe Areas ✅
-- [x] Safe area top para notch (completed: 20min)
-  - CSS: `pt-[env(safe-area-inset-top)]` en header
-  - Messages area: `pt-[calc(60px_+_env(safe-area-inset-top)_+_16px)]`
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ iPhone 15 - notch no tapa header content
+### 2.1 Trackear embeddings en compressor
+- [ ] Modificar `generateEmbeddingForSummary()` para trackear (estimado: 30min)
+  - Después de línea ~245 (embedding exitoso):
+    ```typescript
+    const estimatedTokens = Math.ceil(summary.length / 4) // Aprox: 4 chars/token
+    await trackEmbedding(estimatedTokens, 'text-embedding-3-large', sessionId, tenantId)
+    ```
+  - Importar: `import { trackEmbedding } from './cost-tracker'`
+  - Files: `src/lib/conversation-compressor.ts` (línea ~245)
+  - Agent: **backend-developer**
+  - Test: Generar embedding y verificar entry con `service: 'openai'`
 
-- [x] Safe area bottom para home bar (completed: 20min)
-  - CSS: `pb-[env(safe-area-inset-bottom)]` en input container
-  - Messages area: `pb-[calc(80px_+_env(safe-area-inset-bottom)_+_16px)]`
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ iPhone 15 - home bar no tapa input button
+### 2.2 Trackear embeddings en search (cache miss)
+- [ ] Modificar `conversation-memory-search.ts` para trackear (estimado: 30min)
+  - Solo en cache MISS (línea 60-62):
+    ```typescript
+    if (!queryEmbedding) {
+      queryEmbedding = await generateEmbeddingForSummary(query)
+      embeddingCache.set(query, queryEmbedding)
+      
+      // Track cost (solo cache miss)
+      const estimatedTokens = Math.ceil(query.length / 4)
+      await trackEmbedding(estimatedTokens, 'text-embedding-3-large', sessionId, tenantId)
+    }
+    ```
+  - **IMPORTANTE**: Cache HIT no debe generar cost entry
+  - Files: `src/lib/conversation-memory-search.ts` (línea 60-66)
+  - Agent: **backend-developer**
+  - Test: Verificar cache HIT no genera entry, cache MISS sí genera
 
-### 2.2 Touch optimization ✅
-- [x] Touch targets ≥ 44px (completed: 15min)
-  - Send button: `w-11 h-11 min-w-[44px] min-h-[44px]`
-  - CSS: `touch-manipulation` para mejor responsiveness
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Botones fáciles de tocar en móvil
+### 2.3 Actualizar cost-tracker con pricing de embeddings
+- [ ] Agregar soporte para modelo `text-embedding-3-large` (estimado: 15min)
+  - Precio: $0.13/1M tokens
+  - Cálculo: `(tokens / 1_000_000) * 0.13`
+  - Files: `src/lib/cost-tracker.ts` (función `calculateCost`)
+  - Agent: **backend-developer**
+  - Test: `calculateCost(1000, 'text-embedding-3-large')` → $0.00013
 
-### 2.3 Scroll behavior ✅
-- [x] Smooth scroll a nuevos mensajes (completed: 15min)
-  - Auto-scroll ya implementado (línea 32-34)
-  - CSS: `overscroll-behavior-contain scroll-smooth`
-  - Previene bounce en iOS
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Nuevos mensajes scroll smooth, no bounce
-
-### 2.4 Keyboard handling ✅
-- [x] Input no tapado por keyboard (completed: 10min)
-  - iOS/Android: `min-h-[100dvh] h-[100dvh]` en container
-  - dvh adapta al viewport con keyboard
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ⚠️ Pending real device test (iOS Safari, Android Chrome)
-
-### 2.5 Code Review y Corrección de Issues ✅
-- [x] Code review completo por ux-interface (completed: 40min)
-  - ✅ Reorganización dual environment (dev/prod)
-  - ✅ Corrección background gradient (sand-50 → amber-50)
-  - ✅ Error banner safe area positioning
-  - ✅ Persistencia sessionId en localStorage
-  - ✅ Validación maxLength textarea (2000 chars)
-  - Agent: **ux-interface**
-  - Test: ✅ Build exitoso, ambas rutas funcionando
-
-### 2.5 Testing mobile FASE 2
-- [ ] Probar safe areas (estimate: 30min)
-  - iPhone 15 simulator con notch
-  - Landscape mode funcional
-  - No overlap en ning�n dispositivo
-  - Test: Todos los elementos visibles y accesibles
+### 2.4 Tests de integración embeddings
+- [ ] Tests end-to-end de tracking de embeddings (estimado: 30min)
+  - Test: Comprimir + embedding → 2 entries (1 compression + 1 embedding)
+  - Test: Búsqueda con cache hit → 0 entries adicionales
+  - Test: Búsqueda con cache miss → 1 entry embedding
+  - Test: Total cost correcto (sum de compression + embedding)
+  - Files: `src/lib/__tests__/cost-tracker.test.ts`
+  - Agent: **backend-developer**
+  - Test: `npm test -- cost-tracker`
 
 ---
 
-## FASE 3: Feature Parity (2-3h) ✅
+## FASE 3: Metrics API & Aggregation ✨
 
-### 3.1 Portar Streaming SSE ✅
-- [x] Implementar streaming logic (completed: 1h)
-  - Copiar líneas 128-204 de `DevChatInterface.tsx`
-  - Fetch con `?stream=true`
-  - Server-Sent Events parsing
-  - Update message content en tiempo real
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Enviar mensaje → respuesta streamea chunk por chunk
+### 3.1 Crear API endpoint de métricas
+- [ ] Implementar `/api/metrics` GET endpoint (estimado: 1h)
+  - Query params:
+    - `?period=day|week|month` (default: day)
+    - `?service=anthropic|openai|all` (default: all)
+    - `?date=YYYY-MM-DD` (default: today)
+  - Response:
+    ```json
+    {
+      "total_cost": 0.45,
+      "breakdown": [
+        { "service": "anthropic", "cost": 0.30, "count": 300 },
+        { "service": "openai", "cost": 0.15, "count": 300 }
+      ],
+      "usage_count": 600,
+      "period": "month"
+    }
+    ```
+  - Files: `src/app/api/metrics/route.ts`
+  - Agent: **backend-developer**
+  - Test: `curl http://localhost:3000/api/metrics?period=day` → retorna JSON válido
 
-### 3.2 Portar Markdown rendering ✅
-- [x] ReactMarkdown + typing dots (completed: 1h)
-  - Copiar líneas 336-366 de `DevChatInterface.tsx`
-  - Typing dots cuando `!message.content && loading`
-  - ReactMarkdown con remark-gfm
-  - Cursor pulsante cuando `loading && message.content`
-  - Smooth transitions (150ms)
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Markdown renderiza (headers, lists, bold, links)
-  - Test: ✅ Typing dots aparecen mientras espera
-  - Test: ✅ Cursor pulsa mientras streamea
+### 3.2 Crear módulo de agregación
+- [ ] Implementar `metrics-aggregator.ts` con funciones (estimado: 45min)
+  - `getDailyCosts(tenantId, date)` → suma costos del día
+  - `getMonthlyCosts(tenantId, year, month)` → suma costos del mes
+  - `getServiceBreakdown(tenantId, period)` → breakdown por servicio (anthropic vs openai)
+  - Usar RPC function de Supabase para performance
+  - Files: `src/lib/metrics-aggregator.ts`
+  - Agent: **backend-developer**
+  - Test: Insertar 10 entries, verificar suma correcta
 
-### 3.3 Portar Photo Carousel ✅
-- [x] Implementar carousel de fotos (completed: 30min)
-  - Copiar líneas 362-374 de `DevChatInterface.tsx`
-  - Mostrar fotos de `message.sources`
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Frontend implementado (pending API integration)
-  - Test: ✅ Carousel scrolleable en móvil
+### 3.3 Crear RPC function para agregación
+- [ ] Migración con `get_cost_summary` RPC (estimado: 30min)
+  - Function signature: `get_cost_summary(p_tenant_id UUID, p_start_date DATE, p_end_date DATE)`
+  - Return: `TABLE(service TEXT, total_cost DECIMAL, count BIGINT)`
+  - Query optimizado con indexes (timestamp, tenant_id)
+  - Files: `supabase/migrations/YYYYMMDDHHMMSS_create_cost_aggregation_rpc.sql`
+  - Agent: **backend-developer** + **database-agent** (review)
+  - Test: Ejecutar RPC con datos de prueba → retorna agregados correctos
 
-### 3.4 Portar Suggestions ✅
-- [x] Follow-up suggestions clickeables (completed: 30min)
-  - Copiar líneas 386-402 de `DevChatInterface.tsx`
-  - Buttons con hover states
-  - onClick → setInput(suggestion)
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Frontend implementado (pending API integration)
-  - Test: ✅ Input se llena con suggestion
-
-### 3.5 Testing features FASE 3 ✅
-- [x] Validar todos los features (completed: 30min)
-  - Streaming funciona ✅
-  - Markdown renderiza ✅
-  - Typing dots + cursor ✅
-  - Photos carousel ✅ (frontend ready)
-  - Suggestions clickeables ✅ (frontend ready)
-  - Test: ✅ Todo implementado, pendiente API metadata
-
-### 3.6 Documentación FASE 3 ✅
-- [x] Crear documentación completa (completed: 30min)
-  - `docs/chat-mobile/fase-3/IMPLEMENTATION.md` ✅
-  - `docs/chat-mobile/fase-3/CHANGES.md` ✅
-  - `docs/chat-mobile/fase-3/TESTS.md` ✅
-  - Agent: **ux-interface**
+### 3.4 Tests de API
+- [ ] Suite de tests para `/api/metrics` (estimado: 30min)
+  - Test: `/api/metrics?period=day` → retorna day aggregation
+  - Test: `/api/metrics?period=month` → retorna month aggregation
+  - Test: `/api/metrics?service=anthropic` → solo Claude costs
+  - Test: `/api/metrics?service=openai` → solo OpenAI costs
+  - Test: Response time <200ms (performance target)
+  - Files: `src/app/api/metrics/__tests__/route.test.ts`
+  - Agent: **backend-developer**
+  - Test: `npm test -- api/metrics`
 
 ---
 
-## FASE 4: Polish & Performance (1-2h) ✅
+## FASE 4: Alerts & Monitoring 🎨
 
-### 4.1 Animaciones smooth ✅
-- [x] Transitions suaves (completed: 30min)
-  - Message entrance: fade + staggered delay (50ms)
-  - Typing dots: bounce animation con delays (0, 150, 300ms)
-  - Cursor: pulse animation durante streaming
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Animaciones suaves, no bruscas
-  - Test: ✅ Will-change optimization aplicada
+### 4.1 Crear sistema de alertas
+- [ ] Implementar `cost-alerts.ts` con threshold checks (estimado: 45min)
+  - `checkDailyThreshold(tenantId, threshold)` → compara gasto del día vs threshold
+  - `triggerAlert(type, message, cost)` → logea alerta (console.warn por ahora)
+  - Default threshold: $10/día
+  - Debouncing: Max 1 alerta por hora (evitar spam)
+  - Files: `src/lib/cost-alerts.ts`
+  - Agent: **backend-developer**
+  - Test: Insertar entries que suman $11 → debe trigger alert
 
-### 4.2 Loading & Error states ✅
-- [x] Error handling visible (completed: 30min)
-  - Error banner con retry button
-  - Retry functionality completa
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ Error muestra banner con retry
-  - Test: ✅ Retry funciona correctamente
-  - Test: ✅ Input pre-llenado con último mensaje
+### 4.2 Integrar alertas en cost-tracker
+- [ ] Modificar `cost-tracker.ts` para check thresholds (estimado: 20min)
+  - Después de cada `trackCompression()` o `trackEmbedding()`:
+    ```typescript
+    await checkDailyThreshold(tenantId, 10.00) // $10/día default
+    ```
+  - Alert format: `⚠️ Daily cost threshold exceeded: $12.50 > $10.00`
+  - Files: `src/lib/cost-tracker.ts` (después de DB insert)
+  - Agent: **backend-developer**
+  - Test: Simular spike de costos → verificar alert en console
 
-### 4.3 Accessibility ✅
-- [x] A11y compliance (completed: 1h)
-  - ARIA labels en todos los elementos interactivos
-  - `role="main"`, `role="log"`, `role="alert"` implementados
-  - `aria-live="polite"` para nuevos mensajes
-  - `aria-live="assertive"` para errores
-  - Color contrast ≥ 7:1 (AAA) en todos los textos
-  - Focus management completo
-  - Files: `src/components/Dev/DevChatMobileDev.tsx`
-  - Agent: **ux-interface**
-  - Test: ✅ VoiceOver navigation funciona
-  - Test: ✅ Keyboard navigation completa
-  - Test: ✅ Screen reader announcements correctos
+### 4.3 Crear script de análisis de costos
+- [ ] CLI tool para reportes de costos (estimado: 45min)
+  - Command: `npx tsx scripts/analyze-costs.ts --period month`
+  - Output: Tabla con breakdown por día, servicio, y total
+  - Params: `--period day|week|month`, `--service anthropic|openai|all`
+  - Export: Opción `--export csv` para guardar reporte
+  - Files: `scripts/analyze-costs.ts`
+  - Agent: **backend-developer**
+  - Test: `npx tsx scripts/analyze-costs.ts --period month` → genera tabla correcta
 
-### 4.4 Performance check ✅
-- [x] Lighthouse audit setup (completed: 30min)
-  - Build de producción exitoso
-  - Servidor corriendo en port 3000
-  - Optimizaciones aplicadas (debounce, will-change)
-  - Documentación completa creada
-  - Test: ✅ `npm run build && npm start`
-  - Test: ⏳ Lighthouse mobile audit pendiente (manual en Chrome DevTools)
-  - Docs: `docs/chat-mobile/fase-4/LIGHTHOUSE_AUDIT_INSTRUCTIONS.md`
+### 4.4 Documentación de alertas
+- [ ] Crear guía completa de alertas y monitoring (estimado: 30min)
+  - Cómo configurar thresholds personalizados
+  - Cómo interpretar alertas (normal vs anomalía)
+  - Cómo integrar con Slack/email (futuro roadmap)
+  - Troubleshooting: ¿Por qué no recibo alertas?
+  - Files: `docs/cost-monitoring/fase-4/ALERTS.md`
+  - Agent: **backend-developer**
+  - Test: Review manual de README → claro y completo
 
-### 4.5 Testing final FASE 4 ✅
-- [x] Validación completa (completed: 30min)
-  - Error handling testeado (offline mode)
-  - Animaciones validadas (smooth, no jank)
-  - Accessibility compliance verificado (WCAG 2.1 AAA)
-  - Performance optimizations aplicadas
-  - Test: ✅ Errores manejados gracefully
-  - Test: ✅ 55/57 tests passed (96%)
-  - Docs: `docs/chat-mobile/fase-4/TESTS.md`
-
-### 4.6 Documentación FASE 4 ✅
-- [x] Crear documentación completa (completed: 20min)
-  - `docs/chat-mobile/fase-4/IMPLEMENTATION.md` ✅
-  - `docs/chat-mobile/fase-4/CHANGES.md` ✅
-  - `docs/chat-mobile/fase-4/TESTS.md` ✅
-  - `docs/chat-mobile/fase-4/LIGHTHOUSE_AUDIT_INSTRUCTIONS.md` ✅
-  - `docs/chat-mobile/fase-4/LIGHTHOUSE-PLACEHOLDER.md` ✅
-  - Agent: **ux-interface**
+### 4.5 Tests de alertas
+- [ ] Suite de tests para sistema de alertas (estimado: 30min)
+  - Test: Threshold $5/día → alert a $6
+  - Test: Threshold $10/día → alert a $11, no alert a $9
+  - Test: Debouncing funciona (max 1 alert/hora)
+  - Test: Multi-tenant: alerts separados por tenant
+  - Files: `src/lib/__tests__/cost-alerts.test.ts`
+  - Agent: **backend-developer**
+  - Test: `npm test -- cost-alerts`
 
 ---
 
-## FASE 5: Production Promotion (30min) 🚀
+## 📊 PROGRESO
 
-### 5.1 Copiar código de dev a prod
-- [ ] Copiar DevChatMobileDev.tsx → DevChatMobile.tsx (estimate: 10min)
-  - Crear `src/components/Dev/DevChatMobile.tsx`
-  - Copiar TODO el código de DevChatMobileDev.tsx
-  - Limpiar console.logs de desarrollo
-  - Remover comentarios "// DEV ONLY"
-  - Files: `src/components/Dev/DevChatMobile.tsx`
-  - Agent: **ux-interface**
-  - Test: Componente compila sin errores
+**Total Tasks:** 17
+**Completed:** 0/17 (0%)
 
-### 5.2 Actualizar página producción
-- [ ] Modificar `src/app/chat-mobile/page.tsx` (estimate: 5min)
-  - Remover placeholder "Coming Soon"
-  - Importar DevChatMobile (NO DevChatMobileDev)
-  - Layout fullscreen sin badge "DEV MODE"
-  - Files: `src/app/chat-mobile/page.tsx`
-  - Agent: **ux-interface**
-  - Test: http://localhost:3000/chat-mobile funciona igual que dev
+**Por Fase:**
+- FASE 1: 0/4 tareas (Cost Tracking Core)
+- FASE 2: 0/4 tareas (Embedding Cost Tracking)
+- FASE 3: 0/4 tareas (Metrics API & Aggregation)
+- FASE 4: 0/5 tareas (Alerts & Monitoring)
 
-### 5.3 Production validation & documentation
-- [ ] Testing completo + documentación (estimate: 15min)
-  - Build producción: `npm run build && npm start`
-  - Lighthouse audit ≥ 90 en /chat-mobile
-  - Manual testing (iPhone, Pixel, Galaxy)
-  - Crear `docs/chat-mobile/PRODUCTION_RELEASE.md`
-  - Timestamp, changelog, known issues
-  - Test: Todos los criterios de éxito cumplidos
-  - Test: Build sin warnings
+**Tiempo estimado total:** 7 horas
 
 ---
 
-## DOCUMENTACIÓN 📋
-
-### Crear estructura docs
-- [ ] Crear carpetas de documentación
-  - `docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md` (FASE 0)
-  - `docs/chat-mobile/fase-1/`
-  - `docs/chat-mobile/fase-2/`
-  - `docs/chat-mobile/fase-3/`
-  - `docs/chat-mobile/fase-4/`
-  - `docs/chat-mobile/PRODUCTION_RELEASE.md` (FASE 5)
-
-### Al completar cada FASE
-Usar este prompt para documentar:
-```
-He completado FASE {N}. Necesito:
-1. Crear documentaci�n en docs/chat-mobile/fase-{N}/
-2. Incluir:
-   - IMPLEMENTATION.md (qu� se hizo)
-   - CHANGES.md (archivos creados/modificados)
-   - TESTS.md (tests corridos y resultados)
-   - ISSUES.md (problemas si los hay)
-3. Actualizar TODO.md marcando con [x] solo las tareas testeadas
-```
-
----
-
-## CRITERIOS DE �XITO 
-
-### Funcionalidad Core
-- [ ] Ruta `/chat-mobile` accesible
-- [ ] Chat fullscreen sin decoraci�n marketing
-- [ ] Streaming SSE funcional
-- [ ] Markdown rendering completo
-- [ ] Typing dots + cursor pulsante
-- [ ] Photo carousel
-- [ ] Follow-up suggestions
-
-### Mobile UX
-- [ ] Safe areas respetadas (notch, home bar)
-- [ ] Touch targets e 44px
-- [ ] Keyboard no tapa input (iOS/Android)
-- [ ] Smooth scroll a nuevos mensajes
-- [ ] Landscape mode funcional
-- [ ] No bounce scroll (iOS)
-
-### Performance
-- [ ] Lighthouse mobile score e 90
-- [ ] First Contentful Paint < 1.5s
-- [ ] Time to Interactive < 3s
-- [ ] Cumulative Layout Shift < 0.1
-
-### Accesibilidad
-- [ ] VoiceOver navigation OK
-- [ ] TalkBack navigation OK
-- [ ] ARIA labels completos
-- [ ] Color contrast e 4.5:1
-
-### Compatibilidad
-- [ ] iPhone 15/14 (Safari iOS 17+)
-- [ ] Google Pixel 8 (Chrome Android 14+)
-- [ ] Samsung Galaxy S24 (Samsung Internet)
-- [ ] Funciona en 360px - 430px width
-
----
-
-## COMANDOS �TILES
-
-```bash
-# Desarrollo
-npm run dev                  # Iniciar dev server
-# Visitar: http://localhost:3000/chat-mobile-dev  (desarrollo)
-# Visitar: http://localhost:3000/chat-mobile      (producción - FASE 5)
-
-# Testing
-npm run build               # Build para producci�n
-npm start                   # Probar build
-npm run lint                # Linting
-
-# Chrome DevTools
-# 1. Abrir DevTools (Cmd+Option+I)
-# 2. Toggle device toolbar (Cmd+Shift+M)
-# 3. Seleccionar dispositivo (iPhone 15 Pro Max, etc.)
-# 4. Reload (Cmd+R)
-```
-
----
-
-**Última actualización**: 3 Octubre 2025
-**Siguiente paso**: Ejecutar FASE 0 (Dual Environment Setup) con **ux-interface** agent
-**Total estimado**: 9.5-13.5 horas (FASE 0: 1h, FASE 1-4: 8-12h, FASE 5: 30min)
+**Última actualización:** 2025-10-03

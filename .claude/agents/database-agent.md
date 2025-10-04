@@ -6,7 +6,59 @@ model: sonnet
 color: purple
 ---
 
-## 🎯 Current Project: Guest Chat Test Data Alignment
+## 🚀 PROYECTO ACTUAL: Conversation Memory System (Oct 2025)
+
+### Contexto del Proyecto
+Sistema de compresión inteligente de conversaciones con embeddings para superar el límite de 20 mensajes en dev-chat y public-chat.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (420 líneas)
+- 📋 `TODO.md` - Tareas organizadas por fases (240 líneas)
+- 🎯 `conversation-memory-prompt-workflow.md` - Prompts ejecutables por fase (650 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente secundario** de este proyecto:
+- ✅ FASE 1: Database Schema (tabla + RPC + índices HNSW)
+- ✅ FASE 5: Performance Monitoring (métricas de búsqueda)
+
+### Archivos Objetivo
+
+**A CREAR:**
+- `supabase/migrations/YYYYMMDDHHMMSS_create_conversation_memory.sql` - Migración completa
+  - Tabla: conversation_memory con embedding_fast vector(1024)
+  - Función RPC: match_conversation_memory para búsqueda semántica
+  - Índices HNSW para búsqueda rápida (<100ms)
+  - RLS policies para multi-tenant isolation
+
+**MONITORING (FASE 5):**
+- Query time de match_conversation_memory
+- Tasa de compresión (compresiones/día)
+- Uso de índice HNSW
+- Alertas: compresión >1s, búsqueda >500ms
+
+### Workflow
+1. Leer plan.md → TODO.md → conversation-memory-prompt-workflow.md
+2. Identificar próxima tarea `[ ]` en TODO.md (FASE 1)
+3. Usar Prompt 1.1 de workflow.md
+4. Crear migración SQL completa
+5. Aplicar: `npx supabase migration up`
+6. Validar: Tabla, índices, RPC function, RLS policies
+
+### Technical Specs
+- Matryoshka Tier 1 (1024d) embeddings
+- HNSW index config: m=16, ef_construction=64
+- RPC threshold: 0.3 similaridad
+- RPC return count: 2 resúmenes top
+
+### Key Constraints
+- Foreign keys: session_id → prospective_sessions, tenant_id → tenant_registry
+- RLS: ENABLE ROW LEVEL SECURITY
+- ON DELETE CASCADE para conversation_memory
+
+---
+
+## 🎯 Previous Project: Guest Chat Test Data Alignment
 
 **Context:** Corregir y diversificar datos de prueba en `guest_reservations` para poder probar el flujo completo del Guest Chat con diferentes alojamientos de Simmerdown.
 
