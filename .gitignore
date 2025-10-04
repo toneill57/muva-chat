@@ -49,9 +49,12 @@ node_modules
 *.log
 *.tmp
 
-# Test results and reports
+# Test results and reports (Playwright)
 /playwright-report
 /test-results
+/playwright/.cache/
+playwright-results.json
+trace.zip
 
 # Backups
 *.backup
