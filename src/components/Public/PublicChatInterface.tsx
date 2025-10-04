@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { X, Minimize2, Send, Bot, User } from 'lucide-react'
+import { X, Minimize2, Send, Bot, User, RotateCcw } from 'lucide-react'
 import IntentSummary from './IntentSummary'
 import PhotoCarousel from './PhotoCarousel'
 import AvailabilityCTA from './AvailabilityCTA'
@@ -86,6 +86,17 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
       setMessages([welcomeMessage])
     }
   }, [isExpanded, messages.length])
+
+  const handleNewConversation = () => {
+    // Clear session from localStorage
+    localStorage.removeItem('public_chat_session_id')
+    // Reset state
+    setSessionId(null)
+    setMessages([])
+    setCurrentIntent({})
+    setError(null)
+    // Welcome message will be added automatically by the useEffect
+  }
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return
@@ -241,6 +252,14 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={handleNewConversation}
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            aria-label="New conversation"
+            title="Start new conversation"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </button>
           <button
             onClick={handleMinimize}
             className="p-2 hover:bg-white/20 rounded-lg transition-colors"
