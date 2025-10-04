@@ -29,9 +29,19 @@ interface Message {
 }
 
 // Constants
-const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || 'simmerdown' // Fallback for safety
 const PULL_TO_REFRESH_THRESHOLD = 80 // pixels to trigger pull-to-refresh
 const PULL_ANIMATION_DURATION = 300 // ms for scroll animation
+
+/**
+ * Detects tenant slug from URL or defaults to 'simmerdown' for development
+ * In production, this should read from subdomain/path/config
+ */
+function detectTenantSlug(): string {
+  // TODO: Implement subdomain detection (e.g., simmerdown.innpilot.com)
+  // TODO: Implement path detection (e.g., /t/simmerdown/chat)
+  // For now, default to 'simmerdown' during development
+  return 'simmerdown'
+}
 
 export default function ChatMobile() {
   const [messages, setMessages] = useState<Message[]>([])
@@ -39,12 +49,40 @@ export default function ChatMobile() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [tenantId, setTenantId] = useState<string | null>(null)
   const [isPulling, setIsPulling] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const pullStartY = useRef<number>(0)
+
+  // Resolve tenant UUID on mount
+  useEffect(() => {
+    const resolveTenant = async () => {
+      try {
+        const slug = detectTenantSlug()
+        const response = await fetch('/api/tenant/resolve', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slugOrUuid: slug })
+        })
+
+        if (!response.ok) {
+          throw new Error('Tenant resolution failed')
+        }
+
+        const { tenant_id } = await response.json()
+        setTenantId(tenant_id)
+        console.log('[tenant] Resolved:', slug, '→', tenant_id)
+      } catch (error) {
+        console.error('[tenant] Resolution error:', error)
+        setError('Failed to resolve tenant. Please refresh the page.')
+      }
+    }
+
+    resolveTenant()
+  }, [])
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem('public_chat_session_id')
@@ -98,7 +136,7 @@ export default function ChatMobile() {
   }
 
   const sendMessage = async () => {
-    if (!input.trim() || loading) return
+    if (!input.trim() || loading || !tenantId) return
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -130,7 +168,7 @@ export default function ChatMobile() {
         body: JSON.stringify({
           message: messageText,
           session_id: sessionId,
-          tenant_id: TENANT_ID
+          tenant_id: tenantId
         })
       })
 
@@ -456,7 +494,7 @@ export default function ChatMobile() {
 
           <button
             onClick={sendMessage}
-            disabled={!input.trim() || loading}
+            disabled={!input.trim() || loading || !tenantId}
             aria-label="Send message"
             className="bg-gradient-to-r from-teal-500 to-cyan-600
                        text-white rounded-xl
