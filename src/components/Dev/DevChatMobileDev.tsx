@@ -72,7 +72,7 @@ export default function DevChatMobileDev() {
       const welcomeMessage: Message = {
         id: 'welcome',
         role: 'assistant',
-        content: '**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️, también puedes preguntarme sobre planes y actividades turísticas.',
+        content: '**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️\n\n🏝️ ¡También soy tu guía turística! Pregúntame sobre playas, restaurantes, buceo y todo lo que San Andrés tiene para ofrecerte.',
         timestamp: new Date()
       }
       setMessages([welcomeMessage])
