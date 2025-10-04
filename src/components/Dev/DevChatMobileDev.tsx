@@ -137,7 +137,13 @@ export default function DevChatMobileDev() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to send message')
+        const errorText = await response.text()
+        console.error('[DevChatMobileDev] API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        })
+        throw new Error(`Failed to send message: ${response.status} ${errorText}`)
       }
 
       // Handle streaming response
