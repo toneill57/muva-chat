@@ -87,28 +87,30 @@ export default function DevChatMobileDev() {
     }
   }, [messages.length])
 
-  const handleNewConversation = useCallback(() => {
+  const handleNewConversation = useCallback(async () => {
     // Clear session from localStorage
     localStorage.removeItem('dev_chat_session_id')
 
-    // Clear session cookie (critical for backend to create new session)
-    // Try multiple combinations to ensure cookie deletion
-    const cookieOptions = [
-      'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;',
-      'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost',
-      'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/chat-mobile-dev;',
-    ]
+    // Call backend to expire HttpOnly session cookie
+    try {
+      const response = await fetch('/api/dev/reset-session', {
+        method: 'POST',
+      })
 
-    cookieOptions.forEach(option => {
-      document.cookie = option
-    })
-
-    console.log('[reset] Cleared localStorage and cookies')
+      if (response.ok) {
+        console.log('[reset] Session cookie expired by backend')
+      } else {
+        console.warn('[reset] Failed to expire session cookie')
+      }
+    } catch (error) {
+      console.error('[reset] Error calling reset-session API:', error)
+    }
 
     // Reset state
     setSessionId(null)
     setMessages([])
     setError(null)
+    console.log('[reset] State cleared, ready for new conversation')
     // Welcome message will be added automatically by the useEffect
   }, [])
 

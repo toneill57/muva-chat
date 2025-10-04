@@ -87,12 +87,17 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
     }
   }, [isExpanded, messages.length])
 
-  const handleNewConversation = () => {
+  const handleNewConversation = async () => {
     // Clear session from localStorage
     localStorage.removeItem('public_chat_session_id')
 
-    // Clear session cookie (critical for backend to create new session)
-    document.cookie = 'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    // Call backend to expire HttpOnly session cookie
+    try {
+      await fetch('/api/public/reset-session', { method: 'POST' })
+      console.log('[reset] Session cookie expired')
+    } catch (error) {
+      console.error('[reset] Error expiring cookie:', error)
+    }
 
     // Reset state
     setSessionId(null)
