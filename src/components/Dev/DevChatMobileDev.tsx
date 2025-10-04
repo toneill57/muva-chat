@@ -327,13 +327,14 @@ export default function DevChatMobileDev() {
                    pt-[calc(60px_+_env(safe-area-inset-top)_+_16px)]
                    pb-[calc(80px_+_env(safe-area-inset-bottom)_+_16px)]
                    bg-gradient-to-b from-amber-50 to-white
-                   overscroll-behavior-contain scroll-smooth"
+                   overscroll-behavior-none scroll-smooth"
+        style={{ WebkitOverflowScrolling: 'touch' }}
         role="log"
         aria-live="polite"
         aria-atomic="false"
         aria-label="Chat messages"
       >
-        <div className="space-y-4 py-4">
+        <div className="space-y-4 py-4 min-h-full flex flex-col justify-end">
           {messages.map((message, index) => (
             <div
               key={message.id}
