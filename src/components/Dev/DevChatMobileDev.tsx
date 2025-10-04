@@ -504,8 +504,8 @@ export default function DevChatMobileDev() {
             aria-label="Type your message"
             aria-describedby="message-input-help"
             className="flex-1 resize-none rounded-xl border border-gray-300
-                       focus:border-teal-500 focus:ring-2 focus:ring-teal-500 focus:outline-none
-                       px-4 py-3 text-sm
+                       focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 focus:outline-none
+                       px-4 py-3 text-base
                        disabled:bg-gray-50 disabled:text-gray-400
                        transition-all duration-200
                        max-h-32 min-h-[48px]"
@@ -513,7 +513,8 @@ export default function DevChatMobileDev() {
             style={{
               height: 'auto',
               minHeight: '48px',
-              maxHeight: '128px'
+              maxHeight: '128px',
+              fontSize: '16px'  // Explicit 16px to prevent iOS auto-zoom
             }}
             onInput={handleTextareaResize}
           />
