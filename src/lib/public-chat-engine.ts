@@ -9,7 +9,6 @@ import Anthropic from '@anthropic-ai/sdk'
 import {
   getOrCreatePublicSession,
   updatePublicSession,
-  extractTravelIntent,
   type PublicSession,
 } from './public-chat-session'
 import {
@@ -103,41 +102,24 @@ export async function generatePublicChatResponse(
     const memoryTime = Date.now() - memoryStartTime
     console.log(`[public-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
 
-    // STEP 3: Extract travel intent
-    const extractedIntent = await extractTravelIntent(message)
-    const intentCaptured = Object.values(extractedIntent).some((v) => v !== null)
-    console.log('[public-chat-engine] Intent captured:', intentCaptured, extractedIntent)
+    // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
 
-    // STEP 4: Merge with existing intent
-    const mergedIntent: PublicSession['travel_intent'] = {
-      ...session.travel_intent,
-      check_in: extractedIntent.check_in || session.travel_intent.check_in,
-      check_out: extractedIntent.check_out || session.travel_intent.check_out,
-      guests: extractedIntent.guests || session.travel_intent.guests,
-      accommodation_type: extractedIntent.accommodation_type || session.travel_intent.accommodation_type,
-      budget_range: session.travel_intent.budget_range,
-      preferences: session.travel_intent.preferences,
-    }
-
-    // STEP 5: Build system prompt (marketing-focused)
-    // NOTE: availabilityURL removed - using direct API calls instead
+    // STEP 4: Build system prompt (marketing-focused)
     const systemPrompt = buildMarketingSystemPrompt(
       session,
       searchResults,
-      mergedIntent,
-      null, // No longer generating MotoPress URL
       conversationMemories
     )
 
-    // STEP 7: Generate response with Claude Sonnet 4.5
+    // STEP 5: Generate response with Claude Sonnet 4.5
     const response = await generateMarketingResponse(message, session, systemPrompt)
     console.log('[public-chat-engine] Generated response:', response.length, 'chars')
 
-    // STEP 8: Generate follow-up suggestions
-    const suggestions = generatePublicSuggestions(searchResults, mergedIntent)
+    // STEP 6: Generate follow-up suggestions
+    const suggestions = generatePublicSuggestions(searchResults, session.travel_intent)
 
-    // STEP 9: Update session with conversation history and intent
-    await updatePublicSession(session.session_id, message, response, extractedIntent)
+    // STEP 7: Update session with conversation history
+    await updatePublicSession(session.session_id, message, response)
 
     // STEP 10: Prepare sources for response
     // Increased to 15 to ensure all accommodations (8) reach the client
@@ -159,13 +141,12 @@ export async function generatePublicChatResponse(
       response,
       sources,
       travel_intent: {
-        check_in: mergedIntent.check_in,
-        check_out: mergedIntent.check_out,
-        guests: mergedIntent.guests,
-        accommodation_type: mergedIntent.accommodation_type,
-        captured_this_message: intentCaptured,
+        check_in: session.travel_intent.check_in,
+        check_out: session.travel_intent.check_out,
+        guests: session.travel_intent.guests,
+        accommodation_type: session.travel_intent.accommodation_type,
+        captured_this_message: false, // No longer extracting per message
       },
-      // availability_url removed - using direct API calls instead
       suggestions,
     }
   } catch (error) {
@@ -202,8 +183,6 @@ export async function generatePublicChatResponse(
 function buildMarketingSystemPrompt(
   session: PublicSession,
   searchResults: VectorSearchResult[],
-  travelIntent: PublicSession['travel_intent'],
-  availabilityURL: string | null,
   conversationMemories: ConversationMemoryResult[]
 ): string {
   // Build search context
@@ -248,31 +227,31 @@ ESTILO DE COMUNICACIÓN:
 - Amigable, profesional, entusiasta
 - Marketing-focused (destaca beneficios y características únicas)
 - Usa emojis ocasionalmente para ambiente tropical (🌴, 🌊, ☀️)
+- NO uses texto en mayúsculas en tus respuestas - escribe natural
+- Usa **negritas** solo para información clave (precios, nombres) en párrafos
+- NUNCA uses **negritas** dentro de títulos (##, ###) - los títulos ya son bold
 - Respuestas concisas pero informativas (4-6 oraciones máximo)
-- Incluye CTAs (calls-to-action) cuando sea apropiado
+- Incluye CTAs cuando sea apropiado
 
 INFORMACIÓN DISPONIBLE:
-- Catálogo COMPLETO de alojamientos (con precios y fotos)
-- Políticas del hotel (check-in, check-out, cancelación)
-- Información básica de turismo en San Andrés (atracciones)
+- Solo tienes acceso a los RESULTADOS DE BÚSQUEDA abajo
+- NO inventes alojamientos, precios o información que no aparezca en los resultados
 
 RESTRICCIONES:
 - NO tengas acceso a información operacional interna
 - NO puedes ver disponibilidad en tiempo real (dirígelos al sistema de reservas)
 - NO des información de otros hoteles/competidores
-- SIEMPRE menciona precios cuando estén disponibles
+- SOLO menciona precios y alojamientos que aparecen EXPLÍCITAMENTE en los resultados
 
-${historicalContext}
-RESULTADOS DE BÚSQUEDA:
+${historicalContext}RESULTADOS DE BÚSQUEDA:
 ${searchContext || 'No se encontraron resultados relevantes.'}
 
 INSTRUCCIONES:
-1. Si el usuario menciona fechas/huéspedes, pregunta por los detalles faltantes para ayudarle mejor
-2. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
-3. Incluye precios cuando estén disponibles
-4. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
-5. Siempre termina con pregunta o CTA para continuar conversación
-6. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
+1. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
+2. Incluye precios cuando estén disponibles
+3. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
+4. Siempre termina con pregunta o CTA para continuar conversación
+5. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
 
 Responde de manera natural, útil y orientada a conversión.`
 }
@@ -292,8 +271,9 @@ async function generateMarketingResponse(
   const client = getAnthropicClient()
 
   // Build conversation history for Claude
+  // Include last 50 messages for better context
   const conversationHistory = session.conversation_history
-    .slice(-5) // Last 5 messages
+    .slice(-50) // Last 50 messages
     .map((msg) => ({
       role: msg.role,
       content: msg.content,
@@ -417,30 +397,13 @@ export async function* generatePublicChatResponseStream(
     const memoryTime = Date.now() - memoryStartTime
     console.log(`[public-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
 
-    // STEP 3: Extract travel intent
-    const extractedIntent = await extractTravelIntent(message)
-    const intentCaptured = Object.values(extractedIntent).some((v) => v !== null)
-    console.log('[public-chat-engine-stream] Intent captured:', intentCaptured, extractedIntent)
+    // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
 
-    // STEP 4: Merge with existing intent
-    const mergedIntent: PublicSession['travel_intent'] = {
-      ...session.travel_intent,
-      check_in: extractedIntent.check_in || session.travel_intent.check_in,
-      check_out: extractedIntent.check_out || session.travel_intent.check_out,
-      guests: extractedIntent.guests || session.travel_intent.guests,
-      accommodation_type: extractedIntent.accommodation_type || session.travel_intent.accommodation_type,
-      budget_range: session.travel_intent.budget_range,
-      preferences: session.travel_intent.preferences,
-    }
-
-    // STEP 5: Build system prompt
-    // NOTE: availabilityURL removed - using direct API calls instead
+    // STEP 4: Build system prompt
     const promptStartTime = Date.now()
     const systemPrompt = buildMarketingSystemPrompt(
       session,
       searchResults,
-      mergedIntent,
-      null, // No longer generating MotoPress URL
       conversationMemories
     )
     const promptTime = Date.now() - promptStartTime
@@ -452,7 +415,7 @@ export async function* generatePublicChatResponseStream(
 
     const client = getAnthropicClient()
     const conversationHistory = session.conversation_history
-      .slice(-5)
+      .slice(-50)
       .map((msg) => ({ role: msg.role, content: msg.content }))
 
     const stream = await client.messages.stream({
@@ -483,8 +446,8 @@ export async function* generatePublicChatResponseStream(
     const claudeTime = Date.now() - claudeStartTime
     console.log(`[public-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
 
-    // STEP 8: Update session with final response and intent
-    await updatePublicSession(session.session_id, message, fullResponse, extractedIntent)
+    // STEP 5: Update session with final response
+    await updatePublicSession(session.session_id, message, fullResponse)
 
     const totalTime = Date.now() - startTime
     console.log(`[public-chat-engine-stream] ✅ Total time: ${totalTime}ms`)

@@ -166,18 +166,16 @@ export async function getOrCreatePublicSession(
 }
 
 /**
- * Update session with new message and extracted intent
+ * Update session with new message
  *
  * @param sessionId - Session ID to update
  * @param userMessage - User's message
  * @param assistantResponse - Assistant's response
- * @param extractedIntent - Extracted travel intent from message
  */
 export async function updatePublicSession(
   sessionId: string,
   userMessage: string,
-  assistantResponse: string,
-  extractedIntent: Partial<TravelIntent>
+  assistantResponse: string
 ): Promise<void> {
   const supabase = createServerClient()
 
@@ -241,22 +239,10 @@ export async function updatePublicSession(
         // Fallback: keep last 20 messages
         const updatedHistory = history.slice(-20)
 
-        // Merge travel intent
-        const currentIntent = session.travel_intent || {}
-        const updatedIntent = {
-          check_in: extractedIntent.check_in ?? currentIntent.check_in,
-          check_out: extractedIntent.check_out ?? currentIntent.check_out,
-          guests: extractedIntent.guests ?? currentIntent.guests,
-          accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
-          budget_range: currentIntent.budget_range || null,
-          preferences: currentIntent.preferences || [],
-        }
-
         await supabase
           .from('prospective_sessions')
           .update({
             conversation_history: updatedHistory,
-            travel_intent: updatedIntent,
             last_activity_at: new Date().toISOString(),
           })
           .eq('session_id', sessionId)
@@ -272,24 +258,10 @@ export async function updatePublicSession(
       // Update session with compressed history
       const updatedHistory = toKeep
 
-      // Merge travel intent
-      const currentIntent = session.travel_intent || {}
-      const updatedIntent = {
-        check_in: extractedIntent.check_in ?? currentIntent.check_in,
-        check_out: extractedIntent.check_out ?? currentIntent.check_out,
-        guests: extractedIntent.guests ?? currentIntent.guests,
-        accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
-        budget_range: currentIntent.budget_range || null,
-        preferences: currentIntent.preferences || [],
-      }
-
-      console.log('[public-session] Updated intent:', updatedIntent)
-
       const { error: updateError } = await supabase
         .from('prospective_sessions')
         .update({
           conversation_history: updatedHistory,
-          travel_intent: updatedIntent,
           last_activity_at: new Date().toISOString(),
         })
         .eq('session_id', sessionId)
@@ -309,21 +281,10 @@ export async function updatePublicSession(
       // Fallback: keep last 20 messages without compression
       const updatedHistory = history.slice(-20)
 
-      const currentIntent = session.travel_intent || {}
-      const updatedIntent = {
-        check_in: extractedIntent.check_in ?? currentIntent.check_in,
-        check_out: extractedIntent.check_out ?? currentIntent.check_out,
-        guests: extractedIntent.guests ?? currentIntent.guests,
-        accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
-        budget_range: currentIntent.budget_range || null,
-        preferences: currentIntent.preferences || [],
-      }
-
       await supabase
         .from('prospective_sessions')
         .update({
           conversation_history: updatedHistory,
-          travel_intent: updatedIntent,
           last_activity_at: new Date().toISOString(),
         })
         .eq('session_id', sessionId)
@@ -335,24 +296,10 @@ export async function updatePublicSession(
       threshold: 20,
     })
 
-    // Merge extracted intent with existing (new values override)
-    const currentIntent = session.travel_intent || {}
-    const updatedIntent = {
-      check_in: extractedIntent.check_in ?? currentIntent.check_in,
-      check_out: extractedIntent.check_out ?? currentIntent.check_out,
-      guests: extractedIntent.guests ?? currentIntent.guests,
-      accommodation_type: extractedIntent.accommodation_type ?? currentIntent.accommodation_type,
-      budget_range: currentIntent.budget_range || null,
-      preferences: currentIntent.preferences || [],
-    }
-
-    console.log('[public-session] Updated intent:', updatedIntent)
-
     const { error: updateError } = await supabase
       .from('prospective_sessions')
       .update({
         conversation_history: history.slice(-20), // Keep last 20
-        travel_intent: updatedIntent,
         last_activity_at: new Date().toISOString(),
       })
       .eq('session_id', sessionId)

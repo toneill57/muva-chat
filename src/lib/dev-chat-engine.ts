@@ -124,8 +124,8 @@ export async function generateDevChatResponse(
     console.log(`[dev-chat-engine] Session updated in ${dbTime}ms`)
 
     // STEP 7: Prepare sources for response
-    // Return top 10 sources to client (more than the 8 sent to Claude for variety)
-    const sources = searchResults.slice(0, 10).map((result) => ({
+    // Increased to 15 to ensure all accommodations (8) reach the client
+    const sources = searchResults.slice(0, 15).map((result) => ({
       table: result.table,
       id: result.id,
       name: result.name || result.title || 'Unknown',
@@ -174,15 +174,15 @@ function buildMarketingSystemPrompt(
   conversationMemories: ConversationMemoryResult[]
 ): string {
   // Build search context
-  // Optimized to 8 results with 250 chars preview for faster Claude responses
+  // Increased to 15 to provide Claude with all accommodations context
   const searchContext = searchResults
-    .slice(0, 8)
+    .slice(0, 15)
     .map((result, index) => {
       const name = result.name || result.title || 'Unknown'
       const pricing = result.pricing
         ? `\nPrecio: ${result.pricing.base_price_night} ${result.pricing.currency}/noche`
         : ''
-      const preview = result.content.substring(0, 250)
+      const preview = result.content.substring(0, 400)
 
       return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}...`
     })
@@ -255,9 +255,9 @@ async function generateMarketingResponse(
   const client = getAnthropicClient()
 
   // Build conversation history for Claude
-  // Optimized to last 3 messages for faster responses
+  // Include last 50 messages for better context
   const conversationHistory = session.conversation_history
-    .slice(-3) // Last 3 messages (instead of 5)
+    .slice(-50) // Last 50 messages
     .map((msg) => ({
       role: msg.role,
       content: msg.content,
@@ -339,7 +339,7 @@ export async function* generateDevChatResponseStream(
 
     const client = getAnthropicClient()
     const conversationHistory = session.conversation_history
-      .slice(-3)
+      .slice(-50)
       .map((msg) => ({ role: msg.role, content: msg.content }))
 
     const stream = await client.messages.stream({
