@@ -35,7 +35,6 @@ export default function DevChatMobileDev() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
   const [isPulling, setIsPulling] = useState(false)
-  const [isDark, setIsDark] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -267,7 +266,7 @@ export default function DevChatMobileDev() {
   }
 
   return (
-    <div className={`flex flex-col h-screen bg-[hsl(var(--chat-bg))] ${isDark ? 'dark' : ''}`} role="main">
+    <div className="flex flex-col h-screen bg-white" role="main">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
         <div className="h-16 flex items-center justify-between px-4">
@@ -282,14 +281,6 @@ export default function DevChatMobileDev() {
             <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full">
               <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
             </div>
-
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
-              aria-label="Toggle dark mode"
-            >
-              <span className="text-lg">{isDark ? '☀️' : '🌙'}</span>
-            </button>
 
             <button
               onClick={handleNewConversation}
@@ -308,7 +299,7 @@ export default function DevChatMobileDev() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-[hsl(var(--chat-messages-bg-start))] to-[hsl(var(--chat-messages-bg-end))] pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
+        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
         role="log"
         aria-live="polite"
         aria-atomic="false"
@@ -331,8 +322,8 @@ export default function DevChatMobileDev() {
                 <div
                   className={`rounded-2xl px-4 py-3 ${
                     message.role === 'user'
-                      ? 'bg-[hsl(var(--chat-user-bubble))] text-white rounded-br-sm shadow-md'
-                      : 'bg-[hsl(var(--chat-assistant-bubble))] text-[hsl(var(--chat-assistant-text))] rounded-bl-sm shadow-sm border border-[hsl(var(--chat-border))]'
+                      ? 'bg-blue-500 text-white rounded-br-sm shadow-md'
+                      : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100'
                   }`}
                 >
                   {message.role === 'assistant' ? (
@@ -445,7 +436,7 @@ export default function DevChatMobileDev() {
       )}
 
       {/* Input */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[hsl(var(--chat-bg))] border-t border-[hsl(var(--chat-border))] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
