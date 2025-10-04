@@ -437,17 +437,39 @@ export async function* generatePublicChatResponseStream(
     const memoryTime = Date.now() - memoryStartTime
     console.log(`[public-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
 
-    // STEP 3: Build system prompt
+    // STEP 3: Extract travel intent
+    const extractedIntent = await extractTravelIntent(message)
+    const intentCaptured = Object.values(extractedIntent).some((v) => v !== null)
+    console.log('[public-chat-engine-stream] Intent captured:', intentCaptured, extractedIntent)
+
+    // STEP 4: Merge with existing intent
+    const mergedIntent: PublicSession['travel_intent'] = {
+      ...session.travel_intent,
+      check_in: extractedIntent.check_in || session.travel_intent.check_in,
+      check_out: extractedIntent.check_out || session.travel_intent.check_out,
+      guests: extractedIntent.guests || session.travel_intent.guests,
+      accommodation_type: extractedIntent.accommodation_type || session.travel_intent.accommodation_type,
+      budget_range: session.travel_intent.budget_range,
+      preferences: session.travel_intent.preferences,
+    }
+
+    // STEP 5: Generate availability URL if intent is complete
+    const baseURL = TENANT_BASE_URLS[tenantId] || `https://${tenantId}.com`
+    const availabilityURL = generateAvailabilityURL(baseURL, mergedIntent)
+
+    // STEP 6: Build system prompt
     const promptStartTime = Date.now()
     const systemPrompt = buildMarketingSystemPrompt(
       session,
       searchResults,
+      mergedIntent,
+      availabilityURL,
       conversationMemories
     )
     const promptTime = Date.now() - promptStartTime
     console.log(`[public-chat-engine-stream] System prompt built in ${promptTime}ms`)
 
-    // STEP 4: Stream response from Claude
+    // STEP 7: Stream response from Claude
     const claudeStartTime = Date.now()
     console.log('[public-chat-engine-stream] 🤖 Starting Claude stream...')
 
@@ -484,8 +506,8 @@ export async function* generatePublicChatResponseStream(
     const claudeTime = Date.now() - claudeStartTime
     console.log(`[public-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
 
-    // STEP 5: Update session with final response
-    await updatePublicSession(session.session_id, message, fullResponse)
+    // STEP 8: Update session with final response and intent
+    await updatePublicSession(session.session_id, message, fullResponse, extractedIntent)
 
     const totalTime = Date.now() - startTime
     console.log(`[public-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
