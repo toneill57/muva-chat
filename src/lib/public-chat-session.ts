@@ -203,18 +203,18 @@ export async function updatePublicSession(
   )
 
   // CHECK: Did we reach compression threshold?
-  if (history.length >= 20) {
+  if (history.length >= 100) {
     console.log('[compression] Triggering auto-compression...', {
       total_messages: history.length,
       session_id: sessionId,
     })
 
     try {
-      // Split: first 10 to compress, rest to keep
-      const toCompress = history.slice(0, 10)
-      const toKeep = history.slice(10)
+      // Split: first 50 to compress, rest to keep
+      const toCompress = history.slice(0, 50)
+      const toKeep = history.slice(50)
 
-      console.log('[compression] Compressing messages 1-10...', {
+      console.log('[compression] Compressing messages 1-50...', {
         to_compress: toCompress.length,
         to_keep: toKeep.length,
       })

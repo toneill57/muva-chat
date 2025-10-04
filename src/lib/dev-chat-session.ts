@@ -169,8 +169,8 @@ export async function getOrCreateDevSession(
 /**
  * Update session with new message
  *
- * Auto-compression: When conversation reaches 20 messages, compresses the first 10
- * into a summary with embeddings, then keeps only the last 10-12 messages in active history.
+ * Auto-compression: When conversation reaches 100 messages, compresses the first 50
+ * into a summary with embeddings, then keeps only the last 50 messages in active history.
  *
  * @param sessionId - Session ID to update
  * @param userMessage - User's message
@@ -205,18 +205,18 @@ export async function updateDevSession(
   )
 
   // 3. CHECK: Did we reach compression threshold?
-  if (history.length >= 20) {
+  if (history.length >= 100) {
     console.log('[compression] Triggering auto-compression...', {
       total_messages: history.length,
       session_id: sessionId,
     })
 
     try {
-      // 4. Split: first 10 to compress, rest to keep
-      const toCompress = history.slice(0, 10)
-      const toKeep = history.slice(10)
+      // 4. Split: first 50 to compress, rest to keep
+      const toCompress = history.slice(0, 50)
+      const toKeep = history.slice(50)
 
-      console.log('[compression] Compressing messages 1-10...', {
+      console.log('[compression] Compressing messages 1-50...', {
         to_compress: toCompress.length,
         to_keep: toKeep.length,
       })
