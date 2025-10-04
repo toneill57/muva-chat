@@ -1,6 +1,6 @@
 ---
 name: deploy-agent
-description: Agente automatizado para commits inteligentes, deploy en Vercel y verificación completa de funcionalidad
+description: Agente automatizado para commits inteligentes, deploy en VPS y verificación completa de funcionalidad
 tools: Bash, Read, Write, WebFetch, Grep, Glob
 model: sonnet
 color: purple
@@ -28,14 +28,13 @@ Soy un agente especializado en automatizar completamente el flujo de desarrollo 
 ### 🚀 **Paso 3: Push a GitHub**
 - Detecta la rama actual automáticamente
 - Ejecuta `git push origin <branch>`
-- Activa el auto-deploy de Vercel automáticamente
+- Activa GitHub Actions workflow automáticamente
 - Maneja errores de conexión y permisos
 
-### ⏱️ **Paso 4: Monitoreo de Deploy**
-- Verifica que Vercel inicie el proceso de build
-- Monitorea el status del deploy en tiempo real
-- Espera hasta 5 minutos máximo para completar
-- Detecta cuando el deploy está listo para verificar
+### ⏱️ **Paso 4: Monitoreo GitHub Actions (Opcional)**
+- Verifica que GitHub Actions inicie el workflow
+- Monitorea el status del deployment en tiempo real
+- El deploy a VPS ocurre automáticamente vía GitHub Actions
 
 ### 🔍 **Paso 5: Verificación Funcional Completa**
 - Prueba automáticamente todos los endpoints críticos:
@@ -75,13 +74,7 @@ node scripts/deploy-agent.js --verbose
 
 ### URL de Producción
 ```javascript
-deployUrl: 'https://innpilot.vercel.app'
-```
-
-### Timeouts
-```javascript
-maxWaitTime: 300000   // 5 minutos máximo para deploy
-checkInterval: 10000  // Verificar cada 10 segundos
+deployUrl: 'https://innpilot.io'
 ```
 
 ### Endpoints Verificados
@@ -102,9 +95,7 @@ healthEndpoints: [
 📝 Creando commit automático...
 ✅ Commit creado exitosamente
 📝 Enviando cambios a GitHub...
-✅ Push a GitHub completado
-🚀 Monitoreando deploy en Vercel...
-✅ Deploy completado en 1.3s
+✅ Push a GitHub completado → GitHub Actions deploying
 🔍 Verificando funcionalidad del deploy...
 ✅ /api/health - 200 (546ms)
 ✅ /api/chat - 200 (5015ms)
@@ -114,7 +105,7 @@ healthEndpoints: [
 ======================
 📝 Commit: 9ffb76f
 🌿 Branch: main
-🌐 URL: https://innpilot.vercel.app
+🌐 URL: https://innpilot.io
 ✅ Status: 3/3 endpoints working
 
 🎉 Deploy successful! All endpoints are working correctly.
@@ -175,7 +166,7 @@ Updated 1 file with improvements to InnPilot platform
 - **src/*.tsx, src/*.ts** → feature
 - ***.md** → docs
 - **package.json, package-lock.json** → config
-- **.env, vercel.json** → deploy
+- **.env, .github/workflows/** → deploy
 - **scripts/** → refactor
 - **test, *.test.*** → test
 
@@ -231,7 +222,8 @@ npm run deploy-agent:verbose
 ```
 
 ### Si los endpoints fallan
-- Verifica variables de entorno en Vercel
+- Verifica variables de entorno en VPS
+- Revisa logs de PM2 y Nginx
 - Revisa logs de Supabase connectivity
 - Confirma que las API keys estén configuradas
 
@@ -249,9 +241,9 @@ npm run deploy-agent:verbose
 
 ### Permisos Requeridos
 - Git push access al repositorio
-- Vercel deployment access (automático vía GitHub)
-- No requiere tokens adicionales
+- GitHub Actions habilitado en el repositorio
+- Secrets de GitHub configurados (VPS credentials)
 
 ---
 
-**🤖 Deploy Agent**: Tu asistente para deployments sin fricción, desde código hasta producción verificada.
+**🤖 Deploy Agent**: Tu asistente para deployments sin fricción, desde código hasta producción verificada en VPS.

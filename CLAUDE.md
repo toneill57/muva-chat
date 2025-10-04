@@ -69,35 +69,38 @@ npm run lint                        # Lint code
 
 ---
 
-## 🎯 CURRENT PROJECT: Fixed Layout Migration (Oct 4, 2025)
+## 🎯 CURRENT PROJECT: VPS Deployment Migration (Oct 4, 2025)
 
 ### Objective
-Migrate chat mobile architecture from **flexbox (`flex-1`)** to **`position: fixed`** to prepare for header expansible (date fields, photo cards, templates) without breaking scroll behavior.
+Migrar deployment de InnPilot de Vercel a VPS Hostinger (innpilot.io) con CI/CD automático via GitHub Actions.
 
 ### Project Files
-- 📄 **Plan**: `plan.md` (415 lines) - Complete architecture & 4 phases
-- 📋 **Tasks**: `TODO.md` (280 lines) - 28 tasks organized by FASE
-- 🎯 **Prompts**: `fixed-layout-migration-prompt-workflow.md` (650 lines) - Ready-to-use prompts per phase
+- 📄 **Plan**: `plan.md` (610 líneas) - Arquitectura completa, 5 fases
+- 📋 **Tasks**: `TODO.md` (208 líneas) - 28 tareas organizadas
+- 🎯 **Prompts**: `vps-deployment-workflow.md` (650 líneas) - Prompts ejecutables por fase
 
 ### Status
 - **Planning**: ✅ Complete
-- **FASE 1**: 🔜 Ready to start (Migración DevChatMobileDev.tsx - 2h)
-- **FASE 2**: Pending (Testing Exhaustivo Dev - 1h)
-- **FASE 3**: Pending (Migración ChatMobile.tsx - 1h)
-- **FASE 4**: Pending (Testing Final + Validación - 1h)
+- **FASE 1**: 🔜 Ready to start (Limpieza Vercel - 1h)
+- **FASE 2**: Pending (GitHub Actions Workflow - 2h)
+- **FASE 3**: Pending (VPS Setup Guide - 3h)
+- **FASE 4**: Pending (Deploy Agent Refactor - 1h)
+- **FASE 5**: Pending (Testing & Documentation - 1h)
 
-### Key Changes
-- **Wrapper**: Remove `flex flex-col h-screen` → Simple `<div>`
-- **Messages**: Change `flex-1` → `fixed` with explicit `top/bottom`
-- **Header/Input**: No changes (already `fixed`, correct)
-- **Goal**: Header can grow dynamically (date fields, cards) without breaking messages scroll
+### Key Specs
+- **VPS Provider**: Hostinger (Ubuntu 22.04 LTS)
+- **Domain**: innpilot.io (already configured)
+- **CI/CD**: GitHub Actions (push to main = auto-deploy)
+- **Infrastructure**: Nginx + PM2 cluster mode + Let's Encrypt SSL
+- **Timeline**: 8 horas total
 
 ### Success Criteria
-- Zero breaking changes in functionality
-- Scroll behavior identical to before
-- Pull-to-refresh works
-- Safe areas correct (iPhone/Android)
-- Lighthouse ≥90, 60fps scroll
+- Push to main auto-deploys to VPS in < 5min
+- Application accessible at https://innpilot.io
+- All API endpoints working
+- SSL certificate valid (A+ rating)
+- PM2 process stable
+- Response time ≤ 0.500s (comparable to Vercel)
 
 ---
 
@@ -120,22 +123,25 @@ Migrate chat mobile architecture from **flexbox (`flex-1`)** to **`position: fix
 
 ```
 /Users/oneill/Sites/apps/InnPilot/
-├── plan.md                                # 🎯 Project plan (415 lines)
-├── TODO.md                                # 📋 Tasks (28 tasks, 280 lines)
-├── fixed-layout-migration-prompt-workflow.md  # 🚀 Execution prompts (650 lines)
-├── src/
-│   └── components/
-│       ├── Dev/
-│       │   └── DevChatMobileDev.tsx       # [TO MODIFY] FASE 1
-│       └── Public/
-│           └── ChatMobile.tsx             # [TO MODIFY] FASE 3
+├── plan.md                                # 🎯 VPS migration plan (610 líneas)
+├── TODO.md                                # 📋 28 tareas (208 líneas)
+├── vps-deployment-workflow.md             # 🚀 Prompts ejecutables (650 líneas)
+├── .github/
+│   └── workflows/
+│       └── deploy.yml                    # [TO CREATE] GitHub Actions
 ├── docs/
-│   └── fixed-layout-migration/            # Documentation by fase
-│       ├── fase-1/ fase-2/ fase-3/ fase-4/
-│       └── README.md
+│   └── deployment/                       # [TO CREATE] VPS guides
+│       ├── VPS_SETUP_GUIDE.md
+│       ├── GITHUB_SECRETS.md
+│       ├── ecosystem.config.js
+│       └── nginx-innpilot.conf
+├── scripts/
+│   └── vps-setup.sh                      # [TO CREATE] Automated VPS setup
+├── vercel.json                            # [TO DELETE]
 └── .claude/
     └── agents/
-        └── ux-interface.md                # Agent instructions (updated)
+        ├── backend-developer.md          # [TO UPDATE]
+        └── deploy-agent.md               # [TO REFACTOR]
 ```
 
 ---
@@ -160,21 +166,21 @@ Migrate chat mobile architecture from **flexbox (`flex-1`)** to **`position: fix
 ### For New Conversations
 1. Read `plan.md` for project context
 2. Read `TODO.md` for current tasks
-3. Use prompts from `fixed-layout-migration-prompt-workflow.md`
-4. Invoke `@ux-interface` for layout migration
+3. Use prompts from `vps-deployment-workflow.md`
+4. Invoke `@backend-developer` for deployment tasks
 
 ### Quick Start FASE 1
 ```bash
 # Context prompt (copy-paste to new conversation)
-CONTEXTO: Fixed Layout Migration
+CONTEXTO: VPS Deployment Migration
 
-Estoy en el proyecto "Fixed Layout Migration".
-- Plan: plan.md (415 líneas)
+Estoy en el proyecto "VPS Deployment Migration".
+- Plan: plan.md (610 líneas)
 - Tareas: TODO.md (28 tareas)
-- Prompts: fixed-layout-migration-prompt-workflow.md (650 líneas)
+- Prompts: vps-deployment-workflow.md (650 líneas)
 
-Próxima fase: FASE 1 (Migración DevChatMobileDev.tsx)
-Agente: @ux-interface
+Próxima fase: FASE 1 (Limpieza de Vercel)
+Agente: @backend-developer
 
 Por favor lee los archivos y ejecuta Prompt 1.1
 ```
