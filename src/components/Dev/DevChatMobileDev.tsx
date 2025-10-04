@@ -308,8 +308,8 @@ export default function DevChatMobileDev() {
                             <ReactMarkdown
                               remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
                               components={{
-                                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
-                                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+                                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
                                 li: ({node, ...props}) => <li className="ml-2" {...props} />,
                                 hr: ({node, ...props}) => <hr className="my-3 border-gray-300" {...props} />,
                                 strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
