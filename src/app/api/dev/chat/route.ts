@@ -177,13 +177,20 @@ export async function POST(request: NextRequest) {
     if (wantsStream) {
       console.log('[dev-chat-api] 📡 Starting streaming response...')
 
+      // Get or create session BEFORE starting stream to get session_id for cookie
+      const { getOrCreateDevSession } = await import('@/lib/dev-chat-session')
+      const session = await getOrCreateDevSession(effectiveSessionId, tenant_id)
+      const sessionId = session.session_id
+
+      console.log('[dev-chat-api] Session for stream:', sessionId)
+
       const encoder = new TextEncoder()
       const stream = new ReadableStream({
         async start(controller) {
           try {
             for await (const chunk of generateDevChatResponseStream(
               message,
-              effectiveSessionId,
+              sessionId, // Use the session we just created
               tenant_id
             )) {
               // Send as Server-Sent Events format
@@ -191,8 +198,11 @@ export async function POST(request: NextRequest) {
               controller.enqueue(encoder.encode(data))
             }
 
-            // Send completion event
-            const done = `data: ${JSON.stringify({ type: 'done' })}\n\n`
+            // Send completion event with session_id
+            const done = `data: ${JSON.stringify({
+              type: 'done',
+              session_id: sessionId
+            })}\n\n`
             controller.enqueue(encoder.encode(done))
             controller.close()
           } catch (error) {
@@ -207,6 +217,16 @@ export async function POST(request: NextRequest) {
         },
       })
 
+      // Prepare headers including Set-Cookie
+      const cookieOptions = [
+        `session_id=${sessionId}`,
+        'HttpOnly',
+        'Secure',
+        'SameSite=Strict',
+        'Path=/',
+        `Max-Age=${7 * 24 * 60 * 60}`, // 7 days
+      ]
+
       return new Response(stream, {
         headers: {
           'Content-Type': 'text/event-stream',
@@ -214,6 +234,7 @@ export async function POST(request: NextRequest) {
           'Connection': 'keep-alive',
           'X-RateLimit-Limit': '10',
           'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+          'Set-Cookie': cookieOptions.join('; '),
         },
       })
     }
