@@ -167,7 +167,77 @@ export async function POST(request: NextRequest) {
     const headerSessionId = request.headers.get('x-session-id')
     const effectiveSessionId = session_id || cookieSessionId || headerSessionId || undefined
 
-    // Generate response
+    // Check if client wants streaming response
+    const url = new URL(request.url)
+    const wantsStream = url.searchParams.get('stream') === 'true'
+
+    if (wantsStream) {
+      console.log('[public-chat-api] 📡 Starting streaming response...')
+
+      // Get or create session BEFORE starting stream to get session_id for cookie
+      const { getOrCreatePublicSession } = await import('@/lib/public-chat-session')
+      const { generatePublicChatResponseStream } = await import('@/lib/public-chat-engine')
+      const session = await getOrCreatePublicSession(effectiveSessionId, tenant_id)
+      const sessionId = session.session_id
+
+      console.log('[public-chat-api] Session for stream:', sessionId)
+
+      const encoder = new TextEncoder()
+      const stream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of generatePublicChatResponseStream(
+              message,
+              sessionId,
+              tenant_id
+            )) {
+              // Send as Server-Sent Events format
+              const data = `data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`
+              controller.enqueue(encoder.encode(data))
+            }
+
+            // Send completion event with session_id
+            const done = `data: ${JSON.stringify({
+              type: 'done',
+              session_id: sessionId
+            })}\n\n`
+            controller.enqueue(encoder.encode(done))
+            controller.close()
+          } catch (error) {
+            console.error('[public-chat-api] Stream error:', error)
+            const errorData = `data: ${JSON.stringify({
+              type: 'error',
+              error: 'Stream failed'
+            })}\n\n`
+            controller.enqueue(encoder.encode(errorData))
+            controller.close()
+          }
+        },
+      })
+
+      // Prepare headers including Set-Cookie
+      const cookieOptions = [
+        `session_id=${sessionId}`,
+        'HttpOnly',
+        'Secure',
+        'SameSite=Strict',
+        'Path=/',
+        `Max-Age=${7 * 24 * 60 * 60}`, // 7 days
+      ]
+
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+          'X-RateLimit-Limit': '10',
+          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+          'Set-Cookie': cookieOptions.join('; '),
+        },
+      })
+    }
+
+    // Generate non-streaming response (legacy)
     const response = await generatePublicChatResponse(
       message,
       effectiveSessionId,

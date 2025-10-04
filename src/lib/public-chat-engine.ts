@@ -403,3 +403,95 @@ function generatePublicSuggestions(
   // Return top 3 unique suggestions
   return Array.from(new Set(suggestions)).slice(0, 3)
 }
+
+// ============================================================================
+// Streaming Response Generation
+// ============================================================================
+
+/**
+ * Generate streaming marketing response using Claude Sonnet 4.5
+ * Yields chunks of text as they arrive from Claude
+ */
+export async function* generatePublicChatResponseStream(
+  message: string,
+  sessionId: string | undefined,
+  tenantId: string
+): AsyncGenerator<string, void, unknown> {
+  const startTime = Date.now()
+
+  console.log('[public-chat-engine-stream] Processing message:', message.substring(0, 80))
+  console.log('[public-chat-engine-stream] Session:', sessionId, 'Tenant:', tenantId)
+
+  try {
+    // STEP 1: Get or create session
+    const session = await getOrCreatePublicSession(sessionId, tenantId)
+    console.log('[public-chat-engine-stream] Session loaded:', session.session_id)
+
+    // STEP 2: Perform public search
+    const searchResults = await performPublicSearch(message, session)
+    console.log('[public-chat-engine-stream] Search found:', searchResults.length, 'results')
+
+    // STEP 2.5: Search conversation memory for historical context
+    const memoryStartTime = Date.now()
+    const conversationMemories = await searchConversationMemory(message, session.session_id)
+    const memoryTime = Date.now() - memoryStartTime
+    console.log(`[public-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
+
+    // STEP 3: Build system prompt
+    const promptStartTime = Date.now()
+    const systemPrompt = buildMarketingSystemPrompt(
+      session,
+      searchResults,
+      conversationMemories
+    )
+    const promptTime = Date.now() - promptStartTime
+    console.log(`[public-chat-engine-stream] System prompt built in ${promptTime}ms`)
+
+    // STEP 4: Stream response from Claude
+    const claudeStartTime = Date.now()
+    console.log('[public-chat-engine-stream] 🤖 Starting Claude stream...')
+
+    const client = getAnthropicClient()
+    const conversationHistory = session.conversation_history
+      .slice(-5)
+      .map((msg) => ({ role: msg.role, content: msg.content }))
+
+    const stream = await client.messages.stream({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 600,
+      temperature: 0.3,
+      top_k: 10,
+      system: systemPrompt,
+      messages: [
+        ...conversationHistory,
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+    })
+
+    let fullResponse = ''
+
+    for await (const chunk of stream) {
+      if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+        const text = chunk.delta.text
+        fullResponse += text
+        yield text // Send chunk to client
+      }
+    }
+
+    const claudeTime = Date.now() - claudeStartTime
+    console.log(`[public-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
+
+    // STEP 5: Update session with final response
+    await updatePublicSession(session.session_id, message, fullResponse)
+
+    const totalTime = Date.now() - startTime
+    console.log(`[public-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
+
+  } catch (error) {
+    console.error('[public-chat-engine-stream] Error:', error)
+    throw error
+  }
+}
