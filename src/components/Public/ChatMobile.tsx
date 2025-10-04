@@ -29,7 +29,7 @@ interface Message {
 }
 
 // Constants
-const TENANT_ID = 'simmerdown'
+const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || 'simmerdown' // Fallback for safety
 const PULL_TO_REFRESH_THRESHOLD = 80 // pixels to trigger pull-to-refresh
 const PULL_ANIMATION_DURATION = 300 // ms for scroll animation
 
