@@ -1,16 +1,12 @@
 'use client'
 
-import React, { useState, useEffect, useRef, lazy, Suspense, memo, useCallback, useMemo } from 'react'
-import { Send, Bot, User, RotateCcw } from 'lucide-react'
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { Send, Bot, RotateCcw } from 'lucide-react'
 
-// Lazy load heavy components to reduce initial bundle size and improve TTI
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
 const DevAvailabilityCTA = lazy(() => import('../Dev/DevAvailabilityCTA'))
 const DevIntentSummary = lazy(() => import('../Dev/DevIntentSummary'))
-
-// Import remarkGfm dynamically within component
-// This prevents loading it on initial page load
 
 interface Message {
   id: string
@@ -38,18 +34,19 @@ export default function ChatMobile() {
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
+  const [isPulling, setIsPulling] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const pullStartY = useRef<number>(0)
 
-  // Dynamically load remarkGfm plugin after component mounts
   useEffect(() => {
     import('remark-gfm').then((module) => {
       setRemarkGfmPlugin(() => module.default)
     })
   }, [])
 
-  // Load session ID from localStorage
   useEffect(() => {
     const storedSessionId = localStorage.getItem('public_chat_session_id')
     if (storedSessionId) {
@@ -57,37 +54,64 @@ export default function ChatMobile() {
     }
   }, [])
 
-
-  // Debounced auto-resize for textarea (performance optimization)
-  const handleTextareaResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    const target = e.target as HTMLTextAreaElement
-    target.style.height = 'auto'
-    target.style.height = Math.min(target.scrollHeight, 128) + 'px'
-  }
-
-  // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messages.length > 1) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    } else if (messages.length === 1) {
+      // Double requestAnimationFrame ensures DOM is fully rendered before scroll
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
+        })
+      })
+    }
   }, [messages])
 
-  // Add welcome message on first load
   useEffect(() => {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
         id: 'welcome',
         role: 'assistant',
-        content: 'Welcome to Simmer Down! 🌴\n\nI\'m here to help you find the perfect accommodation in the beautiful Colombian Caribbean. Feel free to ask me about our rooms, availability, or anything else!',
+        content: '**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️\n\n🏝️ ¡También soy tu guía turística! Pregúntame sobre playas, restaurantes, buceo y todo lo que San Andrés tiene para ofrecerte.',
         timestamp: new Date()
       }
       setMessages([welcomeMessage])
     }
   }, [messages.length])
 
-  const handleNewConversation = useCallback(async () => {
-    // Clear session from localStorage
+  // iOS Safari: Handle virtual keyboard appearance with smart scroll
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined' && window.visualViewport && messagesContainerRef.current) {
+        const windowHeight = window.innerHeight
+        const viewportHeight = window.visualViewport.height
+        const keyboardHeight = windowHeight - viewportHeight
+
+        // Keyboard is visible if viewport shrinks significantly
+        if (keyboardHeight > 100) {
+          // Scroll to absolute bottom to eliminate gap
+          setTimeout(() => {
+            if (messagesContainerRef.current) {
+              messagesContainerRef.current.scrollTop =
+                messagesContainerRef.current.scrollHeight -
+                messagesContainerRef.current.clientHeight
+            }
+          }, 100)
+        }
+      }
+    }
+
+    if (typeof window !== 'undefined' && 'visualViewport' in window) {
+      window.visualViewport?.addEventListener('resize', handleResize)
+      return () => {
+        window.visualViewport?.removeEventListener('resize', handleResize)
+      }
+    }
+  }, [])
+
+  const handleNewConversation = async () => {
     localStorage.removeItem('public_chat_session_id')
 
-    // Call backend to expire HttpOnly session cookie
     try {
       const response = await fetch('/api/public/reset-session', {
         method: 'POST',
@@ -102,13 +126,11 @@ export default function ChatMobile() {
       console.error('[reset] Error calling reset-session API:', error)
     }
 
-    // Reset state
     setSessionId(null)
     setMessages([])
     setError(null)
     console.log('[reset] State cleared, ready for new conversation')
-    // Welcome message will be added automatically by the useEffect
-  }, [])
+  }
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return
@@ -126,7 +148,6 @@ export default function ChatMobile() {
     setLoading(true)
     setError(null)
 
-    // Create placeholder assistant message
     const assistantId = `assistant-${Date.now()}`
     const assistantMessage: Message = {
       id: assistantId,
@@ -138,7 +159,6 @@ export default function ChatMobile() {
     setMessages(prev => [...prev, assistantMessage])
 
     try {
-      // Use streaming API
       const response = await fetch('/api/public/chat?stream=true', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -159,7 +179,6 @@ export default function ChatMobile() {
         throw new Error(`Failed to send message: ${response.status} ${errorText}`)
       }
 
-      // Handle streaming response
       const reader = response.body?.getReader()
       const decoder = new TextDecoder()
 
@@ -174,7 +193,6 @@ export default function ChatMobile() {
 
         if (done) break
 
-        // Decode chunk and parse SSE format
         const chunk = decoder.decode(value)
         const lines = chunk.split('\n')
 
@@ -186,7 +204,6 @@ export default function ChatMobile() {
               if (data.type === 'chunk') {
                 fullContent += data.content
 
-                // Update message with new content
                 setMessages(prev =>
                   prev.map(msg =>
                     msg.id === assistantId
@@ -197,13 +214,11 @@ export default function ChatMobile() {
               } else if (data.type === 'done') {
                 console.log('[chat] Stream completed')
 
-                // Save session_id if returned
                 if (data.session_id) {
                   setSessionId(data.session_id)
                   localStorage.setItem('public_chat_session_id', data.session_id)
                 }
 
-                // Update message with additional metadata (sources, suggestions, etc.)
                 if (data.sources || data.suggestions || data.availability_url) {
                   setMessages(prev =>
                     prev.map(msg =>
@@ -229,7 +244,6 @@ export default function ChatMobile() {
         }
       }
 
-      // Stream complete
       setLoading(false)
 
     } catch (err) {
@@ -237,7 +251,6 @@ export default function ChatMobile() {
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message'
       setError(errorMessage)
 
-      // Remove failed message
       setMessages(prev => prev.filter(msg => msg.id !== assistantId))
       setLoading(false)
     }
@@ -250,165 +263,129 @@ export default function ChatMobile() {
     }
   }
 
-  const handleSuggestionClick = useCallback((suggestion: string) => {
+  const handleSuggestionClick = (suggestion: string) => {
     setInput(suggestion)
     inputRef.current?.focus()
-  }, [])
+  }
 
-  const retryLastMessage = useCallback(() => {
+  const retryLastMessage = () => {
     const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')
     if (lastUserMessage) {
       setInput(lastUserMessage.content)
       setError(null)
       inputRef.current?.focus()
     }
-  }, [messages])
+  }
 
-  // Memoize markdown components to prevent re-renders
-  const markdownComponents = useMemo(() => ({
-    h1: ({node, ...props}: any) => <h1 className="text-lg font-bold mb-2 text-gray-900" {...props} />,
-    h2: ({node, ...props}: any) => <h2 className="text-base font-bold mb-2 text-gray-900" {...props} />,
-    h3: ({node, ...props}: any) => <h3 className="text-sm font-bold mb-1 text-gray-900" {...props} />,
-    p: ({node, ...props}: any) => <p className="mb-2 last:mb-0" {...props} />,
-    ul: ({node, ...props}: any) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
-    ol: ({node, ...props}: any) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
-    li: ({node, ...props}: any) => <li className="ml-2" {...props} />,
-    strong: ({node, ...props}: any) => <strong className="font-semibold text-gray-900" {...props} />,
-    em: ({node, ...props}: any) => <em className="italic" {...props} />,
-    a: ({node, ...props}: any) => <a className="text-teal-600 hover:underline" {...props} />,
-    code: ({node, ...props}: any) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
-  }), [])
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (messagesContainerRef.current?.scrollTop === 0) {
+      pullStartY.current = e.touches[0].clientY
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (pullStartY.current === 0) return
+
+    const currentY = e.touches[0].clientY
+    const diff = currentY - pullStartY.current
+
+    if (diff > 80 && !isPulling) {
+      setIsPulling(true)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (isPulling) {
+      messagesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => setIsPulling(false), 300)
+    }
+    pullStartY.current = 0
+  }
 
   return (
-    <div
-      className="h-[100dvh] w-screen overflow-hidden bg-white relative"
-      role="main"
-      aria-label="Chat conversation"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }}
-    >
-      {/* Header fijo con safe area top (notch) */}
-      <header
-        className="fixed top-0 left-0 right-0 z-50
-                   pt-[env(safe-area-inset-top)]
-                   bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600
-                   text-white shadow-md"
-        role="banner"
-      >
-        <div className="h-[60px] flex items-center justify-between px-4 gap-2">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
+    <div className="flex flex-col h-screen bg-white" role="main">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
+        <div className="h-16 flex items-center justify-between px-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
               <Bot className="w-6 h-6" />
             </div>
-            <h1 className="font-bold text-lg truncate">Simmer Down Chat</h1>
+            <h1 className="font-bold text-lg">Simmer Down Chat</h1>
           </div>
 
           <button
             onClick={handleNewConversation}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
-            aria-label="New conversation"
-            title="Start new conversation"
+            className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
+            aria-label="Start new conversation"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
         </div>
       </header>
 
-      {/* Messages scrollable con safe areas y smooth scroll */}
+      {/* Messages */}
       <div
-        className="absolute overflow-y-auto overflow-x-hidden px-4
-                   bg-gradient-to-b from-amber-50 to-white
-                   touch-pan-y"
-        style={{
-          top: 'calc(60px + env(safe-area-inset-top))',
-          bottom: 'calc(80px + env(safe-area-inset-bottom))',
-          left: 0,
-          right: 0,
-          WebkitOverflowScrolling: 'touch',
-          overscrollBehaviorY: 'none',
-          touchAction: 'pan-y'
-        }}
+        ref={messagesContainerRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
         role="log"
         aria-live="polite"
         aria-atomic="false"
-        aria-label="Chat messages"
       >
-        <div className="flex flex-col min-h-full">
-          <div className="space-y-4 py-4">
-          {messages.map((message, index) => (
+        {isPulling && (
+          <div className="absolute top-[calc(64px+env(safe-area-inset-top)+0.5rem)] left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg z-10">
+            <p className="text-sm text-teal-600 font-medium">↓ Ir al inicio</p>
+          </div>
+        )}
+        <div className="space-y-4">
+          {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-3 animate-message-in ${
-                message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+              className={`flex animate-[messageIn_0.3s_ease-out] ${
+                message.role === 'user' ? 'justify-end' : 'justify-start'
               }`}
-              style={{
-                animationDelay: `${index * 50}ms`,
-                willChange: index === messages.length - 1 ? 'transform, opacity' : 'auto'
-              }}
-              role="article"
-              aria-label={`${message.role === 'user' ? 'Your message' : 'Assistant message'} at ${message.timestamp.toLocaleTimeString()}`}
             >
-              {/* Avatar */}
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gradient-to-br from-teal-400 to-cyan-500 text-white'
-                }`}
-                aria-hidden="true"
-              >
-                {message.role === 'user' ? (
-                  <User className="w-5 h-5" />
-                ) : (
-                  <Bot className="w-5 h-5" />
-                )}
-              </div>
-
               {/* Message Content */}
-              <div
-                className={`flex-1 max-w-[80%] ${
-                  message.role === 'user' ? 'items-end' : 'items-start'
-                } flex flex-col gap-2`}
-              >
+              <div className={`max-w-[85%] flex flex-col gap-2`}>
                 <div
-                  className={`rounded-2xl px-4 py-3 shadow-sm ${
+                  className={`rounded-2xl px-4 py-3 ${
                     message.role === 'user'
-                      ? 'bg-blue-500 text-white rounded-br-sm'
-                      : 'bg-white text-gray-900 rounded-bl-sm border border-gray-100'
+                      ? 'bg-blue-500 text-white rounded-br-sm shadow-md'
+                      : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100'
                   }`}
                 >
                   {message.role === 'assistant' ? (
                     <>
                       {!message.content && loading ? (
-                        // Typing dots while waiting for first chunk
                         <div className="flex gap-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       ) : (
-                        <div className="text-sm leading-relaxed markdown-content transition-opacity duration-150">
-                          <Suspense fallback={<div className="text-sm text-gray-600">{message.content}</div>}>
+                        <div className="text-base leading-[1.6]">
+                          <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
                             <ReactMarkdown
                               remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
-                              components={markdownComponents}
+                              components={{
+                                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
+                                li: ({node, ...props}) => <li className="ml-2" {...props} />,
+                                hr: ({node, ...props}) => <hr className="my-3 border-gray-300" {...props} />,
+                                strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+                              }}
                             >
                               {message.content}
                             </ReactMarkdown>
                           </Suspense>
-                          {loading && message.content && (
-                            <span className="inline-block w-2 h-4 bg-gray-900 ml-0.5 animate-pulse" />
-                          )}
                         </div>
                       )}
                     </>
                   ) : (
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed text-white">
+                    <p className="text-base whitespace-pre-wrap leading-[1.6] text-white">
                       {message.content}
                     </p>
                   )}
@@ -433,20 +410,18 @@ export default function ChatMobile() {
                   </>
                 )}
 
-                {/* Follow-up Suggestions */}
+                {/* Suggestions */}
                 {message.role === 'assistant' && message.suggestions && message.suggestions.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2" role="group" aria-label="Suggested follow-up questions">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     {message.suggestions.map((suggestion, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="px-3 py-1.5 bg-teal-50 hover:bg-teal-100
-                                   text-teal-700 text-sm rounded-full
+                        className="px-4 py-2.5 min-h-[44px] bg-teal-50 hover:bg-teal-100
+                                   text-teal-700 text-base rounded-full
                                    border border-teal-200
-                                   transition-all duration-200
-                                   hover:scale-105 active:scale-95
-                                   focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                        aria-label={`Ask: ${suggestion}`}
+                                   transition-colors"
+                        aria-label={`Quick reply: ${suggestion}`}
                       >
                         {suggestion}
                       </button>
@@ -454,7 +429,7 @@ export default function ChatMobile() {
                   </div>
                 )}
 
-                <p className="text-xs text-gray-400 px-1">
+                <p className="text-xs text-gray-500 px-1">
                   {message.timestamp.toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit'
@@ -465,92 +440,72 @@ export default function ChatMobile() {
           ))}
 
           <div ref={messagesEndRef} />
-          </div>
         </div>
       </div>
 
       {/* Error Banner */}
       {error && (
-        <div
-          className="fixed left-0 right-0 z-40 bg-red-50 border-t border-red-200 p-3"
-          style={{ top: 'calc(60px + env(safe-area-inset-top))' }}
-          role="alert"
-          aria-live="assertive"
-        >
+        <div className="fixed bottom-[calc(80px+env(safe-area-inset-bottom))] left-0 right-0 z-40 bg-red-50 border-t border-red-200 p-3 shadow-lg">
           <div className="flex items-center justify-between max-w-lg mx-auto">
-            <p className="text-sm text-red-700 flex-1" id="error-message">{error}</p>
-            <button
-              onClick={retryLastMessage}
-              className="text-sm text-red-600 hover:text-red-800 font-medium underline ml-3 whitespace-nowrap
-                         focus:ring-2 focus:ring-red-500 focus:outline-none rounded px-2 py-1"
-              aria-label="Retry sending last message"
-              aria-describedby="error-message"
-            >
-              Retry
-            </button>
+            <p className="text-sm text-red-700 flex-1">{error}</p>
+            <div className="flex gap-2">
+              <button
+                onClick={retryLastMessage}
+                className="text-sm text-red-600 hover:text-red-800 font-medium underline"
+              >
+                Retry
+              </button>
+              <button
+                onClick={() => setError(null)}
+                className="text-sm text-red-400 hover:text-red-600 font-medium"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Input fijo con safe area bottom (home bar) */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-50
-                   bg-white border-t border-gray-200
-                   pb-[env(safe-area-inset-bottom)]"
-        style={{ touchAction: 'none' }}
-      >
-        <div className="p-4">
+      {/* Input */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={(e) => {
+              // iOS Safari: Scroll input into view when keyboard appears
+              setTimeout(() => {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
             placeholder="Type your message..."
             disabled={loading}
             maxLength={2000}
-            aria-label="Type your message"
-            aria-describedby="message-input-help"
+            aria-label="Message input"
             className="flex-1 resize-none rounded-xl border border-gray-300
                        focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 focus:outline-none
                        px-4 py-3 text-base
                        disabled:bg-gray-50 disabled:text-gray-400
-                       transition-all duration-200
-                       max-h-32 min-h-[48px]"
+                       transition-all duration-200"
             rows={1}
-            style={{
-              height: 'auto',
-              minHeight: '48px',
-              maxHeight: '128px',
-              fontSize: '16px'  // Explicit 16px to prevent iOS auto-zoom
-            }}
-            onInput={handleTextareaResize}
           />
-          <span id="message-input-help" className="sr-only">
-            Press Enter to send, Shift+Enter for new line. Maximum 2000 characters.
-          </span>
 
           <button
             onClick={sendMessage}
             disabled={!input.trim() || loading}
+            aria-label="Send message"
             className="bg-gradient-to-r from-teal-500 to-cyan-600
                        text-white rounded-xl
-                       w-11 h-11 min-w-[44px] min-h-[44px]
+                       w-11 h-11
                        flex items-center justify-center
-                       touch-manipulation
-                       hover:shadow-lg hover:scale-105
-                       active:scale-95
+                       hover:shadow-lg
                        disabled:bg-gray-300 disabled:cursor-not-allowed
-                       disabled:hover:scale-100 disabled:hover:shadow-none
-                       focus:ring-2 focus:ring-teal-500 focus:outline-none
-                       transition-transform duration-200
-                       flex-shrink-0"
-            aria-label="Send message"
-            type="button"
+                       transition-all duration-200"
           >
-            <Send className="w-5 h-5" aria-hidden="true" />
+            <Send className="w-5 h-5" />
           </button>
-        </div>
         </div>
       </div>
     </div>

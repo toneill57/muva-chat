@@ -26,13 +26,19 @@
 < } from './dev-chat-search'
 ---
 > } from './public-chat-search'
-40d38
+23,27d21
+< import {
+<   extractTravelIntent,
+<   mergeIntent,
+<   type TravelIntent,
+< } from './dev-chat-intent'
+45d38
 < 
-45c43
+50c43
 < export interface DevChatResponse {
 ---
 > export interface PublicChatResponse {
-59a58,64
+64a58,64
 >   travel_intent: {
 >     check_in: string | null
 >     check_out: string | null
@@ -40,91 +46,102 @@
 >     accommodation_type: string | null
 >     captured_this_message: boolean
 >   }
-68c73
+73c73
 <  * Generate dev chat response with marketing focus
 ---
 >  * Generate public chat response with marketing focus
-73c78
+78c78
 <  * @returns DevChatResponse with response, intent, sources, and suggestions
 ---
 >  * @returns PublicChatResponse with response, intent, sources, and suggestions
-75c80
+80c80
 < export async function generateDevChatResponse(
 ---
 > export async function generatePublicChatResponse(
-79c84
+84c84
 < ): Promise<DevChatResponse> {
 ---
 > ): Promise<PublicChatResponse> {
-82,83c87,88
+87,88c87,88
 <   console.log('[dev-chat-engine] Processing message:', message.substring(0, 80))
 <   console.log('[dev-chat-engine] Session:', sessionId, 'Tenant:', tenantId)
 ---
 >   console.log('[public-chat-engine] Processing message:', message.substring(0, 80))
 >   console.log('[public-chat-engine] Session:', sessionId, 'Tenant:', tenantId)
-87,88c92,93
+92,93c92,93
 <     const session = await getOrCreateDevSession(sessionId, tenantId)
 <     console.log('[dev-chat-engine] Session loaded:', session.session_id)
 ---
 >     const session = await getOrCreatePublicSession(sessionId, tenantId)
 >     console.log('[public-chat-engine] Session loaded:', session.session_id)
-90,92c95,97
-<     // STEP 2: Perform dev search
-<     const searchResults = await performDevSearch(message, session)
-<     console.log('[dev-chat-engine] Search found:', searchResults.length, 'results')
+95,99c95,97
+<     // STEP 1.5: Extract travel intent from message (conversational)
+<     const intentStartTime = Date.now()
+<     const extractedIntent = await extractTravelIntent(message)
+<     const intentTime = Date.now() - intentStartTime
+<     console.log(`[dev-chat-engine] Intent extracted in ${intentTime}ms:`, extractedIntent)
 ---
 >     // STEP 2: Perform public search
 >     const searchResults = await performPublicSearch(message, session)
 >     console.log('[public-chat-engine] Search found:', searchResults.length, 'results')
-98c103
+101,108d98
+<     // Merge with existing intent (preserves previous data)
+<     session.travel_intent = mergeIntent(session.travel_intent, extractedIntent)
+<     console.log('[dev-chat-engine] Merged intent:', session.travel_intent)
+< 
+<     // STEP 2: Perform dev search
+<     const searchResults = await performDevSearch(message, session)
+<     console.log('[dev-chat-engine] Search found:', searchResults.length, 'results')
+< 
+113c103
 <     console.log(`[dev-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
 ---
 >     console.log(`[public-chat-engine] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
-100,101c105,107
+115,116c105,107
 <     // STEP 3: Build system prompt (marketing-focused)
 <     const promptStartTime = Date.now()
 ---
 >     // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
 > 
 >     // STEP 4: Build system prompt (marketing-focused)
-107,108d112
+122,123d112
 <     const promptTime = Date.now() - promptStartTime
 <     console.log(`[dev-chat-engine] System prompt built in ${promptTime}ms (${systemPrompt.length} chars)`)
-110,112c114
+125,127c114
 <     // STEP 4: Generate response with Claude Sonnet 4.5 (high quality marketing)
 <     const claudeStartTime = Date.now()
 <     console.log('[dev-chat-engine] 🤖 Calling Claude Sonnet 4.5 API...')
 ---
 >     // STEP 5: Generate response with Claude Sonnet 4.5
-114,115c116
+129,130c116
 <     const claudeTime = Date.now() - claudeStartTime
 <     console.log(`[dev-chat-engine] ✅ Claude responded in ${claudeTime}ms (${response.length} chars)`)
 ---
 >     console.log('[public-chat-engine] Generated response:', response.length, 'chars')
-117,118c118,119
+132,133c118,122
 <     // STEP 5: Generate follow-up suggestions
 <     const suggestions = generateDevSuggestions(searchResults)
 ---
 >     // STEP 6: Generate follow-up suggestions
 >     const suggestions = generatePublicSuggestions(searchResults, session.travel_intent)
-120,124c121,122
+> 
+>     // STEP 7: Update session with conversation history
+>     await updatePublicSession(session.session_id, message, response)
+135,141c124
 <     // STEP 6: Update session with conversation history
 <     const dbStartTime = Date.now()
 <     await updateDevSession(session.session_id, message, response)
 <     const dbTime = Date.now() - dbStartTime
 <     console.log(`[dev-chat-engine] Session updated in ${dbTime}ms`)
----
->     // STEP 7: Update session with conversation history
->     await updatePublicSession(session.session_id, message, response)
-126c124
+< 
 <     // STEP 7: Prepare sources for response
 ---
 >     // STEP 10: Prepare sources for response
-139c137
+154c137
 <     console.log(`[dev-chat-engine] ✅ Response generated in ${totalTime}ms`)
 ---
 >     console.log(`[public-chat-engine] ✅ Response generated in ${totalTime}ms`)
-144a143,149
+159a143,149
 >       travel_intent: {
 >         check_in: session.travel_intent.check_in,
 >         check_out: session.travel_intent.check_out,
@@ -132,11 +149,11 @@
 >         accommodation_type: session.travel_intent.accommodation_type,
 >         captured_this_message: false, // No longer extracting per message
 >       },
-148c153
+163c153
 <     console.error('[dev-chat-engine] Error:', error)
 ---
 >     console.error('[public-chat-engine] Error:', error)
-154a160,166
+169a160,166
 >       travel_intent: {
 >         check_in: null,
 >         check_out: null,
@@ -144,46 +161,107 @@
 >         accommodation_type: null,
 >         captured_this_message: false,
 >       },
-172c184
+187c184
 <   session: DevSession,
 ---
 >   session: PublicSession,
-205a218,221
+221,229c218,220
+<   // Build intent summary (only if data has been captured)
+<   const hasIntent = session.travel_intent.check_in || session.travel_intent.guests || session.travel_intent.accommodation_type
+<   const intentSummary = hasIntent
+<     ? `
+< INTENCIÓN DE VIAJE CAPTURADA:
+< ${session.travel_intent.check_in ? `- Check-in: ${session.travel_intent.check_in}` : ''}
+< ${session.travel_intent.check_out ? `- Check-out: ${session.travel_intent.check_out}` : ''}
+< ${session.travel_intent.guests ? `- Huéspedes: ${session.travel_intent.guests}` : ''}
+< ${session.travel_intent.accommodation_type ? `- Tipo de alojamiento: ${session.travel_intent.accommodation_type}` : ''}
+---
 >   // NOTE: Travel intent is NOT included in system prompt
 >   // It's extracted, saved to session, and returned to frontend for UI display
 >   // Claude responds only to the current message context
-> 
-248c264
+231,233d221
+< `
+<     : ''
+< 
+242,244c230,234
+< - Respuestas concisas pero informativas (3-5 oraciones máximo)
+< - Incluye CTAs (calls-to-action) cuando sea apropiado
+< - Enumera amenities con dash simple (-), una por línea
+---
+> - NO uses texto en mayúsculas en tus respuestas - escribe natural
+> - Usa **negritas** solo para información clave (precios, nombres) en párrafos
+> - NUNCA uses **negritas** dentro de títulos (##, ###) - los títulos ya son bold
+> - Respuestas concisas pero informativas (4-6 oraciones máximo)
+> - Incluye CTAs cuando sea apropiado
+247,251c237,238
+< - Catálogo COMPLETO de alojamientos (con precios y fotos)
+< - Políticas del hotel (check-in, check-out, cancelación)
+< - Información básica de turismo en San Andrés (atracciones)
+< - Contexto histórico de conversaciones pasadas (si aplica)
+< - La mayoría de los visitantes viaja en pareja, asume que buscan alojamiento para dos personas si no se especifica.
+---
+> - Solo tienes acceso a los RESULTADOS DE BÚSQUEDA abajo
+> - NO inventes alojamientos, precios o información que no aparezca en los resultados
+254a242
+> - NO puedes ver disponibilidad en tiempo real (dirígelos al sistema de reservas)
+256,258c244
+< - SIEMPRE menciona precios cuando estén disponibles
+< - NO uses emojis de check/cross (✅/❌) ni en listas, ni enumeraciones, ni recomendaciones ni validaciones. Preferible usar uno que otro emoji inteligente y relacionado con el amenity o característica que se esté mencionando.
+< - NO inventes información (si no sabes, di que no estás seguro y ofrece ayudar con otra cosa)
+---
+> - SOLO menciona precios y alojamientos que aparecen EXPLÍCITAMENTE en los resultados
+260,261c246,247
+< RECONOCIMIENTO DE INTENCIÓN DE VIAJE:
+< ${intentSummary} // Fechas, huéspedes, tipo de alojamiento capturados
+---
+> ${historicalContext}RESULTADOS DE BÚSQUEDA:
+> ${searchContext || 'No se encontraron resultados relevantes.'}
+263,268d248
+< RESULTADOS DE BÚSQUEDA:
+< ${searchContext} // Top 15 resultados con precios y similaridad
+< 
+< CONTEXTO DE CONVERSACIONES PASADAS:
+< ${historicalContext} // Resúmenes y temas clave
+< 
+270,275c250,254
+< 1. Si identificas fechas/huéspedes, confirma y ofrece opciones relevantes
+< 2. Si hay URL de disponibilidad, MENCIONA que pueden "ver disponibilidad en tiempo real" y sugiérelo sutilmente
+< 3. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
+< 4. Incluye precios cuando estén disponibles
+< 5. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
+< 6. Siempre termina con pregunta o CTA para continuar conversación
+---
+> 1. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
+> 2. Incluye precios cuando estén disponibles
+> 3. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
+> 4. Siempre termina con pregunta o CTA para continuar conversación
+> 5. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
+285c264
 <  * Generate marketing response using Claude Sonnet 4.5 (high quality)
 ---
 >  * Generate marketing response using Claude Sonnet 4.5
-252c268
+289c268
 <   session: DevSession,
 ---
 >   session: PublicSession,
-268c284
+305c284
 <       model: 'claude-sonnet-4-5-20250929', // Sonnet 4.5 for marketing quality
 ---
 >       model: 'claude-sonnet-4-5-20250929', // Latest Sonnet 4.5 for marketing quality
-272d287
+309d287
 <       stream: false, // Set to true for streaming (handled separately)
-290c305
+327c305
 <     console.error('[dev-chat-engine] Claude error:', error)
 ---
 >     console.error('[public-chat-engine] Claude error:', error)
-296a312,315
+333a312,315
 > // ============================================================================
 > // Suggestion Generation
 > // ============================================================================
 > 
-298,299c317
-<  * Generate streaming marketing response using Claude Sonnet 4.5
-<  * Returns an async generator that yields text chunks
----
+334a317,371
 >  * Generate contextual follow-up suggestions
-301c319,375
-< export async function* generateDevChatResponseStream(
----
+>  */
 > function generatePublicSuggestions(
 >   searchResults: VectorSearchResult[],
 >   travelIntent: PublicSession['travel_intent']
@@ -237,23 +315,27 @@
 > // ============================================================================
 > 
 > /**
->  * Generate streaming marketing response using Claude Sonnet 4.5
+336c373
+<  * Returns an async generator that yields text chunks
+---
 >  * Yields chunks of text as they arrive from Claude
->  */
+338c375
+< export async function* generateDevChatResponseStream(
+---
 > export async function* generatePublicChatResponseStream(
-308,309c382,383
+345,346c382,383
 <   console.log('[dev-chat-engine-stream] Processing message:', message.substring(0, 80))
 <   console.log('[dev-chat-engine-stream] Session:', sessionId, 'Tenant:', tenantId)
 ---
 >   console.log('[public-chat-engine-stream] Processing message:', message.substring(0, 80))
 >   console.log('[public-chat-engine-stream] Session:', sessionId, 'Tenant:', tenantId)
-313,314c387,388
+350,351c387,388
 <     const session = await getOrCreateDevSession(sessionId, tenantId)
 <     console.log('[dev-chat-engine-stream] Session loaded:', session.session_id)
 ---
 >     const session = await getOrCreatePublicSession(sessionId, tenantId)
 >     console.log('[public-chat-engine-stream] Session loaded:', session.session_id)
-316,318c390,392
+353,355c390,392
 <     // STEP 2: Perform dev search
 <     const searchResults = await performDevSearch(message, session)
 <     console.log('[dev-chat-engine-stream] Search found:', searchResults.length, 'results')
@@ -261,47 +343,47 @@
 >     // STEP 2: Perform public search
 >     const searchResults = await performPublicSearch(message, session)
 >     console.log('[public-chat-engine-stream] Search found:', searchResults.length, 'results')
-324c398
+361c398
 <     console.log(`[dev-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
 ---
 >     console.log(`[public-chat-engine-stream] Memory search: ${conversationMemories.length} results in ${memoryTime}ms`)
-326c400,402
+363c400,402
 <     // STEP 3: Build system prompt
 ---
 >     // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
 > 
 >     // STEP 4: Build system prompt
-334c410
+371c410
 <     console.log(`[dev-chat-engine-stream] System prompt built in ${promptTime}ms`)
 ---
 >     console.log(`[public-chat-engine-stream] System prompt built in ${promptTime}ms`)
-336c412
+373c412
 <     // STEP 4: Stream response from Claude
 ---
 >     // STEP 7: Stream response from Claude
-338c414
+375c414
 <     console.log('[dev-chat-engine-stream] 🤖 Starting Claude stream...')
 ---
 >     console.log('[public-chat-engine-stream] 🤖 Starting Claude stream...')
-371c447
+408c447
 <     console.log(`[dev-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
 ---
 >     console.log(`[public-chat-engine-stream] ✅ Stream completed in ${claudeTime}ms (${fullResponse.length} chars)`)
-374c450
+411c450
 <     await updateDevSession(session.session_id, message, fullResponse)
 ---
 >     await updatePublicSession(session.session_id, message, fullResponse)
-377c453
+414c453
 <     console.log(`[dev-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
 ---
 >     console.log(`[public-chat-engine-stream] ✅ Total time: ${totalTime}ms`)
-380,381c456,457
+417,418c456,457
 <     console.error('[dev-chat-engine-stream] Error:', error)
 <     yield '¡Hola! Disculpa, tuve un problema procesando tu mensaje. ¿Podrías intentarlo de nuevo?'
 ---
 >     console.error('[public-chat-engine-stream] Error:', error)
 >     throw error
-384,424d459
+421,461d459
 < 
 < // ============================================================================
 < // Suggestion Generation

@@ -1,4 +1,12 @@
-8,10c8,10
+3,4c3,4
+< import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
+< import { Send, Bot, RotateCcw } from 'lucide-react'
+---
+> import React, { useState, useEffect, useRef, lazy, Suspense, memo, useCallback, useMemo } from 'react'
+> import { Send, Bot, User, RotateCcw } from 'lucide-react'
+5a6
+> // Lazy load heavy components to reduce initial bundle size and improve TTI
+7,9c8,10
 < const DevPhotoCarousel = lazy(() => import('./DevPhotoCarousel'))
 < const DevAvailabilityCTA = lazy(() => import('./DevAvailabilityCTA'))
 < const DevIntentSummary = lazy(() => import('./DevIntentSummary'))
@@ -6,37 +14,495 @@
 > const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
 > const DevAvailabilityCTA = lazy(() => import('../Dev/DevAvailabilityCTA'))
 > const DevIntentSummary = lazy(() => import('../Dev/DevIntentSummary'))
-34c34
+10a12,14
+> // Import remarkGfm dynamically within component
+> // This prevents loading it on initial page load
+> 
+30c34
 < export default function DevChatMobileDev() {
 ---
 > export default function ChatMobile() {
-54c54
+37d40
+<   const [isPulling, setIsPulling] = useState(false)
+41,42d43
+<   const messagesContainerRef = useRef<HTMLDivElement>(null)
+<   const pullStartY = useRef<number>(0)
+43a45
+>   // Dynamically load remarkGfm plugin after component mounts
+49a52
+>   // Load session ID from localStorage
+51c54
 <     const storedSessionId = localStorage.getItem('dev_chat_session_id')
 ---
 >     const storedSessionId = localStorage.getItem('public_chat_session_id')
-92c92
-<     localStorage.removeItem('dev_chat_session_id')
+56a60,68
+> 
+>   // Debounced auto-resize for textarea (performance optimization)
+>   const handleTextareaResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
+>     const target = e.target as HTMLTextAreaElement
+>     target.style.height = 'auto'
+>     target.style.height = Math.min(target.scrollHeight, 128) + 'px'
+>   }
+> 
+>   // Auto-scroll to bottom when new messages arrive
+58,67c70
+<     if (messages.length > 1) {
+<       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+<     } else if (messages.length === 1) {
+<       // Double requestAnimationFrame ensures DOM is fully rendered before scroll
+<       requestAnimationFrame(() => {
+<         requestAnimationFrame(() => {
+<           messagesEndRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
+<         })
+<       })
+<     }
 ---
+>     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+69a73
+>   // Add welcome message on first load
+75c79
+<         content: '**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️\n\n🏝️ ¡También soy tu guía turística! Pregúntame sobre playas, restaurantes, buceo y todo lo que San Andrés tiene para ofrecerte.',
+---
+>         content: 'Welcome to Simmer Down! 🌴\n\nI\'m here to help you find the perfect accommodation in the beautiful Colombian Caribbean. Feel free to ask me about our rooms, availability, or anything else!',
+82,88c86,88
+<   // iOS Safari: Handle virtual keyboard appearance with smart scroll
+<   useEffect(() => {
+<     const handleResize = () => {
+<       if (typeof window !== 'undefined' && window.visualViewport && messagesContainerRef.current) {
+<         const windowHeight = window.innerHeight
+<         const viewportHeight = window.visualViewport.height
+<         const keyboardHeight = windowHeight - viewportHeight
+---
+>   const handleNewConversation = useCallback(async () => {
+>     // Clear session from localStorage
 >     localStorage.removeItem('public_chat_session_id')
-96c96
+90,114c90
+<         // Keyboard is visible if viewport shrinks significantly
+<         if (keyboardHeight > 100) {
+<           // Scroll to absolute bottom to eliminate gap
+<           setTimeout(() => {
+<             if (messagesContainerRef.current) {
+<               messagesContainerRef.current.scrollTop =
+<                 messagesContainerRef.current.scrollHeight -
+<                 messagesContainerRef.current.clientHeight
+<             }
+<           }, 100)
+<         }
+<       }
+<     }
+< 
+<     if (typeof window !== 'undefined' && 'visualViewport' in window) {
+<       window.visualViewport?.addEventListener('resize', handleResize)
+<       return () => {
+<         window.visualViewport?.removeEventListener('resize', handleResize)
+<       }
+<     }
+<   }, [])
+< 
+<   const handleNewConversation = async () => {
+<     localStorage.removeItem('dev_chat_session_id')
+< 
+---
+>     // Call backend to expire HttpOnly session cookie
+116c92
 <       const response = await fetch('/api/dev/reset-session', {
 ---
 >       const response = await fetch('/api/public/reset-session', {
-146c146
+128a105
+>     // Reset state
+133c110,111
+<   }
+---
+>     // Welcome message will be added automatically by the useEffect
+>   }, [])
+150a129
+>     // Create placeholder assistant message
+162c141,142
 <       const response = await fetch('/api/dev/chat?stream=true', {
 ---
+>       // Use streaming API
 >       const response = await fetch('/api/public/chat?stream=true', {
-158c158
+174c154
 <         console.error('[DevChatMobileDev] API Error:', {
 ---
 >         console.error('[ChatMobile] API Error:', {
-207c207
+181a162
+>       // Handle streaming response
+195a177
+>         // Decode chunk and parse SSE format
+206a189
+>                 // Update message with new content
+216a200
+>                 // Save session_id if returned
+219c203
 <                   localStorage.setItem('dev_chat_session_id', data.session_id)
 ---
 >                   localStorage.setItem('public_chat_session_id', data.session_id)
-315,319d314
-<           {/* DEV Badge - integrated in header */}
-<           <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full flex-shrink-0">
-<             <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
-<           </div>
+221a206
+>                 // Update message with additional metadata (sources, suggestions, etc.)
+246a232
+>       // Stream complete
+253a240
+>       // Remove failed message
+266c253
+<   const handleSuggestionClick = (suggestion: string) => {
+---
+>   const handleSuggestionClick = useCallback((suggestion: string) => {
+269c256
+<   }
+---
+>   }, [])
+271c258
+<   const retryLastMessage = () => {
+---
+>   const retryLastMessage = useCallback(() => {
+278c265
+<   }
+---
+>   }, [messages])
+280,284c267,280
+<   const handleTouchStart = (e: React.TouchEvent) => {
+<     if (messagesContainerRef.current?.scrollTop === 0) {
+<       pullStartY.current = e.touches[0].clientY
+<     }
+<   }
+---
+>   // Memoize markdown components to prevent re-renders
+>   const markdownComponents = useMemo(() => ({
+>     h1: ({node, ...props}: any) => <h1 className="text-lg font-bold mb-2 text-gray-900" {...props} />,
+>     h2: ({node, ...props}: any) => <h2 className="text-base font-bold mb-2 text-gray-900" {...props} />,
+>     h3: ({node, ...props}: any) => <h3 className="text-sm font-bold mb-1 text-gray-900" {...props} />,
+>     p: ({node, ...props}: any) => <p className="mb-2 last:mb-0" {...props} />,
+>     ul: ({node, ...props}: any) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
+>     ol: ({node, ...props}: any) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+>     li: ({node, ...props}: any) => <li className="ml-2" {...props} />,
+>     strong: ({node, ...props}: any) => <strong className="font-semibold text-gray-900" {...props} />,
+>     em: ({node, ...props}: any) => <em className="italic" {...props} />,
+>     a: ({node, ...props}: any) => <a className="text-teal-600 hover:underline" {...props} />,
+>     code: ({node, ...props}: any) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono" {...props} />,
+>   }), [])
+286,304d281
+<   const handleTouchMove = (e: React.TouchEvent) => {
+<     if (pullStartY.current === 0) return
 < 
+<     const currentY = e.touches[0].clientY
+<     const diff = currentY - pullStartY.current
+< 
+<     if (diff > 80 && !isPulling) {
+<       setIsPulling(true)
+<     }
+<   }
+< 
+<   const handleTouchEnd = () => {
+<     if (isPulling) {
+<       messagesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+<       setTimeout(() => setIsPulling(false), 300)
+<     }
+<     pullStartY.current = 0
+<   }
+< 
+306,311c283,305
+<     <div className="flex flex-col h-screen bg-white" role="main">
+<       {/* Header */}
+<       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
+<         <div className="h-16 flex items-center justify-between px-4">
+<           <div className="flex items-center gap-3">
+<             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+---
+>     <div
+>       className="h-[100dvh] w-screen overflow-hidden bg-white relative"
+>       role="main"
+>       aria-label="Chat conversation"
+>       style={{
+>         position: 'fixed',
+>         top: 0,
+>         left: 0,
+>         right: 0,
+>         bottom: 0
+>       }}
+>     >
+>       {/* Header fijo con safe area top (notch) */}
+>       <header
+>         className="fixed top-0 left-0 right-0 z-50
+>                    pt-[env(safe-area-inset-top)]
+>                    bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600
+>                    text-white shadow-md"
+>         role="banner"
+>       >
+>         <div className="h-[60px] flex items-center justify-between px-4 gap-2">
+>           <div className="flex items-center gap-3 flex-1 min-w-0">
+>             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
+314c308
+<             <h1 className="font-bold text-lg">Simmer Down Chat</h1>
+---
+>             <h1 className="font-bold text-lg truncate">Simmer Down Chat</h1>
+317,329c311,318
+<           <div className="flex items-center gap-2">
+<             <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full">
+<               <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
+<             </div>
+< 
+<             <button
+<               onClick={handleNewConversation}
+<               className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
+<               aria-label="Start new conversation"
+<             >
+<               <RotateCcw className="w-5 h-5" />
+<             </button>
+<           </div>
+---
+>           <button
+>             onClick={handleNewConversation}
+>             className="p-2 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
+>             aria-label="New conversation"
+>             title="Start new conversation"
+>           >
+>             <RotateCcw className="w-5 h-5" />
+>           </button>
+333c322
+<       {/* Messages */}
+---
+>       {/* Messages scrollable con safe areas y smooth scroll */}
+335,339c324,335
+<         ref={messagesContainerRef}
+<         onTouchStart={handleTouchStart}
+<         onTouchMove={handleTouchMove}
+<         onTouchEnd={handleTouchEnd}
+<         className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
+---
+>         className="absolute overflow-y-auto overflow-x-hidden px-4
+>                    bg-gradient-to-b from-amber-50 to-white
+>                    touch-pan-y"
+>         style={{
+>           top: 'calc(60px + env(safe-area-inset-top))',
+>           bottom: 'calc(80px + env(safe-area-inset-bottom))',
+>           left: 0,
+>           right: 0,
+>           WebkitOverflowScrolling: 'touch',
+>           overscrollBehaviorY: 'none',
+>           touchAction: 'pan-y'
+>         }}
+342a339
+>         aria-label="Chat messages"
+344,350c341,343
+<         {isPulling && (
+<           <div className="absolute top-[calc(64px+env(safe-area-inset-top)+0.5rem)] left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg z-10">
+<             <p className="text-sm text-teal-600 font-medium">↓ Ir al inicio</p>
+<           </div>
+<         )}
+<         <div className="space-y-4">
+<           {messages.map((message) => (
+---
+>         <div className="flex flex-col min-h-full">
+>           <div className="space-y-4 py-4">
+>           {messages.map((message, index) => (
+353,354c346,347
+<               className={`flex animate-[messageIn_0.3s_ease-out] ${
+<                 message.role === 'user' ? 'justify-end' : 'justify-start'
+---
+>               className={`flex gap-3 animate-message-in ${
+>                 message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+355a349,354
+>               style={{
+>                 animationDelay: `${index * 50}ms`,
+>                 willChange: index === messages.length - 1 ? 'transform, opacity' : 'auto'
+>               }}
+>               role="article"
+>               aria-label={`${message.role === 'user' ? 'Your message' : 'Assistant message'} at ${message.timestamp.toLocaleTimeString()}`}
+356a356,371
+>               {/* Avatar */}
+>               <div
+>                 className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+>                   message.role === 'user'
+>                     ? 'bg-blue-500 text-white'
+>                     : 'bg-gradient-to-br from-teal-400 to-cyan-500 text-white'
+>                 }`}
+>                 aria-hidden="true"
+>               >
+>                 {message.role === 'user' ? (
+>                   <User className="w-5 h-5" />
+>                 ) : (
+>                   <Bot className="w-5 h-5" />
+>                 )}
+>               </div>
+> 
+358c373,377
+<               <div className={`max-w-[85%] flex flex-col gap-2`}>
+---
+>               <div
+>                 className={`flex-1 max-w-[80%] ${
+>                   message.role === 'user' ? 'items-end' : 'items-start'
+>                 } flex flex-col gap-2`}
+>               >
+360c379
+<                   className={`rounded-2xl px-4 py-3 ${
+---
+>                   className={`rounded-2xl px-4 py-3 shadow-sm ${
+362,363c381,382
+<                       ? 'bg-blue-500 text-white rounded-br-sm shadow-md'
+<                       : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100'
+---
+>                       ? 'bg-blue-500 text-white rounded-br-sm'
+>                       : 'bg-white text-gray-900 rounded-bl-sm border border-gray-100'
+368a388
+>                         // Typing dots while waiting for first chunk
+370c390
+<                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+---
+>                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+375,376c395,396
+<                         <div className="text-base leading-[1.6]">
+<                           <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
+---
+>                         <div className="text-sm leading-relaxed markdown-content transition-opacity duration-150">
+>                           <Suspense fallback={<div className="text-sm text-gray-600">{message.content}</div>}>
+379,385c399
+<                               components={{
+<                                 ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
+<                                 ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
+<                                 li: ({node, ...props}) => <li className="ml-2" {...props} />,
+<                                 hr: ({node, ...props}) => <hr className="my-3 border-gray-300" {...props} />,
+<                                 strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+<                               }}
+---
+>                               components={markdownComponents}
+389a404,406
+>                           {loading && message.content && (
+>                             <span className="inline-block w-2 h-4 bg-gray-900 ml-0.5 animate-pulse" />
+>                           )}
+394c411
+<                     <p className="text-base whitespace-pre-wrap leading-[1.6] text-white">
+---
+>                     <p className="text-sm whitespace-pre-wrap leading-relaxed text-white">
+419c436
+<                 {/* Suggestions */}
+---
+>                 {/* Follow-up Suggestions */}
+421c438
+<                   <div className="flex flex-wrap gap-2 mt-2">
+---
+>                   <div className="flex flex-wrap gap-2 mt-2" role="group" aria-label="Suggested follow-up questions">
+426,427c443,444
+<                         className="px-4 py-2.5 min-h-[44px] bg-teal-50 hover:bg-teal-100
+<                                    text-teal-700 text-base rounded-full
+---
+>                         className="px-3 py-1.5 bg-teal-50 hover:bg-teal-100
+>                                    text-teal-700 text-sm rounded-full
+429,430c446,449
+<                                    transition-colors"
+<                         aria-label={`Quick reply: ${suggestion}`}
+---
+>                                    transition-all duration-200
+>                                    hover:scale-105 active:scale-95
+>                                    focus:ring-2 focus:ring-teal-500 focus:outline-none"
+>                         aria-label={`Ask: ${suggestion}`}
+438c457
+<                 <p className="text-xs text-gray-500 px-1">
+---
+>                 <p className="text-xs text-gray-400 px-1">
+448a468
+>           </div>
+454c474,479
+<         <div className="fixed bottom-[calc(80px+env(safe-area-inset-bottom))] left-0 right-0 z-40 bg-red-50 border-t border-red-200 p-3 shadow-lg">
+---
+>         <div
+>           className="fixed left-0 right-0 z-40 bg-red-50 border-t border-red-200 p-3"
+>           style={{ top: 'calc(60px + env(safe-area-inset-top))' }}
+>           role="alert"
+>           aria-live="assertive"
+>         >
+456,470c481,490
+<             <p className="text-sm text-red-700 flex-1">{error}</p>
+<             <div className="flex gap-2">
+<               <button
+<                 onClick={retryLastMessage}
+<                 className="text-sm text-red-600 hover:text-red-800 font-medium underline"
+<               >
+<                 Retry
+<               </button>
+<               <button
+<                 onClick={() => setError(null)}
+<                 className="text-sm text-red-400 hover:text-red-600 font-medium"
+<               >
+<                 ✕
+<               </button>
+<             </div>
+---
+>             <p className="text-sm text-red-700 flex-1" id="error-message">{error}</p>
+>             <button
+>               onClick={retryLastMessage}
+>               className="text-sm text-red-600 hover:text-red-800 font-medium underline ml-3 whitespace-nowrap
+>                          focus:ring-2 focus:ring-red-500 focus:outline-none rounded px-2 py-1"
+>               aria-label="Retry sending last message"
+>               aria-describedby="error-message"
+>             >
+>               Retry
+>             </button>
+475,476c495,502
+<       {/* Input */}
+<       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+---
+>       {/* Input fijo con safe area bottom (home bar) */}
+>       <div
+>         className="fixed bottom-0 left-0 right-0 z-50
+>                    bg-white border-t border-gray-200
+>                    pb-[env(safe-area-inset-bottom)]"
+>         style={{ touchAction: 'none' }}
+>       >
+>         <div className="p-4">
+483,488d508
+<             onFocus={(e) => {
+<               // iOS Safari: Scroll input into view when keyboard appears
+<               setTimeout(() => {
+<                 e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+<               }, 300)
+<             }}
+492c512,513
+<             aria-label="Message input"
+---
+>             aria-label="Type your message"
+>             aria-describedby="message-input-help"
+497c518,519
+<                        transition-all duration-200"
+---
+>                        transition-all duration-200
+>                        max-h-32 min-h-[48px]"
+498a521,527
+>             style={{
+>               height: 'auto',
+>               minHeight: '48px',
+>               maxHeight: '128px',
+>               fontSize: '16px'  // Explicit 16px to prevent iOS auto-zoom
+>             }}
+>             onInput={handleTextareaResize}
+499a529,531
+>           <span id="message-input-help" className="sr-only">
+>             Press Enter to send, Shift+Enter for new line. Maximum 2000 characters.
+>           </span>
+504d535
+<             aria-label="Send message"
+507c538
+<                        w-11 h-11
+---
+>                        w-11 h-11 min-w-[44px] min-h-[44px]
+509c540,542
+<                        hover:shadow-lg
+---
+>                        touch-manipulation
+>                        hover:shadow-lg hover:scale-105
+>                        active:scale-95
+511c544,549
+<                        transition-all duration-200"
+---
+>                        disabled:hover:scale-100 disabled:hover:shadow-none
+>                        focus:ring-2 focus:ring-teal-500 focus:outline-none
+>                        transition-transform duration-200
+>                        flex-shrink-0"
+>             aria-label="Send message"
+>             type="button"
+513c551
+<             <Send className="w-5 h-5" />
+---
+>             <Send className="w-5 h-5" aria-hidden="true" />
+515a554
+>         </div>
