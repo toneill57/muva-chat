@@ -69,53 +69,45 @@ npm run lint                        # Lint code
 
 ---
 
-## 🎯 CURRENT PROJECT: VPS Deployment Migration (Oct 4, 2025)
+## 🎯 CURRENT PROJECT: VPS Deployment Migration (Oct 2025)
 
 ### Objective
-Migrar deployment de InnPilot de Vercel a VPS Hostinger (innpilot.io) con CI/CD automático via GitHub Actions.
+Migrar deployment de Vercel a VPS Hostinger con CI/CD automático via GitHub Actions
 
 ### Project Files
 - 📄 **Plan**: `plan.md` (610 líneas) - Arquitectura completa, 5 fases
 - 📋 **Tasks**: `TODO.md` (208 líneas) - 28 tareas organizadas
-- 🎯 **Prompts**: `vps-deployment-workflow.md` (650 líneas) - Prompts ejecutables por fase
+- 🎯 **Prompts**: `vps-deployment-workflow.md` (650 líneas) - Prompts ejecutables
 
 ### Status
 - **Planning**: ✅ Complete
-- **FASE 1**: 🔜 Ready to start (Limpieza Vercel - 1h)
-- **FASE 2**: Pending (GitHub Actions Workflow - 2h)
+- **FASE 1**: 🔜 Ready (Limpieza Vercel - 1h)
+- **FASE 2**: Pending (GitHub Actions - 2h)
 - **FASE 3**: Pending (VPS Setup Guide - 3h)
 - **FASE 4**: Pending (Deploy Agent Refactor - 1h)
-- **FASE 5**: Pending (Testing & Documentation - 1h)
+- **FASE 5**: Pending (Testing & Docs - 1h)
 
 ### Key Specs
-- **VPS Provider**: Hostinger (Ubuntu 22.04 LTS)
-- **Domain**: innpilot.io (already configured)
-- **CI/CD**: GitHub Actions (push to main = auto-deploy)
-- **Infrastructure**: Nginx + PM2 cluster mode + Let's Encrypt SSL
+- **VPS**: Hostinger (Ubuntu 22.04)
+- **Domain**: innpilot.io
+- **CI/CD**: GitHub Actions (push to dev = auto-deploy)
+- **Infrastructure**: Nginx + PM2 + Let's Encrypt SSL
 - **Timeline**: 8 horas total
-
-### Success Criteria
-- Push to main auto-deploys to VPS in < 5min
-- Application accessible at https://innpilot.io
-- All API endpoints working
-- SSL certificate valid (A+ rating)
-- PM2 process stable
-- Response time ≤ 0.500s (comparable to Vercel)
 
 ---
 
 ## 🤖 Specialized Agents
 
-### ux-interface (PRIMARY)
-**Responsible for:** Fixed Layout Migration (all 4 phases)
-- Modifies: `src/components/Dev/DevChatMobileDev.tsx`, `src/components/Public/ChatMobile.tsx`
-- Handles: Layout migration (flexbox → fixed), testing exhaustivo, documentación
-- See: `.claude/agents/ux-interface.md` for complete instructions
+### backend-developer (PRIMARY)
+**Responsible for:** VPS Deployment Migration (all 5 phases)
+- Modifies: Deployment configs, GitHub Actions, documentation
+- Handles: Vercel cleanup, CI/CD setup, VPS guides, agent refactor
+- See: `.claude/agents/backend-developer.md` for complete instructions
 
 ### Other Agents
-- **deploy-agent**: Automated commits → deploy → verification
+- **deploy-agent**: Automated commits → deploy → verification (will be refactored in FASE 4)
 - **embeddings-generator**: SIRE embeddings processing
-- **backend-developer**: API/database support (minimal for this project)
+- **ux-interface**: UI/UX modifications (not needed for deployment migration)
 
 ---
 
@@ -130,11 +122,13 @@ Migrar deployment de InnPilot de Vercel a VPS Hostinger (innpilot.io) con CI/CD 
 │   └── workflows/
 │       └── deploy.yml                    # [TO CREATE] GitHub Actions
 ├── docs/
-│   └── deployment/                       # [TO CREATE] VPS guides
-│       ├── VPS_SETUP_GUIDE.md
-│       ├── GITHUB_SECRETS.md
-│       ├── ecosystem.config.js
-│       └── nginx-innpilot.conf
+│   └── deployment/                       # VPS guides
+│       ├── DEPLOYMENT_WORKFLOW.md        # ✅ Created (7KB)
+│       ├── TROUBLESHOOTING.md            # ✅ Created (12KB)
+│       ├── VPS_SETUP_GUIDE.md            # [TO CREATE]
+│       ├── GITHUB_SECRETS.md             # [TO CREATE]
+│       ├── ecosystem.config.js           # [TO CREATE]
+│       └── nginx-innpilot.conf           # [TO CREATE]
 ├── scripts/
 │   └── vps-setup.sh                      # [TO CREATE] Automated VPS setup
 ├── vercel.json                            # [TO DELETE]
@@ -188,4 +182,4 @@ Por favor lee los archivos y ejecuta Prompt 1.1
 ---
 
 **Last Updated**: Oct 4, 2025
-**Current Focus**: Fixed Layout Migration - FASE 1 Ready
+**Current Focus**: VPS Deployment Migration - FASE 5 in progress (Documentation)

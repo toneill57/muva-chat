@@ -513,12 +513,9 @@ SIGUIENTE: FASE 2 completa → FASE 3 (VPS Setup Guide)
 
 ---
 
-## FASE 3: VPS Server Setup Guide (3h)
-
-### Prompt 3.1: Crear VPS_SETUP_GUIDE.md completa
-
-```
-@backend-developer
+FASE 3: VPS Server Setup Guide (3h)
+Crear VPS_SETUP_GUIDE.md completa
+you go @backend-developer
 
 TAREA: Crear guía completa de setup del VPS Hostinger
 
@@ -566,9 +563,9 @@ SIGUIENTE: Prompt 3.2 para ecosystem.config.js
 ### Prompt 3.2: Crear ecosystem.config.js (PM2)
 
 ```
-@backend-developer
+ahora para Crear ecosystem.config.js (PM2) @backend-developer, tu 
 
-TAREA: Crear configuración de PM2 para producción
+TAREA es Crear configuración de PM2 para producción
 
 CONTEXTO:
 PM2 gestionará el proceso Node.js en modo cluster
@@ -625,12 +622,7 @@ SIGUIENTE: Prompt 3.3 para nginx-innpilot.conf
 
 ---
 
-### Prompt 3.3: Crear nginx-innpilot.conf
-
-```
-@backend-developer
-
-TAREA: Crear configuración de Nginx optimizada
+### Prompt 3.3: y ahora para Crear nginx-innpilot.conf, tu mismo sr @backend-developer, tienes la TAREA de Crear configuración de Nginx optimizada
 
 CONTEXTO:
 Nginx como reverse proxy para Next.js con rate limiting y SSL
@@ -667,9 +659,7 @@ SIGUIENTE: Prompt 3.4 para vps-setup.sh
 ### Prompt 3.4: Crear vps-setup.sh
 
 ```
-@backend-developer
-
-TAREA: Crear script automatizado de setup inicial del VPS
+ahora sr usted y solo usted @backend-developer va a crear Crear vps-setup.sh, un  script automatizado de setup inicial del VPS
 
 CONTEXTO:
 Script para instalar todas las dependencias del servidor
@@ -712,7 +702,7 @@ SIGUIENTE: FASE 3 completa → FASE 4 (Deploy Agent Refactor final)
 ### Prompt 4.1: Validar deploy-agent.md refactor
 
 ```
-@backend-developer
+que la haga el @backend-developer
 
 TAREA: Validar que deploy-agent.md está completamente actualizado
 
@@ -754,9 +744,7 @@ SIGUIENTE: FASE 4 completa → FASE 5 (Testing & Documentation final)
 ### Prompt 5.1: Crear DEPLOYMENT_WORKFLOW.md
 
 ```
-@backend-developer
-
-TAREA: Documentar workflow completo de deployment
+invoqueamos a @backend-developer para hacer la tarea de Documentar workflow completo de deployment
 
 CONTEXTO:
 Guía de referencia rápida para deployments y troubleshooting
@@ -810,9 +798,7 @@ SIGUIENTE: Prompt 5.2 para TROUBLESHOOTING.md
 ### Prompt 5.2: Crear TROUBLESHOOTING.md
 
 ```
-@backend-developer
-
-TAREA: Crear guía de troubleshooting de problemas comunes
+ahora tu mismo invoquemos al agente pero invoquemoslo y que revise la tarea 5.1 anterior el sr, @backend-developer para ahora  crea Crear guía de troubleshooting de problemas comunes
 
 CONTEXTO:
 Documentar 7 problemas comunes con síntomas, causas y soluciones
@@ -854,7 +840,7 @@ SIGUIENTE: Prompt 5.3 para actualizar CLAUDE.md
 ### Prompt 5.3: Actualizar CLAUDE.md
 
 ```
-@backend-developer
+ahora usted sr @backend-developer
 
 TAREA: Actualizar CLAUDE.md con proyecto actual
 
@@ -914,7 +900,7 @@ SIGUIENTE: Prompt 5.4 para testing end-to-end
 ### Prompt 5.4: Testing End-to-End Completo
 
 ```
-@backend-developer
+activa tu sr @backend-developer
 
 TAREA: Ejecutar checklist completo de testing de deployment
 
