@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, lazy, Suspense, memo, useCallback, useMemo } from 'react'
-import { Send, Bot, User } from 'lucide-react'
+import { Send, Bot, User, RotateCcw } from 'lucide-react'
 
 // Lazy load heavy components to reduce initial bundle size and improve TTI
 const ReactMarkdown = lazy(() => import('react-markdown'))
@@ -86,6 +86,16 @@ export default function DevChatMobileDev() {
       setMessages([welcomeMessage])
     }
   }, [messages.length])
+
+  const handleNewConversation = useCallback(() => {
+    // Clear session from localStorage
+    localStorage.removeItem('dev_chat_session_id')
+    // Reset state
+    setSessionId(null)
+    setMessages([])
+    setError(null)
+    // Welcome message will be added automatically by the useEffect
+  }, [])
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return
@@ -264,13 +274,22 @@ export default function DevChatMobileDev() {
                    text-white shadow-md"
         role="banner"
       >
-        <div className="h-[60px] flex items-center justify-center">
+        <div className="h-[60px] flex items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center" aria-hidden="true">
               <Bot className="w-6 h-6" />
             </div>
             <h1 className="font-bold text-lg">Simmer Down Chat</h1>
           </div>
+
+          <button
+            onClick={handleNewConversation}
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            aria-label="New conversation"
+            title="Start new conversation"
+          >
+            <RotateCcw className="w-5 h-5" />
+          </button>
         </div>
       </header>
 
