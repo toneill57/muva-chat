@@ -57,6 +57,11 @@ export default function DevChatMobileDev() {
   useEffect(() => {
     if (messages.length > 1) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    } else if (messages.length === 1) {
+      // Delay scroll for welcome message to ensure proper layout after render
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' })
+      }, 100)
     }
   }, [messages])
 
@@ -71,6 +76,23 @@ export default function DevChatMobileDev() {
       setMessages([welcomeMessage])
     }
   }, [messages.length])
+
+  // iOS Safari: Handle virtual keyboard appearance
+  useEffect(() => {
+    const handleResize = () => {
+      // When keyboard opens, ensure messages are scrollable
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+      }
+    }
+
+    if (typeof window !== 'undefined' && 'visualViewport' in window) {
+      window.visualViewport?.addEventListener('resize', handleResize)
+      return () => {
+        window.visualViewport?.removeEventListener('resize', handleResize)
+      }
+    }
+  }, [])
 
   const handleNewConversation = async () => {
     localStorage.removeItem('dev_chat_session_id')
@@ -443,6 +465,12 @@ export default function DevChatMobileDev() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={(e) => {
+              // iOS Safari: Scroll input into view when keyboard appears
+              setTimeout(() => {
+                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              }, 300)
+            }}
             placeholder="Type your message..."
             disabled={loading}
             maxLength={2000}
