@@ -5,7 +5,87 @@ model: sonnet
 color: orange
 ---
 
-## 🔄 PROYECTO ACTUAL: Dev-Public Sync (Oct 2025)
+## 🚀 PROYECTO ACTUAL: VPS Deployment Migration (Oct 4, 2025)
+
+### Contexto del Proyecto
+Migrar deployment de InnPilot de Vercel a VPS Hostinger (innpilot.io) con CI/CD automático vía GitHub Actions.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (610 líneas) - Arquitectura completa, 5 fases
+- 📋 `TODO.md` - Tareas organizadas por fases (208 líneas) - 28 tareas
+- 🎯 `vps-deployment-workflow.md` - Prompts ejecutables por fase (650 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal** de este proyecto:
+- ✅ FASE 1: Limpieza de Vercel (1h) - Eliminar vercel.json, package.json, .gitignore, deploy-agent.md, README.md
+- ✅ FASE 2: GitHub Actions Workflow (2h) - Crear .github/workflows/deploy.yml, documentar GitHub Secrets
+- ✅ FASE 3: VPS Server Setup Guide (3h) - Guías completas, configs de PM2/Nginx/SSL
+- ✅ FASE 4: Deploy Agent Refactor (1h) - Actualizar deploy-agent.md para VPS workflow
+- ✅ FASE 5: Testing & Documentation (1h) - DEPLOYMENT_WORKFLOW.md, TROUBLESHOOTING.md, testing E2E
+
+### Archivos Objetivo
+
+**FASE 1 - A ELIMINAR:**
+- `vercel.json` (37 líneas de config Vercel)
+
+**FASE 1 - A MODIFICAR:**
+- `package.json` (línea 26) - Eliminar script deploy
+- `.gitignore` (líneas 36-37) - Eliminar referencias Vercel
+- `.claude/agents/deploy-agent.md` (257 líneas) - Refactor completo
+- `README.md` (líneas 24, 312-328) - Actualizar sección Deploy
+
+**FASE 2 - A CREAR:**
+- `.github/workflows/deploy.yml` (~150 líneas) - GitHub Actions workflow
+- `docs/deployment/GITHUB_SECRETS.md` (~80 líneas) - Guía de secrets
+
+**FASE 3 - A CREAR:**
+- `docs/deployment/VPS_SETUP_GUIDE.md` (~400 líneas) - Guía completa VPS setup
+- `docs/deployment/ecosystem.config.js` (~25 líneas) - PM2 config
+- `docs/deployment/nginx-innpilot.conf` (~80 líneas) - Nginx config
+- `scripts/vps-setup.sh` (~50 líneas) - Script automatizado setup
+- `docs/deployment/env.example` (~50 líneas) - Template variables de entorno
+
+**FASE 5 - A CREAR:**
+- `docs/deployment/DEPLOYMENT_WORKFLOW.md` (~150 líneas) - Workflow completo
+- `docs/deployment/TROUBLESHOOTING.md` (~200 líneas) - Guía de troubleshooting
+
+### Workflow
+1. Leer plan.md → TODO.md → vps-deployment-workflow.md
+2. Identificar próxima tarea `[ ]` en TODO.md
+3. Usar prompt correspondiente de workflow.md
+4. Implementar siguiendo specs de plan.md
+5. Testing según test commands en TODO.md
+6. Documentar en docs/deployment/
+
+### Reglas Críticas
+
+**NUNCA:**
+- ❌ Dejar referencias a Vercel en código o docs
+- ❌ Hardcodear secrets en archivos (usar GitHub Secrets)
+- ❌ Crear workflows sin rollback automático
+- ❌ Deployar sin health checks
+
+**SIEMPRE:**
+- ✅ GitHub Actions debe hacer rollback si health check falla
+- ✅ PM2 en cluster mode (2 instances para VPS)
+- ✅ Nginx con rate limiting y SSL
+- ✅ Logs centralizados (PM2 + Nginx)
+- ✅ Variables de entorno en VPS (nunca en GitHub)
+
+### Success Criteria
+- [ ] Push to dev auto-deploys a VPS en < 5min
+- [ ] Application accesible en https://innpilot.io
+- [ ] Todos los endpoints API funcionando
+- [ ] SSL certificate válido (A+ rating)
+- [ ] PM2 process stable sin crashes
+- [ ] Response time ≤ 0.500s (comparable a Vercel)
+- [ ] Rollback automático funciona
+- [ ] Documentación completa en docs/deployment/
+
+---
+
+## 🔄 PROYECTO ANTERIOR: Dev-Public Sync (Oct 2025)
 
 ### Contexto del Proyecto
 **Copiar Dev → Public. Fin.**

@@ -1,370 +1,254 @@
-# TODO - Fixed Layout Migration
+# TODO - Migración VPS Deployment
 
-**Proyecto:** Fixed Layout Migration
-**Fecha:** Octubre 4, 2025
-**Plan:** Ver `plan.md` para contexto completo
-
----
-
-## FASE 1: Migración DevChatMobileDev.tsx 🎯
-
-### 1.1 Modificar wrapper container
-- [ ] Eliminar clases flexbox del wrapper (estimate: 15min)
-  - Cambiar `className="flex flex-col h-screen bg-white"` a `className="bg-white"`
-  - Verificar que `role="main"` se mantiene
-  - Files: `src/components/Dev/DevChatMobileDev.tsx` (línea 320)
-  - Agent: **ux-interface**
-  - Test: Visual check en browser - wrapper debe ser simple div
-
-### 1.2 Migrar messages área a position fixed
-- [ ] Reemplazar flex-1 con position fixed (estimate: 45min)
-  - Cambiar `className` de messages container
-  - Quitar: `flex-1`
-  - Agregar: `fixed`
-  - Agregar `style` object con top/bottom/left/right
-  - Mover padding-top y padding-bottom a inline style
-  - Mantener: `overflow-y-auto`, `px-4`, `bg-gradient-to-b`, `overscroll-behavior-contain`, `scroll-smooth`
-  - Mantener: event handlers (`onTouchStart`, `onTouchMove`, `onTouchEnd`)
-  - Mantener: ARIA attributes (`role="log"`, `aria-live="polite"`, `aria-atomic="false"`)
-  - Files: `src/components/Dev/DevChatMobileDev.tsx` (línea 348)
-  - Agent: **ux-interface**
-  - Test: npm run dev → abrir /dev-chat-mobile-dev → verificar scroll
-
-### 1.3 Verificar header sin cambios
-- [ ] Confirmar que header permanece intacto (estimate: 10min)
-  - NO modificar className
-  - NO modificar estructura
-  - Verificar que sigue siendo `fixed top-0 left-0 right-0 z-50`
-  - Files: `src/components/Dev/DevChatMobileDev.tsx` (línea 322)
-  - Agent: **ux-interface**
-  - Test: Visual check - header debe estar fixed arriba
-
-### 1.4 Verificar input sin cambios
-- [ ] Confirmar que input permanece intacto (estimate: 10min)
-  - NO modificar className
-  - NO modificar estructura
-  - Verificar que sigue siendo `fixed bottom-0 left-0 right-0 z-50`
-  - Files: `src/components/Dev/DevChatMobileDev.tsx` (línea 482)
-  - Agent: **ux-interface**
-  - Test: Visual check - input debe estar fixed abajo
-
-### 1.5 Verificar código compilado sin errores
-- [ ] Build check y type check (estimate: 10min)
-  - Ejecutar: `npm run build`
-  - Ejecutar: `npm run type-check` (si existe)
-  - Verificar ZERO TypeScript errors
-  - Verificar ZERO build warnings
-  - Files: Terminal output
-  - Agent: **ux-interface**
-  - Test: npm run build (debe completar sin errores)
-
-### 1.6 Testing visual básico en dev server
-- [ ] Primera validación visual (estimate: 30min)
-  - Iniciar dev server: `./scripts/dev-with-keys.sh`
-  - Abrir: http://localhost:3000/dev-chat-mobile-dev
-  - Verificar: Welcome message visible y centrado
-  - Verificar: Header arriba (con safe area)
-  - Verificar: Input abajo (con safe area)
-  - Verificar: Área de mensajes scrolleable
-  - Enviar mensaje de prueba
-  - Verificar: Mensaje aparece, scroll automático funciona
-  - Files: Browser
-  - Agent: **ux-interface**
-  - Test: Manual - abrir /dev-chat-mobile-dev en browser
+**Proyecto:** VPS Deployment Migration (Vercel → Hostinger)
+**Fecha:** 4 de Octubre 2025
+**Plan:** Ver `plan.md` para contexto completo (610 líneas)
 
 ---
 
-## FASE 2: Testing Exhaustivo Dev ⚙️
+## FASE 1: Limpieza de Vercel 🧹 ✅ COMPLETADA
 
-### 2.1 Testing scroll behavior
-- [ ] Validar comportamiento de scroll idéntico (estimate: 15min)
-  - Enviar 10+ mensajes para forzar scroll
-  - Verificar: Scroll suave (60fps)
-  - Verificar: Auto-scroll al nuevo mensaje
-  - Verificar: Manual scroll hacia arriba funciona
-  - Verificar: Scroll hacia abajo retorna a último mensaje
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Manual scroll testing con 10+ mensajes
+### 1.1 Eliminar vercel.json ✅
+- [x] Eliminar archivo `vercel.json` (completado: 5min)
+  - Archivo eliminado: 37 líneas de configuración específica de Vercel
+  - Files: `vercel.json` (deleted)
+  - Agent: **backend-developer**
+  - Test: ✅ `git status` muestra vercel.json deleted
 
-### 2.2 Testing pull-to-refresh
-- [ ] Validar pull-to-refresh funciona (estimate: 10min)
-  - Scroll to top del área de mensajes
-  - Pull down 80px+
-  - Verificar: Indicador "↓ Ir al inicio" aparece
-  - Verificar: Scroll to top se ejecuta
-  - Verificar: Indicador desaparece después de 300ms
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Pull down gesture en mensajes área
+### 1.2 Actualizar package.json ✅
+- [x] Eliminar script de deploy a Vercel + @vercel/kv dependency (completado: 5min)
+  - Eliminado línea 26: `"deploy": "npm run pre-deploy && vercel --prod"`
+  - Eliminado línea 54: `"@vercel/kv": "^3.0.0"`
+  - Files: `package.json`
+  - Agent: **backend-developer**
+  - Test: ✅ `npm run deploy` falla con "script not found"
+  - Test: ✅ `@vercel/kv` no está en uso en el código
 
-### 2.3 Testing welcome message positioning
-- [ ] Validar mensaje de bienvenida centrado (estimate: 10min)
-  - Abrir /dev-chat-mobile-dev (sin mensajes previos)
-  - Verificar: Welcome message aparece centrado verticalmente
-  - Verificar: Padding-top de 2rem aplicado
-  - Verificar: NO queda pegado al header
-  - Verificar: NO queda pegado al input
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Limpiar localStorage y recargar página
+### 1.3 Actualizar .gitignore ✅
+- [x] Eliminar referencias a Vercel (completado: 5min)
+  - Eliminadas líneas 36-37: `# vercel` y `.vercel`
+  - Files: `.gitignore`
+  - Agent: **backend-developer**
+  - Test: ✅ `grep -i vercel .gitignore` retorna vacío
 
-### 2.4 Testing photo carousel
-- [ ] Validar carrusel de fotos funciona (estimate: 10min)
-  - Enviar mensaje que devuelva fotos (ej: "apartamentos")
-  - Verificar: DevPhotoCarousel renderiza
-  - Verificar: Scroll horizontal funciona
-  - Verificar: Lazy loading funciona
-  - Verificar: Imágenes cargan correctamente
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Enviar "apartamentos" y verificar carousel
+### 1.4 Refactor deploy-agent.md ✅
+- [x] Actualizar agente para VPS workflow (completado: 30min)
+  - Cambiado URL: `https://innpilot.vercel.app` → `https://innpilot.io` (2 ocurrencias)
+  - Eliminada sección: "Monitoreo de Deploy en Vercel"
+  - Actualizado workflow: commit → push → GitHub Actions → verify
+  - Files: `.claude/agents/deploy-agent.md` (249 líneas)
+  - Agent: **backend-developer**
+  - Test: ✅ Solo referencias históricas a Vercel
+  - Test: ✅ 6 referencias a "GitHub Actions"
 
-### 2.5 Testing suggestion pills
-- [ ] Validar suggestion pills clickeables (estimate: 10min)
-  - Verificar: Pills aparecen después de respuesta
-  - Verificar: Min-height 44px para touch target
-  - Verificar: Click popula input field
-  - Verificar: Focus en input después de click
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Click en suggestion pill y verificar input
-
-### 2.6 Testing typing dots
-- [ ] Validar animación de typing dots (estimate: 5min)
-  - Enviar mensaje
-  - Verificar: Typing dots aparecen mientras carga
-  - Verificar: Animación bounce funciona
-  - Verificar: Dots desaparecen cuando llega respuesta
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Enviar mensaje y observar loading state
-
-### 2.7 Testing error banner
-- [ ] Validar error banner sticky (estimate: 10min)
-  - Forzar error (desconectar red o matar backend)
-  - Verificar: Error banner aparece sticky bottom
-  - Verificar: Mensaje de error visible
-  - Verificar: Botón "Retry" funcional
-  - Verificar: Botón "✕" cierra banner
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Desconectar red y enviar mensaje
-
-### 2.8 Testing safe areas en dispositivos iOS
-- [ ] Validar safe areas en iPhone (estimate: 20min)
-  - Dispositivos: iPhone 15 (430x932), iPhone 14 (390x844)
-  - Browser: Safari Mobile
-  - Verificar: Header no queda debajo del notch
-  - Verificar: Input no queda debajo del home bar
-  - Verificar: Área de mensajes calcula altura correcta
-  - Verificar: env(safe-area-inset-top) aplicado
-  - Verificar: env(safe-area-inset-bottom) aplicado
-  - Files: iPhone - Safari
-  - Agent: **ux-interface**
-  - Test: Abrir en iPhone real o simulator
-
-### 2.9 Testing safe areas en dispositivos Android
-- [ ] Validar safe areas en Android (estimate: 15min)
-  - Dispositivos: Pixel 8 (412x915), Galaxy S24 (360x800)
-  - Browser: Chrome Mobile
-  - Verificar: Header spacing correcto
-  - Verificar: Input spacing correcto (home bar gesture)
-  - Verificar: Área de mensajes altura correcta
-  - Files: Android - Chrome
-  - Agent: **ux-interface**
-  - Test: Abrir en Android real o emulator
-
-### 2.10 Performance testing Lighthouse
-- [ ] Medir performance con Lighthouse (estimate: 10min)
-  - Abrir Chrome DevTools
-  - Run Lighthouse (Mobile)
-  - Verificar: Score ≥90
-  - Verificar: FCP (First Contentful Paint) <2s
-  - Verificar: CLS (Cumulative Layout Shift) <0.1
-  - Documentar: Screenshots de resultados
-  - Files: Chrome DevTools
-  - Agent: **ux-interface**
-  - Test: Chrome DevTools → Lighthouse → Mobile
-
-### 2.11 Documentar resultados FASE 2
-- [ ] Crear documentación de testing (estimate: 20min)
-  - Crear: `docs/fixed-layout-migration/fase-2/TESTS.md`
-  - Incluir: Checklist completo de tests
-  - Incluir: Screenshots de 4 dispositivos
-  - Incluir: Lighthouse report
-  - Incluir: Issues encontrados (si los hay)
-  - Files: docs/fixed-layout-migration/fase-2/
-  - Agent: **ux-interface**
-  - Test: Revisar documentación completa
+### 1.5 Actualizar README.md ✅
+- [x] Modificar sección de Deploy (completado: 15min)
+  - Línea 24: Cambiado "Deploy: Vercel US East" → "Deploy: VPS Hostinger (innpilot.io) + GitHub Actions"
+  - Sección Deploy (líneas 312-353): Reemplazada con VPS instructions completas
+  - Todas las URLs actualizadas: 9 reemplazos de `innpilot.vercel.app` → `innpilot.io`
+  - Files: `README.md`
+  - Agent: **backend-developer**
+  - Test: ✅ `grep -i vercel README.md` retorna 0 resultados
+  - Test: ✅ 14 referencias a `innpilot.io`
+  - Test: ✅ 2 links a `docs/deployment/`
 
 ---
 
-## FASE 3: Migración ChatMobile.tsx ✨
+## FASE 2: GitHub Actions Workflow ⚙️
 
-### 3.1 Modificar wrapper container (producción)
-- [ ] Aplicar mismo cambio que FASE 1.1 (estimate: 10min)
-  - Cambiar `className="flex flex-col h-screen bg-white"` a `className="bg-white"`
-  - Files: `src/components/Public/ChatMobile.tsx` (línea 320)
-  - Agent: **ux-interface**
-  - Test: Visual check en browser - wrapper debe ser simple div
+### 2.1 Crear directorio .github/workflows ✅
+- [x] Crear estructura de GitHub Actions (completado: 2min)
+  - Directory: `.github/workflows/` creado
+  - Files: `.github/workflows/` (directory)
+  - Agent: **backend-developer**
+  - Test: ✅ `ls -la .github/workflows/` existe
 
-### 3.2 Migrar messages área a position fixed (producción)
-- [ ] Aplicar mismo cambio que FASE 1.2 (estimate: 30min)
-  - EXACTAMENTE los mismos cambios que DevChatMobileDev.tsx
-  - Cambiar `className` de messages container
-  - Agregar `style` object con top/bottom/left/right
-  - Mantener diferencias específicas:
-    - localStorage key: `public_chat_session_id` (NO cambiar)
-    - API route: `/api/public/chat/stream` (NO cambiar)
-    - NO tiene badge "🚧 DEV"
-    - Import paths: `../Dev/DevPhotoCarousel`
-  - Files: `src/components/Public/ChatMobile.tsx` (línea 348)
-  - Agent: **ux-interface**
-  - Test: npm run dev → abrir /chat-mobile → verificar scroll
+### 2.2 Crear deploy.yml workflow ✅
+- [x] Implementar workflow de deployment (completado: 15min)
+  - Trigger: `on: push: branches: [dev]` (modificado de `main` a `dev`)
+  - Steps: 9 steps implementados (Checkout → Setup Node.js → Install → Build → Deploy SSH → Wait → Health check → Rollback → Notify)
+  - Files: `.github/workflows/deploy.yml` (74 líneas)
+  - Agent: **backend-developer**
+  - Test: ✅ `cat .github/workflows/deploy.yml | grep "name: Deploy to VPS"`
+  - Test: ✅ 9 steps definidos correctamente
+  - Test: ✅ Health check a `https://innpilot.io/api/health`
+  - Test: ✅ Rollback automático implementado
+  - Test: ✅ Trigger configurado para rama `dev`
 
-### 3.3 Build check producción
-- [ ] Verificar compilación sin errores (estimate: 5min)
-  - Ejecutar: `npm run build`
-  - Verificar ZERO errors
-  - Verificar ZERO warnings
-  - Files: Terminal
-  - Agent: **ux-interface**
-  - Test: npm run build
+### 2.3 Documentar GitHub Secrets ✅
+- [x] Crear guía de configuración de Secrets (completado: 10min)
+  - Secrets: 10 secrets documentados (VPS_HOST, VPS_USER, VPS_SSH_KEY, VPS_APP_PATH, SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY, JWT_SECRET_KEY)
+  - Files: `docs/deployment/GITHUB_SECRETS.md` (141 líneas)
+  - Agent: **backend-developer**
+  - Test: ✅ 10 secrets documentados con instrucciones paso a paso
+  - Test: ✅ Secciones: Acceso, Secrets Requeridos, Verificación, Seguridad
 
-### 3.4 Testing visual rápido producción
-- [ ] Primera validación de ChatMobile.tsx (estimate: 15min)
-  - Abrir: http://localhost:3000/chat-mobile
-  - Verificar: Layout idéntico a /dev-chat-mobile-dev
-  - Verificar: Scroll funciona
-  - Verificar: Welcome message centrado
-  - Verificar: Safe areas correctas
-  - Enviar mensaje de prueba
-  - Verificar: API call a `/api/public/chat/stream` funciona
-  - Files: Browser - /chat-mobile
-  - Agent: **ux-interface**
-  - Test: Abrir /chat-mobile en browser
+### 2.4 Configurar GitHub Secrets (manual) ✅
+- [x] Configurar 10 secrets en GitHub (completado: 20min)
+  - Action: https://github.com/toneill57/innpilot → Settings → Secrets and variables → Actions
+  - Guide: Seguido `docs/deployment/GITHUB_SECRETS.md`
+  - Secrets configurados:
+    - [x] VPS_HOST
+    - [x] VPS_USER
+    - [x] VPS_SSH_KEY
+    - [x] VPS_APP_PATH
+    - [x] SUPABASE_URL
+    - [x] SUPABASE_ANON_KEY
+    - [x] SUPABASE_SERVICE_ROLE_KEY
+    - [x] OPENAI_API_KEY
+    - [x] ANTHROPIC_API_KEY
+    - [x] JWT_SECRET_KEY
+  - Test: ✅ 10 secrets verificados en GitHub UI
 
-### 3.5 Documentar cambios FASE 3
-- [ ] Crear documentación de implementación (estimate: 15min)
-  - Crear: `docs/fixed-layout-migration/fase-3/IMPLEMENTATION.md`
-  - Crear: `docs/fixed-layout-migration/fase-3/CHANGES.md`
-  - Crear: `docs/fixed-layout-migration/fase-3/TESTS.md`
-  - Files: docs/fixed-layout-migration/fase-3/
-  - Agent: **ux-interface**
-  - Test: Revisar documentación
+### 2.5 Test workflow (manual)
+- [ ] Validar workflow en GitHub (estimado: 10min)
+  - Files: N/A (validation in GitHub UI)
+  - Agent: **backend-developer**
+  - Test: GitHub Actions muestra workflow sin errores de sintaxis
 
 ---
 
-## FASE 4: Testing Final + Validación 🎨
+## FASE 3: VPS Server Setup Guide 📚
 
-### 4.1 Testing de regresión DevChatMobileDev.tsx
-- [ ] Checklist completo de funcionalidad (estimate: 20min)
-  - Scroll behavior: Suave, 60fps
-  - Pull-to-refresh: Trigger at 80px
-  - Welcome message: Centrado verticalmente
-  - Message rendering: User/assistant, markdown
-  - Photo carousel: Horizontal scroll
-  - Suggestion pills: Clickeable, min 44px
-  - Typing dots: Animación bounce
-  - Error banner: Sticky, retry/dismiss
-  - Input field: Auto-resize, max 2000 chars
-  - Send button: Disabled states correctos
-  - New conversation: Limpia mensajes
-  - Safe areas: Notch/home bar spacing
-  - Files: Browser - /dev-chat-mobile-dev
-  - Agent: **ux-interface**
-  - Test: Ejecutar checklist completo
+### 3.1 Crear docs/deployment/ directory
+- [ ] Crear estructura de documentación (estimado: 5min)
+  - Files: `docs/deployment/` (directory)
+  - Agent: **backend-developer**
+  - Test: `ls -la docs/deployment/` debe existir
 
-### 4.2 Testing de regresión ChatMobile.tsx
-- [ ] Checklist completo de funcionalidad (estimate: 20min)
-  - EXACTAMENTE el mismo checklist que 4.1
-  - Verificar: API calls a `/api/public/` funcionan
-  - Verificar: Session persistence con `public_chat_session_id`
-  - Verificar: NO tiene badge "🚧 DEV"
-  - Files: Browser - /chat-mobile
-  - Agent: **ux-interface**
-  - Test: Ejecutar checklist completo
+### 3.2 Crear VPS_SETUP_GUIDE.md
+- [ ] Escribir guía completa de setup VPS (estimado: 1h 30min)
+  - Secciones: Configuración Inicial, Aplicación, PM2, Nginx, SSL
+  - Files: `docs/deployment/VPS_SETUP_GUIDE.md` (~400 líneas)
+  - Agent: **backend-developer**
+  - Test: Verificar 5 secciones principales
 
-### 4.3 Performance comparison
-- [ ] Comparar performance antes/después (estimate: 15min)
-  - Lighthouse score antes (si existe)
-  - Lighthouse score después (debe ser ≥90)
-  - FPS scroll antes/después (debe ser 60fps)
-  - CLS antes/después (debe ser <0.1)
-  - Layout shifts (debe ser 0)
-  - Documentar en tabla comparativa
-  - Files: Chrome DevTools
-  - Agent: **ux-interface**
-  - Test: Lighthouse en ambos archivos
+### 3.3 Crear ecosystem.config.js (PM2)
+- [ ] Configuración de PM2 para producción (estimado: 20min)
+  - Instances: 2 (cluster mode), Max memory: 1G
+  - Files: `docs/deployment/ecosystem.config.js` (~25 líneas)
+  - Agent: **backend-developer**
+  - Test: `node -e "require('./docs/deployment/ecosystem.config.js')"`
 
-### 4.4 Testing cross-browser
-- [ ] Validar en múltiples browsers (estimate: 15min)
-  - Safari (iOS/macOS)
-  - Chrome (Android/Desktop)
-  - Firefox (Desktop)
-  - Edge (Desktop)
-  - Verificar: Comportamiento consistente
-  - Documentar: Issues específicos de browser (si los hay)
-  - Files: Multiple browsers
-  - Agent: **ux-interface**
-  - Test: Abrir en 4+ browsers diferentes
+### 3.4 Crear nginx-innpilot.conf
+- [ ] Configuración de Nginx optimizada (estimado: 30min)
+  - Server: innpilot.io, Proxy: localhost:3000, Rate limiting
+  - Files: `docs/deployment/nginx-innpilot.conf` (~80 líneas)
+  - Agent: **backend-developer**
+  - Test: Validar sintaxis Nginx
 
-### 4.5 Crear documentación final consolidada
-- [ ] Documentar implementación completa (estimate: 30min)
-  - Crear: `docs/fixed-layout-migration/IMPLEMENTATION.md` (summary)
-  - Crear: `docs/fixed-layout-migration/CHANGES.md` (all files)
-  - Crear: `docs/fixed-layout-migration/TESTS.md` (consolidated)
-  - Crear: `docs/fixed-layout-migration/MIGRATION_GUIDE.md` (future reference)
-  - Incluir: Before/after code snippets
-  - Incluir: Performance metrics
-  - Incluir: Lessons learned
-  - Files: docs/fixed-layout-migration/
-  - Agent: **ux-interface**
-  - Test: Revisar documentación completa
+### 3.5 Crear vps-setup.sh
+- [ ] Script automatizado de setup inicial (estimado: 30min)
+  - Install: Node.js, PM2, Nginx, Certbot, Git
+  - Files: `scripts/vps-setup.sh` (~50 líneas)
+  - Agent: **backend-developer**
+  - Test: `bash -n scripts/vps-setup.sh`
 
-### 4.6 Actualizar TODO.md con checkmarks
-- [ ] Marcar tareas completadas (estimate: 10min)
-  - Revisar TODAS las tareas de FASE 1-4
-  - Marcar con `[x]` SOLO las que pasaron tests
-  - Dejar como `[ ]` si no se testearon o fallaron
-  - Agregar notas para tests fallidos
-  - Files: TODO.md
-  - Agent: **ux-interface**
-  - Test: Revisar que solo tareas testeadas están marcadas
+### 3.6 Crear .env.example para VPS
+- [ ] Template de variables de entorno para producción (estimado: 15min)
+  - Agregar: NODE_ENV=production, NEXT_PUBLIC_APP_URL=https://innpilot.io
+  - Files: `docs/deployment/env.example` (~50 líneas)
+  - Agent: **backend-developer**
+  - Test: Comparar con `.env.example` raíz
 
-### 4.7 Code review final
-- [ ] Revisión de código por usuario (estimate: 15min)
-  - Revisar: src/components/Dev/DevChatMobileDev.tsx
-  - Revisar: src/components/Public/ChatMobile.tsx
-  - Verificar: Solo cambios de layout (NO lógica)
-  - Verificar: Zero breaking changes
-  - Aprobar: Listo para commit
-  - Files: Git diff
-  - Agent: **ux-interface** (presenta para revisión del usuario)
-  - Test: git diff --no-pager
+---
+
+## FASE 4: Deploy Agent Refactor 🤖
+
+### 4.1 Actualizar deploy-agent.md
+- [ ] Refactor completo del agente (estimado: 45min)
+  - Workflow: commit → push → GitHub Actions verification → health checks
+  - Endpoints: https://innpilot.io/api/health, /api/chat, /api/chat/muva
+  - Files: `.claude/agents/deploy-agent.md`
+  - Agent: **backend-developer**
+  - Test: Verificar menciona GitHub Actions y no Vercel deploy monitoring
+
+### 4.2 Test deploy agent workflow
+- [ ] Validar nuevo flujo de deploy agent (estimado: 15min)
+  - Files: N/A (testing workflow)
+  - Agent: **backend-developer**
+  - Test: Deploy agent reporta status correcto
+
+---
+
+## FASE 5: Testing & Documentation ✨
+
+### 5.1 Crear DEPLOYMENT_WORKFLOW.md
+- [ ] Documentar workflow completo de deployment (estimado: 30min)
+  - Secciones: Overview, Manual deployment, Rollback, Monitoring
+  - Files: `docs/deployment/DEPLOYMENT_WORKFLOW.md` (~150 líneas)
+  - Agent: **backend-developer**
+  - Test: Verificar 4 secciones principales
+
+### 5.2 Crear TROUBLESHOOTING.md
+- [ ] Guía de problemas comunes (estimado: 30min)
+  - 7 problemas: Build fails, SSH timeout, PM2 crashes, Nginx 502, SSL renewal, Health check fails, API errors
+  - Files: `docs/deployment/TROUBLESHOOTING.md` (~200 líneas)
+  - Agent: **backend-developer**
+  - Test: Verificar 7 problemas documentados
+
+### 5.3 Actualizar README.md - sección Deploy
+- [ ] Reescribir sección de Deploy completa (estimado: 20min)
+  - Eliminar: Vercel, Agregar: GitHub Actions + VPS
+  - Files: `README.md` (líneas 312-400)
+  - Agent: **backend-developer**
+  - Test: `grep -i "vercel" README.md` debe retornar 0 resultados
+
+### 5.4 Actualizar CLAUDE.md
+- [ ] Actualizar proyecto actual (estimado: 15min)
+  - Proyecto: "VPS Deployment Migration"
+  - Files: `CLAUDE.md` (líneas 50-120)
+  - Agent: **backend-developer**
+  - Test: `grep -i "VPS Deployment Migration" CLAUDE.md` debe encontrar entrada
+
+### 5.5 Testing end-to-end completo
+- [ ] Validar deployment completo (estimado: 1h)
+  - [ ] Push to dev triggers GitHub Actions
+  - [ ] Build completes (< 3min)
+  - [ ] Deploy to VPS executes
+  - [ ] PM2 restart works
+  - [ ] Health check: `curl https://innpilot.io/api/health` → 200
+  - [ ] Chat endpoint funciona
+  - [ ] MUVA endpoint funciona
+  - [ ] SSL certificate válido
+  - [ ] Response time ~0.490s
+  - Files: N/A (manual testing)
+  - Agent: **backend-developer**
+  - Test: Todos los checks pasan ✓
 
 ---
 
 ## 📊 PROGRESO
 
-**Total Tasks:** 28
-**Completed:** 0/28 (0%)
+**Total Tasks:** 29
+**Completed:** 9/29 (31%)
 
 **Por Fase:**
-- FASE 1: 0/6 tareas (Migración DevChatMobileDev.tsx)
-- FASE 2: 0/11 tareas (Testing Exhaustivo Dev)
-- FASE 3: 0/5 tareas (Migración ChatMobile.tsx)
-- FASE 4: 0/7 tareas (Testing Final + Validación)
+- FASE 1: ✅ 5/5 tareas (100% COMPLETADA)
+- FASE 2: ✅ 4/5 tareas (80%) - 🔜 Pendiente: Test workflow en GitHub
+- FASE 3: 0/6 tareas (0%)
+- FASE 4: 0/2 tareas (0%)
+- FASE 5: 0/5 tareas (0%)
 
-**Estimación Total:** ~5 horas
-- FASE 1: ~2h
-- FASE 2: ~1h
-- FASE 3: ~1h
-- FASE 4: ~1h
+**Archivos creados en FASE 2:**
+```
+new file:   .github/workflows/deploy.yml (74 líneas)
+new file:   docs/deployment/GITHUB_SECRETS.md (141 líneas)
+```
+
+**Archivos modificados en FASE 1:**
+```
+deleted:    vercel.json
+modified:   package.json
+modified:   .gitignore
+modified:   .claude/agents/deploy-agent.md
+modified:   README.md
+```
+
+**Próxima acción:**
+1. 🔜 FASE 2.5 - Test workflow en GitHub (manual - 10min)
+2. Continuar con FASE 3 - VPS Setup Guide (2h estimado)
 
 ---
 
-**Última actualización:** Octubre 4, 2025
-**Estado:** 📋 Planificación completa, listo para ejecutar FASE 1
-**Siguiente paso:** Usar prompts de `fixed-layout-migration-prompt-workflow.md`
+**Última actualización:** 4 de Octubre 2025 - FASE 2: 80% completada ✅

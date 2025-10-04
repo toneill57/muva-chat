@@ -21,7 +21,7 @@ InnPilot es una plataforma web moderna para ayudar a hoteles colombianos con la 
 - **Backend**: Next.js API Routes (Edge Runtime)
 - **Database**: Supabase (PostgreSQL + pgvector + 🪆 Matryoshka Multi-Tier Embeddings ✅)
 - **AI**: OpenAI text-embedding-3-large + Anthropic Claude
-- **Deploy**: Vercel US East
+- **Deploy**: VPS Hostinger (innpilot.io) + GitHub Actions
 
 ## 🪆 Matryoshka Multi-Tier Embeddings ⚡
 
@@ -76,7 +76,7 @@ node scripts/populate-embeddings.js
 ```
 
 La aplicación está disponible en:
-- **Producción**: https://innpilot.vercel.app
+- **Producción**: https://innpilot.io
 - **Desarrollo local**: http://localhost:3000
 
 ## 📁 Estructura del Proyecto
@@ -119,7 +119,7 @@ sql/                            # Database functions
 #### 🚀 Premium Chat API (NEW - 77% más rápido)
 ```javascript
 // Premium conversational chat - hotel + tourism combined
-const response = await fetch('https://innpilot.vercel.app/api/premium-chat', {
+const response = await fetch('https://innpilot.io/api/premium-chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ console.log(data.sources); // Source attribution for transparency
 #### Multi-tenant Listings Chat (Recomendado)
 ```javascript
 // Chat con acceso a negocio + turismo (según plan)
-const response = await fetch('https://innpilot.vercel.app/api/chat/listings', {
+const response = await fetch('https://innpilot.io/api/chat/listings', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ console.log(data.response); // Respuesta combinada negocio + MUVA
 #### SIRE Chat (Legacy)
 ```javascript
 // Consultar el asistente SIRE específico
-const response = await fetch('https://innpilot.vercel.app/api/chat', {
+const response = await fetch('https://innpilot.io/api/chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ console.log(data.response);
 const formData = new FormData();
 formData.append('file', fileInput.files[0]);
 
-const response = await fetch('https://innpilot.vercel.app/api/validate', {
+const response = await fetch('https://innpilot.io/api/validate', {
   method: 'POST',
   body: formData
 });
@@ -198,7 +198,7 @@ if (validation.isValid) {
 ### System Health Check
 ```javascript
 // Verificar estado del sistema
-const health = await fetch('https://innpilot.vercel.app/api/health')
+const health = await fetch('https://innpilot.io/api/health')
   .then(res => res.json());
 
 console.log('Sistema:', health.status); // "healthy"
@@ -220,7 +220,7 @@ console.log('Servicios:', health.services);
 ### MUVA Tourism Chat API (Standalone)
 ```javascript
 // Chat especializado SOLO para turismo en San Andrés
-const response = await fetch('https://innpilot.vercel.app/api/chat/muva', {
+const response = await fetch('https://innpilot.io/api/chat/muva', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -311,21 +311,46 @@ El sistema valida archivos con estas especificaciones:
 
 ## 🚀 Deploy
 
-### Vercel (Recomendado)
+### Production Deployment (VPS Hostinger)
 
+La aplicación se despliega automáticamente vía GitHub Actions cuando se hace push a `dev`.
+
+**Deployment Workflow:**
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel --prod
+git push origin dev
+# → GitHub Actions build + deploy
+# → Live on https://innpilot.io (< 5min)
 ```
 
-La aplicación se desplegará automáticamente en US East para optimizar latencia desde Colombia.
+**Manual Deployment:**
+Ver guía completa en [docs/deployment/VPS_SETUP_GUIDE.md](docs/deployment/VPS_SETUP_GUIDE.md)
 
-### Variables de Entorno en Vercel
+**Verificación:**
+```bash
+# Health check
+curl https://innpilot.io/api/health
 
-Configurar las mismas variables de `.env.local` en el dashboard de Vercel.
+# Check SSL
+curl -vI https://innpilot.io
+```
+
+**Logs:**
+```bash
+# SSH to VPS
+ssh user@innpilot.io
+
+# View PM2 logs
+pm2 logs innpilot
+
+# View Nginx logs
+sudo tail -f /var/log/nginx/innpilot-access.log
+sudo tail -f /var/log/nginx/innpilot-error.log
+```
+
+### Variables de Entorno en VPS
+
+Configurar las variables de `.env.local` en el servidor VPS.
+Ver [docs/deployment/VPS_SETUP_GUIDE.md](docs/deployment/VPS_SETUP_GUIDE.md) para detalles.
 
 ## 🔐 Base de Datos
 
@@ -423,7 +448,7 @@ CREATE INDEX CONCURRENTLY idx_client_info_embedding_hnsw ON client_info USING hn
 node scripts/populate-embeddings.js --test
 
 # Monitor API performance via health endpoint
-curl https://innpilot.vercel.app/api/health
+curl https://innpilot.io/api/health
 ```
 
 ### **🪆 Matryoshka Document Embedding Management**
@@ -480,7 +505,7 @@ curl -X POST http://localhost:3000/api/chat/listings -H "Content-Type: applicati
 Para usar InnPilot y resolver dudas sobre SIRE:
 
 ### 🌐 Interfaz Web Principal
-- **Chat Assistant**: https://innpilot.vercel.app
+- **Chat Assistant**: https://innpilot.io
 - **Validación de Archivos**: Disponible en la interfaz web
 - **Documentación Técnica**: `/docs/` (para desarrolladores)
 
