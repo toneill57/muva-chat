@@ -79,12 +79,25 @@ export default function DevChatMobileDev() {
     }
   }, [messages.length])
 
-  // iOS Safari: Handle virtual keyboard appearance
+  // iOS Safari: Handle virtual keyboard appearance with smart scroll
   useEffect(() => {
     const handleResize = () => {
-      // When keyboard opens, ensure messages are scrollable
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+      if (typeof window !== 'undefined' && window.visualViewport && messagesContainerRef.current) {
+        const windowHeight = window.innerHeight
+        const viewportHeight = window.visualViewport.height
+        const keyboardHeight = windowHeight - viewportHeight
+
+        // Keyboard is visible if viewport shrinks significantly
+        if (keyboardHeight > 100) {
+          // Scroll to absolute bottom to eliminate gap
+          setTimeout(() => {
+            if (messagesContainerRef.current) {
+              messagesContainerRef.current.scrollTop =
+                messagesContainerRef.current.scrollHeight -
+                messagesContainerRef.current.clientHeight
+            }
+          }, 100)
+        }
       }
     }
 
