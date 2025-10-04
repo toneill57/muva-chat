@@ -31,7 +31,8 @@ if (missingVars.length > 0) {
   process.exit(1)
 }
 
-import { extractTravelIntent, generateAvailabilityURL } from '../../src/lib/public-chat-session'
+import { extractTravelIntent } from '../../src/lib/public-chat-session'
+// NOTE: generateAvailabilityURL removed - using direct API calls instead
 
 // ANSI colors
 const green = '\x1b[32m'
@@ -142,57 +143,11 @@ async function testIntentExtraction() {
 }
 
 // Test 2: Availability URL Generation
+// NOTE: This test is now deprecated - generateAvailabilityURL() removed
+// Availability checks will be handled via direct API calls using travel_intent data
 async function testURLGeneration() {
-  log('Testing availability URL generation...')
-
-  const testCases = [
-    {
-      intent: {
-        check_in: '2025-12-15',
-        check_out: '2025-12-20',
-        guests: 4,
-        accommodation_type: 'apartment',
-        budget_range: null,
-        preferences: [],
-      },
-      baseURL: 'https://simmerdown.house',
-      expected: 'https://simmerdown.house/availability?check_in=2025-12-15&check_out=2025-12-20&guests=4',
-    },
-    {
-      intent: {
-        check_in: '2025-12-25',
-        check_out: null,
-        guests: 2,
-        accommodation_type: null,
-        budget_range: null,
-        preferences: [],
-      },
-      baseURL: 'https://simmerdown.house',
-      expected: 'https://simmerdown.house/availability?check_in=2025-12-25&guests=2',
-    },
-    {
-      intent: {
-        check_in: null,
-        check_out: null,
-        guests: null,
-        accommodation_type: null,
-        budget_range: null,
-        preferences: [],
-      },
-      baseURL: 'https://simmerdown.house',
-      expected: null,
-    },
-  ]
-
-  for (const { intent, baseURL, expected } of testCases) {
-    const url = generateAvailabilityURL(baseURL, intent)
-
-    if (url === expected) {
-      success(`  ✓ URL generation correct: ${url || 'null'}`)
-    } else {
-      error(`  ✗ Expected: ${expected}, got: ${url}`)
-    }
-  }
+  warn('⚠ Availability URL generation test SKIPPED - feature removed in favor of direct API calls')
+  return
 }
 
 // Test 3: Database Tables Exist

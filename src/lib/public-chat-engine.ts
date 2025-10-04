@@ -2,7 +2,7 @@
  * Public Chat Engine
  *
  * Marketing-focused conversational chat for public/anonymous visitors.
- * Includes travel intent extraction and availability URL generation.
+ * Includes travel intent extraction for future API-based availability checks.
  */
 
 import Anthropic from '@anthropic-ai/sdk'
@@ -10,7 +10,6 @@ import {
   getOrCreatePublicSession,
   updatePublicSession,
   extractTravelIntent,
-  generateAvailabilityURL,
   type PublicSession,
 } from './public-chat-session'
 import {
@@ -36,12 +35,6 @@ function getAnthropicClient(): Anthropic {
     })
   }
   return anthropic
-}
-
-// Base URL for tenant websites (configurable per tenant)
-const TENANT_BASE_URLS: Record<string, string> = {
-  simmerdown: 'https://simmerdown.house',
-  // Add more tenants as needed
 }
 
 // ============================================================================
@@ -70,7 +63,6 @@ export interface PublicChatResponse {
     accommodation_type: string | null
     captured_this_message: boolean
   }
-  availability_url?: string
   suggestions: string[]
 }
 
@@ -127,16 +119,13 @@ export async function generatePublicChatResponse(
       preferences: session.travel_intent.preferences,
     }
 
-    // STEP 5: Generate availability URL if intent is complete
-    const baseURL = TENANT_BASE_URLS[tenantId] || `https://${tenantId}.com`
-    const availabilityURL = generateAvailabilityURL(baseURL, mergedIntent)
-
-    // STEP 6: Build system prompt (marketing-focused)
+    // STEP 5: Build system prompt (marketing-focused)
+    // NOTE: availabilityURL removed - using direct API calls instead
     const systemPrompt = buildMarketingSystemPrompt(
       session,
       searchResults,
       mergedIntent,
-      availabilityURL,
+      null, // No longer generating MotoPress URL
       conversationMemories
     )
 
@@ -176,7 +165,7 @@ export async function generatePublicChatResponse(
         accommodation_type: mergedIntent.accommodation_type,
         captured_this_message: intentCaptured,
       },
-      availability_url: availabilityURL || undefined,
+      // availability_url removed - using direct API calls instead
       suggestions,
     }
   } catch (error) {
@@ -254,7 +243,6 @@ Preguntas clave: ${m.key_entities.key_questions?.join(', ') || 'N/A'}
 - Check-out: ${travelIntent.check_out || 'No especificado'}
 - Huéspedes: ${travelIntent.guests || 'No especificado'}
 - Tipo: ${travelIntent.accommodation_type || 'No especificado'}
-${availabilityURL ? `\nURL DE DISPONIBILIDAD: ${availabilityURL}` : ''}
 `
     : ''
 
@@ -287,12 +275,11 @@ ${searchContext || 'No se encontraron resultados relevantes.'}
 
 INSTRUCCIONES:
 1. Si identificas fechas/huéspedes, confirma y ofrece opciones relevantes
-2. Si hay URL de disponibilidad, MENCIONA que pueden "ver disponibilidad en tiempo real" y sugiérelo sutilmente
-3. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
-4. Incluye precios cuando estén disponibles
-5. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
-6. Siempre termina con pregunta o CTA para continuar conversación
-7. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
+2. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
+3. Incluye precios cuando estén disponibles
+4. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
+5. Siempre termina con pregunta o CTA para continuar conversación
+6. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
 
 Responde de manera natural, útil y orientada a conversión.`
 }
@@ -453,17 +440,14 @@ export async function* generatePublicChatResponseStream(
       preferences: session.travel_intent.preferences,
     }
 
-    // STEP 5: Generate availability URL if intent is complete
-    const baseURL = TENANT_BASE_URLS[tenantId] || `https://${tenantId}.com`
-    const availabilityURL = generateAvailabilityURL(baseURL, mergedIntent)
-
-    // STEP 6: Build system prompt
+    // STEP 5: Build system prompt
+    // NOTE: availabilityURL removed - using direct API calls instead
     const promptStartTime = Date.now()
     const systemPrompt = buildMarketingSystemPrompt(
       session,
       searchResults,
       mergedIntent,
-      availabilityURL,
+      null, // No longer generating MotoPress URL
       conversationMemories
     )
     const promptTime = Date.now() - promptStartTime
