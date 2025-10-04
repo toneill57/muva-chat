@@ -90,6 +90,10 @@ export default function DevChatMobileDev() {
   const handleNewConversation = useCallback(() => {
     // Clear session from localStorage
     localStorage.removeItem('dev_chat_session_id')
+
+    // Clear session cookie (critical for backend to create new session)
+    document.cookie = 'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+
     // Reset state
     setSessionId(null)
     setMessages([])
