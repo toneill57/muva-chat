@@ -305,7 +305,16 @@ export default function DevChatMobileDev() {
                       ) : (
                         <div className="text-sm leading-relaxed">
                           <Suspense fallback={<div className="text-sm text-gray-600">{message.content}</div>}>
-                            <ReactMarkdown remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}>
+                            <ReactMarkdown
+                              remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
+                              components={{
+                                ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />,
+                                li: ({node, ...props}) => <li className="ml-2" {...props} />,
+                                hr: ({node, ...props}) => <hr className="my-3 border-gray-300" {...props} />,
+                                strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+                              }}
+                            >
                               {message.content}
                             </ReactMarkdown>
                           </Suspense>
