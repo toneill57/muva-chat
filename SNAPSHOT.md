@@ -2,18 +2,318 @@
 title: "InnPilot Project SNAPSHOT - Mobile-First Chat Interface"
 description: "Estado actual del proyecto InnPilot - Octubre 2025. Desarrollo de interfaz mobile-first fullscreen para chat conversacional."
 category: architecture-snapshot
-status: PLANNING_COMPLETE
-version: "1.0-MOBILE-FIRST-CHAT"
+status: FASE_0_COMPLETE_SESSION_MEMORY_FIXED
+version: "1.1-SESSION-MANAGEMENT"
 last_updated: "2025-10-03"
-tags: [mobile_first, chat_interface, fullscreen, planning_complete, fase_1_ready]
-keywords: ["mobile_first", "chat_interface", "fullscreen", "ux_interface", "safe_areas", "streaming_sse"]
+tags: [mobile_first, chat_interface, session_memory, bug_fixes, fase_0_complete]
+keywords: ["mobile_first", "chat_interface", "session_management", "cookie_persistence", "reset_functionality", "streaming_sse"]
 ---
 
 # 🏗️ InnPilot Project SNAPSHOT - Mobile-First Chat Interface
 
-**Última actualización**: 3 Octubre 2025
-**Estado**: Planning Complete → FASE 1 Ready
+**Última actualización**: 3 Octubre 2025 23:45
+**Estado**: FASE 0 Complete (Session Management Fixed) → FASE 1 Ready
 **Agente Principal**: ux-interface
+
+---
+
+## 🔧 TRABAJO REALIZADO - Sesión 3 Oct 2025
+
+### FASE 0: Session Management & Bug Fixes ✅ COMPLETADO
+
+**Duración**: ~4 horas
+**Commits**: 12+ commits (ver lista abajo)
+**Objetivo**: Resolver bugs críticos de persistencia de sesión antes de iniciar FASE 1
+
+#### Bugs Críticos Solucionados
+
+##### 1. 🚨 CRÍTICO: Streaming API No Persistía Sesiones
+**Problema**: Cada mensaje creaba una nueva sesión, sin memoria conversacional
+**Root Cause**: `/api/dev/chat/route.ts` streaming path no configuraba cookie `Set-Cookie`
+**Impacto**: Conversación sin contexto, experiencia rota
+
+**Solución** (`src/app/api/dev/chat/route.ts:177-240`):
+```typescript
+// ANTES (broken):
+if (wantsStream) {
+  return new Response(stream, {
+    headers: { 'Content-Type': 'text/event-stream' }
+    // ❌ NO Set-Cookie header
+  })
+}
+
+// DESPUÉS (fixed):
+if (wantsStream) {
+  // Get or create session BEFORE streaming
+  const { getOrCreateDevSession } = await import('@/lib/dev-chat-session')
+  const session = await getOrCreateDevSession(effectiveSessionId, tenant_id)
+  const sessionId = session.session_id
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      for await (const chunk of generateDevChatResponseStream(...)) {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`))
+      }
+      // ✅ Send session_id in 'done' event
+      controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+        type: 'done',
+        session_id: sessionId
+      })}\n\n`))
+    }
+  })
+
+  // ✅ Add Set-Cookie header to streaming response
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Set-Cookie': `session_id=${sessionId}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${7*24*60*60}`
+    }
+  })
+}
+```
+
+**Resultado**: ✅ Session cookie ahora se crea en primer mensaje y persiste
+
+##### 2. Reset Functionality Sin Implementar
+**Problema**: HttpOnly cookies no se pueden eliminar desde JavaScript
+**User Feedback**: "Cuando hago clic en reset, el Session ID permanece igual siempre"
+
+**Solución**: Crear endpoints backend para expirar cookies
+
+**Archivos Creados**:
+- `src/app/api/dev/reset-session/route.ts` (NEW)
+- `src/app/api/public/reset-session/route.ts` (NEW)
+
+```typescript
+export async function POST() {
+  const response = NextResponse.json({ success: true })
+
+  // Expire cookie with Max-Age=0
+  const cookieOptions = [
+    'session_id=',
+    'HttpOnly',
+    'Secure',
+    'SameSite=Strict',
+    'Path=/',
+    'Max-Age=0'  // ← Expires immediately
+  ]
+
+  response.headers.set('Set-Cookie', cookieOptions.join('; '))
+  return response
+}
+```
+
+**Componentes Actualizados**:
+- `src/components/Dev/DevChatMobileDev.tsx` - Reset button + API call
+- `src/components/Dev/DevChatInterface.tsx` - Reset button + API call
+- `src/components/Public/PublicChatInterface.tsx` - Reset button + API call
+
+```typescript
+const handleNewConversation = async () => {
+  // Clear localStorage
+  localStorage.removeItem('dev_chat_session_id')
+
+  // Call backend to expire HttpOnly cookie
+  await fetch('/api/dev/reset-session', { method: 'POST' })
+
+  // Reset React state
+  setSessionId(null)
+  setMessages([])
+  setCurrentIntent({})
+}
+```
+
+**Resultado**: ✅ Reset button ahora limpia sesión completamente
+
+##### 3. Compression Threshold Demasiado Agresivo
+**Problema**: 20 mensajes (10 pares) muy corto, perdía contexto rápido
+**User Request**: "Prefiero que sea a los 100 mensajes, 50 es muy poco"
+
+**Archivos Modificados**:
+- `src/lib/dev-chat-session.ts:207-217`
+- `src/lib/public-chat-session.ts:205-220`
+
+```typescript
+// ANTES: >= 20 mensajes → comprimir primeros 10
+if (history.length >= 20) {
+  const toCompress = history.slice(0, 10)
+  const toKeep = history.slice(10)
+}
+
+// DESPUÉS: >= 100 mensajes → comprimir primeros 50
+if (history.length >= 100) {
+  const toCompress = history.slice(0, 50)
+  const toKeep = history.slice(50)
+}
+```
+
+**Resultado**: ✅ Mejor retención de contexto en conversaciones largas
+
+##### 4. DEV Badge Bloqueaba UI Elements
+**Problema**: Badge overlay `fixed top-4 right-4` tapaba reset button y título
+**User Feedback**: "Se ve detrás del dev mode"
+
+**Solución** (`src/components/Dev/DevChatMobileDev.tsx`):
+```typescript
+// ANTES: Fixed overlay (bloqueaba UI)
+<div className="fixed top-4 left-4 z-50 bg-purple-600 ...">
+  DEV MODE
+</div>
+
+// DESPUÉS: Integrado en header flex layout
+<div className="flex items-center justify-between px-4 gap-2">
+  {/* Left: Icon + Title */}
+  <div className="flex items-center gap-3 flex-1 min-w-0">
+    <Bot />
+    <h1 className="truncate">Simmer Down Chat</h1>
+  </div>
+
+  {/* Center: Badge */}
+  <div className="bg-purple-600/90 px-2.5 py-1 rounded-full flex-shrink-0">
+    <p className="text-xs font-bold">🚧 DEV</p>
+  </div>
+
+  {/* Right: Reset Button */}
+  <button className="flex-shrink-0">
+    <RotateCcw />
+  </button>
+</div>
+```
+
+**Resultado**: ✅ Todo visible y accesible, layout limpio
+
+##### 5. API Key Security - Git Push Protection
+**Problema**: GitHub secret scanning bloqueó push por keys expuestos
+**User Feedback**: "Como así que remover? De pronto se puede hacer workaround"
+
+**Archivos Afectados**:
+- `scripts/run-benchmarks.sh` - Hardcoded ANTHROPIC_API_KEY
+- `docs/conversation-memory/fase-5/VALIDATION.md` - API key en ejemplo
+
+**Solución**:
+```bash
+# ANTES: Hardcoded key
+ANTHROPIC_API_KEY="sk-ant-api03-..." npm run test
+
+# DESPUÉS: Environment variable
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+  echo "❌ Error: ANTHROPIC_API_KEY not set"
+  exit 1
+fi
+
+ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" npm run test
+```
+
+**Documentación Maskeada**:
+```bash
+ANTHROPIC_API_KEY=sk-ant-api03-****** (from .env.local)
+```
+
+**Resultado**: ✅ Push exitoso sin exponer credenciales
+
+##### 6. TypeScript Build Error - embedding-cache.ts
+**Error**: `Type 'string | undefined' not assignable to 'string'`
+
+**Fix** (`src/lib/embedding-cache.ts:91-96`):
+```typescript
+// ANTES:
+const oldestKey = this.cache.keys().next().value
+this.cache.delete(oldestKey)
+
+// DESPUÉS:
+const oldestKey = this.cache.keys().next().value as string | undefined
+if (oldestKey) {
+  this.cache.delete(oldestKey)
+}
+```
+
+**Resultado**: ✅ Build limpio sin errores
+
+#### Arquitectura de Session Management
+
+**Multi-Layer Session Persistence**:
+```
+┌─────────────────────────────────────┐
+│ CLIENT (React State)                │
+│ - sessionId: string | null          │
+│ - messages: Message[]               │
+│ - currentIntent: TravelIntent       │
+└──────────────┬──────────────────────┘
+               │
+               ├─── localStorage (client-side persistence)
+               │    - 'dev_chat_session_id'
+               │    - Survives page refresh
+               │    - Can be cleared by JS
+               │
+               └─── Cookie (server-side persistence)
+                    - session_id (HttpOnly, Secure)
+                    - Set by streaming API
+                    - Cannot be cleared by JS
+                    - Expires via backend API
+```
+
+**Reset Flow**:
+```
+1. User clicks Reset button
+   ↓
+2. localStorage.removeItem('dev_chat_session_id')
+   ↓
+3. fetch('/api/dev/reset-session', { method: 'POST' })
+   ↓
+4. Backend: Set-Cookie with Max-Age=0
+   ↓
+5. React state: setSessionId(null), setMessages([])
+   ↓
+6. Next message creates new session
+```
+
+#### Commits de Esta Sesión
+
+```bash
+# Security & Setup
+1. fix: mask API keys in docs and use env vars in scripts
+2. chore: update git status with new untracked files
+
+# Compression Optimization
+3. feat: increase compression threshold to 100 messages (50 pairs)
+
+# Reset Functionality
+4. feat: add reset conversation button to DevChatInterface
+5. feat: add reset conversation button to PublicChatInterface
+6. feat: add reset conversation button to DevChatMobileDev
+
+# UI Fixes
+7. fix: move DEV badge to top-left to avoid blocking reset button
+8. fix: integrate DEV badge into header layout (no overlay)
+
+# CRITICAL: Session Persistence
+9. fix: add session cookie to streaming API response
+10. feat: create reset-session API endpoints for HttpOnly cookie expiration
+11. feat: integrate reset-session API into all chat components
+
+# Type Safety
+12. fix: add type assertion for Map iterator in embedding-cache.ts
+```
+
+#### Lecciones Aprendidas
+
+1. **HttpOnly Cookies**: Requieren backend para expirarse (Max-Age=0)
+2. **Streaming Responses**: Headers diferentes a regular HTTP responses
+3. **Session Management**: Multi-layer approach (cookie + localStorage + state)
+4. **Git Security**: GitHub push protection detecta API keys automáticamente
+5. **UI Overlays**: `fixed` position puede bloquear interactive elements
+6. **TypeScript Strictness**: Map iterators retornan `| undefined`
+
+#### Estado Post-FASE 0
+
+✅ **Session Persistence**: Working
+✅ **Reset Functionality**: Working
+✅ **Compression Threshold**: Optimizado (100 mensajes)
+✅ **UI Layout**: Clean, sin overlays bloqueantes
+✅ **Security**: API keys protegidos
+✅ **Build**: Sin errores TypeScript
+
+**Próximo Paso**: Ejecutar FASE 1 (Estructura Base) con confianza en session management
 
 ---
 
@@ -50,6 +350,17 @@ Crear una interfaz de chat **fullscreen mobile-first** que elimina toda decoraci
 
 ### Fases de Desarrollo
 
+#### FASE 0: Session Management & Bug Fixes ✅ COMPLETADO (3 Oct 2025)
+- [x] Fix streaming API cookie persistence (CRITICAL)
+- [x] Implement reset session functionality
+- [x] Optimize compression threshold (20→100 messages)
+- [x] Fix DEV badge UI blocking
+- [x] Secure API keys in repository
+- [x] Fix TypeScript build errors
+
+**Duración**: ~4 horas
+**Commits**: 12+
+
 #### FASE 1: Estructura Base (2-3h) - 🔜 READY TO START
 - [ ] Crear página `/chat-mobile` (30min)
 - [ ] Crear componente `DevChatMobile.tsx` (1.5h)
@@ -74,7 +385,7 @@ Crear una interfaz de chat **fullscreen mobile-first** que elimina toda decoraci
 - [ ] Accessibility (1h)
 - [ ] Lighthouse audit (30min)
 
-**Timeline Total**: 8-12 horas de desarrollo
+**Timeline Total**: 12-16 horas de desarrollo (FASE 0 completada)
 
 ---
 
@@ -377,23 +688,67 @@ TAREA: Crear página mobile-first en /chat-mobile
 ## 📈 TRACKING DE PROGRESO
 
 ### Estado por Fase
+- **FASE 0**: 100% (6/6 tareas) - ✅ Completada (3 Oct 2025)
 - **FASE 1**: 0% (0/4 tareas) - 🔜 Ready to start
 - **FASE 2**: 0% (0/5 tareas) - Pending
 - **FASE 3**: 0% (0/5 tareas) - Pending
 - **FASE 4**: 0% (0/5 tareas) - Pending
 
-**Total Progress**: 0/19 tareas completadas (0%)
+**Total Progress**: 6/25 tareas completadas (24%)
 
 ### Timeline Estimado
 - **Inicio**: 3 Octubre 2025
-- **FASE 1**: 3-4 Octubre (2-3h)
-- **FASE 2**: 4-5 Octubre (3-4h)
-- **FASE 3**: 5-6 Octubre (2-3h)
-- **FASE 4**: 6-7 Octubre (1-2h)
-- **Completado estimado**: 7 Octubre 2025
+- **FASE 0**: ✅ 3 Octubre (4h) - Completado
+- **FASE 1**: 4-5 Octubre (2-3h)
+- **FASE 2**: 5-6 Octubre (3-4h)
+- **FASE 3**: 6-7 Octubre (2-3h)
+- **FASE 4**: 7-8 Octubre (1-2h)
+- **Completado estimado**: 8 Octubre 2025
 
 ---
 
-**🎨 Mobile-First Chat Interface**: Interfaz limpia, fullscreen, optimizada para móviles de alta gama. Planning completo, FASE 1 ready to start.
+**🎨 Mobile-First Chat Interface**: Interfaz limpia, fullscreen, optimizada para móviles de alta gama. FASE 0 completada (session management fixed), FASE 1 ready to start.
 
 **✨ Next Action**: Ejecutar Prompt 1.1 con `@ux-interface` para crear página `/chat-mobile`
+
+---
+
+## 📝 HISTORIAL DE SESIONES
+
+### Sesión 3 Oct 2025 (FASE 0) - ✅ Completada
+**Duración**: ~4 horas
+**Objetivo**: Resolver bugs críticos de session management
+**Commits**: 12+
+**Estado**: Session persistence working, reset functionality implemented
+
+**Bugs Solucionados**:
+- 🚨 CRÍTICO: Streaming API no persistía session cookie
+- Reset conversation button sin funcionalidad
+- Compression threshold demasiado agresivo (20→100)
+- DEV badge bloqueaba UI elements
+- API keys expuestos en repositorio
+- TypeScript build error en embedding-cache.ts
+
+**Archivos Creados**:
+- `src/app/api/dev/reset-session/route.ts`
+- `src/app/api/public/reset-session/route.ts`
+
+**Archivos Modificados**:
+- `src/app/api/dev/chat/route.ts` (streaming fix)
+- `src/lib/dev-chat-session.ts` (compression threshold)
+- `src/lib/public-chat-session.ts` (compression threshold)
+- `src/components/Dev/DevChatMobileDev.tsx` (reset button + badge layout)
+- `src/components/Dev/DevChatInterface.tsx` (reset button)
+- `src/components/Public/PublicChatInterface.tsx` (reset button)
+- `src/lib/embedding-cache.ts` (type safety)
+- `scripts/run-benchmarks.sh` (env vars)
+- `docs/conversation-memory/fase-5/VALIDATION.md` (masked key)
+
+**Lecciones Aprendidas**:
+1. HttpOnly cookies requieren backend para expirarse
+2. Streaming responses necesitan Set-Cookie en headers
+3. Session management multi-layer: cookie + localStorage + React state
+4. GitHub push protection detecta API keys automáticamente
+5. Fixed overlays pueden bloquear interactive elements
+
+**Próximo Paso**: FASE 1 (Estructura Base) con session management estable
