@@ -318,9 +318,6 @@ export default function DevChatMobileDev() {
                               {message.content}
                             </ReactMarkdown>
                           </Suspense>
-                          {loading && message.content && (
-                            <span className="inline-block w-2 h-4 bg-gray-900 ml-0.5 animate-pulse" />
-                          )}
                         </div>
                       )}
                     </>
