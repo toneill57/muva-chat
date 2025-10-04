@@ -14,7 +14,7 @@ export const viewport = {
 
 export default function ChatMobileDevPage() {
   return (
-    <main className="h-screen w-screen overflow-hidden relative">
+    <main className="h-screen w-screen overflow-hidden relative bg-[hsl(var(--chat-bg))]">
       <DevChatMobileDev />
     </main>
   )
