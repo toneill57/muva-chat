@@ -57,10 +57,6 @@ export default function ChatMobile() {
     }
   }, [])
 
-  // Auto-focus input on mount for accessibility
-  useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
 
   // Debounced auto-resize for textarea (performance optimization)
   const handleTextareaResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
@@ -342,7 +338,7 @@ export default function ChatMobile() {
         aria-atomic="false"
         aria-label="Chat messages"
       >
-        <div className="flex flex-col min-h-full justify-end">
+        <div className="flex flex-col min-h-full">
           <div className="space-y-4 py-4">
           {messages.map((message, index) => (
             <div
