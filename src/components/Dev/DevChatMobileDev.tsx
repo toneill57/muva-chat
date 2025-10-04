@@ -52,7 +52,9 @@ export default function DevChatMobileDev() {
   }, [])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messages.length > 1) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
   }, [messages])
 
   useEffect(() => {
@@ -236,9 +238,9 @@ export default function DevChatMobileDev() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-screen bg-white" role="main">
       {/* Header */}
-      <header className="bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
         <div className="h-16 flex items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -253,7 +255,8 @@ export default function DevChatMobileDev() {
 
           <button
             onClick={handleNewConversation}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
+            aria-label="Start new conversation"
           >
             <RotateCcw className="w-5 h-5" />
           </button>
@@ -261,8 +264,8 @@ export default function DevChatMobileDev() {
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white">
-        <div className="space-y-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth" role="log" aria-live="polite" aria-atomic="false">
+        <div className="space-y-4">
           {messages.map((message) => (
             <div
               key={message.id}
@@ -354,10 +357,11 @@ export default function DevChatMobileDev() {
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="px-3 py-1.5 bg-teal-50 hover:bg-teal-100
+                        className="px-4 py-2.5 min-h-[44px] bg-teal-50 hover:bg-teal-100
                                    text-teal-700 text-sm rounded-full
                                    border border-teal-200
                                    transition-colors"
+                        aria-label={`Quick reply: ${suggestion}`}
                       >
                         {suggestion}
                       </button>
@@ -395,7 +399,7 @@ export default function DevChatMobileDev() {
       )}
 
       {/* Input */}
-      <div className="bg-white border-t border-gray-200 p-4">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
@@ -405,6 +409,7 @@ export default function DevChatMobileDev() {
             placeholder="Type your message..."
             disabled={loading}
             maxLength={2000}
+            aria-label="Message input"
             className="flex-1 resize-none rounded-xl border border-gray-300
                        focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 focus:outline-none
                        px-4 py-3 text-base
@@ -416,6 +421,7 @@ export default function DevChatMobileDev() {
           <button
             onClick={sendMessage}
             disabled={!input.trim() || loading}
+            aria-label="Send message"
             className="bg-gradient-to-r from-teal-500 to-cyan-600
                        text-white rounded-xl
                        w-11 h-11
