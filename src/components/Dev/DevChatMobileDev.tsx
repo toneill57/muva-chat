@@ -34,9 +34,13 @@ export default function DevChatMobileDev() {
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
+  const [isPulling, setIsPulling] = useState(false)
+  const [isDark, setIsDark] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const pullStartY = useRef<number>(0)
 
   useEffect(() => {
     import('remark-gfm').then((module) => {
@@ -237,8 +241,33 @@ export default function DevChatMobileDev() {
     }
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (messagesContainerRef.current?.scrollTop === 0) {
+      pullStartY.current = e.touches[0].clientY
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (pullStartY.current === 0) return
+
+    const currentY = e.touches[0].clientY
+    const diff = currentY - pullStartY.current
+
+    if (diff > 80 && !isPulling) {
+      setIsPulling(true)
+    }
+  }
+
+  const handleTouchEnd = () => {
+    if (isPulling) {
+      messagesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      setTimeout(() => setIsPulling(false), 300)
+    }
+    pullStartY.current = 0
+  }
+
   return (
-    <div className="flex flex-col h-screen bg-white" role="main">
+    <div className={`flex flex-col h-screen bg-[hsl(var(--chat-bg))] ${isDark ? 'dark' : ''}`} role="main">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
         <div className="h-16 flex items-center justify-between px-4">
@@ -249,22 +278,46 @@ export default function DevChatMobileDev() {
             <h1 className="font-bold text-lg">Simmer Down Chat</h1>
           </div>
 
-          <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full">
-            <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
-          </div>
+          <div className="flex items-center gap-2">
+            <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full">
+              <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
+            </div>
 
-          <button
-            onClick={handleNewConversation}
-            className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
-            aria-label="Start new conversation"
-          >
-            <RotateCcw className="w-5 h-5" />
-          </button>
+            <button
+              onClick={() => setIsDark(!isDark)}
+              className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
+              aria-label="Toggle dark mode"
+            >
+              <span className="text-lg">{isDark ? '☀️' : '🌙'}</span>
+            </button>
+
+            <button
+              onClick={handleNewConversation}
+              className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
+              aria-label="Start new conversation"
+            >
+              <RotateCcw className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth" role="log" aria-live="polite" aria-atomic="false">
+      <div
+        ref={messagesContainerRef}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-[hsl(var(--chat-messages-bg-start))] to-[hsl(var(--chat-messages-bg-end))] pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+      >
+        {isPulling && (
+          <div className="absolute top-[calc(64px+env(safe-area-inset-top)+0.5rem)] left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg z-10">
+            <p className="text-sm text-teal-600 font-medium">↓ Ir al inicio</p>
+          </div>
+        )}
         <div className="space-y-4">
           {messages.map((message) => (
             <div
@@ -278,8 +331,8 @@ export default function DevChatMobileDev() {
                 <div
                   className={`rounded-2xl px-4 py-3 ${
                     message.role === 'user'
-                      ? 'bg-blue-500 text-white rounded-br-sm shadow-md'
-                      : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100'
+                      ? 'bg-[hsl(var(--chat-user-bubble))] text-white rounded-br-sm shadow-md'
+                      : 'bg-[hsl(var(--chat-assistant-bubble))] text-[hsl(var(--chat-assistant-text))] rounded-bl-sm shadow-sm border border-[hsl(var(--chat-border))]'
                   }`}
                 >
                   {message.role === 'assistant' ? (
@@ -291,7 +344,7 @@ export default function DevChatMobileDev() {
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       ) : (
-                        <div className="text-base leading-relaxed">
+                        <div className="text-base leading-[1.6]">
                           <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
                             <ReactMarkdown
                               remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
@@ -310,7 +363,7 @@ export default function DevChatMobileDev() {
                       )}
                     </>
                   ) : (
-                    <p className="text-base whitespace-pre-wrap leading-relaxed text-white">
+                    <p className="text-base whitespace-pre-wrap leading-[1.6] text-white">
                       {message.content}
                     </p>
                   )}
@@ -370,21 +423,29 @@ export default function DevChatMobileDev() {
 
       {/* Error Banner */}
       {error && (
-        <div className="bg-red-50 border-t border-red-200 p-3">
+        <div className="fixed bottom-[calc(80px+env(safe-area-inset-bottom))] left-0 right-0 z-40 bg-red-50 border-t border-red-200 p-3 shadow-lg">
           <div className="flex items-center justify-between max-w-lg mx-auto">
             <p className="text-sm text-red-700 flex-1">{error}</p>
-            <button
-              onClick={retryLastMessage}
-              className="text-sm text-red-600 hover:text-red-800 font-medium underline ml-3"
-            >
-              Retry
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={retryLastMessage}
+                className="text-sm text-red-600 hover:text-red-800 font-medium underline"
+              >
+                Retry
+              </button>
+              <button
+                onClick={() => setError(null)}
+                className="text-sm text-red-400 hover:text-red-600 font-medium"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       {/* Input */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[hsl(var(--chat-bg))] border-t border-[hsl(var(--chat-border))] px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
