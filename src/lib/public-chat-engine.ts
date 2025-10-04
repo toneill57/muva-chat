@@ -272,6 +272,7 @@ INSTRUCCIONES:
 3. Incluye precios cuando estén disponibles
 4. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
 5. Siempre termina con pregunta o CTA para continuar conversación
+6. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
 
 Responde de manera natural, útil y orientada a conversión.`
 }
