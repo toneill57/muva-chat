@@ -285,9 +285,16 @@ export default function DevChatMobileDev() {
 
   return (
     <div
-      className="min-h-[100dvh] h-[100dvh] w-screen flex flex-col bg-white"
+      className="h-[100dvh] w-screen overflow-hidden bg-white relative"
       role="main"
       aria-label="Chat conversation"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }}
     >
       {/* Header fijo con safe area top (notch) */}
       <header
@@ -323,21 +330,24 @@ export default function DevChatMobileDev() {
 
       {/* Messages scrollable con safe areas y smooth scroll */}
       <div
-        className="flex-1 overflow-y-auto px-4
-                   pt-[calc(60px_+_env(safe-area-inset-top)_+_16px)]
-                   pb-[calc(80px_+_env(safe-area-inset-bottom)_+_16px)]
+        className="absolute overflow-y-auto overflow-x-hidden px-4
                    bg-gradient-to-b from-amber-50 to-white
-                   overscroll-behavior-none scroll-smooth"
-        style={{ WebkitOverflowScrolling: 'touch' }}
+                   touch-pan-y"
+        style={{
+          top: 'calc(60px + env(safe-area-inset-top))',
+          bottom: 'calc(80px + env(safe-area-inset-bottom))',
+          left: 0,
+          right: 0,
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehaviorY: 'none',
+          touchAction: 'pan-y'
+        }}
         role="log"
         aria-live="polite"
         aria-atomic="false"
         aria-label="Chat messages"
       >
-        <div className="min-h-full flex flex-col">
-          {/* Spacer that pushes messages to bottom when there's little content */}
-          <div className="flex-1 min-h-0" />
-
+        <div className="flex flex-col min-h-full justify-end">
           <div className="space-y-4 py-4">
           {messages.map((message, index) => (
             <div
@@ -496,6 +506,7 @@ export default function DevChatMobileDev() {
         className="fixed bottom-0 left-0 right-0 z-50
                    bg-white border-t border-gray-200
                    pb-[env(safe-area-inset-bottom)]"
+        style={{ touchAction: 'none' }}
       >
         <div className="p-4">
         <div className="flex gap-2 items-end">
