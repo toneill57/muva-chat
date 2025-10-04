@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Send, Bot, RotateCcw } from 'lucide-react'
+import remarkGfm from 'remark-gfm'
 
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
@@ -33,19 +34,12 @@ export default function ChatMobile() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
-  const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
   const [isPulling, setIsPulling] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
   const pullStartY = useRef<number>(0)
-
-  useEffect(() => {
-    import('remark-gfm').then((module) => {
-      setRemarkGfmPlugin(() => module.default)
-    })
-  }, [])
 
   useEffect(() => {
     const storedSessionId = localStorage.getItem('public_chat_session_id')
@@ -55,15 +49,8 @@ export default function ChatMobile() {
   }, [])
 
   useEffect(() => {
-    if (messages.length > 1) {
+    if (messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    } else if (messages.length === 1) {
-      // Double requestAnimationFrame ensures DOM is fully rendered before scroll
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          messagesEndRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
-        })
-      })
     }
   }, [messages])
 
@@ -79,35 +66,6 @@ export default function ChatMobile() {
     }
   }, [messages.length])
 
-  // iOS Safari: Handle virtual keyboard appearance with smart scroll
-  useEffect(() => {
-    const handleResize = () => {
-      if (typeof window !== 'undefined' && window.visualViewport && messagesContainerRef.current) {
-        const windowHeight = window.innerHeight
-        const viewportHeight = window.visualViewport.height
-        const keyboardHeight = windowHeight - viewportHeight
-
-        // Keyboard is visible if viewport shrinks significantly
-        if (keyboardHeight > 100) {
-          // Scroll to absolute bottom to eliminate gap
-          setTimeout(() => {
-            if (messagesContainerRef.current) {
-              messagesContainerRef.current.scrollTop =
-                messagesContainerRef.current.scrollHeight -
-                messagesContainerRef.current.clientHeight
-            }
-          }, 100)
-        }
-      }
-    }
-
-    if (typeof window !== 'undefined' && 'visualViewport' in window) {
-      window.visualViewport?.addEventListener('resize', handleResize)
-      return () => {
-        window.visualViewport?.removeEventListener('resize', handleResize)
-      }
-    }
-  }, [])
 
   const handleNewConversation = async () => {
     localStorage.removeItem('public_chat_session_id')
@@ -369,7 +327,7 @@ export default function ChatMobile() {
                         <div className="text-base leading-[1.6]">
                           <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
                             <ReactMarkdown
-                              remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
+                              remarkPlugins={[remarkGfm]}
                               components={{
                                 ul: ({node, ...props}) => <ul className="list-disc list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
                                 ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-2 space-y-1 marker:text-xs marker:text-gray-400" {...props} />,
@@ -474,12 +432,6 @@ export default function ChatMobile() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            onFocus={(e) => {
-              // iOS Safari: Scroll input into view when keyboard appears
-              setTimeout(() => {
-                e.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              }, 300)
-            }}
             placeholder="Type your message..."
             disabled={loading}
             maxLength={2000}
