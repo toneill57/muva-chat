@@ -6,6 +6,7 @@ import { Send, Bot, User, RotateCcw } from 'lucide-react'
 // Lazy load heavy components to reduce initial bundle size and improve TTI
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
+const DevAvailabilityCTA = lazy(() => import('../Dev/DevAvailabilityCTA'))
 const DevIntentSummary = lazy(() => import('../Dev/DevIntentSummary'))
 
 // Import remarkGfm dynamically within component
@@ -26,6 +27,7 @@ interface Message {
     num_guests?: number
     accommodation_type?: string
   }
+  availability_url?: string
   suggestions?: string[]
 }
 
@@ -153,7 +155,7 @@ export default function ChatMobile() {
 
       if (!response.ok) {
         const errorText = await response.text()
-        console.error('[DevChatMobileDev] API Error:', {
+        console.error('[ChatMobile] API Error:', {
           status: response.status,
           statusText: response.statusText,
           error: errorText
@@ -206,7 +208,7 @@ export default function ChatMobile() {
                 }
 
                 // Update message with additional metadata (sources, suggestions, etc.)
-                if (data.sources || data.suggestions) {
+                if (data.sources || data.suggestions || data.availability_url) {
                   setMessages(prev =>
                     prev.map(msg =>
                       msg.id === assistantId
@@ -214,6 +216,7 @@ export default function ChatMobile() {
                             ...msg,
                             sources: data.sources,
                             suggestions: data.suggestions,
+                            availability_url: data.availability_url,
                             travel_intent: data.travel_intent
                           }
                         : msg
