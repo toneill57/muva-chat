@@ -35,7 +35,6 @@ export default function DevChatMobileDev() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
   const [isPulling, setIsPulling] = useState(false)
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -80,29 +79,17 @@ export default function DevChatMobileDev() {
     }
   }, [messages.length])
 
-  // Handle virtual keyboard appearance (works with iOS, Gboard, SwiftKey, etc.)
+  // iOS Safari: Handle virtual keyboard appearance
   useEffect(() => {
     const handleResize = () => {
-      if (typeof window !== 'undefined' && window.visualViewport) {
-        // Calculate keyboard height: difference between window height and visible viewport
-        const windowHeight = window.innerHeight
-        const viewportHeight = window.visualViewport.height
-        const calculatedKeyboardHeight = Math.max(0, windowHeight - viewportHeight)
-
-        setKeyboardHeight(calculatedKeyboardHeight)
-
-        // Scroll to bottom when keyboard appears
-        if (messagesContainerRef.current && calculatedKeyboardHeight > 0) {
-          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
-        }
+      // When keyboard opens, ensure messages are scrollable
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
       }
     }
 
     if (typeof window !== 'undefined' && 'visualViewport' in window) {
       window.visualViewport?.addEventListener('resize', handleResize)
-      // Initial check
-      handleResize()
-
       return () => {
         window.visualViewport?.removeEventListener('resize', handleResize)
       }
@@ -336,10 +323,7 @@ export default function DevChatMobileDev() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] overscroll-behavior-contain scroll-smooth relative"
-        style={{
-          paddingBottom: `calc(80px + env(safe-area-inset-bottom) + 1rem + ${keyboardHeight}px)`
-        }}
+        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
         role="log"
         aria-live="polite"
         aria-atomic="false"
