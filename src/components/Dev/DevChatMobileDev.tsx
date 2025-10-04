@@ -35,6 +35,7 @@ export default function DevChatMobileDev() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [remarkGfmPlugin, setRemarkGfmPlugin] = useState<any>(null)
   const [isPulling, setIsPulling] = useState(false)
+  const [viewportHeight, setViewportHeight] = useState<number>(0)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -79,17 +80,25 @@ export default function DevChatMobileDev() {
     }
   }, [messages.length])
 
-  // iOS Safari: Handle virtual keyboard appearance
+  // Handle virtual keyboard: track viewport height for min-height adjustment
   useEffect(() => {
     const handleResize = () => {
-      // When keyboard opens, ensure messages are scrollable
-      if (messagesContainerRef.current) {
-        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+      if (typeof window !== 'undefined' && window.visualViewport) {
+        // Set viewport height to adjust container min-height
+        setViewportHeight(window.visualViewport.height)
+
+        // Scroll to bottom when keyboard appears
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+        }
       }
     }
 
     if (typeof window !== 'undefined' && 'visualViewport' in window) {
       window.visualViewport?.addEventListener('resize', handleResize)
+      // Initial height
+      setViewportHeight(window.visualViewport?.height || window.innerHeight)
+
       return () => {
         window.visualViewport?.removeEventListener('resize', handleResize)
       }
@@ -324,6 +333,9 @@ export default function DevChatMobileDev() {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
+        style={{
+          minHeight: viewportHeight > 0 ? `${viewportHeight - 144}px` : undefined
+        }}
         role="log"
         aria-live="polite"
         aria-atomic="false"
