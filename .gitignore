@@ -43,7 +43,16 @@ node_modules
 
 # local development cache
 .cache/
+
 # Ignorar archivos del sistema macOS
 .DS_Store
 *.log
 *.tmp
+
+# Test results and reports
+/playwright-report
+/test-results
+
+# Backups
+*.backup
+/backups
