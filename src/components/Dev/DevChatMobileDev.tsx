@@ -58,10 +58,12 @@ export default function DevChatMobileDev() {
     if (messages.length > 1) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     } else if (messages.length === 1) {
-      // Delay scroll for welcome message to ensure proper layout after render
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' })
-      }, 100)
+      // Double requestAnimationFrame ensures DOM is fully rendered before scroll
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          messagesEndRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' })
+        })
+      })
     }
   }, [messages])
 
