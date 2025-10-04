@@ -5,9 +5,9 @@ import { Send, Bot, User, RotateCcw } from 'lucide-react'
 
 // Lazy load heavy components to reduce initial bundle size and improve TTI
 const ReactMarkdown = lazy(() => import('react-markdown'))
-const DevPhotoCarousel = lazy(() => import('./DevPhotoCarousel'))
-const DevAvailabilityCTA = lazy(() => import('./DevAvailabilityCTA'))
-const DevIntentSummary = lazy(() => import('./DevIntentSummary'))
+const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
+const DevAvailabilityCTA = lazy(() => import('../Dev/DevAvailabilityCTA'))
+const DevIntentSummary = lazy(() => import('../Dev/DevIntentSummary'))
 
 // Import remarkGfm dynamically within component
 // This prevents loading it on initial page load
