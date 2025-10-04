@@ -280,17 +280,22 @@ export default function DevChatMobileDev() {
                    text-white shadow-md"
         role="banner"
       >
-        <div className="h-[60px] flex items-center justify-between px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center" aria-hidden="true">
+        <div className="h-[60px] flex items-center justify-between px-4 gap-2">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <Bot className="w-6 h-6" />
             </div>
-            <h1 className="font-bold text-lg">Simmer Down Chat</h1>
+            <h1 className="font-bold text-lg truncate">Simmer Down Chat</h1>
+          </div>
+
+          {/* DEV Badge - integrated in header */}
+          <div className="bg-purple-600/90 text-white px-2.5 py-1 rounded-full flex-shrink-0">
+            <p className="text-xs font-bold whitespace-nowrap">🚧 DEV</p>
           </div>
 
           <button
             onClick={handleNewConversation}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors flex-shrink-0"
             aria-label="New conversation"
             title="Start new conversation"
           >
