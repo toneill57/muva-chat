@@ -49,7 +49,9 @@ export default function ChatMobile() {
   }, [])
 
   useEffect(() => {
-    if (messages.length > 0) {
+    // Only scroll for messages AFTER welcome message (length > 1)
+    // Welcome message (length === 1) stays at natural position with padding-top
+    if (messages.length > 1) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }, [messages])
