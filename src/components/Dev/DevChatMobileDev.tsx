@@ -334,7 +334,11 @@ export default function DevChatMobileDev() {
         aria-atomic="false"
         aria-label="Chat messages"
       >
-        <div className="space-y-4 py-4 min-h-full flex flex-col justify-end">
+        <div className="min-h-full flex flex-col">
+          {/* Spacer that pushes messages to bottom when there's little content */}
+          <div className="flex-1 min-h-0" />
+
+          <div className="space-y-4 py-4">
           {messages.map((message, index) => (
             <div
               key={message.id}
@@ -460,6 +464,7 @@ export default function DevChatMobileDev() {
           ))}
 
           <div ref={messagesEndRef} />
+          </div>
         </div>
       </div>
 
