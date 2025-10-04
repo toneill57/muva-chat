@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
-import { Send, Bot, User, RotateCcw } from 'lucide-react'
+import { Send, Bot, RotateCcw } from 'lucide-react'
 
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('./DevPhotoCarousel'))
@@ -269,32 +269,17 @@ export default function DevChatMobileDev() {
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-3 ${
-                message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+              className={`flex animate-[messageIn_0.3s_ease-out] ${
+                message.role === 'user' ? 'justify-end' : 'justify-start'
               }`}
             >
-              {/* Avatar */}
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gradient-to-br from-teal-400 to-cyan-500 text-white'
-                }`}
-              >
-                {message.role === 'user' ? (
-                  <User className="w-5 h-5" />
-                ) : (
-                  <Bot className="w-5 h-5" />
-                )}
-              </div>
-
               {/* Message Content */}
-              <div className={`max-w-[80%] flex flex-col gap-2`}>
+              <div className={`max-w-[85%] flex flex-col gap-2`}>
                 <div
-                  className={`rounded-2xl px-4 py-3 shadow-sm ${
+                  className={`rounded-2xl px-4 py-3 ${
                     message.role === 'user'
-                      ? 'bg-blue-500 text-white rounded-br-sm'
-                      : 'bg-white text-gray-900 rounded-bl-sm border border-gray-100'
+                      ? 'bg-blue-500 text-white rounded-br-sm shadow-md'
+                      : 'bg-white text-gray-900 rounded-bl-sm shadow-sm border border-gray-100'
                   }`}
                 >
                   {message.role === 'assistant' ? (
@@ -369,7 +354,7 @@ export default function DevChatMobileDev() {
                   </div>
                 )}
 
-                <p className="text-xs text-gray-400 px-1">
+                <p className="text-xs text-gray-500 px-1">
                   {message.timestamp.toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: '2-digit'
