@@ -291,8 +291,8 @@ export default function DevChatMobileDev() {
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       ) : (
-                        <div className="text-sm leading-relaxed">
-                          <Suspense fallback={<div className="text-sm text-gray-600">{message.content}</div>}>
+                        <div className="text-base leading-relaxed">
+                          <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
                             <ReactMarkdown
                               remarkPlugins={remarkGfmPlugin ? [remarkGfmPlugin] : []}
                               components={{
@@ -310,7 +310,7 @@ export default function DevChatMobileDev() {
                       )}
                     </>
                   ) : (
-                    <p className="text-sm whitespace-pre-wrap leading-relaxed text-white">
+                    <p className="text-base whitespace-pre-wrap leading-relaxed text-white">
                       {message.content}
                     </p>
                   )}
@@ -343,7 +343,7 @@ export default function DevChatMobileDev() {
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion)}
                         className="px-4 py-2.5 min-h-[44px] bg-teal-50 hover:bg-teal-100
-                                   text-teal-700 text-sm rounded-full
+                                   text-teal-700 text-base rounded-full
                                    border border-teal-200
                                    transition-colors"
                         aria-label={`Quick reply: ${suggestion}`}
