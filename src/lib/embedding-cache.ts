@@ -88,9 +88,11 @@ class EmbeddingCache {
 
     // LRU eviction: remove oldest if at max size
     if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
-      const oldestKey = this.cache.keys().next().value
-      this.cache.delete(oldestKey)
-      console.log('[embedding-cache] Evicted oldest entry (LRU)')
+      const oldestKey = this.cache.keys().next().value as string | undefined
+      if (oldestKey) {
+        this.cache.delete(oldestKey)
+        console.log('[embedding-cache] Evicted oldest entry (LRU)')
+      }
     }
 
     this.cache.set(key, {
