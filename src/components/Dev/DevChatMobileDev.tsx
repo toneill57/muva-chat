@@ -28,6 +28,11 @@ interface Message {
   suggestions?: string[]
 }
 
+// Constants
+const TENANT_ID = 'simmerdown'
+const PULL_TO_REFRESH_THRESHOLD = 80 // pixels to trigger pull-to-refresh
+const PULL_ANIMATION_DURATION = 300 // ms for scroll animation
+
 export default function DevChatMobileDev() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
@@ -125,7 +130,7 @@ export default function DevChatMobileDev() {
         body: JSON.stringify({
           message: messageText,
           session_id: sessionId,
-          tenant_id: 'simmerdown'
+          tenant_id: TENANT_ID
         })
       })
 
@@ -237,6 +242,17 @@ export default function DevChatMobileDev() {
     }
   }
 
+  // Helper: Extract photos from message sources
+  const getPhotosFromSources = (sources: Message['sources']) => {
+    if (!sources) return []
+    return sources
+      .filter(s => s.photos && s.photos.length > 0)
+      .flatMap(s => s.photos!.map(url => ({
+        url,
+        caption: s.unit_name
+      })))
+  }
+
   const handleTouchStart = (e: React.TouchEvent) => {
     if (messagesContainerRef.current?.scrollTop === 0) {
       pullStartY.current = e.touches[0].clientY
@@ -249,7 +265,7 @@ export default function DevChatMobileDev() {
     const currentY = e.touches[0].clientY
     const diff = currentY - pullStartY.current
 
-    if (diff > 80 && !isPulling) {
+    if (diff > PULL_TO_REFRESH_THRESHOLD && !isPulling) {
       setIsPulling(true)
     }
   }
@@ -257,7 +273,7 @@ export default function DevChatMobileDev() {
   const handleTouchEnd = () => {
     if (isPulling) {
       messagesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-      setTimeout(() => setIsPulling(false), 300)
+      setTimeout(() => setIsPulling(false), PULL_ANIMATION_DURATION)
     }
     pullStartY.current = 0
   }
@@ -360,19 +376,11 @@ export default function DevChatMobileDev() {
                 {/* Photo Carousel */}
                 {message.role === 'assistant' && message.sources && (
                   <>
-                    {(() => {
-                      const photos = message.sources
-                        .filter(s => s.photos && s.photos.length > 0)
-                        .flatMap(s => s.photos!.map(url => ({
-                          url,
-                          caption: s.unit_name
-                        })))
-                      return photos.length > 0 ? (
-                        <Suspense fallback={<div className="text-sm text-gray-500">Loading photos...</div>}>
-                          <DevPhotoCarousel photos={photos} />
-                        </Suspense>
-                      ) : null
-                    })()}
+                    {getPhotosFromSources(message.sources).length > 0 && (
+                      <Suspense fallback={<div className="text-sm text-gray-500">Loading photos...</div>}>
+                        <DevPhotoCarousel photos={getPhotosFromSources(message.sources)} />
+                      </Suspense>
+                    )}
                   </>
                 )}
 
@@ -396,7 +404,7 @@ export default function DevChatMobileDev() {
                 )}
 
                 <p className="text-xs text-gray-500 px-1">
-                  {message.timestamp.toLocaleTimeString('en-US', {
+                  {message.timestamp.toLocaleTimeString('es-CO', {
                     hour: 'numeric',
                     minute: '2-digit'
                   })}
