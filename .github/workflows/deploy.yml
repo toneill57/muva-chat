@@ -38,7 +38,7 @@ jobs:
             git pull origin dev
             npm ci --legacy-peer-deps --production
             npm run build
-            pm2 restart innpilot
+            pm2 reload ecosystem.config.js
 
       - name: Wait for deployment
         run: sleep 10
@@ -64,7 +64,7 @@ jobs:
             git reset --hard HEAD~1
             npm ci --legacy-peer-deps --production
             npm run build
-            pm2 restart innpilot
+            pm2 reload ecosystem.config.js
             echo "Rolled back to previous version"
 
       - name: Notify success

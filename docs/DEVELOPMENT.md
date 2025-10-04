@@ -51,10 +51,10 @@
    - API Health: http://localhost:3000/api/health
    - API Status: http://localhost:3000/api/status
 
-   **Production (Vercel):**
-   - Web UI: https://innpilot.vercel.app
-   - API Health: https://innpilot.vercel.app/api/health
-   - API Status: https://innpilot.vercel.app/api/status
+   **Production (VPS):**
+   - Web UI: https://innpilot.io
+   - API Health: https://innpilot.io/api/health
+   - API Status: https://innpilot.io/api/status
 
 ## Project Structure
 
@@ -116,17 +116,15 @@ CLAUDE_MAX_TOKENS=800
 #### Optional
 ```env
 NODE_ENV=development
-VERCEL_URL=your-deployment-url
-VERCEL_ENV=development
 ```
 
 ## API Development
 
 ### Edge Runtime
-All API routes use Vercel Edge Runtime for better performance:
+All API routes use Node.js runtime in production VPS:
 
 ```typescript
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 ```
 
 ### Error Handling
@@ -156,7 +154,6 @@ Currently no authentication required. For future implementation:
 
 ### Rate Limiting
 Implement rate limiting for production:
-- Use Vercel Edge Config
 - Redis-based limiting
 - Per-IP restrictions
 
@@ -278,20 +275,25 @@ npm run deploy
 
 # Manual deployment
 npm run pre-deploy
-vercel --prod
+git push origin main  # Triggers GitHub Actions
 ```
 
 ### Environment Setup
 
-#### Vercel Environment Variables
-Set in Vercel dashboard or CLI:
+#### Environment Variables Setup
+Set in VPS via .env.local file:
+
 ```bash
-vercel env add SUPABASE_URL
-vercel env add SUPABASE_ANON_KEY
-vercel env add OPENAI_API_KEY
-vercel env add ANTHROPIC_API_KEY
-vercel env add CLAUDE_MODEL
-vercel env add CLAUDE_MAX_TOKENS
+# SSH to VPS
+ssh deploy@innpilot.io
+cd /var/www/innpilot
+
+# Edit .env.local
+nano .env.local
+# Add: SUPABASE_URL, SUPABASE_ANON_KEY, OPENAI_API_KEY, etc.
+
+# Restart app
+pm2 reload ecosystem.config.js
 ```
 
 #### Health Checks
@@ -300,7 +302,7 @@ vercel env add CLAUDE_MAX_TOKENS
 - Monitor: Check HTTP status codes
 
 ### Performance Monitoring
-- Vercel Analytics
+- PM2 Process Monitoring
 - Custom metrics in `/api/status`
 - Response time tracking
 
@@ -322,7 +324,7 @@ cat .env.local
 **Recommended - Use API calls:**
 ```javascript
 // Check API health
-const health = await fetch('https://innpilot.vercel.app/api/health')
+const health = await fetch('https://innpilot.io/api/health')
   .then(res => res.json());
 console.log('System status:', health.status);
 
@@ -334,7 +336,7 @@ console.log('Services:', status.services);
 
 **For debugging only (cURL):**
 ```bash
-curl https://innpilot.vercel.app/api/health
+curl https://innpilot.io/api/health
 curl http://localhost:3000/api/status  # Local only
 ```
 
@@ -357,7 +359,7 @@ npx tsc --noEmit
 ```javascript
 // Monitor response times
 const start = performance.now();
-const response = await fetch('https://innpilot.vercel.app/api/chat', {
+const response = await fetch('https://innpilot.io/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ question: "Test performance" })
@@ -373,7 +375,7 @@ console.log(`API response time: ${duration.toFixed(2)}ms`);
 npm run validate-env:test
 
 # Monitor API calls with timing
-curl -w "@curl-format.txt" https://innpilot.vercel.app/api/chat
+curl -w "@curl-format.txt" https://innpilot.io/api/chat
 ```
 
 #### Database Issues
@@ -434,4 +436,4 @@ LOG_LEVEL=debug
 - [Supabase Docs](https://supabase.com/docs)
 - [OpenAI API](https://platform.openai.com/docs)
 - [Anthropic API](https://docs.anthropic.com/)
-- [Vercel Platform](https://vercel.com/docs)
+- [GitHub Actions](https://docs.github.com/en/actions)
