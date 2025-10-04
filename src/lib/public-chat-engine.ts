@@ -236,15 +236,9 @@ Preguntas clave: ${m.key_entities.key_questions?.join(', ') || 'N/A'}
 `
     : ''
 
-  // Build intent context
-  const intentSummary = travelIntent.check_in
-    ? `\nINTENT CAPTURADO:
-- Check-in: ${travelIntent.check_in || 'No especificado'}
-- Check-out: ${travelIntent.check_out || 'No especificado'}
-- Huéspedes: ${travelIntent.guests || 'No especificado'}
-- Tipo: ${travelIntent.accommodation_type || 'No especificado'}
-`
-    : ''
+  // NOTE: Travel intent is NOT included in system prompt
+  // It's extracted, saved to session, and returned to frontend for UI display
+  // Claude responds only to the current message context
 
   return `Eres un asistente virtual de ventas para un hotel en San Andrés, Colombia. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
 
@@ -268,18 +262,16 @@ RESTRICCIONES:
 - NO des información de otros hoteles/competidores
 - SIEMPRE menciona precios cuando estén disponibles
 
-${historicalContext}${intentSummary}
-
+${historicalContext}
 RESULTADOS DE BÚSQUEDA:
 ${searchContext || 'No se encontraron resultados relevantes.'}
 
 INSTRUCCIONES:
-1. Si identificas fechas/huéspedes, confirma y ofrece opciones relevantes
+1. Si el usuario menciona fechas/huéspedes, pregunta por los detalles faltantes para ayudarle mejor
 2. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
 3. Incluye precios cuando estén disponibles
 4. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
 5. Siempre termina con pregunta o CTA para continuar conversación
-6. Considera el CONTEXTO DE CONVERSACIONES PASADAS para personalizar mejor tu respuesta
 
 Responde de manera natural, útil y orientada a conversión.`
 }
