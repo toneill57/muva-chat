@@ -317,7 +317,7 @@ export default function DevChatMobileDev() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white" role="main">
+    <div className="bg-white" role="main">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
         <div className="h-16 flex items-center justify-between px-4">
@@ -350,7 +350,15 @@ export default function DevChatMobileDev() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
+        className="fixed overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white overscroll-behavior-contain scroll-smooth"
+        style={{
+          top: 'calc(64px + env(safe-area-inset-top))',
+          bottom: 'calc(80px + env(safe-area-inset-bottom))',
+          left: 0,
+          right: 0,
+          paddingTop: '2rem',
+          paddingBottom: '1rem'
+        }}
         role="log"
         aria-live="polite"
         aria-atomic="false"

@@ -69,38 +69,44 @@ npm run lint                        # Lint code
 
 ---
 
-## 🎯 CURRENT PROJECT: Mobile-First Chat Interface (Oct 2025)
+## 🎯 CURRENT PROJECT: Fixed Layout Migration (Oct 4, 2025)
 
 ### Objective
-Create a **fullscreen mobile-first chat interface** optimized for iPhone 15/14, Google Pixel 8, Samsung Galaxy S24. Clean UX, no marketing clutter, 100% focused on conversation.
+Migrate chat mobile architecture from **flexbox (`flex-1`)** to **`position: fixed`** to prepare for header expansible (date fields, photo cards, templates) without breaking scroll behavior.
 
 ### Project Files
-- 📄 **Plan**: `plan.md` (412 lines) - Complete architecture & phases
-- 📋 **Tasks**: `TODO.md` (300+ lines) - Organized by FASE 1-4
-- 🎯 **Prompts**: `mobile-first-prompt-workflow.md` - Ready-to-use prompts per phase
+- 📄 **Plan**: `plan.md` (415 lines) - Complete architecture & 4 phases
+- 📋 **Tasks**: `TODO.md` (280 lines) - 28 tasks organized by FASE
+- 🎯 **Prompts**: `fixed-layout-migration-prompt-workflow.md` (650 lines) - Ready-to-use prompts per phase
 
 ### Status
 - **Planning**: ✅ Complete
-- **FASE 1**: 🔜 Ready to start (Structure base)
-- **FASE 2**: Pending (Mobile optimizations)
-- **FASE 3**: Pending (Feature parity)
-- **FASE 4**: Pending (Polish & performance)
+- **FASE 1**: 🔜 Ready to start (Migración DevChatMobileDev.tsx - 2h)
+- **FASE 2**: Pending (Testing Exhaustivo Dev - 1h)
+- **FASE 3**: Pending (Migración ChatMobile.tsx - 1h)
+- **FASE 4**: Pending (Testing Final + Validación - 1h)
 
-### Key Specs
-- **Layout**: Header (60px) + Messages (flex-1) + Input (80px)
-- **Safe Areas**: `env(safe-area-inset-top/bottom)` for notch/home bar
-- **Viewports**: 360px - 430px width support
-- **Features**: Streaming SSE, markdown, typing dots, photo carousel
-- **Performance**: Lighthouse ≥90, 60fps animations
+### Key Changes
+- **Wrapper**: Remove `flex flex-col h-screen` → Simple `<div>`
+- **Messages**: Change `flex-1` → `fixed` with explicit `top/bottom`
+- **Header/Input**: No changes (already `fixed`, correct)
+- **Goal**: Header can grow dynamically (date fields, cards) without breaking messages scroll
+
+### Success Criteria
+- Zero breaking changes in functionality
+- Scroll behavior identical to before
+- Pull-to-refresh works
+- Safe areas correct (iPhone/Android)
+- Lighthouse ≥90, 60fps scroll
 
 ---
 
 ## 🤖 Specialized Agents
 
 ### ux-interface (PRIMARY)
-**Responsible for:** All UI/UX implementation of Mobile-First Chat
-- Creates: `src/app/chat-mobile/page.tsx`, `src/components/Dev/DevChatMobile.tsx`
-- Handles: Layout, animations, safe areas, responsive design, a11y
+**Responsible for:** Fixed Layout Migration (all 4 phases)
+- Modifies: `src/components/Dev/DevChatMobileDev.tsx`, `src/components/Public/ChatMobile.tsx`
+- Handles: Layout migration (flexbox → fixed), testing exhaustivo, documentación
 - See: `.claude/agents/ux-interface.md` for complete instructions
 
 ### Other Agents
@@ -114,19 +120,22 @@ Create a **fullscreen mobile-first chat interface** optimized for iPhone 15/14, 
 
 ```
 /Users/oneill/Sites/apps/InnPilot/
-├── plan.md                           # 🎯 Project plan (read first)
-├── TODO.md                           # 📋 Tasks by phase
-├── mobile-first-prompt-workflow.md   # 🚀 Execution prompts
+├── plan.md                                # 🎯 Project plan (415 lines)
+├── TODO.md                                # 📋 Tasks (28 tasks, 280 lines)
+├── fixed-layout-migration-prompt-workflow.md  # 🚀 Execution prompts (650 lines)
 ├── src/
-│   ├── app/
-│   │   └── chat-mobile/              # [TO CREATE] Mobile chat page
 │   └── components/
-│       └── Dev/
-│           ├── DevChatInterface.tsx  # [REFERENCE] Base code
-│           └── DevChatMobile.tsx     # [TO CREATE] Mobile version
+│       ├── Dev/
+│       │   └── DevChatMobileDev.tsx       # [TO MODIFY] FASE 1
+│       └── Public/
+│           └── ChatMobile.tsx             # [TO MODIFY] FASE 3
+├── docs/
+│   └── fixed-layout-migration/            # Documentation by fase
+│       ├── fase-1/ fase-2/ fase-3/ fase-4/
+│       └── README.md
 └── .claude/
     └── agents/
-        └── ux-interface.md           # Agent instructions
+        └── ux-interface.md                # Agent instructions (updated)
 ```
 
 ---
@@ -151,20 +160,20 @@ Create a **fullscreen mobile-first chat interface** optimized for iPhone 15/14, 
 ### For New Conversations
 1. Read `plan.md` for project context
 2. Read `TODO.md` for current tasks
-3. Use prompts from `mobile-first-prompt-workflow.md`
-4. Invoke `@ux-interface` for UI work
+3. Use prompts from `fixed-layout-migration-prompt-workflow.md`
+4. Invoke `@ux-interface` for layout migration
 
 ### Quick Start FASE 1
 ```bash
 # Context prompt (copy-paste to new conversation)
-CONTEXTO: Mobile-First Chat Interface
+CONTEXTO: Fixed Layout Migration
 
-Estoy en el proyecto "Mobile-First Chat Interface".
-- Plan: plan.md
-- Tareas: TODO.md
-- Prompts: mobile-first-prompt-workflow.md
+Estoy en el proyecto "Fixed Layout Migration".
+- Plan: plan.md (415 líneas)
+- Tareas: TODO.md (28 tareas)
+- Prompts: fixed-layout-migration-prompt-workflow.md (650 líneas)
 
-Próxima fase: FASE 1 (Estructura Base)
+Próxima fase: FASE 1 (Migración DevChatMobileDev.tsx)
 Agente: @ux-interface
 
 Por favor lee los archivos y ejecuta Prompt 1.1
@@ -172,5 +181,5 @@ Por favor lee los archivos y ejecuta Prompt 1.1
 
 ---
 
-**Last Updated**: Oct 3, 2025
-**Current Focus**: Mobile-First Chat Interface - FASE 1 Ready
+**Last Updated**: Oct 4, 2025
+**Current Focus**: Fixed Layout Migration - FASE 1 Ready

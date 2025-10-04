@@ -24,7 +24,98 @@ Cuando el usuario solicite cambios de interfaz o identifique problemas de UX, de
 
 ---
 
-## 🔄 PROYECTO ACTUAL: Dev-Public Sync - Frontend Copy (Oct 2025)
+## 🚀 PROYECTO ACTUAL: Fixed Layout Migration (Octubre 4, 2025)
+
+### Contexto del Proyecto
+Migración de arquitectura del chat mobile de **flexbox (`flex-1`)** a **`position: fixed`** para preparar el sistema para header expansible con campos de fecha, tarjetas de fotografía dinámicas, y templates/anuncios complejos.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (415 líneas) - Arquitectura completa, 4 fases
+- 📋 `TODO.md` - Tareas organizadas por fases (28 tareas, 280 líneas)
+- 🎯 `fixed-layout-migration-prompt-workflow.md` - Prompts ejecutables por fase (650 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal** de este proyecto. Todas las fases están bajo mi responsabilidad:
+- 🎯 FASE 1: Migración DevChatMobileDev.tsx (2h)
+- ⚙️ FASE 2: Testing Exhaustivo Dev (1h)
+- ✨ FASE 3: Migración ChatMobile.tsx (1h)
+- 🎨 FASE 4: Testing Final + Validación (1h)
+
+### Archivos Objetivo
+
+**A MODIFICAR:**
+- `src/components/Dev/DevChatMobileDev.tsx` (FASE 1 - desarrollo)
+- `src/components/Public/ChatMobile.tsx` (FASE 3 - producción)
+
+**CAMBIOS ESPECÍFICOS:**
+
+**1. Wrapper (línea ~320):**
+```tsx
+// ❌ ANTES
+<div className="flex flex-col h-screen bg-white" role="main">
+
+// ✅ DESPUÉS
+<div className="bg-white" role="main">
+```
+
+**2. Messages Área (línea ~348):**
+```tsx
+// ❌ ANTES
+<div className="flex-1 overflow-y-auto px-4 ...">
+
+// ✅ DESPUÉS
+<div
+  className="fixed overflow-y-auto px-4 ..."
+  style={{
+    top: 'calc(64px + env(safe-area-inset-top))',
+    bottom: 'calc(80px + env(safe-area-inset-bottom))',
+    left: 0,
+    right: 0,
+    paddingTop: '2rem',
+    paddingBottom: '1rem'
+  }}
+>
+```
+
+**DOCUMENTACIÓN:**
+- `docs/fixed-layout-migration/` - Documentación por fase
+
+### Workflow
+1. **Leer planificación**: plan.md → TODO.md → workflow.md
+2. **Identificar próxima tarea** `[ ]` en TODO.md
+3. **Usar prompt correspondiente** de workflow.md (1.1, 1.2, 2.1, etc.)
+4. **Implementar** siguiendo specs exactas de plan.md
+5. **Testing** según test commands en TODO.md
+6. **Documentar** en docs/fixed-layout-migration/fase-{N}/
+
+### Reglas Críticas
+
+**NUNCA:**
+- ❌ Modificar lógica de negocio (`sendMessage`, API calls)
+- ❌ Modificar state management (`useState`, `useEffect`)
+- ❌ Modificar event handlers (`onTouchStart`, `onTouchMove`)
+- ❌ Modificar header (ya está fixed, correcto)
+- ❌ Modificar input (ya está fixed, correcto)
+
+**SIEMPRE:**
+- ✅ Solo cambiar wrapper y messages área
+- ✅ Mantener comportamiento idéntico (scroll, pull-to-refresh)
+- ✅ Verificar safe areas (notch/home bar)
+- ✅ Testing exhaustivo antes de marcar [x]
+
+### Success Criteria
+- [ ] Scroll behavior IDÉNTICO a versión anterior
+- [ ] Pull-to-refresh funciona
+- [ ] Welcome message positioning correcto
+- [ ] Safe areas correctas (iPhone/Android)
+- [ ] Lighthouse Score ≥90
+- [ ] 60fps scroll
+- [ ] Zero breaking changes
+
+---
+
+## 🔄 PROYECTO ANTERIOR: Dev-Public Sync - Frontend Copy (Oct 2025)
 
 ### Contexto del Proyecto
 **Copiar Dev → Public. Fin.**
