@@ -56,3 +56,6 @@ trace.zip
 # Backups
 *.backup
 /backups
+
+# VPS Production Environment (contains secrets)
+VPS-ENV-PRODUCTION.txt

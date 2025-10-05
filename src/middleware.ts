@@ -68,6 +68,21 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // 🌐 SUBDOMAIN DETECTION (for multi-tenant routing)
+  // Extract subdomain from Nginx header or hostname
+  const subdomainHeader = request.headers.get('x-tenant-subdomain')
+
+  // Fallback: Parse from hostname (for local dev)
+  let subdomain = subdomainHeader
+  if (!subdomain && request.nextUrl.hostname !== 'localhost') {
+    const hostParts = request.nextUrl.hostname.split('.')
+    if (hostParts.length > 2) {
+      subdomain = hostParts[0]
+    }
+  }
+
+  console.log('[middleware] Subdomain detected:', subdomain || 'none', '(from:', subdomainHeader ? 'nginx-header' : 'hostname', ')')
+
   // Only apply rate limiting to API routes
   if (pathname.startsWith('/api/')) {
     const clientId = getClientId(request)
@@ -104,8 +119,20 @@ export function middleware(request: NextRequest) {
     return addSecurityHeaders(response)
   }
 
+  // Set subdomain cookie for client-side access (non-API routes)
+  const response = NextResponse.next()
+
+  if (subdomain && subdomain !== 'www') {
+    response.cookies.set('tenant_subdomain', subdomain, {
+      httpOnly: false, // Accessible by client JS
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    })
+  }
+
   // Add security headers to all responses
-  return addSecurityHeaders(NextResponse.next())
+  return addSecurityHeaders(response)
 }
 
 export const config = {

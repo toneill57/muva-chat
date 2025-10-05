@@ -5,7 +5,219 @@ model: sonnet
 color: orange
 ---
 
-## 🚀 PROYECTO ACTUAL: VPS Deployment Migration (Oct 4, 2025)
+## 🎯 PROYECTO ACTUAL: Guest Portal Multi-Conversation + Compliance Module (Oct 5, 2025)
+
+### Contexto del Proyecto
+Transformar el Guest Chat actual (single-conversation) en una experiencia multi-conversation moderna estilo Claude AI / ChatGPT con módulo de compliance integrado (SIRE + TRA) conversacional.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (1047 líneas) - Arquitectura completa, 7 fases
+- 📋 `TODO.md` - Tareas organizadas por fases (680 líneas) - 57 tareas
+- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables por fase (1120 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal** de este proyecto (60% del trabajo):
+
+**FASE 1: Subdomain Infrastructure** (3-4h)
+- 🤖 Prompt 1.2: Nginx Subdomain Routing (nginx-subdomain.conf + SUBDOMAIN_SETUP_GUIDE.md)
+- 🤖 Prompt 1.3: Next.js Middleware + Tenant Resolver (middleware.ts + tenant-resolver.ts modifications)
+
+**FASE 2: Multi-Conversation Foundation** (6-8h)
+- 🤖 Prompt 2.2: Backend API - Conversations CRUD (POST/GET/PUT/DELETE /api/guest/conversations)
+
+**FASE 2.5: Multi-Modal File Upload** (4-5h) 🆕
+- 🤖 Prompt 2.5: Multi-Modal Setup (Claude Vision API, Supabase Storage, OCR passport)
+
+**FASE 2.6: Conversation Intelligence** (3-4h) 🆕
+- 🤖 Prompt 2.6: Conversation Memory Management (compactación, favoritos, sugerencias, cron jobs)
+
+**FASE 3: Compliance Module Integration** (10-12h)
+- 🤖 Prompt 3.1: Compliance Chat Engine (compliance-chat-engine.ts - entity extraction, state machine)
+- 🤖 Prompt 3.2: Intent Detection Enhancement (conversational-chat-engine.ts modifications)
+- 🤖 Prompt 3.3: SIRE Puppeteer + TRA API Integration (sire-automation.ts + tra-api.ts)
+
+**FASE 4: Staff Notifications & Dashboard** (4-5h)
+- 🤖 Prompt 4.1: Staff Notifications (Email alerts para compliance submissions)
+
+**FASE 5: Testing & Performance** (3-4h)
+- 🤖 Prompt 5.1: E2E Testing + Performance Validation (test suites completos)
+
+**Total responsabilidad:** ~32-39 horas de ~45h totales
+
+### Archivos Objetivo
+
+**FASE 1 - A MODIFICAR:**
+- `src/middleware.ts` (~50 líneas) - Subdomain detection + cookie setting
+- `src/lib/tenant-resolver.ts` (~100 líneas) - Add resolveSubdomainToTenantId() function
+
+**FASE 1 - A CREAR:**
+- `docs/deployment/nginx-subdomain.conf` (~80 líneas) - Nginx wildcard config
+- `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md` (~200 líneas) - Complete setup guide
+
+**FASE 2 - A CREAR:**
+- `src/app/api/guest/conversations/route.ts` (~120 líneas) - POST, GET endpoints
+- `src/app/api/guest/conversations/[id]/route.ts` (~100 líneas) - PUT, DELETE endpoints
+
+**FASE 2 - A MODIFICAR:**
+- `src/app/api/guest/chat/history/route.ts` (~20 líneas) - Add conversation_id query param
+
+**FASE 2.5 - A CREAR:** 🆕
+- `src/lib/claude-vision.ts` (~100 líneas) - Claude Vision API integration (analyzeImage function)
+- `src/app/api/guest/conversations/[id]/attachments/route.ts` (~120 líneas) - POST upload endpoint
+- `supabase/migrations/20251005010300_add_conversation_attachments.sql` (~50 líneas) - Attachments table
+
+**FASE 2.6 - A CREAR:** 🆕
+- `src/lib/guest-conversation-memory.ts` (~200 líneas) - Conversation memory management
+  - compactConversationIfNeeded() - Umbral 20 mensajes
+  - suggestNewConversation() - Detect topic changes
+  - addToFavorites() - Capture favorites
+- `src/lib/cron/archive-conversations.ts` (~100 líneas) - Auto-archive/delete cron jobs
+
+**FASE 2.6 - A MODIFICAR:** 🆕
+- `src/app/api/guest/chat/route.ts` (~20 líneas) - Auto-trigger compactación
+- `supabase/migrations/20251005010000_add_guest_conversations.sql` - Add fields (message_count, compressed_history, favorites, etc.)
+
+**FASE 3 - A CREAR:**
+- `src/lib/compliance-chat-engine.ts` (~300 líneas) - Conversational compliance flow
+- `src/lib/sire-automation.ts` (~150 líneas) - Puppeteer automation
+- `src/lib/tra-api.ts` (~100 líneas) - TRA MinCIT API integration
+
+**FASE 3 - A MODIFICAR:**
+- `src/lib/conversational-chat-engine.ts` (~50 líneas) - Intent detection for compliance trigger
+
+**FASE 4 - A CREAR:**
+- `src/lib/staff-notifications.ts` (~80 líneas) - Email service
+- `src/app/api/staff/compliance/route.ts` (~120 líneas) - Staff compliance API
+
+**FASE 5 - A CREAR:**
+- `e2e/guest-portal-multi-conversation.spec.ts` (~200 líneas) - E2E test suite
+- `scripts/benchmark-compliance-flow.ts` (~100 líneas) - Performance benchmarks
+
+### Technical Stack
+
+**Subdomain Architecture:**
+- DNS Wildcard: `*.innpilot.io` → VPS 195.200.6.216
+- SSL: Let's Encrypt wildcard certificate
+- Nginx: Subdomain routing + X-Tenant-Subdomain header
+- Next.js: Middleware subdomain detection + cookie
+
+**Multi-Conversation:**
+- Database: `guest_conversations` table (similar a staff_conversations)
+- APIs: REST CRUD (POST/GET/PUT/DELETE)
+- Frontend: Sidebar pattern from Staff Chat
+- Backend: Conversation title generation, message threading
+
+**Multi-Modal Features:** 🆕
+- Claude Vision API: Image analysis, location recognition (Simmerdown PoC)
+- Passport OCR: Extract data from photo (passport number, country, birthdate)
+- Supabase Storage: Bucket `guest-attachments` with RLS
+- File types: image/* (photos), application/pdf (documents)
+- Max size: 10MB per file
+
+**Conversation Intelligence:** 🆕
+- Compactación automática: 20 mensajes → comprimir bloque más antiguo
+- Favoritos: Capture lugares de interés en metadata
+- Smart Suggestions: 2+ menciones → sugerir nueva conversación por tema
+- Auto-archiving: 30 días sin actividad → archived, 90 días → deleted
+- Memory: `compressed_history` JSONB field stores conversation summaries
+
+**Compliance Module:**
+- SIRE: Puppeteer automation (no API available)
+- TRA: REST API integration (https://pms.mincit.gov.co/token/)
+- Entity Extraction: Passport regex, country NER, date parsing
+- State Machine: normal → compliance_active → compliance_confirm → compliance_processing → success/failed
+- Validation: Strict field validation, pre-submit confirmation
+
+### Workflow
+1. Leer plan.md → TODO.md → guest-portal-compliance-workflow.md
+2. Identificar próxima tarea backend `[ ]` en TODO.md
+3. Usar prompt correspondiente de workflow.md
+4. Implementar siguiendo specs de plan.md
+5. Testing según test commands en TODO.md
+6. Coordinar con @ux-interface para UI integration
+7. Documentar en comments y console.logs
+
+### Reglas Críticas
+
+**NUNCA:**
+- ❌ Cambiar Matryoshka embeddings (ya óptimo con Tier 1+2)
+- ❌ Hacer compliance mandatory (es opcional, con "recordatorio suave")
+- ❌ Crear formularios standalone (compliance es conversacional)
+- ❌ Hardcodear credentials SIRE/TRA (usar tenant_compliance_credentials table)
+- ❌ Exponer credentials en JWT o API responses
+
+**SIEMPRE:**
+- ✅ Subdomain detection en middleware + tenant-resolver
+- ✅ Conversation_id en todos los endpoints (multi-conversation)
+- ✅ Entity extraction con high confidence thresholds (>0.7)
+- ✅ Pre-submit confirmation (evitar errores en SIRE/TRA)
+- ✅ Staff notifications para compliance submissions
+- ✅ Error handling robusto (Puppeteer puede fallar)
+- ✅ Logging detallado para troubleshooting
+- ✅ Rate limiting en SIRE/TRA APIs
+
+### Key Constraints
+
+**Subdomain Infrastructure:**
+- Nginx debe pasar X-Tenant-Subdomain header
+- Middleware debe funcionar con y sin subdomain (backward compatibility)
+- Cookie tenant_subdomain debe ser accesible por client JS (httpOnly: false)
+
+**Multi-Conversation:**
+- Mantener entity tracking existente ✅
+- Mantener follow-up suggestions ✅
+- Auto-generate conversation titles (from first user message)
+- Sidebar colapsable en mobile
+
+**Compliance Module:**
+- Entity extraction >95% accuracy
+- Passport format: [A-Z]{2}[0-9]{6,9}
+- Age validation: >18 años, <120 años
+- SIRE timeout: 30s max (Puppeteer)
+- TRA timeout: 10s max (API)
+- Pre-fill data from reservation (nombre, check-in, check-out, teléfono)
+
+### Success Criteria
+
+**FASE 1 Complete:**
+- [ ] `simmerdown.innpilot.io` resuelve a VPS
+- [ ] Nginx pasa X-Tenant-Subdomain header
+- [ ] Middleware detecta subdomain y setea cookie
+- [ ] tenant-resolver resuelve subdomain → tenant_id
+- [ ] Testing: `curl -v https://simmerdown.innpilot.io` → 200 OK
+
+**FASE 2 Complete:**
+- [ ] POST /api/guest/conversations crea conversación
+- [ ] GET /api/guest/conversations retorna lista
+- [ ] PUT /api/guest/conversations/:id actualiza título
+- [ ] DELETE /api/guest/conversations/:id elimina (cascade messages)
+- [ ] Entity tracking + follow-up suggestions funcionan ✅
+- [ ] Testing: `npm test -- src/app/api/guest/conversations`
+
+**FASE 3 Complete:**
+- [ ] Compliance intent detected en conversational-chat-engine.ts
+- [ ] compliance-chat-engine.ts extrae entities (passport, país, fecha, propósito)
+- [ ] SIRE automation funciona (Puppeteer login + submit)
+- [ ] TRA API integration funciona (token + RNT)
+- [ ] Pre-submit confirmation muestra todos los datos
+- [ ] Validación strict funciona (passport format, age, required fields)
+- [ ] Testing: `npm test -- src/lib/__tests__/compliance-chat-engine.test.ts`
+
+**FASE 4 Complete:**
+- [ ] Staff notifications enviadas en compliance submission
+- [ ] Dashboard compliance tab muestra submissions
+- [ ] Testing: `npm test -- src/lib/__tests__/staff-notifications.test.ts`
+
+**FASE 5 Complete:**
+- [ ] E2E test cubre full user flow (login → multi-conversation → compliance → submit)
+- [ ] Performance benchmarks: Entity extraction <200ms, SIRE submit <30s, TRA submit <10s
+- [ ] No regressions en existing Guest Chat
+- [ ] Testing: `npm run test:e2e -- guest-portal-multi-conversation.spec.ts`
+
+---
+
+## 🚀 PROYECTO ANTERIOR: VPS Deployment Migration (Oct 4, 2025)
 
 ### Contexto del Proyecto
 Migrar deployment de InnPilot de Vercel a VPS Hostinger (innpilot.io) con CI/CD automático vía GitHub Actions.

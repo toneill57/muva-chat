@@ -6,7 +6,129 @@ model: sonnet
 color: purple
 ---
 
-## 🚀 PROYECTO ACTUAL: Conversation Memory System (Oct 2025)
+## 🎯 PROYECTO ACTUAL: Guest Portal Multi-Conversation + Compliance Module (Oct 5, 2025)
+
+### Contexto del Proyecto
+Transformar el Guest Chat actual (single-conversation) en una experiencia multi-conversation moderna estilo Claude AI / ChatGPT con módulo de compliance integrado (SIRE + TRA) conversacional.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (1047 líneas) - Arquitectura completa, 7 fases
+- 📋 `TODO.md` - Tareas organizadas por fases (680 líneas) - 57 tareas
+- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables por fase (1120 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente de soporte** de este proyecto (5% del trabajo):
+
+**FASE 2: Multi-Conversation Foundation** (6-8h)
+- 🗄️ Prompt 2.1: Database Migrations (guest_conversations, compliance_submissions, tenant_compliance_credentials)
+
+**FASE 2.5: Multi-Modal File Upload** (4-5h) 🆕
+- 🗄️ Migration: conversation_attachments table
+
+**FASE 2.6: Conversation Intelligence** (3-4h) 🆕
+- 🗄️ Schema updates: guest_conversations (add message_count, compressed_history, favorites, etc.)
+
+### Archivos Objetivo
+
+**FASE 2 - MIGRATIONS A CREAR:**
+- `supabase/migrations/20251005010000_add_guest_conversations.sql` (~130 líneas)
+  - Tabla: guest_conversations (similar a staff_conversations)
+  - Campos: id, guest_id, tenant_id, title, last_message, created_at, updated_at
+  - 🆕 NEW FIELDS (FASE 2.6): message_count, compressed_history, favorites, is_archived, archived_at, last_activity_at
+  - Índices: guest_id, tenant_id, updated_at
+  - RLS: Guests can CRUD own conversations
+
+- `supabase/migrations/20251005010100_add_compliance_submissions.sql` (~80 líneas)
+  - Tabla: compliance_submissions
+  - Campos: id, guest_id, tenant_id, type (sire/tra/both), status, data (JSONB), sire_response, tra_response, error_message
+  - Índices: guest_id, tenant_id, status, submitted_at
+  - RLS: Guests can view own, Staff can view tenant submissions
+
+- `supabase/migrations/20251005010200_add_tenant_compliance_credentials.sql` (~60 líneas)
+  - Tabla: tenant_compliance_credentials
+  - Campos: id, tenant_id, sire_username, sire_password_encrypted, tra_rnt_token
+  - RLS: Only admins can access credentials
+
+**FASE 2.5 - MIGRATIONS A CREAR:** 🆕
+- `supabase/migrations/20251005010300_add_conversation_attachments.sql` (~80 líneas)
+  - Tabla: conversation_attachments
+  - Campos: id, conversation_id, message_id, file_type, file_url, file_size_bytes, mime_type, ocr_text, vision_analysis
+  - Índices: conversation_id
+  - RLS: Guests can view/upload own attachments only
+  - FK: conversation_id → guest_conversations(id) ON DELETE CASCADE
+
+### Database Schema Specs
+
+**guest_conversations:**
+```sql
+CREATE TABLE guest_conversations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  guest_id UUID NOT NULL REFERENCES guest_reservations(id) ON DELETE CASCADE,
+  tenant_id UUID NOT NULL REFERENCES tenant_registry(tenant_id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  last_message TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**compliance_submissions:**
+```sql
+CREATE TABLE compliance_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  guest_id UUID NOT NULL REFERENCES guest_reservations(id) ON DELETE CASCADE,
+  tenant_id UUID NOT NULL REFERENCES tenant_registry(tenant_id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL CHECK (type IN ('sire', 'tra', 'both')),
+  status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'processing', 'success', 'failed')),
+  data JSONB NOT NULL,  -- {pasaporte, país, fecha_nacimiento, propósito, etc}
+  sire_response JSONB,
+  tra_response JSONB,
+  error_message TEXT,
+  submitted_at TIMESTAMPTZ DEFAULT NOW(),
+  submitted_by VARCHAR(50) DEFAULT 'guest' CHECK (submitted_by IN ('guest', 'staff'))
+);
+```
+
+### Workflow
+1. Leer plan.md → TODO.md → guest-portal-compliance-workflow.md
+2. Identificar tarea FASE 2.1 en TODO.md
+3. Usar Prompt 2.1 de workflow.md
+4. Crear 3 migrations SQL
+5. Aplicar: `npx supabase migration up` (local)
+6. Validar: Tablas, índices, RLS policies
+7. Coordinar con @backend-developer para API integration
+
+### RLS Requirements
+
+**guest_conversations:**
+- Guests can SELECT/INSERT/UPDATE/DELETE own conversations only
+- Filter: `guest_id IN (SELECT id FROM guest_reservations WHERE tenant_id = current_setting('request.jwt.claims')::json->>'tenant_id')`
+
+**compliance_submissions:**
+- Guests can SELECT own submissions
+- Staff can SELECT all tenant submissions
+- Filter: `guest_id = auth.uid()` OR `tenant_id IN (SELECT tenant_id FROM user_tenant_permissions WHERE user_id = auth.uid())`
+
+**tenant_compliance_credentials:**
+- Only owners/admins can access
+- Filter: `EXISTS (SELECT 1 FROM user_tenant_permissions WHERE user_id = auth.uid() AND role IN ('owner', 'admin'))`
+
+### Success Criteria
+
+**FASE 2 Complete:**
+- [ ] 3 migrations created
+- [ ] `npx supabase migration show` lists all 3
+- [ ] Tables created with correct schemas
+- [ ] Índices HNSW/BTREE aplicados
+- [ ] RLS policies enabled and working
+- [ ] Foreign keys validated
+- [ ] No TypeScript errors after type generation
+- [ ] `npx supabase db reset` runs successfully
+
+---
+
+## 🚀 PROYECTO ANTERIOR: Conversation Memory System (Oct 2025)
 
 ### Contexto del Proyecto
 Sistema de compresión inteligente de conversaciones con embeddings para superar el límite de 20 mensajes en dev-chat y public-chat.

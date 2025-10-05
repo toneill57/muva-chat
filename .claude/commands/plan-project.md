@@ -273,9 +273,11 @@ Por favor, confirma que entiendes el contexto antes de continuar.
 
 ### Prompt 1.1: {Task Name}
 
-```
-@{agent-name}
+**AGENTE:** @{agent-name}
 
+**COPY-PASTE DESDE AQUÍ:**
+
+```
 TAREA: {What to do in 1 sentence}
 
 CONTEXTO:
@@ -304,12 +306,15 @@ SIGUIENTE: Prompt 1.2 para {next task}
 
 ### Prompt 1.2: {Task Name}
 
-```
-@{agent-name}
+**AGENTE:** @{agent-name}
 
-TAREA: {What to do}
+**COPY-PASTE DESDE AQUÍ:**
+
+```
+TAREA: {What to do in 1 sentence}
 
 CONTEXTO:
+- Proyecto: {Name} (ver plan.md)
 {Context}
 
 ARCHIVOS:

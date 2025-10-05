@@ -36,7 +36,7 @@ Performance real: 586ms
 
 ## Project Overview
 
-InnPilot is a modern web platform for managing hotel operations with AI-powered conversational interfaces. Currently focused on **Mobile-First Chat Interface** development.
+InnPilot is a modern web platform for managing hotel operations with AI-powered conversational interfaces. Currently focused on **Guest Portal Multi-Conversation Architecture with Integrated Compliance Module**.
 
 ---
 
@@ -69,45 +69,74 @@ npm run lint                        # Lint code
 
 ---
 
-## 🎯 CURRENT PROJECT: VPS Deployment Migration (Oct 2025)
+## 🎯 CURRENT PROJECT: Guest Portal Multi-Conversation + Compliance Module (Oct 5, 2025)
 
 ### Objective
-Migrar deployment de Vercel a VPS Hostinger con CI/CD automático via GitHub Actions
+Transformar el Guest Chat actual (single-conversation) en una experiencia multi-conversation moderna estilo Claude AI / ChatGPT con módulo de compliance integrado (SIRE + TRA) conversacional.
 
 ### Project Files
-- 📄 **Plan**: `plan.md` (610 líneas) - Arquitectura completa, 5 fases
-- 📋 **Tasks**: `TODO.md` (208 líneas) - 28 tareas organizadas
-- 🎯 **Prompts**: `vps-deployment-workflow.md` (650 líneas) - Prompts ejecutables
+- 📄 **Plan**: `plan.md` (1570 líneas) - Arquitectura completa, 7 fases
+- 📋 **Tasks**: `TODO.md` (750 líneas) - 72 tareas organizadas
+- 🎯 **Prompts**: `guest-portal-compliance-workflow.md` (1310 líneas) - 17 prompts ejecutables
 
 ### Status
-- **Planning**: ✅ Complete
-- **FASE 1**: 🔜 Ready (Limpieza Vercel - 1h)
-- **FASE 2**: Pending (GitHub Actions - 2h)
-- **FASE 3**: Pending (VPS Setup Guide - 3h)
-- **FASE 4**: Pending (Deploy Agent Refactor - 1h)
-- **FASE 5**: Pending (Testing & Docs - 1h)
+- **FASE 0 Planning**: ✅ Complete
+- **FASE 1**: 🔜 Ready (Subdomain Infrastructure - 3-4h)
+- **FASE 2**: Pending (Multi-Conversation Foundation - 10-14h)
+  - 2.1-2.3: Core multi-conversation (6-8h)
+  - 2.5: Multi-Modal file upload (4-5h) 🆕
+  - 2.6: Conversation Intelligence (3-4h) 🆕
+- **FASE 3**: Pending (Compliance Module - 10-12h)
+- **FASE 4**: Pending (Staff Notifications - 4-5h)
+- **FASE 5**: Pending (Testing & Performance - 3-4h)
+- **FASE 6**: Pending (SEO + Analytics - 2-3h)
+- **FASE 7**: Pending (Documentation & Deployment - 1-2h)
 
 ### Key Specs
-- **VPS**: Hostinger (Ubuntu 22.04)
-- **Domain**: innpilot.io
-- **CI/CD**: GitHub Actions (push to dev = auto-deploy)
-- **Infrastructure**: Nginx + PM2 + Let's Encrypt SSL
-- **Timeline**: 8 horas total
+- **Subdomain Architecture**: `simmerdown.innpilot.io` → tenant resolution
+- **Multi-Conversation**: Sidebar UI pattern from Staff Chat
+- **Multi-Modal**: Photo/document upload with Claude Vision API 🆕
+- **Conversation Intelligence**: Auto-compactación, favoritos, smart suggestions 🆕
+- **Compliance**: SIRE (Puppeteer) + TRA (REST API) conversational flow
+- **Entity Extraction**: Passport, country, birthdate, travel purpose
+- **Stack**: Next.js 15, Supabase, Anthropic Claude, Puppeteer, Claude Vision
+- **Timeline**: 36-45 horas total
+
+### Critical Decisions
+- ✅ Matryoshka embeddings: Leave as-is (Guest Chat Tier 1+2)
+- ✅ Compliance: NOT mandatory (soft reminder, optional)
+- ✅ SIRE + TRA: Simultaneous capture in one flow
+- ✅ UI: Conversational (NO standalone forms)
 
 ---
 
 ## 🤖 Specialized Agents
 
-### backend-developer (PRIMARY)
-**Responsible for:** VPS Deployment Migration (all 5 phases)
-- Modifies: Deployment configs, GitHub Actions, documentation
-- Handles: Vercel cleanup, CI/CD setup, VPS guides, agent refactor
+### backend-developer (PRIMARY - 60%)
+**Responsible for:** Guest Portal Multi-Conversation (Backend)
+- FASE 1: Nginx routing, middleware subdomain detection
+- FASE 2: APIs CRUD conversations
+- FASE 3: Compliance engine, SIRE Puppeteer, TRA API, intent detection
+- FASE 4: Staff notifications
+- FASE 5: Testing & benchmarks
 - See: `.claude/agents/backend-developer.md` for complete instructions
 
+### ux-interface (PRIMARY UI - 30%)
+**Responsible for:** Guest Portal Multi-Conversation (Frontend)
+- FASE 2: ConversationList component, GuestChatInterface refactor
+- FASE 3: Compliance UI components
+- FASE 6: SEO + Analytics
+- See: `.claude/agents/ux-interface.md` for complete instructions
+
+### database-agent (SUPPORT - 5%)
+**Responsible for:** Guest Portal Multi-Conversation (Database)
+- FASE 2: Migrations (guest_conversations, compliance_submissions, tenant_compliance_credentials)
+- See: `.claude/agents/database-agent.md` for complete instructions
+
 ### Other Agents
-- **deploy-agent**: Automated commits → deploy → verification (will be refactored in FASE 4)
+- **api-endpoints-mapper**: TRA API investigation (if needed)
 - **embeddings-generator**: SIRE embeddings processing
-- **ux-interface**: UI/UX modifications (not needed for deployment migration)
+- **deploy-agent**: Automated deployment workflow
 
 ---
 
@@ -115,27 +144,104 @@ Migrar deployment de Vercel a VPS Hostinger con CI/CD automático via GitHub Act
 
 ```
 /Users/oneill/Sites/apps/InnPilot/
-├── plan.md                                # 🎯 VPS migration plan (610 líneas)
-├── TODO.md                                # 📋 28 tareas (208 líneas)
-├── vps-deployment-workflow.md             # 🚀 Prompts ejecutables (650 líneas)
-├── .github/
-│   └── workflows/
-│       └── deploy.yml                    # [TO CREATE] GitHub Actions
+├── plan.md                                           # 🎯 Guest Portal plan (1047 líneas)
+├── TODO.md                                           # 📋 57 tareas (680 líneas)
+├── guest-portal-compliance-workflow.md               # 🚀 Prompts ejecutables (1120 líneas)
+├── SNAPSHOT.md                                       # 📸 Project snapshot (updated)
+├── CLAUDE.md                                         # 📖 This file (updated)
+├── src/
+│   ├── middleware.ts                                # [TO MODIFY] Subdomain detection
+│   ├── lib/
+│   │   ├── tenant-resolver.ts                       # [TO MODIFY] Add resolveSubdomainToTenantId
+│   │   ├── compliance-chat-engine.ts                # [TO CREATE] Entity extraction + state machine
+│   │   ├── sire-automation.ts                       # [TO CREATE] Puppeteer automation
+│   │   └── tra-api.ts                               # [TO CREATE] TRA REST API integration
+│   ├── components/
+│   │   ├── Chat/
+│   │   │   ├── ConversationList.tsx                 # [TO CREATE] Sidebar multi-conversation
+│   │   │   └── GuestChatInterface.tsx               # [TO MODIFY] Add sidebar layout
+│   │   └── Compliance/
+│   │       ├── ComplianceFlow.tsx                   # [TO CREATE] Conversational compliance UI
+│   │       ├── ComplianceConfirmation.tsx           # [TO CREATE] Pre-submit modal
+│   │       └── ComplianceSuccess.tsx                # [TO CREATE] Success feedback
+│   └── app/
+│       └── api/
+│           ├── guest/
+│           │   ├── conversations/route.ts           # [TO CREATE] POST, GET
+│           │   └── conversations/[id]/route.ts      # [TO CREATE] PUT, DELETE
+│           ├── compliance/
+│           │   └── submit/route.ts                  # [TO CREATE] SIRE + TRA submission
+│           └── staff/
+│               └── compliance/route.ts              # [TO CREATE] Staff compliance dashboard
+├── supabase/
+│   └── migrations/
+│       ├── 20251005010000_add_guest_conversations.sql           # [TO CREATE]
+│       ├── 20251005010100_add_compliance_submissions.sql        # [TO CREATE]
+│       └── 20251005010200_add_tenant_compliance_credentials.sql # [TO CREATE]
 ├── docs/
-│   └── deployment/                       # VPS guides
-│       ├── DEPLOYMENT_WORKFLOW.md        # ✅ Created (7KB)
-│       ├── TROUBLESHOOTING.md            # ✅ Created (12KB)
-│       ├── VPS_SETUP_GUIDE.md            # [TO CREATE]
-│       ├── GITHUB_SECRETS.md             # [TO CREATE]
-│       ├── ecosystem.config.js           # [TO CREATE]
-│       └── nginx-innpilot.conf           # [TO CREATE]
-├── scripts/
-│   └── vps-setup.sh                      # [TO CREATE] Automated VPS setup
-├── vercel.json                            # [TO DELETE]
+│   └── deployment/
+│       ├── nginx-subdomain.conf                     # [TO CREATE] Nginx wildcard config
+│       └── SUBDOMAIN_SETUP_GUIDE.md                 # [TO CREATE] Complete setup guide
 └── .claude/
     └── agents/
-        ├── backend-developer.md          # [TO UPDATE]
-        └── deploy-agent.md               # [TO REFACTOR]
+        ├── backend-developer.md                     # ✅ Updated
+        ├── ux-interface.md                          # ✅ Updated
+        ├── database-agent.md                        # ✅ Updated
+        └── api-endpoints-mapper.md                  # ✅ Updated
+```
+
+---
+
+## 🚦 Getting Started
+
+### For New Conversations
+1. Read `plan.md` for project context
+2. Read `TODO.md` for current tasks
+3. Use prompts from `guest-portal-compliance-workflow.md`
+4. Invoke appropriate agent: `@backend-developer`, `@ux-interface`, `@database-agent`
+
+### Quick Start FASE 1 (Subdomain Infrastructure)
+```bash
+# Context prompt (copy-paste to new conversation)
+CONTEXTO: Guest Portal Multi-Conversation + Compliance Module
+
+Estoy en el proyecto "Guest Portal Multi-Conversation Architecture with Integrated Compliance".
+- Plan: plan.md (1047 líneas, 7 fases)
+- Tareas: TODO.md (57 tareas, 680 líneas)
+- Prompts: guest-portal-compliance-workflow.md (1120 líneas)
+
+Próxima fase: FASE 1 (Subdomain Infrastructure)
+Agente: @backend-developer
+
+Por favor lee los archivos de planificación y ejecuta Prompt 1.1
+```
+
+### Quick Start FASE 2 (Multi-Conversation)
+```bash
+# Context prompt (copy-paste to new conversation)
+CONTEXTO: Guest Portal Multi-Conversation - FASE 2
+
+Estoy en FASE 2: Multi-Conversation Foundation
+- Database migrations listas ✅ (FASE 2.1)
+- Próxima tarea: Backend APIs (FASE 2.2) o UI Components (FASE 2.3)
+
+Agente: @backend-developer (APIs) o @ux-interface (UI)
+
+Lee plan.md, TODO.md y ejecuta el prompt correspondiente de guest-portal-compliance-workflow.md
+```
+
+### Quick Start FASE 3 (Compliance)
+```bash
+# Context prompt (copy-paste to new conversation)
+CONTEXTO: Guest Portal Compliance Module - FASE 3
+
+Estoy en FASE 3: Compliance Module Integration
+- Multi-conversation listo ✅ (FASE 2)
+- Próxima tarea: Compliance Chat Engine (FASE 3.1)
+
+Agente: @backend-developer
+
+Lee plan.md sección FASE 3, TODO.md tareas 3.1-3.4 y ejecuta Prompt 3.1 de workflow.md
 ```
 
 ---

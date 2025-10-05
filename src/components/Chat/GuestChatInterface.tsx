@@ -13,11 +13,21 @@ import {
   Calendar,
   AlertCircle,
   RefreshCw,
+  Menu,
+  X,
 } from "lucide-react"
 import ReactMarkdown from 'react-markdown'
 import { EntityBadge } from './EntityBadge'
 import { FollowUpSuggestions } from './FollowUpSuggestions'
+import ConversationList from './ConversationList'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
+
+interface Conversation {
+  id: string
+  title: string
+  last_message: string | null
+  updated_at: string
+}
 
 /**
  * GuestChatInterface Component
@@ -34,14 +44,27 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
   const [trackedEntities, setTrackedEntities] = useState<Map<string, TrackedEntity>>(new Map())
   const [followUpSuggestions, setFollowUpSuggestions] = useState<string[]>([])
 
+  // Multi-conversation state
+  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(session.conversation_id)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isLoadingConversations, setIsLoadingConversations] = useState(true)
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  // Load chat history on mount
+  // Load conversations on mount
   useEffect(() => {
-    loadChatHistory()
+    loadConversations()
   }, [])
+
+  // Load chat history when active conversation changes
+  useEffect(() => {
+    if (activeConversationId) {
+      loadChatHistory()
+    }
+  }, [activeConversationId])
 
   // Auto-scroll to bottom when new message arrives
   useEffect(() => {
@@ -60,13 +83,93 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
     messagesEndRef.current?.scrollIntoView({ behavior })
   }
 
+  const loadConversations = async () => {
+    setIsLoadingConversations(true)
+
+    try {
+      const response = await fetch('/api/guest/conversations', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al cargar conversaciones')
+      }
+
+      const data = await response.json()
+      setConversations(data.conversations || [])
+    } catch (err) {
+      console.error('Error loading conversations:', err)
+    } finally {
+      setIsLoadingConversations(false)
+    }
+  }
+
+  const handleNewConversation = async () => {
+    try {
+      const response = await fetch('/api/guest/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: 'Nueva conversación',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al crear conversación')
+      }
+
+      const data = await response.json()
+
+      // Add new conversation to list
+      const newConversation: Conversation = {
+        id: data.conversation.id,
+        title: data.conversation.title,
+        last_message: data.conversation.last_message,
+        updated_at: data.conversation.updated_at,
+      }
+
+      setConversations((prev) => [newConversation, ...prev])
+      setActiveConversationId(data.conversation.id)
+
+      // Clear current messages
+      setMessages([])
+      setTrackedEntities(new Map())
+      setFollowUpSuggestions([])
+
+      // Close sidebar on mobile
+      setIsSidebarOpen(false)
+    } catch (err) {
+      console.error('Error creating conversation:', err)
+      setError('No se pudo crear la conversación')
+    }
+  }
+
+  const handleSelectConversation = (conversationId: string) => {
+    setActiveConversationId(conversationId)
+
+    // Clear current state
+    setMessages([])
+    setTrackedEntities(new Map())
+    setFollowUpSuggestions([])
+
+    // Close sidebar on mobile
+    setIsSidebarOpen(false)
+  }
+
   const loadChatHistory = async () => {
+    if (!activeConversationId) return
+
     setIsLoadingHistory(true)
     setError(null)
 
     try {
       const response = await fetch(
-        `/api/guest/chat/history?conversation_id=${session.conversation_id}`,
+        `/api/guest/chat/history?conversation_id=${activeConversationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -201,7 +304,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         },
         body: JSON.stringify({
           message: textToSend,
-          conversation_id: session.conversation_id,
+          conversation_id: activeConversationId,
         }),
       })
 
@@ -233,6 +336,43 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       // Update follow-up suggestions
       if (data.followUpSuggestions) {
         setFollowUpSuggestions(data.followUpSuggestions)
+      }
+
+      // Update conversation in list (update last_message and updated_at)
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === activeConversationId
+            ? { ...conv, last_message: textToSend, updated_at: new Date().toISOString() }
+            : conv
+        )
+      )
+
+      // Auto-generate title from first user message if title is default
+      if (messages.filter((m) => m.role === 'user').length === 0) {
+        const generatedTitle = textToSend.slice(0, 50) + (textToSend.length > 50 ? '...' : '')
+
+        // Update title in backend
+        try {
+          await fetch(`/api/guest/conversations/${activeConversationId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ title: generatedTitle }),
+          })
+
+          // Update title in local state
+          setConversations((prev) =>
+            prev.map((conv) =>
+              conv.id === activeConversationId
+                ? { ...conv, title: generatedTitle }
+                : conv
+            )
+          )
+        } catch (err) {
+          console.error('Error updating conversation title:', err)
+        }
       }
     } catch (err) {
       console.error('Error sending message:', err)
@@ -295,10 +435,56 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
-      {/* Header */}
-      <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm">
+    <div className="flex h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
+      <aside
+        className={`
+          fixed lg:relative z-50 lg:z-0
+          w-80 h-full
+          transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          bg-white border-r border-slate-200 shadow-lg lg:shadow-none
+        `}
+      >
+        {isLoadingConversations ? (
+          <div className="flex items-center justify-center h-full">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          </div>
+        ) : (
+          <ConversationList
+            conversations={conversations}
+            activeConversationId={activeConversationId}
+            onSelectConversation={handleSelectConversation}
+            onNewConversation={handleNewConversation}
+          />
+        )}
+      </aside>
+
+      {/* Mobile overlay backdrop */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Main Chat Area */}
+      <div className="flex flex-col flex-1 h-screen">
+        {/* Header */}
+        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            {isSidebarOpen ? (
+              <X className="h-6 w-6 text-gray-600" />
+            ) : (
+              <Menu className="h-6 w-6 text-gray-600" />
+            )}
+          </button>
+
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
               <User className="h-5 w-5 text-blue-600" />
@@ -330,12 +516,12 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             <span className="hidden sm:inline">Salir</span>
           </Button>
         </div>
-      </header>
+        </header>
 
-      {/* Entity Badges */}
-      {trackedEntities.size > 0 && (
-        <div className="flex-shrink-0 bg-white border-b border-gray-100 px-4 py-2">
-          <div className="max-w-4xl mx-auto">
+        {/* Entity Badges */}
+        {trackedEntities.size > 0 && (
+          <div className="flex-shrink-0 bg-white border-b border-gray-100 px-4 py-2">
+            <div className="max-w-4xl mx-auto">
             <p className="text-xs text-gray-500 mb-2">Hablando sobre:</p>
             <div className="flex flex-wrap gap-2">
               {Array.from(trackedEntities.values()).map((entity) => (
@@ -347,12 +533,12 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                 />
               ))}
             </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-hidden">
+        {/* Messages Area */}
+        <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
             {isLoadingHistory ? (
@@ -461,24 +647,24 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               </>
             )}
           </div>
-        </ScrollArea>
-      </div>
+          </ScrollArea>
+        </div>
 
-      {/* Follow-up Suggestions */}
-      {followUpSuggestions.length > 0 && !isLoading && (
-        <div className="flex-shrink-0 bg-white border-t border-gray-100">
+        {/* Follow-up Suggestions */}
+        {followUpSuggestions.length > 0 && !isLoading && (
+          <div className="flex-shrink-0 bg-white border-t border-gray-100">
           <div className="max-w-4xl mx-auto px-4">
             <FollowUpSuggestions
               suggestions={followUpSuggestions}
               onSuggestionClick={handleSendMessage}
             />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Error Bar */}
-      {error && (
-        <div className="flex-shrink-0 bg-red-50 border-t border-red-200 px-4 py-3">
+        {/* Error Bar */}
+        {error && (
+          <div className="flex-shrink-0 bg-red-50 border-t border-red-200 px-4 py-3">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-red-800">
               <AlertCircle className="h-4 w-4" />
@@ -493,12 +679,12 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               <RefreshCw className="h-3.5 w-3.5 mr-1" />
               Reintentar
             </Button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Input Area */}
-      <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg">
+        {/* Input Area */}
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex gap-2 items-end">
             <textarea
@@ -531,6 +717,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> para enviar •{' '}
             <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Shift+Enter</kbd> para nueva línea
           </p>
+          </div>
         </div>
       </div>
 

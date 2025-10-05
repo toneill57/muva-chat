@@ -24,7 +24,267 @@ Cuando el usuario solicite cambios de interfaz o identifique problemas de UX, de
 
 ---
 
-## 🚀 PROYECTO ACTUAL: Fixed Layout Migration (Octubre 4, 2025)
+## 🎯 PROYECTO ACTUAL: Guest Portal Multi-Conversation + Compliance Module (Oct 5, 2025)
+
+### Contexto del Proyecto
+Transformar el Guest Chat actual (single-conversation) en una experiencia multi-conversation moderna estilo Claude AI / ChatGPT con módulo de compliance integrado (SIRE + TRA) conversacional.
+
+### Archivos de Planificación
+Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
+- 📄 `plan.md` - Plan completo del proyecto (1047 líneas) - Arquitectura completa, 7 fases
+- 📋 `TODO.md` - Tareas organizadas por fases (680 líneas) - 57 tareas
+- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables por fase (1120 líneas)
+
+### Mi Responsabilidad Principal
+Soy el **agente principal UI** de este proyecto (30% del trabajo):
+
+**FASE 2: Multi-Conversation Foundation** (6-8h)
+- 🎨 Prompt 2.3: UI Components - Sidebar Multi-Conversation (ConversationList.tsx + GuestChatInterface refactor)
+
+**FASE 2.5: Multi-Modal File Upload** (4-5h) 🆕
+- 🎨 File upload UI components (Paperclip button, image preview modal, loading states)
+
+**FASE 2.6: Conversation Intelligence** (3-4h) 🆕
+- 🎨 Topic suggestions banner, Favorites sidebar section
+
+**FASE 3: Compliance Module Integration** (10-12h)
+- 🎨 Prompt 3.4: Compliance UI Components (ComplianceFlow.tsx, ComplianceConfirmation.tsx)
+
+**FASE 6: SEO + Analytics** (2-3h)
+- 🎨 Prompt 6.1: SEO Optimization + Analytics Integration (metadata, structured data, Plausible)
+
+**Total responsabilidad:** ~13-16 horas de ~45h totales
+
+### Archivos Objetivo
+
+**FASE 2 - A CREAR:**
+- `src/components/Chat/ConversationList.tsx` (~150 líneas) - Sidebar component (copiar de Staff)
+
+**FASE 2 - A MODIFICAR:**
+- `src/components/Chat/GuestChatInterface.tsx` (~200 líneas) - Add sidebar layout
+
+**FASE 2.5 - A MODIFICAR:** 🆕
+- `src/components/Chat/GuestChatInterface.tsx` (~80 líneas adicionales)
+  - Paperclip button (lucide-react Paperclip icon)
+  - File input (hidden, triggered by button)
+  - Image preview modal (show uploaded photo)
+  - Loading state durante Vision API call
+  - Vision analysis results display
+
+**FASE 2.6 - A MODIFICAR:** 🆕
+- `src/components/Chat/GuestChatInterface.tsx` (~60 líneas adicionales)
+  - Topic change suggestion banner (blue-50 bg, border-left)
+  - "💡 ¿Quieres crear una conversación sobre {tema}?" message
+  - Buttons: "Sí, crear" | "No, continuar"
+- `src/components/Chat/ConversationList.tsx` (~40 líneas adicionales)
+  - Favorites section in sidebar: "⭐ Favoritos"
+  - Click favorite → insert into chat
+  - Empty state: "No favorites yet"
+
+**FASE 3 - A CREAR:**
+- `src/components/Compliance/ComplianceFlow.tsx` (~200 líneas) - Main compliance UI
+- `src/components/Compliance/ComplianceConfirmation.tsx` (~100 líneas) - Pre-submit confirmation
+- `src/components/Compliance/ComplianceSuccess.tsx` (~80 líneas) - Success feedback
+
+**FASE 6 - A MODIFICAR:**
+- `src/app/layout.tsx` (~50 líneas) - Add metadata + structured data
+- `src/app/[tenant]/page.tsx` (~30 líneas) - Guest portal SEO
+
+### Technical Stack
+
+**UI Components:**
+- React 19 + TypeScript
+- Tailwind CSS 4
+- lucide-react icons
+- Shadcn/ui components (button, card, dialog)
+- Framer Motion (animations opcional)
+
+**Layout Pattern (Staff Chat reference):**
+- Sidebar: 300px desktop, drawer mobile
+- Active conversation highlight: border-left blue, bg-blue-50
+- Empty state: Icon + message + CTA
+- Mobile responsive: Collapse sidebar, hamburger menu
+
+**Multi-Modal UI:** 🆕
+- File upload: Paperclip button (lucide-react)
+- Image preview: Modal overlay with analysis results
+- Loading state: Spinner + "Analizando imagen..."
+- Vision results: Display in chat message
+- Error handling: "Error al subir archivo" banner
+
+**Conversation Intelligence UI:** 🆕
+- Topic suggestions: Blue banner with border-left
+- Message: "💡 Parece que cambiaste de tema. ¿Nueva conversación sobre {tema}?"
+- Buttons: Primary "Sí, crear" | Secondary "No, continuar"
+- Favorites sidebar: "⭐ Favoritos" section
+- Favorite cards: Icon + Name + Click → insert
+
+**Compliance UI:**
+- Conversational style (chat-like interface)
+- Entity highlighting (passport, country, date recognized)
+- Progress indicator (4/4 fields collected)
+- Pre-submit confirmation (formatted table)
+- Success animation (checkmark + confetti opcional)
+
+### Workflow
+1. Leer plan.md → TODO.md → guest-portal-compliance-workflow.md
+2. Identificar próxima tarea UI `[ ]` en TODO.md
+3. Usar prompt correspondiente de workflow.md
+4. Implementar siguiendo specs de plan.md
+5. Testing visual en Chrome DevTools + mobile devices
+6. Coordinar con @backend-developer para API integration
+7. Documentar en Storybook (opcional) o screenshots
+
+### Reglas Críticas
+
+**NUNCA:**
+- ❌ Modificar backend logic (APIs, database, chat engines)
+- ❌ Cambiar Matryoshka embeddings
+- ❌ Crear formularios standalone (compliance es conversacional)
+- ❌ Agregar features no especificados en plan.md
+
+**SIEMPRE:**
+- ✅ Copiar UI patterns de Staff Chat (ConversationList, sidebar layout)
+- ✅ Mantener entity tracking + follow-up suggestions existentes
+- ✅ Mobile-first design (320px-430px)
+- ✅ Accessibility (ARIA labels, keyboard navigation, color contrast)
+- ✅ Consistent styling (Tailwind classes, color palette)
+- ✅ Smooth animations (200-300ms transitions)
+
+### UI Specifications
+
+**ConversationList.tsx** (FASE 2.3):
+```tsx
+// Copiar de src/components/Staff/ConversationList.tsx
+// Estructura:
+// - Header con "Nueva conversación" button (+ icon, blue)
+// - Lista de conversations:
+//   - Title (truncate a 1 línea)
+//   - Last message preview (truncate a 2 líneas)
+//   - Timestamp relativo (5m, 2h, 3d, 1w)
+// - Active highlight: border-left-4 blue-600, bg-blue-50
+// - Empty state: MessageSquare icon + "No hay conversaciones"
+// - Mobile: Drawer colapsable
+```
+
+**GuestChatInterface.tsx refactor** (FASE 2.3):
+```tsx
+// Layout:
+// Desktop: Sidebar 300px left + Chat flex-1 right
+// Mobile: Hamburger → Drawer sidebar
+// Mantener TODO lo existente:
+// - Entity tracking ✅
+// - Follow-up suggestions ✅
+// - Streaming SSE ✅
+// - Markdown rendering ✅
+```
+
+**ComplianceFlow.tsx** (FASE 3.4):
+```tsx
+// Conversational interface (NOT form)
+// Features:
+// - Entity extraction highlighting (passport recognized → ✅ green)
+// - Progress indicator: "2/4 campos completados"
+// - Soft reminder: "💡 Completar SIRE ahorra tiempo en check-in"
+// - Pre-submit button: "Revisar datos" → ComplianceConfirmation modal
+```
+
+**ComplianceConfirmation.tsx** (FASE 3.4):
+```tsx
+// Modal overlay (fullscreen mobile)
+// Sections:
+// - Header: "📋 Confirmación Final"
+// - Table: Todos los campos (nombre, pasaporte, país, fecha, propósito)
+// - Actions: "❌ Corregir" (volver) | "✅ Enviar" (submit)
+// - Warning: "Verifica que todo esté correcto antes de enviar"
+```
+
+### Mobile Specifications
+
+**Breakpoints:**
+- Mobile small: 320px - 375px
+- Mobile medium: 375px - 430px
+- Tablet: 768px - 1024px
+- Desktop: 1024px+
+
+**Touch Targets:**
+- Minimum: 44px × 44px (Apple HIG)
+- Preferred: 48px × 48px
+- Spacing: 8px between targets
+
+**Safe Areas:**
+- Top: `env(safe-area-inset-top)` (notch)
+- Bottom: `env(safe-area-inset-bottom)` (home bar)
+
+### Accessibility Requirements
+
+**ARIA Labels:**
+```tsx
+<aside role="navigation" aria-label="Conversation list">
+  <button aria-label="Nueva conversación" />
+  <ul role="list">
+    <li role="listitem">
+      <button aria-label="Conversación: Consulta sobre suite">
+    </li>
+  </ul>
+</aside>
+
+<main role="main" aria-label="Chat messages">
+  <div role="log" aria-live="polite">
+    {/* Messages */}
+  </div>
+</main>
+```
+
+**Color Contrast:**
+- Text on white: #111827 (ratio 16.8:1) ✅
+- Links/buttons blue: #2563eb (ratio 8.6:1) ✅
+- Secondary text: #6b7280 (ratio 5.5:1) ✅
+- Tool: https://webaim.org/resources/contrastchecker/
+
+### Performance Targets
+
+**Lighthouse:**
+- Performance: ≥ 90
+- Accessibility: 100
+- Best Practices: ≥ 90
+- SEO: 100
+
+**Animation:**
+- 60fps consistent
+- GPU-accelerated (transform, opacity only)
+- No layout shifts during interactions
+
+### Success Criteria
+
+**FASE 2 Complete:**
+- [ ] ConversationList.tsx renders correctly
+- [ ] "Nueva conversación" creates conversation (POST API)
+- [ ] Conversation switching loads messages (GET API)
+- [ ] Active highlight works (blue border-left)
+- [ ] Empty state visible cuando no hay conversations
+- [ ] Mobile drawer collapses/expands smoothly
+- [ ] Entity tracking + suggestions still work ✅
+
+**FASE 3 Complete:**
+- [ ] Compliance mode activated conversationally
+- [ ] Entity highlighting works (passport, country, date)
+- [ ] Progress indicator updates (1/4, 2/4, 3/4, 4/4)
+- [ ] Pre-submit confirmation modal shows all data
+- [ ] "Corregir" vuelve a chat, "Enviar" submits
+- [ ] Success feedback shown after submit
+- [ ] Mobile responsive (320px-430px)
+
+**FASE 6 Complete:**
+- [ ] Metadata en layout.tsx (title, description, OG tags)
+- [ ] Structured data JSON-LD (Organization, WebPage)
+- [ ] Plausible analytics script loaded
+- [ ] SEO audit score 100
+- [ ] Social preview cards work (Twitter, Facebook, WhatsApp)
+
+---
+
+## 🚀 PROYECTO ANTERIOR: Fixed Layout Migration (Octubre 4, 2025)
 
 ### Contexto del Proyecto
 Migración de arquitectura del chat mobile de **flexbox (`flex-1`)** a **`position: fixed`** para preparar el sistema para header expansible con campos de fecha, tarjetas de fotografía dinámicas, y templates/anuncios complejos.

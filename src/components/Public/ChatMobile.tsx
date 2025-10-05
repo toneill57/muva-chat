@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { Send, Bot, RotateCcw } from 'lucide-react'
 import remarkGfm from 'remark-gfm'
+import { WELCOME_MESSAGE_HTML } from '@/lib/welcome-message-static'
 
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
@@ -104,7 +105,7 @@ export default function ChatMobile() {
       const welcomeMessage: Message = {
         id: 'welcome',
         role: 'assistant',
-        content: '**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️\n\n🏝️ ¡También soy tu guía turística! Pregúntame sobre playas, restaurantes, buceo y todo lo que San Andrés tiene para ofrecerte.',
+        content: '', // Empty - will use static HTML instead
         timestamp: new Date()
       }
       setMessages([welcomeMessage])
@@ -317,7 +318,7 @@ export default function ChatMobile() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white" role="main">
+    <div className="bg-white" role="main">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 text-white shadow-md pt-[env(safe-area-inset-top)]">
         <div className="h-16 flex items-center justify-between px-4">
@@ -344,7 +345,15 @@ export default function ChatMobile() {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white pt-[calc(64px+env(safe-area-inset-top)+2rem)] pb-[calc(80px+env(safe-area-inset-bottom)+1rem)] overscroll-behavior-contain scroll-smooth relative"
+        className="fixed overflow-y-auto px-4 bg-gradient-to-b from-amber-50 to-white overscroll-behavior-contain scroll-smooth"
+        style={{
+          top: 'calc(64px + env(safe-area-inset-top))',
+          bottom: 'calc(80px + env(safe-area-inset-bottom))',
+          left: 0,
+          right: 0,
+          paddingTop: '2rem',
+          paddingBottom: '1rem'
+        }}
         role="log"
         aria-live="polite"
         aria-atomic="false"
@@ -379,7 +388,14 @@ export default function ChatMobile() {
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                           <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
+                      ) : message.id === 'welcome' ? (
+                        /* Welcome message: Static HTML (optimal LCP) */
+                        <div
+                          className="text-base leading-[1.6]"
+                          dangerouslySetInnerHTML={{ __html: WELCOME_MESSAGE_HTML }}
+                        />
                       ) : (
+                        /* Dynamic messages: Lazy-loaded ReactMarkdown */
                         <div className="text-base leading-[1.6]">
                           <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
                             <ReactMarkdown

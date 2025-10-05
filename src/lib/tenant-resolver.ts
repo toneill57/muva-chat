@@ -37,6 +37,61 @@ const tenantCache = new Map<string, { schema_name: string, expires: number }>()
 const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 
 /**
+ * Resolves subdomain to tenant_id for multi-tenant routing
+ *
+ * This function is specifically designed for subdomain-based tenant resolution
+ * (e.g., simmerdown.innpilot.io → tenant_id)
+ *
+ * @param subdomain - The subdomain slug (e.g., "simmerdown")
+ * @returns The tenant_id (UUID) for database filtering
+ */
+export async function resolveSubdomainToTenantId(subdomain: string): Promise<string> {
+  if (!subdomain) {
+    throw new Error('Subdomain is required')
+  }
+
+  // Check cache first (separate namespace for subdomains)
+  const cacheKey = `subdomain:${subdomain}`
+  const cached = tenantCache.get(cacheKey)
+  if (cached && cached.expires > Date.now()) {
+    console.log(`🎯 Cache hit: ${subdomain} → ${cached.schema_name}`)
+    return cached.schema_name
+  }
+
+  const supabase = getSupabaseClient()
+
+  try {
+    // Query by slug (subdomain maps to slug column)
+    const { data, error } = await supabase
+      .from('tenant_registry')
+      .select('tenant_id, tenant_type, is_active')
+      .eq('slug', subdomain)
+      .eq('is_active', true)
+      .single()
+
+    if (error || !data) {
+      console.warn(`⚠️ Subdomain ${subdomain} not found in registry:`, error?.message)
+      throw new Error(`Subdomain ${subdomain} not found or inactive`)
+    }
+
+    const tenantId = data.tenant_id
+
+    // Cache the result
+    tenantCache.set(cacheKey, {
+      schema_name: tenantId,
+      expires: Date.now() + CACHE_TTL
+    })
+
+    console.log(`✅ Resolved subdomain: ${subdomain} → ${tenantId} (${data.tenant_type})`)
+    return tenantId
+
+  } catch (error) {
+    console.error(`❌ Error resolving subdomain ${subdomain}:`, error)
+    throw error
+  }
+}
+
+/**
  * Resolves tenant UUID to tenant identifier for database operations
  *
  * @param tenantUuid - The formal tenant UUID from client_id

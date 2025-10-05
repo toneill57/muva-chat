@@ -58,25 +58,24 @@
   - Test: Guía completa, copy-paste ready, troubleshooting incluido ✅
 
 ### 1.5 Implementar Next.js middleware subdomain detection
-- [x] Modificar src/middleware.ts para detectar subdomain (completado: 20min)
-  - Header `X-Tenant-Subdomain` detection ✅
-  - Cookie `tenant_subdomain` set correctamente ✅
-  - Hostname parsing fallback (local dev) ✅
-  - Console logging for debugging ✅
-  - Files: `src/middleware.ts` (updated lines 68-136)
+- [ ] Modificar src/middleware.ts para detectar subdomain (estimate: 45min)
+  - Leer header `X-Tenant-Subdomain` del request
+  - Si existe, guardar en cookie: `tenant_subdomain=simmerdown`
+  - Si no existe, intentar parsear del hostname
+  - Fallback a path-based tenant resolution
+  - Files: `src/middleware.ts`
   - Agent: **backend-developer**
-  - Test: Middleware detects subdomain, sets cookie ✅
+  - Test: Cookie `tenant_subdomain` set correctamente
 
 ### 1.6 Enhance tenant resolver con subdomain support
-- [x] Crear función resolveSubdomainToTenantId() (completado: 25min)
-  - Nueva función `resolveSubdomainToTenantId(subdomain: string)` ✅
-  - Cache por subdomain (`subdomain:simmerdown`, TTL 5min) ✅
-  - Query: `SELECT tenant_id FROM tenant_registry WHERE slug = subdomain` ✅
-  - Error handling para subdomain inválido ✅
-  - Files: `src/lib/tenant-resolver.ts` (added lines 39-92)
-  - Test script: `test-subdomain-resolution.ts` ✅
+- [ ] Modificar src/lib/tenant-resolver.ts (estimate: 30min)
+  - Agregar funci�n `resolveSubdomainToTenantId(subdomain: string)`
+  - Cache por subdomain (Map<subdomain, tenant_id>, TTL 5min)
+  - Query: `SELECT tenant_id FROM tenant_registry WHERE slug = subdomain`
+  - Fallback a UUID resolution si subdomain no existe
+  - Files: `src/lib/tenant-resolver.ts`
   - Agent: **backend-developer**
-  - Test: `resolveSubdomainToTenantId(\'simmerdown\')` → `b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf` ✅
+  - Test: `resolveSubdomainToTenantId('simmerdown')` � UUID correcto
 
 ---
 
@@ -641,11 +640,11 @@
 ## =� PROGRESO
 
 **Total Tasks:** 72
-**Completed:** 6/72 (8%)
+**Completed:** 4/72 (6%)
 
 **Por Fase:**
-- FASE 0: 1/7 tareas (14%) - ✅ COMPLETADO
-- FASE 1: 6/6 tareas (100%) - ✅ COMPLETADO ✨
+- FASE 0: 1/7 tareas (14%) - = EN PROGRESO
+- FASE 1: 0/6 tareas (0%) - = PENDIENTE
 - FASE 2: 0/25 tareas (0%) - = PENDIENTE (includes 2.5 Multi-Modal + 2.6 Intelligence)
 - FASE 3: 0/11 tareas (0%) - = PENDIENTE
 - FASE 4: 0/6 tareas (0%) - = PENDIENTE

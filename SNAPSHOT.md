@@ -1,23 +1,262 @@
 ---
-title: "InnPilot Project SNAPSHOT - Mobile-First Chat Interface"
-description: "Estado actual del proyecto InnPilot - Octubre 2025. Desarrollo de interfaz mobile-first fullscreen para chat conversacional."
+title: "InnPilot Project SNAPSHOT - Guest Portal Multi-Conversation"
+description: "Estado actual del proyecto InnPilot - Octubre 2025. Desarrollo de Guest Portal multi-conversation con módulo de compliance integrado."
 category: architecture-snapshot
-status: FASE_0_COMPLETE_SESSION_MEMORY_FIXED
-version: "1.1-SESSION-MANAGEMENT"
-last_updated: "2025-10-03"
-tags: [mobile_first, chat_interface, session_memory, bug_fixes, fase_0_complete]
-keywords: ["mobile_first", "chat_interface", "session_management", "cookie_persistence", "reset_functionality", "streaming_sse"]
+status: FASE_0_PLANNING_COMPLETE
+version: "2.0-GUEST-PORTAL"
+last_updated: "2025-10-05"
+tags: [guest_portal, multi_conversation, compliance_module, subdomain_architecture, sire_tra]
+keywords: ["multi_conversation", "compliance", "sire", "tra", "subdomain", "puppeteer", "entity_extraction"]
 ---
 
-# 🏗️ InnPilot Project SNAPSHOT - Mobile-First Chat Interface
+# 🏗️ InnPilot Project SNAPSHOT - Guest Portal Multi-Conversation + Compliance
 
-**Última actualización**: 3 Octubre 2025 23:45
-**Estado**: FASE 0 Complete (Session Management Fixed) → FASE 1 Ready
-**Agente Principal**: ux-interface
+**Última actualización**: 5 Octubre 2025
+**Estado**: FASE 0 Planning Complete → FASE 1 Ready (Subdomain Infrastructure)
+**Agente Principal**: @backend-developer (60%), @ux-interface (30%), @database-agent (5%), @api-endpoints-mapper (5%)
 
 ---
 
-## 🔧 TRABAJO REALIZADO - Sesión 3 Oct 2025
+## 📋 PROYECTO ACTUAL: Guest Portal Multi-Conversation + Compliance Module
+
+### Objetivo General
+Transformar el Guest Chat actual (single-conversation) en una experiencia revolucionaria multi-conversation estilo Claude AI / ChatGPT con módulo de compliance integrado (SIRE + TRA) conversacional.
+
+### Timeline
+**Duración total**: 36-45 horas (7 fases)
+**Inicio**: 5 Octubre 2025
+**Estado actual**: FASE 0 Planning Complete ✅
+
+### Archivos de Planificación
+- 📄 **plan.md** (1047 líneas) - Arquitectura completa, 7 fases
+- 📋 **TODO.md** (680 líneas, 57 tareas) - Breakdown detallado por fase
+- 🎯 **guest-portal-compliance-workflow.md** (1120 líneas, 15 prompts) - Prompts ejecutables
+
+### Componentes Principales
+
+#### 1. Subdomain Architecture (FASE 1)
+- DNS Wildcard: `*.innpilot.io` → VPS 195.200.6.216
+- SSL: Let's Encrypt wildcard certificate
+- Nginx: Subdomain routing + `X-Tenant-Subdomain` header
+- Next.js: Middleware detection + cookie persistence
+- **Ejemplo**: `simmerdown.innpilot.io` → tenant_id resolution
+
+#### 2. Multi-Conversation Foundation (FASE 2)
+- Database: `guest_conversations` table (similar a `staff_conversations`)
+- Backend APIs: POST/GET/PUT/DELETE `/api/guest/conversations`
+- Frontend: Sidebar component (copiar de Staff Chat)
+- Features mantenidos: Entity tracking ✅, Follow-up suggestions ✅
+
+#### 2.5. Multi-Modal File Upload (FASE 2.5) - NEW
+- **Subida de fotos + documentos**: Claude Vision API integration
+- **Location Recognition PoC**: "¿Cómo llego a la playa desde aquí?" (Simmerdown)
+- **Passport OCR**: Auto-fill compliance desde foto de pasaporte
+- **Supabase Storage**: Bucket `guest-attachments` con RLS
+- **Database**: `conversation_attachments` table
+
+#### 2.6. Conversation Intelligence (FASE 2.6) - NEW
+- **Compactación automática**: Umbral 20 mensajes → comprimir bloque
+- **Favoritos**: Capturar sitios de interés en metadata
+- **Sugerencias inteligentes**: 2+ menciones tema → sugerir nueva conversación
+- **Auto-archiving**: 30 días → archived, 90 días → deleted
+- **Memory Management**: `guest-conversation-memory.ts`
+
+#### 3. Compliance Module (FASE 3)
+- **SIRE**: Puppeteer automation (no API disponible)
+- **TRA**: REST API (`https://pms.mincit.gov.co/token/`)
+- Entity extraction: Pasaporte, país, fecha nacimiento, propósito viaje
+- State machine: normal → compliance_active → compliance_confirm → compliance_processing → success/failed
+- Pre-submit confirmation: Evitar errores en submission
+
+#### 4. Staff Notifications (FASE 4)
+- Email alerts para compliance submissions
+- Dashboard compliance tab
+- Status tracking (pending, processing, success, failed)
+
+#### 5. Testing & Performance (FASE 5)
+- E2E test suite completo
+- Performance benchmarks: Entity extraction <200ms, SIRE <30s, TRA <10s
+- No regressions en Guest Chat existente
+
+#### 6. SEO + Analytics (FASE 6)
+- Metadata optimization
+- Structured data JSON-LD
+- Plausible analytics integration
+
+#### 7. Documentation & Deployment (FASE 7)
+- README updates
+- API documentation
+- Deployment guides
+- Training materials
+
+### Stack Técnico
+
+**Frontend:**
+- React 19 + TypeScript
+- Next.js 15.5.3 (App Router)
+- Tailwind CSS 4
+- lucide-react icons
+
+**Backend:**
+- Node.js 20.x
+- Supabase PostgreSQL + pgvector
+- Anthropic Claude (conversational AI)
+- OpenAI text-embedding-3-large (Matryoshka Tier 1+2)
+
+**Compliance:**
+- Puppeteer (SIRE automation)
+- REST API (TRA MinCIT)
+- Entity extraction (regex + NER)
+- Validation strict (passport format, age, required fields)
+
+**Infrastructure:**
+- VPS Hostinger (195.200.6.216)
+- Nginx (subdomain routing)
+- Let's Encrypt SSL (wildcard)
+- PM2 cluster mode
+
+### Decisiones Críticas
+
+**✅ APROBADAS:**
+1. Matryoshka embeddings: Dejar TODO as-is (Guest Chat Tier 1+2, Staff Chat Tier 2, Mobile Dev Tier 1)
+2. Compliance: NO mandatory (recordatorio suave, opcional)
+3. SIRE + TRA: Capturar simultáneamente en un solo flujo
+4. UI: Single chat conversacional (NO formularios standalone)
+5. Subdominios: Implementar early (FASE 1)
+6. Staff notifications: Sí, claramente necesarias
+
+**❌ RECHAZADAS:**
+1. Compliance como requisito obligatorio
+2. Flujos separados para SIRE y TRA
+3. Formularios standalone (debe ser conversacional)
+4. Cambiar configuración Matryoshka existente
+
+### Agentes y Responsabilidades
+
+#### @backend-developer (60% - Principal)
+- FASE 1: Nginx routing, middleware subdomain detection
+- FASE 2: APIs CRUD conversations
+- FASE 3: Compliance engine, SIRE Puppeteer, TRA API, intent detection
+- FASE 4: Staff notifications
+- FASE 5: Testing & benchmarks
+
+#### @ux-interface (30% - Principal UI)
+- FASE 2: ConversationList component, GuestChatInterface refactor
+- FASE 3: Compliance UI components
+- FASE 6: SEO + Analytics
+
+#### @database-agent (5% - Soporte)
+- FASE 2: Migrations (guest_conversations, compliance_submissions, tenant_compliance_credentials)
+
+#### @api-endpoints-mapper (5% - Soporte)
+- FASE 3: TRA API investigation (si necesario)
+
+---
+
+## 🔧 TRABAJO REALIZADO - FASE 0 Planning (5 Oct 2025)
+
+### Duración: ~2 horas
+### Commits: 3 archivos creados + 4 agent configs actualizados
+
+#### ✅ Archivos Creados
+
+**1. plan.md** (1570 líneas)
+- Secciones: Overview, estado actual vs deseado, 7 fases detalladas
+- Arquitectura: Subdomain, multi-conversation, compliance, multi-modal, conversation intelligence
+- Timeline: 36-45 horas total
+- Tech stack: Next.js 15, Supabase, Anthropic, Puppeteer, Claude Vision API
+- Success criteria por fase
+- **NEW**: FASE 2.5 (Multi-Modal), FASE 2.6 (Conversation Intelligence)
+
+**2. TODO.md** (750 líneas, 72 tareas)
+- Organización: FASE 0-7
+- Formato por tarea: Checkbox, descripción, estimate, archivos, agente, testing
+- Tracking: 1/72 completadas (1%)
+- Distribución: Backend 60%, UX 30%, DB 5%, API mapper 5%
+- **NEW**: 15 tareas agregadas (2.5.1-2.5.8, 2.6.1-2.6.8)
+
+**3. guest-portal-compliance-workflow.md** (1310 líneas, 17 prompts)
+- Estructura: Contexto general + 17 prompts copy-paste ready
+- Organización: Por fase (1.1-1.3, 2.1-2.6, 3.1-3.4, 4.1-4.2, etc.)
+- Contenido: Especificaciones técnicas completas, código esperado, testing steps
+- Uso: Copy-paste directo en nuevas conversaciones para cada fase
+- **NEW**: Prompts 2.5 (Multi-Modal) y 2.6 (Conversation Intelligence)
+- **FIX CRÍTICO**: Formato `@agent` FUERA de code blocks en TODOS los prompts
+
+**4. Agent Configurations Updated**
+- `.claude/agents/backend-developer.md` - Added "PROYECTO ACTUAL" section (250 líneas nuevas)
+  - **NEW**: FASE 2.5 (Claude Vision API, Supabase Storage, OCR)
+  - **NEW**: FASE 2.6 (Conversation memory, favoritos, cron jobs)
+- `.claude/agents/ux-interface.md` - Added "PROYECTO ACTUAL" section (270 líneas nuevas)
+  - **NEW**: FASE 2.5 (File upload UI, image preview modal)
+  - **NEW**: FASE 2.6 (Topic suggestions banner, Favorites sidebar)
+- `.claude/agents/database-agent.md` - Added "PROYECTO ACTUAL" section (140 líneas nuevas)
+  - **NEW**: FASE 2.5 migration (conversation_attachments table)
+- `.claude/agents/api-endpoints-mapper.md` - Added "PROYECTO ACTUAL" section (30 líneas nuevas)
+
+#### Decisiones Técnicas Tomadas
+
+**Subdomain Architecture:**
+- Pattern: `{tenant}.innpilot.io` (e.g., `simmerdown.innpilot.io`)
+- DNS: Wildcard A record `*.innpilot.io`
+- SSL: Let's Encrypt wildcard certificate
+- Nginx: Extract subdomain, pass via `X-Tenant-Subdomain` header
+- Next.js: Middleware detects subdomain, sets cookie, resolves tenant_id
+
+**Multi-Conversation Database:**
+```sql
+guest_conversations (
+  id UUID,
+  guest_id UUID FK guest_reservations,
+  tenant_id UUID FK tenant_registry,
+  title VARCHAR(255),
+  last_message TEXT,
+  created_at, updated_at
+)
+```
+
+**Compliance Database:**
+```sql
+compliance_submissions (
+  id UUID,
+  guest_id UUID,
+  tenant_id UUID,
+  type VARCHAR(20) CHECK IN ('sire', 'tra', 'both'),
+  status VARCHAR(20) CHECK IN ('pending', 'processing', 'success', 'failed'),
+  data JSONB,  -- {pasaporte, país, fecha_nacimiento, propósito}
+  sire_response JSONB,
+  tra_response JSONB,
+  error_message TEXT
+)
+
+tenant_compliance_credentials (
+  tenant_id UUID UNIQUE,
+  sire_username VARCHAR(255),
+  sire_password_encrypted TEXT,
+  tra_rnt_token VARCHAR(255)
+)
+
+conversation_attachments (  -- NEW - FASE 2.5
+  id UUID,
+  conversation_id UUID FK guest_conversations,
+  file_type VARCHAR(50) CHECK IN ('image', 'document', 'pdf'),
+  file_url TEXT,
+  file_size_bytes INTEGER,
+  ocr_text TEXT,  -- Passport OCR data
+  vision_analysis JSONB  -- Claude Vision API response
+)
+```
+
+**Compliance Entity Extraction:**
+- Pasaporte: Regex `[A-Z]{2}[0-9]{6,9}`
+- País: NER + keyword matching + validation lista oficial
+- Fecha nacimiento: Date parsing (DD/MM/YYYY, DD-MM-YYYY)
+- Propósito viaje: Enum matching ['turismo', 'negocios', 'estudio', 'familiar', 'otro']
+- Confidence threshold: >0.7 para auto-fill
+
+---
+
+## 🔧 TRABAJO REALIZADO - Sesión 3 Oct 2025 (PROYECTO ANTERIOR)
 
 ### FASE 0: Session Management & Bug Fixes ✅ COMPLETADO
 
@@ -317,438 +556,185 @@ if (oldestKey) {
 
 ---
 
-## 🎯 PROYECTO ACTUAL: Mobile-First Chat Interface (Oct 2025)
+## 🔧 TRABAJO RECIENTE: LCP Optimization (5 Oct 2025) ✅ COMPLETADO
 
-### Objetivo
-Crear una interfaz de chat **fullscreen mobile-first** que elimina toda decoración/marketing y se enfoca 100% en la conversación. El chat debe ocupar toda la pantalla y estar optimizado para dispositivos móviles de alta gama.
+### Duración: ~2 horas
+### Commits: 2 (implementation + bug fix + documentation)
 
-### ¿Por qué?
-- **Mobile-First App**: Mayoría de usuarios accederán desde celular
-- **UX Limpia**: Eliminar distracciones, enfoque total en chat
-- **Conversión**: Interacción intuitiva sin explicaciones
-- **Performance**: Aprovechar enhancements actuales (streaming, markdown, typing dots)
+#### Contexto
+**Problema Inicial:**
+- Lighthouse Performance: 73/100
+- LCP (Largest Contentful Paint): 7.1 segundos
+- Causa: ReactMarkdown (50KB bundle) loading eagerly para welcome message
+- Ruta afectada: `/chat-mobile-dev` (DevChatMobileDev.tsx)
 
-### Alcance
-- Nueva ruta `/chat-mobile` con interfaz fullscreen
-- Soporte: iPhone 15/14, Google Pixel 8, Samsung Galaxy S24
-- Mantener TODA la funcionalidad actual (streaming, markdown, photos, suggestions)
-- Safe areas para notches, home bars, status bars
+**Solución Implementada:**
+- Opción 3: Static Extraction + Lazy Loading
+- Documentación: `/docs/fixed-layout-migration/OPCION-3-STATIC-EXTRACTION.md`
 
----
+#### Implementación
 
-## 📊 ESTADO DEL PROYECTO
+**Paso 1: Build Script (Pre-existing)**
+- Script: `scripts/build-welcome-message.ts`
+- Output: `src/lib/welcome-message-static.ts` (670 bytes static HTML)
+- Execution: `npm run prebuild` (antes de production build)
+- ReactDOMServer.renderToString() → Pre-rendered HTML
 
-### Planificación
-✅ **COMPLETADA** (3 Octubre 2025)
+**Paso 2: Component Refactor (DevChatMobileDev.tsx)**
 
-**Archivos creados:**
-- 📄 `plan.md` (412 líneas) - Arquitectura completa, 4 fases
-- 📋 `TODO.md` (300+ líneas) - Tareas detalladas por fase
-- 🎯 `mobile-first-prompt-workflow.md` (750+ líneas) - Prompts ejecutables
-- 🤖 `.claude/agents/ux-interface.md` (510 líneas) - Agent config actualizado
-- 📖 `CLAUDE.md` (147 líneas) - Guía para Claude Code
+Cambios aplicados:
 
-### Fases de Desarrollo
-
-#### FASE 0: Session Management & Bug Fixes ✅ COMPLETADO (3 Oct 2025)
-- [x] Fix streaming API cookie persistence (CRITICAL)
-- [x] Implement reset session functionality
-- [x] Optimize compression threshold (20→100 messages)
-- [x] Fix DEV badge UI blocking
-- [x] Secure API keys in repository
-- [x] Fix TypeScript build errors
-
-**Duración**: ~4 horas
-**Commits**: 12+
-
-#### FASE 1: Estructura Base (2-3h) - 🔜 READY TO START
-- [ ] Crear página `/chat-mobile` (30min)
-- [ ] Crear componente `DevChatMobile.tsx` (1.5h)
-- [ ] Implementar layout móvil básico (1h)
-- [ ] Testing visual en DevTools (30min)
-
-#### FASE 2: Mobile Optimizations (3-4h) - Pending
-- [ ] Safe areas (notch + home bar) (2h)
-- [ ] Touch optimization (30min)
-- [ ] Scroll behavior (1h)
-- [ ] Keyboard handling (1h)
-
-#### FASE 3: Feature Parity (2-3h) - Pending
-- [ ] Streaming SSE (1h)
-- [ ] Markdown + typing dots (1h)
-- [ ] Photos carousel (30min)
-- [ ] Suggestions (30min)
-
-#### FASE 4: Polish & Performance (1-2h) - Pending
-- [ ] Animaciones smooth (30min)
-- [ ] Error handling (30min)
-- [ ] Accessibility (1h)
-- [ ] Lighthouse audit (30min)
-
-**Timeline Total**: 12-16 horas de desarrollo (FASE 0 completada)
-
----
-
-## 📐 ESPECIFICACIONES TÉCNICAS
-
-### Layout Fullscreen
-```
-┌─────────────────────────────┐
-│ Header (60px)               │ ← Fixed top, gradient teal
-├─────────────────────────────┤
-│                             │
-│ Messages Area               │ ← Flex-1, scrollable
-│ (flex-1, scroll)            │
-│                             │
-├─────────────────────────────┤
-│ Input (80px)                │ ← Fixed bottom
-└─────────────────────────────┘
+1. **Import added** (line 6):
+```typescript
+import { WELCOME_MESSAGE_HTML } from '@/lib/welcome-message-static'
 ```
 
-### Mobile Viewport Targets
-| Dispositivo | Width | Height | Safe Areas |
-|-------------|-------|--------|------------|
-| iPhone 15 Pro Max | 430px | 932px | Top: 59px, Bottom: 34px |
-| iPhone 14 Pro | 393px | 852px | Top: 54px, Bottom: 34px |
-| Google Pixel 8 Pro | 412px | 915px | Top: 48px, Bottom: 0px |
-| Samsung Galaxy S24 | 360px | 800px | Top: 0px, Bottom: 0px |
-
-### CSS Key Features
-```css
-/* Safe areas para notch y home bar */
-padding-top: env(safe-area-inset-top);
-padding-bottom: env(safe-area-inset-bottom);
-
-/* Viewport dinámico para keyboard */
-height: 100dvh;  /* NOT 100vh */
-
-/* Touch optimization */
-touch-action: manipulation;
-min-width: 44px;  /* Touch targets */
-min-height: 44px;
-
-/* Smooth scroll */
-scroll-behavior: smooth;
-overscroll-behavior: contain;  /* No bounce */
+2. **Welcome message content emptied** (line 108):
+```typescript
+const welcomeMessage: Message = {
+  id: 'welcome',
+  role: 'assistant',
+  content: '', // Empty - will use static HTML instead
+  timestamp: new Date()
+}
 ```
 
-### Features a Implementar
-- **Streaming SSE**: Server-Sent Events para respuestas en tiempo real
-- **Markdown**: react-markdown v9 + remark-gfm
-- **Typing dots**: 3 puntos animados mientras espera
-- **Cursor pulsante**: Cursor al final del texto mientras streamea
-- **Photo carousel**: Galería de fotos de accommodations
-- **Suggestions**: Botones de follow-up clickeables
+3. **Conditional rendering updated** (lines 391-421):
+```typescript
+{!message.content && loading && message.id !== 'welcome' ? (
+  // Loading dots (only for dynamic messages)
+  <div className="flex gap-1">
+    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+  </div>
+) : message.id === 'welcome' ? (
+  /* Welcome message: Static HTML (optimal LCP) */
+  <div
+    className="text-base leading-[1.6]"
+    dangerouslySetInnerHTML={{ __html: WELCOME_MESSAGE_HTML }}
+  />
+) : (
+  /* Dynamic messages: Lazy-loaded ReactMarkdown */
+  <div className="text-base leading-[1.6]">
+    <Suspense fallback={<div className="text-base text-gray-600">{message.content}</div>}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{...}}
+      >
+        {message.content}
+      </ReactMarkdown>
+    </Suspense>
+  </div>
+)}
+```
 
-### Performance Targets
-- **Lighthouse Mobile**: ≥ 90
-- **First Contentful Paint**: < 1.5s
-- **Time to Interactive**: < 3s
-- **Cumulative Layout Shift**: < 0.1
-- **Animations**: 60fps consistente
-
----
-
-## 🤖 AGENTES Y WORKFLOW
-
-### Agente Principal: ux-interface
-**Responsabilidad**: Implementación completa del UI mobile-first
-
-**Tareas por fase:**
-- FASE 1: Crear estructura base (page.tsx + DevChatMobile.tsx)
-- FASE 2: Mobile optimizations (safe areas, touch targets)
-- FASE 3: Feature parity (streaming, markdown, photos, suggestions)
-- FASE 4: Polish & performance (animaciones, a11y, lighthouse)
-
-**Configuración**: `.claude/agents/ux-interface.md` (510 líneas actualizadas)
-
-### Workflow de Desarrollo
-1. **Leer planificación**: plan.md → TODO.md → workflow.md
-2. **Identificar fase**: Buscar próxima tarea `[ ]` en TODO.md
-3. **Usar prompt**: Copiar de mobile-first-prompt-workflow.md
-4. **Implementar**: Seguir specs de plan.md
-5. **Testing**: Chrome DevTools (iPhone 15, Pixel 8, Galaxy S24)
-6. **Documentar**: Crear docs/chat-mobile/fase-{N}/
-
----
-
-## 🛠️ DESARROLLO - SETUP
-
-### Development Server
+**Paso 3: Production Build**
 ```bash
-# Iniciar con script recomendado (cleanup automático + API keys)
-./scripts/dev-with-keys.sh
-
-# Alternativamente (si .env.local configurado)
-npm run dev
-
-# URL del proyecto
-http://localhost:3000/chat-mobile
+npm run prebuild  # Generate static HTML (670 bytes)
+npm run build     # Production build
 ```
 
-### Scripts Disponibles
-```bash
-# Desarrollo
-npm run dev                    # Dev server (port 3000)
-npm run build                  # Production build
-npm start                      # Run production build
+#### Resultados
 
-# Testing
-npm test                       # Jest tests
-npm run lint                   # ESLint
+**Performance Metrics:**
+- ✅ Lighthouse Performance: **95/100** (from 73/100) - +30% improvement
+- ✅ LCP: **<1.5s** (from 7.1s) - 79% reduction
+- ✅ FCP: <1.0s
+- ✅ TBT: <200ms
+- ✅ CLS: <0.1
+
+**Bundle Size Reduction:**
+- ReactMarkdown bundle: 50KB → NOT loaded initially
+- Welcome message: 670 bytes static HTML
+- Lazy loading: Only after user interaction
+
+#### Bug Fix: Welcome Message Loading Dots Glitch
+
+**Problema Detectado:**
+- User enviaba primer mensaje → Welcome message temporalmente mostraba loading dots
+- Después de streaming completo → Welcome message reaparecía correctamente
+
+**Root Cause:**
+- Line 391 condition: `{!message.content && loading ? (`
+- Welcome message tiene `content: ''` (empty by design para static extraction)
+- Cuando `loading=true`, condition matched welcome message → showed dots
+
+**Fix Aplicado** (DevChatMobileDev.tsx:391):
+```typescript
+// BEFORE (buggy):
+{!message.content && loading ? (
+
+// AFTER (fixed):
+{!message.content && loading && message.id !== 'welcome' ? (
 ```
 
-### Variables de Entorno Requeridas
-```bash
-# .env.local
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=[your-key]
-SUPABASE_SERVICE_ROLE_KEY=[your-key]
-OPENAI_API_KEY=[your-key]
-ANTHROPIC_API_KEY=[your-key]
+**User Feedback:** "perfecto. quedó arreglado" ✅
+
+#### Archivos Modificados
+
+1. **src/components/Dev/DevChatMobileDev.tsx**
+   - Added import: `WELCOME_MESSAGE_HTML`
+   - Changed welcome message content to empty string
+   - Updated rendering logic con conditional static HTML
+   - Fixed loading dots glitch con exclusion check
+
+2. **docs/fixed-layout-migration/fase-4/REGRESSION_TESTS.md**
+   - Added test G5: "Welcome message NO muestra typing dots durante loading"
+   - Added "BUG FIXES DURANTE TESTING" section
+   - Updated test counts: 120 → 121 tests total
+   - Documented complete bug fix workflow
+
+#### Documentación
+
+**Regression Test G5 Added:**
+```markdown
+- [ ] **G5.** Welcome message NO muestra typing dots durante loading ⚠️ CRITICAL
+  - **Cómo:** Enviar primer mensaje "hola", observar welcome message durante respuesta
+  - **Esperado:** Welcome message permanece visible (HTML estático), NO se convierte en dots
+  - **Actual (ANTES DEL FIX):** Welcome message flickeaba a dots temporalmente
+  - **Fix:** Condición `message.id !== 'welcome'` agregada en línea 391
+  - **Dispositivos:** Todos
+  - **Nota:** Bug introducido por static extraction (welcome.content=''), fix crítico para UX
 ```
+
+**Bug Fix Documentation:**
+- Symptom: Welcome message flicker durante streaming
+- Root cause: Conditional rendering matched empty content
+- Sequence: User sends message → loading=true → welcome matched → dots shown → response complete → welcome reappeared
+- Solution: Add `&& message.id !== 'welcome'` exclusion
+- Testing: Manual validation, no flicker observed
+- Impact: CRITICAL UX fix
+
+#### Commits
+
+1. **feat: implement Opción 3 (Static Extraction + Lazy Loading) for LCP optimization**
+   - DevChatMobileDev.tsx: Add static HTML for welcome message
+   - Conditional rendering: Static HTML (welcome) vs Lazy ReactMarkdown (dynamic)
+   - Production build: 670 bytes static HTML generated
+   - Results: Lighthouse 95/100, LCP <1.5s
+
+2. **fix: prevent welcome message from showing loading dots during streaming**
+   - DevChatMobileDev.tsx:391 - Add `message.id !== 'welcome'` exclusion
+   - REGRESSION_TESTS.md: Add test G5 + bug fix documentation
+   - User confirmed: "perfecto. quedó arreglado"
+
+#### Lecciones Aprendidas
+
+1. **Static Extraction**: Pre-rendering React components a HTML estático reduce bundle size dramáticamente
+2. **Lazy Loading**: Usar `Suspense` + dynamic imports para cargar componentes solo cuando se necesitan
+3. **LCP Optimization**: First paint debe usar minimal JavaScript, render estático cuando sea posible
+4. **Edge Cases**: Empty content strings pueden causar conditional rendering bugs - always check IDs
+5. **Build-time Generation**: npm prebuild hooks son perfectos para static asset generation
+
+#### Estado Post-LCP Optimization
+
+✅ **Performance**: Lighthouse 95/100 (target achieved)
+✅ **LCP**: <1.5s (target achieved)
+✅ **Bundle Size**: 50KB ReactMarkdown NOT loaded initially
+✅ **UX**: No flickering, smooth experience
+✅ **Testing**: Regression test added, bug documented
+
+**Próximo Paso**: Continuar con Guest Portal Multi-Conversation (FASE 1)
 
 ---
-
-## 📂 ESTRUCTURA DE ARCHIVOS
-
-### Archivos de Planificación
-```
-/Users/oneill/Sites/apps/InnPilot/
-├── plan.md                           # 🎯 Plan completo (412 líneas)
-├── TODO.md                           # 📋 Tareas por fase (300+ líneas)
-├── mobile-first-prompt-workflow.md   # 🚀 Prompts ejecutables (750+ líneas)
-├── CLAUDE.md                         # 📖 Guía para Claude Code (147 líneas)
-├── SNAPSHOT.md                       # 📸 Este archivo
-└── .claude/
-    └── agents/
-        └── ux-interface.md           # 🤖 Agent config (510 líneas)
-```
-
-### Archivos a Crear (FASE 1)
-```
-src/
-├── app/
-│   └── chat-mobile/
-│       └── page.tsx              # [TO CREATE] Página fullscreen
-└── components/
-    └── Dev/
-        ├── DevChatInterface.tsx  # [REFERENCE] Base code
-        └── DevChatMobile.tsx     # [TO CREATE] Mobile version
-```
-
-### Documentación a Generar
-```
-docs/
-└── chat-mobile/
-    ├── fase-1/
-    │   ├── IMPLEMENTATION.md     # Qué se hizo
-    │   ├── CHANGES.md            # Archivos modificados
-    │   ├── TESTS.md              # Resultados tests
-    │   └── ISSUES.md             # Problemas (si hay)
-    ├── fase-2/
-    ├── fase-3/
-    └── fase-4/
-```
-
----
-
-## 📋 REFERENCIAS RÁPIDAS
-
-### Archivos Clave
-- **Plan completo**: `/Users/oneill/Sites/apps/InnPilot/plan.md`
-- **Tareas**: `/Users/oneill/Sites/apps/InnPilot/TODO.md`
-- **Prompts**: `/Users/oneill/Sites/apps/InnPilot/mobile-first-prompt-workflow.md`
-- **Base code**: `/Users/oneill/Sites/apps/InnPilot/src/components/Dev/DevChatInterface.tsx`
-
-### Comandos Útiles
-```bash
-# Testing responsive
-# 1. Abrir DevTools (Cmd+Option+I)
-# 2. Toggle device toolbar (Cmd+Shift+M)
-# 3. Seleccionar: iPhone 15 Pro Max, Pixel 8, Galaxy S24
-# 4. Reload (Cmd+R)
-
-# Hard refresh (sin caché)
-# Chrome/Edge: Cmd+Shift+R
-# Safari: Cmd+Option+R
-# DevTools: Right-click reload → Empty Cache and Hard Reload
-
-# Lighthouse audit
-# 1. npm run build && npm start
-# 2. DevTools → Lighthouse tab
-# 3. Device: Mobile
-# 4. Click "Analyze page load"
-```
-
-### Quick Start para Nuevas Conversaciones
-```
-CONTEXTO: Mobile-First Chat Interface
-
-Estoy en el proyecto "Mobile-First Chat Interface".
-- Plan: plan.md
-- Tareas: TODO.md
-- Prompts: mobile-first-prompt-workflow.md
-
-Próxima fase: FASE 1 (Estructura Base)
-Agente: @ux-interface
-
-Por favor lee los archivos y ejecuta Prompt 1.1
-```
-
----
-
-## 🎯 CRITERIOS DE ÉXITO
-
-### Funcionalidad Core
-- [ ] Ruta `/chat-mobile` accesible
-- [ ] Chat fullscreen sin decoración marketing
-- [ ] Streaming SSE funcional
-- [ ] Markdown rendering completo
-- [ ] Typing dots + cursor pulsante
-- [ ] Photo carousel
-- [ ] Follow-up suggestions
-
-### Mobile UX
-- [ ] Safe areas respetadas (notch, home bar)
-- [ ] Touch targets ≥ 44px
-- [ ] Keyboard no tapa input (iOS/Android)
-- [ ] Smooth scroll a nuevos mensajes
-- [ ] Landscape mode funcional
-- [ ] No bounce scroll (iOS)
-
-### Performance
-- [ ] Lighthouse mobile ≥ 90
-- [ ] FCP < 1.5s
-- [ ] TTI < 3s
-- [ ] CLS < 0.1
-
-### Accesibilidad
-- [ ] VoiceOver navigation OK
-- [ ] TalkBack navigation OK (Android)
-- [ ] ARIA labels completos
-- [ ] Color contrast ≥ 4.5:1
-
-### Compatibilidad
-- [ ] iPhone 15/14 (Safari iOS 17+)
-- [ ] Pixel 8 (Chrome Android 14+)
-- [ ] Galaxy S24 (Samsung Internet)
-- [ ] Funciona en 360px - 430px width
-
----
-
-## 🚀 PRÓXIMOS PASOS INMEDIATOS
-
-### 1. Ejecutar FASE 1 con @ux-interface
-**Usar prompt 1.1** de `mobile-first-prompt-workflow.md`:
-```
-@ux-interface
-
-TAREA: Crear página mobile-first en /chat-mobile
-...
-```
-
-### 2. Validar Layout Básico
-- Header fijo (60px)
-- Messages área scrollable
-- Input fijo (80px)
-- Chrome DevTools testing
-
-### 3. Continuar con FASE 2
-- Safe areas implementation
-- Touch optimization
-- Scroll behavior
-
-### 4. Completar FASE 3 y 4
-- Feature parity
-- Polish & performance
-
----
-
-## 💡 NOTAS IMPORTANTES
-
-### Reutilización de Código
-- **DevChatInterface.tsx** es la fuente de verdad
-- **DevChatMobile.tsx** copia toda la lógica de chat
-- **Diferencia principal**: Layout (fullscreen vs bubble)
-
-### Consideraciones Mobile
-- **iOS Safari**: Viewport height cambia con keyboard (`100vh` → `100dvh`)
-- **Android Chrome**: Address bar colapsa (usar `min-height: 100dvh`)
-- **Safe Areas**: Solo iOS tiene notch/home bar, Android varía
-
-### Performance Tips
-- Lazy load photo carousel si hay muchas imágenes
-- Debounce textarea auto-resize (reduce reflows)
-- Use `will-change: transform` para animaciones smooth
-- Evitar `box-shadow` en scroll (usar `border`)
-
----
-
-## 📈 TRACKING DE PROGRESO
-
-### Estado por Fase
-- **FASE 0**: 100% (6/6 tareas) - ✅ Completada (3 Oct 2025)
-- **FASE 1**: 0% (0/4 tareas) - 🔜 Ready to start
-- **FASE 2**: 0% (0/5 tareas) - Pending
-- **FASE 3**: 0% (0/5 tareas) - Pending
-- **FASE 4**: 0% (0/5 tareas) - Pending
-
-**Total Progress**: 6/25 tareas completadas (24%)
-
-### Timeline Estimado
-- **Inicio**: 3 Octubre 2025
-- **FASE 0**: ✅ 3 Octubre (4h) - Completado
-- **FASE 1**: 4-5 Octubre (2-3h)
-- **FASE 2**: 5-6 Octubre (3-4h)
-- **FASE 3**: 6-7 Octubre (2-3h)
-- **FASE 4**: 7-8 Octubre (1-2h)
-- **Completado estimado**: 8 Octubre 2025
-
----
-
-**🎨 Mobile-First Chat Interface**: Interfaz limpia, fullscreen, optimizada para móviles de alta gama. FASE 0 completada (session management fixed), FASE 1 ready to start.
-
-**✨ Next Action**: Ejecutar Prompt 1.1 con `@ux-interface` para crear página `/chat-mobile`
-
----
-
-## 📝 HISTORIAL DE SESIONES
-
-### Sesión 3 Oct 2025 (FASE 0) - ✅ Completada
-**Duración**: ~4 horas
-**Objetivo**: Resolver bugs críticos de session management
-**Commits**: 12+
-**Estado**: Session persistence working, reset functionality implemented
-
-**Bugs Solucionados**:
-- 🚨 CRÍTICO: Streaming API no persistía session cookie
-- Reset conversation button sin funcionalidad
-- Compression threshold demasiado agresivo (20→100)
-- DEV badge bloqueaba UI elements
-- API keys expuestos en repositorio
-- TypeScript build error en embedding-cache.ts
-
-**Archivos Creados**:
-- `src/app/api/dev/reset-session/route.ts`
-- `src/app/api/public/reset-session/route.ts`
-
-**Archivos Modificados**:
-- `src/app/api/dev/chat/route.ts` (streaming fix)
-- `src/lib/dev-chat-session.ts` (compression threshold)
-- `src/lib/public-chat-session.ts` (compression threshold)
-- `src/components/Dev/DevChatMobileDev.tsx` (reset button + badge layout)
-- `src/components/Dev/DevChatInterface.tsx` (reset button)
-- `src/components/Public/PublicChatInterface.tsx` (reset button)
-- `src/lib/embedding-cache.ts` (type safety)
-- `scripts/run-benchmarks.sh` (env vars)
-- `docs/conversation-memory/fase-5/VALIDATION.md` (masked key)
-
-**Lecciones Aprendidas**:
-1. HttpOnly cookies requieren backend para expirarse
-2. Streaming responses necesitan Set-Cookie en headers
-3. Session management multi-layer: cookie + localStorage + React state
-4. GitHub push protection detecta API keys automáticamente
-5. Fixed overlays pueden bloquear interactive elements
-
-**Próximo Paso**: FASE 1 (Estructura Base) con session management estable

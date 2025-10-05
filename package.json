@@ -7,6 +7,7 @@
     "dev:force": "npm run kill-all && next dev --turbopack",
     "kill-port": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
     "kill-all": "pkill -f 'next dev' 2>/dev/null || true && pkill -f 'node.*next' 2>/dev/null || true && npm run kill-port",
+    "prebuild": "npx tsx scripts/build-welcome-message.ts",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",

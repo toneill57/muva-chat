@@ -44,16 +44,30 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // 3. Verify conversation belongs to this guest
-    if (conversationId !== session.conversation_id) {
-      return NextResponse.json(
-        { error: 'Acceso no autorizado a esta conversación' },
-        { status: 403 }
-      )
+    // 3. Fetch messages from database
+    const supabase = createServerClient()
+
+    // 3.1 Verify conversation belongs to this guest (support multi-conversation)
+    const { data: conversation, error: convError } = await supabase
+      .from('guest_conversations')
+      .select('id')
+      .eq('id', conversationId)
+      .eq('guest_id', session.reservation_id)
+      .single()
+
+    // If conversation not found in guest_conversations, fallback to legacy check
+    // (for backwards compatibility with old single-conversation system)
+    if (convError || !conversation) {
+      // Check if it's the legacy conversation_id from session
+      if (conversationId !== session.conversation_id) {
+        return NextResponse.json(
+          { error: 'Acceso no autorizado a esta conversación' },
+          { status: 403 }
+        )
+      }
     }
 
     // 4. Fetch messages from database
-    const supabase = createServerClient()
 
     const { data: messages, error } = await supabase
       .from('chat_messages')
