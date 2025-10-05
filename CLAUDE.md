@@ -69,6 +69,47 @@ npm run lint                        # Lint code
 
 ---
 
+## 🚫 OBSOLETE INFRASTRUCTURE (DO NOT USE)
+
+### Vercel (Migrated to VPS - Oct 4, 2025)
+
+**⚠️ CRITICAL:** InnPilot has been **fully migrated** from Vercel to VPS Hostinger.
+
+**NEVER create or reference:**
+- ❌ `vercel.json` - **DELETED**, use VPS cron instead
+- ❌ Vercel Edge Functions - Use Next.js API routes
+- ❌ Vercel Cron - Use VPS crontab (see `VPS_CRON_SETUP.md`)
+- ❌ Vercel CLI commands (`vercel deploy`, etc.) - Use PM2 + Git deployment
+- ❌ Vercel Environment Variables - Use VPS `.env.local`
+
+**✅ CURRENT INFRASTRUCTURE (VPS Hostinger):**
+
+| Component | Technology | Location/Command |
+|-----------|------------|------------------|
+| **Hosting** | VPS Hostinger | 195.200.6.216 |
+| **Domain** | innpilot.io | DNS managed in Hostinger |
+| **SSL** | Let's Encrypt wildcard | `*.innpilot.io` + `innpilot.io` |
+| **Web Server** | Nginx | Reverse proxy to localhost:3000 |
+| **Process Manager** | PM2 | `ecosystem.config.cjs` |
+| **Deployment** | Git + PM2 | `git push` → `pm2 reload innpilot` |
+| **Cron Jobs** | VPS crontab | `scripts/cron/setup-*.sh` |
+| **Logs** | System logs | `/var/log/innpilot/` |
+| **Environment** | .env.local | `/var/www/innpilot/.env.local` |
+
+**📖 Documentation:**
+- VPS Setup: `docs/deployment/VPS_SETUP_GUIDE.md`
+- Cron Jobs: `docs/deployment/VPS_CRON_SETUP.md`
+- Subdomain Setup: `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md`
+- Environment Variables: `docs/deployment/env.example.vps`
+- Migration Complete: VPS Deployment project completed Oct 4, 2025
+
+**⚠️ If you see references to Vercel:**
+1. Check if it's historical documentation (acceptable)
+2. If in active code, update to VPS equivalent
+3. Never create new Vercel-specific files
+
+---
+
 ## 🎯 CURRENT PROJECT: Guest Portal Multi-Conversation + Compliance Module (Oct 5, 2025)
 
 ### Objective
@@ -82,11 +123,14 @@ Transformar el Guest Chat actual (single-conversation) en una experiencia multi-
 ### Status
 - **FASE 0 Planning**: ✅ Complete
 - **FASE 1**: 🔜 Ready (Subdomain Infrastructure - 3-4h)
-- **FASE 2**: Pending (Multi-Conversation Foundation - 10-14h)
-  - 2.1-2.3: Core multi-conversation (6-8h)
-  - 2.5: Multi-Modal file upload (4-5h) 🆕
-  - 2.6: Conversation Intelligence (3-4h) 🆕
-- **FASE 3**: Pending (Compliance Module - 10-12h)
+- **FASE 2**: 🚧 In Progress (Multi-Conversation Foundation - 10-14h)
+  - 2.1: ✅ Database migrations (`guest_conversations`, `compliance_submissions`)
+  - 2.2: ✅ Backend APIs (`/api/guest/conversations`, `/api/compliance/submit`)
+  - 2.3: 🚧 UI Components (GuestChatInterface with compliance modal)
+  - 2.5: Pending - Multi-Modal file upload (4-5h) 🆕
+  - 2.6: Pending - Conversation Intelligence (3-4h) 🆕
+- **FASE 3**: 🚧 In Progress (Compliance Module - 10-12h)
+  - 3.4: 🚧 UI Two-Layer Architecture (compliance modal implemented, testing needed)
 - **FASE 4**: Pending (Staff Notifications - 4-5h)
 - **FASE 5**: Pending (Testing & Performance - 3-4h)
 - **FASE 6**: Pending (SEO + Analytics - 2-3h)
@@ -159,7 +203,7 @@ Transformar el Guest Chat actual (single-conversation) en una experiencia multi-
 │   ├── components/
 │   │   ├── Chat/
 │   │   │   ├── ConversationList.tsx                 # [TO CREATE] Sidebar multi-conversation
-│   │   │   └── GuestChatInterface.tsx               # [TO MODIFY] Add sidebar layout
+│   │   │   └── GuestChatInterface.tsx               # ✅ Modified - Added compliance modal states
 │   │   └── Compliance/
 │   │       ├── ComplianceFlow.tsx                   # [TO CREATE] Conversational compliance UI
 │   │       ├── ComplianceConfirmation.tsx           # [TO CREATE] Pre-submit modal
@@ -167,16 +211,19 @@ Transformar el Guest Chat actual (single-conversation) en una experiencia multi-
 │   └── app/
 │       └── api/
 │           ├── guest/
-│           │   ├── conversations/route.ts           # [TO CREATE] POST, GET
+│           │   ├── conversations/route.ts           # ✅ Created - POST, GET
 │           │   └── conversations/[id]/route.ts      # [TO CREATE] PUT, DELETE
 │           ├── compliance/
-│           │   └── submit/route.ts                  # [TO CREATE] SIRE + TRA submission
+│           │   └── submit/route.ts                  # ✅ Created - SIRE + TRA submission (MOCK mode)
 │           └── staff/
 │               └── compliance/route.ts              # [TO CREATE] Staff compliance dashboard
 ├── supabase/
 │   └── migrations/
-│       ├── 20251005010000_add_guest_conversations.sql           # [TO CREATE]
-│       ├── 20251005010100_add_compliance_submissions.sql        # [TO CREATE]
+│       ├── 20251005010000_add_guest_conversations.sql           # ✅ Created
+│       ├── 20251005010100_add_compliance_submissions.sql        # ✅ Created
+│       ├── 20251005010300_add_conversation_attachments.sql      # ✅ Created (FASE 2.5)
+│       ├── 20251005010301_create_guest_attachments_bucket.sql   # ✅ Created (FASE 2.5)
+│       ├── 20251005010400_add_conversation_intelligence.sql     # ✅ Created (FASE 2.6)
 │       └── 20251005010200_add_tenant_compliance_credentials.sql # [TO CREATE]
 ├── docs/
 │   └── deployment/
@@ -261,31 +308,5 @@ Lee plan.md sección FASE 3, TODO.md tareas 3.1-3.4 y ejecuta Prompt 3.1 de work
 
 ---
 
-## 🚦 Getting Started
-
-### For New Conversations
-1. Read `plan.md` for project context
-2. Read `TODO.md` for current tasks
-3. Use prompts from `vps-deployment-workflow.md`
-4. Invoke `@backend-developer` for deployment tasks
-
-### Quick Start FASE 1
-```bash
-# Context prompt (copy-paste to new conversation)
-CONTEXTO: VPS Deployment Migration
-
-Estoy en el proyecto "VPS Deployment Migration".
-- Plan: plan.md (610 líneas)
-- Tareas: TODO.md (28 tareas)
-- Prompts: vps-deployment-workflow.md (650 líneas)
-
-Próxima fase: FASE 1 (Limpieza de Vercel)
-Agente: @backend-developer
-
-Por favor lee los archivos y ejecuta Prompt 1.1
-```
-
----
-
-**Last Updated**: Oct 4, 2025
-**Current Focus**: VPS Deployment Migration - FASE 5 in progress (Documentation)
+**Last Updated**: Oct 5, 2025
+**Current Focus**: Guest Portal Multi-Conversation + Compliance Module - FASE 2-3 in progress
