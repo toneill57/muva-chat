@@ -7,7 +7,7 @@ import { createServerClient } from '@/lib/supabase'
  *
  * Retrieves chat message history for a guest conversation
  *
- * Query params: conversation_id
+ * Query params: conversation_id (OPTIONAL - if not provided, returns all messages for guest)
  * Headers: Authorization: Bearer <token>
  * Response: { messages: GuestChatMessage[], total: number }
  */
@@ -33,46 +33,52 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // 2. Get conversation_id from query params
+    // 2. Get conversation_id from query params (OPTIONAL for backward compatibility)
     const { searchParams } = new URL(request.url)
     const conversationId = searchParams.get('conversation_id')
-
-    if (!conversationId) {
-      return NextResponse.json(
-        { error: 'conversation_id es requerido' },
-        { status: 400 }
-      )
-    }
 
     // 3. Fetch messages from database
     const supabase = createServerClient()
 
-    // 3.1 Verify conversation belongs to this guest (support multi-conversation)
-    const { data: conversation, error: convError } = await supabase
-      .from('guest_conversations')
-      .select('id')
-      .eq('id', conversationId)
-      .eq('guest_id', session.reservation_id)
-      .single()
-
-    // If conversation not found in guest_conversations, fallback to legacy check
-    // (for backwards compatibility with old single-conversation system)
-    if (convError || !conversation) {
-      // Check if it's the legacy conversation_id from session
-      if (conversationId !== session.conversation_id) {
-        return NextResponse.json(
-          { error: 'Acceso no autorizado a esta conversación' },
-          { status: 403 }
-        )
-      }
-    }
-
-    // 4. Fetch messages from database
-
-    const { data: messages, error } = await supabase
+    // 4. Build query based on whether conversation_id is provided
+    let query = supabase
       .from('chat_messages')
       .select('id, role, content, created_at, metadata')
-      .eq('conversation_id', conversationId)
+
+    if (conversationId) {
+      // Filter by specific conversation_id
+      console.log('[chat-history] Fetching messages for conversation:', conversationId)
+
+      // Verify conversation belongs to this guest (support multi-conversation)
+      const { data: conversation, error: convError } = await supabase
+        .from('guest_conversations')
+        .select('id')
+        .eq('id', conversationId)
+        .eq('guest_id', session.reservation_id)
+        .single()
+
+      // If conversation not found in guest_conversations, fallback to legacy check
+      // (for backwards compatibility with old single-conversation system)
+      if (convError || !conversation) {
+        // Check if it's the legacy conversation_id from session
+        if (conversationId !== session.conversation_id) {
+          return NextResponse.json(
+            { error: 'Acceso no autorizado a esta conversación' },
+            { status: 403 }
+          )
+        }
+      }
+
+      query = query.eq('conversation_id', conversationId)
+    } else {
+      // No conversation_id provided - return all messages for this guest
+      // (backward compatibility with old single-conversation system)
+      console.log('[chat-history] Fetching all messages for guest')
+      query = query.eq('conversation_id', session.conversation_id)
+    }
+
+    // 5. Execute query
+    const { data: messages, error } = await query
       .order('created_at', { ascending: true })
       .limit(100) // Last 100 messages
 

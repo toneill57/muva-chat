@@ -1,34 +1,26 @@
-/**
- * Guest Conversations API - Individual Conversation Operations
- *
- * PUT /api/guest/conversations/[id] - Update conversation title
- * DELETE /api/guest/conversations/[id] - Delete conversation
- */
-
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyGuestToken } from '@/lib/guest-auth'
+import { extractTokenFromHeader, verifyGuestToken } from '@/lib/guest-auth'
 import { createServerClient } from '@/lib/supabase'
 
 /**
  * PUT /api/guest/conversations/[id]
  *
- * Update conversation title
+ * Updates a conversation title
  *
+ * Request body: { title: string }
  * Headers: Authorization: Bearer <token>
- * Body: { title: string }
- * Response: { success: true, conversation: GuestConversation }
+ * Response: { id, guest_id, tenant_id, title, last_message, created_at, updated_at }
  */
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Get conversation ID from params
-    const { id } = await params
-
-    // 2. Extract and verify token
+    // Await params for Next.js 15
+    const resolvedParams = await params
+    // 1. Verify authentication
     const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    const token = extractTokenFromHeader(authHeader)
 
     if (!token) {
       return NextResponse.json(
@@ -46,62 +38,57 @@ export async function PUT(
       )
     }
 
-    // 3. Parse request body
+    // 2. Parse request body
     const body = await request.json()
     const { title } = body
 
-    // Validate title
-    if (!title || typeof title !== 'string' || title.trim().length === 0) {
+    if (!title || typeof title !== 'string') {
       return NextResponse.json(
-        { error: 'El título es requerido y no puede estar vacío' },
+        { error: 'El título es requerido' },
         { status: 400 }
       )
     }
 
-    if (title.length > 255) {
-      return NextResponse.json(
-        { error: 'El título es demasiado largo (máximo 255 caracteres)' },
-        { status: 400 }
-      )
-    }
+    // Validate title length
+    const validatedTitle = title.substring(0, 200)
 
-    // 4. Update conversation in database
+    // 3. Update conversation in database (RLS verifies ownership)
     const supabase = createServerClient()
 
-    const { data, error } = await supabase
+    const { data: conversation, error: dbError } = await supabase
       .from('guest_conversations')
-      .update({ title: title.trim() })
-      .eq('id', id)
-      .eq('guest_id', session.reservation_id) // Security: Only update own conversations
+      .update({
+        title: validatedTitle
+      })
+      .eq('id', resolvedParams.id)
+      .eq('guest_id', session.reservation_id)  // Ensure ownership
       .select()
       .single()
 
-    if (error) {
-      // Check if conversation not found or not owned by guest
-      if (error.code === 'PGRST116') {
+    if (dbError) {
+      if (dbError.code === 'PGRST116') {
+        // No rows updated (conversation not found or not owned by user)
         return NextResponse.json(
-          { error: 'Conversación no encontrada o acceso no autorizado' },
+          { error: 'Conversación no encontrada' },
           { status: 404 }
         )
       }
 
-      console.error('[guest-conversations] Update error:', error)
+      console.error('[guest-conversations] Error updating conversation:', dbError)
       return NextResponse.json(
-        { error: 'Error al actualizar conversación' },
+        { error: 'No se pudo actualizar la conversación' },
         { status: 500 }
       )
     }
 
-    console.log('[guest-conversations] PUT:', {
+    // 4. Return updated conversation
+    console.log('[guest-conversations] Updated conversation:', {
+      id: resolvedParams.id,
       guest: session.guest_name,
-      conversation_id: id,
-      new_title: title.trim(),
+      new_title: validatedTitle,
     })
 
-    return NextResponse.json({
-      success: true,
-      conversation: data,
-    }, { status: 200 })
+    return NextResponse.json(conversation)
 
   } catch (error) {
     console.error('[guest-conversations] PUT error:', error)
@@ -115,22 +102,21 @@ export async function PUT(
 /**
  * DELETE /api/guest/conversations/[id]
  *
- * Delete conversation (CASCADE will delete associated messages)
+ * Deletes a conversation (cascade deletes messages)
  *
  * Headers: Authorization: Bearer <token>
- * Response: { success: true, deleted_id: string }
+ * Response: { success: true, message: string }
  */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Get conversation ID from params
-    const { id } = await params
-
-    // 2. Extract and verify token
+    // Await params for Next.js 15
+    const resolvedParams = await params
+    // 1. Verify authentication
     const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    const token = extractTokenFromHeader(authHeader)
 
     if (!token) {
       return NextResponse.json(
@@ -148,49 +134,33 @@ export async function DELETE(
       )
     }
 
-    // 3. Delete conversation from database
+    // 2. Delete conversation (RLS + CASCADE deletes related messages)
     const supabase = createServerClient()
 
-    // First verify the conversation exists and belongs to the guest
-    const { data: conversation, error: verifyError } = await supabase
-      .from('guest_conversations')
-      .select('id, title')
-      .eq('id', id)
-      .eq('guest_id', session.reservation_id)
-      .single()
-
-    if (verifyError || !conversation) {
-      return NextResponse.json(
-        { error: 'Conversación no encontrada o acceso no autorizado' },
-        { status: 404 }
-      )
-    }
-
-    // Delete the conversation (CASCADE will delete messages)
-    const { error: deleteError } = await supabase
+    const { error: dbError } = await supabase
       .from('guest_conversations')
       .delete()
-      .eq('id', id)
-      .eq('guest_id', session.reservation_id)
+      .eq('id', resolvedParams.id)
+      .eq('guest_id', session.reservation_id)  // Ensure ownership
 
-    if (deleteError) {
-      console.error('[guest-conversations] Delete error:', deleteError)
+    if (dbError) {
+      console.error('[guest-conversations] Error deleting conversation:', dbError)
       return NextResponse.json(
-        { error: 'Error al eliminar conversación' },
+        { error: 'No se pudo eliminar la conversación' },
         { status: 500 }
       )
     }
 
-    console.log('[guest-conversations] DELETE:', {
+    // 3. Return success (even if 0 rows deleted, no error thrown)
+    console.log('[guest-conversations] Deleted conversation:', {
+      id: resolvedParams.id,
       guest: session.guest_name,
-      conversation_id: id,
-      title: conversation.title,
     })
 
     return NextResponse.json({
       success: true,
-      deleted_id: id,
-    }, { status: 200 })
+      message: 'Conversación eliminada'
+    })
 
   } catch (error) {
     console.error('[guest-conversations] DELETE error:', error)
