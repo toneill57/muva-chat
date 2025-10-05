@@ -45,7 +45,7 @@ jobs:
             git pull origin dev
             npm ci --legacy-peer-deps --production
             npm run build
-            pm2 reload ecosystem.config.js
+            pm2 reload docs/deployment/ecosystem.config.js --update-env
 
       - name: Wait for deployment
         run: sleep 10
@@ -71,7 +71,7 @@ jobs:
             git reset --hard HEAD~1
             npm ci --legacy-peer-deps --production
             npm run build
-            pm2 reload ecosystem.config.js
+            pm2 reload docs/deployment/ecosystem.config.js --update-env
             echo "Rolled back to previous version"
 
       - name: Notify success
