@@ -1,31 +1,33 @@
-# PROMPTS WORKFLOW - Guest Portal Multi-Conversation + Compliance Module
+# PROMPTS EJECUTABLES - Guest Portal Multi-Conversation + Compliance
 
 **Proyecto:** Guest Portal Multi-Conversation Architecture with Integrated Compliance
-**Archivos de referencia:** `plan.md` (1047 líneas) + `TODO.md` (680 líneas, 57 tareas)
+**Referencias:**
+- `plan.md` (1720 líneas) - Plan completo
+- `TODO.md` (205 líneas) - Tareas organizadas
+- `_assets/sire/pasos-para-reportar-al-sire.md` - 13 campos SIRE oficiales
 
 ---
 
-## 🎯 Contexto General (Usar SIEMPRE primero en nuevas conversaciones)
+## 🎯 CONTEXTO GENERAL (Usar SIEMPRE primero en nuevas conversaciones)
 
 ```
 CONTEXTO DEL PROYECTO: Guest Portal Multi-Conversation + Compliance Module
 
-Estoy trabajando en el proyecto "Guest Portal Multi-Conversation Architecture with Integrated Compliance" para transformar el Guest Chat actual (single-conversation) en una experiencia revolucionaria multi-conversation con módulo de compliance integrado (SIRE + TRA).
+Proyecto: Transformar Guest Chat single-conversation en multi-conversation moderna (estilo Claude AI) con compliance integrado (SIRE + TRA).
 
 ARCHIVOS CLAVE:
-- plan.md → Plan completo del proyecto (1047 líneas, 7 fases)
-- TODO.md → 57 tareas organizadas por fases
+- plan.md → Plan completo (1720 líneas, 7 fases + FASE 0.5 corrección SIRE)
+- TODO.md → Tareas organizadas (205 líneas, limpio)
 - guest-portal-compliance-workflow.md → Este archivo (prompts ejecutables)
 
 OBJETIVO:
-Crear un Guest Portal moderno estilo Claude AI / ChatGPT con:
-1. Sidebar con múltiples conversaciones (como Staff Chat)
-2. Compliance module integrado conversacional (SIRE + TRA)
+1. Sidebar multi-conversaciones (como Staff Chat)
+2. Compliance conversacional SIRE + TRA (13 campos oficiales)
 3. Subdomain architecture (simmerdown.innpilot.io)
-4. Confirmación pre-submit para evitar errores
-5. Staff notifications y dashboard
+4. Confirmación pre-submit
+5. Staff notifications
 
-STACK TÉCNICO:
+STACK:
 - Frontend: Next.js 15.5.3, React, Tailwind CSS
 - Backend: Node.js 20.x, Supabase PostgreSQL + pgvector
 - AI: Anthropic Claude (conversational-chat-engine.ts)
@@ -34,1318 +36,1189 @@ STACK TÉCNICO:
 - Infrastructure: Nginx, Let's Encrypt SSL, VPS Hostinger
 
 ESTADO ACTUAL:
-- ✅ Planning completada (plan.md, TODO.md creados)
-- ✅ Guest Chat funcionando (single-conversation, Tier 1+2 embeddings)
-- ✅ Entity tracking + Follow-up suggestions
-- ✅ FASE 1: Subdomain Infrastructure COMPLETADA (Oct 5, 2025)
-- 🔜 FASE 2.2: Backend API - Conversations CRUD ✅ COMPLETADA (Oct 5, 2025)
-- 🔜 FASE 2.3: UI Components - Sidebar (próxima)
+- ✅ FASE 0: Planning completada
+- ✅ FASE 1: Subdomain Infrastructure COMPLETADA
+- ✅ FASE 0.5: Corrección Campos SIRE COMPLETADA
+- 🔜 FASE 2: Multi-Conversation Foundation (PRÓXIMA)
+- 🔜 FASE 3: Compliance Module Integration
+- 🔜 FASE 4-7: Notifications, Testing, SEO, Docs
 
-DECISIONES CRÍTICAS:
-- ❌ NO cambiar backend embeddings (ya óptimo con Tier 1+2)
-- ✅ SÍ copiar UI del Staff Chat (sidebar multi-conversation)
-- ✅ SÍ compliance conversacional (no formulario standalone)
-- ✅ SÍ SIRE + TRA simultáneo (un solo flujo)
-- ✅ SÍ confirmación pre-submit (evitar errores)
+DECISIÓN CRÍTICA DESCUBIERTA:
+❌ Campos compliance originales eran dummy (pasaporte, país, propósito_viaje)
+✅ Campos SIRE REALES: 13 campos obligatorios oficiales
+✅ Solución: Estructura de DOS CAPAS (conversational_data + sire_data)
 
 Por favor, confirma que entiendes el contexto antes de continuar.
 ```
 
 ---
 
-## FASE 1: Subdomain Infrastructure 🌐 (3-4h)
+## ✅ FASE 0.5: CORRECCIÓN CAMPOS SIRE (COMPLETADA)
 
-### Prompt 1.1: Configurar DNS Wildcard + SSL ✅ COMPLETADO (Oct 5, 2025)
+**Estado:** Todos los prompts 0.5.1-0.5.4 han sido ejecutados exitosamente.
 
-**AGENTE:** @backend-developer
+**Entregables:**
+- ✅ `AUDITORIA_FASES_1_2.md` (354 líneas)
+- ✅ `docs/sire/CODIGOS_OFICIALES.md` (657 líneas)
+- ✅ `src/lib/sire/field-mappers.ts` (551 líneas, 9 funciones)
+- ✅ `UI_COMPLIANCE_REDESIGN_SPEC.md` (752 líneas)
+- ✅ `CORRECCION_CAMPOS_SIRE_REPORT.md` (738 líneas)
+- ✅ plan.md FASE 3.1, 3.4 actualizados
+- ✅ guest-portal-compliance-workflow.md Prompt 3.1, 3.4 corregidos
 
-**COPY-PASTE DESDE AQUÍ:**
+**Próximo:** FASE 2.1 - Database Migrations
+
+---
+
+### Prompt 0.5.1: Auditoría y Catálogos SIRE ✅
+
+**AGENTE:** @agent-backend-developer
+**ESTADO:** COMPLETADO
+
+
 
 ```
-TAREA: Configurar DNS wildcard y SSL wildcard en VPS Hostinger
+TAREA: Auditar FASE 1+2 y crear catálogo SIRE oficial
 
 CONTEXTO:
-- Proyecto: Guest Portal Multi-Conversation (ver plan.md)
-- Objetivo FASE 1: `simmerdown.innpilot.io` funcionando con SSL
-- VPS actual: 195.200.6.216 (Debian 11, Nginx 1.18.0)
-- Dominio: innpilot.io (ya configurado)
+- Se descubrió error: campos compliance definidos son dummy
+- Documento oficial: `_assets/sire/pasos-para-reportar-al-sire.md`
+- 13 campos SIRE obligatorios documentados
 
 ESPECIFICACIONES:
 
-1. DNS Wildcard (Hostinger Panel):
-   - Login a https://hpanel.hostinger.com
-   - DNS Zone Editor → innpilot.io
-   - Crear record: `*.innpilot.io A 195.200.6.216`
-   - TTL: 3600 (1 hour)
-   - Verificar propagación: `host simmerdown.innpilot.io`
+1. Auditoría FASE 1 (30min):
+   - Leer: `docs/deployment/nginx-subdomain.conf`
+   - Leer: `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md`
+   - Leer: `src/middleware.ts` (líneas 68-136)
+   - Leer: `src/lib/tenant-resolver.ts` (líneas 39-92)
+   - Verificar: NO hay referencias a campos compliance
+   - Documentar en: `AUDITORIA_FASES_1_2.md`
 
-2. SSL Wildcard (Let's Encrypt):
-   - SSH al VPS: `ssh root@innpilot.io`
-   - Comando: `sudo certbot certonly --manual --preferred-challenges dns -d *.innpilot.io -d innpilot.io`
-   - Agregar TXT record en Hostinger DNS cuando Certbot lo pida:
-     - Name: `_acme-challenge.innpilot.io`
-     - Type: TXT
-     - Value: [el que provea Certbot]
-   - Esperar propagación (~5min): `dig TXT _acme-challenge.innpilot.io`
-   - Presionar Enter en Certbot
-   - Certificado guardado en: `/etc/letsencrypt/live/innpilot.io/`
+2. Auditoría FASE 2.2 (30min):
+   - Leer: `src/app/api/guest/conversations/route.ts`
+   - Leer: `src/app/api/guest/conversations/[id]/route.ts`
+   - Leer: `src/app/api/guest/chat/history/route.ts`
+   - Verificar: NO hay `compliance_data` con estructura incorrecta
+   - Documentar en: `AUDITORIA_FASES_1_2.md` (completar)
 
-3. Auto-renovación SSL:
-   - Verificar certbot timer: `systemctl status certbot.timer`
-   - Si no existe, agregar crontab: `0 0 * * * certbot renew --quiet`
+3. Crear catálogo SIRE (30min):
+   - Archivo: `docs/sire/CODIGOS_OFICIALES.md`
+   - Contenido:
+     - 4 tipos documento (3=Pasaporte, 5=Cédula, 46=Diplomático, 10=Extranjero)
+     - Placeholder códigos nacionalidad (TODO investigar MinCIT)
+     - Placeholder códigos ciudad (TODO investigar SCH)
+     - Formatos validación 13 campos SIRE
+     - Errores comunes (5 tipos documentados en pasos-para-reportar-al-sire.md)
 
-ARCHIVOS:
-- N/A (configuración en Hostinger panel y VPS)
+ENTREGABLES:
+- `AUDITORIA_FASES_1_2.md` (hallazgos)
+- `docs/sire/CODIGOS_OFICIALES.md` (catálogo oficial)
 
 TESTING:
-- `host simmerdown.innpilot.io` → 195.200.6.216
-- `openssl x509 -in /etc/letsencrypt/live/innpilot.io/fullchain.pem -text | grep CN` → CN=*.innpilot.io
-- `curl -I https://simmerdown.innpilot.io` → SSL error (expected, Nginx no configurado aún)
+- Auditoría completa sin referencias dummy
+- Catálogo SIRE listo para usar como referencia
 
-SIGUIENTE: Prompt 1.2 para configurar Nginx subdomain routing
+SIGUIENTE: Prompt 0.5.2 para correcciones plan.md y workflow.md
 ```
 
 ---
 
-### Prompt 1.2: Nginx Subdomain Routing ✅ COMPLETADO (Oct 5, 2025)
+### Prompt 0.5.2: Corrección Plan y Workflow Backend ✅
 
-**AGENTE:** @backend-developer
+**AGENTE:** @agent-backend-developer
+**ESTADO:** COMPLETADO
 
-**COPY-PASTE DESDE AQUÍ:**
+**COPY-PASTE:**
 
 ```
-TAREA: Configurar Nginx para subdomain routing con SSL
+TAREA: Corregir plan.md FASE 3 y workflow Prompt 3.1 con campos SIRE reales
 
 CONTEXTO:
-- DNS wildcard configurado ✅ (Prompt 1.1)
-- SSL wildcard configurado ✅ (Prompt 1.1)
-- Objetivo: Nginx detecta subdomain y proxy a Next.js con custom header
+- Auditoría completada ✅ (Prompt 0.5.1)
+- Catálogo SIRE creado ✅ (docs/sire/CODIGOS_OFICIALES.md)
+- Ahora: Actualizar especificaciones con estructura correcta
 
 ESPECIFICACIONES:
 
-1. Crear archivo de configuración Nginx:
-   - Path local: `docs/deployment/nginx-subdomain.conf`
-   - Contenido:
-```nginx
-# Wildcard subdomain configuration
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name *.innpilot.io innpilot.io;
+1. Actualizar plan.md FASE 3.1 (1h):
+   - Archivo: `plan.md` líneas ~666-682
+   - Cambiar interface ComplianceContext:
+     ```typescript
+     // DOS CAPAS (conversational + SIRE oficial)
+     interface ComplianceContext {
+       conversational_data: {
+         nombre_completo: string
+         numero_pasaporte: string
+         pais_texto: string
+         proposito_viaje: string
+       }
+       sire_data: {
+         // 13 campos oficiales SIRE
+         codigo_hotel: string
+         codigo_ciudad: string
+         tipo_documento: '3'|'5'|'46'|'10'
+         numero_identificacion: string
+         codigo_nacionalidad: string
+         primer_apellido: string
+         segundo_apellido: string
+         nombre_extranjero: string
+         tipo_movimiento: 'E'|'S'
+         fecha_movimiento: string  // DD/MM/YYYY
+         lugar_procedencia: string
+         lugar_destino: string
+         fecha_nacimiento: string  // DD/MM/YYYY
+       }
+     }
+     ```
+   - Actualizar entity extraction patterns
+   - Actualizar validaciones SIRE oficiales
 
-    # SSL Configuration
-    ssl_certificate /etc/letsencrypt/live/innpilot.io/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/innpilot.io/privkey.pem;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers HIGH:!aNULL:!MD5;
+2. Actualizar guest-portal-compliance-workflow.md Prompt 3.1 (1.5h):
+   - Líneas 1093-1111: Reescribir ComplianceContext
+   - Línea 1113: REQUIRED_FIELDS → dos listas (conversational + SIRE)
+   - Líneas 1161-1197: Reescribir extractComplianceEntities()
+     - Extraer a ambas capas
+     - splitFullName() → primer_apellido, segundo_apellido, nombre
+     - mapCountryToCode() → pais_texto a codigo_nacionalidad
+   - Líneas 1199-1218: Reescribir generateConfirmationMessage()
+     - Mostrar datos conversational (user-friendly)
+     - Indicar campos SIRE auto-generados
+   - Líneas 1230-1254: Reescribir validateComplianceData()
+     - Validar 13 campos SIRE según especificaciones oficiales
 
-    # Extract subdomain from Host header
-    set $subdomain "";
-    if ($host ~* ^([^.]+)\.innpilot\.io$) {
-        set $subdomain $1;
-    }
+3. Crear field-mappers.ts (1h):
+   - Archivo: `src/lib/sire/field-mappers.ts`
+   - Funciones:
+     - splitFullName(nombre_completo) → {primer_apellido, segundo_apellido, nombre_extranjero}
+     - mapCountryToCode(pais_texto) → codigo_nacionalidad
+     - detectDocumentType(numero_pasaporte) → tipo_documento
+     - formatDateForSIRE(date) → DD/MM/YYYY
+     - validateSIREDateFormat(date) → boolean
+     - validateOnlyLetters(text) → boolean
+     - validateOnlyNumbers(text) → boolean
 
-    # Add custom header with subdomain
-    proxy_set_header X-Tenant-Subdomain $subdomain;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
+4. Corregir migration SQL comentario (15min):
+   - Archivo: `supabase/migrations/20251005010100_add_compliance_submissions.sql`
+   - Línea 91: Actualizar COMMENT:
+     ```sql
+     COMMENT ON COLUMN compliance_submissions.data IS 'JSONB con estructura: { conversational_data: {...}, sire_data: { 13 campos oficiales SIRE según docs/sire/CODIGOS_OFICIALES.md } }';
+     ```
 
-    # Proxy to Next.js
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-
-# Redirect HTTP to HTTPS
-server {
-    listen 80;
-    listen [::]:80;
-    server_name *.innpilot.io innpilot.io;
-    return 301 https://$host$request_uri;
-}
-```
-
-2. Copiar a VPS y activar:
-   - `scp docs/deployment/nginx-subdomain.conf root@innpilot.io:/etc/nginx/sites-available/`
-   - SSH: `ssh root@innpilot.io`
-   - Symlink: `ln -sf /etc/nginx/sites-available/nginx-subdomain.conf /etc/nginx/sites-enabled/`
-   - Test: `sudo nginx -t`
-   - Reload: `sudo systemctl reload nginx`
-
-3. Crear guía de setup:
-   - Path: `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md`
-   - Incluir: Pasos DNS, SSL, Nginx, troubleshooting
-
-ARCHIVOS:
-- Crear: `docs/deployment/nginx-subdomain.conf`
-- Crear: `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md`
+ENTREGABLES:
+- `plan.md` FASE 3.1 corregido
+- `guest-portal-compliance-workflow.md` Prompt 3.1 corregido
+- `src/lib/sire/field-mappers.ts` creado
+- Migration SQL comentario actualizado
 
 TESTING:
-- `curl -I https://simmerdown.innpilot.io` → 200 OK (Next.js responde)
-- `curl -H "Host: simmerdown.innpilot.io" -I https://195.200.6.216` → 200 OK
-- Verificar header: `curl -v https://simmerdown.innpilot.io 2>&1 | grep X-Tenant-Subdomain` → Debe aparecer
+- Coherencia plan.md ↔ workflow.md
+- Todos mencionan "13 campos SIRE oficiales"
+- NO hay referencias a campos dummy
 
-SIGUIENTE: Prompt 1.3 para Next.js middleware subdomain detection
+SIGUIENTE: Prompt 0.5.3 para corrección UI specs
 ```
 
 ---
 
-### Prompt 1.3: Next.js Middleware + Tenant Resolver ✅ COMPLETADO (Oct 5, 2025)
+### Prompt 0.5.3: Corrección UI Specs Compliance ✅
 
-**AGENTE:** @backend-developer
+**AGENTE:** @agent-ux-interface
+**ESTADO:** COMPLETADO
 
-**COPY-PASTE DESDE AQUÍ:**
+**COPY-PASTE:**
 
 ```
-TAREA: Modificar Next.js middleware y tenant-resolver para subdomain support
+TAREA: Corregir workflow Prompt 3.4 con diseño UI de dos capas
 
 CONTEXTO:
-- Nginx configurado ✅ (Prompt 1.2)
-- Header `X-Tenant-Subdomain` disponible en requests
-- Objetivo: Next.js detecta subdomain y resuelve tenant_id
+- Backend corregido ✅ (Prompt 0.5.2)
+- Estructura DOS CAPAS definida (conversational_data + sire_data)
+- Ahora: Actualizar specs UI para reflejar nueva estructura
 
 ESPECIFICACIONES:
 
-1. Modificar `src/middleware.ts`:
-```typescript
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+1. Actualizar guest-portal-compliance-workflow.md Prompt 3.4 (1h):
+   - Buscar sección "Prompt 3.4: Compliance UI Components"
+   - Actualizar specs ComplianceConfirmation.tsx:
 
-export function middleware(request: NextRequest) {
-  const response = NextResponse.next()
+   ```typescript
+   interface ComplianceConfirmationProps {
+     conversationalData: {
+       nombre_completo: string
+       numero_pasaporte: string
+       pais_texto: string
+       proposito_viaje: string
+     }
+     sireData: {
+       // 13 campos SIRE oficiales (auto-generated)
+       codigo_hotel: string
+       codigo_ciudad: string
+       tipo_documento: string
+       // ... resto de campos
+     }
+     onConfirm: () => void
+     onEdit: () => void
+     onCancel: () => void
+   }
+   ```
 
-  // 1. Check for subdomain header from Nginx
-  const subdomainHeader = request.headers.get('x-tenant-subdomain')
+   - Layout componente:
+     1. **Sección editable** (conversational_data):
+        - Nombre completo ✏️
+        - Número pasaporte ✏️
+        - País ✏️ (dropdown)
+        - Propósito viaje ✏️
 
-  // 2. Fallback: Parse from hostname (for local dev)
-  let subdomain = subdomainHeader
-  if (!subdomain && request.nextUrl.hostname !== 'localhost') {
-    const hostParts = request.nextUrl.hostname.split('.')
-    if (hostParts.length > 2) {
-      subdomain = hostParts[0]
-    }
-  }
+     2. **Sección colapsable** "Ver detalles SIRE generados":
+        - Read-only (NO editable)
+        - Mostrar 13 campos SIRE
+        - Badge "auto" en campos generados
+        - Highlight mapping: nombre_completo → primer_apellido, segundo_apellido, nombre_extranjero
 
-  // 3. Set cookie with subdomain for client-side access
-  if (subdomain && subdomain !== 'www') {
-    response.cookies.set('tenant_subdomain', subdomain, {
-      httpOnly: false, // Accessible by client JS
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    })
-  }
+     3. **Botones:**
+        - ✅ "Confirmar y Enviar a SIRE"
+        - ✏️ "Editar datos"
+        - ❌ "Cancelar"
 
-  console.log('[middleware] Subdomain detected:', subdomain || 'none')
+   - Validaciones UI:
+     - Pasaporte: Formato [A-Z]{2}[0-9]{6,9}
+     - Nombre completo: Solo letras (sin números)
+     - Fecha nacimiento: Selector DD/MM/YYYY
+     - País: Dropdown (no texto libre)
 
-  return response
-}
+2. Actualizar plan.md FASE 3.4 (30min):
+   - Líneas ~800-870: Actualizar descripción UI components
+   - Incluir diseño de dos capas
 
-export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-  ],
-}
-```
+3. Crear UI_COMPLIANCE_REDESIGN_SPEC.md (30min):
+   - Wireframes/descripción ComplianceConfirmation
+   - Validaciones UI listadas
+   - Ejemplos visuales (ASCII art o descripción)
 
-2. Modificar `src/lib/tenant-resolver.ts`:
-```typescript
-// Add new function for subdomain resolution
-export async function resolveSubdomainToTenantId(subdomain: string): Promise<string> {
-  if (!subdomain) {
-    throw new Error('Subdomain is required')
-  }
-
-  // Check cache first
-  const cacheKey = `subdomain:${subdomain}`
-  const cached = tenantCache.get(cacheKey)
-  if (cached && cached.expires > Date.now()) {
-    console.log(`🎯 Cache hit: ${subdomain} → ${cached.schema_name}`)
-    return cached.schema_name
-  }
-
-  const supabase = getSupabaseClient()
-
-  try {
-    // Query by slug (subdomain maps to slug column)
-    const { data, error } = await supabase
-      .from('tenant_registry')
-      .select('tenant_id, tenant_type, is_active')
-      .eq('slug', subdomain)
-      .eq('is_active', true)
-      .single()
-
-    if (error || !data) {
-      console.warn(`⚠️ Subdomain ${subdomain} not found in registry:`, error?.message)
-      throw new Error(`Subdomain ${subdomain} not found or inactive`)
-    }
-
-    const tenantId = data.tenant_id
-
-    // Cache the result
-    tenantCache.set(cacheKey, {
-      schema_name: tenantId,
-      expires: Date.now() + CACHE_TTL
-    })
-
-    console.log(`✅ Resolved subdomain: ${subdomain} → ${tenantId} (${data.tenant_type})`)
-    return tenantId
-
-  } catch (error) {
-    console.error(`❌ Error resolving subdomain ${subdomain}:`, error)
-    throw error
-  }
-}
-
-// Update resolveTenantSchemaName to support subdomain
-export async function resolveTenantSchemaName(tenantUuid: string | null | undefined): Promise<string> {
-  // ... existing code ...
-
-  // Add subdomain check before UUID/slug detection
-  const isSubdomain = tenantUuid && !tenantUuid.match(/^[0-9a-f]{8}-[0-9a-f]{4}-/)
-  if (isSubdomain) {
-    return resolveSubdomainToTenantId(tenantUuid)
-  }
-
-  // ... rest of existing code ...
-}
-```
-
-ARCHIVOS:
-- Modificar: `src/middleware.ts` (add subdomain detection)
-- Modificar: `src/lib/tenant-resolver.ts` (add resolveSubdomainToTenantId function)
+ENTREGABLES:
+- `guest-portal-compliance-workflow.md` Prompt 3.4 corregido
+- `plan.md` FASE 3.4 actualizado
+- `UI_COMPLIANCE_REDESIGN_SPEC.md` creado
 
 TESTING:
-- Visit `https://simmerdown.innpilot.io`
-- Check cookie: `tenant_subdomain=simmerdown`
-- Check logs: `[middleware] Subdomain detected: simmerdown`
-- Test tenant resolution: `resolveSubdomainToTenantId('simmerdown')` → tenant_id correcto
+- Specs UI claras
+- Diseño de dos capas documentado
+- UX conversacional (NO pedir códigos numéricos al usuario)
 
-SIGUIENTE: FASE 2 - Multi-Conversation Foundation (Prompt 2.1)
-```
-
-//VAMOS AQUÍ
-
----
-
-## FASE 2: Multi-Conversation Foundation 💬 (6-8h)
-
-### Prompt 2.1: Database Migrations (guest_conversations + compliance)
-
-**AGENTE:** @database-agent
-
-**COPY-PASTE DESDE AQUÍ:**
-
-```
-TAREA: Crear migrations para guest_conversations, compliance_submissions, tenant_compliance_credentials
-
-CONTEXTO:
-- Proyecto: Guest Portal Multi-Conversation (ver plan.md, TODO.md tarea 2.1-2.4)
-- Base de referencia: Staff Chat usa `staff_conversations` table
-- Objetivo: Crear estructura de base de datos para multi-conversation + compliance
-
-ESPECIFICACIONES:
-
-1. Migration: guest_conversations
-   - Path: `supabase/migrations/20251005010000_add_guest_conversations.sql`
-   - Contenido:
-```sql
--- Guest Conversations Table
-CREATE TABLE guest_conversations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  guest_id UUID NOT NULL REFERENCES guest_reservations(id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL REFERENCES tenant_registry(tenant_id) ON DELETE CASCADE,
-  title VARCHAR(255) NOT NULL,
-  last_message TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Indexes
-CREATE INDEX idx_guest_conversations_guest_id ON guest_conversations(guest_id);
-CREATE INDEX idx_guest_conversations_tenant_id ON guest_conversations(tenant_id);
-CREATE INDEX idx_guest_conversations_updated_at ON guest_conversations(updated_at DESC);
-
--- RLS Policies
-ALTER TABLE guest_conversations ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Guests can view their own conversations"
-  ON guest_conversations FOR SELECT
-  USING (
-    guest_id IN (
-      SELECT id FROM guest_reservations
-      WHERE tenant_id = current_setting('request.jwt.claims', true)::json->>'tenant_id'
-    )
-  );
-
-CREATE POLICY "Guests can create their own conversations"
-  ON guest_conversations FOR INSERT
-  WITH CHECK (
-    guest_id IN (
-      SELECT id FROM guest_reservations
-      WHERE tenant_id = current_setting('request.jwt.claims', true)::json->>'tenant_id'
-    )
-  );
-
-CREATE POLICY "Guests can update their own conversations"
-  ON guest_conversations FOR UPDATE
-  USING (
-    guest_id IN (
-      SELECT id FROM guest_reservations
-      WHERE tenant_id = current_setting('request.jwt.claims', true)::json->>'tenant_id'
-    )
-  );
-
-CREATE POLICY "Guests can delete their own conversations"
-  ON guest_conversations FOR DELETE
-  USING (
-    guest_id IN (
-      SELECT id FROM guest_reservations
-      WHERE tenant_id = current_setting('request.jwt.claims', true)::json->>'tenant_id'
-    )
-  );
-
--- Updated_at trigger
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_guest_conversations_updated_at
-BEFORE UPDATE ON guest_conversations
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
-```
-
-2. Migration: compliance_submissions
-   - Path: `supabase/migrations/20251005010100_add_compliance_submissions.sql`
-   - Contenido:
-```sql
--- Compliance Submissions Table
-CREATE TABLE compliance_submissions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  guest_id UUID NOT NULL REFERENCES guest_reservations(id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL REFERENCES tenant_registry(tenant_id) ON DELETE CASCADE,
-  type VARCHAR(20) NOT NULL CHECK (type IN ('sire', 'tra', 'both')),
-  status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'processing', 'success', 'failed')),
-  data JSONB NOT NULL,
-  sire_response JSONB,
-  tra_response JSONB,
-  error_message TEXT,
-  submitted_at TIMESTAMPTZ DEFAULT NOW(),
-  submitted_by VARCHAR(50) DEFAULT 'guest' CHECK (submitted_by IN ('guest', 'staff'))
-);
-
--- Indexes
-CREATE INDEX idx_compliance_submissions_guest_id ON compliance_submissions(guest_id);
-CREATE INDEX idx_compliance_submissions_tenant_id ON compliance_submissions(tenant_id);
-CREATE INDEX idx_compliance_submissions_status ON compliance_submissions(status);
-CREATE INDEX idx_compliance_submissions_submitted_at ON compliance_submissions(submitted_at DESC);
-
--- RLS Policies
-ALTER TABLE compliance_submissions ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Guests can view their own submissions"
-  ON compliance_submissions FOR SELECT
-  USING (guest_id = auth.uid());
-
-CREATE POLICY "Staff can view tenant submissions"
-  ON compliance_submissions FOR SELECT
-  USING (
-    tenant_id IN (
-      SELECT tenant_id FROM user_tenant_permissions
-      WHERE user_id = auth.uid() AND is_active = true
-    )
-  );
-```
-
-3. Migration: tenant_compliance_credentials
-   - Path: `supabase/migrations/20251005010200_add_tenant_compliance_credentials.sql`
-   - Contenido:
-```sql
--- Tenant Compliance Credentials Table
-CREATE TABLE tenant_compliance_credentials (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  tenant_id UUID NOT NULL UNIQUE REFERENCES tenant_registry(tenant_id) ON DELETE CASCADE,
-  sire_username VARCHAR(255),
-  sire_password_encrypted TEXT,
-  tra_rnt_token VARCHAR(255),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- RLS Policies (staff only)
-ALTER TABLE tenant_compliance_credentials ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Only admins can access credentials"
-  ON tenant_compliance_credentials FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_tenant_permissions
-      WHERE user_id = auth.uid()
-        AND tenant_id = tenant_compliance_credentials.tenant_id
-        AND role IN ('owner', 'admin')
-        AND is_active = true
-    )
-  );
-```
-
-ARCHIVOS:
-- Crear: `supabase/migrations/20251005010000_add_guest_conversations.sql`
-- Crear: `supabase/migrations/20251005010100_add_compliance_submissions.sql`
-- Crear: `supabase/migrations/20251005010200_add_tenant_compliance_credentials.sql`
-
-TESTING:
-- `npx supabase migration show` → 3 migrations visibles
-- Apply migrations (local): `npx supabase db reset`
-- Apply migrations (prod): Se aplicarán con next deploy
-- Verificar RLS: Guest no puede ver conversations de otro guest
-
-SIGUIENTE: Prompt 2.2 para crear APIs de conversations
+SIGUIENTE: Prompt 0.5.4 para generar reporte final
 ```
 
 ---
 
-### Prompt 2.2: Backend API - Conversations CRUD ✅ COMPLETADO (Oct 5, 2025)
+### Prompt 0.5.4: Reporte Final Corrección SIRE ✅
 
-**AGENTE:** @backend-developer
+**AGENTE:** @agent-backend-developer + @agent-ux-interface
+**ESTADO:** COMPLETADO
 
-**COPY-PASTE DESDE AQUÍ:**
+**COPY-PASTE:**
 
 ```
-TAREA: Crear APIs para guest conversations (CREATE, READ, UPDATE, DELETE)
+TAREA: Generar reporte final de corrección campos SIRE
 
 CONTEXTO:
-- Database migrations aplicadas ✅ (Prompt 2.1)
-- Base de referencia: Staff Chat API (`/api/staff/chat`)
-- Objetivo: APIs completas para multi-conversation
+- Auditoría completada ✅
+- Backend corregido ✅
+- UI specs corregidas ✅
+- Ahora: Documentar TODO lo realizado
 
 ESPECIFICACIONES:
 
-1. POST /api/guest/conversations - Create new
-2. GET /api/guest/conversations - List all
-3. PUT /api/guest/conversations/[id] - Update title
-4. DELETE /api/guest/conversations/[id] - Delete
-5. Modificar GET /api/guest/chat/history - Add conversation_id param
+Crear `CORRECCION_CAMPOS_SIRE_REPORT.md` (30min):
 
-CÓDIGO ESPERADO:
+## Secciones requeridas:
 
-```typescript
-// src/app/api/guest/conversations/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyGuestToken } from '@/lib/guest-auth'
-import { createServerClient } from '@/lib/supabase'
+1. **Resumen Ejecutivo**
+   - Problema descubierto (campos dummy vs SIRE oficiales)
+   - Impacto (40%+ error rate en producción evitado)
+   - Solución implementada (dos capas)
 
-export async function GET(request: NextRequest) {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '')
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+2. **Archivos Auditados**
+   - FASE 1: 4 archivos (hallazgos)
+   - FASE 2.2: 3 archivos (hallazgos)
 
-  const session = await verifyGuestToken(token)
-  if (!session) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-  }
+3. **Archivos Creados**
+   - docs/sire/CODIGOS_OFICIALES.md
+   - src/lib/sire/field-mappers.ts
+   - AUDITORIA_FASES_1_2.md
+   - UI_COMPLIANCE_REDESIGN_SPEC.md
 
-  const supabase = createServerClient()
+4. **Archivos Modificados**
+   - plan.md (FASE 3.1, 3.4)
+   - guest-portal-compliance-workflow.md (Prompt 3.1, 3.4)
+   - supabase/migrations/.../compliance_submissions.sql (comentario)
 
-  const { data, error } = await supabase
-    .from('guest_conversations')
-    .select('id, title, last_message, created_at, updated_at')
-    .eq('guest_id', session.reservation_id)
-    .order('updated_at', { ascending: false })
+5. **Estructura Correcta**
+   - Diagram/código mostrando dos capas
+   - conversational_data → sire_data mapping
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
+6. **TODOs Pendientes**
+   - Catálogo códigos nacionalidad (MinCIT)
+   - Catálogo códigos ciudad Colombia (SCH)
+   - Catálogo lugares procedencia/destino
 
-  return NextResponse.json({ conversations: data, total: data.length })
-}
+7. **Próximos Pasos**
+   - FASE 2: Multi-Conversation Foundation
+   - FASE 3: Compliance (ya con campos correctos)
 
-export async function POST(request: NextRequest) {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '')
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+ENTREGABLES:
+- `CORRECCION_CAMPOS_SIRE_REPORT.md` completo
 
-  const session = await verifyGuestToken(token)
-  if (!session) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-  }
+TESTING:
+- Reporte completo y accionable
+- Diff de cambios principales incluido
+- Timeline próximos pasos claro
 
-  const { title } = await request.json()
-  const conversationTitle = title || `Conversación ${new Date().toLocaleString('es', { month: 'short', day: 'numeric' })}`
-
-  const supabase = createServerClient()
-
-  const { data, error } = await supabase
-    .from('guest_conversations')
-    .insert({
-      guest_id: session.reservation_id,
-      tenant_id: session.tenant_id,
-      title: conversationTitle,
-      last_message: ''
-    })
-    .select()
-    .single()
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json({ conversation: data }, { status: 201 })
-}
+FINALIZACIÓN: FASE 0.5 completada ✅
 ```
 
-```typescript
-// src/app/api/guest/conversations/[id]/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyGuestToken } from '@/lib/guest-auth'
-import { createServerClient } from '@/lib/supabase'
+---
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params
-  const token = request.headers.get('authorization')?.replace('Bearer ', '')
+## 📋 FASE 2: MULTI-CONVERSATION FOUNDATION
 
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+### Prompt 2.1: Database Migrations
 
-  const session = await verifyGuestToken(token)
-  if (!session) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-  }
+**AGENTE:** @agent-database-agent
 
-  const { title } = await request.json()
+**COPY-PASTE:**
 
-  if (!title || title.trim().length === 0) {
-    return NextResponse.json({ error: 'Title is required' }, { status: 400 })
-  }
-
-  const supabase = createServerClient()
-
-  const { data, error } = await supabase
-    .from('guest_conversations')
-    .update({ title: title.trim() })
-    .eq('id', id)
-    .eq('guest_id', session.reservation_id)
-    .select()
-    .single()
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json({ success: true, conversation: data })
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params
-  const token = request.headers.get('authorization')?.replace('Bearer ', '')
-
-  if (!token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const session = await verifyGuestToken(token)
-  if (!session) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-  }
-
-  const supabase = createServerClient()
-
-  // Delete conversation (CASCADE will delete associated messages)
-  const { error } = await supabase
-    .from('guest_conversations')
-    .delete()
-    .eq('id', id)
-    .eq('guest_id', session.reservation_id)
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json({ success: true, deleted_id: id })
-}
 ```
+TAREA: Crear migrations para guest_conversations y compliance
+
+CONTEXTO:
+- Ver plan.md FASE 2.1 para especificaciones completas
+- 4 migrations a crear
+
+ESPECIFICACIONES:
+
+1. `supabase/migrations/20251005010000_add_guest_conversations.sql`
+   - CREATE TABLE guest_conversations
+   - RLS policies (guests own conversations)
+   - Indexes (guest_id, tenant_id)
+
+2. `supabase/migrations/20251005010100_add_compliance_submissions.sql`
+   - Ya existe, verificar está correcto
+   - Comentario JSONB debe mencionar dos capas
+
+3. `supabase/migrations/20251005010200_add_tenant_compliance_credentials.sql`
+   - Ya existe, verificar está correcto
+
+4. `supabase/migrations/20251005010300_add_conversation_attachments.sql`
+   - CREATE TABLE conversation_attachments
+   - For multi-modal file upload
+
+5. `supabase/migrations/20251005010400_add_conversation_intelligence.sql`
+   - ALTER guest_conversations add: message_count, compressed_history, favorites, is_archived
+
+ENTREGABLES:
+- Migrations creadas/verificadas
+- RLS policies correctas
+- Comentarios SQL descriptivos
+
+TESTING:
+- `npx supabase migration show` → migrations visibles
+- Apply locally sin errores
+
+SIGUIENTE: Prompt 2.2 para Backend APIs
+```
+
+---
+
+### Prompt 2.2: Backend API - Conversations CRUD
+
+**AGENTE:** @agent-backend-developer
+
+**COPY-PASTE:**
+
+```
+TAREA: Crear endpoints CRUD para guest_conversations
+
+CONTEXTO:
+- Migrations aplicadas ✅ (Prompt 2.1)
+- Patrón: Similar a Staff Chat conversations
+
+ESPECIFICACIONES:
+
+1. POST/GET `/api/guest/conversations` (route.ts):
+   - POST: Crear nueva conversación
+   - GET: Listar conversaciones del guest
+   - Authentication: JWT guest token
+   - RLS enforcement
+
+2. PUT/DELETE `/api/guest/conversations/[id]` ([id]/route.ts):
+   - PUT: Actualizar título
+   - DELETE: Eliminar conversación (CASCADE messages)
+
+3. Modificar `/api/guest/chat/history/route.ts`:
+   - Agregar query param: conversation_id
+   - Load messages by conversation
 
 ARCHIVOS:
 - Crear: `src/app/api/guest/conversations/route.ts`
 - Crear: `src/app/api/guest/conversations/[id]/route.ts`
-- Modificar: `src/app/api/guest/chat/history/route.ts` (add conversation_id query param)
+- Modificar: `src/app/api/guest/chat/history/route.ts`
 
 TESTING:
-- `curl -X POST /api/guest/conversations -H "Authorization: Bearer TOKEN"` → 201 Created
-- `curl /api/guest/conversations -H "Authorization: Bearer TOKEN"` → 200 OK con array
-- `curl -X PUT /api/guest/conversations/:id -d '{"title":"New Title"}' -H "Authorization: Bearer TOKEN"` → 200 OK
-- `curl -X DELETE /api/guest/conversations/:id -H "Authorization: Bearer TOKEN"` → 200 OK
-- RLS funciona: No cross-guest access
+- curl POST → 201 Created
+- curl GET → 200 OK con array
+- curl PUT → title updates
+- curl DELETE → conversation deleted
+- RLS: No cross-guest access
 
-SIGUIENTE: Prompt 2.3 para UI components (ConversationList + GuestChatInterface refactor)
+SIGUIENTE: Prompt 2.3 para UI components
 ```
 
 ---
 
 ### Prompt 2.3: UI Components - Sidebar Multi-Conversation
 
-**AGENTE:** @ux-interface
+**AGENTE:** @agent-ux-interface
 
-**COPY-PASTE DESDE AQUÍ:**
+**COPY-PASTE:**
 
 ```
-TAREA: Crear ConversationList component y refactor GuestChatInterface con sidebar
+TAREA: Crear ConversationList y refactor GuestChatInterface con sidebar
 
 CONTEXTO:
-- APIs de conversations creadas ✅ (Prompt 2.2)
-- Base de referencia: `src/components/Staff/ConversationList.tsx` (COPIAR estructura)
-- Objetivo: UI multi-conversation mejorada a partir de copiado de Staff Chat
+- APIs creadas ✅ (Prompt 2.2)
+- Referencia: `src/components/Staff/ConversationList.tsx`
+- Copiar patrón UI del Staff Chat
 
 ESPECIFICACIONES:
 
-1. Crear ConversationList.tsx (copiado de Staff Chat):
-   - Path: `src/components/Chat/ConversationList.tsx`
-   - Features:
-     - "Nueva conversación" button (+ icon, blue)
-     - Lista de conversations con title, last_message preview, timestamp relativo
-     - Active conversation highlight (border-left blue, bg-blue-50)
-     - Empty state: "No conversations yet"
-     - Mobile responsive (colapsable)
+1. Crear `ConversationList.tsx`:
+   - "Nueva conversación" button
+   - Lista conversations
+   - Active highlight
+   - Timestamps relativos
+   - Empty state
+   - Mobile responsive (drawer)
 
-2. Refactor GuestChatInterface.tsx:
-   - Agregar sidebar layout (300px desktop, drawer mobile)
-   - Load conversations on mount (GET /api/guest/conversations)
-   - "Nueva conversación" functionality (POST /api/guest/conversations)
-   - Conversation switching (load messages GET /api/guest/chat/history?conversation_id=X)
-   - Auto-generate conversation titles (from first user message)
-   - **MANTENER entity tracking ✅** (ya existe)
-   - **MANTENER follow-up suggestions ✅** (ya existe)
-
-CÓDIGO ESPERADO (ConversationList):
-```typescript
-// src/components/Chat/ConversationList.tsx
-'use client'
-
-import { Plus, MessageSquare, Clock } from 'lucide-react'
-
-interface Conversation {
-  id: string
-  title: string
-  last_message: string
-  updated_at: string
-}
-
-interface ConversationListProps {
-  conversations: Conversation[]
-  activeConversationId: string | null
-  onSelectConversation: (id: string) => void
-  onNewConversation: () => void
-}
-
-export default function ConversationList({
-  conversations,
-  activeConversationId,
-  onSelectConversation,
-  onNewConversation,
-}: ConversationListProps) {
-
-  const formatRelativeTime = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffMs = now.getTime() - date.getTime()
-    const diffMins = Math.floor(diffMs / 60000)
-    const diffHours = Math.floor(diffMs / 3600000)
-    const diffDays = Math.floor(diffMs / 86400000)
-
-    if (diffMins < 1) return 'Ahora'
-    if (diffMins < 60) return `${diffMins}m`
-    if (diffHours < 24) return `${diffHours}h`
-    if (diffDays < 7) return `${diffDays}d`
-    return date.toLocaleDateString('es')
-  }
-
-  return (
-    <div className="h-full flex flex-col bg-white border-r border-slate-200">
-      {/* Header with New Conversation Button */}
-      <div className="p-4 border-b border-slate-200">
-        <button
-          onClick={onNewConversation}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-        >
-          <Plus className="h-5 w-5" />
-          Nueva conversación
-        </button>
-      </div>
-
-      {/* Conversations List */}
-      <div className="flex-1 overflow-y-auto">
-        {conversations.length === 0 ? (
-          /* Empty State */
-          <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-            <MessageSquare className="h-16 w-16 text-slate-300 mb-4" />
-            <h3 className="text-lg font-semibold text-slate-700 mb-2">
-              No hay conversaciones
-            </h3>
-            <p className="text-sm text-slate-500 mb-4">
-              Inicia una nueva conversación para comenzar
-            </p>
-          </div>
-        ) : (
-          /* Conversation Items */
-          <div className="divide-y divide-slate-100">
-            {conversations.map((conversation) => (
-              <button
-                key={conversation.id}
-                onClick={() => onSelectConversation(conversation.id)}
-                className={`w-full text-left p-4 hover:bg-slate-50 transition-colors ${
-                  activeConversationId === conversation.id
-                    ? 'bg-blue-50 border-l-4 border-l-blue-600'
-                    : 'border-l-4 border-l-transparent'
-                }`}
-              >
-                {/* Title */}
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h4 className="font-semibold text-slate-900 text-sm line-clamp-1">
-                    {conversation.title}
-                  </h4>
-                </div>
-
-                {/* Last Message Preview */}
-                <p className="text-sm text-slate-600 line-clamp-2 mb-2">
-                  {conversation.last_message || 'Sin mensajes aún'}
-                </p>
-
-                {/* Timestamp */}
-                <div className="flex items-center gap-1 text-xs text-slate-500">
-                  <Clock className="h-3 w-3" />
-                  <span>{formatRelativeTime(conversation.updated_at)}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-```
+2. Refactor `GuestChatInterface.tsx`:
+   - Layout: Sidebar (300px desktop) + Chat area
+   - Load conversations on mount
+   - "Nueva conversación" functionality
+   - Conversation switching
+   - **MANTENER entity tracking ✅**
+   - **MANTENER follow-up suggestions ✅**
 
 ARCHIVOS:
 - Crear: `src/components/Chat/ConversationList.tsx`
-- Modificar: `src/components/Chat/GuestChatInterface.tsx` (add sidebar layout, load conversations, switching)
-
-REFERENCIA:
-- `src/components/Staff/ConversationList.tsx` (copiar estructura exacta)
-- `src/components/Staff/StaffChatInterface.tsx` (sidebar layout reference)
+- Modificar: `src/components/Chat/GuestChatInterface.tsx`
 
 TESTING:
-- Component renders correctamente
-- "Nueva conversación" crea conversación (POST API)
-- Click selecciona conversación (load messages)
-- Active highlight funciona
-- Empty state visible cuando no hay conversations
-- **Entity tracking sigue funcionando** ✅
-- **Follow-up suggestions funcionan** ✅
-- Mobile responsive (drawer)
+- Sidebar visible
+- Create/switch/delete conversations funciona
+- Entity tracking funciona
+- Follow-ups funcionan
+- Mobile responsive
 
-SIGUIENTE: FASE 3 - Compliance Module Integration (Prompt 3.1)
+SIGUIENTE: Prompt 2.5 para Multi-Modal file upload
+```
 
 ---
 
-### Prompt 2.5: Multi-Modal File Upload Setup
+### Prompt 2.5: Multi-Modal File Upload
 
-**AGENTE:** @backend-developer
+**AGENTE:** @agent-backend-developer + @agent-ux-interface
 
-**COPY-PASTE DESDE AQUÍ:**
+**COPY-PASTE:**
 
 ```
-TAREA: Implementar subida de archivos (fotos + documentos) con Claude Vision API
+TAREA: Implementar subida archivos + Claude Vision API
 
 CONTEXTO:
-- Proyecto: Guest Portal Multi-Conversation + Compliance (ver plan.md FASE 2.5)
-- Objetivo: Habilitar upload de fotos (location recognition PoC) y documentos (passport OCR)
+- Ver plan.md FASE 2.5 para specs completas
+- PoC: Photo location recognition + Passport OCR
 
 ESPECIFICACIONES:
 
-1. Supabase Storage Setup:
+1. Supabase Storage setup (30min):
    - Bucket: 'guest-attachments'
-   - RLS: Solo guest puede subir a `{guest_id}/`
-   - Max size: 10MB
+   - Max 10MB
    - Formats: image/*, application/pdf
+   - RLS policies
 
-2. Database Migration: conversation_attachments
-```sql
-CREATE TABLE conversation_attachments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  conversation_id UUID NOT NULL REFERENCES guest_conversations(id) ON DELETE CASCADE,
-  message_id UUID,
-  file_type VARCHAR(50) NOT NULL CHECK (file_type IN ('image', 'document', 'pdf')),
-  file_url TEXT NOT NULL,
-  file_size_bytes INTEGER,
-  mime_type VARCHAR(100),
-  ocr_text TEXT,
-  vision_analysis JSONB,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
+2. Claude Vision API (1h):
+   - Crear: `src/lib/claude-vision.ts`
+   - Function: analyzeImage(imageUrl, prompt)
+   - Use cases: Location recognition, Passport OCR
 
-3. Claude Vision API Integration:
-   - Archivo: `src/lib/claude-vision.ts`
-   - Function: `analyzeImage(imageUrl, prompt)`
-   - Model: claude-3-5-sonnet-20241022
-   - Use cases:
-     * Location recognition: "Where is this? How to get to beach?"
-     * Passport OCR: Extract passport data for compliance
+3. Backend API (1h):
+   - POST `/api/guest/conversations/[id]/attachments`
+   - Upload → Supabase Storage
+   - Call Claude Vision if image
+   - Extract passport data if document
 
-4. Backend API:
-   - POST /api/guest/conversations/:id/attachments
-   - Upload file → Supabase Storage
-   - If image: Call Claude Vision
-   - If passport: Extract data (number, country, birthdate)
-   - Save metadata to conversation_attachments
-
-5. UI Components (@ux-interface):
-   - Paperclip button (lucide-react)
+4. UI (1.5h):
+   - Paperclip button
    - File input (hidden)
    - Image preview modal
-   - Loading state during Vision API call
+   - Vision analysis display
+   - Loading states
 
-TEST:
-- Upload foto Simmerdown → Vision recognizes location
-- Upload passport → OCR extracts data correctly
-- File stored en Supabase Storage bucket
-- Attachment metadata en conversation_attachments table
+ARCHIVOS:
+- Crear: `src/lib/claude-vision.ts`
+- Crear: `src/app/api/guest/conversations/[id]/attachments/route.ts`
+- Modificar: `src/components/Chat/GuestChatInterface.tsx`
+
+TESTING:
+- Upload foto → Vision analysis funciona
+- Upload passport → OCR extrae datos
+- File stored en Supabase Storage
 
 SIGUIENTE: Prompt 2.6 para Conversation Intelligence
 ```
 
 ---
 
-### Prompt 2.6: Conversation Intelligence & Memory Management
+### Prompt 2.6: Conversation Intelligence
 
-**AGENTE:** @backend-developer
+**AGENTE:** @agent-backend-developer + @agent-ux-interface
 
-**COPY-PASTE DESDE AQUÍ:**
+**COPY-PASTE:**
 
 ```
-TAREA: Implementar gestión inteligente de memoria y sugerencias de conversación
+TAREA: Implementar compactación, favoritos, topic suggestions
 
 CONTEXTO:
-- Proyecto: Guest Portal Multi-Conversation (ver plan.md FASE 2.6)
-- Objetivo: Compactación automática, favoritos, sugerencias inteligentes, auto-archiving
+- Ver plan.md FASE 2.6 para specs completas
+- Gestión inteligente de memoria
 
 ESPECIFICACIONES:
 
-1. Update guest_conversations schema:
-```sql
-ALTER TABLE guest_conversations
-  ADD COLUMN message_count INTEGER DEFAULT 0,
-  ADD COLUMN compressed_history JSONB DEFAULT '[]',
-  ADD COLUMN favorites JSONB DEFAULT '[]',
-  ADD COLUMN is_archived BOOLEAN DEFAULT FALSE,
-  ADD COLUMN archived_at TIMESTAMPTZ,
-  ADD COLUMN last_activity_at TIMESTAMPTZ DEFAULT NOW();
-```
+1. Crear `guest-conversation-memory.ts` (2h):
+   - compactConversationIfNeeded() - umbral 20 mensajes
+   - addToFavorites() - places/activities
+   - suggestNewConversation() - topic detection
 
-2. Conversation Memory Management:
-   Archivo: `src/lib/guest-conversation-memory.ts` (NUEVO)
+2. Auto-trigger compactación (30min):
+   - En POST /api/guest/chat
+   - Update message_count
 
-```typescript
-export async function compactConversationIfNeeded(conversationId: string) {
-  const conversation = await getConversation(conversationId)
+3. UI topic suggestions (1h):
+   - Banner: "💡 ¿Crear conversación sobre {tema}?"
+   - Buttons: "Sí, crear" | "No, continuar"
 
-  // Umbral: 20 mensajes → comprimir bloque más antiguo
-  if (conversation.message_count > 20 && conversation.message_count % 10 === 0) {
-    const oldMessages = await getOldestMessages(conversationId, 10)
-    const summary = await compressWithClaude(oldMessages)
-
-    await updateConversation(conversationId, {
-      compressed_history: [
-        ...conversation.compressed_history,
-        { summary, timestamp: new Date(), message_range: [...] }
-      ]
-    })
-
-    await archiveMessages(conversationId, oldMessages.map(m => m.id))
-  }
-}
-
-export async function suggestNewConversation(messages: Message[]): { suggest: boolean; topic: string } {
-  // Topic keywords:
-  const TOPICS = {
-    restaurantes: ['restaurante', 'comida', 'cena', 'almuerzo'],
-    playas: ['playa', 'mar', 'buceo', 'snorkel'],
-    servicios: ['piscina', 'spa', 'gimnasio', 'servicio']
-  }
-
-  // Detectar 2+ menciones del mismo tema → sugerir nueva conversación
-  // Return: { suggest: true, topic: 'restaurantes' }
-}
-
-export async function addToFavorites(conversationId: string, favorite: Favorite) {
-  // favorite = { type: 'place|activity|restaurant', name, url, timestamp }
-}
-```
-
-3. Auto-trigger compactación:
-   - Modificar: `src/app/api/guest/chat/route.ts`
-   - Llamar `compactConversationIfNeeded()` después de cada mensaje
-   - Update `message_count` y `last_activity_at`
-
-4. UI - Topic Suggestions (@ux-interface):
-```typescript
-{showNewConversationSuggestion && (
-  <div className="bg-blue-50 border-l-4 border-blue-600 p-4">
-    <p>💡 Parece que cambiaste de tema. ¿Quieres crear una conversación sobre "{newTopic}"?</p>
-    <button onClick={createNewConversation}>Sí, crear</button>
-    <button onClick={dismissSuggestion}>No, continuar</button>
-  </div>
-)}
-```
-
-5. UI - Favorites Section (@ux-interface):
-   - Sidebar section "⭐ Favoritos"
-   - Click → insert favorite into chat
-
-6. Cron Jobs:
-   Archivo: `src/lib/cron/archive-conversations.ts`
-
-   - Daily 2am: Archive conversations (last_activity_at > 30 días)
-   - Daily 2am: Delete archived conversations (archived_at > 90 días)
-   - Config: `vercel.json` cron schedule
-
-TEST:
-- Send 50 messages → verify 2 bloques compactados
-- Mention 'restaurantes' 2x → suggestion appears
-- Add favorite → appears in sidebar
-- Manual trigger cron → conversations archived/deleted
-
-SIGUIENTE: FASE 3 - Compliance Module Integration
-```
-```
-
----
-
-## FASE 3: Compliance Module Integration 📋 (10-12h)
-
-### Prompt 3.1: Compliance Chat Engine
-
-**AGENTE:** @backend-developer
-
-**COPY-PASTE DESDE AQUÍ:**
-
-```
-TAREA: Crear compliance-chat-engine.ts con conversational flow y entity extraction
-
-CONTEXTO:
-- Proyecto: Guest Portal Multi-Conversation (ver plan.md FASE 3.1)
-- Objetivo: Chat conversacional que captura datos SIRE + TRA con confirmación
-- Base: `src/lib/conversational-chat-engine.ts` (ya existe, tiene entity extraction)
-
-ESPECIFICACIONES:
-
-1. State Machine:
-   - normal → compliance_active → compliance_confirm → compliance_processing → success/failed
-
-2. Entity Extraction (campos SIRE + TRA):
-   - Pasaporte: Regex [A-Z]{2}[0-9]{6,9}
-   - País: NER + validation contra lista de países
-   - Fecha nacimiento: Date parsing (DD/MM/YYYY, DD-MM-YYYY, etc.)
-   - Propósito viaje: Enum ['turismo', 'negocios', 'estudio', 'familiar', 'otro']
-
-3. Pre-fill Data (desde reserva):
-   - Nombre: session.guest_name
-   - Check-in: reservation.check_in_date
-   - Check-out: reservation.check_out_date
-   - Teléfono: reservation.phone
-
-4. Validation (strict):
-   - Passport format válido
-   - País en lista oficial de países
-   - Fecha nacimiento válida (> 18 años, < 120 años)
-   - Todos los campos required completados
-
-5. Confirmation Generation:
-   - Mensaje formateado con todos los datos
-   - Clear "¿Todo correcto? Responde SÍ para enviar"
-
-CÓDIGO ESPERADO:
-
-```typescript
-// src/lib/compliance-chat-engine.ts
-import Anthropic from '@anthropic-ai/sdk'
-import { createServerClient } from './supabase'
-
-export interface ComplianceContext {
-  mode: 'normal' | 'compliance_active' | 'compliance_confirm' | 'compliance_processing'
-  compliance_type: 'sire' | 'tra' | 'both'
-  compliance_data: {
-    nombre: string
-    pasaporte?: string
-    pais?: string
-    fecha_nacimiento?: string
-    proposito_viaje?: string
-    check_in: string
-    check_out: string
-    telefono: string
-    nacionalidad?: string
-  }
-  fields_collected: string[]
-  fields_remaining: string[]
-  confirmation_pending: boolean
-  validation_errors: string[]
-}
-
-const REQUIRED_FIELDS = ['pasaporte', 'pais', 'fecha_nacimiento', 'proposito_viaje']
-
-const PASSPORT_REGEX = /\b[A-Z]{2}[0-9]{6,9}\b/
-const DATE_REGEX = /\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\b/
-
-export async function generateComplianceResponse(
-  message: string,
-  context: ComplianceContext,
-  session: { guest_name: string; reservation_id: string; tenant_id: string }
-): Promise<{ response: string; updated_context: ComplianceContext }> {
-
-  // Extract entities from message
-  const extractedData = extractComplianceEntities(message, context)
-
-  // Update context with extracted data
-  const updatedContext = {
-    ...context,
-    compliance_data: {
-      ...context.compliance_data,
-      ...extractedData
-    }
-  }
-
-  // Update fields collected/remaining
-  updatedContext.fields_collected = REQUIRED_FIELDS.filter(
-    field => updatedContext.compliance_data[field as keyof typeof updatedContext.compliance_data]
-  )
-  updatedContext.fields_remaining = REQUIRED_FIELDS.filter(
-    field => !updatedContext.compliance_data[field as keyof typeof updatedContext.compliance_data]
-  )
-
-  // Check if all fields collected
-  if (updatedContext.fields_remaining.length === 0 && !updatedContext.confirmation_pending) {
-    // Generate confirmation message
-    updatedContext.mode = 'compliance_confirm'
-    updatedContext.confirmation_pending = true
-
-    const confirmationMessage = generateConfirmationMessage(updatedContext.compliance_data)
-    return { response: confirmationMessage, updated_context: updatedContext }
-  }
-
-  // Ask for next field
-  const nextField = updatedContext.fields_remaining[0]
-  const promptMessage = generateFieldPrompt(nextField, updatedContext.compliance_data)
-
-  return { response: promptMessage, updated_context: updatedContext }
-}
-
-function extractComplianceEntities(message: string, context: ComplianceContext) {
-  const extracted: Partial<ComplianceContext['compliance_data']> = {}
-
-  // Extract passport
-  const passportMatch = message.match(PASSPORT_REGEX)
-  if (passportMatch) {
-    extracted.pasaporte = passportMatch[0]
-  }
-
-  // Extract date (fecha de nacimiento)
-  const dateMatch = message.match(DATE_REGEX)
-  if (dateMatch && !context.compliance_data.fecha_nacimiento) {
-    const [_, day, month, year] = dateMatch
-    extracted.fecha_nacimiento = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-  }
-
-  // Extract country (basic keyword matching)
-  const countries = ['colombia', 'méxico', 'argentina', 'españa', 'usa', 'estados unidos', /* ... */]
-  const lowerMessage = message.toLowerCase()
-  for (const country of countries) {
-    if (lowerMessage.includes(country)) {
-      extracted.pais = country
-      break
-    }
-  }
-
-  // Extract propósito (keyword matching)
-  if (lowerMessage.match(/turismo|vacaciones|paseo/)) {
-    extracted.proposito_viaje = 'turismo'
-  } else if (lowerMessage.match(/negocios|trabajo|laboral/)) {
-    extracted.proposito_viaje = 'negocios'
-  } else if (lowerMessage.match(/estudio|universidad|curso/)) {
-    extracted.proposito_viaje = 'estudio'
-  }
-
-  return extracted
-}
-
-function generateConfirmationMessage(data: ComplianceContext['compliance_data']): string {
-  return `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 CONFIRMACIÓN FINAL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Verifica que todo esté correcto antes de enviar:
-
-👤 Nombre completo: ${data.nombre}
-🆔 Pasaporte: ${data.pasaporte}
-🌍 País: ${data.pais}
-🎂 Fecha nacimiento: ${data.fecha_nacimiento}
-📞 Teléfono: ${data.telefono}
-📅 Check-in: ${data.check_in}
-📅 Check-out: ${data.check_out}
-✈️ Propósito: ${data.proposito_viaje}
-
-¿Todo correcto?
-✅ Responde SÍ para enviar a SIRE y TRA
-❌ Responde NO para corregir`
-}
-
-function generateFieldPrompt(field: string, data: ComplianceContext['compliance_data']): string {
-  const prompts = {
-    pasaporte: '📋 ¿Cuál es tu número de pasaporte?',
-    pais: '🌍 ¿De qué país eres?',
-    fecha_nacimiento: '📅 ¿Cuál es tu fecha de nacimiento? (DD/MM/AAAA)',
-    proposito_viaje: '✈️ ¿Cuál es el propósito de tu viaje? (Turismo, Negocios, Estudio, etc.)'
-  }
-  return prompts[field as keyof typeof prompts] || '¿Puedes proporcionar más información?'
-}
-
-export function validateComplianceData(data: ComplianceContext['compliance_data']): { valid: boolean; errors: string[] } {
-  const errors: string[] = []
-
-  // Validate passport format
-  if (data.pasaporte && !PASSPORT_REGEX.test(data.pasaporte)) {
-    errors.push('Formato de pasaporte inválido')
-  }
-
-  // Validate date
-  if (data.fecha_nacimiento) {
-    const birthDate = new Date(data.fecha_nacimiento)
-    const age = (new Date().getTime() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
-    if (age < 18) errors.push('Debe ser mayor de 18 años')
-    if (age > 120) errors.push('Fecha de nacimiento inválida')
-  }
-
-  // Validate required fields
-  for (const field of REQUIRED_FIELDS) {
-    if (!data[field as keyof typeof data]) {
-      errors.push(`Campo requerido: ${field}`)
-    }
-  }
-
-  return { valid: errors.length === 0, errors }
-}
-```
+4. Cron jobs (1.5h):
+   - Auto-archive conversations (30 días)
+   - Auto-delete archived (90 días)
 
 ARCHIVOS:
-- Crear: `src/lib/compliance-chat-engine.ts`
+- Crear: `src/lib/guest-conversation-memory.ts`
+- Crear: `src/lib/cron/archive-conversations.ts`
+- Modificar: `src/app/api/guest/chat/route.ts`
+- Modificar: `src/components/Chat/GuestChatInterface.tsx`
 
 TESTING:
-- Entity extraction > 95% accuracy
-- Pasaporte "AB123456" extraído correctamente
-- País "Colombia" extraído
-- Fecha "15/03/1985" parseada a "1985-03-15"
-- Validation funciona (passport format, age, required fields)
-- Confirmation message formateado correctamente
+- 50 messages → 2 bloques compactados
+- Topic mention 2x → suggestion appears
+- Cron jobs funcionan
 
-SIGUIENTE: Prompt 3.2 para modificar conversational-chat-engine.ts (intent detection)
+SIGUIENTE: FASE 3 - Compliance Module (usar Prompts 3.1-3.4 CORREGIDOS)
 ```
 
 ---
 
-*[Continuaría con Prompts 3.2 - 7.6, pero por límites de espacio, muestro estructura completa sin repetir formato similar...]*
+## 🔒 FASE 3: COMPLIANCE MODULE
+
+### Prompt 3.1: Compliance Chat Engine (CORREGIDO)
+
+**AGENTE:** @agent-backend-developer
+
+**NOTA:** Este prompt ya debe estar CORREGIDO por Prompt 0.5.2 con campos SIRE reales y estructura de dos capas.
 
 ---
 
-## 📋 LISTA COMPLETA DE PROMPTS
+### Prompt 3.4: Compliance UI Components (CORREGIDO)
 
-**FASE 1** (3 prompts):
-- 1.1: DNS Wildcard + SSL ✅
-- 1.2: Nginx Subdomain Routing ✅
-- 1.3: Next.js Middleware + Tenant Resolver ✅
+**AGENTE:** @agent-ux-interface
 
-**FASE 2** (6 prompts principales + 15 sub-tasks):
-- 2.1: Database Migrations ⏳ PENDIENTE
-- 2.2: Backend API - Conversations CRUD ✅ COMPLETADO (Oct 5, 2025)
-- 2.3: UI Components - Sidebar ⏳ PENDIENTE
-- 2.5: Multi-Modal File Upload (8 sub-tasks) ⏳ PENDIENTE
-- 2.6: Conversation Intelligence (8 sub-tasks) ⏳ PENDIENTE
+**COPY-PASTE:**
 
-**FASE 3** (4 prompts):
-- 3.1: Compliance Chat Engine ✅
-- 3.2: Intent Detection Enhancement
-- 3.3: SIRE Puppeteer + TRA API Integration
-- 3.4: Compliance UI Components
+```
+TAREA: Crear componentes UI para confirmación compliance con arquitectura de dos capas
 
-**FASE 4** (2 prompts):
-- 4.1: Staff Notifications (Email)
-- 4.2: Dashboard Compliance Tab
+CONTEXTO:
+- Backend implementado con estructura DOS CAPAS (conversational_data + sire_data)
+- UX conversacional (NO pedir códigos numéricos al usuario)
+- Confirmación pre-submit con edición inline
 
-**FASE 5** (1 prompt):
-- 5.1: E2E Testing + Performance Validation
+ESPECIFICACIONES:
 
-**FASE 6** (1 prompt):
-- 6.1: SEO + Analytics
+## 1. ComplianceConfirmation.tsx - Interface de Dos Capas
 
-**FASE 7** (1 prompt):
-- 7.1: Documentation + Deployment
+### Props Interface:
 
-**Total: 15 prompts ejecutables**
+```typescript
+interface ComplianceConfirmationProps {
+  // Capa 1: Datos conversacionales (editables por usuario)
+  conversationalData: {
+    nombre_completo: string          // "Juan Pérez García"
+    numero_pasaporte: string         // "AB123456"
+    pais_texto: string              // "Colombia"
+    proposito_viaje: string         // "Turismo y vacaciones"
+  }
+
+  // Capa 2: Datos SIRE oficiales (auto-generados, read-only)
+  sireData: {
+    // Hotel/Location (auto desde tenant config)
+    codigo_hotel: string             // "1234"
+    codigo_ciudad: string            // "11001" (Bogotá)
+    nombre_hotel: string             // "Simmerdown House"
+
+    // Documento (auto desde conversational)
+    tipo_documento: string           // "3" (Pasaporte)
+    numero_identificacion: string    // "AB123456"
+    fecha_expedicion_documento: string // "01/01/2020"
+
+    // Identidad (auto desde nombre_completo)
+    primer_apellido: string          // "Pérez"
+    segundo_apellido: string         // "García"
+    nombre_extranjero: string        // "Juan"
+
+    // Nacionalidad (auto desde pais_texto)
+    codigo_nacionalidad: string      // "840" (USA)
+    codigo_pais: string              // "840" (mismo)
+
+    // Fechas/Movimiento
+    fecha_nacimiento: string         // "15/05/1990"
+    tipo_movimiento: string          // "E" (Entrada)
+    fecha_movimiento: string         // "15/12/2024" (check-in)
+
+    // Lugares (auto desde tenant config)
+    lugar_procedencia: string        // "11001"
+    lugar_destino: string            // "11001"
+    codigo_ciudad_residencia: string // "11001"
+
+    // Ocupación (default)
+    codigo_ocupacion: string         // "9999" (No especificado)
+  }
+
+  onConfirm: () => Promise<void>
+  onEdit: (field: keyof ConversationalData, value: string) => void
+  onCancel: () => void
+  isLoading?: boolean
+}
+```
+
+### Layout del Componente (3 secciones):
+
+**SECCIÓN 1: Datos Conversacionales (EDITABLE) ✏️**
+
+```tsx
+<div className="space-y-4 p-6 bg-white rounded-lg border-2 border-blue-200">
+  <h2 className="text-xl font-semibold text-gray-900">
+    📝 Confirma tus datos
+  </h2>
+
+  {/* Campo nombre_completo */}
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-gray-700">
+      Nombre completo ✏️
+    </label>
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={conversationalData.nombre_completo}
+        onChange={(e) => onEdit('nombre_completo', e.target.value)}
+        className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+        placeholder="Juan Pérez García"
+      />
+      <button className="px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md">
+        Editar
+      </button>
+    </div>
+    {/* Validation error */}
+    <p className="text-xs text-gray-500">
+      Solo letras, espacios y guiones
+    </p>
+  </div>
+
+  {/* Campo numero_pasaporte */}
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-gray-700">
+      Número de pasaporte ✏️
+    </label>
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={conversationalData.numero_pasaporte}
+        onChange={(e) => onEdit('numero_pasaporte', e.target.value)}
+        className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+        placeholder="AB123456789"
+        pattern="[A-Z]{2}[0-9]{6,9}"
+      />
+      <button className="px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md">
+        Editar
+      </button>
+    </div>
+    <p className="text-xs text-gray-500">
+      Formato: 2 letras + 6-9 dígitos (ej: US123456789)
+    </p>
+  </div>
+
+  {/* Campo pais_texto (dropdown) */}
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-gray-700">
+      País de origen ✏️
+    </label>
+    <div className="flex gap-2">
+      <select
+        value={conversationalData.pais_texto}
+        onChange={(e) => onEdit('pais_texto', e.target.value)}
+        className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+      >
+        <option value="Estados Unidos">Estados Unidos</option>
+        <option value="Colombia">Colombia</option>
+        <option value="España">España</option>
+        {/* ... más países */}
+      </select>
+      <button className="px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md">
+        Editar
+      </button>
+    </div>
+  </div>
+
+  {/* Campo proposito_viaje */}
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-gray-700">
+      Propósito del viaje ✏️
+    </label>
+    <div className="flex gap-2">
+      <textarea
+        value={conversationalData.proposito_viaje}
+        onChange={(e) => onEdit('proposito_viaje', e.target.value)}
+        className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+        placeholder="Turismo y vacaciones"
+        rows={2}
+        maxLength={200}
+      />
+      <button className="px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 rounded-md">
+        Editar
+      </button>
+    </div>
+    <p className="text-xs text-gray-500">
+      Máximo 200 caracteres
+    </p>
+  </div>
+</div>
+```
+
+**SECCIÓN 2: Datos SIRE Generados (READ-ONLY, COLAPSABLE) 🔒**
+
+```tsx
+<div className="mt-6 space-y-4">
+  {/* Collapse trigger */}
+  <button
+    onClick={() => setShowSireDetails(!showSireDetails)}
+    className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+  >
+    <span className="text-sm font-medium text-gray-700">
+      {showSireDetails ? '▼' : '▶'} Ver detalles técnicos SIRE (generados automáticamente)
+    </span>
+    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+      13 campos oficiales
+    </span>
+  </button>
+
+  {/* Collapse content */}
+  {showSireDetails && (
+    <div className="p-6 bg-gray-50 rounded-lg space-y-3 border-l-4 border-blue-500">
+      <p className="text-xs text-gray-600 mb-4">
+        ℹ️ Estos datos se generan automáticamente basados en tu información conversacional.
+        No son editables directamente.
+      </p>
+
+      {/* Grupo: Identidad */}
+      <div className="space-y-2">
+        <h4 className="text-xs font-semibold text-gray-500 uppercase">Identidad</h4>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-gray-600">Primer apellido</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.primer_apellido}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Segundo apellido</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.segundo_apellido || '(vacío)'}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Nombre</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.nombre_extranjero}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grupo: Documento */}
+      <div className="space-y-2">
+        <h4 className="text-xs font-semibold text-gray-500 uppercase">Documento</h4>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-gray-600">Tipo documento</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={`${sireData.tipo_documento} (Pasaporte)`}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Número documento</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.numero_identificacion}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grupo: Nacionalidad */}
+      <div className="space-y-2">
+        <h4 className="text-xs font-semibold text-gray-500 uppercase">Nacionalidad</h4>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-gray-600">Código país</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={`${sireData.codigo_pais} (${conversationalData.pais_texto})`}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grupo: Hotel/Ubicación */}
+      <div className="space-y-2">
+        <h4 className="text-xs font-semibold text-gray-500 uppercase">Hotel/Ubicación</h4>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-gray-600">Código hotel</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.codigo_hotel}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Nombre hotel</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.nombre_hotel}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Código ciudad</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.codigo_ciudad}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grupo: Fechas */}
+      <div className="space-y-2">
+        <h4 className="text-xs font-semibold text-gray-500 uppercase">Fechas</h4>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-gray-600">Fecha expedición doc</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.fecha_expedicion_documento}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Fecha nacimiento</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sireData.fecha_nacimiento}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs text-gray-600">Código ocupación</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={`${sireData.codigo_ocupacion} (No especificado)`}
+                disabled
+                className="w-full px-2 py-1 text-sm bg-white border border-gray-200 rounded"
+              />
+              <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                auto 🤖
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Info footer */}
+      <div className="mt-4 p-3 bg-blue-50 rounded border border-blue-200">
+        <p className="text-xs text-blue-800">
+          💡 <strong>Mapeo automático:</strong> Si corriges tu nombre completo arriba,
+          los apellidos y nombre se actualizarán automáticamente aquí.
+        </p>
+      </div>
+    </div>
+  )}
+</div>
+```
+
+**SECCIÓN 3: Botones de Acción**
+
+```tsx
+<div className="mt-6 flex flex-col sm:flex-row gap-3 justify-end">
+  <button
+    onClick={onCancel}
+    disabled={isLoading}
+    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+  >
+    ❌ Cancelar
+  </button>
+
+  <button
+    onClick={() => setShowSireDetails(false)}
+    disabled={isLoading}
+    className="px-6 py-3 border border-blue-300 rounded-lg text-blue-700 hover:bg-blue-50 transition"
+  >
+    ✏️ Editar datos
+  </button>
+
+  <button
+    onClick={onConfirm}
+    disabled={isLoading}
+    className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition disabled:opacity-50"
+  >
+    {isLoading ? (
+      <>
+        <span className="inline-block animate-spin mr-2">⏳</span>
+        Enviando a SIRE...
+      </>
+    ) : (
+      '✅ Confirmar y Enviar a SIRE'
+    )}
+  </button>
+</div>
+```
+
+### Validaciones Cliente (UI)
+
+**1. nombre_completo:**
+- Regex: `/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/`
+- Error: "El nombre solo puede contener letras, espacios, guiones y apóstrofes"
+- Min: 3 caracteres
+- Max: 100 caracteres
+
+**2. numero_pasaporte:**
+- Regex: `/^[A-Z]{2}[0-9]{6,9}$/`
+- Error: "Formato inválido. Usa 2 letras mayúsculas + 6-9 dígitos (ej: US123456789)"
+- Auto-uppercase input
+
+**3. pais_texto:**
+- Dropdown (NO texto libre)
+- Lista desde `src/lib/sire/sire-country-mapping.ts`
+- Required
+
+**4. proposito_viaje:**
+- Texto libre
+- Max: 200 caracteres
+- NO validación de formato (es contexto adicional, no campo SIRE)
+
+**5. fecha_nacimiento (en sireData, read-only):**
+- Formato: DD/MM/YYYY
+- Validación backend: Mayor de 18 años
+- Si inválida: mostrar error en conversational layer
+
+### Mapeo Visual (Hover Effects)
+
+Cuando usuario hace hover sobre campo conversacional, highlight campos SIRE relacionados:
+
+```tsx
+// Hover sobre nombre_completo → highlight
+onMouseEnter={() => highlightSireFields(['primer_apellido', 'segundo_apellido', 'nombre_extranjero'])}
+
+// Hover sobre numero_pasaporte → highlight
+onMouseEnter={() => highlightSireFields(['tipo_documento', 'numero_identificacion'])}
+
+// Hover sobre pais_texto → highlight
+onMouseEnter={() => highlightSireFields(['codigo_pais', 'codigo_nacionalidad'])}
+```
+
+Estilo highlight:
+```tsx
+className={`${isHighlighted ? 'ring-2 ring-yellow-400 bg-yellow-50' : ''} ...`}
+```
+
+### Estados del Componente
+
+```typescript
+type ConfirmationStep =
+  | 'review'        // Revisar datos (default)
+  | 'edit'          // Editar campo específico
+  | 'confirming'    // Enviando a SIRE (loading)
+  | 'success'       // Éxito → ComplianceSuccess.tsx
+  | 'error'         // Error → mostrar mensaje + retry
+```
+
+## 2. ComplianceReminder.tsx (sin cambios)
+
+Mantener diseño original (banner suave, dismissible).
+
+## 3. ComplianceSuccess.tsx (sin cambios)
+
+Mantener diseño original (confetti, reference numbers).
 
 ---
 
-## 📈 PROGRESO DE EJECUCIÓN
+ARCHIVOS A CREAR:
+- `src/components/Compliance/ComplianceConfirmation.tsx` (~250 líneas)
+- `src/components/Compliance/EditableField.tsx` (~50 líneas) - Componente reutilizable
+- `src/components/Compliance/SireDataCollapse.tsx` (~150 líneas) - Componente colapsable
 
-**Prompts Completados:** 4/15 (27%)
+ARCHIVOS A MODIFICAR:
+- Ninguno (componentes nuevos)
 
-### ✅ Completados
-- ✅ Prompt 1.1: DNS Wildcard + SSL (Oct 5, 2025 - 30min)
-- ✅ Prompt 1.2: Nginx Subdomain Routing (Oct 5, 2025 - 1h)
-- ✅ Prompt 1.3: Next.js Middleware + Tenant Resolver (Oct 5, 2025 - 45min)
-- ✅ Prompt 2.2: Backend API - Conversations CRUD (Oct 5, 2025 - 2h)
-  - Files Created: 2 (route.ts + [id]/route.ts)
-  - Files Modified: 1 (chat/history/route.ts)
-  - Testing: 12/12 tests passed (100%)
-  - Documentation: FASE_2.2_COMPLETION_REPORT.md
+TESTING:
+- [ ] Modal confirmación renderiza correctamente
+- [ ] Datos conversacionales son editables
+- [ ] Validaciones cliente funcionan (regex pasaporte, nombre)
+- [ ] Collapse SIRE data expande/colapsa
+- [ ] Badges "auto 🤖" visibles
+- [ ] Hover mapping funciona (highlight campos relacionados)
+- [ ] Botones deshabilitados durante loading
+- [ ] Mobile responsive (stacked layout)
+- [ ] Keyboard navigation (Tab, Enter, Esc)
+- [ ] ARIA labels para screenreaders
 
-### ⏳ Pendientes
-- ⏳ Prompt 2.1: Database Migrations (próximo)
-- ⏳ Prompt 2.3: UI Components - Sidebar
-- ⏳ Prompt 2.5: Multi-Modal File Upload
-- ⏳ Prompt 2.6: Conversation Intelligence
-- ⏳ Prompt 3.1: Compliance Chat Engine
-- ⏳ Prompt 3.2: Intent Detection Enhancement
-- ⏳ Prompt 3.3: SIRE Puppeteer + TRA API
-- ⏳ Prompt 3.4: Compliance UI Components
-- ⏳ Prompt 4.1: Staff Notifications
-- ⏳ Prompt 4.2: Dashboard Compliance Tab
-- ⏳ Prompt 5.1: E2E Testing + Performance
-- ⏳ Prompt 6.1: SEO + Analytics
-- ⏳ Prompt 7.1: Documentation + Deployment
-
-**Fases Completadas:** 1/7 (FASE 1 - Subdomain Infrastructure)
-**Fases En Progreso:** 1/7 (FASE 2 - Multi-Conversation Foundation - 19% completado)
+SIGUIENTE: Integrar con backend API /api/compliance/submit
+```
 
 ---
 
-**Última actualización:** 5 de Octubre 2025 - 21:30
-**Timeline:** 28-36 horas total
-**Formato:** Copy-paste ready para cada fase
-**Tiempo invertido:** ~4.5 horas (FASE 1: 2.5h, FASE 2.2: 2h)
+## 📝 NOTAS IMPORTANTES
+
+### Sintaxis de Invocación de Agentes
+
+**CORRECTO:**
+- `@agent-backend-developer`
+- `@agent-ux-interface`
+- `@agent-database-agent`
+- `@agent-api-endpoints-mapper`
+
+**INCORRECTO:**
+- `@backend-developer` ❌
+- `@ux-interface` ❌
+- `@database-agent` ❌
+
+### Workflow de Trabajo
+
+1. **Nueva conversación** → Usar "CONTEXTO GENERAL" primero
+2. **Ejecutar prompt** → Copy-paste completo del prompt específico
+3. **Invocar agente** → Usar sintaxis correcta `@agent-nombre`
+4. **Verificar completitud** → Marcar task en TODO.md
+5. **Siguiente prompt** → Seguir orden secuencial
+
+### Archivos de Referencia
+
+- `plan.md` - Especificaciones técnicas completas
+- `TODO.md` - Estado de tareas (limpio, solo pendientes)
+- `_assets/sire/pasos-para-reportar-al-sire.md` - 13 campos SIRE oficiales
+
+---
+
+**Última actualización:** 5 de Octubre 2025 23:30
+**Total prompts:** 12 ejecutables (4 completados FASE 0.5)
+**Próximo:** Prompt 2.1 - Database Migrations
