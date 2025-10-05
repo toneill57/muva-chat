@@ -161,6 +161,41 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
     setIsSidebarOpen(false)
   }
 
+  const handleDeleteConversation = async (conversationId: string) => {
+    try {
+      const response = await fetch(`/api/guest/conversations/${conversationId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar conversación')
+      }
+
+      // Remove from list
+      setConversations((prev) => prev.filter((c) => c.id !== conversationId))
+
+      // If deleted conversation was active, select another
+      if (conversationId === activeConversationId) {
+        const remaining = conversations.filter((c) => c.id !== conversationId)
+        if (remaining.length > 0) {
+          setActiveConversationId(remaining[0].id)
+          // Messages will be loaded automatically by useEffect
+        } else {
+          setActiveConversationId(null)
+          setMessages([])
+          setTrackedEntities(new Map())
+          setFollowUpSuggestions([])
+        }
+      }
+    } catch (err) {
+      console.error('Error deleting conversation:', err)
+      setError('No se pudo eliminar la conversación')
+    }
+  }
+
   const loadChatHistory = async () => {
     if (!activeConversationId) return
 
@@ -456,6 +491,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             activeConversationId={activeConversationId}
             onSelectConversation={handleSelectConversation}
             onNewConversation={handleNewConversation}
+            onDeleteConversation={handleDeleteConversation}
           />
         )}
       </aside>

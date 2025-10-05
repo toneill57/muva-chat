@@ -126,11 +126,17 @@
   Agent: **@agent-backend-developer**
   Prompt: Workflow 2.2
 
-### 2.3 UI Components
-- [ ] `ConversationList.tsx` (2h)
-- [ ] Refactor `GuestChatInterface.tsx` con sidebar (3h)
-  - Agent: **@agent-ux-interface**
+### 2.3 UI Components ✅ COMPLETADO (Oct 5, 2025)
+- [x] `ConversationList.tsx` (2h) ✅
+- [x] Refactor `GuestChatInterface.tsx` con sidebar (3h) ✅
+- [x] date-fns instalado y funcionando ✅
+- [x] Delete conversation implementado ✅
+- [x] Entity tracking preservado ✅
+- [x] Follow-up suggestions preservados ✅
+- [x] Testing manual 46/46 PASS ✅
+  - Agent: **@ux-interface**
   - Prompt: Workflow 2.3
+  - Docs: `/docs/guest-portal-multi-conversation/fase-2.3/`
 
 ### 2.5 Multi-Modal File Upload (4-5h)
 - [ ] Supabase Storage + migrations (1h)
@@ -223,12 +229,12 @@
 ## 📈 PROGRESO
 
 **Total Tareas:** 80
-**Completadas:** 6 (FASE 1) + 8 (FASE 0.5) + 6 (FASE 2.1+2.2) = 20/80 (25%)
+**Completadas:** 6 (FASE 1) + 8 (FASE 0.5) + 6 (FASE 2.1+2.2) + 2 (FASE 2.3) = 22/80 (27.5%)
 
-**Timeline Estimado Restante:** 29-35 horas
+**Timeline Estimado Restante:** 24-30 horas
 
-**Próximo:** FASE 2.3 (UI Components - ConversationList + GuestChatInterface)
+**Próximo:** FASE 3.1 (Compliance Chat Engine) o FASE 2.5 (Multi-Modal - Opcional)
 
 ---
 
-**Última actualización:** 6 de Octubre 2025 00:15
+**Última actualización:** 6 de Octubre 2025 01:00
