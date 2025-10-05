@@ -43,9 +43,9 @@ jobs:
           script: |
             cd ${{ secrets.VPS_APP_PATH }}
             git pull origin dev
-            npm ci --legacy-peer-deps --production
+            npm ci --legacy-peer-deps
             npm run build
-            pm2 reload docs/deployment/ecosystem.config.js --update-env
+            pm2 reload docs/deployment/ecosystem.config.cjs --update-env
 
       - name: Wait for deployment
         run: sleep 10
@@ -69,9 +69,9 @@ jobs:
           script: |
             cd ${{ secrets.VPS_APP_PATH }}
             git reset --hard HEAD~1
-            npm ci --legacy-peer-deps --production
+            npm ci --legacy-peer-deps
             npm run build
-            pm2 reload docs/deployment/ecosystem.config.js --update-env
+            pm2 reload docs/deployment/ecosystem.config.cjs --update-env
             echo "Rolled back to previous version"
 
       - name: Notify success
