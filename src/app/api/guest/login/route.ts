@@ -136,7 +136,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<LoginResp
     }
 
     // Return success response with HTTP-only cookie
-    const response = NextResponse.json(
+    const response = NextResponse.json<LoginSuccessResponse>(
       {
         success: true,
         token,

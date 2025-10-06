@@ -270,7 +270,7 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
         role: 'user',
         content: 'Hola',
         entities: [],
-        created_at: new Date().toISOString(),
+        timestamp: new Date(),
       }
 
       const assistantMessage: GuestChatMessage = {
@@ -278,7 +278,7 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
         role: 'assistant',
         content: data.response,
         entities: data.entities || [],
-        created_at: new Date().toISOString(),
+        timestamp: new Date(),
       }
 
       setMessages([userMessage, assistantMessage])
@@ -291,8 +291,9 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
           data.entities.forEach((entity: string) => {
             updated.set(entity, {
               name: entity,
-              firstMentioned: new Date().toISOString(),
-              count: 1,
+              type: 'other',
+              firstMentioned: new Date(),
+              mentionCount: 1,
             })
           })
           return updated
