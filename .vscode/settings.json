@@ -11,12 +11,13 @@
     "**/coverage/**": true,
     "**/.cache/**": true,
     "**/tmp/**": true,
-    "**/temp/**": true
+    "**/temp/**": true,
+    "**/.claude/**": true
   },
 
-  // AUTO-SAVE: Guardar automáticamente para evitar buffers sucios
+  // AUTO-SAVE: Guardar automáticamente para evitar buffers sucios (optimizado para Claude Code)
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000,
+  "files.autoSaveDelay": 2000,
   "files.autoSaveWorkspaceFilesOnly": false,
 
   // HOT EXIT: Evitar restaurar archivos con cambios no guardados (configurar en settings globales)
@@ -59,5 +60,10 @@
 
   // MINIMAP: Reflejar cambios inmediatamente
   "editor.minimap.enabled": true,
-  "editor.minimap.renderCharacters": false
+  "editor.minimap.renderCharacters": false,
+
+  // PERFORMANCE: Optimizaciones adicionales para Claude Code
+  "files.maxMemoryForLargeFilesMB": 4096,
+  "window.restoreWindows": "none",
+  "window.newWindowDimensions": "default"
 }
