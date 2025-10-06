@@ -1,0 +1,5612 @@
+[
+  {
+    "codigo": "5001",
+    "ciudad": "MEDELLÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5002",
+    "ciudad": "ABEJORRAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5004",
+    "ciudad": "ABRIAQUÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5021",
+    "ciudad": "ALEJANDRÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5030",
+    "ciudad": "AMAGÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5031",
+    "ciudad": "AMALFI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5034",
+    "ciudad": "ANDES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5036",
+    "ciudad": "ANGELÓPOLIS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5038",
+    "ciudad": "ANGOSTURA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5040",
+    "ciudad": "ANORÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5042",
+    "ciudad": "SANTAFÉ DE ANTIOQUIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5044",
+    "ciudad": "ANZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5045",
+    "ciudad": "APARTADÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5051",
+    "ciudad": "ARBOLETES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5055",
+    "ciudad": "ARGELIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5059",
+    "ciudad": "ARMENIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5079",
+    "ciudad": "BARBOSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5086",
+    "ciudad": "BELMIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5088",
+    "ciudad": "BELLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5091",
+    "ciudad": "BETANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5093",
+    "ciudad": "BETULIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5101",
+    "ciudad": "CIUDAD BOLÍVAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5107",
+    "ciudad": "BRICEÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5113",
+    "ciudad": "BURITICÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5120",
+    "ciudad": "CÁCERES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5125",
+    "ciudad": "CAICEDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5129",
+    "ciudad": "CALDAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5134",
+    "ciudad": "CAMPAMENTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5138",
+    "ciudad": "CAÑASGORDAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5142",
+    "ciudad": "CARACOLÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5145",
+    "ciudad": "CARAMANTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5147",
+    "ciudad": "CAREPA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5148",
+    "ciudad": "EL CARMEN DE VIBORAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5150",
+    "ciudad": "CAROLINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5154",
+    "ciudad": "CAUCASIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5172",
+    "ciudad": "CHIGORODÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5190",
+    "ciudad": "CISNEROS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5197",
+    "ciudad": "COCORNÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5206",
+    "ciudad": "CONCEPCIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5209",
+    "ciudad": "CONCORDIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5212",
+    "ciudad": "COPACABANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5234",
+    "ciudad": "DABEIBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5237",
+    "ciudad": "DONMATÍAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5240",
+    "ciudad": "EBÉJICO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5250",
+    "ciudad": "EL BAGRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5264",
+    "ciudad": "ENTRERRIOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5266",
+    "ciudad": "ENVIGADO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5282",
+    "ciudad": "FREDONIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5284",
+    "ciudad": "FRONTINO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5306",
+    "ciudad": "GIRALDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5308",
+    "ciudad": "GIRARDOTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5310",
+    "ciudad": "GÓMEZ PLATA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5313",
+    "ciudad": "GRANADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5315",
+    "ciudad": "GUADALUPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5318",
+    "ciudad": "GUARNE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5321",
+    "ciudad": "GUATAPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5347",
+    "ciudad": "HELICONIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5353",
+    "ciudad": "HISPANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5360",
+    "ciudad": "ITAGUI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5361",
+    "ciudad": "ITUANGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5364",
+    "ciudad": "JARDÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5368",
+    "ciudad": "JERICÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5376",
+    "ciudad": "LA CEJA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5380",
+    "ciudad": "LA ESTRELLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5390",
+    "ciudad": "LA PINTADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5400",
+    "ciudad": "LA UNIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5411",
+    "ciudad": "LIBORINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5425",
+    "ciudad": "MACEO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5440",
+    "ciudad": "MARINILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5467",
+    "ciudad": "MONTEBELLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5475",
+    "ciudad": "MURINDÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5480",
+    "ciudad": "MUTATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5483",
+    "ciudad": "NARIÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5490",
+    "ciudad": "NECOCLÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5495",
+    "ciudad": "NECHÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5501",
+    "ciudad": "OLAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5541",
+    "ciudad": "PEÑOL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5543",
+    "ciudad": "PEQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5576",
+    "ciudad": "PUEBLORRICO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5579",
+    "ciudad": "PUERTO BERRÍO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5585",
+    "ciudad": "PUERTO NARE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5591",
+    "ciudad": "PUERTO TRIUNFO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5604",
+    "ciudad": "REMEDIOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5607",
+    "ciudad": "RETIRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5615",
+    "ciudad": "RIONEGRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5628",
+    "ciudad": "SABANALARGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5631",
+    "ciudad": "SABANETA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5642",
+    "ciudad": "SALGAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5647",
+    "ciudad": "SAN ANDRÉS DE CUERQUÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5649",
+    "ciudad": "SAN CARLOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5652",
+    "ciudad": "SAN FRANCISCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5656",
+    "ciudad": "SAN JERÓNIMO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5658",
+    "ciudad": "SAN JOSÉ DE LA MONTAÑA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5659",
+    "ciudad": "SAN JUAN DE URABÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5660",
+    "ciudad": "SAN LUIS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5664",
+    "ciudad": "SAN PEDRO DE LOS MILAGROS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5665",
+    "ciudad": "SAN PEDRO DE URABA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5667",
+    "ciudad": "SAN RAFAEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5670",
+    "ciudad": "SAN ROQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5674",
+    "ciudad": "SAN VICENTE FERRER",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5679",
+    "ciudad": "SANTA BÁRBARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5686",
+    "ciudad": "SANTA ROSA DE OSOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5690",
+    "ciudad": "SANTO DOMINGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5697",
+    "ciudad": "EL SANTUARIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5736",
+    "ciudad": "SEGOVIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5756",
+    "ciudad": "SONSON",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5761",
+    "ciudad": "SOPETRÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5789",
+    "ciudad": "TÁMESIS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5790",
+    "ciudad": "TARAZÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5792",
+    "ciudad": "TARSO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5809",
+    "ciudad": "TITIRIBÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5819",
+    "ciudad": "TOLEDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5837",
+    "ciudad": "TURBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5842",
+    "ciudad": "URAMITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5847",
+    "ciudad": "URRAO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5854",
+    "ciudad": "VALDIVIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5856",
+    "ciudad": "VALPARAÍSO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5858",
+    "ciudad": "VEGACHÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5861",
+    "ciudad": "VENECIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5873",
+    "ciudad": "VIGÍA DEL FUERTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5885",
+    "ciudad": "YALÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5887",
+    "ciudad": "YARUMAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5890",
+    "ciudad": "YOLOMBÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5893",
+    "ciudad": "YONDÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "5895",
+    "ciudad": "ZARAGOZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8001",
+    "ciudad": "BARRANQUILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8078",
+    "ciudad": "BARANOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8137",
+    "ciudad": "CAMPO DE LA CRUZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8141",
+    "ciudad": "CANDELARIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8296",
+    "ciudad": "GALAPA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8372",
+    "ciudad": "JUAN DE ACOSTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8421",
+    "ciudad": "LURUACO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8433",
+    "ciudad": "MALAMBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8436",
+    "ciudad": "MANATÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8520",
+    "ciudad": "PALMAR DE VARELA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8549",
+    "ciudad": "PIOJÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8558",
+    "ciudad": "POLONUEVO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8560",
+    "ciudad": "PONEDERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8573",
+    "ciudad": "PUERTO COLOMBIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8606",
+    "ciudad": "REPELÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8634",
+    "ciudad": "SABANAGRANDE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8638",
+    "ciudad": "SABANALARGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8675",
+    "ciudad": "SANTA LUCÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8685",
+    "ciudad": "SANTO TOMÁS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8758",
+    "ciudad": "SOLEDAD",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8770",
+    "ciudad": "SUAN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8832",
+    "ciudad": "TUBARÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "8849",
+    "ciudad": "USIACURÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "11001",
+    "ciudad": "BOGOTÁ, D.C.",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13001",
+    "ciudad": "CARTAGENA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13006",
+    "ciudad": "ACHÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13030",
+    "ciudad": "ALTOS DEL ROSARIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13042",
+    "ciudad": "ARENAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13052",
+    "ciudad": "ARJONA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13062",
+    "ciudad": "ARROYOHONDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13074",
+    "ciudad": "BARRANCO DE LOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13140",
+    "ciudad": "CALAMAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13160",
+    "ciudad": "CANTAGALLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13188",
+    "ciudad": "CICUCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13212",
+    "ciudad": "CÓRDOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13222",
+    "ciudad": "CLEMENCIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13244",
+    "ciudad": "EL CARMEN DE BOLÍVAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13248",
+    "ciudad": "EL GUAMO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13268",
+    "ciudad": "EL PEÑÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13300",
+    "ciudad": "HATILLO DE LOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13430",
+    "ciudad": "MAGANGUÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13433",
+    "ciudad": "MAHATES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13440",
+    "ciudad": "MARGARITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13442",
+    "ciudad": "MARÍA LA BAJA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13458",
+    "ciudad": "MONTECRISTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13468",
+    "ciudad": "MOMPÓS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13473",
+    "ciudad": "MORALES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13490",
+    "ciudad": "NOROSÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13549",
+    "ciudad": "PINILLOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13580",
+    "ciudad": "REGIDOR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13600",
+    "ciudad": "RÍO VIEJO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13620",
+    "ciudad": "SAN CRISTÓBAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13647",
+    "ciudad": "SAN ESTANISLAO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13650",
+    "ciudad": "SAN FERNANDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13654",
+    "ciudad": "SAN JACINTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13655",
+    "ciudad": "SAN JACINTO DEL CAUCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13657",
+    "ciudad": "SAN JUAN NEPOMUCENO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13667",
+    "ciudad": "SAN MARTÍN DE LOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13670",
+    "ciudad": "SAN PABLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13673",
+    "ciudad": "SANTA CATALINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13683",
+    "ciudad": "SANTA ROSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13688",
+    "ciudad": "SANTA ROSA DEL SUR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13744",
+    "ciudad": "SIMITÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13760",
+    "ciudad": "SOPLAVIENTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13780",
+    "ciudad": "TALAIGUA NUEVO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13810",
+    "ciudad": "TIQUISIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13836",
+    "ciudad": "TURBACO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13838",
+    "ciudad": "TURBANÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13873",
+    "ciudad": "VILLANUEVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "13894",
+    "ciudad": "ZAMBRANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15001",
+    "ciudad": "TUNJA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15022",
+    "ciudad": "ALMEIDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15047",
+    "ciudad": "AQUITANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15051",
+    "ciudad": "ARCABUCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15087",
+    "ciudad": "BELÉN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15090",
+    "ciudad": "BERBEO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15092",
+    "ciudad": "BETÉITIVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15097",
+    "ciudad": "BOAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15104",
+    "ciudad": "BOYACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15106",
+    "ciudad": "BRICEÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15109",
+    "ciudad": "BUENAVISTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15114",
+    "ciudad": "BUSBANZÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15131",
+    "ciudad": "CALDAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15135",
+    "ciudad": "CAMPOHERMOSO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15162",
+    "ciudad": "CERINZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15172",
+    "ciudad": "CHINAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15176",
+    "ciudad": "CHIQUINQUIRÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15180",
+    "ciudad": "CHISCAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15183",
+    "ciudad": "CHITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15185",
+    "ciudad": "CHITARAQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15187",
+    "ciudad": "CHIVATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15189",
+    "ciudad": "CIÉNEGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15204",
+    "ciudad": "CÓMBITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15212",
+    "ciudad": "COPER",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15215",
+    "ciudad": "CORRALES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15218",
+    "ciudad": "COVARACHÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15223",
+    "ciudad": "CUBARÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15224",
+    "ciudad": "CUCAITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15226",
+    "ciudad": "CUÍTIVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15232",
+    "ciudad": "CHÍQUIZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15236",
+    "ciudad": "CHIVOR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15238",
+    "ciudad": "DUITAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15244",
+    "ciudad": "EL COCUY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15248",
+    "ciudad": "EL ESPINO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15272",
+    "ciudad": "FIRAVITOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15276",
+    "ciudad": "FLORESTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15293",
+    "ciudad": "GACHANTIVÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15296",
+    "ciudad": "GAMEZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15299",
+    "ciudad": "GARAGOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15317",
+    "ciudad": "GUACAMAYAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15322",
+    "ciudad": "GUATEQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15325",
+    "ciudad": "GUAYATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15332",
+    "ciudad": "GÜICÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15362",
+    "ciudad": "IZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15367",
+    "ciudad": "JENESANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15368",
+    "ciudad": "JERICÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15377",
+    "ciudad": "LABRANZAGRANDE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15380",
+    "ciudad": "LA CAPILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15401",
+    "ciudad": "LA VICTORIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15403",
+    "ciudad": "LA UVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15407",
+    "ciudad": "VILLA DE LEYVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15425",
+    "ciudad": "MACANAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15442",
+    "ciudad": "MARIPÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15455",
+    "ciudad": "MIRAFLORES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15464",
+    "ciudad": "MONGUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15466",
+    "ciudad": "MONGUÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15469",
+    "ciudad": "MONIQUIRÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15476",
+    "ciudad": "MOTAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15480",
+    "ciudad": "MUZO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15491",
+    "ciudad": "NOBSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15494",
+    "ciudad": "NUEVO COLÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15500",
+    "ciudad": "OICATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15507",
+    "ciudad": "OTANCHE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15511",
+    "ciudad": "PACHAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15514",
+    "ciudad": "PÁEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15516",
+    "ciudad": "PAIPA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15518",
+    "ciudad": "PAJARITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15522",
+    "ciudad": "PANQUEBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15531",
+    "ciudad": "PAUNA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15533",
+    "ciudad": "PAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15537",
+    "ciudad": "PAZ DE RÍO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15542",
+    "ciudad": "PESCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15550",
+    "ciudad": "PISBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15572",
+    "ciudad": "PUERTO BOYACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15580",
+    "ciudad": "QUÍPAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15599",
+    "ciudad": "RAMIRIQUÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15600",
+    "ciudad": "RÁQUIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15621",
+    "ciudad": "RONDÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15632",
+    "ciudad": "SABOYÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15638",
+    "ciudad": "SÁCHICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15646",
+    "ciudad": "SAMACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15660",
+    "ciudad": "SAN EDUARDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15664",
+    "ciudad": "SAN JOSÉ DE PARE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15667",
+    "ciudad": "SAN LUIS DE GACENO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15673",
+    "ciudad": "SAN MATEO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15676",
+    "ciudad": "SAN MIGUEL DE SEMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15681",
+    "ciudad": "SAN PABLO DE BORBUR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15686",
+    "ciudad": "SANTANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15690",
+    "ciudad": "SANTA MARÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15693",
+    "ciudad": "SANTA ROSA DE VITERBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15696",
+    "ciudad": "SANTA SOFÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15720",
+    "ciudad": "SATIVANORTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15723",
+    "ciudad": "SATIVASUR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15740",
+    "ciudad": "SIACHOQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15753",
+    "ciudad": "SOATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15755",
+    "ciudad": "SOCOTÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15757",
+    "ciudad": "SOCHA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15759",
+    "ciudad": "SOGAMOSO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15761",
+    "ciudad": "SOMONDOCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15762",
+    "ciudad": "SORA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15763",
+    "ciudad": "SOTAQUIRÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15764",
+    "ciudad": "SORACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15774",
+    "ciudad": "SUSACÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15776",
+    "ciudad": "SUTAMARCHÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15778",
+    "ciudad": "SUTATENZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15790",
+    "ciudad": "TASCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15798",
+    "ciudad": "TENZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15804",
+    "ciudad": "TIBANÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15806",
+    "ciudad": "TIBASOSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15808",
+    "ciudad": "TINJACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15810",
+    "ciudad": "TIPACOQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15814",
+    "ciudad": "TOCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15816",
+    "ciudad": "TOGÜÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15820",
+    "ciudad": "TÓPAGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15822",
+    "ciudad": "TOTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15832",
+    "ciudad": "TUNUNGUÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15835",
+    "ciudad": "TURMEQUÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15837",
+    "ciudad": "TUTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15839",
+    "ciudad": "TUTAZÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15842",
+    "ciudad": "UMBITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15861",
+    "ciudad": "VENTAQUEMADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15879",
+    "ciudad": "VIRACACHÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "15897",
+    "ciudad": "ZETAQUIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17001",
+    "ciudad": "MANIZALES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17013",
+    "ciudad": "AGUADAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17042",
+    "ciudad": "ANSERMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17050",
+    "ciudad": "ARANZAZU",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17088",
+    "ciudad": "BELALCÁZAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17174",
+    "ciudad": "CHINCHINÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17272",
+    "ciudad": "FILADELFIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17380",
+    "ciudad": "LA DORADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17388",
+    "ciudad": "LA MERCED",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17433",
+    "ciudad": "MANZANARES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17442",
+    "ciudad": "MARMATO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17444",
+    "ciudad": "MARQUETALIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17446",
+    "ciudad": "MARULANDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17486",
+    "ciudad": "NEIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17495",
+    "ciudad": "NORCASIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17513",
+    "ciudad": "PÁCORA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17524",
+    "ciudad": "PALESTINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17541",
+    "ciudad": "PENSILVANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17614",
+    "ciudad": "RIOSUCIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17616",
+    "ciudad": "RISARALDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17653",
+    "ciudad": "SALAMINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17662",
+    "ciudad": "SAMANÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17665",
+    "ciudad": "SAN JOSÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17777",
+    "ciudad": "SUPÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17867",
+    "ciudad": "VICTORIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17873",
+    "ciudad": "VILLAMARÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "17877",
+    "ciudad": "VITERBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18001",
+    "ciudad": "FLORENCIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18029",
+    "ciudad": "ALBANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18094",
+    "ciudad": "BELÉN DE LOS ANDAQUÍES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18150",
+    "ciudad": "CARTAGENA DEL CHAIRÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18205",
+    "ciudad": "CURILLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18247",
+    "ciudad": "EL DONCELLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18256",
+    "ciudad": "EL PAUJIL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18410",
+    "ciudad": "LA MONTAÑITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18460",
+    "ciudad": "MILÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18479",
+    "ciudad": "MORELIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18592",
+    "ciudad": "PUERTO RICO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18610",
+    "ciudad": "SAN JOSÉ DEL FRAGUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18753",
+    "ciudad": "SAN VICENTE DEL CAGUÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18756",
+    "ciudad": "SOLANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18785",
+    "ciudad": "SOLITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "18860",
+    "ciudad": "VALPARAÍSO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19001",
+    "ciudad": "POPAYÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19022",
+    "ciudad": "ALMAGUER",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19050",
+    "ciudad": "ARGELIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19075",
+    "ciudad": "BALBOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19100",
+    "ciudad": "BOLÍVAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19110",
+    "ciudad": "BUENOS AIRES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19130",
+    "ciudad": "CAJIBÍO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19137",
+    "ciudad": "CALDONO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19142",
+    "ciudad": "CALOTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19212",
+    "ciudad": "CORINTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19256",
+    "ciudad": "EL TAMBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19290",
+    "ciudad": "FLORENCIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19300",
+    "ciudad": "GUACHENÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19318",
+    "ciudad": "GUAPI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19355",
+    "ciudad": "INZÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19364",
+    "ciudad": "JAMBALÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19392",
+    "ciudad": "LA SIERRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19397",
+    "ciudad": "LA VEGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19418",
+    "ciudad": "LÓPEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19450",
+    "ciudad": "MERCADERES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19455",
+    "ciudad": "MIRANDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19473",
+    "ciudad": "MORALES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19513",
+    "ciudad": "PADILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19517",
+    "ciudad": "PAEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19532",
+    "ciudad": "PATÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19533",
+    "ciudad": "PIAMONTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19548",
+    "ciudad": "PIENDAMÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19573",
+    "ciudad": "PUERTO TEJADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19585",
+    "ciudad": "PURACÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19622",
+    "ciudad": "ROSAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19693",
+    "ciudad": "SAN SEBASTIÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19698",
+    "ciudad": "SANTANDER DE QUILICHAO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19701",
+    "ciudad": "SANTA ROSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19743",
+    "ciudad": "SILVIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19760",
+    "ciudad": "SOTARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19780",
+    "ciudad": "SUÁREZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19785",
+    "ciudad": "SUCRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19807",
+    "ciudad": "TIMBÍO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19809",
+    "ciudad": "TIMBIQUÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19821",
+    "ciudad": "TORIBIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19824",
+    "ciudad": "TOTORÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "19845",
+    "ciudad": "VILLA RICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20001",
+    "ciudad": "VALLEDUPAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20011",
+    "ciudad": "AGUACHICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20013",
+    "ciudad": "AGUSTÍN CODAZZI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20032",
+    "ciudad": "ASTREA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20045",
+    "ciudad": "BECERRIL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20060",
+    "ciudad": "BOSCONIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20175",
+    "ciudad": "CHIMICHAGUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20178",
+    "ciudad": "CHIRIGUANÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20228",
+    "ciudad": "CURUMANÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20238",
+    "ciudad": "EL COPEY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20250",
+    "ciudad": "EL PASO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20295",
+    "ciudad": "GAMARRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20310",
+    "ciudad": "GONZÁLEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20383",
+    "ciudad": "LA GLORIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20400",
+    "ciudad": "LA JAGUA DE IBIRICO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20443",
+    "ciudad": "MANAURE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20517",
+    "ciudad": "PAILITAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20550",
+    "ciudad": "PELAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20570",
+    "ciudad": "PUEBLO BELLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20614",
+    "ciudad": "RÍO DE ORO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20621",
+    "ciudad": "LA PAZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20710",
+    "ciudad": "SAN ALBERTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20750",
+    "ciudad": "SAN DIEGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20770",
+    "ciudad": "SAN MARTÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "20787",
+    "ciudad": "TAMALAMEQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23001",
+    "ciudad": "MONTERÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23068",
+    "ciudad": "AYAPEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23079",
+    "ciudad": "BUENAVISTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23090",
+    "ciudad": "CANALETE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23162",
+    "ciudad": "CERETÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23168",
+    "ciudad": "CHIMÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23182",
+    "ciudad": "CHINÚ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23189",
+    "ciudad": "CIÉNAGA DE ORO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23300",
+    "ciudad": "COTORRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23350",
+    "ciudad": "LA APARTADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23417",
+    "ciudad": "LORICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23419",
+    "ciudad": "LOS CÓRDOBAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23464",
+    "ciudad": "MOMIL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23466",
+    "ciudad": "MONTELÍBANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23500",
+    "ciudad": "MOÑITOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23555",
+    "ciudad": "PLANETA RICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23570",
+    "ciudad": "PUEBLO NUEVO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23574",
+    "ciudad": "PUERTO ESCONDIDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23580",
+    "ciudad": "PUERTO LIBERTADOR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23586",
+    "ciudad": "PURÍSIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23660",
+    "ciudad": "SAHAGÚN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23670",
+    "ciudad": "SAN ANDRÉS DE SOTAVENTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23672",
+    "ciudad": "SAN ANTERO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23675",
+    "ciudad": "SAN BERNARDO DEL VIENTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23678",
+    "ciudad": "SAN CARLOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23682",
+    "ciudad": "SAN JOSÉ DE URÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23686",
+    "ciudad": "SAN PELAYO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23807",
+    "ciudad": "TIERRALTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23815",
+    "ciudad": "TUCHÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "23855",
+    "ciudad": "VALENCIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25001",
+    "ciudad": "AGUA DE DIOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25019",
+    "ciudad": "ALBÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25035",
+    "ciudad": "ANAPOIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25040",
+    "ciudad": "ANOLAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25053",
+    "ciudad": "ARBELÁEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25086",
+    "ciudad": "BELTRÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25095",
+    "ciudad": "BITUIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25099",
+    "ciudad": "BOJACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25120",
+    "ciudad": "CABRERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25123",
+    "ciudad": "CACHIPAY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25126",
+    "ciudad": "CAJICÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25148",
+    "ciudad": "CAPARRAPÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25151",
+    "ciudad": "CAQUEZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25154",
+    "ciudad": "CARMEN DE CARUPA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25168",
+    "ciudad": "CHAGUANÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25175",
+    "ciudad": "CHÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25178",
+    "ciudad": "CHIPAQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25181",
+    "ciudad": "CHOACHÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25183",
+    "ciudad": "CHOCONTÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25200",
+    "ciudad": "COGUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25214",
+    "ciudad": "COTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25224",
+    "ciudad": "CUCUNUBÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25245",
+    "ciudad": "EL COLEGIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25258",
+    "ciudad": "EL PEÑÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25260",
+    "ciudad": "EL ROSAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25269",
+    "ciudad": "FACATATIVÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25279",
+    "ciudad": "FOMEQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25281",
+    "ciudad": "FOSCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25286",
+    "ciudad": "FUNZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25288",
+    "ciudad": "FÚQUENE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25290",
+    "ciudad": "FUSAGASUGÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25293",
+    "ciudad": "GACHALA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25295",
+    "ciudad": "GACHANCIPÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25297",
+    "ciudad": "GACHETÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25299",
+    "ciudad": "GAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25307",
+    "ciudad": "GIRARDOT",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25312",
+    "ciudad": "GRANADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25317",
+    "ciudad": "GUACHETÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25320",
+    "ciudad": "GUADUAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25322",
+    "ciudad": "GUASCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25324",
+    "ciudad": "GUATAQUÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25326",
+    "ciudad": "GUATAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25328",
+    "ciudad": "GUAYABAL DE SIQUIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25335",
+    "ciudad": "GUAYABETAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25339",
+    "ciudad": "GUTIÉRREZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25368",
+    "ciudad": "JERUSALÉN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25372",
+    "ciudad": "JUNÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25377",
+    "ciudad": "LA CALERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25386",
+    "ciudad": "LA MESA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25394",
+    "ciudad": "LA PALMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25398",
+    "ciudad": "LA PEÑA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25402",
+    "ciudad": "LA VEGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25407",
+    "ciudad": "LENGUAZAQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25426",
+    "ciudad": "MACHETA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25430",
+    "ciudad": "MADRID",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25436",
+    "ciudad": "MANTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25438",
+    "ciudad": "MEDINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25473",
+    "ciudad": "MOSQUERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25483",
+    "ciudad": "NARIÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25486",
+    "ciudad": "NEMOCÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25488",
+    "ciudad": "NILO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25489",
+    "ciudad": "NIMAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25491",
+    "ciudad": "NOCAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25506",
+    "ciudad": "VENECIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25513",
+    "ciudad": "PACHO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25518",
+    "ciudad": "PAIME",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25524",
+    "ciudad": "PANDI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25530",
+    "ciudad": "PARATEBUENO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25535",
+    "ciudad": "PASCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25572",
+    "ciudad": "PUERTO SALGAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25580",
+    "ciudad": "PULÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25592",
+    "ciudad": "QUEBRADANEGRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25594",
+    "ciudad": "QUETAME",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25596",
+    "ciudad": "QUIPILE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25599",
+    "ciudad": "APULO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25612",
+    "ciudad": "RICAURTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25645",
+    "ciudad": "SAN ANTONIO DEL TEQUENDAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25649",
+    "ciudad": "SAN BERNARDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25653",
+    "ciudad": "SAN CAYETANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25658",
+    "ciudad": "SAN FRANCISCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25662",
+    "ciudad": "SAN JUAN DE RÍO SECO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25718",
+    "ciudad": "SASAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25736",
+    "ciudad": "SESQUILÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25740",
+    "ciudad": "SIBATÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25743",
+    "ciudad": "SILVANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25745",
+    "ciudad": "SIMIJACA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25754",
+    "ciudad": "SOACHA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25758",
+    "ciudad": "SOPÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25769",
+    "ciudad": "SUBACHOQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25772",
+    "ciudad": "SUESCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25777",
+    "ciudad": "SUPATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25779",
+    "ciudad": "SUSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25781",
+    "ciudad": "SUTATAUSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25785",
+    "ciudad": "TABIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25793",
+    "ciudad": "TAUSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25797",
+    "ciudad": "TENA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25799",
+    "ciudad": "TENJO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25805",
+    "ciudad": "TIBACUY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25807",
+    "ciudad": "TIBIRITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25815",
+    "ciudad": "TOCAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25817",
+    "ciudad": "TOCANCIPÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25823",
+    "ciudad": "TOPAIPÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25839",
+    "ciudad": "UBALÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25841",
+    "ciudad": "UBAQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25843",
+    "ciudad": "VILLA DE SAN DIEGO DE UBATE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25845",
+    "ciudad": "UNE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25851",
+    "ciudad": "ÚTICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25862",
+    "ciudad": "VERGARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25867",
+    "ciudad": "VIANÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25871",
+    "ciudad": "VILLAGÓMEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25873",
+    "ciudad": "VILLAPINZÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25875",
+    "ciudad": "VILLETA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25878",
+    "ciudad": "VIOTÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25885",
+    "ciudad": "YACOPÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25898",
+    "ciudad": "ZIPACÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "25899",
+    "ciudad": "ZIPAQUIRÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27001",
+    "ciudad": "QUIBDÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27006",
+    "ciudad": "ACANDÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27025",
+    "ciudad": "ALTO BAUDÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27050",
+    "ciudad": "ATRATO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27073",
+    "ciudad": "BAGADÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27075",
+    "ciudad": "BAHÍA SOLANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27077",
+    "ciudad": "BAJO BAUDÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27099",
+    "ciudad": "BOJAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27135",
+    "ciudad": "EL CANTÓN DEL SAN PABLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27150",
+    "ciudad": "CARMEN DEL DARIÉN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27160",
+    "ciudad": "CÉRTEGUI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27205",
+    "ciudad": "CONDOTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27245",
+    "ciudad": "EL CARMEN DE ATRATO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27250",
+    "ciudad": "EL LITORAL DEL SAN JUAN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27361",
+    "ciudad": "ISTMINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27372",
+    "ciudad": "JURADÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27413",
+    "ciudad": "LLORÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27425",
+    "ciudad": "MEDIO ATRATO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27430",
+    "ciudad": "MEDIO BAUDÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27450",
+    "ciudad": "MEDIO SAN JUAN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27491",
+    "ciudad": "NÓVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27495",
+    "ciudad": "NUQUÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27580",
+    "ciudad": "RÍO IRÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27600",
+    "ciudad": "RÍO QUITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27615",
+    "ciudad": "RIOSUCIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27660",
+    "ciudad": "SAN JOSÉ DEL PALMAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27745",
+    "ciudad": "SIPÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27787",
+    "ciudad": "TADÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27800",
+    "ciudad": "UNGUÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "27810",
+    "ciudad": "UNIÓN PANAMERICANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41001",
+    "ciudad": "NEIVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41006",
+    "ciudad": "ACEVEDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41013",
+    "ciudad": "AGRADO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41016",
+    "ciudad": "AIPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41020",
+    "ciudad": "ALGECIRAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41026",
+    "ciudad": "ALTAMIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41078",
+    "ciudad": "BARAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41132",
+    "ciudad": "CAMPOALEGRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41206",
+    "ciudad": "COLOMBIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41244",
+    "ciudad": "ELÍAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41298",
+    "ciudad": "GARZÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41306",
+    "ciudad": "GIGANTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41319",
+    "ciudad": "GUADALUPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41349",
+    "ciudad": "HOBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41357",
+    "ciudad": "IQUIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41359",
+    "ciudad": "ISNOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41378",
+    "ciudad": "LA ARGENTINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41396",
+    "ciudad": "LA PLATA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41483",
+    "ciudad": "NÁTAGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41503",
+    "ciudad": "OPORAPA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41518",
+    "ciudad": "PAICOL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41524",
+    "ciudad": "PALERMO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41530",
+    "ciudad": "PALESTINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41548",
+    "ciudad": "PITAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41551",
+    "ciudad": "PITALITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41615",
+    "ciudad": "RIVERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41660",
+    "ciudad": "SALADOBLANCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41668",
+    "ciudad": "SAN AGUSTÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41676",
+    "ciudad": "SANTA MARÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41770",
+    "ciudad": "SUAZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41791",
+    "ciudad": "TARQUI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41797",
+    "ciudad": "TESALIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41799",
+    "ciudad": "TELLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41801",
+    "ciudad": "TERUEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41807",
+    "ciudad": "TIMANÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41872",
+    "ciudad": "VILLAVIEJA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "41885",
+    "ciudad": "YAGUARÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44001",
+    "ciudad": "RIOHACHA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44035",
+    "ciudad": "ALBANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44078",
+    "ciudad": "BARRANCAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44090",
+    "ciudad": "DIBULLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44098",
+    "ciudad": "DISTRACCIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44110",
+    "ciudad": "EL MOLINO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44279",
+    "ciudad": "FONSECA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44378",
+    "ciudad": "HATONUEVO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44420",
+    "ciudad": "LA JAGUA DEL PILAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44430",
+    "ciudad": "MAICAO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44560",
+    "ciudad": "MANAURE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44650",
+    "ciudad": "SAN JUAN DEL CESAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44847",
+    "ciudad": "URIBIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44855",
+    "ciudad": "URUMITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "44874",
+    "ciudad": "VILLANUEVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47001",
+    "ciudad": "SANTA MARTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47030",
+    "ciudad": "ALGARROBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47053",
+    "ciudad": "ARACATACA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47058",
+    "ciudad": "ARIGUANÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47161",
+    "ciudad": "CERRO SAN ANTONIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47170",
+    "ciudad": "CHIVOLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47189",
+    "ciudad": "CIÉNAGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47205",
+    "ciudad": "CONCORDIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47245",
+    "ciudad": "EL BANCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47258",
+    "ciudad": "EL PIÑON",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47268",
+    "ciudad": "EL RETÉN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47288",
+    "ciudad": "FUNDACIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47318",
+    "ciudad": "GUAMAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47460",
+    "ciudad": "NUEVA GRANADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47541",
+    "ciudad": "PEDRAZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47545",
+    "ciudad": "PIJIÑO DEL CARMEN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47551",
+    "ciudad": "PIVIJAY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47555",
+    "ciudad": "PLATO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47570",
+    "ciudad": "PUEBLOVIEJO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47605",
+    "ciudad": "REMOLINO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47660",
+    "ciudad": "SABANAS DE SAN ANGEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47675",
+    "ciudad": "SALAMINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47692",
+    "ciudad": "SAN SEBASTIÁN DE BUENAVISTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47703",
+    "ciudad": "SAN ZENÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47707",
+    "ciudad": "SANTA ANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47720",
+    "ciudad": "SANTA BÁRBARA DE PINTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47745",
+    "ciudad": "SITIONUEVO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47798",
+    "ciudad": "TENERIFE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47960",
+    "ciudad": "ZAPAYÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "47980",
+    "ciudad": "ZONA BANANERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50001",
+    "ciudad": "VILLAVICENCIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50006",
+    "ciudad": "ACACÍAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50110",
+    "ciudad": "BARRANCA DE UPÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50124",
+    "ciudad": "CABUYARO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50150",
+    "ciudad": "CASTILLA LA NUEVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50223",
+    "ciudad": "SAN LUIS DE CUBARRAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50226",
+    "ciudad": "CUMARAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50245",
+    "ciudad": "EL CALVARIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50251",
+    "ciudad": "EL CASTILLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50270",
+    "ciudad": "EL DORADO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50287",
+    "ciudad": "FUENTE DE ORO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50313",
+    "ciudad": "GRANADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50318",
+    "ciudad": "GUAMAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50325",
+    "ciudad": "MAPIRIPÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50330",
+    "ciudad": "MESETAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50350",
+    "ciudad": "LA MACARENA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50370",
+    "ciudad": "URIBE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50400",
+    "ciudad": "LEJANÍAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50450",
+    "ciudad": "PUERTO CONCORDIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50568",
+    "ciudad": "PUERTO GAITÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50573",
+    "ciudad": "PUERTO LÓPEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50577",
+    "ciudad": "PUERTO LLERAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50590",
+    "ciudad": "PUERTO RICO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50606",
+    "ciudad": "RESTREPO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50680",
+    "ciudad": "SAN CARLOS DE GUAROA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50683",
+    "ciudad": "SAN JUAN DE ARAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50686",
+    "ciudad": "SAN JUANITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50689",
+    "ciudad": "SAN MARTÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "50711",
+    "ciudad": "VISTAHERMOSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52001",
+    "ciudad": "PASTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52019",
+    "ciudad": "ALBÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52022",
+    "ciudad": "ALDANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52036",
+    "ciudad": "ANCUYÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52051",
+    "ciudad": "ARBOLEDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52079",
+    "ciudad": "BARBACOAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52083",
+    "ciudad": "BELÉN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52110",
+    "ciudad": "BUESACO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52203",
+    "ciudad": "COLÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52207",
+    "ciudad": "CONSACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52210",
+    "ciudad": "CONTADERO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52215",
+    "ciudad": "CÓRDOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52224",
+    "ciudad": "CUASPUD",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52227",
+    "ciudad": "CUMBAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52233",
+    "ciudad": "CUMBITARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52240",
+    "ciudad": "CHACHAGÜÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52250",
+    "ciudad": "EL CHARCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52254",
+    "ciudad": "EL PEÑOL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52256",
+    "ciudad": "EL ROSARIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52258",
+    "ciudad": "EL TABLÓN DE GÓMEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52260",
+    "ciudad": "EL TAMBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52287",
+    "ciudad": "FUNES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52317",
+    "ciudad": "GUACHUCAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52320",
+    "ciudad": "GUAITARILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52323",
+    "ciudad": "GUALMATÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52352",
+    "ciudad": "ILES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52354",
+    "ciudad": "IMUÉS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52356",
+    "ciudad": "IPIALES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52378",
+    "ciudad": "LA CRUZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52381",
+    "ciudad": "LA FLORIDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52385",
+    "ciudad": "LA LLANADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52390",
+    "ciudad": "LA TOLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52399",
+    "ciudad": "LA UNIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52405",
+    "ciudad": "LEIVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52411",
+    "ciudad": "LINARES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52418",
+    "ciudad": "LOS ANDES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52427",
+    "ciudad": "MAGÜI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52435",
+    "ciudad": "MALLAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52473",
+    "ciudad": "MOSQUERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52480",
+    "ciudad": "NARIÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52490",
+    "ciudad": "OLAYA HERRERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52506",
+    "ciudad": "OSPINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52520",
+    "ciudad": "FRANCISCO PIZARRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52540",
+    "ciudad": "POLICARPA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52560",
+    "ciudad": "POTOSÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52565",
+    "ciudad": "PROVIDENCIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52573",
+    "ciudad": "PUERRES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52585",
+    "ciudad": "PUPIALES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52612",
+    "ciudad": "RICAURTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52621",
+    "ciudad": "ROBERTO PAYÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52678",
+    "ciudad": "SAMANIEGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52683",
+    "ciudad": "SANDONÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52685",
+    "ciudad": "SAN BERNARDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52687",
+    "ciudad": "SAN LORENZO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52693",
+    "ciudad": "SAN PABLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52694",
+    "ciudad": "SAN PEDRO DE CARTAGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52696",
+    "ciudad": "SANTA BÁRBARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52699",
+    "ciudad": "SANTACRUZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52720",
+    "ciudad": "SAPUYES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52786",
+    "ciudad": "TAMINANGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52788",
+    "ciudad": "TANGUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52835",
+    "ciudad": "SAN ANDRES DE TUMACO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52838",
+    "ciudad": "TÚQUERRES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "52885",
+    "ciudad": "YACUANQUER",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54001",
+    "ciudad": "CÚCUTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54003",
+    "ciudad": "ABREGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54051",
+    "ciudad": "ARBOLEDAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54099",
+    "ciudad": "BOCHALEMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54109",
+    "ciudad": "BUCARASICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54125",
+    "ciudad": "CÁCOTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54128",
+    "ciudad": "CACHIRÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54172",
+    "ciudad": "CHINÁCOTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54174",
+    "ciudad": "CHITAGÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54206",
+    "ciudad": "CONVENCIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54223",
+    "ciudad": "CUCUTILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54239",
+    "ciudad": "DURANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54245",
+    "ciudad": "EL CARMEN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54250",
+    "ciudad": "EL TARRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54261",
+    "ciudad": "EL ZULIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54313",
+    "ciudad": "GRAMALOTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54344",
+    "ciudad": "HACARÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54347",
+    "ciudad": "HERRÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54377",
+    "ciudad": "LABATECA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54385",
+    "ciudad": "LA ESPERANZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54398",
+    "ciudad": "LA PLAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54405",
+    "ciudad": "LOS PATIOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54418",
+    "ciudad": "LOURDES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54480",
+    "ciudad": "MUTISCUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54498",
+    "ciudad": "OCAÑA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54518",
+    "ciudad": "PAMPLONA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54520",
+    "ciudad": "PAMPLONITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54553",
+    "ciudad": "PUERTO SANTANDER",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54599",
+    "ciudad": "RAGONVALIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54660",
+    "ciudad": "SALAZAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54670",
+    "ciudad": "SAN CALIXTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54673",
+    "ciudad": "SAN CAYETANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54680",
+    "ciudad": "SANTIAGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54720",
+    "ciudad": "SARDINATA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54743",
+    "ciudad": "SILOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54800",
+    "ciudad": "TEORAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54810",
+    "ciudad": "TIBÚ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54820",
+    "ciudad": "TOLEDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54871",
+    "ciudad": "VILLA CARO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "54874",
+    "ciudad": "VILLA DEL ROSARIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63001",
+    "ciudad": "ARMENIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63111",
+    "ciudad": "BUENAVISTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63130",
+    "ciudad": "CALARCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63190",
+    "ciudad": "CIRCASIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63212",
+    "ciudad": "CÓRDOBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63272",
+    "ciudad": "FILANDIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63302",
+    "ciudad": "GÉNOVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63401",
+    "ciudad": "LA TEBAIDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63470",
+    "ciudad": "MONTENEGRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63548",
+    "ciudad": "PIJAO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63594",
+    "ciudad": "QUIMBAYA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "63690",
+    "ciudad": "SALENTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66001",
+    "ciudad": "PEREIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66045",
+    "ciudad": "APÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66075",
+    "ciudad": "BALBOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66088",
+    "ciudad": "BELÉN DE UMBRÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66170",
+    "ciudad": "DOSQUEBRADAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66318",
+    "ciudad": "GUÁTICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66383",
+    "ciudad": "LA CELIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66400",
+    "ciudad": "LA VIRGINIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66440",
+    "ciudad": "MARSELLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66456",
+    "ciudad": "MISTRATÓ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66572",
+    "ciudad": "PUEBLO RICO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66594",
+    "ciudad": "QUINCHÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66682",
+    "ciudad": "SANTA ROSA DE CABAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "66687",
+    "ciudad": "SANTUARIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68001",
+    "ciudad": "BUCARAMANGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68013",
+    "ciudad": "AGUADA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68020",
+    "ciudad": "ALBANIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68051",
+    "ciudad": "ARATOCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68077",
+    "ciudad": "BARBOSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68079",
+    "ciudad": "BARICHARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68081",
+    "ciudad": "BARRANCABERMEJA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68092",
+    "ciudad": "BETULIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68101",
+    "ciudad": "BOLÍVAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68121",
+    "ciudad": "CABRERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68132",
+    "ciudad": "CALIFORNIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68147",
+    "ciudad": "CAPITANEJO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68152",
+    "ciudad": "CARCASÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68160",
+    "ciudad": "CEPITÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68162",
+    "ciudad": "CERRITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68167",
+    "ciudad": "CHARALÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68169",
+    "ciudad": "CHARTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68176",
+    "ciudad": "CHIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68179",
+    "ciudad": "CHIPATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68190",
+    "ciudad": "CIMITARRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68207",
+    "ciudad": "CONCEPCIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68209",
+    "ciudad": "CONFINES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68211",
+    "ciudad": "CONTRATACIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68217",
+    "ciudad": "COROMORO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68229",
+    "ciudad": "CURITÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68235",
+    "ciudad": "EL CARMEN DE CHUCURÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68245",
+    "ciudad": "EL GUACAMAYO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68250",
+    "ciudad": "EL PEÑÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68255",
+    "ciudad": "EL PLAYÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68264",
+    "ciudad": "ENCINO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68266",
+    "ciudad": "ENCISO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68271",
+    "ciudad": "FLORIÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68276",
+    "ciudad": "FLORIDABLANCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68296",
+    "ciudad": "GALÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68298",
+    "ciudad": "GAMBITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68307",
+    "ciudad": "GIRÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68318",
+    "ciudad": "GUACA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68320",
+    "ciudad": "GUADALUPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68322",
+    "ciudad": "GUAPOTÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68324",
+    "ciudad": "GUAVATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68327",
+    "ciudad": "GÜEPSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68344",
+    "ciudad": "HATO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68368",
+    "ciudad": "JESÚS MARÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68370",
+    "ciudad": "JORDÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68377",
+    "ciudad": "LA BELLEZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68385",
+    "ciudad": "LANDÁZURI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68397",
+    "ciudad": "LA PAZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68406",
+    "ciudad": "LEBRIJA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68418",
+    "ciudad": "LOS SANTOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68425",
+    "ciudad": "MACARAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68432",
+    "ciudad": "MÁLAGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68444",
+    "ciudad": "MATANZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68464",
+    "ciudad": "MOGOTES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68468",
+    "ciudad": "MOLAGAVITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68498",
+    "ciudad": "OCAMONTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68500",
+    "ciudad": "OIBA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68502",
+    "ciudad": "ONZAGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68522",
+    "ciudad": "PALMAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68524",
+    "ciudad": "PALMAS DEL SOCORRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68533",
+    "ciudad": "PÁRAMO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68547",
+    "ciudad": "PIEDECUESTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68549",
+    "ciudad": "PINCHOTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68572",
+    "ciudad": "PUENTE NACIONAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68573",
+    "ciudad": "PUERTO PARRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68575",
+    "ciudad": "PUERTO WILCHES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68615",
+    "ciudad": "RIONEGRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68655",
+    "ciudad": "SABANA DE TORRES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68669",
+    "ciudad": "SAN ANDRÉS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68673",
+    "ciudad": "SAN BENITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68679",
+    "ciudad": "SAN GIL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68682",
+    "ciudad": "SAN JOAQUÍN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68684",
+    "ciudad": "SAN JOSÉ DE MIRANDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68686",
+    "ciudad": "SAN MIGUEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68689",
+    "ciudad": "SAN VICENTE DE CHUCURÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68705",
+    "ciudad": "SANTA BÁRBARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68720",
+    "ciudad": "SANTA HELENA DEL OPÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68745",
+    "ciudad": "SIMACOTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68755",
+    "ciudad": "SOCORRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68770",
+    "ciudad": "SUAITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68773",
+    "ciudad": "SUCRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68780",
+    "ciudad": "SURATÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68820",
+    "ciudad": "TONA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68855",
+    "ciudad": "VALLE DE SAN JOSÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68861",
+    "ciudad": "VÉLEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68867",
+    "ciudad": "VETAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68872",
+    "ciudad": "VILLANUEVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "68895",
+    "ciudad": "ZAPATOCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70001",
+    "ciudad": "SINCELEJO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70110",
+    "ciudad": "BUENAVISTA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70124",
+    "ciudad": "CAIMITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70204",
+    "ciudad": "COLOSO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70215",
+    "ciudad": "COROZAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70221",
+    "ciudad": "COVEÑAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70230",
+    "ciudad": "CHALÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70233",
+    "ciudad": "EL ROBLE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70235",
+    "ciudad": "GALERAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70265",
+    "ciudad": "GUARANDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70400",
+    "ciudad": "LA UNIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70418",
+    "ciudad": "LOS PALMITOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70429",
+    "ciudad": "MAJAGUAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70473",
+    "ciudad": "MORROA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70508",
+    "ciudad": "OVEJAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70523",
+    "ciudad": "PALMITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70670",
+    "ciudad": "SAMPUÉS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70678",
+    "ciudad": "SAN BENITO ABAD",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70702",
+    "ciudad": "SAN JUAN DE BETULIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70708",
+    "ciudad": "SAN MARCOS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70713",
+    "ciudad": "SAN ONOFRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70717",
+    "ciudad": "SAN PEDRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70742",
+    "ciudad": "SAN LUIS DE SINCÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70771",
+    "ciudad": "SUCRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70820",
+    "ciudad": "SANTIAGO DE TOLÚ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "70823",
+    "ciudad": "TOLÚ VIEJO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73001",
+    "ciudad": "IBAGUÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73024",
+    "ciudad": "ALPUJARRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73026",
+    "ciudad": "ALVARADO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73030",
+    "ciudad": "AMBALEMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73043",
+    "ciudad": "ANZOÁTEGUI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73055",
+    "ciudad": "ARMERO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73067",
+    "ciudad": "ATACO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73124",
+    "ciudad": "CAJAMARCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73148",
+    "ciudad": "CARMEN DE APICALÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73152",
+    "ciudad": "CASABIANCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73168",
+    "ciudad": "CHAPARRAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73200",
+    "ciudad": "COELLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73217",
+    "ciudad": "COYAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73226",
+    "ciudad": "CUNDAY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73236",
+    "ciudad": "DOLORES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73268",
+    "ciudad": "ESPINAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73270",
+    "ciudad": "FALAN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73275",
+    "ciudad": "FLANDES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73283",
+    "ciudad": "FRESNO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73319",
+    "ciudad": "GUAMO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73347",
+    "ciudad": "HERVEO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73349",
+    "ciudad": "HONDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73352",
+    "ciudad": "ICONONZO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73408",
+    "ciudad": "LÉRIDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73411",
+    "ciudad": "LÍBANO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73443",
+    "ciudad": "SAN SEBASTIÁN DE MARIQUITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73449",
+    "ciudad": "MELGAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73461",
+    "ciudad": "MURILLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73483",
+    "ciudad": "NATAGAIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73504",
+    "ciudad": "ORTEGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73520",
+    "ciudad": "PALOCABILDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73547",
+    "ciudad": "PIEDRAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73555",
+    "ciudad": "PLANADAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73563",
+    "ciudad": "PRADO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73585",
+    "ciudad": "PURIFICACIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73616",
+    "ciudad": "RIOBLANCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73622",
+    "ciudad": "RONCESVALLES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73624",
+    "ciudad": "ROVIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73671",
+    "ciudad": "SALDAÑA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73675",
+    "ciudad": "SAN ANTONIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73678",
+    "ciudad": "SAN LUIS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73686",
+    "ciudad": "SANTA ISABEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73770",
+    "ciudad": "SUÁREZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73854",
+    "ciudad": "VALLE DE SAN JUAN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73861",
+    "ciudad": "VENADILLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73870",
+    "ciudad": "VILLAHERMOSA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "73873",
+    "ciudad": "VILLARRICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76001",
+    "ciudad": "CALI",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76020",
+    "ciudad": "ALCALÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76036",
+    "ciudad": "ANDALUCÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76041",
+    "ciudad": "ANSERMANUEVO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76054",
+    "ciudad": "ARGELIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76100",
+    "ciudad": "BOLÍVAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76109",
+    "ciudad": "BUENAVENTURA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76111",
+    "ciudad": "GUADALAJARA DE BUGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76113",
+    "ciudad": "BUGALAGRANDE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76122",
+    "ciudad": "CAICEDONIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76126",
+    "ciudad": "CALIMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76130",
+    "ciudad": "CANDELARIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76147",
+    "ciudad": "CARTAGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76233",
+    "ciudad": "DAGUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76243",
+    "ciudad": "EL ÁGUILA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76246",
+    "ciudad": "EL CAIRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76248",
+    "ciudad": "EL CERRITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76250",
+    "ciudad": "EL DOVIO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76275",
+    "ciudad": "FLORIDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76306",
+    "ciudad": "GINEBRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76318",
+    "ciudad": "GUACARÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76364",
+    "ciudad": "JAMUNDÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76377",
+    "ciudad": "LA CUMBRE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76400",
+    "ciudad": "LA UNIÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76403",
+    "ciudad": "LA VICTORIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76497",
+    "ciudad": "OBANDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76520",
+    "ciudad": "PALMIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76563",
+    "ciudad": "PRADERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76606",
+    "ciudad": "RESTREPO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76616",
+    "ciudad": "RIOFRÍO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76622",
+    "ciudad": "ROLDANILLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76670",
+    "ciudad": "SAN PEDRO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76736",
+    "ciudad": "SEVILLA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76823",
+    "ciudad": "TORO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76828",
+    "ciudad": "TRUJILLO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76834",
+    "ciudad": "TULUÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76845",
+    "ciudad": "ULLOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76863",
+    "ciudad": "VERSALLES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76869",
+    "ciudad": "VIJES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76890",
+    "ciudad": "YOTOCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76892",
+    "ciudad": "YUMBO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "76895",
+    "ciudad": "ZARZAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81001",
+    "ciudad": "ARAUCA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81065",
+    "ciudad": "ARAUQUITA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81220",
+    "ciudad": "CRAVO NORTE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81300",
+    "ciudad": "FORTUL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81591",
+    "ciudad": "PUERTO RONDÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81736",
+    "ciudad": "SARAVENA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "81794",
+    "ciudad": "TAME",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85001",
+    "ciudad": "YOPAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85010",
+    "ciudad": "AGUAZUL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85015",
+    "ciudad": "CHAMEZA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85125",
+    "ciudad": "HATO COROZAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85136",
+    "ciudad": "LA SALINA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85139",
+    "ciudad": "MANÍ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85162",
+    "ciudad": "MONTERREY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85225",
+    "ciudad": "NUNCHÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85230",
+    "ciudad": "OROCUÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85250",
+    "ciudad": "PAZ DE ARIPORO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85263",
+    "ciudad": "PORE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85279",
+    "ciudad": "RECETOR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85300",
+    "ciudad": "SABANALARGA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85315",
+    "ciudad": "SÁCAMA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85325",
+    "ciudad": "SAN LUIS DE PALENQUE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85400",
+    "ciudad": "TÁMARA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85410",
+    "ciudad": "TAURAMENA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85430",
+    "ciudad": "TRINIDAD",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "85440",
+    "ciudad": "VILLANUEVA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86001",
+    "ciudad": "MOCOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86219",
+    "ciudad": "COLÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86320",
+    "ciudad": "ORITO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86568",
+    "ciudad": "PUERTO ASÍS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86569",
+    "ciudad": "PUERTO CAICEDO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86571",
+    "ciudad": "PUERTO GUZMÁN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86573",
+    "ciudad": "PUERTO LEGUÍZAMO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86749",
+    "ciudad": "SIBUNDOY",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86755",
+    "ciudad": "SAN FRANCISCO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86757",
+    "ciudad": "SAN MIGUEL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86760",
+    "ciudad": "SANTIAGO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86865",
+    "ciudad": "VALLE DEL GUAMUEZ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "86885",
+    "ciudad": "VILLAGARZÓN",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "88001",
+    "ciudad": "SAN ANDRÉS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "88564",
+    "ciudad": "PROVIDENCIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91001",
+    "ciudad": "LETICIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91263",
+    "ciudad": "EL ENCANTO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91405",
+    "ciudad": "LA CHORRERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91407",
+    "ciudad": "LA PEDRERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91430",
+    "ciudad": "LA VICTORIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91460",
+    "ciudad": "MIRITI - PARANÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91530",
+    "ciudad": "PUERTO ALEGRÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91536",
+    "ciudad": "PUERTO ARICA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91540",
+    "ciudad": "PUERTO NARIÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91669",
+    "ciudad": "PUERTO SANTANDER",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "91798",
+    "ciudad": "TARAPACÁ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94001",
+    "ciudad": "INÍRIDA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94343",
+    "ciudad": "BARRANCO MINAS",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94663",
+    "ciudad": "MAPIRIPANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94883",
+    "ciudad": "SAN FELIPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94884",
+    "ciudad": "PUERTO COLOMBIA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94885",
+    "ciudad": "LA GUADALUPE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94886",
+    "ciudad": "CACAHUAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94887",
+    "ciudad": "PANA PANA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "94888",
+    "ciudad": "MORICHAL",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "95001",
+    "ciudad": "SAN JOSÉ DEL GUAVIARE",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "95015",
+    "ciudad": "CALAMAR",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "95025",
+    "ciudad": "EL RETORNO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "95200",
+    "ciudad": "MIRAFLORES",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "97001",
+    "ciudad": "MITÚ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "97161",
+    "ciudad": "CARURU",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "97511",
+    "ciudad": "PACOA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "97666",
+    "ciudad": "TARAIRA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "97777",
+    "ciudad": "PAPUNAUA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "97889",
+    "ciudad": "YAVARATÉ",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "99001",
+    "ciudad": "PUERTO CARREÑO",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "99524",
+    "ciudad": "LA PRIMAVERA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "99624",
+    "ciudad": "SANTA ROSALÍA",
+    "habilitada_sire": false
+  },
+  {
+    "codigo": "99773",
+    "ciudad": "CUMARIBO",
+    "habilitada_sire": false
+  }
+]

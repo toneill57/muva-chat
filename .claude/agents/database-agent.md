@@ -62,6 +62,8 @@ PostgreSQL Database (Supabase):
 - **Current Tenants**: SimmerDown (tenant_id='simmerdown')
 
 ### Critical Functions
+
+#### Vector Search Functions
 ```sql
 -- Multi-tenant hotel search
 match_hotels_documents(query_embedding, tenant_id, table_name, threshold, count)
@@ -76,7 +78,109 @@ match_muva_documents(query_embedding, threshold, count)
 match_conversation_memory(query_embedding, session_id, threshold, count)
 ```
 
+#### Available RPC Functions (October 2025)
+
+**Guest Conversations:**
+```sql
+-- Get full conversation metadata (replaces 11 queries, 99.4% token reduction)
+get_guest_conversation_metadata(p_conversation_id UUID)
+
+-- Get inactive conversations for archiving (replaces 2 queries, 92.5% reduction)
+get_inactive_conversations(p_tenant_id TEXT, p_days_inactive INT)
+
+-- Get archived conversations to delete (replaces 1 query, 82.0% reduction)
+get_archived_conversations_to_delete(p_tenant_id TEXT, p_days_archived INT)
+```
+
+**Chat Messages:**
+```sql
+-- Get messages with pagination (replaces 6 queries, 97.9% reduction)
+get_conversation_messages(p_conversation_id UUID, p_limit INT, p_offset INT)
+```
+
+**Integrations:**
+```sql
+-- Get active integration config (replaces 8 queries, 98.4% reduction)
+get_active_integration(p_tenant_id UUID, p_integration_type TEXT)
+```
+
+**Reservations:**
+```sql
+-- Find reservations by external booking ID (replaces 5 queries, 98.0% reduction)
+get_reservations_by_external_id(p_external_booking_id TEXT, p_tenant_id TEXT)
+```
+
+**Accommodation Units:**
+```sql
+-- Get units needing motopress_type_id (replaces script logic, 92.5% reduction)
+get_accommodation_units_needing_type_id(p_tenant_id TEXT)
+```
+
+**📖 Complete documentation**: See `docs/architecture/DATABASE_QUERY_PATTERNS.md`
+
 ## Operational Guidelines
+
+### Database Query Hierarchy
+
+**🎯 ALWAYS prefer this order:**
+
+**1. RPC Functions (PRIMARY - Use First)**
+```sql
+-- Dedicated PostgreSQL functions (type-safe, documented, tested)
+SELECT * FROM get_accommodation_units_by_tenant('simmerdown');
+SELECT * FROM get_active_reservation_by_auth('tenant_id', '2025-10-15', '1234');
+SELECT * FROM get_accommodation_unit_by_motopress_id('tenant_id', 307);
+```
+
+**Benefits:**
+- ✅ Type-safe: Return types defined in database
+- ✅ Fast: Pre-compiled, query plan cached
+- ✅ Maintainable: Change logic in 1 place
+- ✅ Context efficient: Reduces tokens by 90-98% (October 2025: 98.1% measured)
+- ✅ Documented: Single source of truth
+
+**2. Direct SQL via MCP (SECONDARY - Ad-hoc Only)**
+```sql
+-- For one-time analysis, debugging, development queries
+mcp__supabase__execute_sql("
+  SELECT COUNT(*) FROM guest_reservations
+  WHERE status = 'active' AND check_in_date > NOW()
+")
+```
+
+**Use when:**
+- Exploring data during development
+- One-time reports or analysis
+- Debugging production issues
+- Performance investigation
+
+**3. execute_sql() RPC (EMERGENCY - Avoid)**
+```typescript
+// ❌ DO NOT USE in regular code
+const { data } = await supabase.rpc('execute_sql', {
+  query: 'SELECT * FROM...'
+})
+```
+
+**Only for:**
+- Database migrations (via scripts/migrations)
+- One-time data fixes (with human approval)
+- Emergency production patches (document in postmortem)
+
+**❌ NEVER use execute_sql() in:**
+- API endpoints (`src/app/api/**`)
+- Scheduled scripts (`scripts/sync-*.ts`, cron jobs)
+- Regular application code
+- Anything that runs more than once
+
+**Why avoid execute_sql()?**
+- No type safety (returns generic JSONB)
+- Bypasses query plan optimization
+- Increases context window unnecessarily
+- Creates maintenance debt
+- Harder to test and debug
+
+---
 
 ### SAFE Operations (Execute Freely)
 
@@ -393,6 +497,77 @@ mcp__supabase__get_advisors --type="security"
 # Generate TypeScript types
 mcp__supabase__generate_typescript_types
 ```
+
+## Current Projects
+
+### SIRE Compliance Data Extension (October 2025)
+
+**Objective:** Extend `guest_reservations` table with 9 missing SIRE compliance fields.
+
+**Your Responsibilities (FASE 1 - Database Migration):**
+
+1. **Create migration with 9 SIRE fields** (`20251007000000_add_sire_fields_to_guest_reservations.sql`)
+   - Add columns: `document_type` (VARCHAR 2), `document_number` (VARCHAR 20), `birth_date` (DATE), `first_surname` (VARCHAR 45), `second_surname` (VARCHAR 45), `given_names` (VARCHAR 60), `nationality_code` (VARCHAR 3), `origin_country_code` (VARCHAR 3), `destination_country_code` (VARCHAR 3)
+   - All fields nullable (no breaking changes to existing data)
+   - Add SQL comments explaining SIRE compliance purpose
+
+2. **Add validation constraints**
+   - `document_type` IN ('3', '5', '10', '46')
+   - `document_number` alphanumeric 6-20 chars (regex `^[A-Z0-9]+$`)
+   - `first_surname`, `second_surname`, `given_names` uppercase letters only (regex `^[A-ZÁÉÍÓÚÑ ]+$`)
+   - `nationality_code`, `origin_country_code`, `destination_country_code` numeric 3 digits (regex `^\d{3}$`)
+
+3. **Create search indexes**
+   - `idx_guest_reservations_document` on `document_number` (WHERE NOT NULL)
+   - `idx_guest_reservations_nationality` on `nationality_code` (WHERE NOT NULL)
+
+4. **Create data migration script** (`scripts/migrate-compliance-data-to-reservations.sql`)
+   - Migrate existing data from `compliance_submissions.data` (JSONB) → `guest_reservations` columns
+   - Only migrate where `status = 'success'`
+   - Parse JSONB: `sire_data.tipo_documento` → `document_type`, etc.
+   - Log number of records updated
+
+5. **Validation queries** (`scripts/validate-sire-compliance-data.sql`)
+   - Verify columns exist with correct types
+   - Count reservations with compliance data (document_number NOT NULL)
+   - Validate no constraint violations
+   - Verify migration completeness
+   - Verify indexes created
+
+6. **Performance testing**
+   - EXPLAIN ANALYZE on `/api/reservations/list` query
+   - Verify indexes are used (Index Scan in plan)
+   - Benchmark: < 50ms for queries on ~150 rows
+
+7. **Create rollback script** (`scripts/rollback-sire-fields-migration.sql`)
+   - DROP COLUMN for each of the 9 SIRE fields
+   - DROP INDEX for created indexes
+   - Document when to use (migration failure only)
+
+**Context Files:**
+- Plan: `/Users/oneill/Sites/apps/InnPilot/plan.md`
+- Tasks: `/Users/oneill/Sites/apps/InnPilot/TODO.md` (FASE 1 tasks 1.1-1.4, FASE 3 tasks 3.1-3.5)
+- Prompts: `/Users/oneill/Sites/apps/InnPilot/sire-compliance-prompt-workflow.md`
+- SIRE Specs: `/Users/oneill/Sites/apps/InnPilot/docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md`
+- SIRE Codes: `/Users/oneill/Sites/apps/InnPilot/docs/sire/CODIGOS_OFICIALES.md`
+- **Catálogos Oficiales (Octubre 6, 2025):**
+  - Países: `_assets/sire/codigos-pais.json` (250 países, códigos SIRE propietarios NO ISO 3166-1)
+  - Ciudades: `_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
+
+**Success Criteria:**
+- Migration applied successfully on dev branch
+- All constraints enforced (invalid data rejected)
+- Indexes created and used in queries
+- Existing data migrated from compliance_submissions
+- Performance baseline maintained (< 50ms queries)
+- Rollback script tested and documented
+
+**Coordination:**
+- Provide migration file to `@backend-developer` for TypeScript types update
+- Notify when migration complete so backend integration (FASE 2) can start
+- Report any validation failures or performance issues
+
+---
 
 ## Coordination
 

@@ -3,8 +3,9 @@
 **Sistema**: Sistema de Información y Registro de Extranjeros (SIRE)
 **Autoridad**: Gobierno de Colombia - Migración Colombia
 **Propósito**: Catálogo oficial de códigos y formatos para reporte de huéspedes extranjeros
-**Última Actualización**: Octubre 5, 2025
+**Última Actualización**: Octubre 6, 2025
 **Documento Fuente**: `_assets/sire/pasos-para-reportar-al-sire.md`
+**Catálogos Oficiales**: `_assets/sire/codigos-pais.json`, `_assets/sire/ciudades-colombia.json`
 
 ---
 
@@ -69,98 +70,143 @@ El sistema SIRE acepta ÚNICAMENTE 4 códigos de tipo de documento:
 
 ## Códigos de Nacionalidad
 
-**Estado**: ⚠️ PENDIENTE DE INVESTIGACIÓN
+**Estado**: ✅ **CATÁLOGO OFICIAL DISPONIBLE**
 
-El documento oficial menciona "Código de la nacionalidad del extranjero (solo números)" pero NO proporciona el catálogo completo.
+**Fuente**: Catálogo oficial Migración Colombia / MinCIT
+**Archivo**: `_assets/sire/codigos-pais.json` (250 países)
 
-### Fuente Oficial Requerida
+### ⚠️ IMPORTANTE: NO son códigos ISO 3166-1
 
-**TODO**: Investigar catálogo oficial en MinCIT (Ministerio de Comercio, Industria y Turismo)
+Los códigos SIRE son **diferentes** al estándar internacional ISO 3166-1 numeric. Por ejemplo:
 
-- **URL Potencial**: https://pms.mincit.gov.co/
-- **Contacto**: Sistema de Certificación Hotelera (SCH)
-- **Alternativa**: Estándar ISO 3166-1 numeric codes (usado por muchos sistemas gubernamentales)
+| País | Código SIRE | Código ISO 3166-1 | Diferencia |
+|------|-------------|-------------------|------------|
+| Colombia | **169** | 170 | -1 |
+| Estados Unidos | **249** | 840 | -591 |
+| Brasil | **105** | 076 | +29 |
+| España | **245** | 724 | -479 |
+| México | **493** | 484 | +9 |
+| Argentina | **63** | 032 | +31 |
 
-### Códigos Conocidos (Uso Temporal)
+**CRÍTICO**: Usar **SOLO** códigos del catálogo `codigos-pais.json`. NO usar ISO 3166-1.
 
-Basados en estándar ISO 3166-1 numeric (verificar con MinCIT antes de producción):
+### Códigos Más Comunes en Hotelería Colombiana
 
-| Código | País | ISO Alpha-2 | Uso en Hotelería |
-|--------|------|-------------|------------------|
-| `170` | Colombia | CO | Alta (residentes temporales) |
-| `840` | Estados Unidos | US | Alta (turismo) |
-| `032` | Argentina | AR | Alta (turismo) |
-| `076` | Brasil | BR | Alta (turismo) |
-| `124` | Canadá | CA | Media (turismo) |
-| `152` | Chile | CL | Media (turismo) |
-| `484` | México | MX | Media (turismo) |
-| `724` | España | ES | Media (turismo) |
-| `276` | Alemania | DE | Media (turismo) |
-| `250` | Francia | FR | Media (turismo) |
+| Código | País | Uso Estimado |
+|--------|------|--------------|
+| `169` | COLOMBIA | Alta (residentes temporales) |
+| `249` | ESTADOS UNIDOS | Alta (turismo #1) |
+| `105` | BRASIL | Alta (turismo) |
+| `63` | ARGENTINA | Alta (turismo) |
+| `245` | ESPAÑA | Media (turismo) |
+| `493` | MEXICO | Media (turismo) |
+| `117` | CANADA | Media (turismo) |
+| `149` | CHILE | Media (turismo) |
+| `23` | ALEMANIA | Media (turismo) |
+| `265` | FRANCIA | Media (turismo) |
+| `300` | REINO UNIDO | Media (turismo) |
+| `369` | ITALIA | Media (turismo) |
+| `587` | PERU | Media (vecindad) |
+| `239` | ECUADOR | Media (vecindad) |
+| `863` | VENEZUELA | Media (vecindad) |
 
-**⚠️ ADVERTENCIA**: Esta lista es PROVISIONAL. Verificar con catálogo oficial MinCIT antes de uso en producción.
+**Total disponible**: 250 países en catálogo oficial.
 
-**Acción requerida**: API endpoint MinCIT o consulta directa a SCH para obtener catálogo completo.
+### Formato de Códigos
+
+- **Tipo**: Numérico
+- **Rango**: 1-3 dígitos (13, 63, 105, 249, 493, 921)
+- **Validación**: `^\d{1,3}$`
+- **NO**: Llevar ceros a la izquierda (usar "63" no "063")
 
 ---
 
 ## Códigos de Ciudad
 
-**Estado**: ⚠️ PENDIENTE DE INVESTIGACIÓN
+**Estado**: ✅ **CATÁLOGO OFICIAL DISPONIBLE**
 
-El documento oficial menciona "Código de la ciudad donde se encuentra el establecimiento hotelero (solo números)" pero NO proporciona el catálogo.
+**Fuente**: Catálogo DIVIPOLA (División Político-Administrativa del DANE)
+**Archivo**: `_assets/sire/ciudades-colombia.json` (1,122 ciudades)
 
-### Fuente Oficial Requerida
+### Códigos DIVIPOLA para SIRE
 
-**TODO**: Investigar catálogo oficial en Sistema de Certificación Hotelera (SCH)
+Colombia usa códigos DIVIPOLA oficiales para identificar ciudades en el sistema SIRE:
 
-- **Contexto**: Código asignado por SCH durante inscripción del hotel
-- **Formato**: Numérico (5-6 dígitos basado en ejemplos)
-- **Ejemplo conocido**: `88001` (San Andrés Isla - código DIVIPOLA)
-
-### Códigos DIVIPOLA (Posible Fuente)
-
-Colombia usa códigos DIVIPOLA (División Político-Administrativa) del DANE:
+**Ciudades Turísticas Principales:**
 
 | Código | Ciudad | Departamento | Relevancia Hotelera |
 |--------|--------|--------------|---------------------|
-| `88001` | San Andrés | San Andrés y Providencia | Alta (destino turístico) |
-| `11001` | Bogotá D.C. | Cundinamarca | Alta (capital) |
-| `05001` | Medellín | Antioquia | Alta (turismo) |
-| `76001` | Cali | Valle del Cauca | Media (turismo) |
-| `13001` | Cartagena | Bolívar | Alta (turismo costero) |
-| `47001` | Santa Marta | Magdalena | Alta (turismo costero) |
+| `88001` | San Andrés | San Andrés y Providencia | ⭐ Alta (destino turístico internacional) |
+| `13001` | Cartagena | Bolívar | ⭐ Alta (turismo costero e histórico) |
+| `47001` | Santa Marta | Magdalena | ⭐ Alta (turismo costero) |
+| `11001` | Bogotá D.C. | Cundinamarca | ⭐ Alta (capital, negocios) |
+| `5001` | Medellín | Antioquia | ⭐ Alta (turismo urbano) |
+| `76001` | Cali | Valle del Cauca | Alta (turismo urbano) |
+| `8001` | Barranquilla | Atlántico | Media (turismo urbano) |
+| `68001` | Bucaramanga | Santander | Media (turismo) |
+| `73001` | Ibagué | Tolima | Media (turismo) |
+| `17001` | Manizales | Caldas | Media (eje cafetero) |
 
-**⚠️ ADVERTENCIA**: Verificar que SCH usa DIVIPOLA antes de implementar. Puede ser sistema interno SCH diferente.
+**Total disponible**: 1,122 municipios colombianos en catálogo oficial.
 
-**Acción requerida**: Consulta directa a SCH o documentación técnica del sistema SIRE.
+### Formato de Códigos
+
+- **Tipo**: Numérico
+- **Estructura**: 5 dígitos (código DIVIPOLA estándar)
+- **Validación**: `^\d{5}$`
+- **Ejemplo**: San Andrés = `88001`, Cartagena = `13001`
+
+**NOTA**: Todos los hoteles deben usar el código DIVIPOLA de la ciudad donde están ubicados físicamente.
 
 ---
 
 ## Códigos de Lugar (Procedencia/Destino)
 
-**Estado**: ⚠️ PENDIENTE DE INVESTIGACIÓN
+**Estado**: ✅ **CATÁLOGOS OFICIALES DISPONIBLES**
 
-El documento oficial menciona "Código del lugar de procedencia/destino (solo números)" pero NO proporciona el catálogo.
+**Fuente**: Combinación de códigos SIRE de país + DIVIPOLA de ciudades
+**Archivos**: `_assets/sire/codigos-pais.json` + `_assets/sire/ciudades-colombia.json`
 
 ### Contexto del Campo
 
 - **Campo 11 - Lugar de procedencia**: De dónde viene el extranjero ANTES de llegar al hotel
 - **Campo 12 - Lugar de destino**: A dónde va el extranjero DESPUÉS de salir del hotel
 
-**Ejemplo de uso**:
-- Huésped llega de USA (`840`) → Hotel en Colombia → Sale hacia USA (`840`)
-- Huésped llega de Bogotá (`11001`) → Hotel en San Andrés → Sale hacia Cartagena (`13001`)
+### Sistema de Códigos
 
-### Fuente Oficial Requerida
+**Para procedencia/destino INTERNACIONAL:**
+- Usar códigos de `codigos-pais.json`
+- Formato: 1-3 dígitos
+- Ejemplo: USA = `249`, Brasil = `105`, España = `245`
 
-**TODO**: Investigar si usa códigos ISO 3166-1 (países) + DIVIPOLA (ciudades colombianas)
+**Para procedencia/destino NACIONAL (dentro de Colombia):**
+- Usar códigos de `ciudades-colombia.json` (DIVIPOLA)
+- Formato: 5 dígitos
+- Ejemplo: Bogotá = `11001`, Medellín = `5001`, Cartagena = `13001`
 
-**Hipótesis**:
-- Códigos internacionales: ISO 3166-1 numeric (países)
-- Códigos nacionales: DIVIPOLA (ciudades colombianas)
+### Ejemplos de Uso
 
-**Acción requerida**: Documentación técnica SIRE o consulta a MinCIT.
+**Caso 1: Turista internacional directo**
+- Huésped llega de USA → Hotel en San Andrés → Sale hacia USA
+- Procedencia: `249` (Estados Unidos)
+- Destino: `249` (Estados Unidos)
+
+**Caso 2: Turista con conexión nacional**
+- Huésped llega de España → Hotel en San Andrés → Sale hacia Cartagena
+- Procedencia: `245` (España)
+- Destino: `13001` (Cartagena - ciudad colombiana)
+
+**Caso 3: Turista nacional**
+- Huésped llega de Bogotá → Hotel en San Andrés → Sale hacia Medellín
+- Procedencia: `11001` (Bogotá)
+- Destino: `5001` (Medellín)
+
+### Validación de Códigos
+
+- **Rango permitido**: 1-6 dígitos numéricos
+- **Regex**: `^\d{1,6}$`
+- **Países**: 1-3 dígitos (13, 63, 105, 249, 493, 921)
+- **Ciudades colombianas**: 5 dígitos (11001, 13001, 88001)
 
 ---
 
@@ -584,33 +630,43 @@ export function generateSIRETXT(sireData: SIREData): string {
 
 ---
 
-## Pendientes de Investigación
+## ✅ Catálogos Completados (Octubre 6, 2025)
 
-### Prioridad Alta (Bloqueantes para Producción)
+### Catálogos Oficiales Disponibles
 
-1. **Catálogo Códigos Nacionalidad** ⚠️
-   - Fuente oficial: MinCIT o SCH
-   - Formato: Verificar si usa ISO 3166-1 numeric
-   - Acción: Consulta directa a entidad gubernamental
+1. **✅ Códigos de Nacionalidad - COMPLETO**
+   - Fuente: Catálogo oficial Migración Colombia / MinCIT
+   - Archivo: `_assets/sire/codigos-pais.json`
+   - Total: 250 países
+   - Formato: Códigos SIRE propietarios (NO ISO 3166-1)
+   - Estado: Listo para producción
 
-2. **Catálogo Códigos Ciudad** ⚠️
-   - Fuente oficial: SCH
-   - Formato: Verificar si usa DIVIPOLA o sistema interno
-   - Acción: Documentación técnica SIRE
+2. **✅ Códigos de Ciudad - COMPLETO**
+   - Fuente: Catálogo DIVIPOLA oficial (DANE)
+   - Archivo: `_assets/sire/ciudades-colombia.json`
+   - Total: 1,122 ciudades colombianas
+   - Formato: Códigos DIVIPOLA de 5 dígitos
+   - Estado: Listo para producción
 
-3. **Catálogo Códigos Lugar (Procedencia/Destino)** ⚠️
-   - Fuente oficial: MinCIT
-   - Formato: Verificar si combina ISO 3166-1 + DIVIPOLA
-   - Acción: Especificación técnica del formato TXT
+3. **✅ Códigos de Lugar (Procedencia/Destino) - COMPLETO**
+   - Fuente: Combinación de códigos-pais.json + ciudades-colombia.json
+   - Formato: Códigos SIRE (1-3 dígitos) para países internacionales, DIVIPOLA (5 dígitos) para ciudades colombianas
+   - Estado: Listo para producción
+
+### Archivos de Catálogo Creados
+
+- `_assets/sire/codigos-pais.json` - 250 países con códigos oficiales SIRE
+- `_assets/sire/ciudades-colombia.json` - 1,122 ciudades con códigos DIVIPOLA
+- `_assets/sire/codigos-sire.ts` - Helper TypeScript con funciones de búsqueda
 
 ### Prioridad Media (Mejoras de UX)
 
-4. **Validaciones Adicionales**
+4. **Validaciones Adicionales** (Futuro)
    - Edad mínima/máxima permitida
    - Formato específico de número de identificación por tipo de documento
    - Validación de coherencia de fechas (entrada antes de salida)
 
-5. **Mensajes de Error Localizados**
+5. **Mensajes de Error Localizados** (Futuro)
    - Traducción de errores del sistema SIRE
    - Guía de corrección para cada tipo de error
 

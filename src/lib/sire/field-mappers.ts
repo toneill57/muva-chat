@@ -39,17 +39,17 @@ export interface ConversationalData {
  */
 export interface SIREData {
   codigo_hotel: string              // Ej: "7706" (de tenant_compliance_credentials)
-  codigo_ciudad: string             // Ej: "88001" (San Andrés - código DANE/DIVIPOLA)
+  codigo_ciudad: string             // Ej: "88001" (San Andrés - código DIVIPOLA)
   tipo_documento: TipoDocumentoSIRE // 3=Pasaporte, 5=Cédula, 46=Diplomático, 10=PEP
-  numero_identificacion: string     // Solo alfanumérico, sin guiones (Ej: "AB1234567")
-  codigo_nacionalidad: string       // Código país DANE (Ej: "840" = USA, "170" = COL)
-  primer_apellido: string           // Solo letras, hasta 45 chars (Ej: "GARCÍA")
-  segundo_apellido: string          // Solo letras, hasta 45 chars, opcional (Ej: "PÉREZ" o "")
-  nombres: string                   // Solo letras, hasta 60 chars (Ej: "JUAN PABLO")
+  numero_identificacion: string     // Alfanumérico 6-15 chars sin guiones (Ej: "AB1234567")
+  codigo_nacionalidad: string       // Código SIRE (Ej: "249" = USA, "169" = COL) - NO ISO
+  primer_apellido: string           // Solo letras con acentos, máx 50 chars (Ej: "GARCÍA")
+  segundo_apellido: string          // Solo letras con acentos, máx 50 chars, PUEDE estar vacío (Ej: "PÉREZ" o "")
+  nombres: string                   // Solo letras con acentos, máx 50 chars (Ej: "JUAN PABLO")
   tipo_movimiento: TipoMovimientoSIRE // E=Entrada, S=Salida
   fecha_movimiento: string          // DD/MM/YYYY (Ej: "15/10/2025")
-  lugar_procedencia: string         // Código numérico país/ciudad (Ej: "840")
-  lugar_destino: string             // Código numérico país/ciudad (Ej: "840")
+  lugar_procedencia: string         // Código SIRE país o DIVIPOLA ciudad (Ej: "249" o "11001")
+  lugar_destino: string             // Código SIRE país o DIVIPOLA ciudad (Ej: "249" o "13001")
   fecha_nacimiento: string          // DD/MM/YYYY (Ej: "25/03/1985")
 }
 
@@ -141,22 +141,23 @@ export function splitFullName(nombre_completo: string): {
 }
 
 /**
- * Mapear país texto (conversacional) a código DANE oficial
+ * Mapear país texto (conversacional) a código SIRE oficial
  *
- * IMPORTANTE: Esta función usa catálogo ISO 3166-1 numeric PROVISIONAL.
- * TODO: Investigar catálogo oficial MinCIT (puede diferir de ISO).
+ * ⚠️ IMPORTANTE: Los códigos SIRE NO son ISO 3166-1 numeric.
+ * Son códigos propietarios del sistema SIRE de Migración Colombia.
  *
- * Fuente: docs/sire/CODIGOS_OFICIALES.md sección "Códigos de Nacionalidad"
+ * Fuente oficial: _assets/sire/codigos-pais.json (250 países)
+ * Documentación: docs/sire/CODIGOS_OFICIALES.md sección "Códigos de Nacionalidad"
  *
  * @param pais_texto - Ej: "Estados Unidos", "Colombia", "España"
- * @returns codigo_nacionalidad - Ej: "840", "170", "724"
+ * @returns codigo_nacionalidad - Ej: "249" (no 840), "169" (no 170), "245" (no 724)
  *
  * @throws Error si país no encontrado en catálogo
  *
  * @example
- * mapCountryToCode("Estados Unidos") // Returns: "840"
- * mapCountryToCode("Colombia") // Returns: "170"
- * mapCountryToCode("España") // Returns: "724"
+ * mapCountryToCode("Estados Unidos") // Returns: "249" (SIRE code, NO ISO 840)
+ * mapCountryToCode("Colombia") // Returns: "169" (SIRE code, NO ISO 170)
+ * mapCountryToCode("España") // Returns: "245" (SIRE code, NO ISO 724)
  */
 export function mapCountryToCode(pais_texto: string): string {
   // Normalizar texto (lowercase, sin acentos, trim)
@@ -166,55 +167,64 @@ export function mapCountryToCode(pais_texto: string): string {
     .replace(/[\u0300-\u036f]/g, '') // Quitar acentos
     .trim()
 
-  // Catálogo PROVISIONAL (ISO 3166-1 numeric)
-  // TODO: Reemplazar con catálogo oficial MinCIT
+  // Catálogo OFICIAL SIRE (Migración Colombia / MinCIT)
+  // Fuente: _assets/sire/codigos-pais.json (250 países)
+  // Última actualización: Octubre 6, 2025
   const countryCodeMap: Record<string, string> = {
-    // Países de alta frecuencia en hotelería (ordenados por uso)
-    'colombia': '170',
-    'estados unidos': '840',
-    'usa': '840',
-    'eeuu': '840',
-    'united states': '840',
-    'argentina': '032',
-    'brasil': '076',
-    'brazil': '076',
-    'canada': '124',
-    'chile': '152',
-    'mexico': '484',
-    'españa': '724',
-    'spain': '724',
-    'alemania': '276',
-    'germany': '276',
-    'francia': '250',
-    'france': '250',
-    'reino unido': '826',
-    'united kingdom': '826',
-    'uk': '826',
-    'italia': '380',
-    'italy': '380',
-    'peru': '604',
-    'ecuador': '218',
-    'venezuela': '862',
-    'panama': '591',
-    'costa rica': '188',
-    'uruguay': '858',
-    'paraguay': '600',
-    'bolivia': '068',
-    'china': '156',
-    'japon': '392',
-    'japan': '392',
-    'india': '356',
-    'australia': '036',
-    'nueva zelanda': '554',
-    'new zealand': '554',
+    // ⚠️ ESTOS CÓDIGOS SON DIFERENTES A ISO 3166-1
+    // Países de alta frecuencia en hotelería colombiana (ordenados por uso)
+    'colombia': '169',       // ISO sería 170 (diferencia: -1)
+    'estados unidos': '249', // ISO sería 840 (diferencia: -591)
+    'usa': '249',
+    'eeuu': '249',
+    'united states': '249',
+    'brasil': '105',         // ISO sería 076 (diferencia: +29)
+    'brazil': '105',
+    'argentina': '63',       // ISO sería 032 (diferencia: +31)
+    'españa': '245',         // ISO sería 724 (diferencia: -479)
+    'spain': '245',
+    'mexico': '493',         // ISO sería 484 (diferencia: +9)
+    'canada': '117',         // ISO sería 124 (diferencia: -7)
+    'chile': '149',          // ISO sería 152 (diferencia: -3)
+    'francia': '265',        // ISO sería 250 (diferencia: +15)
+    'france': '265',
+    'alemania': '23',        // ISO sería 276 (diferencia: -253)
+    'germany': '23',
+    'reino unido': '300',    // ISO sería 826 (diferencia: -526)
+    'united kingdom': '300',
+    'uk': '300',
+    'inglaterra': '300',
+    'gran bretaña': '300',
+    'italia': '369',         // ISO sería 380 (diferencia: -11)
+    'italy': '369',
+    'peru': '587',           // ISO sería 604 (diferencia: -17)
+    'ecuador': '239',        // ISO sería 218 (diferencia: +21)
+    'venezuela': '863',      // ISO sería 862 (diferencia: +1)
+    'panama': '573',         // ISO sería 591 (diferencia: -18)
+    'costa rica': '177',     // ISO sería 188 (diferencia: -11)
+    'uruguay': '859',        // ISO sería 858 (diferencia: +1)
+    'paraguay': '583',       // ISO sería 600 (diferencia: -17)
+    'bolivia': '101',        // ISO sería 068 (diferencia: +33)
+
+    // Países adicionales con turismo hacia Colombia
+    'china': '157',          // ISO sería 156 (diferencia: +1)
+    'japon': '373',          // ISO sería 392 (diferencia: -19)
+    'japan': '373',
+    'india': '351',          // ISO sería 356 (diferencia: -5)
+    'australia': '77',       // ISO sería 036 (diferencia: +41)
+    'nueva zelanda': '569',  // ISO sería 554 (diferencia: +15)
+    'new zealand': '569',
+
+    // Catálogo completo disponible en: _assets/sire/codigos-pais.json (250 países)
   }
 
   const code = countryCodeMap[normalized]
 
   if (!code) {
     throw new Error(
-      `País no encontrado en catálogo: "${pais_texto}". ` +
-      `Verificar docs/sire/CODIGOS_OFICIALES.md o agregar manualmente.`
+      `País no encontrado en catálogo SIRE: "${pais_texto}". ` +
+      `Verificar _assets/sire/codigos-pais.json (250 países disponibles) ` +
+      `o docs/sire/CODIGOS_OFICIALES.md para catálogo completo.`
     )
   }
 

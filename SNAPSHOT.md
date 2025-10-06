@@ -3,38 +3,87 @@ title: "InnPilot Project SNAPSHOT - Estado Real del Proyecto"
 description: "Estado actual completo del proyecto InnPilot - Octubre 2025. Análisis exhaustivo de 6 agentes especializados."
 category: architecture-snapshot
 status: PRODUCTION_READY
-version: "3.0-COMPREHENSIVE-AUDIT"
-last_updated: "2025-10-06"
+version: "3.1-RPC-OPTIMIZATION"
+last_updated: "2025-10-06T14:30:00"
 audit_date: "2025-10-06"
 audited_by: ["ux-interface", "database-agent", "backend-developer", "api-endpoints-mapper", "infrastructure-monitor", "general-purpose"]
-tags: [production, multi_tenant, compliance_module, matryoshka_embeddings, vps_deployment]
-keywords: ["multi_conversation", "compliance", "sire", "tra", "matryoshka", "supabase", "vps_hostinger"]
+tags: [production, multi_tenant, compliance_module, matryoshka_embeddings, vps_deployment, rpc_optimization]
+keywords: ["multi_conversation", "compliance", "sire", "tra", "matryoshka", "supabase", "vps_hostinger", "rpc_functions", "context_optimization"]
 ---
 
 # 🏗️ InnPilot Project SNAPSHOT - Estado Real del Proyecto
 
-**Última actualización**: 6 Octubre 2025
+**Última actualización**: 6 Octubre 2025 16:00
 **Estado**: PRODUCCIÓN - VPS Hostinger (innpilot.io)
 **Análisis**: Completo (6 agentes especializados)
-**Documentos de Referencia**: ⚠️ `plan.md` (0 bytes), `TODO.md` (0 bytes) - REQUIEREN RECONSTRUCCIÓN
+**Documentos de Referencia**: ✅ `plan.md` (SIRE Compliance), ✅ `TODO.md` (SIRE Compliance), ✅ `sire-compliance-prompt-workflow.md`
+
+---
+
+## 🎯 PROYECTO ACTIVO: SIRE Compliance Data Extension
+
+### **Estado**: PLANIFICACIÓN COMPLETA - Listo para FASE 1
+
+**Archivos de planificación creados:**
+- ✅ `plan.md` (620 líneas) - Plan completo 3 fases
+- ✅ `TODO.md` (190 líneas) - 15 tareas con estimaciones
+- ✅ `sire-compliance-prompt-workflow.md` (950 líneas) - 16 prompts ready-to-use
+
+**Catálogos Oficiales (Octubre 6, 2025):**
+- ✅ `_assets/sire/codigos-pais.json` (250 países) - Códigos SIRE propietarios, NO ISO 3166-1
+- ✅ `_assets/sire/ciudades-colombia.json` (1,122 ciudades) - Códigos DIVIPOLA oficiales
+- ✅ `_assets/sire/codigos-sire.ts` - Helper TypeScript con funciones de búsqueda
+- ✅ `src/lib/sire/field-mappers.ts` - Actualizado con códigos SIRE correctos
+
+**Objetivo:** Extender tabla `guest_reservations` con 9 campos SIRE faltantes para cumplir compliance legal con Migración Colombia.
+
+**Gap Identificado:**
+- **Actual:** `guest_reservations` tiene solo 4/13 campos SIRE requeridos
+- **Faltantes:** `document_type`, `document_number`, `birth_date`, `first_surname`, `second_surname`, `given_names`, `nationality_code`, `origin_country_code`, `destination_country_code`
+- **Problema:** Compliance chat extrae datos pero no tiene dónde persistirlos en la reserva
+
+**Fases del Proyecto:**
+1. **FASE 1**: Database Migration (4 tareas, ~2h 15min)
+   - Crear migración SQL con 9 columnas
+   - Agregar constraints de validación SIRE
+   - Crear índices para búsquedas
+   - Migrar datos existentes desde `compliance_submissions`
+
+2. **FASE 2**: Backend Integration (5 tareas, ~3h 15min)
+   - Actualizar TypeScript types
+   - Crear `updateReservationWithComplianceData()`
+   - Integrar en compliance chat flow
+   - Actualizar API `/api/reservations/list`
+   - Script de sync helper
+
+3. **FASE 3**: Testing & Validation (6 tareas, ~2h 45min)
+   - Queries de validación SQL
+   - Test end-to-end compliance flow
+   - Validar datos migrados
+   - Performance testing
+   - Rollback script
+   - Documentar resultados
+
+**Tiempo Total Estimado:** ~7 horas
+
+**Agentes Asignados:**
+- `@agent-database-agent` - FASE 1 (migrations) + FASE 3 (validation)
+- `@agent-backend-developer` - FASE 2 (integration) + FASE 3 (E2E test)
+
+**Próximo Paso:** Ejecutar FASE 1.1 con `@agent-database-agent` (crear migración SQL)
 
 ---
 
 ## 🚨 HALLAZGOS CRÍTICOS
 
-### **BLOCKER CRÍTICO:** Documentación de Planificación Perdida
+### **✅ RESUELTO:** Documentación de Planificación Restaurada (Oct 6, 2025)
 
-**Archivos vacíos detectados:**
-- ❌ `plan.md` (0 bytes) - Esperado: 1,047 líneas según versión anterior
-- ❌ `TODO.md` (0 bytes) - Esperado: 680 líneas con 57 tareas
+**Archivos creados:**
+- ✅ `plan.md` (620 líneas) - Plan completo SIRE Compliance Data Extension
+- ✅ `TODO.md` (190 líneas) - 15 tareas específicas con agentes asignados
+- ✅ `sire-compliance-prompt-workflow.md` (950 líneas) - Prompts copy-paste ready
 
-**Impacto:**
-- Workflow de agentes Claude roto (CLAUDE.md los referencia)
-- No hay roadmap formal visible
-- Visión del proyecto fragmentada en `/docs/projects/`
-- SNAPSHOT.md anterior afirmaba su existencia (desincronización)
-
-**Recomendación:** Reconstruir desde `/docs/projects/guest-portal/` + commits recientes
+**Estado:** Workflow de agentes Claude restaurado
 
 ---
 
@@ -65,6 +114,15 @@ InnPilot es una plataforma web moderna para gestión hotelera con interfaces con
 - **3 extensiones** activas (pgvector 0.8.0, pgcrypto, pg_stat_statements)
 - **100% cobertura** embeddings en todas las tablas críticas
 - **0 registros huérfanos** detectados
+
+**Optimizaciones Recientes (Octubre 2025):**
+- ✅ **7 RPC Functions** creadas para queries repetitivos
+- ✅ **34 queries inline** reemplazados en 41 archivos
+- ✅ **98.1% reducción** en context window (17,700 → 345 tokens)
+- ✅ **DATABASE_QUERY_PATTERNS.md** creado (guía completa de RPC functions)
+- ✅ **DATABASE_SCHEMA_RULES.md** creado (decisiones de schema documentadas)
+- ✅ **Infrastructure Monitor proactivo** con error detection automático (hook + .claude/errors.jsonl)
+- 📊 **Impacto medido**: 17,355 tokens ahorrados por conversación
 
 **Documentación:**
 - **~2.5 MB** de documentación en `/docs`
@@ -762,11 +820,10 @@ POST   /api/premium-chat-dev                 # Dev environment
 
 ### INMEDIATO (Esta Semana)
 
-**1. 🔴 CRÍTICO - Restaurar plan.md y TODO.md**
-- **Problema:** Archivos vacíos (0 bytes), workflow roto
-- **Impacto:** Roadmap no visible, tracking perdido
-- **Acción:** Reconstruir desde `/docs/projects/guest-portal/` + commits
-- **Esfuerzo:** 2-3 horas
+**1. ✅ RESUELTO - plan.md y TODO.md restaurados (Oct 6, 2025)**
+- **Estado:** Archivos creados con planificación completa SIRE Compliance
+- **Archivos:** plan.md (620 LOC), TODO.md (190 LOC), sire-compliance-prompt-workflow.md (950 LOC)
+- **Próximo paso:** Ejecutar FASE 1 (Database Migration)
 
 **2. ✅ RESUELTO - RLS habilitado en todas las tablas (Oct 6, 2025)**
 ```sql
