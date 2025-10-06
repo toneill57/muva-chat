@@ -52,54 +52,11 @@ InnPilot is a modern web platform for managing hotel operations with AI-powered 
 
 **Current Infrastructure:** VPS Hostinger + Nginx + PM2 + Let's Encrypt SSL
 
-**Docs:** `docs/deployment/VPS_SETUP_GUIDE.md`
-
----
-
-## 🚨 BLOCKER CRÍTICO: Sistema Dual de Conversaciones
-
-**Problema:** Dos tablas de conversaciones activas simultáneamente:
-- `chat_conversations` (legacy): 5 conv, 64 mensajes
-- `guest_conversations` (nuevo): 2 conv, 0 mensajes
-
-**ROOT CAUSE:**
-- `src/lib/guest-auth.ts:193-246` - Función `getOrCreateConversation()`
-- Busca/crea en tabla legacy en lugar de nueva tabla
-- Mensajes se guardan en legacy, conversaciones nuevas quedan vacías
-
-**Próximo Paso: FASE 2.4.4** (⚠️ EJECUTAR PRIMERO)
-- Modificar `guest-auth.ts` para usar `guest_conversations`
-- Eliminar `conversation_id` de `GuestSession` interface
-- Ver `plan.md` FASE 2.4 para plan completo
-
-**Referencias:**
-- 📄 Investigación: `side-todo.md` (1,150 líneas)
-- 📋 Tareas: `TODO.md` sección FASE 2.4
-- 📖 Plan: `plan.md` FASE 2.4
-- 🎯 Prompts: `guest-portal-compliance-workflow.md`
-
 ---
 
 ## 🎯 CURRENT PROJECT
 
-**Proyecto:** Guest Portal Multi-Conversation + Compliance Module
-
-**Archivos Clave:**
-- `plan.md` (1,720+ líneas) - Arquitectura completa, 7 fases
-- `TODO.md` (850+ líneas) - Tareas organizadas
-- `guest-portal-compliance-workflow.md` (1,310 líneas) - Prompts ejecutables
-- `side-todo.md` (1,150 líneas) - Investigación BLOCKER
-
-**Status Fases:**
-- ✅ FASE 1: Subdomain Infrastructure
-- ✅ FASE 2.1-2.3: Multi-Conversation Foundation (migrations, APIs, UI)
-- ⚠️ **FASE 2.4: Database Migration (BLOCKER CRÍTICO)**
-- ✅ FASE 2.5: Multi-Modal file upload
-- ✅ FASE 2.6: Conversation Intelligence
-- ✅ FASE 3.1: Compliance Chat Engine
-- ✅ FASE 3.4: Compliance UI Two-Layer Architecture
-- ⏳ FASE 3.5: Integration End-to-End (bloqueado por 2.4)
-- 📅 FASE 4-7: Pending
+**Project Status:** We are making an analysis to determine where to go next.
 
 **Stack:**
 - Next.js 15, Supabase PostgreSQL + pgvector
@@ -111,9 +68,9 @@ InnPilot is a modern web platform for managing hotel operations with AI-powered 
 ## 🤖 Specialized Agents
 
 **Primary Agents:**
-- `@backend-developer` (60%) - APIs, Backend logic, Compliance engine
-- `@ux-interface` (30%) - UI Components, Frontend
-- `@database-agent` (5%) - Migrations, DB operations
+- `@backend-developer` - APIs, Backend logic, Compliance engine
+- `@ux-interface` - UI Components, Frontend
+- `@database-agent` - Migrations, DB operations
 
 **Support Agents:**
 - `@embeddings-generator` - SIRE embeddings
@@ -125,11 +82,23 @@ Ver `.claude/agents/` para instrucciones completas.
 
 ## 🚦 Getting Started
 
-### For New Conversations
-1. Read `plan.md` for project context
-2. Read `TODO.md` for current tasks
-3. Use prompts from `current-workflow.md`
-4. Invoke appropriate agent
+### Workflow for New Conversations
+
+**Step 1: Understand Context**
+- Read `plan.md` - Overall project architecture and roadmap
+- Read `TODO.md` - Current tasks and priorities
+- Check `docs/projects/` - Specific project documentation
+
+**Step 2: Choose Approach**
+- For backend work → Invoke `@backend-developer` agent
+- For UI/UX work → Invoke `@ux-interface` agent
+- For database changes → Invoke `@database-agent` agent
+- For general tasks → Work directly or use `@general-purpose` agent
+
+**Step 3: Execute**
+- Follow existing code patterns in the codebase
+- Test thoroughly using MCP tools (see Development Methodology below)
+- Document changes in appropriate `docs/projects/` directory
 
 ### Development Methodology
 
@@ -144,6 +113,5 @@ Ver `.claude/agents/` para instrucciones completas.
 
 ---
 
-**Last Updated:** Oct 5, 2025
-**Current Focus:** FASE 2.4 Database Migration (BLOCKER)
-**Next Step:** Ejecutar FASE 2.4.4 (modificar `guest-auth.ts`)
+**Last Updated:** Oct 6, 2025
+**Status:** Analysis phase - determining next steps
