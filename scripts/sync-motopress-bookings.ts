@@ -68,9 +68,14 @@ interface IntegrationConfig {
   id: string
   tenant_id: string
   config_data: {
-    consumer_key: string
-    consumer_secret: string
-    site_url: string
+    // Support both old and new formats
+    consumer_key?: string
+    consumer_secret?: string
+    site_url?: string
+    // New format (Basic Auth - Application Password)
+    username?: string
+    password?: string
+    api_url?: string
   }
   is_active: boolean
 }
@@ -143,13 +148,14 @@ class MotoPresBookingClient {
     return this.makeRequest<MotoPresBooking[]>(endpoint)
   }
 
-  async getAllConfirmedBookings(): Promise<{ data?: MotoPresBooking[]; error?: string }> {
+  async getAllBookings(): Promise<{ data?: MotoPresBooking[]; error?: string }> {
     const allBookings: MotoPresBooking[] = []
     let page = 1
     let hasMore = true
 
     while (hasMore) {
-      const response = await this.getBookings({ status: 'confirmed', per_page: 100, page })
+      // No filter by status - get ALL bookings (confirmed, pending, cancelled, blocked, etc.)
+      const response = await this.getBookings({ per_page: 100, page })
 
       if (response.error) {
         return response
@@ -234,16 +240,37 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
     }
 
     // Initialize MotoPress client
+    // Normalize credentials to support both formats (consumer_key/secret OR username/password)
     const credentials = config.config_data
-    const client = new MotoPresBookingClient(
-      credentials.consumer_key,
-      credentials.consumer_secret,
-      credentials.site_url
-    )
 
-    // Fetch all confirmed bookings from MotoPress
-    console.log('📥 Fetching confirmed bookings from MotoPress...')
-    const response = await client.getAllConfirmedBookings()
+    // Extract site URL (remove /wp-json/mphb/v1 if present in api_url)
+    let siteUrl = credentials.site_url || credentials.api_url || ''
+    if (siteUrl.includes('/wp-json')) {
+      siteUrl = siteUrl.split('/wp-json')[0]
+    }
+
+    // Extract auth credentials
+    const authUser = credentials.consumer_key || credentials.username || ''
+    const authPass = credentials.consumer_secret || credentials.password || ''
+
+    // Validate credentials
+    if (!authUser || !authPass || !siteUrl) {
+      result.errors.push(
+        `Invalid MotoPress credentials. Missing: ${[
+          !authUser ? 'username/consumer_key' : '',
+          !authPass ? 'password/consumer_secret' : '',
+          !siteUrl ? 'site_url/api_url' : ''
+        ].filter(Boolean).join(', ')}`
+      )
+      result.duration_ms = Date.now() - startTime
+      return result
+    }
+
+    const client = new MotoPresBookingClient(authUser, authPass, siteUrl)
+
+    // Fetch ALL bookings from MotoPress (all statuses: confirmed, pending, cancelled, blocked, etc.)
+    console.log('📥 Fetching all bookings from MotoPress (all statuses)...')
+    const response = await client.getAllBookings()
 
     if (response.error || !response.data) {
       result.errors.push(`Failed to fetch bookings: ${response.error}`)
@@ -254,7 +281,7 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
     const motoPresBookings = response.data
     result.bookings_fetched = motoPresBookings.length
 
-    console.log(`   Found ${motoPresBookings.length} confirmed bookings`)
+    console.log(`   Found ${motoPresBookings.length} bookings (all statuses)`)
 
     // Filter for bookings from 1 month ago onwards (includes recent past + future)
     const oneMonthAgo = new Date()
@@ -265,7 +292,7 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
       (booking) => booking.check_in_date >= minDate
     )
 
-    console.log(`   ${relevantBookings.length} bookings from ${minDate} onwards`)
+    console.log(`   ${relevantBookings.length} bookings from ${minDate} onwards (all statuses)`)
 
     if (relevantBookings.length === 0) {
       console.log('   ℹ️  No relevant bookings to sync')

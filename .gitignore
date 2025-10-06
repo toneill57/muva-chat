@@ -55,7 +55,17 @@ trace.zip
 
 # Backups
 *.backup
+*.bak
 /backups
+
+# Progress and workflow files
+*_PROGRESS_*
+*-prompt-workflow.md
+*-workflow.md
+
+# Dumps and temporary data
+dump_*.json
+benchmark-results.log
 
 # VPS Production Environment (contains secrets)
 VPS-ENV-PRODUCTION.txt

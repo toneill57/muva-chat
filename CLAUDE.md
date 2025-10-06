@@ -128,7 +128,7 @@ Ver `.claude/agents/` para instrucciones completas.
 ### For New Conversations
 1. Read `plan.md` for project context
 2. Read `TODO.md` for current tasks
-3. Use prompts from `guest-portal-compliance-workflow.md`
+3. Use prompts from `current-workflow.md`
 4. Invoke appropriate agent
 
 ### Development Methodology
