@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { MotoPresSyncManager } from '@/lib/integrations/motopress/sync-manager'
+import { requireAdminAuth } from '@/lib/admin-auth'
 
 interface SyncRequest {
   tenant_id: string
@@ -8,12 +9,24 @@ interface SyncRequest {
 
 export async function POST(request: Request) {
   try {
+    // ✅ Admin authentication required
+    const { response: authError, session } = await requireAdminAuth(request)
+    if (authError) return authError
+
     const { tenant_id, selected_ids }: SyncRequest = await request.json()
 
     if (!tenant_id) {
       return NextResponse.json(
         { error: 'Missing tenant_id' },
         { status: 400 }
+      )
+    }
+
+    // Verify admin belongs to this tenant
+    if (session!.tenant_id !== tenant_id) {
+      return NextResponse.json(
+        { error: 'Access denied. Cannot sync data for another tenant.' },
+        { status: 403 }
       )
     }
 
@@ -76,6 +89,10 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
+    // ✅ Admin authentication required
+    const { response: authError, session } = await requireAdminAuth(request)
+    if (authError) return authError
+
     const { searchParams } = new URL(request.url)
     const tenant_id = searchParams.get('tenant_id')
 
@@ -83,6 +100,14 @@ export async function GET(request: Request) {
       return NextResponse.json(
         { error: 'Missing tenant_id parameter' },
         { status: 400 }
+      )
+    }
+
+    // Verify admin belongs to this tenant
+    if (session!.tenant_id !== tenant_id) {
+      return NextResponse.json(
+        { error: 'Access denied. Cannot view sync history for another tenant.' },
+        { status: 403 }
       )
     }
 

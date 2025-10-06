@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
+import { requireAdminAuth, decryptCredentials } from '@/lib/admin-auth'
 
 interface TestConnectionRequest {
   tenant_id?: string
@@ -10,30 +11,33 @@ interface TestConnectionRequest {
 
 export async function POST(request: Request) {
   try {
+    // ✅ Admin authentication required
+    const { response: authError, session } = await requireAdminAuth(request)
+    if (authError) return authError
+
     const body: TestConnectionRequest = await request.json()
     const { tenant_id, api_key, consumer_secret, site_url } = body
 
     const supabase = createServerClient()
 
-    // TODO: Implementar autenticación adecuada para producción
-    // Para esta demo, saltamos la verificación de autenticación
-
     let testApiKey = api_key
     let testSiteUrl = site_url
+    const effectiveTenantId = tenant_id || session!.tenant_id
+
+    // Verify admin belongs to this tenant
+    if (effectiveTenantId && session!.tenant_id !== effectiveTenantId) {
+      return NextResponse.json(
+        { error: 'Access denied. Cannot test connection for another tenant.' },
+        { status: 403 }
+      )
+    }
 
     // Si no se proporcionan credenciales, obtenerlas de la configuración existente
     if (!testApiKey || !testSiteUrl) {
-      if (!tenant_id) {
-        return NextResponse.json(
-          { error: 'Missing tenant_id or credentials' },
-          { status: 400 }
-        )
-      }
-
       const { data: config, error: configError } = await supabase
         .from('integration_configs')
         .select('config_data')
-        .eq('tenant_id', tenant_id)
+        .eq('tenant_id', effectiveTenantId)
         .eq('integration_type', 'motopress')
         .single()
 
@@ -44,7 +48,9 @@ export async function POST(request: Request) {
         )
       }
 
-      testApiKey = config.config_data.api_key
+      // ✅ Decrypt credentials from database
+      const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
+      testApiKey = decryptedApiKey
       testSiteUrl = config.config_data.site_url
     }
 
@@ -55,11 +61,18 @@ export async function POST(request: Request) {
       )
     }
 
-    // Usar credenciales hardcodeadas por ahora (las credenciales reales del usuario)
-    const realConsumerKey = 'ck_29a384bbb0500c07159e90b59404293839a33282'
-    const realConsumerSecret = 'cs_8fc58d0a3af6663b3dca2776f54f18d55f2aaea4'
+    // ✅ Use credentials from environment variables (secured)
+    const realConsumerKey = process.env.MOTOPRESS_KEY!
+    const realConsumerSecret = process.env.MOTOPRESS_SECRET!
 
-    // Test de conexión con MotoPress API usando credenciales reales
+    if (!realConsumerKey || !realConsumerSecret) {
+      return NextResponse.json(
+        { error: 'MotoPress credentials not configured on server' },
+        { status: 500 }
+      )
+    }
+
+    // Test de conexión con MotoPress API
     const testResult = await testMotoPresConnection(realConsumerKey, realConsumerSecret, testSiteUrl)
 
     return NextResponse.json(testResult)

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
+import { requireAdminAuth, encryptCredentials } from '@/lib/admin-auth'
 
 interface ConfigureRequest {
   tenant_id: string
@@ -10,6 +11,10 @@ interface ConfigureRequest {
 
 export async function POST(request: Request) {
   try {
+    // ✅ Admin authentication required
+    const { response: authError, session } = await requireAdminAuth(request)
+    if (authError) return authError
+
     const { tenant_id, api_key, site_url, is_active }: ConfigureRequest = await request.json()
 
     if (!tenant_id || !api_key || !site_url) {
@@ -19,17 +24,21 @@ export async function POST(request: Request) {
       )
     }
 
+    // Verify admin belongs to this tenant
+    if (session!.tenant_id !== tenant_id) {
+      return NextResponse.json(
+        { error: 'Access denied. Cannot configure integration for another tenant.' },
+        { status: 403 }
+      )
+    }
+
     const supabase = createServerClient()
 
-    // TODO: Implementar autenticación adecuada para producción
-    // Para esta demo, saltamos la verificación de autenticación
-
-    // TODO: Encriptar las credenciales antes de guardar
-    // Para el demo, las guardamos en texto plano (NO usar en producción)
+    // ✅ Encrypt credentials before storing
+    const encryptedApiKey = await encryptCredentials(api_key)
     const configData = {
-      api_key,
+      api_key: encryptedApiKey,
       site_url,
-      // En producción, encriptar estos datos
     }
 
     // Guardar o actualizar configuración
@@ -75,6 +84,10 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
+    // ✅ Admin authentication required
+    const { response: authError, session } = await requireAdminAuth(request)
+    if (authError) return authError
+
     const { searchParams } = new URL(request.url)
     const tenant_id = searchParams.get('tenant_id')
 
@@ -85,9 +98,15 @@ export async function GET(request: Request) {
       )
     }
 
-    const supabase = createServerClient()
+    // Verify admin belongs to this tenant
+    if (session!.tenant_id !== tenant_id) {
+      return NextResponse.json(
+        { error: 'Access denied. Cannot view configuration for another tenant.' },
+        { status: 403 }
+      )
+    }
 
-    // TODO: Implementar autenticación adecuada para producción
+    const supabase = createServerClient()
 
     // Obtener configuración existente
     const { data, error } = await supabase

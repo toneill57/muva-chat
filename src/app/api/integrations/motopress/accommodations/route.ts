@@ -2,20 +2,7 @@ import { NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
 import { MotoPresDataMapper } from '@/lib/integrations/motopress/data-mapper'
-
-function decrypt(configData: any): { api_key: string; consumer_secret: string; site_url: string } {
-  // TODO: Implement proper decryption
-  // For now, using base64 decode (NEVER use in production)
-  try {
-    if (configData.encrypted) {
-      return JSON.parse(Buffer.from(configData.encrypted, 'base64').toString())
-    }
-    // If already decrypted or in plain format
-    return configData
-  } catch {
-    return configData
-  }
-}
+import { requireAdminAuth, decryptCredentials } from '@/lib/admin-auth'
 
 async function getIntegrationConfig(tenantId: string) {
   const supabase = createServerClient()
@@ -37,6 +24,10 @@ async function getIntegrationConfig(tenantId: string) {
 
 export async function GET(request: Request) {
   try {
+    // ✅ Admin authentication required
+    const { response: authError, session } = await requireAdminAuth(request)
+    if (authError) return authError
+
     const { searchParams } = new URL(request.url)
     const tenant_id = searchParams.get('tenant_id')
     const preview = searchParams.get('preview') === 'true'
@@ -48,11 +39,26 @@ export async function GET(request: Request) {
       )
     }
 
+    // Verify admin belongs to this tenant
+    if (session!.tenant_id !== tenant_id) {
+      return NextResponse.json(
+        { error: 'Access denied. Cannot view accommodations for another tenant.' },
+        { status: 403 }
+      )
+    }
+
     console.log(`Fetching accommodations for tenant: ${tenant_id}, preview: ${preview}`)
 
     // Get integration configuration
     const config = await getIntegrationConfig(tenant_id)
-    const credentials = decrypt(config.config_data)
+
+    // ✅ Decrypt credentials
+    const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
+    const credentials = {
+      api_key: decryptedApiKey,
+      consumer_secret: config.config_data.consumer_secret || process.env.MOTOPRESS_SECRET!,
+      site_url: config.config_data.site_url
+    }
 
     // Initialize MotoPress client
     const client = new MotoPresClient({
