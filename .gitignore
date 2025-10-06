@@ -69,3 +69,6 @@ benchmark-results.log
 
 # VPS Production Environment (contains secrets)
 VPS-ENV-PRODUCTION.txt
+
+# Claude Code error logs (hooks)
+.claude/errors.jsonl

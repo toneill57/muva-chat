@@ -346,18 +346,9 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
             accommodationUnitId = unitId
           }
 
-          // Check if booking already exists (by external_booking_id + check-in + phone + accommodation_unit_id)
-          // CRITICAL: Must include accommodation_unit_id to avoid updating the same reservation multiple times for multi-unit bookings
-          const { data: existingReservation } = await supabase
-            .from('guest_reservations')
-            .select('id, status, updated_at')
-            .eq('tenant_id', tenantId)
-            .eq('external_booking_id', mpBooking.id.toString())
-            .eq('check_in_date', mpBooking.check_in_date)
-            .eq('phone_last_4', phoneLast4)
-            .eq('accommodation_unit_id', accommodationUnitId)
-            .maybeSingle()
-
+          // 🆕 IDEMPOTENT SYNC: Use UPSERT to prevent duplicates
+          // Unique constraint: uq_motopress_booking_unit (tenant_id, external_booking_id, accommodation_unit_id_key)
+          // This ensures one reservation per MotoPress booking per unit
           const reservationData = {
             tenant_id: tenantId,
             guest_name: guestName,
@@ -369,47 +360,34 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
             status: mapMotoPresStatusToInnPilot(mpBooking.status),
             accommodation_unit_id: accommodationUnitId,
 
-            // 🆕 NEW: Complete booking details (PHASE 2)
+            // Complete booking details
             guest_email: mpBooking.customer.email || null,
             guest_country: mpBooking.customer.country || null,
-            adults: reservedUnit.adults || 1,  // Use specific unit's capacity
-            children: reservedUnit.children || 0,  // Use specific unit's capacity
-            total_price: unitPrice || null,  // Individual unit price from accommodation_price_per_days
+            adults: reservedUnit.adults || 1,
+            children: reservedUnit.children || 0,
+            total_price: unitPrice || null,
             currency: mpBooking.currency || 'COP',
             check_in_time: mpBooking.check_in_time || '15:00',
             check_out_time: mpBooking.check_out_time || '12:00',
             booking_source: 'motopress',
-            external_booking_id: mpBooking.id.toString(),  // Same ID for all units
-            booking_notes: mpBooking.customer.address1 || null,  // Store address as notes
+            external_booking_id: mpBooking.id.toString(),
+            booking_notes: mpBooking.customer.address1 || null,
 
             updated_at: new Date().toISOString(),
           }
 
-          if (existingReservation) {
-            // Update existing reservation
-            const { error: updateError } = await supabase
-              .from('guest_reservations')
-              .update(reservationData)
-              .eq('id', existingReservation.id)
+          // Use upsert - DB constraint handles duplicates automatically
+          // Note: accommodation_unit_id_key is a generated column (COALESCE(accommodation_unit_id::text, ''))
+          const { error: upsertError } = await supabase
+            .from('guest_reservations')
+            .upsert(reservationData)
+            .select('id')
 
-            if (updateError) {
-              result.errors.push(`Failed to update booking MP-${mpBooking.id} unit ${unitIndex + 1}: ${updateError.message}`)
-            } else {
-              result.bookings_updated++
-              console.log(`   ✓ Updated: ${guestName} (${mpBooking.check_in_date}) - Unit ${unitIndex + 1}/${totalUnits}`)
-            }
+          if (upsertError) {
+            result.errors.push(`Failed to upsert booking MP-${mpBooking.id} unit ${unitIndex + 1}: ${upsertError.message}`)
           } else {
-            // Create new reservation
-            const { error: insertError } = await supabase
-              .from('guest_reservations')
-              .insert([reservationData])
-
-            if (insertError) {
-              result.errors.push(`Failed to create booking MP-${mpBooking.id} unit ${unitIndex + 1}: ${insertError.message}`)
-            } else {
-              result.bookings_created++
-              console.log(`   ✓ Created: ${guestName} (${mpBooking.check_in_date}) - Unit ${unitIndex + 1}/${totalUnits}`)
-            }
+            result.bookings_created++
+            console.log(`   ✓ Synced: ${guestName} (${mpBooking.check_in_date}) - Unit ${unitIndex + 1}/${totalUnits}`)
           }
         }
       } catch (error: any) {

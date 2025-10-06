@@ -76,7 +76,7 @@ All 6 MotoPress endpoints now require admin authentication:
 
 ## 🧪 Test Results
 
-### Test Suite: `scripts/test-motopress-auth.ts`
+### Test Suite 1: Authentication & Encryption (`scripts/test-motopress-auth.ts`)
 
 ```bash
 ✅ ENV: PASSED                  # Environment variables loaded correctly
@@ -97,23 +97,79 @@ All 6 MotoPress endpoints now require admin authentication:
 
 ---
 
-## 🔑 MotoPress Authentication Method
-
-MotoPress uses **HTTP Basic Authentication** with Consumer Key/Secret (WooCommerce REST API style):
+### Test Suite 2: Credential Compatibility (`scripts/test-motopress-credentials.ts`)
 
 ```bash
-# Correct format (currently implemented)
+✅ Accommodation Types (Consumer Key/Secret):     PASSED (200, 2 accommodations)
+✅ Accommodation Types (Application Password):     PASSED (200, 2 accommodations)
+✅ Bookings (Consumer Key/Secret):                PASSED (200, 2 bookings)
+✅ Bookings (Application Password):                PASSED (200, 2 bookings)
+✅ Availability (Consumer Key/Secret):            PASSED (200, availability data)
+✅ Availability (Application Password):            PASSED (200, availability data)
+✅ Categories (Consumer Key/Secret):              PASSED (200, 8 categories)
+✅ Categories (Application Password):              PASSED (200, 8 categories)
+
+🎉 8/8 tests passed - Both authentication methods work identically!
+```
+
+**Key Findings:**
+1. ✅ **Consumer Key/Secret works on ALL endpoints** (accommodation_types, bookings, availability, categories)
+2. ✅ **Application Password works on ALL endpoints** with identical behavior
+3. ✅ Both methods return **identical data** and **identical HTTP status codes**
+4. ✅ No endpoint requires one credential type over the other
+5. ✅ Current code implementation (`MotoPresClient`) uses the correct authentication method
+
+---
+
+## 🔑 MotoPress Authentication Method
+
+MotoPress supports **TWO authentication methods** with HTTP Basic Authentication:
+
+### Method 1: Consumer Key/Secret (RECOMMENDED ✅)
+
+```bash
+# WooCommerce REST API style
 Authorization: Basic base64(ck_xxx:cs_xxx)
 ```
 
-**Credentials in use:**
+**Credentials:**
 - `MOTOPRESS_KEY`: `ck_29a384bbb0500c07159e90b59404293839a33282` (Consumer Key)
 - `MOTOPRESS_SECRET`: `cs_8fc58d0a3af6663b3dca2776f54f18d55f2aaea4` (Consumer Secret)
 - `MOTOPRESS_URL`: `https://simmerdown.house`
 
-**WordPress Application Password (not used):**
+### Method 2: WordPress Application Password (ALSO WORKS ✅)
+
+```bash
+# WordPress Application Password style
+Authorization: Basic base64(username:app_password)
+```
+
+**Credentials:**
 - `MOTOPRESS_USER`: `admin`
-- `MOTOPRESS_APP_PASS`: `Ehxu d1gy d2AV cF71 RQOm W3HI` (reserved for future use)
+- `MOTOPRESS_APP_PASS`: `Ehxu d1gy d2AV cF71 RQOm W3HI`
+
+### Credential Testing Results
+
+**Comprehensive testing performed with script:** `scripts/test-motopress-credentials.ts`
+
+| Endpoint | Consumer Key/Secret | Application Password | Notes |
+|----------|---------------------|----------------------|-------|
+| Accommodation Types | ✅ WORKS | ✅ WORKS | Identical access |
+| Bookings | ✅ WORKS | ✅ WORKS | Identical access |
+| Availability | ✅ WORKS | ✅ WORKS | Requires `check_in_date` param |
+| Categories | ✅ WORKS | ✅ WORKS | Identical access |
+
+**Conclusion:**
+- Both authentication methods provide **identical access** to ALL endpoints
+- Consumer Key/Secret is the **official MotoPress/WooCommerce method**
+- Application Password works because WordPress accepts it globally for all REST API endpoints
+- **Current code uses Consumer Key/Secret exclusively** (no changes needed)
+
+**Code Implementation:**
+- File: `src/lib/integrations/motopress/client.ts`
+- Method: HTTP Basic Authentication (same as curl)
+- Currently configured for Consumer Key/Secret only
+- No modifications required - works perfectly as-is
 
 ---
 
