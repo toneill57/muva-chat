@@ -6,6 +6,7 @@ import {
   type ChatMessage
 } from '@/lib/conversational-chat-engine'
 import { createServerClient } from '@/lib/supabase'
+import { compactConversationIfNeeded } from '@/lib/guest-conversation-memory'
 
 // Rate limiting configuration
 const RATE_LIMIT = {
@@ -51,11 +52,14 @@ export async function POST(request: NextRequest) {
 
   try {
     // === AUTHENTICATION ===
+    // Try cookie first, then fall back to Authorization header
+    const cookieToken = request.cookies.get('guest_token')?.value
     const authHeader = request.headers.get('Authorization')
-    const token = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(authHeader)
+    const token = cookieToken || headerToken
 
     if (!token) {
-      console.error('[Guest Chat] Missing authorization header')
+      console.error('[Guest Chat] Missing authentication (no cookie or header)')
       return NextResponse.json(
         { error: GuestAuthErrors.MISSING_HEADER },
         { status: 401 }
@@ -72,11 +76,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`[Guest Chat] Authenticated guest: ${session.guest_name} (conversation: ${session.conversation_id})`)
+    console.log(`[Guest Chat] Authenticated guest: ${session.guest_name} (reservation: ${session.reservation_id})`)
 
     // === RATE LIMITING ===
-    if (!checkRateLimit(session.conversation_id)) {
-      console.warn(`[Guest Chat] Rate limit exceeded for conversation ${session.conversation_id}`)
+    if (!checkRateLimit(session.reservation_id)) {
+      console.warn(`[Guest Chat] Rate limit exceeded for reservation ${session.reservation_id}`)
       return NextResponse.json(
         {
           error: 'Rate limit exceeded',
@@ -87,7 +91,7 @@ export async function POST(request: NextRequest) {
     }
 
     // === PARSE REQUEST ===
-    const { message } = await request.json()
+    const { message, conversation_id } = await request.json()
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return NextResponse.json(
@@ -106,10 +110,44 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Guest Chat] Query: "${message.substring(0, 100)}${message.length > 100 ? '...' : ''}"`)
 
-    // === PERSIST USER MESSAGE ===
+    // === VALIDATE CONVERSATION OWNERSHIP ===
     const supabase = createServerClient()
+
+    // conversation_id is now required in request (no fallback)
+    if (!conversation_id) {
+      return NextResponse.json(
+        { error: 'conversation_id is required' },
+        { status: 400 }
+      )
+    }
+
+    const targetConversationId = conversation_id
+
+    // Verify conversation belongs to the guest
+    const { data: convData, error: convError } = await supabase
+      .from('guest_conversations')
+      .select('id, guest_id')
+      .eq('id', conversation_id)
+      .eq('guest_id', session.reservation_id)
+      .single()
+
+    if (convError || !convData) {
+      console.error('[Guest Chat] Conversation access denied:', {
+        conversation_id,
+        guest_id: session.reservation_id,
+        error: convError?.message
+      })
+      return NextResponse.json(
+        { error: 'Conversation not found or access denied' },
+        { status: 404 }
+      )
+    }
+
+    console.log(`[Guest Chat] Using conversation: ${conversation_id} (validated ownership)`)
+
+    // === PERSIST USER MESSAGE ===
     const { error: saveError } = await supabase.from('chat_messages').insert({
-      conversation_id: session.conversation_id,
+      conversation_id: targetConversationId,
       role: 'user',
       content: message,
       tenant_id: session.tenant_id,
@@ -124,7 +162,7 @@ export async function POST(request: NextRequest) {
     const { data: historyData, error: historyError } = await supabase
       .from('chat_messages')
       .select('id, role, content, entities, created_at')
-      .eq('conversation_id', session.conversation_id)
+      .eq('conversation_id', targetConversationId)
       .order('created_at', { ascending: false })
       .limit(10)
 
@@ -158,7 +196,7 @@ export async function POST(request: NextRequest) {
 
     // === PERSIST ASSISTANT MESSAGE ===
     const { error: saveResponseError } = await supabase.from('chat_messages').insert({
-      conversation_id: session.conversation_id,
+      conversation_id: targetConversationId,
       role: 'assistant',
       content: conversationalResponse.response,
       entities: conversationalResponse.entities,
@@ -173,6 +211,46 @@ export async function POST(request: NextRequest) {
     if (saveResponseError) {
       console.error('[Guest Chat] Failed to save assistant message:', saveResponseError)
       // Continue anyway
+    }
+
+    // === UPDATE CONVERSATION METADATA ===
+    // Update message count and last activity timestamp
+    // First get current message_count
+    const { data: conversationData } = await supabase
+      .from('guest_conversations')
+      .select('message_count')
+      .eq('id', targetConversationId)
+      .single()
+
+    const currentCount = conversationData?.message_count || 0
+
+    const { error: updateError } = await supabase
+      .from('guest_conversations')
+      .update({
+        message_count: currentCount + 2, // user + assistant
+        last_activity_at: new Date().toISOString(),
+        last_message: message.substring(0, 100), // Preview of last user message
+      })
+      .eq('id', targetConversationId)
+
+    if (updateError) {
+      console.error('[Guest Chat] Failed to update conversation metadata:', updateError)
+      // Non-critical, continue
+    }
+
+    // === AUTO-COMPACTION ===
+    // Check if conversation needs compaction (threshold: 20 messages)
+    try {
+      const { compacted, blocksCreated } = await compactConversationIfNeeded(targetConversationId)
+      if (compacted) {
+        console.log('[Guest Chat] Auto-compaction triggered:', {
+          conversation_id: targetConversationId,
+          blocks_created: blocksCreated,
+        })
+      }
+    } catch (compactionError) {
+      console.error('[Guest Chat] Compaction failed:', compactionError)
+      // Non-critical error, continue
     }
 
     const totalTime = Date.now() - startTime
@@ -190,7 +268,7 @@ export async function POST(request: NextRequest) {
         confidence: conversationalResponse.confidence,
         responseTime: totalTime,
         guestName: session.guest_name,
-        conversationId: session.conversation_id,
+        conversationId: targetConversationId,
       },
     })
   } catch (error) {
@@ -226,6 +304,7 @@ export async function GET() {
       },
       body: {
         message: 'string (required, max 1000 chars)',
+        conversation_id: 'string (optional, UUID of target conversation - defaults to session conversation)',
       },
     },
     response: {

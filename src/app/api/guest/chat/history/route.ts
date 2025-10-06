@@ -13,9 +13,11 @@ import { createServerClient } from '@/lib/supabase'
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Verify authentication
+    // 1. Verify authentication (cookie or header)
+    const cookieToken = request.cookies.get('guest_token')?.value
     const authHeader = request.headers.get('authorization')
-    const token = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(authHeader)
+    const token = cookieToken || headerToken
 
     if (!token) {
       return NextResponse.json(
@@ -57,24 +59,23 @@ export async function GET(request: NextRequest) {
         .eq('guest_id', session.reservation_id)
         .single()
 
-      // If conversation not found in guest_conversations, fallback to legacy check
-      // (for backwards compatibility with old single-conversation system)
+      // Conversation not found or access denied
       if (convError || !conversation) {
-        // Check if it's the legacy conversation_id from session
-        if (conversationId !== session.conversation_id) {
-          return NextResponse.json(
-            { error: 'Acceso no autorizado a esta conversación' },
-            { status: 403 }
-          )
-        }
+        return NextResponse.json(
+          { error: 'Acceso no autorizado a esta conversación' },
+          { status: 403 }
+        )
       }
 
       query = query.eq('conversation_id', conversationId)
     } else {
-      // No conversation_id provided - return all messages for this guest
-      // (backward compatibility with old single-conversation system)
-      console.log('[chat-history] Fetching all messages for guest')
-      query = query.eq('conversation_id', session.conversation_id)
+      // No conversation_id provided - return empty array
+      // (conversation_id is now required for multi-conversation system)
+      console.warn('[chat-history] No conversation_id provided - returning empty array')
+      return NextResponse.json({
+        messages: [],
+        total: 0,
+      }, { status: 200 })
     }
 
     // 5. Execute query

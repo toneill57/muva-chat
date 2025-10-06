@@ -1,6 +1,6 @@
 ---
 name: ux-interface
-description: Agente especializado en UI/UX que gestiona autónomamente modificaciones de interfaz, animaciones, estilos y componentes visuales
+description: Agente especializado en UI/UX que gestiona autónomamente modificaciones de interfaz, animaciones, estilos y componentes visuales. Use this agent for all frontend/UI tasks - invoke with @agent-ux-interface.
 model: sonnet
 tools: Bash, Read, Write, Edit, MultiEdit, Glob, Grep, WebFetch
 color: green
@@ -20,7 +20,7 @@ Soy un agente especializado en UI/UX que gestiona autónomamente todas las modif
 - Mejoras de accesibilidad
 - Consistencia visual entre componentes
 
-Cuando el usuario solicite cambios de interfaz o identifique problemas de UX, debo actuar automáticamente sin esperar instrucciones adicionales.
+Cuando el usuario solicite cambios de interfaz o identifique problemas de UX, usar `@agent-ux-interface` para delegarme automáticamente.
 
 ---
 
@@ -31,12 +31,18 @@ Transformar el Guest Chat actual (single-conversation) en una experiencia multi-
 
 ### Archivos de Planificación
 Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
-- 📄 `plan.md` - Plan completo del proyecto (1047 líneas) - Arquitectura completa, 7 fases
-- 📋 `TODO.md` - Tareas organizadas por fases (680 líneas) - 57 tareas
-- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables por fase (1120 líneas)
+- 📄 `plan.md` - Plan completo del proyecto (1720 líneas) - Arquitectura completa, 7 fases + FASE 0.5 corrección SIRE
+- 📋 `TODO.md` - Tareas organizadas por fases (205 líneas, limpio) - Solo pendientes
+- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables (660 líneas) - 12 prompts copy-paste ready
 
 ### Mi Responsabilidad Principal
 Soy el **agente principal UI** de este proyecto (30% del trabajo):
+
+**FASE 0.5: Corrección Campos SIRE** ⚠️ (4-5h) - **CRÍTICA - PRÓXIMA**
+- 🎨 Prompt 0.5.3: Corrección UI Specs (actualizar ComplianceConfirmation.tsx specs con dos capas)
+
+**FASE 1: Subdomain Infrastructure** ✅ (COMPLETADA)
+- ✅ Nginx routing, Middleware, Tenant Resolver
 
 **FASE 2: Multi-Conversation Foundation** (6-8h)
 - 🎨 Prompt 2.3: UI Components - Sidebar Multi-Conversation (ConversationList.tsx + GuestChatInterface refactor)

@@ -15,11 +15,22 @@ import {
   RefreshCw,
   Menu,
   X,
+  Paperclip,
+  Image as ImageIcon,
+  FileText,
+  Upload,
+  CheckCircle2,
+  XCircle,
+  Lightbulb,
 } from "lucide-react"
 import ReactMarkdown from 'react-markdown'
+import { motion, AnimatePresence } from 'framer-motion'
 import { EntityBadge } from './EntityBadge'
 import { FollowUpSuggestions } from './FollowUpSuggestions'
 import ConversationList from './ConversationList'
+import ComplianceReminder from '@/components/Compliance/ComplianceReminder'
+import ComplianceConfirmation from '@/components/Compliance/ComplianceConfirmation'
+import ComplianceSuccess from '@/components/Compliance/ComplianceSuccess'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
 
 interface Conversation {
@@ -27,6 +38,30 @@ interface Conversation {
   title: string
   last_message: string | null
   updated_at: string
+}
+
+interface FileUploadState {
+  file: File | null
+  preview: string | null
+  isUploading: boolean
+  isAnalyzing: boolean
+  error: string | null
+  visionAnalysis: {
+    description: string
+    confidence: number
+  } | null
+  extractedData: {
+    name?: string
+    passportNumber?: string
+    nationality?: string
+    birthDate?: string
+    expiryDate?: string
+  } | null
+}
+
+interface TopicSuggestion {
+  topic: string
+  confidence: number
 }
 
 /**
@@ -46,13 +81,39 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
 
   // Multi-conversation state
   const [conversations, setConversations] = useState<Conversation[]>([])
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(session.conversation_id)
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isLoadingConversations, setIsLoadingConversations] = useState(true)
+
+  // Topic suggestion state (FASE 2.6 - Conversation Intelligence)
+  const [topicSuggestion, setTopicSuggestion] = useState<TopicSuggestion | null>(null)
+
+  // File upload state
+  const [fileUpload, setFileUpload] = useState<FileUploadState>({
+    file: null,
+    preview: null,
+    isUploading: false,
+    isAnalyzing: false,
+    error: null,
+    visionAnalysis: null,
+    extractedData: null,
+  })
+  const [showFilePreview, setShowFilePreview] = useState(false)
+
+  // Compliance modal states
+  const [showComplianceModal, setShowComplianceModal] = useState(false)
+  const [showComplianceSuccess, setShowComplianceSuccess] = useState(false)
+  const [submissionData, setSubmissionData] = useState<any>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [complianceData, setComplianceData] = useState<{
+    conversational_data: any
+    sire_data: any
+  } | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Load conversations on mount
   useEffect(() => {
@@ -79,6 +140,18 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
     }
   }, [input])
 
+  // Keyboard shortcuts - ESC to close topic suggestion
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && topicSuggestion) {
+        setTopicSuggestion(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [topicSuggestion])
+
   const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
     messagesEndRef.current?.scrollIntoView({ behavior })
   }
@@ -98,11 +171,139 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
       }
 
       const data = await response.json()
-      setConversations(data.conversations || [])
+      const loadedConversations = data.conversations || []
+      setConversations(loadedConversations)
+
+      // First-time user: Create welcome conversation automatically
+      if (loadedConversations.length === 0) {
+        console.log('[GuestChat] First-time user detected - creating welcome conversation')
+        await createWelcomeConversation()
+      } else {
+        // Returning user: Auto-select latest conversation
+        const latestConversation = loadedConversations[0] // Already sorted by updated_at DESC
+        setActiveConversationId(latestConversation.id)
+      }
     } catch (err) {
       console.error('Error loading conversations:', err)
     } finally {
       setIsLoadingConversations(false)
+    }
+  }
+
+  /**
+   * Creates welcome conversation for first-time users
+   * Sends "Hola" to chat engine to generate personalized welcome message
+   */
+  const createWelcomeConversation = async () => {
+    try {
+      // 1. Create conversation with "¡Bienvenido! 👋" title
+      const createResponse = await fetch('/api/guest/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: '¡Bienvenido! 👋',
+        }),
+      })
+
+      if (!createResponse.ok) {
+        throw new Error('Error creating welcome conversation')
+      }
+
+      const createData = await createResponse.json()
+      const welcomeConversation = createData.conversation
+
+      console.log('[GuestChat] Welcome conversation created:', welcomeConversation.id)
+
+      // 2. Add to conversations list
+      const newConversation: Conversation = {
+        id: welcomeConversation.id,
+        title: welcomeConversation.title,
+        last_message: welcomeConversation.last_message,
+        updated_at: welcomeConversation.updated_at,
+      }
+      setConversations([newConversation])
+      setActiveConversationId(welcomeConversation.id)
+
+      // 3. Auto-send "Hola" to trigger personalized welcome message
+      await sendWelcomeMessage(welcomeConversation.id)
+
+    } catch (error) {
+      console.error('[GuestChat] Failed to create welcome conversation:', error)
+      // Non-blocking error - user can still create conversation manually
+    }
+  }
+
+  /**
+   * Sends "Hola" to chat engine to generate personalized welcome
+   * Reuses existing chat engine logic (includes guest name + accommodation)
+   */
+  const sendWelcomeMessage = async (conversationId: string) => {
+    try {
+      setIsLoading(true)
+
+      const response = await fetch('/api/guest/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: 'Hola',
+          conversation_id: conversationId,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send welcome message')
+      }
+
+      const data = await response.json()
+
+      console.log('[GuestChat] Welcome message received')
+
+      // Add user message "Hola" and AI response to messages
+      const userMessage: GuestChatMessage = {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        content: 'Hola',
+        entities: [],
+        created_at: new Date().toISOString(),
+      }
+
+      const assistantMessage: GuestChatMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: data.response,
+        entities: data.entities || [],
+        created_at: new Date().toISOString(),
+      }
+
+      setMessages([userMessage, assistantMessage])
+      setFollowUpSuggestions(data.followUpSuggestions || [])
+
+      // Update tracked entities
+      if (data.entities && data.entities.length > 0) {
+        setTrackedEntities((prev) => {
+          const updated = new Map(prev)
+          data.entities.forEach((entity: string) => {
+            updated.set(entity, {
+              name: entity,
+              firstMentioned: new Date().toISOString(),
+              count: 1,
+            })
+          })
+          return updated
+        })
+      }
+
+    } catch (error) {
+      console.error('[GuestChat] Failed to send welcome message:', error)
+      // Non-blocking error
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -223,7 +424,7 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
         id: msg.id,
         role: msg.role,
         content: msg.content,
-        timestamp: new Date(msg.created_at),
+        timestamp: msg.created_at ? new Date(msg.created_at) : new Date(),
         entities: msg.entities || [],
       }))
 
@@ -373,6 +574,14 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         setFollowUpSuggestions(data.followUpSuggestions)
       }
 
+      // Update topic suggestion (FASE 2.6 - Conversation Intelligence)
+      if (data.topicSuggestion) {
+        setTopicSuggestion({
+          topic: data.topicSuggestion.topic,
+          confidence: data.topicSuggestion.confidence || 0.8,
+        })
+      }
+
       // Update conversation in list (update last_message and updated_at)
       setConversations((prev) =>
         prev.map((conv) =>
@@ -440,6 +649,56 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     }
   }
 
+  const handleCreateTopicConversation = async (topic: string) => {
+    try {
+      // Create nueva conversación con título del topic
+      const response = await fetch('/api/guest/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: topic,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al crear conversación')
+      }
+
+      const data = await response.json()
+
+      // Add new conversation to list
+      const newConversation: Conversation = {
+        id: data.conversation.id,
+        title: data.conversation.title,
+        last_message: data.conversation.last_message,
+        updated_at: data.conversation.updated_at,
+      }
+
+      setConversations((prev) => [newConversation, ...prev])
+      setActiveConversationId(data.conversation.id)
+
+      // Clear current state
+      setMessages([])
+      setTrackedEntities(new Map())
+      setFollowUpSuggestions([])
+      setTopicSuggestion(null)
+
+      // Close sidebar on mobile
+      setIsSidebarOpen(false)
+
+      // Optional: Send initial message about the topic
+      setTimeout(() => {
+        handleSendMessage(`Cuéntame más sobre ${topic}`)
+      }, 500)
+    } catch (err) {
+      console.error('Error creating topic conversation:', err)
+      setError('No se pudo crear la conversación sobre este tema')
+    }
+  }
+
   const formatDate = (date: string | undefined): string => {
     if (!date || typeof date !== 'string') {
       return 'N/A'
@@ -469,6 +728,212 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     }).format(dateObj)
   }
 
+  // File upload handlers
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file size (10MB max)
+    const maxSize = 10 * 1024 * 1024 // 10MB
+    if (file.size > maxSize) {
+      setFileUpload((prev) => ({
+        ...prev,
+        error: 'El archivo es demasiado grande (máximo 10MB)',
+      }))
+      return
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+    if (!allowedTypes.includes(file.type)) {
+      setFileUpload((prev) => ({
+        ...prev,
+        error: 'Formato no permitido. Solo imágenes (JPEG, PNG, WEBP) y PDF.',
+      }))
+      return
+    }
+
+    // Create preview URL for images
+    let preview: string | null = null
+    if (file.type.startsWith('image/')) {
+      preview = URL.createObjectURL(file)
+    }
+
+    setFileUpload({
+      file,
+      preview,
+      isUploading: false,
+      isAnalyzing: false,
+      error: null,
+      visionAnalysis: null,
+      extractedData: null,
+    })
+
+    setShowFilePreview(true)
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const handleCancelUpload = () => {
+    if (fileUpload.preview) {
+      URL.revokeObjectURL(fileUpload.preview)
+    }
+    setFileUpload({
+      file: null,
+      preview: null,
+      isUploading: false,
+      isAnalyzing: false,
+      error: null,
+      visionAnalysis: null,
+      extractedData: null,
+    })
+    setShowFilePreview(false)
+  }
+
+  const handleAnalyzeImage = async () => {
+    if (!fileUpload.file || !activeConversationId) return
+
+    setFileUpload((prev) => ({ ...prev, isAnalyzing: true, error: null }))
+
+    try {
+      const formData = new FormData()
+      formData.append('file', fileUpload.file)
+      formData.append('analyze', 'true')
+
+      const response = await fetch(`/api/guest/conversations/${activeConversationId}/attachments`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al analizar la imagen')
+      }
+
+      const data = await response.json()
+
+      setFileUpload((prev) => ({
+        ...prev,
+        isAnalyzing: false,
+        visionAnalysis: data.visionAnalysis || null,
+        extractedData: data.extractedData || null,
+      }))
+    } catch (err) {
+      console.error('Error analyzing image:', err)
+      setFileUpload((prev) => ({
+        ...prev,
+        isAnalyzing: false,
+        error: 'No se pudo analizar la imagen. Intenta de nuevo.',
+      }))
+    }
+  }
+
+  const handleUploadFile = async () => {
+    if (!fileUpload.file || !activeConversationId) return
+
+    setFileUpload((prev) => ({ ...prev, isUploading: true, error: null }))
+
+    try {
+      const formData = new FormData()
+      formData.append('file', fileUpload.file)
+
+      const response = await fetch(`/api/guest/conversations/${activeConversationId}/attachments`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al subir el archivo')
+      }
+
+      const data = await response.json()
+
+      // Create a message with the file info
+      const fileMessage = `📎 Archivo subido: ${fileUpload.file.name}`
+
+      if (data.visionAnalysis?.description) {
+        // If we have vision analysis, send it as context
+        await handleSendMessage(`${fileMessage}\n\nAnálisis de la imagen: ${data.visionAnalysis.description}`)
+      } else {
+        // Just acknowledge the upload
+        const uploadMessage: GuestChatMessage = {
+          id: `file-${Date.now()}`,
+          role: 'assistant',
+          content: `✅ Archivo recibido: **${fileUpload.file.name}**`,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, uploadMessage])
+      }
+
+      // Close modal and reset state
+      handleCancelUpload()
+    } catch (err) {
+      console.error('Error uploading file:', err)
+      setFileUpload((prev) => ({
+        ...prev,
+        isUploading: false,
+        error: 'No se pudo subir el archivo. Intenta de nuevo.',
+      }))
+    }
+  }
+
+  const handleComplianceSubmit = async (data: any) => {
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/compliance/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationalData: data.conversational_data,
+          reservationId: session.reservation_id,
+          conversationId: activeConversationId,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Submission failed')
+      }
+
+      const result = await response.json()
+
+      // Success: cerrar modal, mostrar success screen
+      setSubmissionData(result)
+      setShowComplianceModal(false)
+      setShowComplianceSuccess(true)
+    } catch (err: any) {
+      console.error('Compliance submission error:', err)
+      // Error handling se maneja en ComplianceConfirmation
+      throw err
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleEditField = (field: string, value: any) => {
+    // Update complianceData with edited value
+    setComplianceData((prev: any) => ({
+      ...prev,
+      conversational_data: {
+        ...prev?.conversational_data,
+        [field]: value,
+      },
+    }))
+  }
+
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
@@ -481,19 +946,35 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           bg-white border-r border-slate-200 shadow-lg lg:shadow-none
         `}
       >
-        {isLoadingConversations ? (
-          <div className="flex items-center justify-center h-full">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <div className="h-full flex flex-col">
+          {/* ComplianceReminder banner */}
+          <div className="flex-shrink-0 p-4">
+            <ComplianceReminder
+              onStart={() => setShowComplianceModal(true)}
+              onDismiss={() => {
+                // Handle dismiss if needed
+              }}
+              progressPercentage={0}
+            />
           </div>
-        ) : (
-          <ConversationList
-            conversations={conversations}
-            activeConversationId={activeConversationId}
-            onSelectConversation={handleSelectConversation}
-            onNewConversation={handleNewConversation}
-            onDeleteConversation={handleDeleteConversation}
-          />
-        )}
+
+          {/* Conversation list */}
+          <div className="flex-1 overflow-hidden">
+            {isLoadingConversations ? (
+              <div className="flex items-center justify-center h-full">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : (
+              <ConversationList
+                conversations={conversations}
+                activeConversationId={activeConversationId}
+                onSelectConversation={handleSelectConversation}
+                onNewConversation={handleNewConversation}
+                onDeleteConversation={handleDeleteConversation}
+              />
+            )}
+          </div>
+        </div>
       </aside>
 
       {/* Mobile overlay backdrop */}
@@ -502,6 +983,171 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
+      )}
+
+      {/* File Preview Modal */}
+      {showFilePreview && fileUpload.file && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Vista previa del archivo</h3>
+              <button
+                onClick={handleCancelUpload}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Cerrar"
+              >
+                <XCircle className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 space-y-4">
+              {/* Image Preview */}
+              {fileUpload.preview && (
+                <div className="relative rounded-lg overflow-hidden bg-gray-100">
+                  <img
+                    src={fileUpload.preview}
+                    alt="Preview"
+                    className="w-full h-auto max-h-96 object-contain"
+                  />
+                </div>
+              )}
+
+              {/* File Info */}
+              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                {fileUpload.file.type.startsWith('image/') ? (
+                  <ImageIcon className="h-8 w-8 text-blue-600" />
+                ) : (
+                  <FileText className="h-8 w-8 text-red-600" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 truncate">{fileUpload.file.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {(fileUpload.file.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+              </div>
+
+              {/* Vision Analysis Results */}
+              {fileUpload.visionAnalysis && (
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start gap-2 mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-blue-600 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-blue-900 mb-1">Análisis de IA</h4>
+                      <p className="text-sm text-blue-800">{fileUpload.visionAnalysis.description}</p>
+                      <p className="text-xs text-blue-600 mt-1">
+                        Confianza: {(fileUpload.visionAnalysis.confidence * 100).toFixed(0)}%
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Extracted Passport Data */}
+              {fileUpload.extractedData && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-start gap-2 mb-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-green-900 mb-2">Datos extraídos del pasaporte</h4>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        {fileUpload.extractedData.name && (
+                          <div>
+                            <p className="text-green-700 font-medium">Nombre:</p>
+                            <p className="text-green-800">{fileUpload.extractedData.name}</p>
+                          </div>
+                        )}
+                        {fileUpload.extractedData.passportNumber && (
+                          <div>
+                            <p className="text-green-700 font-medium">Pasaporte:</p>
+                            <p className="text-green-800">{fileUpload.extractedData.passportNumber}</p>
+                          </div>
+                        )}
+                        {fileUpload.extractedData.nationality && (
+                          <div>
+                            <p className="text-green-700 font-medium">Nacionalidad:</p>
+                            <p className="text-green-800">{fileUpload.extractedData.nationality}</p>
+                          </div>
+                        )}
+                        {fileUpload.extractedData.birthDate && (
+                          <div>
+                            <p className="text-green-700 font-medium">Fecha de nacimiento:</p>
+                            <p className="text-green-800">{fileUpload.extractedData.birthDate}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Error Message */}
+              {fileUpload.error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 text-red-600" />
+                    <p className="text-sm text-red-800">{fileUpload.error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4">
+                {/* Analyze button (only for images, if not already analyzed) */}
+                {fileUpload.file.type.startsWith('image/') && !fileUpload.visionAnalysis && (
+                  <Button
+                    onClick={handleAnalyzeImage}
+                    disabled={fileUpload.isAnalyzing || fileUpload.isUploading}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {fileUpload.isAnalyzing ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Analizando...
+                      </>
+                    ) : (
+                      <>
+                        <Bot className="h-4 w-4 mr-2" />
+                        Analizar con IA
+                      </>
+                    )}
+                  </Button>
+                )}
+
+                {/* Upload button */}
+                <Button
+                  onClick={handleUploadFile}
+                  disabled={fileUpload.isAnalyzing || fileUpload.isUploading}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                >
+                  {fileUpload.isUploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Subiendo...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Subir archivo
+                    </>
+                  )}
+                </Button>
+
+                {/* Cancel button */}
+                <Button
+                  onClick={handleCancelUpload}
+                  disabled={fileUpload.isAnalyzing || fileUpload.isUploading}
+                  variant="outline"
+                  className="border-gray-300"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Main Chat Area */}
@@ -581,6 +1227,42 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               </div>
+            ) : !activeConversationId ? (
+              <div className="flex items-center justify-center h-full py-12">
+                <div className="text-center max-w-md px-4">
+                  <Bot className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    Bienvenido a tu asistente de viaje
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Para comenzar, crea una nueva conversación haciendo click en el botón <strong>"Nueva conversación"</strong> en la barra lateral.
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    Puedes crear múltiples conversaciones para organizar tus preguntas por tema.
+                  </p>
+                </div>
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="flex items-center justify-center h-full py-12">
+                <div className="text-center max-w-md px-4">
+                  <Bot className="h-16 w-16 text-blue-300 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    ¡Conversación iniciada!
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Escribe tu primera pregunta abajo. Puedo ayudarte con información sobre:
+                  </p>
+                  <ul className="text-left text-sm text-gray-600 space-y-1 mb-4">
+                    <li>🏖️ Actividades turísticas en San Andrés</li>
+                    <li>🍽️ Restaurantes y gastronomía local</li>
+                    <li>🏨 Información sobre tu alojamiento</li>
+                    <li>🚕 Transporte y movilidad</li>
+                  </ul>
+                  <p className="text-xs text-gray-400">
+                    Tip: Puedo recordar el contexto de nuestra conversación para darte mejores respuestas.
+                  </p>
+                </div>
+              </div>
             ) : (
               <>
                 {messages.map((message, index) => (
@@ -654,7 +1336,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                       )}
 
                       <p className="text-xs text-gray-400 mt-1 px-2">
-                        {message.timestamp.toLocaleTimeString('es-ES', {
+                        {message.timestamp?.toLocaleTimeString('es-ES', {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
@@ -698,6 +1380,69 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           </div>
         )}
 
+        {/* Topic Suggestion Banner (FASE 2.6 - Conversation Intelligence) */}
+        <AnimatePresence>
+          {topicSuggestion && !isLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="flex-shrink-0 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-200"
+            >
+              <div className="max-w-4xl mx-auto px-4 py-4">
+                <div className="flex items-start gap-3">
+                  {/* Icon */}
+                  <div className="flex-shrink-0 mt-0.5">
+                    <Lightbulb className="h-6 w-6 text-blue-600" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">
+                      Nueva conversación sugerida
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-3">
+                      He notado que estás hablando sobre{' '}
+                      <span className="font-medium text-blue-700">
+                        {topicSuggestion.topic}
+                      </span>
+                      . ¿Te gustaría crear una conversación dedicada para este tema?
+                    </p>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => handleCreateTopicConversation(topicSuggestion.topic)}
+                        className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                        aria-label={`Crear conversación sobre ${topicSuggestion.topic}`}
+                      >
+                        Sí, crear conversación
+                      </button>
+                      <button
+                        onClick={() => setTopicSuggestion(null)}
+                        className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                        aria-label="Continuar en conversación actual"
+                      >
+                        No, continuar aquí
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setTopicSuggestion(null)}
+                    className="flex-shrink-0 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    aria-label="Cerrar sugerencia"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Error Bar */}
         {error && (
           <div className="flex-shrink-0 bg-red-50 border-t border-red-200 px-4 py-3">
@@ -723,6 +1468,27 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex gap-2 items-end">
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              onChange={handleFileSelect}
+              className="hidden"
+              aria-label="Seleccionar archivo"
+            />
+
+            {/* Paperclip button */}
+            <Button
+              onClick={handleFileButtonClick}
+              disabled={isLoading}
+              variant="outline"
+              className="h-11 w-11 rounded-full flex items-center justify-center transition-colors hover:bg-blue-50 hover:border-blue-300"
+              aria-label="Adjuntar archivo"
+            >
+              <Paperclip className="h-5 w-5 text-gray-600" />
+            </Button>
+
             <textarea
               ref={textareaRef}
               value={input}
@@ -756,6 +1522,33 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           </div>
         </div>
       </div>
+
+      {/* ComplianceConfirmation Modal */}
+      {showComplianceModal && complianceData && (
+        <ComplianceConfirmation
+          conversationalData={complianceData.conversational_data}
+          sireData={complianceData.sire_data}
+          onConfirm={handleComplianceSubmit}
+          onEdit={handleEditField}
+          onCancel={() => setShowComplianceModal(false)}
+          isLoading={isSubmitting}
+        />
+      )}
+
+      {/* ComplianceSuccess Screen */}
+      {showComplianceSuccess && submissionData && (
+        <ComplianceSuccess
+          sireReferenceNumber={submissionData.mockRefs?.sireRef || 'N/A'}
+          traReferenceNumber={submissionData.mockRefs?.traRef}
+          onClose={() => {
+            setShowComplianceSuccess(false)
+            // Auto-dismiss reminder
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('compliance_reminder_dismissed', 'true')
+            }
+          }}
+        />
+      )}
 
       {/* Animations */}
       <style jsx global>{`

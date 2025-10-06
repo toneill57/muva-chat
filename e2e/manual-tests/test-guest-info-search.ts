@@ -58,7 +58,6 @@ async function testGuestInfoSearch() {
   // Create a test guest session
   const mockGuestInfo: GuestSession = {
     reservation_id: 'test-reservation-456',
-    conversation_id: 'test-conversation-789',
     tenant_id: TENANT_ID,
     guest_name: 'Test Guest',
     check_in: new Date().toISOString(),

@@ -9,13 +9,15 @@ import { createServerClient } from '@/lib/supabase'
  *
  * Request body: { title?: string }
  * Headers: Authorization: Bearer <token>
- * Response: { id, guest_id, tenant_id, title, last_message, created_at, updated_at }
+ * Response: { conversation: { id, guest_id, tenant_id, title, last_message, created_at, updated_at } }
  */
 export async function POST(request: NextRequest) {
   try {
-    // 1. Verify authentication
+    // 1. Verify authentication (cookie or header)
+    const cookieToken = request.cookies.get('guest_token')?.value
     const authHeader = request.headers.get('authorization')
-    const token = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(authHeader)
+    const token = cookieToken || headerToken
 
     if (!token) {
       return NextResponse.json(
@@ -75,7 +77,7 @@ export async function POST(request: NextRequest) {
       title: validatedTitle,
     })
 
-    return NextResponse.json(conversation, { status: 201 })
+    return NextResponse.json({ conversation }, { status: 201 })
 
   } catch (error) {
     console.error('[guest-conversations] POST error:', error)
@@ -96,9 +98,11 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Verify authentication
+    // 1. Verify authentication (cookie or header)
+    const cookieToken = request.cookies.get('guest_token')?.value
     const authHeader = request.headers.get('authorization')
-    const token = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(authHeader)
+    const token = cookieToken || headerToken
 
     if (!token) {
       return NextResponse.json(

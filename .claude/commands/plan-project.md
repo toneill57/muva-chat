@@ -169,14 +169,14 @@ Generate `TODO.md` organized by phases:
   - Subtask or detail 1
   - Subtask or detail 2
   - Files: `path/to/file.ts`
-  - Agent: **{agent-name}**
+  - Agent: **@agent-{agent-name}**
   - Test: npm test path/to/test
 
 ### 1.2 Task name
 - [ ] Task description (estimate: Xh)
   - Details...
   - Files: `path/to/file.ts`
-  - Agent: **{agent-name}**
+  - Agent: **@agent-{agent-name}**
   - Test: Command to run
 
 ---
@@ -187,7 +187,7 @@ Generate `TODO.md` organized by phases:
 - [ ] Task description (estimate: Xh)
   - Details...
   - Files: `path/to/file.ts`
-  - Agent: **{agent-name}**
+  - Agent: **@agent-{agent-name}**
   - Test: Command to run
 
 ---
@@ -273,7 +273,7 @@ Por favor, confirma que entiendes el contexto antes de continuar.
 
 ### Prompt 1.1: {Task Name}
 
-**AGENTE:** @{agent-name}
+**AGENTE:** @agent-{agent-name}
 
 **COPY-PASTE DESDE AQUÍ:**
 
@@ -306,7 +306,7 @@ SIGUIENTE: Prompt 1.2 para {next task}
 
 ### Prompt 1.2: {Task Name}
 
-**AGENTE:** @{agent-name}
+**AGENTE:** @agent-{agent-name}
 
 **COPY-PASTE DESDE AQUÍ:**
 
@@ -370,10 +370,10 @@ He completado FASE {N}. Necesito:
 
 ### Step 5: Identify Required Agents
 List which specialized agents are needed:
-- **ux-interface**: UI/UX, components, styling, animations
-- **backend-developer**: API endpoints, business logic, database
-- **database-agent**: Migrations, monitoring, RLS policies
-- **deploy-agent**: Commits, Vercel deployment, verification
+- **@agent-ux-interface**: UI/UX, components, styling, animations
+- **@agent-backend-developer**: API endpoints, business logic, database
+- **@agent-database-agent**: Migrations, monitoring, RLS policies
+- **@agent-deploy-agent**: Commits, VPS deployment, verification
 
 ### Step 6: Update Agent Configurations
 For each agent in `.claude/agents/*.md`, add a project section:
@@ -471,7 +471,7 @@ Review and update `SNAPSHOT.md`:
 
 ## 🤖 AGENTES Y WORKFLOW
 
-### Agente Principal: {agent-name}
+### Agente Principal: @agent-{agent-name}
 **Responsabilidad**: {What agent does}
 
 **Tareas por fase:**
@@ -492,10 +492,10 @@ Review and update `SNAPSHOT.md`:
 
 ## 🚀 PRÓXIMOS PASOS INMEDIATOS
 
-### 1. Ejecutar FASE 1 con @{agent-name}
+### 1. Ejecutar FASE 1 con @agent-{agent-name}
 **Usar prompt 1.1** de `{project}-prompt-workflow.md`:
 ```
-@{agent-name}
+@agent-{agent-name}
 
 TAREA: {First task}
 ...
@@ -576,7 +576,7 @@ Simplify `CLAUDE.md` to focus on current project:
 1. Read `plan.md` for project context
 2. Read `TODO.md` for current tasks
 3. Use prompts from `{project}-prompt-workflow.md`
-4. Invoke `@{agent-name}` for {work type}
+4. Invoke `@agent-{agent-name}` for {work type}
 
 ### Quick Start FASE 1
 ```bash
@@ -589,7 +589,7 @@ Estoy en el proyecto "{Project Name}".
 - Prompts: {project}-prompt-workflow.md
 
 Próxima fase: FASE 1 ({Description})
-Agente: @{agent-name}
+Agente: @agent-{agent-name}
 
 Por favor lee los archivos y ejecuta Prompt 1.1
 ```
@@ -748,8 +748,8 @@ When a user completes a fase, they should use the documentation prompt to:
 - Keep agent files as is, just add project section
 
 ### Agent Integration
-- Use `@{agent-name}` mentions in workflow prompts
-- Use bold `**{agent-name}**` in TODO.md Agent labels
+- Use `@agent-{agent-name}` mentions in workflow prompts (CRITICAL: Always include @agent- prefix)
+- Use bold `**@agent-{agent-name}**` in TODO.md Agent labels
 - Add project section to agent config, don't remove existing content
 - Specify clear responsibilities per FASE
 
@@ -817,7 +817,7 @@ Always create `docs/{feature}/DUAL_ENVIRONMENT_STRATEGY.md` explaining:
 **Command execution:**
 1. Asked: objective, current state, desired state, agents needed
 2. Created `plan.md` (512 lines) - **6 phases** including FASE 0 (Dual Setup) & FASE 5 (Production)
-3. Created `TODO.md` (360+ lines) - 25 tasks across 6 phases with @ux-interface assignments
+3. Created `TODO.md` (360+ lines) - 25 tasks across 6 phases with @agent-ux-interface assignments
 4. Created `mobile-first-prompt-workflow.md` (950+ lines) - 11 prompts (added 0.1 and 5.1)
 5. Updated `.claude/agents/ux-interface.md` - Added dual environment strategy
 6. Created `docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md` - Complete workflow documentation

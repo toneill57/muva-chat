@@ -25,10 +25,66 @@ export default function GuestChatPage({ params }: { params: Promise<{ tenant_id:
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  // Step 1: Resolve tenant slug/UUID on mount
+  // Step 0: Check for active session BEFORE resolving tenant (auto-redirect)
   useEffect(() => {
+    const checkActiveSession = async () => {
+      const storedToken = localStorage.getItem('guest_token')
+      if (!storedToken) return // No session, proceed with normal flow
+
+      try {
+        // Verify token
+        const response = await fetch('/api/guest/verify-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: storedToken })
+        })
+
+        if (response.ok) {
+          const { session: verifiedSession } = await response.json()
+
+          // Check if we're on the wrong tenant URL
+          if (verifiedSession.tenant_id !== tenantSlugOrUuid) {
+            console.log(`[GuestChatPage] Active session detected for different tenant`)
+            console.log(`  Current URL: /guest-chat/${tenantSlugOrUuid}`)
+            console.log(`  Session tenant: ${verifiedSession.tenant_id}`)
+            console.log(`  ➡️  Redirecting to correct tenant...`)
+
+            // Redirect to correct tenant URL
+            router.push(`/guest-chat/${verifiedSession.tenant_id}`)
+            return
+          }
+
+          // Already on correct URL, set session directly (skip tenant resolution)
+          console.log(`[GuestChatPage] Active session matches URL tenant - loading directly`)
+          setSession(verifiedSession)
+          setToken(storedToken)
+          setTenantId(verifiedSession.tenant_id)
+          setLoading(false)
+        } else {
+          // Invalid token, clear and continue with normal flow
+          console.log(`[GuestChatPage] Invalid token found, clearing`)
+          localStorage.removeItem('guest_token')
+        }
+      } catch (err) {
+        console.error('[GuestChatPage] Session check error:', err)
+        localStorage.removeItem('guest_token')
+      }
+    }
+
+    checkActiveSession()
+  }, [tenantSlugOrUuid, router])
+
+  // Step 1: Resolve tenant slug/UUID on mount (only if no active session)
+  useEffect(() => {
+    // Skip if session already loaded in Step 0
+    if (session) return
     const resolveTenant = async () => {
       try {
+        // Validate tenantSlugOrUuid format
+        if (!tenantSlugOrUuid || tenantSlugOrUuid.trim() === '') {
+          throw new Error('Invalid tenant identifier in URL')
+        }
+
         const response = await fetch('/api/tenant/resolve', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -36,24 +92,26 @@ export default function GuestChatPage({ params }: { params: Promise<{ tenant_id:
         })
 
         if (!response.ok) {
-          throw new Error('Tenant not found')
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || 'Tenant not found')
         }
 
         const { tenant_id } = await response.json()
         setTenantId(tenant_id)
       } catch (err) {
-        console.error('Failed to resolve tenant:', err)
-        setError('Hotel no encontrado. Verifica la URL.')
+        console.error('[GuestChatPage] Failed to resolve tenant:', err)
+        setError(`Hotel "${tenantSlugOrUuid}" no encontrado. Verifica la URL.`)
         setLoading(false)
       }
     }
 
     resolveTenant()
-  }, [tenantSlugOrUuid])
+  }, [tenantSlugOrUuid, session])
 
-  // Step 2: Session persistence - Load JWT from localStorage
+  // Step 2: Session persistence - Load JWT from localStorage (only if not loaded in Step 0)
   useEffect(() => {
     if (!tenantId) return // Wait for tenant resolution
+    if (session) return // Already loaded in Step 0
 
     const loadSession = async () => {
       try {
@@ -68,8 +126,24 @@ export default function GuestChatPage({ params }: { params: Promise<{ tenant_id:
 
           if (response.ok) {
             const { session: verifiedSession } = await response.json()
-            setSession(verifiedSession)
-            setToken(storedToken)
+
+            // Check if session tenant matches URL tenant
+            if (verifiedSession.tenant_id !== tenantId) {
+              console.warn('[GuestChatPage] Session tenant mismatch - clearing old session')
+              console.log(`  URL tenant: ${tenantId}`)
+              console.log(`  Session tenant: ${verifiedSession.tenant_id}`)
+
+              // Clear old session and show login for new tenant
+              localStorage.removeItem('guest_token')
+              await fetch('/api/guest/logout', {
+                method: 'POST',
+                credentials: 'include',
+              }).catch(() => {}) // Ignore logout errors
+            } else {
+              // Session matches - restore it
+              setSession(verifiedSession)
+              setToken(storedToken)
+            }
           } else {
             // Token invalid or expired, clear it
             localStorage.removeItem('guest_token')
@@ -85,7 +159,7 @@ export default function GuestChatPage({ params }: { params: Promise<{ tenant_id:
     }
 
     loadSession()
-  }, [tenantId])
+  }, [tenantId, session])
 
   const handleLoginSuccess = (newSession: GuestSession, newToken: string) => {
     localStorage.setItem('guest_token', newToken)
@@ -93,12 +167,23 @@ export default function GuestChatPage({ params }: { params: Promise<{ tenant_id:
     setToken(newToken)
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('guest_token')
-    setSession(null)
-    setToken(null)
-    setError(null)
-    router.refresh()
+  const handleLogout = async () => {
+    try {
+      // Clear HTTP-only cookie via API
+      await fetch('/api/guest/logout', {
+        method: 'POST',
+        credentials: 'include', // Send cookie so API can identify and delete it
+      })
+    } catch (error) {
+      console.error('[Logout] Failed to clear cookie:', error)
+    } finally {
+      // Always clear client-side state
+      localStorage.removeItem('guest_token')
+      setSession(null)
+      setToken(null)
+      setError(null)
+      router.push(`/guest-chat/${tenantId}`)
+    }
   }
 
   const handleRetry = () => {

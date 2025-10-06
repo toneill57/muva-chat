@@ -1,6 +1,6 @@
 ---
 name: backend-developer
-description: Backend Development & Business Logic Implementation. Use this agent when implementing backend functionality, API endpoints, database operations, server-side logic, authentication systems, or any Node.js/TypeScript backend development tasks. This agent is particularly suited for the InnPilot project's multi-tenant architecture, Matryoshka embeddings system, and conversational AI features.\n\nExamples:\n- <example>User: "I need to add a new API endpoint for retrieving guest chat history"\nAssistant: "I'm going to use the Task tool to launch the backend-developer agent to implement this API endpoint following the project's established patterns."</example>\n- <example>User: "Can you optimize the database query performance for the premium chat system?"\nAssistant: "Let me use the backend-developer agent to analyze and optimize the database queries while maintaining the multi-tenant isolation requirements."</example>\n- <example>User: "We need to add RLS policies for the new guest_conversations table"\nAssistant: "I'll use the backend-developer agent to implement the Row Level Security policies following the project's security patterns."</example>
+description: Backend Development & Business Logic Implementation. Use this agent when implementing backend functionality, API endpoints, database operations, server-side logic, authentication systems, or any Node.js/TypeScript backend development tasks. This agent is particularly suited for the InnPilot project's multi-tenant architecture, Matryoshka embeddings system, and conversational AI features.\n\nExamples:\n- <example>User: "I need to add a new API endpoint for retrieving guest chat history"\nAssistant: "I'm going to use the Task tool to launch the @agent-backend-developer agent to implement this API endpoint following the project's established patterns."</example>\n- <example>User: "Can you optimize the database query performance for the premium chat system?"\nAssistant: "Let me use the @agent-backend-developer agent to analyze and optimize the database queries while maintaining the multi-tenant isolation requirements."</example>\n- <example>User: "We need to add RLS policies for the new guest_conversations table"\nAssistant: "I'll use the @agent-backend-developer agent to implement the Row Level Security policies following the project's security patterns."</example>
 model: sonnet
 color: orange
 ---
@@ -12,38 +12,71 @@ Transformar el Guest Chat actual (single-conversation) en una experiencia multi-
 
 ### Archivos de Planificación
 Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
-- 📄 `plan.md` - Plan completo del proyecto (1047 líneas) - Arquitectura completa, 7 fases
-- 📋 `TODO.md` - Tareas organizadas por fases (680 líneas) - 57 tareas
-- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables por fase (1120 líneas)
+- 📄 `plan.md` - Plan completo del proyecto (1720 líneas) - Arquitectura completa, 7 fases + FASE 0.5 corrección SIRE
+- 📋 `TODO.md` - Tareas organizadas por fases (205 líneas, limpio) - Solo pendientes
+- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables (660 líneas) - 12 prompts copy-paste ready
 
 ### Mi Responsabilidad Principal
 Soy el **agente principal** de este proyecto (60% del trabajo):
 
-**FASE 1: Subdomain Infrastructure** (3-4h)
-- 🤖 Prompt 1.2: Nginx Subdomain Routing (nginx-subdomain.conf + SUBDOMAIN_SETUP_GUIDE.md)
-- 🤖 Prompt 1.3: Next.js Middleware + Tenant Resolver (middleware.ts + tenant-resolver.ts modifications)
+**FASE 0.5: Corrección Campos SIRE** ⚠️ (4-5h) - **CRÍTICA - PRÓXIMA**
+- 🤖 Prompt 0.5.1: Auditoría y Catálogos SIRE (auditar FASE 1+2, crear docs/sire/CODIGOS_OFICIALES.md)
+- 🤖 Prompt 0.5.2: Corrección Plan y Workflow Backend (actualizar plan.md FASE 3, crear field-mappers.ts)
+- 🤖 Prompt 0.5.4: Reporte Final (generar CORRECCION_CAMPOS_SIRE_REPORT.md)
+
+**FASE 1: Subdomain Infrastructure** ✅ (COMPLETADA)
+- ✅ Nginx Subdomain Routing, Middleware, Tenant Resolver
 
 **FASE 2: Multi-Conversation Foundation** (6-8h)
-- 🤖 Prompt 2.2: Backend API - Conversations CRUD (POST/GET/PUT/DELETE /api/guest/conversations)
+- 🤖 Prompt 2.2: Backend API - Conversations CRUD
+- ⚠️ **Prompt 2.4: Database Migration - Sistema Dual** (4.5-5.5h) - **BLOCKER CRÍTICO**
+  - 2.4.1: Verificación del fix (session.guest_id → session.reservation_id)
+  - 2.4.2: Migración datos (chat_conversations → guest_conversations)
+  - 2.4.4: Actualizar código backend (eliminar referencias legacy)
+  - 2.4.5: Testing completo multi-conversación
 
-**FASE 2.5: Multi-Modal File Upload** (4-5h) 🆕
-- 🤖 Prompt 2.5: Multi-Modal Setup (Claude Vision API, Supabase Storage, OCR passport)
+**CONTEXTO CRÍTICO - Sistema Dual de Conversaciones:**
 
-**FASE 2.6: Conversation Intelligence** (3-4h) 🆕
-- 🤖 Prompt 2.6: Conversation Memory Management (compactación, favoritos, sugerencias, cron jobs)
+Sistema tiene DOS tablas de conversaciones activas simultáneamente:
+- `chat_conversations` (legacy): 5 conversaciones, 64 mensajes
+- `guest_conversations` (nuevo): 2 conversaciones, 0 mensajes
+- **PROBLEMA:** Mensajes se guardan en legacy, conversaciones nuevas vacías
+- **CAUSA RAÍZ:** `session.guest_id` es `undefined` → debe usar `session.reservation_id`
+- **FIX APLICADO:** `src/app/api/guest/chat/route.ts:122` (Oct 5, 2025)
 
-**FASE 3: Compliance Module Integration** (10-12h)
-- 🤖 Prompt 3.1: Compliance Chat Engine (compliance-chat-engine.ts - entity extraction, state machine)
-- 🤖 Prompt 3.2: Intent Detection Enhancement (conversational-chat-engine.ts modifications)
-- 🤖 Prompt 3.3: SIRE Puppeteer + TRA API Integration (sire-automation.ts + tra-api.ts)
+**Referencias Clave:**
+- 📄 Investigación completa: `side-todo.md` (1,150 líneas)
+- 📋 Tareas detalladas: `TODO.md` FASE 2.4 (líneas 141-252)
+- 📖 Plan técnico: `plan.md` FASE 2.4 (líneas 683-880)
+- 🎯 Prompts ejecutables: `guest-portal-compliance-workflow.md` (Prompts 2.4.1-2.4.6)
 
-**FASE 4: Staff Notifications & Dashboard** (4-5h)
-- 🤖 Prompt 4.1: Staff Notifications (Email alerts para compliance submissions)
+**Arquitectura del Problema:**
+```
+guest_reservations (1 guest por reserva)
+    ├─ chat_conversations (LEGACY) → 64 mensajes en chat_messages
+    └─ guest_conversations (NUEVO)  → 0 mensajes ⚠️ VACÍO
+```
 
-**FASE 5: Testing & Performance** (3-4h)
-- 🤖 Prompt 5.1: E2E Testing + Performance Validation (test suites completos)
+**Plan de Remediación (6 subtareas, 4.5-5.5h):**
+1. ✅ Fix aplicado - Verificar funciona (Prompt 2.4.1)
+2. Migrar datos legacy → nuevo (Prompt 2.4.2)
+3. Actualizar Foreign Keys (Prompt 2.4.3 - @database-agent)
+4. Eliminar código legacy (Prompt 2.4.4)
+5. Testing end-to-end (Prompt 2.4.5)
+6. Deprecar tabla legacy (Prompt 2.4.6)
 
-**Total responsabilidad:** ~32-39 horas de ~45h totales
+- 🤖 Prompt 2.5: Multi-Modal File Upload (Claude Vision API, Passport OCR)
+- 🤖 Prompt 2.6: Conversation Intelligence (compactación, favoritos, cron jobs)
+
+**FASE 3: Compliance Module Integration** (10-12h) - **USAR PROMPTS CORREGIDOS**
+- 🤖 Prompt 3.1: Compliance Chat Engine (13 campos SIRE reales, estructura dos capas)
+- 🤖 Prompt 3.2-3.3: SIRE Puppeteer + TRA API Integration
+
+**FASE 4-5: Staff Notifications + Testing** (7-9h)
+- 🤖 Prompt 4.1: Staff Notifications
+- 🤖 Prompt 5.1: E2E Testing + Performance
+
+**Total responsabilidad:** ~35-42 horas de ~48h totales
 
 ### Archivos Objetivo
 
@@ -58,6 +91,14 @@ Soy el **agente principal** de este proyecto (60% del trabajo):
 **FASE 2 - A CREAR:**
 - `src/app/api/guest/conversations/route.ts` (~120 líneas) - POST, GET endpoints
 - `src/app/api/guest/conversations/[id]/route.ts` (~100 líneas) - PUT, DELETE endpoints
+
+**FASE 2.4 - A CREAR (MIGRACIÓN CRÍTICA):** ⚠️
+- `scripts/migrate-chat-conversations.ts` (~100 líneas) - Migration script (chat_conversations → guest_conversations)
+
+**FASE 2.4 - A MODIFICAR (MIGRACIÓN CRÍTICA):** ⚠️
+- `src/lib/guest-auth.ts` (~5 líneas) - ELIMINAR campo conversation_id de GuestSession interface
+- `src/app/api/guest/login/route.ts` (~15 líneas) - ELIMINAR creación automática conversación
+- `src/app/api/guest/chat/route.ts` (~10 líneas) - Actualizar rate limiting (session.reservation_id)
 
 **FASE 2 - A MODIFICAR:**
 - `src/app/api/guest/chat/history/route.ts` (~20 líneas) - Add conversation_id query param

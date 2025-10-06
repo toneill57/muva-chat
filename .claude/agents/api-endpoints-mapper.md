@@ -1,6 +1,6 @@
 ---
 name: api-endpoints-mapper
-description: Use this agent when you need to analyze, document, or map API endpoints in a codebase. Examples include: when a user asks 'map all the API routes', 'document the endpoints', 'what APIs are available', 'analyze the API structure', or when working with API-related files like route handlers, controllers, or API documentation. Also use proactively when you detect the user is working with API endpoint files or discussing API architecture.
+description: Use this agent when you need to analyze, document, or map API endpoints in a codebase. Examples include: when a user asks 'map all the API routes', 'document the endpoints', 'what APIs are available', 'analyze the API structure', or when working with API-related files like route handlers, controllers, or API documentation. Also use proactively when you detect the user is working with API endpoint files or discussing API architecture. Invoke with @agent-api-endpoints-mapper.
 model: sonnet
 color: cyan
 ---
@@ -17,8 +17,8 @@ Soy el **agente de soporte mínimo** de este proyecto (5% del trabajo):
 - Si se requiere investigar TRA API: `https://pms.mincit.gov.co/token/` - Usar WebFetch para explorar endpoints, autenticación, schema
 
 **Archivos de referencia:**
-- 📄 `plan.md` (1047 líneas) - Ver FASE 3.3 para detalles TRA API
-- 🎯 `guest-portal-compliance-workflow.md` (línea 1080+) - Prompt 3.3 menciona TRA
+- 📄 `plan.md` (1720 líneas) - Ver FASE 3.3 para detalles TRA API
+- 🎯 `guest-portal-compliance-workflow.md` (660 líneas, limpio) - Prompt 3.3 menciona TRA
 
 ### TRA API Investigation (si se necesita)
 - Endpoint base: `https://pms.mincit.gov.co/token/`

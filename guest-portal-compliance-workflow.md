@@ -2,8 +2,9 @@
 
 **Proyecto:** Guest Portal Multi-Conversation Architecture with Integrated Compliance
 **Referencias:**
-- `plan.md` (1720 líneas) - Plan completo
-- `TODO.md` (205 líneas) - Tareas organizadas
+- `plan.md` (1963 líneas) - Plan completo con FASE 3.5 + 3.6
+- `TODO.md` (342 líneas) - 95 tareas organizadas
+- `guest-portal-compliance-workflow.md` - Este archivo (15 prompts ejecutables)
 - `_assets/sire/pasos-para-reportar-al-sire.md` - 13 campos SIRE oficiales
 
 ---
@@ -13,19 +14,31 @@
 ```
 CONTEXTO DEL PROYECTO: Guest Portal Multi-Conversation + Compliance Module
 
+⚠️ BLOCKER CRÍTICO: FASE 2.4 Database Migration (4.5-5.5h) - PRÓXIMA PRIORIDAD
+
 Proyecto: Transformar Guest Chat single-conversation en multi-conversation moderna (estilo Claude AI) con compliance integrado (SIRE + TRA).
 
 ARCHIVOS CLAVE:
-- plan.md → Plan completo (1720 líneas, 7 fases + FASE 0.5 corrección SIRE)
-- TODO.md → Tareas organizadas (205 líneas, limpio)
+- side-todo.md → Investigación BLOCKER crítico (1,150 líneas)
+- plan.md → Plan completo (1,963 líneas, 7 fases + FASE 2.4)
+- TODO.md → Tareas organizadas (342 líneas, 68 tareas activas)
 - guest-portal-compliance-workflow.md → Este archivo (prompts ejecutables)
 
+BLOCKER CRÍTICO (Oct 5, 2025):
+Sistema tiene DOS tablas de conversaciones activas simultáneamente:
+- chat_conversations (legacy): 5 conv, 64 mensajes
+- guest_conversations (nuevo): 2 conv, 0 mensajes
+- PROBLEMA: Mensajes se guardan en legacy, conversaciones nuevas vacías
+- FIX APLICADO: src/app/api/guest/chat/route.ts:122
+- PLAN: FASE 2.4 (6 subtareas) - Ver Prompts 2.4.1-2.4.6 abajo
+
 OBJETIVO:
-1. Sidebar multi-conversaciones (como Staff Chat)
-2. Compliance conversacional SIRE + TRA (13 campos oficiales)
-3. Subdomain architecture (simmerdown.innpilot.io)
-4. Confirmación pre-submit
-5. Staff notifications
+1. ⚠️ PRIMERO: Migrar sistema dual a guest_conversations (FASE 2.4)
+2. Sidebar multi-conversaciones (como Staff Chat)
+3. Compliance conversacional SIRE + TRA (13 campos oficiales)
+4. Subdomain architecture (simmerdown.innpilot.io)
+5. Confirmación pre-submit con DOS CAPAS (conversational + SIRE)
+6. Staff notifications
 
 STACK:
 - Frontend: Next.js 15.5.3, React, Tailwind CSS
@@ -35,18 +48,35 @@ STACK:
 - Compliance: Puppeteer (SIRE), REST API (TRA MinCIT)
 - Infrastructure: Nginx, Let's Encrypt SSL, VPS Hostinger
 
-ESTADO ACTUAL:
+ESTADO ACTUAL (Oct 5, 2025):
 - ✅ FASE 0: Planning completada
+- ✅ FASE 0.5: Corrección Campos SIRE COMPLETADA (8 tareas)
 - ✅ FASE 1: Subdomain Infrastructure COMPLETADA
-- ✅ FASE 0.5: Corrección Campos SIRE COMPLETADA
-- 🔜 FASE 2: Multi-Conversation Foundation (PRÓXIMA)
-- 🔜 FASE 3: Compliance Module Integration
+- ✅ FASE 2.1-2.3: Multi-Conversation Foundation COMPLETADA
+- ⚠️ FASE 2.4: Database Migration (BLOCKER - 6 tareas, 4.5-5.5h)
+- ✅ FASE 2.5-2.6: Multi-Modal + Intelligence COMPLETADA
+- ✅ FASE 3.1: Compliance Chat Engine COMPLETADO (685 líneas)
+- ✅ FASE 3.4: Compliance UI Components COMPLETADO (1,099 líneas)
+- ✅ FASE 3.6: Auditoría TODO.md COMPLETADA (~2,950 líneas)
+- ⏳ FASE 3.5: Integration End-to-End (BLOQUEADO por 2.4)
+- 🔜 FASE 3.2-3.3: SIRE/TRA Real Integration (opcional)
 - 🔜 FASE 4-7: Notifications, Testing, SEO, Docs
 
-DECISIÓN CRÍTICA DESCUBIERTA:
-❌ Campos compliance originales eran dummy (pasaporte, país, propósito_viaje)
-✅ Campos SIRE REALES: 13 campos obligatorios oficiales
-✅ Solución: Estructura de DOS CAPAS (conversational_data + sire_data)
+ARQUITECTURA DOS CAPAS VALIDADA ✅:
+- Capa 1 (Conversational): 4 campos user-friendly
+  - nombre_completo, numero_pasaporte, pais_texto, proposito_viaje
+- Capa 2 (SIRE): 13 campos oficiales auto-generados
+  - codigo_hotel, codigo_ciudad, tipo_documento, numero_identificacion,
+    codigo_nacionalidad, primer_apellido, segundo_apellido, nombres,
+    tipo_movimiento, fecha_movimiento, lugar_procedencia, lugar_destino,
+    fecha_nacimiento
+- ✅ 13/13 campos SIRE validados en Database, Backend, UI
+- ✅ CERO campos dummy como campos SIRE oficiales
+
+PROGRESO:
+- Total tareas: 110 (68 activas + 42 completadas)
+- Completadas: 42/110 (38.2%)
+- Próxima: FASE 2.4.1 - Verificación del Fix (Prompt 2.4.1 abajo)
 
 Por favor, confirma que entiendes el contexto antes de continuar.
 ```
@@ -518,7 +548,624 @@ TESTING:
 - Follow-ups funcionan
 - Mobile responsive
 
-SIGUIENTE: Prompt 2.5 para Multi-Modal file upload
+SIGUIENTE: Prompt 2.4 para Database Migration ⚠️ CRÍTICA
+```
+
+---
+
+### Prompt 2.4.1: Verificación del Fix - Sistema Dual de Conversaciones ⚠️
+
+**AGENTE:** @agent-backend-developer
+
+**⚠️ BLOCKER CRÍTICO:** Sistema tiene DOS tablas de conversaciones activas simultáneamente
+
+**COPY-PASTE:**
+
+```
+TAREA: Verificar que el fix aplicado en src/app/api/guest/chat/route.ts:122 funciona correctamente
+
+⚠️ CONTEXTO CRÍTICO:
+- Sistema LEGACY: chat_conversations (5 conv, 64 msg)
+- Sistema NUEVO: guest_conversations (2 conv, 0 msg)
+- PROBLEMA: Mensajes se guardan en legacy, conversaciones nuevas vacías
+- FIX APLICADO: session.guest_id → session.reservation_id (Oct 5, 2025)
+
+ESPECIFICACIONES:
+
+1. Iniciar dev server:
+   - cd /Users/oneill/Sites/apps/InnPilot
+   - ./scripts/dev-with-keys.sh
+   - Verificar servidor corriendo en http://localhost:3000
+
+2. Login como guest:
+   - URL: http://localhost:3000/guest-chat/simmerdown
+   - Ingresar check-in date (cualquier fecha futura)
+   - Ingresar phone last 4 (ej: 1234)
+   - Click "Acceder"
+
+3. Crear nueva conversación:
+   - Click botón "Nueva conversación" en sidebar
+   - Título: "Test Fix Oct 5"
+   - Verificar conversación creada
+
+4. Enviar mensaje de prueba:
+   - En chat area, escribir: "Hola, probando fix"
+   - Presionar Enter
+   - **CRÍTICO:** Verificar NO hay error 404
+   - **CRÍTICO:** Mensaje debe aparecer en conversación
+
+5. Verificar en logs del servidor:
+   - Buscar en terminal: [Guest Chat] Using conversation: {uuid} (validated ownership)
+   - Buscar: [Guest Chat] ✅ Request completed in XXXms
+   - NO debe haber: Error 404 o "Conversation not found"
+
+6. Verificar en base de datos (Supabase Dashboard):
+```sql
+SELECT cm.conversation_id, cm.content, cm.created_at, gc.title
+FROM chat_messages cm
+JOIN guest_conversations gc ON cm.conversation_id = gc.id
+WHERE gc.title = 'Test Fix Oct 5'
+ORDER BY cm.created_at DESC;
+-- Expected: 1 row con "Hola, probando fix"
+```
+
+CRITERIOS DE ÉXITO:
+✅ Mensaje se guarda en guest_conversations (NO en chat_conversations)
+✅ NO hay error 404 en logs
+✅ Mensaje visible al cambiar de conversación y volver
+✅ Query DB retorna 1 row
+
+ARCHIVOS:
+- `src/app/api/guest/chat/route.ts` (línea 122 - fix aplicado)
+- `src/lib/guest-auth.ts` (interface GuestSession)
+
+REFERENCIAS:
+- Investigación completa: side-todo.md (líneas 260-278)
+- Plan técnico: plan.md FASE 2.4.1 (líneas 659-690)
+- Tareas detalladas: TODO.md FASE 2.4.1 (líneas 150-176)
+
+SIGUIENTE: Si test PASA → Prompt 2.4.2 para migración datos
+         Si test FALLA → Reportar error, revisar fix
+```
+
+---
+
+### Prompt 2.4.2: Migración de Datos Legacy → Nuevo Sistema
+
+**AGENTE:** @agent-backend-developer
+
+**COPY-PASTE:**
+
+```
+TAREA: Migrar conversaciones y mensajes de chat_conversations a guest_conversations
+
+⚠️ ADVERTENCIA: Hacer backup antes de ejecutar
+
+CONTEXTO:
+- Verificación 2.4.1 PASSED ✅
+- Sistema legacy tiene 5 conversaciones, 64 mensajes
+- Sistema nuevo tiene 2 conversaciones, 0 mensajes
+- Objetivo: Migrar TODOS los datos a nuevo sistema
+
+ESPECIFICACIONES:
+
+1. Crear script de migración (45min):
+   - Archivo: scripts/migrate-chat-conversations.ts
+   - Código:
+```typescript
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+async function migrateChatConversations() {
+  console.log('🔄 Iniciando migración de chat_conversations → guest_conversations...')
+
+  // 1. Obtener todas las conversaciones legacy
+  const { data: legacyConversations, error: fetchError } = await supabase
+    .from('chat_conversations')
+    .select('*')
+    .eq('user_type', 'guest')
+
+  if (fetchError) {
+    console.error('❌ Error al obtener conversaciones legacy:', fetchError)
+    return
+  }
+
+  console.log(`📊 Encontradas ${legacyConversations.length} conversaciones legacy`)
+
+  // 2. Migrar cada conversación
+  for (const legacy of legacyConversations) {
+    // Contar mensajes
+    const { count: messageCount } = await supabase
+      .from('chat_messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('conversation_id', legacy.id)
+
+    console.log(`📝 Migrando conversación ${legacy.id} (${messageCount} mensajes)...`)
+
+    // Crear en nuevo sistema
+    const { data: newConversation, error: insertError } = await supabase
+      .from('guest_conversations')
+      .insert({
+        guest_id: legacy.reservation_id,
+        tenant_id: legacy.tenant_id,
+        title: `Conversación migrada desde ${new Date(legacy.created_at).toLocaleDateString('es-CO')}`,
+        message_count: messageCount || 0,
+        created_at: legacy.created_at,
+        updated_at: legacy.updated_at,
+        last_activity_at: legacy.updated_at
+      })
+      .select()
+      .single()
+
+    if (insertError) {
+      console.error(`❌ Error al migrar conversación ${legacy.id}:`, insertError)
+      continue
+    }
+
+    console.log(`✅ Creada conversación ${newConversation.id}`)
+
+    // Actualizar mensajes para apuntar a nueva conversación
+    const { error: updateError } = await supabase
+      .from('chat_messages')
+      .update({ conversation_id: newConversation.id })
+      .eq('conversation_id', legacy.id)
+
+    if (updateError) {
+      console.error(`❌ Error al actualizar mensajes:`, updateError)
+      continue
+    }
+
+    console.log(`✅ Migrados ${messageCount} mensajes`)
+
+    // Marcar legacy como migrada
+    await supabase
+      .from('chat_conversations')
+      .update({ status: 'migrated', updated_at: new Date().toISOString() })
+      .eq('id', legacy.id)
+  }
+
+  console.log('🎉 Migración completada')
+}
+
+migrateChatConversations().catch(console.error)
+```
+
+2. Hacer backup DB (15min):
+```bash
+pg_dump -h ooaumjzaztmutltifhoq.supabase.co \
+  -U postgres \
+  -t chat_conversations \
+  -t guest_conversations \
+  -t chat_messages \
+  > backup_guest_chat_$(date +%Y%m%d).sql
+```
+
+3. Ejecutar migración (15min):
+```bash
+NEXT_PUBLIC_SUPABASE_URL="https://ooaumjzaztmutltifhoq.supabase.co" \
+SUPABASE_SERVICE_ROLE_KEY="eyJhbGc..." \
+npx tsx scripts/migrate-chat-conversations.ts
+```
+
+CRITERIOS DE ÉXITO:
+✅ Script output: "🎉 Migración completada"
+✅ 5 conversaciones migradas
+✅ 64 mensajes migrados
+✅ Query verificación (ver abajo) retorna 64+
+
+TESTING (SQL en Supabase Dashboard):
+```sql
+-- Conversaciones migradas
+SELECT COUNT(*) FROM guest_conversations
+WHERE title LIKE 'Conversación migrada%';
+-- Expected: 5
+
+-- Mensajes en nuevo sistema
+SELECT COUNT(*) FROM chat_messages cm
+JOIN guest_conversations gc ON cm.conversation_id = gc.id;
+-- Expected: 64+
+
+-- Mensajes en legacy (debe ser 0)
+SELECT COUNT(*) FROM chat_messages cm
+JOIN chat_conversations cc ON cm.conversation_id = cc.id;
+-- Expected: 0
+```
+
+ARCHIVOS:
+- Crear: scripts/migrate-chat-conversations.ts
+- Crear: backup_guest_chat_YYYYMMDD.sql
+
+REFERENCIAS:
+- Plan técnico: plan.md FASE 2.4.2 (líneas 693-767)
+- Código ejemplo: side-todo.md (líneas 505-587)
+
+SIGUIENTE: Prompt 2.4.3 para Foreign Keys
+```
+
+---
+
+### Prompt 2.4.3: Actualizar Foreign Keys
+
+**AGENTE:** @agent-database-agent
+
+**COPY-PASTE:**
+
+```
+TAREA: Crear índice y FK constraint entre chat_messages y guest_conversations
+
+⚠️ PREREQUISITO: Migración 2.4.2 completada ✅
+
+CONTEXTO:
+- Migración completa: 64+ mensajes en guest_conversations
+- Legacy vacío: 0 mensajes en chat_conversations
+- Objetivo: Establecer FK formal para integridad referencial
+
+ESPECIFICACIONES:
+
+1. Verificar NO hay mensajes huérfanos (10min):
+```sql
+SELECT COUNT(*) as mensajes_huerfanos
+FROM chat_messages cm
+WHERE NOT EXISTS (
+  SELECT 1 FROM guest_conversations gc WHERE gc.id = cm.conversation_id
+);
+-- Expected: 0
+```
+
+2. Crear índice para performance (5min):
+```sql
+CREATE INDEX IF NOT EXISTS idx_chat_messages_conversation_id
+ON chat_messages(conversation_id);
+```
+
+3. Agregar FK constraint (10min):
+```sql
+ALTER TABLE chat_messages
+ADD CONSTRAINT chat_messages_guest_conversation_fkey
+FOREIGN KEY (conversation_id)
+REFERENCES guest_conversations(id)
+ON DELETE CASCADE;
+```
+
+4. Verificar constraint creado (5min):
+```sql
+SELECT
+  conname as constraint_name,
+  conrelid::regclass as tabla,
+  confrelid::regclass as tabla_referenciada
+FROM pg_constraint
+WHERE conname = 'chat_messages_guest_conversation_fkey';
+-- Expected: 1 row
+```
+
+CRITERIOS DE ÉXITO:
+✅ Query mensajes huérfanos retorna 0
+✅ Índice creado exitosamente
+✅ FK constraint aplicado
+✅ Query verificación retorna constraint
+
+ARCHIVOS:
+- Supabase SQL Editor (ejecutar queries directamente)
+
+REFERENCIAS:
+- Plan técnico: plan.md FASE 2.4.3 (líneas 770-793)
+
+SIGUIENTE: Prompt 2.4.4 para actualizar código backend
+```
+
+---
+
+### Prompt 2.4.4: Actualizar Código Backend
+
+**AGENTE:** @agent-backend-developer
+
+**COPY-PASTE:**
+
+```
+TAREA: Eliminar referencias a chat_conversations en código backend
+
+⚠️ PREREQUISITO: Foreign Keys aplicadas ✅ (Prompt 2.4.3)
+
+CONTEXTO:
+- Sistema legacy deprecado
+- Nuevo sistema con FK activo
+- Objetivo: Limpiar código de referencias obsoletas
+
+ESPECIFICACIONES:
+
+1. Actualizar src/lib/guest-auth.ts (15min):
+```typescript
+// ELIMINAR campo conversation_id de GuestSession
+export interface GuestSession {
+  reservation_id: string
+  // conversation_id: string  // ← ELIMINAR ESTA LÍNEA
+  tenant_id: string
+  guest_name: string
+  check_in: string
+  check_out: string
+  reservation_code: string
+}
+```
+
+2. Actualizar src/app/api/guest/login/route.ts (20min):
+   - ELIMINAR creación automática de conversación en chat_conversations
+   - MANTENER creación de JWT token con reservation_id
+   - Conversación se crea cuando usuario la necesita (POST /api/guest/conversations)
+
+3. Actualizar src/app/api/guest/chat/route.ts (20min):
+   - ELIMINAR referencias a session.conversation_id en logs
+   - ACTUALIZAR rate limiting para usar session.reservation_id
+
+CÓDIGO ESPERADO:
+
+**src/app/api/guest/login/route.ts:**
+```typescript
+// ANTES (líneas 45-60 aprox - ELIMINAR BLOQUE)
+const { data: conversation } = await supabase
+  .from('chat_conversations')
+  .insert({
+    user_id: reservation.id,
+    user_type: 'guest',
+    reservation_id: reservation.id,
+    tenant_id: tenantId,
+  })
+  .select()
+  .single()
+
+// DESPUÉS (ELIMINAR BLOQUE COMPLETO - conversación se crea en POST /api/guest/conversations)
+```
+
+**src/app/api/guest/chat/route.ts:**
+```typescript
+// ANTES (línea ~76)
+console.log(`[Guest Chat] Authenticated guest: ${session.guest_name} (conversation: ${session.conversation_id})`)
+
+// DESPUÉS
+console.log(`[Guest Chat] Authenticated guest: ${session.guest_name}`)
+
+// ANTES (línea ~79)
+if (!checkRateLimit(session.conversation_id)) {
+
+// DESPUÉS
+if (!checkRateLimit(session.reservation_id)) {
+```
+
+CRITERIOS DE ÉXITO:
+✅ TypeScript compilation sin errores
+✅ Login flow funciona sin crear conversación
+✅ Chat API funciona con conversation_id como parámetro
+✅ NO hay referencias a session.conversation_id
+
+TESTING:
+1. npm run build (verificar TypeScript)
+2. Login como guest → NO debe crear conversación automáticamente
+3. POST /api/guest/conversations → Crea conversación manual
+4. POST /api/guest/chat → Funciona con conversation_id param
+
+ARCHIVOS:
+- src/lib/guest-auth.ts (modificar interface)
+- src/app/api/guest/login/route.ts (eliminar auto-create)
+- src/app/api/guest/chat/route.ts (actualizar rate limiting)
+
+REFERENCIAS:
+- Plan técnico: plan.md FASE 2.4.4 (líneas 797-827)
+
+SIGUIENTE: Prompt 2.4.5 para testing completo
+```
+
+---
+
+### Prompt 2.4.5: Testing Completo - Sistema Multi-Conversación
+
+**AGENTE:** @agent-backend-developer + @agent-ux-interface
+
+**COPY-PASTE:**
+
+```
+TAREA: Validar sistema multi-conversación funciona end-to-end
+
+⚠️ PREREQUISITO: Código actualizado ✅ (Prompt 2.4.4)
+
+CONTEXTO:
+- Migración completa
+- Código limpio de referencias legacy
+- Objetivo: Testing exhaustivo multi-conversación
+
+ESPECIFICACIONES:
+
+TEST 1: Login + Primera Conversación (15min)
+**AGENTE:** @agent-backend-developer
+
+1. Login como guest:
+   - URL: http://localhost:3000/guest-chat/simmerdown
+   - Check-in: 2025-10-15
+   - Phone: 1234
+
+2. Verificar NO se crea conversación automáticamente:
+```sql
+SELECT COUNT(*) FROM guest_conversations
+WHERE guest_id = '{reservation_id}';
+-- Expected: 0 (o las que existían antes)
+```
+
+3. Crear primera conversación:
+   - Click "Nueva conversación"
+   - Título auto-generado
+   - Enviar 3 mensajes diferentes
+
+4. Verificar mensajes guardados:
+```sql
+SELECT cm.content, gc.title
+FROM chat_messages cm
+JOIN guest_conversations gc ON cm.conversation_id = gc.id
+WHERE gc.guest_id = '{reservation_id}'
+ORDER BY cm.created_at DESC
+LIMIT 3;
+-- Expected: 3 rows con los mensajes enviados
+```
+
+---
+
+TEST 2: Multi-Conversación (20min)
+**AGENTE:** @agent-ux-interface
+
+1. Crear 3 conversaciones diferentes:
+   - "Actividades en San Andrés"
+   - "Restaurantes"
+   - "Mi alojamiento"
+
+2. Enviar mensajes específicos a cada una:
+   - Conv 1: "Quiero hacer snorkel"
+   - Conv 2: "¿Dónde comer pizza?"
+   - Conv 3: "¿A qué hora es el check-out?"
+
+3. Switching entre conversaciones:
+   - Click Conv 1 → Verificar mensaje "snorkel" visible
+   - Click Conv 2 → Verificar mensaje "pizza" visible
+   - Click Conv 3 → Verificar mensaje "check-out" visible
+
+4. Verificar entity tracking funciona:
+   - Enviar en Conv 1: "Quiero ir a Johnny Cay"
+   - Debe guardar entity: { type: 'place', name: 'Johnny Cay' }
+
+---
+
+TEST 3: Verificación DB Final (15min)
+**AGENTE:** @agent-database-agent
+
+```sql
+-- 1. NO mensajes en legacy
+SELECT COUNT(*) FROM chat_messages cm
+JOIN chat_conversations cc ON cm.conversation_id = cc.id;
+-- Expected: 0
+
+-- 2. TODOS mensajes en nuevo sistema
+SELECT COUNT(*) FROM chat_messages cm
+JOIN guest_conversations gc ON cm.conversation_id = gc.id;
+-- Expected: 64+ (original + nuevos tests)
+
+-- 3. Verificar message_count correcto
+SELECT
+  gc.id,
+  gc.title,
+  gc.message_count,
+  (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = gc.id) as actual_messages
+FROM guest_conversations gc
+WHERE gc.message_count != (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = gc.id);
+-- Expected: 0 rows (counts match)
+
+-- 4. Verificar FK constraint activo
+SELECT
+  conname as constraint_name,
+  contype as constraint_type
+FROM pg_constraint
+WHERE conrelid = 'chat_messages'::regclass
+  AND conname = 'chat_messages_guest_conversation_fkey';
+-- Expected: 1 row (type 'f' = foreign key)
+```
+
+CRITERIOS DE ÉXITO:
+✅ Login NO crea conversación automática
+✅ 3 conversaciones creadas manualmente
+✅ Mensajes correctos por conversación
+✅ Switching funciona sin errores
+✅ Entity tracking preservado
+✅ Queries DB retornan valores esperados
+
+ARCHIVOS:
+- Testing manual en browser
+- SQL queries en Supabase Dashboard
+
+REFERENCIAS:
+- Plan técnico: plan.md FASE 2.4.5 (líneas 830-860)
+
+SIGUIENTE: Prompt 2.4.6 para limpieza final
+```
+
+---
+
+### Prompt 2.4.6: Limpieza Final - Deprecar Sistema Legacy
+
+**AGENTE:** @agent-database-agent + @agent-backend-developer
+
+**COPY-PASTE:**
+
+```
+TAREA: Renombrar tabla legacy y actualizar documentación
+
+⚠️ PREREQUISITO: Testing completo PASSED ✅ (Prompt 2.4.5)
+
+CONTEXTO:
+- Sistema multi-conversación funcionando 100%
+- Legacy vacío (0 mensajes)
+- Objetivo: Deprecar tabla legacy, actualizar docs
+
+ESPECIFICACIONES:
+
+1. Renombrar tabla legacy (10min):
+**AGENTE:** @agent-database-agent
+
+```sql
+-- 1. Renombrar tabla
+ALTER TABLE chat_conversations
+RENAME TO chat_conversations_legacy_deprecated;
+
+-- 2. Documentar deprecación
+COMMENT ON TABLE chat_conversations_legacy_deprecated IS
+'DEPRECATED: Migrada a guest_conversations el 2025-10-05.
+Migración realizada en FASE 2.4.
+NO USAR - Solo mantener 30 días como backup histórico.
+Eliminar después de 2025-11-05.';
+
+-- 3. Verificar renombre exitoso
+SELECT table_name
+FROM information_schema.tables
+WHERE table_name LIKE '%chat_conversations%';
+-- Expected: chat_conversations_legacy_deprecated
+```
+
+2. Actualizar documentación (15min):
+**AGENTE:** @agent-backend-developer
+
+**SNAPSHOT.md:**
+- Agregar sección "Migraciones Completadas"
+- Documentar: chat_conversations → guest_conversations (Oct 5, 2025)
+- Estado: Sistema multi-conversación activo
+
+**plan.md:**
+- Marcar FASE 2.4 como ✅ COMPLETADA
+- Timestamp: (Oct 5, 2025)
+
+**TODO.md:**
+- Marcar TODAS las tareas 2.4.1-2.4.6 como [x]
+- Actualizar progreso: 27 + 15 = 42/110 (38.2%)
+
+CRITERIOS DE ÉXITO:
+✅ Tabla renombrada exitosamente
+✅ Comentario aplicado
+✅ Query verificación retorna solo legacy_deprecated
+✅ Documentación actualizada (3 archivos)
+
+ENTREGABLES:
+- Tabla legacy renombrada y documentada
+- SNAPSHOT.md actualizado
+- plan.md FASE 2.4 marcada ✅
+- TODO.md tareas marcadas [x]
+
+ARCHIVOS:
+- Supabase SQL Editor (DDL statements)
+- SNAPSHOT.md (sección Migraciones)
+- plan.md (línea 631 - marcar ✅)
+- TODO.md (líneas 141-361 - marcar [x])
+
+REFERENCIAS:
+- Plan técnico: plan.md FASE 2.4.6 (líneas 863-880)
+
+SIGUIENTE: Sistema listo para FASE 3.5 Integration End-to-End
 ```
 
 ---
@@ -1188,6 +1835,533 @@ SIGUIENTE: Integrar con backend API /api/compliance/submit
 
 ---
 
+## 🔗 FASE 3.5: INTEGRATION END-TO-END
+
+### Prompt 3.5.1: Backend API - Compliance Submit
+
+**AGENTE:** @agent-backend-developer
+
+**COPY-PASTE:**
+
+```
+TAREA: Crear API endpoint /api/compliance/submit para guardar submissions sin ejecutar SIRE/TRA real
+
+CONTEXTO:
+- FASE 3.1 completada: compliance-chat-engine.ts (685 líneas) ✅
+- FASE 3.4 completada: UI components (1,099 líneas) ✅
+- Database migrations aplicadas: compliance_submissions table ✅
+- Objetivo: Conectar UI con backend, guardar en DB con status 'pending'
+- SIRE/TRA real se implementará en FASE 3.2-3.3 (opcional)
+
+ESPECIFICACIONES:
+
+## 1. Crear POST /api/compliance/submit
+
+### Request Body:
+```typescript
+{
+  conversationalData: {
+    nombre_completo: string          // "Juan Pérez García"
+    numero_pasaporte: string         // "AB123456"
+    pais_texto: string              // "Colombia"
+    proposito_viaje: string         // "Turismo"
+  },
+  guestId: string,
+  reservationId: string,
+  conversationId: string
+}
+```
+
+### Flujo de Procesamiento:
+
+```typescript
+// 1. Validar conversational_data (4 campos requeridos)
+if (!conversationalData.nombre_completo ||
+    !conversationalData.numero_pasaporte ||
+    !conversationalData.pais_texto) {
+  return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+}
+
+// 2. Importar compliance-chat-engine
+import { conversationalToSire } from '@/lib/compliance-chat-engine'
+
+// 3. Generar sire_data (13 campos oficiales)
+const sireData = conversationalToSire(conversationalData, {
+  tenantId: 'simmerdown',
+  checkInDate: reservation.check_in_date,
+  // ... tenant config
+})
+
+// 4. Guardar en compliance_submissions
+const submission = await supabase
+  .from('compliance_submissions')
+  .insert({
+    guest_id: guestId,
+    tenant_id: tenantId,
+    type: 'sire_tra',
+    status: 'pending',
+    data: {
+      conversational_data: conversationalData,
+      sire_data: sireData
+    },
+    submitted_by: guestId,
+    submitted_at: new Date().toISOString()
+  })
+  .select()
+  .single()
+
+// 5. Return mock refs (NO ejecutar SIRE/TRA real)
+return NextResponse.json({
+  success: true,
+  submissionId: submission.id,
+  mockRefs: {
+    sireRef: `MOCK-SIRE-${Date.now()}`,
+    traRef: `MOCK-TRA-${Date.now()}`
+  },
+  timestamp: new Date().toISOString()
+}, { status: 201 })
+```
+
+### Response Success (201):
+```json
+{
+  "success": true,
+  "submissionId": "uuid-123",
+  "mockRefs": {
+    "sireRef": "MOCK-SIRE-1696824000000",
+    "traRef": "MOCK-TRA-1696824000000"
+  },
+  "timestamp": "2025-10-05T12:00:00.000Z"
+}
+```
+
+### Error Handling:
+```typescript
+// Validación errors (400)
+- Missing required fields
+- Invalid passport format
+- Invalid country
+
+// Database errors (500)
+- Supabase insert failed
+- RLS policy violation
+
+// Response structure:
+{
+  error: string,
+  details?: any
+}
+```
+
+---
+
+ARCHIVOS A CREAR:
+- `src/app/api/compliance/submit/route.ts` (~150 líneas)
+
+TESTING:
+```bash
+# Test manual con curl
+curl -X POST http://localhost:3000/api/compliance/submit \
+  -H "Content-Type: application/json" \
+  -d '{
+    "conversationalData": {
+      "nombre_completo": "Juan Pérez García",
+      "numero_pasaporte": "AB123456",
+      "pais_texto": "Colombia",
+      "proposito_viaje": "Turismo"
+    },
+    "guestId": "guest-uuid",
+    "reservationId": "reservation-uuid",
+    "conversationId": "conversation-uuid"
+  }'
+
+# Expected: 201 Created con mockRefs
+```
+
+VALIDACIÓN DB:
+```sql
+-- Verificar submission creada
+SELECT id, status, data->>'conversational_data', data->>'sire_data'
+FROM compliance_submissions
+WHERE guest_id = 'guest-uuid'
+ORDER BY submitted_at DESC
+LIMIT 1;
+
+-- Expected: 1 row, status = 'pending', data contiene ambas capas
+```
+
+SIGUIENTE: Prompt 3.5.2 - Frontend Integration
+```
+
+---
+
+### Prompt 3.5.2: Frontend Integration - Wire UI to API
+
+**AGENTE:** @agent-ux-interface
+
+**COPY-PASTE:**
+
+```
+TAREA: Conectar ComplianceConfirmation.tsx con POST /api/compliance/submit y manejar success flow
+
+CONTEXTO:
+- FASE 3.5.1 completada: API /api/compliance/submit ✅
+- ComplianceConfirmation.tsx ya existe (306 líneas)
+- ComplianceSuccess.tsx ya existe (193 líneas)
+- Objetivo: Wire submit button → API call → success screen
+
+ESPECIFICACIONES:
+
+## 1. Modificar GuestChatInterface.tsx
+
+### Agregar ComplianceReminder en Sidebar:
+```tsx
+import ComplianceReminder from '@/components/Compliance/ComplianceReminder'
+
+// En sidebar superior (línea ~50)
+<div className="h-full flex flex-col">
+  {/* ComplianceReminder banner */}
+  <ComplianceReminder
+    guestId={guestId}
+    reservationId={reservationId}
+    onStart={() => setShowComplianceModal(true)}
+  />
+
+  {/* Resto del sidebar... */}
+</div>
+```
+
+### Agregar Modal States:
+```tsx
+const [showComplianceModal, setShowComplianceModal] = useState(false)
+const [showComplianceSuccess, setShowComplianceSuccess] = useState(false)
+const [submissionData, setSubmissionData] = useState<any>(null)
+
+// Intent detection trigger (desde API response)
+useEffect(() => {
+  if (chatResponse?.shouldTriggerCompliance) {
+    setShowComplianceModal(true)
+  }
+}, [chatResponse])
+```
+
+### Renderizar Modales:
+```tsx
+{/* ComplianceConfirmation Modal */}
+{showComplianceModal && (
+  <ComplianceConfirmation
+    conversationalData={complianceData?.conversational_data}
+    sireData={complianceData?.sire_data}
+    onConfirm={handleComplianceSubmit}
+    onEdit={handleEditField}
+    onCancel={() => setShowComplianceModal(false)}
+    isLoading={isSubmitting}
+  />
+)}
+
+{/* ComplianceSuccess Screen */}
+{showComplianceSuccess && submissionData && (
+  <ComplianceSuccess
+    sireRef={submissionData.mockRefs.sireRef}
+    traRef={submissionData.mockRefs.traRef}
+    timestamp={submissionData.timestamp}
+    onContinue={() => {
+      setShowComplianceSuccess(false)
+      // Auto-dismiss reminder
+      localStorage.setItem('compliance_reminder_dismissed', 'true')
+    }}
+  />
+)}
+```
+
+## 2. Modificar ComplianceConfirmation.tsx
+
+### Wire Submit Handler:
+```tsx
+const [isSubmitting, setIsSubmitting] = useState(false)
+const [error, setError] = useState<string | null>(null)
+
+const handleSubmit = async () => {
+  setIsSubmitting(true)
+  setError(null)
+
+  try {
+    const response = await fetch('/api/compliance/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        conversationalData,
+        guestId,
+        reservationId,
+        conversationId
+      })
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.error || 'Submission failed')
+    }
+
+    const data = await response.json()
+
+    // Success: trigger parent callback
+    onConfirm(data)
+
+  } catch (err: any) {
+    setError(err.message)
+    console.error('Compliance submission error:', err)
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+```
+
+### Loading State UI:
+```tsx
+<button
+  onClick={handleSubmit}
+  disabled={isSubmitting}
+  className="px-6 py-3 bg-green-600 text-white rounded-lg disabled:opacity-50"
+>
+  {isSubmitting ? (
+    <span className="flex items-center gap-2">
+      <Spinner size="sm" />
+      Validando datos...
+    </span>
+  ) : (
+    'Confirmar y Enviar'
+  )}
+</button>
+
+{/* Error display */}
+{error && (
+  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+    <p className="text-red-800 text-sm">{error}</p>
+  </div>
+)}
+```
+
+## 3. Modificar ComplianceSuccess.tsx
+
+### Auto-redirect Logic:
+```tsx
+useEffect(() => {
+  const timer = setTimeout(() => {
+    onContinue()
+  }, 5000) // 5 seconds
+
+  return () => clearTimeout(timer)
+}, [onContinue])
+```
+
+### Display Mock Refs:
+```tsx
+<div className="space-y-3">
+  <div className="p-4 bg-green-50 rounded-lg">
+    <p className="text-sm text-gray-600">Referencia SIRE</p>
+    <p className="text-lg font-mono font-semibold text-green-700">
+      {sireRef}
+    </p>
+  </div>
+
+  <div className="p-4 bg-blue-50 rounded-lg">
+    <p className="text-sm text-gray-600">Referencia TRA</p>
+    <p className="text-lg font-mono font-semibold text-blue-700">
+      {traRef}
+    </p>
+  </div>
+
+  <p className="text-xs text-gray-500">
+    {new Date(timestamp).toLocaleString('es-CO')}
+  </p>
+</div>
+```
+
+---
+
+ARCHIVOS A MODIFICAR:
+- `src/components/Chat/GuestChatInterface.tsx` (~50 líneas agregadas)
+- `src/components/Compliance/ComplianceConfirmation.tsx` (~30 líneas agregadas)
+- `src/components/Compliance/ComplianceSuccess.tsx` (~10 líneas agregadas)
+
+TESTING:
+- [ ] ComplianceReminder visible en sidebar
+- [ ] Click "Iniciar registro" abre modal
+- [ ] Modal pre-fill con datos correctos
+- [ ] Submit button → loading state
+- [ ] Success → ComplianceSuccess screen
+- [ ] Auto-redirect después de 5s
+- [ ] Reminder dismissed (localStorage)
+- [ ] Error handling muestra mensaje
+
+SIGUIENTE: Prompt 3.5.3 - Testing End-to-End
+```
+
+---
+
+### Prompt 3.5.3: Testing End-to-End - Flujo Completo
+
+**AGENTE:** @agent-backend-developer
+
+**COPY-PASTE:**
+
+```
+TAREA: Validar flujo compliance end-to-end desde guest login hasta success screen
+
+TESTING MANUAL:
+
+## 1. Setup Environment
+
+```bash
+# Start dev server
+./scripts/dev-with-keys.sh
+
+# Verify API keys loaded
+echo $ANTHROPIC_API_KEY
+echo $OPENAI_API_KEY
+```
+
+## 2. Test Flow Paso a Paso
+
+### Paso 1: Guest Login
+1. Navigate: http://localhost:3000/guest-chat/simmerdown
+2. Enter check-in date, phone last 4 digits
+3. Verify login success → chat interface loads
+
+### Paso 2: ComplianceReminder Visible
+1. Verify banner visible en sidebar superior
+2. Badge: "No iniciado" (red)
+3. Button: "Iniciar registro"
+
+### Paso 3: Trigger Compliance Flow
+**Opción A: Manual**
+1. Click "Iniciar registro" en reminder
+2. ComplianceConfirmation modal abre
+
+**Opción B: Intent Detection** (si implementado)
+1. Type message: "Quiero hacer el registro de migración"
+2. Send message
+3. Verify modal opens automatically
+
+### Paso 4: Validar Modal Pre-fill
+1. Verify 4 campos conversacionales tienen datos:
+   - nombre_completo: [from reservation]
+   - numero_pasaporte: [from entity extraction]
+   - pais_texto: [from entity extraction]
+   - proposito_viaje: [from conversation]
+
+2. Verify sección SIRE colapsable:
+   - 13+ campos read-only
+   - Badges "auto 🤖"
+   - Collapse/expand funciona
+
+### Paso 5: Editar Datos
+1. Click campo "nombre_completo"
+2. Modify value
+3. Verify validation (solo letras)
+4. Invalid input → error message inline
+
+### Paso 6: Submit
+1. Click "Confirmar y Enviar"
+2. Verify loading state: "Validando datos..."
+3. Button disabled durante submit
+
+### Paso 7: Verificar Success Screen
+1. ComplianceSuccess modal aparece
+2. Mock refs visibles:
+   - SIRE: MOCK-SIRE-[timestamp]
+   - TRA: MOCK-TRA-[timestamp]
+3. Confetti animation plays
+4. Auto-redirect countdown: 5... 4... 3...
+
+### Paso 8: Validar Post-Submit
+1. After redirect → volver a chat
+2. ComplianceReminder NO visible (dismissed)
+3. localStorage check:
+   ```js
+   localStorage.getItem('compliance_reminder_dismissed') === 'true'
+   ```
+
+### Paso 9: Verificar Database
+```sql
+SELECT
+  id,
+  status,
+  data->>'conversational_data' as conv_data,
+  data->>'sire_data' as sire_data,
+  submitted_at
+FROM compliance_submissions
+WHERE guest_id = '[guest-uuid-from-test]'
+ORDER BY submitted_at DESC
+LIMIT 1;
+```
+
+**Expected:**
+- 1 row created
+- status: 'pending'
+- conv_data: JSON con 4 campos
+- sire_data: JSON con 13+ campos
+- submitted_at: recent timestamp
+
+## 3. Error Scenarios
+
+### Test Case: Missing Required Field
+1. Open modal
+2. Clear "nombre_completo"
+3. Click submit
+4. Verify error: "Missing required fields"
+
+### Test Case: Invalid Passport
+1. Enter invalid passport: "123"
+2. Click submit
+3. Verify validation error inline
+
+### Test Case: Network Error
+1. Stop dev server
+2. Try submit
+3. Verify error handling graceful
+
+## 4. Mobile Testing
+
+1. Resize browser: 375px width (iPhone SE)
+2. Repeat Pasos 1-8
+3. Verify:
+   - Modal fullscreen
+   - Stacked layout
+   - Touch targets ≥ 44px
+   - Scroll works
+
+## 5. Accessibility Testing
+
+1. Tab through modal (keyboard only)
+2. Verify focus order logical
+3. Enter submits form
+4. Esc closes modal (si implementado)
+
+---
+
+CHECKLIST FINAL:
+
+- [ ] ✅ Guest login funciona
+- [ ] ✅ ComplianceReminder visible
+- [ ] ✅ Modal opens (manual + intent detection)
+- [ ] ✅ Pre-fill datos correctos
+- [ ] ✅ Validaciones cliente funcionan
+- [ ] ✅ Submit API call exitoso
+- [ ] ✅ Loading states correctos
+- [ ] ✅ Success screen muestra mock refs
+- [ ] ✅ Auto-redirect funciona (5s)
+- [ ] ✅ Reminder dismissed post-submit
+- [ ] ✅ Database submission creada
+- [ ] ✅ Error handling graceful
+- [ ] ✅ Mobile responsive
+- [ ] ✅ Keyboard navigation
+
+SIGUIENTE: Opcional - FASE 3.2 SIRE Puppeteer (si requiere submissions reales)
+```
+
+---
+
 ## 📝 NOTAS IMPORTANTES
 
 ### Sintaxis de Invocación de Agentes
@@ -1219,6 +2393,6 @@ SIGUIENTE: Integrar con backend API /api/compliance/submit
 
 ---
 
-**Última actualización:** 5 de Octubre 2025 23:30
-**Total prompts:** 12 ejecutables (4 completados FASE 0.5)
-**Próximo:** Prompt 2.1 - Database Migrations
+**Última actualización:** 5 de Octubre 2025 (FASE 3.5 + 3.6 agregadas)
+**Total prompts:** 15 ejecutables (7 completados: FASE 0.5, 3.1, 3.4, 3.6)
+**Próximo:** Prompt 3.5.1 - Backend API Compliance Submit (Integration End-to-End)

@@ -121,6 +121,7 @@ export function GuestLogin({ tenantId, onLoginSuccess, onError }: GuestLoginProp
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // CRITICAL: Allow browser to send/receive cookies
         body: JSON.stringify({
           tenant_id: tenantId,
           check_in_date: formState.check_in_date,
@@ -138,7 +139,6 @@ export function GuestLogin({ tenantId, onLoginSuccess, onError }: GuestLoginProp
       // Keep check_in/check_out as YYYY-MM-DD strings to match GuestSession interface
       const session: GuestSession = {
         reservation_id: data.reservation_id || '',
-        conversation_id: data.conversation_id,
         tenant_id: tenantId,
         guest_name: data.guest_info.name,
         check_in: data.guest_info.check_in,    // Keep as YYYY-MM-DD string

@@ -1,6 +1,6 @@
 ---
 name: deploy-agent
-description: Agente automatizado para commits inteligentes, deploy en VPS y verificación completa de funcionalidad
+description: Agente automatizado para commits inteligentes, deploy en VPS y verificación completa de funcionalidad. Use this agent for all deployment tasks - invoke with @agent-deploy-agent.
 tools: Bash, Read, Write, WebFetch, Grep, Glob
 model: sonnet
 color: purple

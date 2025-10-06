@@ -1,6 +1,6 @@
 ---
 name: database-agent
-description: System Monitoring Routine Maintenance
+description: System Monitoring Routine Maintenance. Use this agent for database operations, migrations, and monitoring - invoke with @agent-database-agent.
 tools: Bash, Read, mcp__supabase__execute_sql, mcp__supabase__apply_migration, mcp__supabase__list_tables, mcp__supabase__list_extensions, mcp__supabase__list_migrations, mcp__supabase__get_logs, mcp__supabase__get_advisors, mcp__supabase__generate_typescript_types
 model: sonnet
 color: purple
@@ -13,15 +13,57 @@ Transformar el Guest Chat actual (single-conversation) en una experiencia multi-
 
 ### Archivos de Planificación
 Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
-- 📄 `plan.md` - Plan completo del proyecto (1047 líneas) - Arquitectura completa, 7 fases
-- 📋 `TODO.md` - Tareas organizadas por fases (680 líneas) - 57 tareas
-- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables por fase (1120 líneas)
+- 📄 `plan.md` - Plan completo del proyecto (1720 líneas) - Arquitectura completa, 7 fases + FASE 0.5 corrección SIRE
+- 📋 `TODO.md` - Tareas organizadas por fases (205 líneas, limpio) - Solo pendientes
+- 🎯 `guest-portal-compliance-workflow.md` - Prompts ejecutables (660 líneas) - 12 prompts copy-paste ready
 
 ### Mi Responsabilidad Principal
 Soy el **agente de soporte** de este proyecto (5% del trabajo):
 
+**FASE 0.5: Corrección Campos SIRE** ⚠️ (4-5h) - **CRÍTICA - PRÓXIMA**
+- 🗄️ Migration validation: compliance_submissions.sql (comentario JSONB con estructura correcta)
+
+**FASE 1: Subdomain Infrastructure** ✅ (COMPLETADA)
+- ✅ Nginx, Middleware, Tenant Resolver configurados
+
 **FASE 2: Multi-Conversation Foundation** (6-8h)
 - 🗄️ Prompt 2.1: Database Migrations (guest_conversations, compliance_submissions, tenant_compliance_credentials)
+
+**FASE 2.4: Database Migration - Sistema Dual** ⚠️ (4.5-5.5h) - **BLOCKER CRÍTICO**
+- 🗄️ Prompt 2.4.1: Verificación del fix (SQL query validación)
+- 🗄️ Prompt 2.4.2: Hacer backup DB antes de migración
+- 🗄️ Prompt 2.4.3: Actualizar Foreign Keys (índice + FK constraint chat_messages → guest_conversations)
+- 🗄️ Prompt 2.4.5: Testing DB final (queries validación integridad)
+- 🗄️ Prompt 2.4.6: Renombrar tabla legacy (ALTER TABLE chat_conversations → chat_conversations_legacy_deprecated)
+
+**⚠️ ADVERTENCIAS CRÍTICAS - FASE 2.4:**
+
+**OBLIGATORIO antes de Migración 2.4.2:**
+```bash
+# Backup completo (OPERACIÓN IRREVERSIBLE - 15min)
+pg_dump -h ooaumjzaztmutltifhoq.supabase.co \
+  -U postgres \
+  -t chat_conversations \
+  -t guest_conversations \
+  -t chat_messages \
+  > backup_guest_chat_$(date +%Y%m%d).sql
+```
+
+**Verificaciones SQL críticas:**
+- 2.4.1: Verificar fix funciona → mensajes en `guest_conversations` (NO en legacy)
+- 2.4.3: Verificar 0 mensajes huérfanos ANTES de aplicar FK constraint
+- 2.4.6: Mantener tabla `chat_conversations_legacy_deprecated` 30 días como backup
+
+**Rollback Plan (si algo falla):**
+```bash
+psql -h ooaumjzaztmutltifhoq.supabase.co \
+  -U postgres < backup_guest_chat_20251005.sql
+```
+
+**Referencias Clave:**
+- 📄 Investigación: `side-todo.md` (líneas 869-880 backup, 605-631 FK queries)
+- 📋 Tareas SQL: `TODO.md` FASE 2.4 (líneas 141-252 con queries completos)
+- 📖 Plan técnico: `plan.md` FASE 2.4 (líneas 683-880)
 
 **FASE 2.5: Multi-Modal File Upload** (4-5h) 🆕
 - 🗄️ Migration: conversation_attachments table

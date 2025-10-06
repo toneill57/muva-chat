@@ -28,7 +28,6 @@ interface LoginRequestBody {
 interface LoginSuccessResponse {
   success: true
   token: string
-  conversation_id: string
   reservation_id: string
   guest_info: {
     name: string
@@ -136,12 +135,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<LoginResp
       )
     }
 
-    // Return success response
-    return NextResponse.json(
+    // Return success response with HTTP-only cookie
+    const response = NextResponse.json(
       {
         success: true,
         token,
-        conversation_id: session.conversation_id,
         reservation_id: session.reservation_id,
         guest_info: {
           name: session.guest_name,
@@ -154,6 +152,19 @@ export async function POST(request: NextRequest): Promise<NextResponse<LoginResp
       },
       { status: 200 }
     )
+
+    // Set HTTP-only cookie for automatic authentication
+    response.cookies.set('guest_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/',
+    })
+
+    console.log(`[guest-login] ✅ Cookie set for ${session.guest_name} (reservation: ${session.reservation_id})`)
+
+    return response
   } catch (error) {
     console.error('[guest-login] Unexpected error:', error)
 

@@ -88,7 +88,7 @@ CREATE POLICY "Staff can update tenant submissions"
 
 -- Comments for documentation
 COMMENT ON TABLE compliance_submissions IS 'Tracks SIRE and TRA compliance submissions from guests';
-COMMENT ON COLUMN compliance_submissions.data IS 'JSONB containing: pasaporte, país, fecha_nacimiento, propósito, etc';
+COMMENT ON COLUMN compliance_submissions.data IS 'JSONB con estructura DOS CAPAS: { conversational_data: {nombre_completo, numero_pasaporte, pais_texto, proposito_viaje, fecha_nacimiento}, sire_data: {13 campos oficiales SIRE según docs/sire/CODIGOS_OFICIALES.md: codigo_hotel, codigo_ciudad, tipo_documento, numero_identificacion, codigo_nacionalidad, primer_apellido, segundo_apellido, nombres, tipo_movimiento, fecha_movimiento, lugar_procedencia, lugar_destino, fecha_nacimiento} }';
 COMMENT ON COLUMN compliance_submissions.sire_response IS 'Response from SIRE Puppeteer automation';
 COMMENT ON COLUMN compliance_submissions.tra_response IS 'Response from TRA REST API';
 COMMENT ON COLUMN compliance_submissions.submitted_by IS 'Origin of submission: guest (chat) or staff (manual)';

@@ -18,9 +18,11 @@ export async function PUT(
   try {
     // Await params for Next.js 15
     const resolvedParams = await params
-    // 1. Verify authentication
+    // 1. Verify authentication (cookie or header)
+    const cookieToken = request.cookies.get('guest_token')?.value
     const authHeader = request.headers.get('authorization')
-    const token = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(authHeader)
+    const token = cookieToken || headerToken
 
     if (!token) {
       return NextResponse.json(
@@ -114,9 +116,11 @@ export async function DELETE(
   try {
     // Await params for Next.js 15
     const resolvedParams = await params
-    // 1. Verify authentication
+    // 1. Verify authentication (cookie or header)
+    const cookieToken = request.cookies.get('guest_token')?.value
     const authHeader = request.headers.get('authorization')
-    const token = extractTokenFromHeader(authHeader)
+    const headerToken = extractTokenFromHeader(authHeader)
+    const token = cookieToken || headerToken
 
     if (!token) {
       return NextResponse.json(

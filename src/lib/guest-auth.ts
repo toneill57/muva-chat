@@ -14,7 +14,6 @@ import { SignJWT, jwtVerify } from 'jose'
 
 export interface GuestSession {
   reservation_id: string
-  conversation_id: string
   tenant_id: string
   guest_name: string
   check_in: string  // YYYY-MM-DD format (no timezone issues)
@@ -50,14 +49,7 @@ interface GuestReservation {
   accommodation_unit_id?: string  // 🆕 NUEVO
 }
 
-interface ChatConversation {
-  id: string
-  user_id: string
-  user_type: string
-  reservation_id: string
-  tenant_id: string
-  status: string
-}
+// Removed ChatConversation interface - legacy table deprecated
 
 // ============================================================================
 // Configuration
@@ -123,20 +115,6 @@ export async function authenticateGuest(
 
     const reservation = reservations[0] as GuestReservation
 
-    // Find or create conversation
-    const conversationId = await getOrCreateConversation(
-      supabase,
-      reservation.id,
-      tenant_id,
-      phone_last_4,
-      check_in_date
-    )
-
-    if (!conversationId) {
-      console.error('[guest-auth] Failed to get/create conversation')
-      return null
-    }
-
     // 🆕 NUEVO: Load accommodation unit data if assigned (FASE 1.3)
     let accommodationUnit: { id: string; name: string; unit_number?: string; view_type?: string } | undefined
 
@@ -166,7 +144,6 @@ export async function authenticateGuest(
     // Build session object
     const session: GuestSession = {
       reservation_id: reservation.id,
-      conversation_id: conversationId,
       tenant_id: reservation.tenant_id,
       guest_name: reservation.guest_name,
       check_in: reservation.check_in_date,   // Keep as YYYY-MM-DD string
@@ -187,63 +164,7 @@ export async function authenticateGuest(
   }
 }
 
-/**
- * Get existing conversation or create new one for guest
- */
-async function getOrCreateConversation(
-  supabase: any,
-  reservationId: string,
-  tenantId: string,
-  phoneLast4: string,
-  checkInDate: string
-): Promise<string | null> {
-  try {
-    // Check for existing conversation
-    const { data: existing, error: searchError } = await supabase
-      .from('chat_conversations')
-      .select('id')
-      .eq('reservation_id', reservationId)
-      .eq('user_type', 'guest')
-      .eq('status', 'active')
-      .maybeSingle()
-
-    if (searchError && searchError.code !== 'PGRST116') {
-      console.error('[guest-auth] Error searching conversation:', searchError)
-      return null
-    }
-
-    if (existing) {
-      console.log(`[guest-auth] Found existing conversation: ${existing.id}`)
-      return existing.id
-    }
-
-    // Create new conversation
-    const { data: newConversation, error: createError } = await supabase
-      .from('chat_conversations')
-      .insert({
-        user_id: reservationId, // Use reservation_id as user_id for guests
-        user_type: 'guest',
-        reservation_id: reservationId,
-        tenant_id: tenantId,
-        status: 'active',
-        guest_phone_last_4: phoneLast4,
-        check_in_date: checkInDate,
-      })
-      .select('id')
-      .single()
-
-    if (createError) {
-      console.error('[guest-auth] Error creating conversation:', createError)
-      return null
-    }
-
-    console.log(`[guest-auth] Created new conversation: ${newConversation.id}`)
-    return newConversation.id
-  } catch (error) {
-    console.error('[guest-auth] getOrCreateConversation error:', error)
-    return null
-  }
-}
+// Removed getOrCreateConversation() - conversations now created on-demand via POST /api/guest/conversations
 
 /**
  * Generate JWT token for guest session
@@ -255,7 +176,6 @@ export async function generateGuestToken(session: GuestSession): Promise<string>
   try {
     const token = await new SignJWT({
       reservation_id: session.reservation_id,
-      conversation_id: session.conversation_id,
       tenant_id: session.tenant_id,
       guest_name: session.guest_name,
       check_in: session.check_in,                        // Already YYYY-MM-DD string
@@ -288,7 +208,7 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
     const { payload } = await jwtVerify(token, SECRET_KEY)
 
     // Validate payload structure
-    if (!payload.reservation_id || !payload.conversation_id || !payload.tenant_id) {
+    if (!payload.reservation_id || !payload.tenant_id) {
       console.error('[guest-auth] Invalid token payload structure')
       return null
     }
@@ -308,7 +228,6 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
       // New JWT format (includes all session data)
       const session: GuestSession = {
         reservation_id: payload.reservation_id as string,
-        conversation_id: payload.conversation_id as string,
         tenant_id: payload.tenant_id as string,
         guest_name: payload.guest_name as string,
         check_in: payload.check_in as string,    // Keep as YYYY-MM-DD string
@@ -366,7 +285,6 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
     // Reconstruct session with real data from database
     const session: GuestSession = {
       reservation_id: payload.reservation_id as string,
-      conversation_id: payload.conversation_id as string,
       tenant_id: payload.tenant_id as string,
       guest_name: payload.guest_name as string,
       check_in: reservation.check_in_date,   // Keep as YYYY-MM-DD string

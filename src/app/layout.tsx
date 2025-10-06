@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "../styles/accommodation-animations.css";
@@ -14,16 +14,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,        // Prevent zoom on iOS Safari
+  userScalable: false,    // Prevent pinch-zoom
+  viewportFit: 'cover'    // Support notch safe areas
+};
+
 export const metadata: Metadata = {
   title: "InnPilot - Plataforma de Gestión Hotelera",
   description: "Sistema inteligente para gestión hotelera y compliance SIRE en Colombia",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,        // Prevent zoom on iOS Safari
-    userScalable: false,    // Prevent pinch-zoom
-    viewportFit: 'cover'    // Support notch safe areas
-  }
 };
 
 export default function RootLayout({
