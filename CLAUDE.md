@@ -24,79 +24,20 @@ InnPilot is a modern web platform for managing hotel operations with AI-powered 
 
 ---
 
-## 🎯 CURRENT PROJECT: SIRE Compliance Data Extension
+## 🚀 MCP SERVERS - Token Optimization Infrastructure
 
-**Status:** Planning Complete - Ready for FASE 1
-**Date:** October 6, 2025
-**Objective:** Extend `guest_reservations` table with 9 missing SIRE compliance fields
+**Status:** ✅ 5/5 Connected (claude-context, knowledge-graph, memory-keeper, context7, supabase)
 
-### Quick Context
+**Benefit:** ~40-60% token reduction via semantic code search + persistent memory
 
-**Problem Identified:**
-- `guest_reservations` has only 4/13 SIRE-required fields
-- Missing: `document_type`, `document_number`, `birth_date`, `first_surname`, `second_surname`, `given_names`, `nationality_code`, `origin_country_code`, `destination_country_code`
-- Compliance chat extracts data but has nowhere to persist it in the reservation
+**Active Servers:**
+- **claude-context**: Semantic code search (818 files indexed, 33,257 chunks)
+- **knowledge-graph**: Entity relationships (local storage)
+- **memory-keeper**: Architectural decisions (SQLite)
+- **context7**: Official docs (React 19, Next.js 15, TypeScript)
+- **supabase**: Database operations (20+ tools)
 
-**Solution:** 3-phase implementation (7 hours estimated)
-
-### Project Files
-
-**Planning Documents:**
-- `plan.md` (620 lines) - Complete project plan with technical specs
-- `TODO.md` (190 lines) - 15 tasks with agent assignments and time estimates
-- `sire-compliance-prompt-workflow.md` (950 lines) - 16 copy-paste ready prompts
-
-**Reference Documents:**
-- `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` - SIRE field specifications
-- `docs/sire/CODIGOS_OFICIALES.md` - Official SIRE codes (document types, countries)
-- `src/lib/sire/field-mappers.ts` - Conversational → SIRE data mappers
-
-### Phase Overview
-
-**FASE 1 - Database Migration** (~2h 15min) - `@agent-database-agent`
-- Create migration with 9 SIRE fields (all nullable)
-- Add validation constraints (document types, formats)
-- Create search indexes (document_number, nationality_code)
-- Migrate existing data from `compliance_submissions.data` (JSONB)
-
-**FASE 2 - Backend Integration** (~3h 15min) - `@agent-backend-developer`
-- Update TypeScript types (`GuestReservation` interface)
-- Create `updateReservationWithComplianceData()` function
-- Integrate into compliance chat flow
-- Update `/api/reservations/list` to return SIRE fields
-- Create sync helper script (`scripts/sync-compliance-to-reservations.ts`)
-
-**FASE 3 - Testing & Validation** (~2h 45min) - Both agents
-- SQL validation queries
-- End-to-end test (8 steps)
-- Data migration validation
-- Performance testing (< 50ms target)
-- Rollback script
-- Document results
-
-### How to Start
-
-**For Database Agent:**
-```bash
-# Use Prompt 1.1 from sire-compliance-prompt-workflow.md
-@agent-database-agent create the SIRE fields migration following plan.md FASE 1.1
-```
-
-**For Backend Developer:**
-```bash
-# Wait for FASE 1 complete, then use Prompt 2.1
-@agent-backend-developer update TypeScript types with SIRE fields following plan.md FASE 2.1
-```
-
-### Success Criteria
-- ✅ Migration applied on dev branch
-- ✅ All constraints enforcing valid SIRE data
-- ✅ Existing data migrated from `compliance_submissions`
-- ✅ API returns SIRE fields
-- ✅ End-to-end test passes (8/8 steps)
-- ✅ Performance baseline maintained (< 50ms queries)
-
----
+**Verification:** Run `/mcp` in Claude Code → Expect "5/5 ✓ connected"
 
 ## 🚀 Development Setup
 
@@ -128,12 +69,22 @@ InnPilot is a modern web platform for managing hotel operations with AI-powered 
 
 ## 🤖 Specialized Agents
 
-**Agentes disponibles:** Ver `.claude/agents/` para lista completa, capacidades y cuándo usar cada uno.
+**Workflow:** Agente lee AUTOMÁTICAMENTE `snapshots/{nombre}.md` cuando es invocado (~88% token savings: 35K → 2-4K).
 
-**🚨 Infrastructure Monitor Proactivo:**
-- Se invoca AUTOMÁTICAMENTE cuando `.claude/errors.jsonl` existe (creado por hooks)
-- Presenta diagnóstico de errores + soluciones al finalizar tareas
-- No necesitas invocarlo manualmente (Claude lo detecta y delega)
+| Agente | Snapshot | Cuándo Usar |
+|--------|----------|-------------|
+| `@agent-general-purpose` | `general-snapshot.md` | Overview general, métricas proyecto, health score |
+| `@agent-database-agent` | `database-agent.md` | Schema, migrations, RPC functions, embeddings, RLS |
+| `@agent-backend-developer` | `backend-developer.md` | APIs, business logic, auth, integrations, SIRE backend |
+| `@agent-api-endpoints-mapper` | `api-endpoints-mapper.md` | Mapear/documentar endpoints, auth patterns |
+| `@agent-ux-interface` | `ux-interface.md` | Componentes React, accesibilidad WCAG, design system |
+| `@agent-infrastructure-monitor` | `infrastructure-monitor.md` | Performance, monitoring, VPS, error detection (auto-invoca) |
+| `@agent-deploy-agent` | `deploy-agent.md` | CI/CD, deployment, secrets, rollbacks (⚠️ VPS solo, NO Vercel) |
+| `@agent-embeddings-generator` | `embeddings-generator.md` | Vector search, Matryoshka 3-tier, embeddings generation |
+
+**Actualización:** Agentes actualizan su snapshot después de cambios importantes (no SNAPSHOT.md - solo milestones)
+
+---
 
 ### ⚠️ CRITICAL: Verify Hooks Are Active
 

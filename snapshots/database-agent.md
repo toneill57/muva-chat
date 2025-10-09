@@ -1,556 +1,732 @@
 ---
-title: "InnPilot Database Agent - Snapshot Especializado"
+title: Database Agent Snapshot
 agent: database-agent
-last_updated: "2025-10-06T16:00:00"
-status: PRODUCTION_READY
+last_updated: 2025-10-08
+status: ✅ Production Ready - SIRE Extension Pending (FASE 10-12)
+database_version: PostgreSQL 17.4.1.075 (Supabase)
+total_size: 35.5 MB
+total_tables: 37 (public + hotels schemas)
 ---
 
-# 🗄️ Database Agent - Snapshot Especializado
+# 🗄️ Database Agent Snapshot - InnPilot
 
-**Agent**: @database-agent
-**Última actualización**: 6 Octubre 2025 16:00
-**Estado**: PRODUCCIÓN - Supabase PostgreSQL 17.4
+## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
----
+**Reference:** `.claude/TEST_FIRST_POLICY.md`
 
-## 🎯 PROYECTO ACTIVO: SIRE Compliance Data Extension
+**When invoked as @agent-database-agent:**
+1. Execute ALL SQL validation queries before reporting completion
+2. Show migration results, query outputs, index verification
+3. Request user approval before marking [x]
+4. Document evidence with actual SQL results
 
-### **Tu Responsabilidad (FASE 1 - Database Migration + FASE 3 - Validation)**
-
-**Estado:** Listo para iniciar FASE 1
-
-**FASE 1 - Database Migration (4 tareas, ~2h 15min):**
-1. **Create migration with 9 SIRE fields** (task 1.1) - ~45 min
-2. **Add validation constraints** (task 1.2) - ~30 min
-3. **Create search indexes** (task 1.3) - ~15 min
-4. **Migrate existing data** (task 1.4) - ~45 min
-
-**FASE 3 - Testing & Validation (4 tareas, ~2h):**
-1. **Create validation queries** (task 3.1) - ~30 min
-2. **Validate migrated data** (task 3.3) - ~30 min
-3. **Performance testing** (task 3.4) - ~30 min
-4. **Create rollback script** (task 3.5) - ~30 min
-
-**Tiempo Total:** ~4h 15min
-
-**Archivos de Contexto:**
-- Plan: `plan.md` (620 líneas) - Ver FASE 1 y FASE 3 completas
-- Tasks: `TODO.md` (190 líneas) - Tasks 1.1-1.4, 3.1-3.5
-- Prompts: `sire-compliance-prompt-workflow.md` (Prompts 1.1-1.4, 3.1-3.5)
-- SIRE Specs: `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md`
-- Catálogos Oficiales:
-  - `_assets/sire/codigos-pais.json` (250 países - códigos SIRE propietarios NO ISO)
-  - `_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
-
-**9 Campos SIRE a Crear:**
-```sql
-ALTER TABLE guest_reservations ADD COLUMN
-  document_type VARCHAR(2),              -- '3', '5', '10', '46'
-  document_number VARCHAR(20),           -- Alphanumeric 6-20 chars
-  birth_date DATE,                       -- Fecha nacimiento
-  first_surname VARCHAR(45),             -- Primer apellido (uppercase)
-  second_surname VARCHAR(45),            -- Segundo apellido (uppercase)
-  given_names VARCHAR(60),               -- Nombres (uppercase)
-  nationality_code VARCHAR(3),           -- Código SIRE 3 digits
-  origin_country_code VARCHAR(3),        -- País origen SIRE
-  destination_country_code VARCHAR(3);   -- País destino SIRE
-```
-
-**Constraints a Crear:**
-- `document_type` IN ('3', '5', '10', '46')
-- `document_number` regex `^[A-Z0-9]+$` (6-20 chars)
-- Surnames/names regex `^[A-ZÁÉÍÓÚÑ ]+$`
-- Country codes regex `^\d{3}$`
-
-**Indexes a Crear:**
-- `idx_guest_reservations_document` on `document_number`
-- `idx_guest_reservations_nationality` on `nationality_code`
+**PROHIBIDO:** Report ✅ without showing EXECUTE/VERIFY evidence
+**If test fails:** Report SQL error immediately, propose fix, await approval
 
 ---
 
-## 🗄️ ESQUEMA POSTGRESQL
+## 📊 Executive Summary
 
-### **39 Tablas Totales** (29 en `public`, 10 en `hotels`)
+**Database Status:** Healthy with minor security advisories
+**Schema Evolution:** Multi-tenant with vector embeddings (Matryoshka 3-tier)
+**Active Extensions:** 4 critical (vector, pgcrypto, uuid-ossp, pg_stat_statements)
+**Migration Status:** 272 migrations applied (Oct 2025)
+**Next Major Project:** SIRE Compliance Extension (9 fields to guest_reservations)
 
-#### Schema `public` - Multi-Tenant Core
+---
 
-**Content & Knowledge Base:**
-```sql
-sire_content (8 docs)                    -- Compliance SIRE
-  ├── embedding vector(3072)             -- Tier 2+3 (1536d + 3072d)
-  ├── embedding_1536 vector(1536)        -- HNSW index
-  └── embedding_3072 vector(3072)        -- IVFFlat index
+## 🏗️ Schema Architecture
 
-muva_content (742 docs)                  -- Tourism San Andrés
-  ├── embedding vector(3072)             -- Tier 1+3 (1024d + 3072d)
-  ├── embedding_1024 vector(1024)        -- HNSW index
-  └── embedding_3072 vector(3072)        -- IVFFlat index
+### Schema Overview
 
-hotel_operations (10 items)              -- Staff knowledge base
-  ├── embedding_1536 vector(1536)        -- Tier 2 HNSW
-  └── embedding_3072 vector(3072)        -- Tier 3 IVFFlat
 ```
-
-**Multi-Tenant Infrastructure:**
-```sql
-tenant_registry (2 tenants)              -- Tenant master
-  ├── b5c45f51... (simmerdown, Premium)
-  └── 11111111... (free-hotel-test, Free)
-
-user_tenant_permissions (1 registro)     -- Access control matrix
-```
-
-**Guest Portal System:**
-```sql
-guest_reservations (189 bookings)        -- Bookings + SIRE fields
-  ├── 4 campos SIRE actuales (check_in, check_out, guest_name, reservation_code)
-  └── 9 campos SIRE pendientes (FASE 1 migration)
-
-guest_conversations (22 conversations)   -- Multi-conversation system
-  ├── conversation_id (UUID, PK)
-  ├── reservation_id (FK → guest_reservations)
-  ├── tenant_id (multi-tenant isolation)
-  ├── is_favorite (boolean)
-  ├── is_archived (boolean)
-  └── last_activity_at (timestamp, indexed)
-
-chat_messages (42 messages)              -- Message persistence
-  ├── message_id (UUID, PK)
-  ├── conversation_id (FK → guest_conversations)
-  ├── sender ('guest' | 'assistant')
-  ├── content (text)
-  └── metadata (JSONB)
-
-prospective_sessions (176 sessions)      -- Anonymous chat tracking
-  ├── session_id (UUID, PK)
-  ├── tenant_id
-  ├── converted_to_reservation_id (FK → guest_reservations)
-  └── conversion_metadata (JSONB)
-
-conversation_memory (10 blocks)          -- Compressed history
-  ├── embedding_1024 vector(1024)        -- Tier 1 fast search
-  └── compressed_summary (text)
-
-conversation_attachments (0 files)       -- File uploads (images, PDFs)
-  ├── attachment_id (UUID, PK)
-  ├── conversation_id (FK)
-  ├── storage_path (text)
-  └── file_metadata (JSONB)
-```
-
-**Compliance Module:**
-```sql
-compliance_submissions (0 registros)     -- SIRE/TRA submissions
-  ├── submission_id (UUID, PK)
-  ├── reservation_id (FK → guest_reservations)
-  ├── status ('pending' | 'success' | 'error')
-  ├── data (JSONB)                       -- SIRE data completo
-  └── created_at (timestamp)
-
-tenant_compliance_credentials (0)        -- Tenant SIRE/TRA credentials
-  ├── tenant_id (FK)
-  ├── sire_credentials (JSONB encrypted)
-  └── tra_credentials (JSONB encrypted)
-```
-
-**Staff Portal:**
-```sql
-staff_users (30 usuarios)                -- Staff authentication
-  ├── 22 CEO
-  ├── 4 Admin
-  └── 4 Housekeeper
-
-staff_conversations (30 conversations)   -- Staff chat
-staff_messages (36 messages)             -- Staff messages
-```
-
-**Accommodation Data:**
-```sql
-accommodation_units (10 unidades)        -- Legacy/sync table
-accommodation_units_public (14)          -- Marketing data
-accommodation_units_manual (1)           -- Unit manuals
-accommodation_units_manual_chunks (38)   -- Chunked manuals
-  ├── embedding_1024 vector(1024)        -- Tier 1 HNSW
-  ├── embedding_1536 vector(1536)        -- Tier 2 HNSW
-  └── embedding_3072 vector(3072)        -- Tier 3 IVFFlat
-```
-
-**Integration:**
-```sql
-integration_configs (1 config)           -- MotoPress config
-sync_history (30 registros)              -- Sync logs (last 30)
-hotels (1 hotel)                         -- Hotel master
-```
-
-#### Schema `hotels` - Hotel-Specific (Legacy)
-
-```sql
-accommodation_units (8 unidades)         -- Active units
-  ├── embedding_1024 vector(1024)        -- Tier 1 tourism
-  └── embedding_1536 vector(1536)        -- Tier 2 balanced
-
-policies (9 políticas)                   -- Hotel policies
-  ├── embedding_1024 vector(1024)        -- Tier 1 fast
-  └── embedding_3072 vector(3072)        -- Tier 3 full
-
-client_info (0)                          -- Empty
-properties (0)                           -- Empty
-guest_information (0)                    -- Empty
+PostgreSQL Database (Supabase)
+├── public/ (27 tables)
+│   ├── Content Tables (3)
+│   │   ├── sire_content (8 rows, 392 KB)
+│   │   ├── muva_content (742 rows, 21 MB) ← Largest table
+│   │   └── accommodation_units_manual_chunks (38 rows, 6.5 MB)
+│   │
+│   ├── Multi-Tenant Core (4)
+│   │   ├── tenant_registry (2 tenants, 136 KB)
+│   │   ├── user_tenant_permissions (1 row, RLS enabled)
+│   │   ├── hotels (1 row, 160 KB)
+│   │   └── accommodation_units (10 rows, 216 KB)
+│   │
+│   ├── Guest Management (5)
+│   │   ├── guest_reservations (144 rows, 312 KB)
+│   │   ├── guest_conversations (23 rows, 160 KB)
+│   │   ├── chat_conversations (5 rows, 136 KB)
+│   │   ├── chat_messages (52 rows, 384 KB)
+│   │   └── conversation_memory (10 rows, 232 KB)
+│   │
+│   ├── Compliance & SIRE (3)
+│   │   ├── compliance_submissions (0 rows)
+│   │   ├── tenant_compliance_credentials (0 rows)
+│   │   └── conversation_attachments (0 rows)
+│   │
+│   ├── Staff Operations (4)
+│   │   ├── staff_users (3 rows)
+│   │   ├── staff_conversations (31 rows)
+│   │   ├── staff_messages (38 rows, 160 KB)
+│   │   └── hotel_operations (10 rows, 1.7 MB)
+│   │
+│   ├── Integrations (2)
+│   │   ├── integration_configs (1 row)
+│   │   └── sync_history (30 rows)
+│   │
+│   └── Prospective/Marketing (2)
+│       ├── prospective_sessions (187 rows, 808 KB)
+│       └── accommodation_units_public (14 rows, 368 KB)
+│
+└── hotels/ (10 tables) - Tenant-specific data
+    ├── client_info (0 rows)
+    ├── properties (0 rows)
+    ├── accommodation_units (8 rows, 1.5 MB)
+    ├── accommodation_types (0 rows)
+    ├── policies (9 rows, 344 KB)
+    ├── guest_information (0 rows, 1.6 MB)
+    ├── unit_amenities (0 rows)
+    ├── pricing_rules (0 rows)
+    └── content (0 rows, 1.2 MB)
 ```
 
 ---
 
-## 🔄 MIGRACIONES
+## 🔧 PostgreSQL Extensions
 
-### Estado Actual
+### Active Extensions (4/70 available)
 
-**Migraciones:**
-- **235 migraciones** aplicadas en base de datos
-- **12 archivos** locales en `/supabase/migrations/`
-- ⚠️ **GAP MASIVO**: 223 migraciones solo en BD (no versionadas localmente)
+| Extension | Schema | Version | Purpose |
+|-----------|--------|---------|---------|
+| **vector** | public | 0.8.0 | pgvector - HNSW & IVFFlat indexes for embeddings |
+| **pgcrypto** | extensions | 1.3 | Credential encryption (SIRE, MotoPress) |
+| **uuid-ossp** | extensions | 1.1 | UUID generation for PKs |
+| **pg_stat_statements** | extensions | 1.11 | Query performance monitoring |
 
-**Últimas migraciones (Oct 1-6, 2025):**
+**Note:** `supabase_vault` and `pg_graphql` also installed but managed by Supabase.
+
+---
+
+## 🛠️ Supabase MCP Tools (29 tools)
+
+### Direct Database Access via MCP
+
+**MCP Server:** `supabase` (connected ✅)
+**Token Benefit:** 98%+ reduction vs reading schema files directly
+**Use Case:** Development, debugging, ad-hoc queries (NOT for regular application code)
+
+**Key Tools Available:**
+
+| Tool | Purpose | When to Use |
+|------|---------|-------------|
+| `list_tables(schemas)` | Schema inspection | Avoid 15k token schema dumps |
+| `execute_sql(query)` | Ad-hoc queries | Development/debugging only |
+| `apply_migration(name, query)` | DDL operations | Create migrations |
+| `get_logs(service)` | Last 24h logs | Debug api, postgres, auth, storage |
+| `list_migrations()` | Migration status | Track applied migrations |
+| `list_extensions()` | Extension inventory | Verify pgvector, pgcrypto installed |
+| `get_advisors(type)` | Security/performance | Check RLS, index usage |
+| `generate_typescript_types()` | Type generation | Update database.types.ts |
+
+**Database Operations Tools (14):**
+- `list_organizations()` - Org membership
+- `list_projects()` - Project discovery
+- `get_project(id)` - Project details
+- `create_project()` - New project setup
+- `pause_project()` - Pause database
+- `restore_project()` - Resume database
+- `create_branch()` - Dev branch creation
+- `list_branches()` - Branch status
+- `delete_branch()` - Cleanup branches
+- `merge_branch()` - Production deployment
+- `reset_branch()` - Rollback changes
+- `rebase_branch()` - Sync with production
+- `get_project_url()` - API endpoint
+- `get_anon_key()` - Public API key
+
+**Edge Functions Tools (3):**
+- `list_edge_functions()` - Function inventory
+- `get_edge_function(slug)` - Function source
+- `deploy_edge_function()` - Deploy/update function
+
+**IMPORTANT Query Hierarchy:**
 ```
-20251001015000_add_prospective_sessions_table.sql
-20251001015100_add_accommodation_units_public_table.sql
-20251005010000_add_guest_conversations.sql           # Multi-conversation
-20251005010100_add_compliance_submissions.sql        # SIRE/TRA
-20251005010200_add_tenant_compliance_credentials.sql
-20251005010300_add_conversation_attachments.sql      # File uploads
-20251005010301_create_guest_attachments_bucket.sql
-20251005010400_add_conversation_intelligence.sql
-20251006010000_enable_rls_security_fix.sql           # RLS 100% fix
-20251006192000_fix_security_definer_view.sql         # Security fix
-20251006192100_fix_function_search_path.sql          # SQL injection fix
+1. RPC Functions (PRIMARY)       ← Use ALWAYS (98.1% token reduction)
+2. MCP execute_sql (SECONDARY)   ← Ad-hoc analysis only
+3. execute_sql() RPC (EMERGENCY) ← Migrations only
 ```
 
-**Próxima migración (FASE 1):**
+**Example Usage:**
+```typescript
+// ✅ PREFERRED - Use RPC function (345 tokens)
+const { data } = await supabase
+  .rpc('get_accommodation_unit_by_id', {
+    p_unit_id: unit_id,
+    p_tenant_id: tenant_id
+  })
+
+// ⚠️ SECONDARY - MCP tool for debugging (1,200 tokens)
+mcp__supabase__execute_sql({
+  project_id: 'ooaumjzaztmutltifhoq',
+  query: 'SELECT COUNT(*) FROM guest_reservations WHERE tenant_id = $1'
+})
+
+// ❌ AVOID - Direct SQL in code (17,700 tokens)
+const { data } = await supabase
+  .from('accommodation_units')
+  .select('*, amenities(*), policies(*)')
+  .eq('id', unit_id)
 ```
-20251007000000_add_sire_fields_to_guest_reservations.sql
+
+### Extension Security Advisory
+
+⚠️ **WARN**: `vector` extension installed in `public` schema (should be in dedicated schema for security)
+- Impact: Low (Supabase managed)
+- Remediation: https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public
+
+---
+
+## 🧬 Matryoshka Embeddings System
+
+### 3-Tier Architecture
+
+**Philosophy:** Flexible dimension truncation for speed/accuracy tradeoff
+
+| Tier | Dimensions | Use Case | Index Type | Tables Using |
+|------|-----------|----------|------------|--------------|
+| **Tier 1 (Fast)** | 1024d | Ultra-fast searches | HNSW | muva_content, accommodation_units_manual_chunks, conversation_memory, accommodation_units_public |
+| **Tier 2 (Balanced)** | 1536d | Balanced performance | HNSW | sire_content, hotels.guest_information, hotels.content, accommodation_units_manual_chunks, hotel_operations |
+| **Tier 3 (Full)** | 3072d | Maximum precision | No index (>2000d limit) | accommodation_units_manual_chunks (primary), hotels.accommodation_units |
+
+**Embedding Model:** OpenAI text-embedding-3-large
+**Index Algorithm:** HNSW (Hierarchical Navigable Small World) for dimensions ≤2000
+**Index Parameters:** `m=16, ef_construction=64` (standard Supabase config)
+
+### Vector Indexes Inventory
+
+**Total Vector Indexes:** 19 HNSW indexes across schemas
+
+**Public Schema (10):**
+- `idx_muva_content_embedding_fast` (1024d)
+- `idx_sire_content_embedding_balanced` (1536d)
+- `idx_manual_chunks_embedding_fast` (1024d)
+- `idx_manual_chunks_embedding_balanced` (1536d)
+- `idx_conversation_memory_embedding_fast` (1024d)
+- `idx_accommodation_public_embedding_fast_hnsw` (1024d)
+- `idx_accommodation_manual_embedding_balanced_hnsw` (1536d)
+- `idx_hotel_operations_embedding_balanced` (IVFFlat - legacy)
+- `idx_hotel_operations_embedding_balanced_hnsw` (1536d)
+- `idx_hotels_embedding_fast` (1024d)
+- `idx_hotels_embedding_balanced` (1536d)
+
+**Hotels Schema (9):**
+- `idx_hotels_accommodation_units_embedding_fast` (1024d)
+- `idx_hotels_accommodation_units_embedding_balanced` (1536d)
+- `idx_content_embedding_balanced` (1536d)
+- `idx_guest_information_embedding_balanced` (1536d)
+- `idx_policies_embedding_fast` (1024d)
+
+**Note:** 3072d embeddings (Tier 3) have NO indexes due to HNSW 2000d limit - uses sequential scan for max precision searches.
+
+---
+
+## 🔐 Security Layer
+
+### Row Level Security (RLS) Status
+
+**RLS Enabled Tables:** 31/37 tables
+
+**Multi-Tenant Isolation (hotels schema - 7 tables):**
+```sql
+-- Pattern: All hotels.* tables enforce tenant_id filtering
+-- Policy: tenant_id = current_setting('app.current_tenant_id')
+-- Roles: anon, authenticated
+```
+
+Tables with RLS:
+- ✅ hotels.client_info
+- ✅ hotels.properties
+- ✅ hotels.accommodation_units (RLS disabled - controlled via public wrapper)
+- ✅ hotels.policies
+- ✅ hotels.guest_information
+- ✅ hotels.unit_amenities
+- ✅ hotels.pricing_rules
+- ✅ hotels.content
+
+**Public Schema RLS (24 tables):**
+- ✅ sire_content (public read, service_role modify)
+- ✅ muva_content (public read, service_role modify)
+- ✅ tenant_registry (service_role only CRUD, users read via permissions)
+- ✅ user_tenant_permissions (tenant admins manage, users view own)
+- ✅ guest_reservations (staff view tenant-filtered)
+- ✅ guest_conversations (guests own, staff view tenant)
+- ✅ chat_messages (linked to conversations)
+- ✅ accommodation_units (tenant-filtered, service_role bypass)
+- ✅ accommodation_units_manual (guests view their unit)
+- ✅ accommodation_units_manual_chunks (tenant-filtered)
+- ✅ accommodation_units_public (public read for active/bookable)
+- ✅ prospective_sessions (public active, staff view tenant)
+- ✅ conversation_memory (users view own session)
+- ✅ conversation_attachments (guests CRUD own)
+- ✅ compliance_submissions (guests own, staff view/update tenant)
+- ✅ tenant_compliance_credentials (admins only)
+- ✅ staff_users (self + admin view)
+- ✅ staff_conversations (tenant-filtered)
+- ✅ staff_messages (via conversation tenant)
+- ✅ hotel_operations (role-based access: all_staff, admin_only, ceo_only)
+- ✅ hotels (tenant isolation via user_tenant_permissions)
+- ✅ integration_configs (tenant-filtered)
+- ✅ sync_history (tenant-filtered)
+
+**Tables WITHOUT RLS (0):**
+- None (all tables secured)
+
+### Security Advisories (5 warnings)
+
+**🔴 ERROR (1):**
+1. **Security Definer View:** `public.guest_chat_performance_monitor` 
+   - Risk: View enforces creator's permissions, not querying user
+   - Impact: Medium (monitoring view, limited exposure)
+   - Remediation: https://supabase.com/docs/guides/database/database-linter?lint=0010_security_definer_view
+
+**⚠️ WARN (4):**
+1. **Extension in Public Schema:** `vector` extension in public schema
+2. **Auth Leaked Password Protection:** Disabled (HaveIBeenPwned integration)
+3. **Insufficient MFA Options:** Too few MFA methods enabled
+4. **Vulnerable Postgres Version:** 17.4.1.075 has security patches available
+   - Recommended: Upgrade to latest minor version
+   - Remediation: https://supabase.com/docs/guides/platform/upgrading
+
+---
+
+## 🚀 RPC Functions Inventory
+
+### Total Functions: 40+ RPC functions
+
+**Category Breakdown:**
+
+**1. Vector Search Functions (15):**
+- `match_sire_documents()` - SIRE compliance docs (3072d)
+- `match_muva_documents()` - Tourism content (1024d fast)
+- `match_muva_documents_public()` - Public chat tourism (1024d)
+- `match_hotels_documents()` - Multi-tenant hotel search (tier routing)
+- `match_conversation_memory()` - Compressed conversation search (1024d)
+- `match_accommodation_units_fast()` - Fast unit search (1024d)
+- `match_accommodation_units_balanced()` - Balanced unit search (1536d)
+- `match_accommodations_public()` - Public marketing chat
+- `match_guest_accommodations()` - Guest portal (dual tier)
+- `match_guest_information_balanced()` - Guest info (1536d)
+- `match_hotel_operations_balanced()` - Staff operations (1536d, role-filtered)
+- `match_policies()` - Hotel policies (1536d)
+- `match_policies_public()` - Public policies (1024d)
+- `match_unit_manual_chunks()` - Manual chunks (1536d)
+- `match_optimized_documents()` - Universal search with tier routing
+
+**2. Data Retrieval RPCs (12) - October 2025 Optimization:**
+
+**Guest Conversations (3):**
+- `get_guest_conversation_metadata(conversation_id)` - Replaces 11 queries (99.4% reduction)
+- `get_inactive_conversations(tenant_id, days_inactive)` - Archiving helper (92.5% reduction)
+- `get_archived_conversations_to_delete(tenant_id, days_archived)` - Cleanup helper (82.0% reduction)
+
+**Chat Messages (1):**
+- `get_conversation_messages(conversation_id, limit, offset)` - Pagination (97.9% reduction)
+
+**Integrations (1):**
+- `get_active_integration(tenant_id, integration_type)` - Config lookup (98.4% reduction)
+
+**Reservations (1):**
+- `get_reservations_by_external_id(external_booking_id, tenant_id)` - Multi-unit bookings (98.0% reduction)
+
+**Accommodation Units (6):**
+- `get_accommodation_unit_by_id(unit_id, tenant_id)` - Schema bypass helper
+- `get_accommodation_unit_by_motopress_id(tenant_id, motopress_unit_id)` - MotoPress sync
+- `get_accommodation_unit_by_name(unit_name, tenant_id)` - ILIKE search
+- `get_accommodation_units_by_ids(unit_ids[])` - Batch retrieval
+- `get_accommodation_units_needing_type_id(tenant_id)` - Script helper (92.5% reduction)
+- `get_accommodation_tenant_id(unit_id)` - Tenant lookup
+
+**3. Utility Functions (5):**
+- `get_tenant_schema(tenant_nit)` - Schema name lookup
+- `get_full_document(source_file, table_name)` - Aggregate chunks
+- `execute_sql(query)` - Dynamic SQL (EMERGENCY USE ONLY)
+- Helper functions for UUID generation
+
+**Performance Impact:** RPC functions reduce token consumption by 90-98% compared to inline SQL (measured Oct 2025: 17,700→345 tokens = 98.1% reduction).
+
+**Documentation:** See `docs/architecture/DATABASE_QUERY_PATTERNS.md` for usage hierarchy.
+
+---
+
+## 📈 Migration History
+
+### Migration Statistics
+
+**Total Migrations:** 272 migrations applied
+**Latest Migration:** `20251006081115_fix_execute_sql_for_ddl.sql` (Oct 6, 2025)
+**Migration Span:** Jan 2025 → Oct 2025
+
+**Recent Major Migrations (Oct 2025):**
+
+**Oct 6, 2025 - Security Hardening:**
+- `20251006010000_enable_rls_security_fix.sql` - Fixed RLS bypass vulnerabilities
+- `20251006010100_add_execute_sql_helper.sql` - Added controlled SQL execution
+- `20251006192000_fix_security_definer_view.sql` - Fixed view permissions
+- `20251006192100_fix_function_search_path.sql` - Fixed search_path for functions
+
+**Oct 5, 2025 - Guest Portal Features:**
+- `20251005010000_add_guest_conversations.sql` - Multi-conversation support
+- `20251005010100_add_compliance_submissions.sql` - SIRE tracking
+- `20251005010200_add_tenant_compliance_credentials.sql` - Encrypted credentials
+- `20251005010300_add_conversation_attachments.sql` - Image/doc uploads
+- `20251005010400_add_conversation_intelligence.sql` - Compressed history
+
+**Oct 1-3, 2025 - RPC Optimization:**
+- Multiple `create_rpc_*_functions.sql` - Token reduction helpers
+- `get_guest_conversation_metadata`, `get_inactive_conversations`, etc.
+- Measured: 90-98% token reduction vs inline queries
+
+**Sep 2025 - Matryoshka Embeddings:**
+- `20250923113238_add_matryoshka_embedding_columns_tier1.sql` - 1024d fast
+- `20250923113244_add_matryoshka_embedding_columns_tier2.sql` - 1536d balanced
+- `20250923113457_create_optimized_search_functions.sql` - Tier routing
+- `20250923113531_create_matryoshka_vector_indexes_fixed.sql` - HNSW indexes
+
+**Migration File Pattern:**
+```
+supabase/migrations/YYYYMMDDHHMMSS_descriptive_name.sql
 ```
 
 ---
 
-## 🧬 EXTENSIONES Y PERFORMANCE
+## 💾 Storage & Performance
 
-### Extensiones Instaladas
+### Database Size Analysis
 
-```
-vector 0.8.0              -- pgvector (HNSW + IVFFlat)
-pgcrypto 1.3              -- Encryption
-pg_stat_statements 1.11   -- Query monitoring
-uuid-ossp 1.1             -- UUID generation
-```
+**Total Database Size:** ~35.5 MB (Oct 2025)
 
-### Sistema de Embeddings Matryoshka
+**Top 10 Tables by Size:**
 
-**3-Tier Architecture:**
+| Table | Total Size | Table Size | Indexes Size | Rows |
+|-------|-----------|------------|--------------|------|
+| muva_content | 21 MB | 1.3 MB | 20 MB | 742 |
+| accommodation_units_manual_chunks | 6.5 MB | 40 KB | 6.5 MB | 38 |
+| hotel_operations | 1.7 MB | 16 KB | 1.7 MB | 10 |
+| hotels.guest_information | 1.6 MB | 144 KB | 1.4 MB | 0 |
+| hotels.accommodation_units | 1.5 MB | 56 KB | 1.4 MB | 8 |
+| hotels.content | 1.2 MB | 0 bytes | 1.2 MB | 0 |
+| prospective_sessions | 808 KB | 232 KB | 576 KB | 187 |
+| accommodation_units_manual | 616 KB | 48 KB | 568 KB | 1 |
+| sire_content | 392 KB | 16 KB | 376 KB | 8 |
+| chat_messages | 384 KB | 64 KB | 320 KB | 52 |
 
-| Tier | Dimensiones | Uso | Índice | Cobertura |
-|------|-------------|-----|--------|-----------|
-| **Tier 1 (Fast)** | 1024d | Ultra-fast (tourism, quick queries) | HNSW | 100% |
-| **Tier 2 (Balanced)** | 1536d | Balanced (policies, general) | HNSW | 100% |
-| **Tier 3 (Full)** | 3072d | Full-precision (compliance, complex) | IVFFlat | 100% |
+**Observations:**
+- Vector indexes are 90-95% of total table size (expected for HNSW)
+- `muva_content` largest table (tourism data) with 742 POIs
+- Manual chunks heavily indexed (3 tiers: 1024d, 1536d, 3072d)
+- Empty tables have index overhead (hotels.content, hotels.guest_information)
 
-**Cobertura de Embeddings:**
-- `sire_content`: 8 documentos (Tier 2+3) ✅
-- `muva_content`: 742 documentos (Tier 1+3) ✅
-- `hotels.accommodation_units`: 8 unidades (Tier 1+2) ✅
-- `hotels.policies`: 9 políticas (Tier 1+3) ✅
-- `accommodation_units_manual_chunks`: 38 chunks (Tier 1+2+3) ✅
-- `conversation_memory`: 10 bloques (Tier 1) ✅
-- `hotel_operations`: 10 items (Tier 2+3) ✅
+### Performance Baselines
 
-**Funciones de búsqueda vectorial:**
-```sql
--- Multi-tenant hotel search
-match_hotels_documents(query_embedding, tenant_id, table_name, threshold, count)
+**Expected Query Times:**
+- Vector search (4 results): < 100ms
+- RPC function calls: < 50ms
+- Simple CRUD: < 10ms
+- Complex joins: < 200ms
 
--- SIRE compliance search
-match_sire_documents(query_embedding, threshold, count)
-
--- Tourism data search (MUVA)
-match_muva_documents(query_embedding, threshold, count)
-
--- Conversation memory search
-match_conversation_memory(query_embedding, session_id, threshold, count)
-
--- Multi-tier guest search
-match_guest_accommodations(query_embedding, tenant_id, tier, threshold, count)
-```
-
-**20+ funciones** `match_*()` implementadas total
-
-### Índices Vector
-
-**20 índices HNSW/IVFFlat activos:**
-
-**HNSW (High-performance):**
-- Tier 1 (1024d): 6 índices
-- Tier 2 (1536d): 8 índices
-
-**IVFFlat (Full precision):**
-- Tier 3 (3072d): 6 índices
-
-**Tamaños de tablas:**
-```
-muva_content:                        21 MB (20 MB índices)
-accommodation_units_manual_chunks:   6.5 MB (6.5 MB índices)
-hotel_operations:                    1.7 MB (1.7 MB índices)
-```
+**Index Usage:**
+- Vector searches: HNSW index scan (fast)
+- Text searches: GIN index on tsvector (Spanish config)
+- Foreign keys: B-tree indexes (automatic)
 
 ---
 
-## 🔧 RPC FUNCTIONS (Octubre 2025)
+## 🔄 SIRE Compliance Extension - Status
 
-### 7 Funciones Creadas - 98.1% Reducción Context Window
+### Current State (Oct 8, 2025)
 
-**Guest Conversations:**
+**Phase:** Planning Complete ✅ | Ready for FASE 10-12 execution
+
+**Missing Fields in `guest_reservations` (9 fields):**
+
 ```sql
--- Get full conversation metadata (replaces 11 queries, 99.4% reduction)
-get_guest_conversation_metadata(p_conversation_id UUID)
+-- Identity Fields (3)
+document_type VARCHAR(2)              -- '3'=Pasaporte, '5'=Cédula, '10'=PEP, '46'=Permiso
+document_number VARCHAR(15)           -- Alphanumeric 6-15 chars (no dashes)
+birth_date DATE                       -- YYYY-MM-DD format
 
--- Get inactive conversations for archiving (replaces 2 queries, 92.5% reduction)
-get_inactive_conversations(p_tenant_id TEXT, p_days_inactive INT)
+-- Name Fields (3) - Separated for SIRE compliance
+first_surname VARCHAR(50)             -- UPPERCASE, with accents (GARCÍA)
+second_surname VARCHAR(50)            -- UPPERCASE, optional
+given_names VARCHAR(50)               -- UPPERCASE, with accents (MARÍA JOSÉ)
 
--- Get archived conversations to delete (replaces 1 query, 82.0% reduction)
-get_archived_conversations_to_delete(p_tenant_id TEXT, p_days_archived INT)
+-- Country Codes (3) - Numeric codes (SIRE proprietary, not ISO 3166-1)
+nationality_code VARCHAR(3)           -- 1-3 digits (e.g., "840" for USA)
+origin_country_code VARCHAR(6)        -- 1-6 digits (supports DIVIPOLA cities)
+destination_country_code VARCHAR(6)   -- 1-6 digits
 ```
 
-**Chat Messages:**
-```sql
--- Get messages with pagination (replaces 6 queries, 97.9% reduction)
-get_conversation_messages(p_conversation_id UUID, p_limit INT, p_offset INT)
-```
+**Data Source for Migration:**
+- Existing: `compliance_submissions.data` (JSONB) with status='success'
+- Catalogs: `_assets/sire/codigos-pais.json` (250 countries, SIRE codes)
+- Catalogs: `_assets/sire/ciudades-colombia.json` (1,122 cities, DIVIPOLA)
 
-**Integrations:**
-```sql
--- Get active integration config (replaces 8 queries, 98.4% reduction)
-get_active_integration(p_tenant_id UUID, p_integration_type TEXT)
-```
+**Constraints to Add:**
+- Document type validation: IN ('3', '5', '10', '46')
+- Document number format: `^[A-Z0-9]{6,15}$`
+- Name fields format: `^[A-ZÁÉÍÓÚÑ ]{1,50}$` (uppercase with accents)
+- Country codes format: `^\d{1,6}$` (numeric)
 
-**Reservations:**
-```sql
--- Find reservations by external booking ID (replaces 5 queries, 98.0% reduction)
-get_reservations_by_external_id(p_external_booking_id TEXT, p_tenant_id TEXT)
-```
+**Indexes to Create:**
+- `idx_guest_reservations_document` ON document_number (WHERE NOT NULL)
+- `idx_guest_reservations_nationality` ON nationality_code (WHERE NOT NULL)
 
-**Accommodation Units:**
-```sql
--- Get units needing motopress_type_id (replaces script logic, 92.5% reduction)
-get_accommodation_units_needing_type_id(p_tenant_id TEXT)
-```
+**Estimated Work:**
+- **FASE 10** (Database Migration): 2h 15min - @database-agent
+- **FASE 11** (Backend Integration): 3h 15min - @backend-developer
+- **FASE 12** (Testing & Validation): 2h 45min - Both agents
+- **Total:** ~8 hours across 3 phases
 
-**Impacto Total:**
-- **34 queries inline** reemplazados en 41 archivos
-- **98.1% reducción** context window (17,700 → 345 tokens)
-- **17,355 tokens ahorrados** por conversación promedio
-
-**Documentación Completa:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
+**Planning Docs:**
+- `plan.md` (FASE 10-12 detailed)
+- `TODO.md` (51 tasks with estimates)
+- `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` (SIRE specs)
+- `docs/sire/CODIGOS_OFICIALES.md` (Official code catalogs)
 
 ---
 
-## 🔒 SEGURIDAD
+## 🔑 Key Architectural Decisions
 
-### Row Level Security (RLS)
+### 1. Multi-Tenant Isolation Strategy
 
-**Estado:** ✅ **100% habilitado** (fix aplicado Oct 6, 2025)
+**Approach:** Row Level Security (RLS) policies + tenant_id filtering
 
-**Tablas con RLS + Policies:**
-- ✅ `public.accommodation_units` - 4 policies
-- ✅ `public.accommodation_units_manual_chunks` - 4 policies
-- ✅ `public.staff_conversations` - 4 policies
-- ✅ `public.staff_messages` - 4 policies
-- ✅ `public.guest_conversations` - 4 policies
-- ✅ `public.chat_messages` - 4 policies
-- ✅ `hotels.*` (schema completo) - RLS habilitado
-
-**Migración Fix:**
-```
-20251006010000_enable_rls_security_fix.sql
+**Implementation:**
+```sql
+-- Pattern used across all tenant-specific tables
+CREATE POLICY "tenant_isolation_policy" ON table_name
+  FOR ALL USING (
+    tenant_id = current_setting('app.current_tenant_id', true)::uuid
+    OR auth.role() = 'service_role'
+  );
 ```
 
-### Function Security
+**Bypass:** Service role for migrations and admin operations
 
-**✅ RESUELTO - Function Search Path (Oct 6, 2025):**
-- **28/28 funciones** `match_*` actualizadas con `SET search_path = public, pg_temp`
-- **0 funciones** vulnerables a SQL injection
-- **Script fix:** `scripts/fix-function-search-path.ts`
+**Tables Enforcing:** 31/37 tables with RLS enabled
 
-**Migraciones:**
-```
-20251006192000_fix_security_definer_view.sql
-20251006192100_fix_function_search_path.sql
-```
+### 2. Vector Search Optimization
 
-### Alertas Pendientes
+**Matryoshka Embeddings:** 3-tier system for speed/accuracy tradeoff
 
-**⚠️ PENDIENTE - PostgreSQL Upgrade:**
-- **Versión actual:** PostgreSQL 17.4
-- **Estado:** Parches de seguridad disponibles
-- **Prioridad:** HIGH (recomendado en 7 días)
-- **Acción manual requerida:** Upgrade via Supabase Dashboard
-- **Guía:** `docs/deployment/POSTGRES_UPGRADE_GUIDE.md`
+**Tier Selection Logic:**
+- **Fast queries** (chat, tourism): 1024d with HNSW index (~3x faster)
+- **Balanced queries** (policies, manuals): 1536d with HNSW index
+- **Precision queries** (compliance, full docs): 3072d no index (max accuracy)
 
-**⚠️ ADVERTENCIA - Password Protection:**
-- **Leaked Password Protection:** DESHABILITADO
-- **Recomendación:** Habilitar verificación HaveIBeenPwned.org
+**Measured Impact:** 3x speed improvement (Tier 1 vs Tier 3) with <2% accuracy loss
+
+### 3. Database Query Hierarchy (Oct 2025)
+
+**Token Optimization Policy:**
+
+1. **RPC Functions (PRIMARY)** - 90-98% token reduction
+   - Example: `get_guest_conversation_metadata()` replaces 11 queries
+   - Type-safe, pre-compiled, cached query plans
+
+2. **Direct SQL via MCP (SECONDARY)** - Ad-hoc analysis only
+   - `mcp__supabase__execute_sql()` for one-time queries
+   - Development and debugging
+
+3. **execute_sql() RPC (EMERGENCY)** - Migrations only
+   - Never in regular application code
+   - Never in scheduled scripts or API endpoints
+
+**Documentation:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
+
+### 4. Embedding Generation Strategy
+
+**Provider:** OpenAI text-embedding-3-large
+**Dimensions:** 3072 (full precision)
+**Truncation:** Dynamic to 1024d or 1536d via Matryoshka
+**Storage:** All 3 tiers stored for flexibility
+
+**Use Cases:**
+- Premium chat: 1024d truncated for real-time search
+- Compliance: 3072d full precision for legal accuracy
+- Policies: 1536d balanced for guest queries
 
 ---
 
-## 📊 PERFORMANCE BASELINES
+## 🐛 Known Issues & Limitations
 
-### Expected Response Times
+### 1. HNSW Index Dimension Limit
 
-**Vector Search Queries:**
-- Tier 1 (1024d HNSW): **< 15ms** (tourism queries)
-- Tier 2 (1536d HNSW): **< 40ms** (SIRE compliance)
-- Tier 3 (3072d IVFFlat): **< 100ms** (complex queries)
+**Issue:** HNSW indexes support max 2000 dimensions
+**Impact:** 3072d embeddings (Tier 3) use sequential scan
+**Workaround:** Store 3072d but search using 1536d index when speed matters
+**Status:** Acceptable (precision use cases tolerate slower queries)
 
-**Database Operations:**
-- Health check queries: **< 50ms**
-- Data validation queries: **< 200ms**
-- Index recreation: **< 1 minute** for tables <1000 records
-- RPC function calls: **< 50ms** (cached query plans)
+### 2. Security Definer View
 
-### Resource Usage Thresholds
+**Issue:** `guest_chat_performance_monitor` uses SECURITY DEFINER
+**Risk:** View enforces creator permissions, not querying user
+**Impact:** Medium (monitoring view, limited data exposure)
+**Remediation:** Redefine view without SECURITY DEFINER or use RLS policies
 
-- Database connections: **< 80%** of max_connections
-- Vector index usage: **> 80%** idx_scan ratio for active indexes
-- Table size growth: **< 10MB per month** per tenant (initial scale)
-- Storage usage: **< 85%** of allocated space
+### 3. Vector Extension in Public Schema
 
-### Quality Metrics
+**Issue:** `vector` extension installed in public schema
+**Best Practice:** Dedicated schema (e.g., `extensions`)
+**Impact:** Low (Supabase managed, minimal security risk)
+**Status:** Defer to Supabase platform updates
 
-- Vector embedding coverage: **> 95%** of records
-- Search result relevance: Consistent with baseline queries
-- Tenant isolation: **100%** (zero cross-contamination)
-- RLS policy effectiveness: **100%** enforcement
+### 4. Empty Tables with Index Overhead
+
+**Tables:** hotels.content, hotels.guest_information, hotels.client_info, hotels.properties
+**Issue:** Vector indexes created but 0 rows
+**Overhead:** ~1-2 MB per table in index storage
+**Impact:** Minimal (future data will use indexes)
+**Action:** Monitor if tables remain unused after 6 months
 
 ---
 
-## 🔍 HEALTH CHECKS
+## 📋 Maintenance Checklist
 
-### Daily Monitoring Queries
+### Daily (Automated)
 
-**Vector Search Health:**
+- [ ] Monitor query performance via `pg_stat_statements`
+- [ ] Check for long-running queries (> 5 seconds)
+- [ ] Verify RLS policies enforcing (zero unauthorized access)
+
+### Weekly (Manual)
+
+- [ ] Review top 20 tables by size (ensure expected growth)
+- [ ] Check vector index usage (EXPLAIN ANALYZE on search queries)
+- [ ] Validate embedding coverage (≥95% of records with embeddings)
+
+### Monthly (Maintenance Window)
+
+- [ ] VACUUM ANALYZE on large tables (muva_content, guest_reservations)
+- [ ] Review and archive old prospective_sessions (>7 days expired)
+- [ ] Update statistics on vector columns
+- [ ] Review security advisories (Supabase dashboard)
+
+### Quarterly (Schema Evolution)
+
+- [ ] Audit unused indexes (idx_scan = 0 after 3 months → consider DROP)
+- [ ] Review RPC function usage (identify optimization opportunities)
+- [ ] Plan migration consolidation (squash old migrations if needed)
+- [ ] Postgres version upgrade (apply security patches)
+
+---
+
+## 🚨 Emergency Procedures
+
+### Vector Index Corruption
+
+**Symptoms:** Search returns no results or incorrect results
+
+**Diagnostic:**
 ```sql
-SELECT
-  COUNT(*) as total_embeddings,
-  COUNT(CASE WHEN embedding IS NOT NULL THEN 1 END) as valid_embeddings,
-  AVG(array_length(embedding::real[], 1)) as avg_dimensions
-FROM hotels.accommodation_units;
+SELECT indexname, indexdef
+FROM pg_indexes
+WHERE tablename = 'affected_table' AND indexdef LIKE '%vector%';
 ```
 
-**Tenant Data Growth:**
+**Fix:**
 ```sql
-SELECT
-  tenant_id,
-  COUNT(*) as record_count,
-  MAX(created_at) as last_activity
-FROM hotels.accommodation_units
-GROUP BY tenant_id;
+-- Recreate affected index
+DROP INDEX IF EXISTS idx_table_embedding_tier;
+CREATE INDEX idx_table_embedding_tier
+  ON schema.table USING hnsw (embedding_tier vector_cosine_ops)
+  WITH (m=16, ef_construction=64);
+
+-- Refresh statistics
+ANALYZE schema.table;
 ```
 
-**Table Size Monitoring:**
+### RLS Policy Bypass Detected
+
+**Symptoms:** Unauthorized cross-tenant data access
+
+**Immediate Action:**
 ```sql
-SELECT
-  schemaname, tablename,
-  pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
-FROM pg_tables
+-- Verify policies are enabled
+SELECT schemaname, tablename, policyname, roles, cmd
+FROM pg_policies
 WHERE schemaname IN ('public', 'hotels')
-ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
+  AND tablename = 'affected_table';
+
+-- If missing, recreate policy
+CREATE POLICY "tenant_isolation" ON affected_table
+  FOR ALL USING (tenant_id = current_setting('app.current_tenant_id')::uuid);
 ```
 
-**Index Usage Statistics:**
+### Performance Degradation
+
+**Symptoms:** Queries taking >500ms (baseline <100ms)
+
+**Diagnostic:**
 ```sql
-SELECT
-  schemaname, tablename, indexname,
-  idx_scan, idx_tup_read, idx_tup_fetch
-FROM pg_stat_user_indexes
+-- Check for missing ANALYZE
+SELECT schemaname, tablename, last_analyze, last_autoanalyze
+FROM pg_stat_user_tables
 WHERE schemaname IN ('public', 'hotels')
-ORDER BY idx_scan DESC;
+ORDER BY last_analyze NULLS FIRST;
+
+-- Identify slow queries
+SELECT query, mean_exec_time, calls
+FROM pg_stat_statements
+WHERE mean_exec_time > 500
+ORDER BY mean_exec_time DESC
+LIMIT 10;
+```
+
+**Fix:**
+```sql
+-- Update statistics
+ANALYZE schema.table;
+
+-- Consider adding index if query pattern identified
 ```
 
 ---
 
-## 🚧 GAPS Y PENDIENTES
+## 📞 Coordination
 
-### CRÍTICO
-1. **PostgreSQL Upgrade** - Parches de seguridad disponibles (HIGH priority)
-2. **Migration Gap** - 223 migraciones no versionadas localmente
+### Works With
 
-### IMPORTANTE
-1. **SIRE Fields Migration** - 9 campos pendientes (FASE 1 proyecto activo)
-2. **Backup Strategy** - Implementar weekly VPS snapshots + pg_dump
-3. **Leaked Password Protection** - Habilitar en Supabase
+**@backend-developer** - Schema requirements, API queries, TypeScript types
+**@infrastructure-monitor** - Production database health, backup strategy
+**@ux-interface** - Data display needs, query optimization for UI
 
-### MEDIO
-1. **Database Schema Diagram** - Crear visual (Mermaid) para documentación
-2. **Performance Regression Tests** - No configurados actualmente
+### Escalation
 
----
-
-## 📝 DOCUMENTACIÓN
-
-**Database Architecture (completa):**
-- ✅ `DATABASE_QUERY_PATTERNS.md` - RPC functions guide (nuevo Oct 2025)
-- ✅ `DATABASE_SCHEMA_RULES.md` - Schema evolution decisions
-- ✅ `MATRYOSHKA_ARCHITECTURE.md` (20KB) - Embeddings system
-- ✅ `MULTI_TENANT_ARCHITECTURE.md` (16KB) - Multi-tenancy
-
-**Deployment:**
-- ✅ `POSTGRES_UPGRADE_GUIDE.md` - PostgreSQL upgrade procedures
+**Database corruption or data loss:** Immediate human intervention
+**Cross-tenant data breach:** Security team + human review
+**Migration failures:** Rollback + review before retry
 
 ---
 
-## 🔗 COORDINACIÓN
+## 📚 Reference Documentation
 
-**Trabaja con:**
-- `@backend-developer` - Para schema requirements y queries
-- `@ux-interface` - Para understanding data display needs
-- `@deploy-agent` - Para production database management
-- `@infrastructure-monitor` - Para performance monitoring
+**Internal Docs:**
+- `docs/architecture/DATABASE_QUERY_PATTERNS.md` - RPC hierarchy and usage
+- `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` - SIRE field specs
+- `docs/sire/CODIGOS_OFICIALES.md` - Country/city code catalogs
+- `plan.md` - SIRE extension planning (FASE 10-12)
+- `TODO.md` - Database migration tasks
 
-**Ver:** `CLAUDE.md` para guías proyecto-wide
-
----
-
-## 📌 COMANDOS ÚTILES
-
-```bash
-# List all migrations
-mcp__supabase__list_migrations
-
-# List all tables
-mcp__supabase__list_tables
-
-# Execute SQL query (ad-hoc analysis only)
-mcp__supabase__execute_sql "SELECT COUNT(*) FROM chat_messages"
-
-# Apply new migration
-mcp__supabase__apply_migration --name="add_sire_fields" --query="..."
-
-# Get database logs
-mcp__supabase__get_logs --service="postgres"
-
-# Get security advisors
-mcp__supabase__get_advisors --type="security"
-
-# Generate TypeScript types (after schema changes)
-mcp__supabase__generate_typescript_types
-```
+**External Resources:**
+- Supabase RLS Guide: https://supabase.com/docs/guides/auth/row-level-security
+- pgvector Documentation: https://github.com/pgvector/pgvector
+- HNSW Index Tuning: https://github.com/pgvector/pgvector#hnsw
+- Supabase Security Linter: https://supabase.com/docs/guides/database/database-linter
 
 ---
 
-## 📊 REFERENCIAS RÁPIDAS
+**Next Action:** Execute SIRE Compliance Extension (FASE 10) - Database Migration
 
-**Database:**
-- Supabase: ooaumjzaztmutltifhoq.supabase.co
-- PostgreSQL: 17.4.1.075
-- Conexiones: < 80% pool limit
-
-**Snapshots Relacionados:**
-- 🔧 Backend: `snapshots/backend-developer.md`
-- 🧬 Embeddings: `snapshots/embeddings-generator.md`
-- 🖥️ Infraestructura: `snapshots/infrastructure-monitor.md`
+**Timestamp:** 2025-10-08 20:15 UTC

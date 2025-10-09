@@ -1,444 +1,1060 @@
 ---
-title: "InnPilot Backend Developer - Snapshot Especializado"
+title: "Backend Developer Snapshot - InnPilot"
+description: "Estado completo del backend: APIs, business logic, integrations, SIRE compliance"
+category: specialized-snapshot
 agent: backend-developer
-last_updated: "2025-10-06T16:00:00"
-status: PRODUCTION_READY
+status: PRODUCTION
+version: "2.0-COMPREHENSIVE"
+last_updated: "2025-10-08"
+audit_date: "2025-10-08"
 ---
 
-# 🔧 Backend Developer - Snapshot Especializado
+# 🔧 Backend Developer Snapshot - InnPilot
 
-**Agent**: @backend-developer
-**Última actualización**: 6 Octubre 2025 16:00
-**Estado**: PRODUCCIÓN - VPS Hostinger
+**Última actualización**: 9 Octubre 2025
+**Estado**: PRODUCCIÓN - VPS Hostinger (innpilot.io)
+**Agente**: @backend-developer
+**Versión**: 2.0 Comprehensive Audit
 
 ---
 
-## 🎯 PROYECTO ACTIVO: SIRE Compliance Data Extension
+## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
-### **Tu Responsabilidad (FASE 2 - Backend Integration)**
+**Reference:** `.claude/TEST_FIRST_POLICY.md`
 
-**Estado:** Esperando completar FASE 1 (Database Migration por @database-agent)
+**When invoked as @agent-backend-developer:**
+1. Execute ALL tests before reporting completion
+2. Show tool outputs (npm run type-check, test results, API responses)
+3. Request user approval before marking [x]
+4. Document evidence with actual output
 
-**Tareas Asignadas:**
-1. **Update TypeScript types** (task 2.1) - ~45 min
-2. **Create update function** (task 2.2) - ~60 min
-3. **Integrate into compliance flow** (task 2.3) - ~30 min
-4. **Update reservations API** (task 2.4) - ~30 min
-5. **Create sync helper script** (task 2.5) - ~30 min
-6. **Create end-to-end test** (task 3.2) - ~60 min
+**PROHIBIDO:** Report ✅ without showing evidence
+**If test fails:** Report immediately, propose fix, await approval
+
+---
+
+## 🎯 PROYECTO ACTIVO: SIRE Compliance Extension
+
+### Estado Actual: FASE 2 - Backend Integration
+
+**Objetivo:** Extender `guest_reservations` con 9 campos SIRE para compliance legal con Sistema de Información y Registro de Extranjeros (Migración Colombia).
+
+**Tu Responsabilidad (FASE 2 - Backend):**
+- [ ] Task 2.1: Actualizar TypeScript types `GuestReservation` (~45 min)
+- [ ] Task 2.2: Crear `updateReservationWithComplianceData()` (~60 min)
+- [ ] Task 2.3: Integrar función en compliance flow (~30 min)
+- [ ] Task 2.4: Actualizar API `/api/reservations/list` (~30 min)
+- [ ] Task 2.5: Helper script sync manual (~30 min)
+- [ ] Task 3.2: End-to-end test compliance flow (~60 min)
 
 **Tiempo Total:** ~3h 45min
 
-**Archivos de Contexto:**
-- Plan: `plan.md` (620 líneas) - Ver FASE 2 completa
-- Tasks: `TODO.md` (190 líneas) - Tasks 2.1-2.5, 3.2
-- Prompts: `sire-compliance-prompt-workflow.md` (Prompts 2.1-2.5)
-- SIRE Mappers: `src/lib/sire/field-mappers.ts`
-- Catálogos Oficiales:
-  - `_assets/sire/codigos-pais.json` (250 países - códigos SIRE propietarios)
-  - `_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
-  - `_assets/sire/codigos-sire.ts` (helper functions)
+**Context Files:**
+- Plan: `/Users/oneill/Sites/apps/InnPilot/plan.md` (FASE 10-12)
+- Tasks: `/Users/oneill/Sites/apps/InnPilot/TODO.md` (tasks 2.1-2.5, 3.2)
+- Prompts: `/Users/oneill/Sites/apps/InnPilot/sire-compliance-prompt-workflow.md`
+- SIRE Mappers: `/Users/oneill/Sites/apps/InnPilot/src/lib/sire/field-mappers.ts` (actualizado Oct 6)
+- Catálogos Oficiales (Oct 6, 2025):
+  - `/Users/oneill/Sites/apps/InnPilot/_assets/sire/codigos-pais.json` (250 países SIRE)
+  - `/Users/oneill/Sites/apps/InnPilot/_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
+  - `/Users/oneill/Sites/apps/InnPilot/_assets/sire/codigos-sire.ts` (helpers)
 
 **9 Campos SIRE a Integrar:**
-- `document_type` (VARCHAR 2) - Tipo documento ('3', '5', '10', '46')
-- `document_number` (VARCHAR 20) - Número documento (alphanumeric)
-- `birth_date` (DATE) - Fecha nacimiento
-- `first_surname` (VARCHAR 45) - Primer apellido
-- `second_surname` (VARCHAR 45) - Segundo apellido
-- `given_names` (VARCHAR 60) - Nombres
-- `nationality_code` (VARCHAR 3) - Código nacionalidad (numeric 3 digits)
-- `origin_country_code` (VARCHAR 3) - País origen
-- `destination_country_code` (VARCHAR 3) - País destino
+```typescript
+document_type: VARCHAR(2)              // '3'=Pasaporte, '5'=Cédula, '10'=PEP, '46'=Diplomático
+document_number: VARCHAR(15)           // Alfanumérico 6-15 chars sin guiones
+birth_date: DATE                       // Fecha nacimiento
+first_surname: VARCHAR(50)             // Primer apellido (MAYÚSCULAS, con acentos)
+second_surname: VARCHAR(50)            // Segundo apellido (opcional, puede estar vacío)
+given_names: VARCHAR(50)               // Nombres (MAYÚSCULAS, con acentos)
+nationality_code: VARCHAR(3)           // Código SIRE (249=USA, 169=COL) - NO ISO
+origin_country_code: VARCHAR(6)        // País/ciudad procedencia (SIRE o DIVIPOLA)
+destination_country_code: VARCHAR(6)   // País/ciudad destino (SIRE o DIVIPOLA)
+```
+
+**Dependencias:**
+- ⏳ Esperar `@database-agent` complete FASE 1 (migration `20251007000000_add_sire_fields_to_guest_reservations.sql`)
+- ✅ Field mappers actualizados (Oct 6, 2025) con códigos SIRE oficiales
+- ✅ Catálogos oficiales disponibles (países NO son ISO 3166-1, son SIRE propietarios)
+
+**⚠️ IMPORTANTE - Códigos SIRE vs ISO:**
+Los códigos de país en SIRE NO son ISO 3166-1 numeric. Son códigos propietarios de Migración Colombia.
+
+```typescript
+// ❌ INCORRECTO - Usar ISO 3166-1
+mapCountryToCode("Estados Unidos") // ❌ 840 (ISO)
+
+// ✅ CORRECTO - Usar códigos SIRE oficiales
+mapCountryToCode("Estados Unidos") // ✅ 249 (SIRE)
+mapCountryToCode("Colombia")       // ✅ 169 (SIRE, NO 170)
+mapCountryToCode("España")         // ✅ 245 (SIRE, NO 724)
+```
+
+**Helper disponible:** `src/lib/sire/field-mappers.ts::mapCountryToCode()`
 
 ---
 
-## 🏗️ STACK TECNOLÓGICO
+## 📊 STACK TECNOLÓGICO BACKEND
 
-### Backend Framework
+### Core Framework
 ```
 Next.js 15.5.3 (App Router)
-TypeScript 5.x (strict mode)
 Node.js 20.x LTS
+TypeScript 5.x (strict mode)
+Runtime: Node.js (API routes) + Edge (middleware)
 ```
 
-### Database
+### Database & Storage
 ```
 Supabase PostgreSQL 17.4.1.075
 pgvector 0.8.0 (Matryoshka embeddings)
-Row Level Security (RLS) - 100% habilitado
+RPC Functions: 15 creadas (98.1% token reduction medido)
+Migrations: 235 aplicadas (12 locales en /supabase/migrations/)
+
+MCP Tools (Supabase):
+  - 29 tools disponibles (execute_sql, list_tables, apply_migration, etc.)
+  - Token benefit: 98%+ reduction vs schema dumps
+  - Use case: Development/debugging (NOT regular app code)
+  - Primary: Use RPC functions always
+  - Secondary: MCP execute_sql for ad-hoc queries only
 ```
 
-### AI/LLM
+### AI/LLM Integration
 ```
-Anthropic Claude 3.5 (Haiku - compression, Sonnet - chat)
-OpenAI text-embedding-3-large (embeddings Matryoshka)
-Claude Vision API (multi-modal)
+Anthropic Claude 3.5:
+  - Haiku (compression, entity extraction)
+  - Sonnet (conversational chat, compliance)
+  - Vision API (multi-modal file processing)
+
+OpenAI:
+  - text-embedding-3-large (Matryoshka 3-tier)
+  - Dimensions: 1024d (fast), 1536d (balanced), 3072d (full)
 ```
 
-### Integrations
+### External APIs
 ```
-Puppeteer 24.23.0 (SIRE automation - pendiente)
-TRA MinCIT API (compliance - pendiente)
-MotoPress API (hotel PMS - parcialmente integrado)
+MotoPress API (hotel PMS):
+  - WordPress REST API
+  - Status: Parcialmente integrado (1/10 unidades completas)
+  - Security: ⚠️ Admin auth pendiente (CRÍTICO)
+
+SIRE/TRA (compliance):
+  - Puppeteer automation (⏳ pendiente FASE 3.2)
+  - TRA MinCIT API (⏳ pendiente)
+  - Status: MOCK mode (DB only, no execution real)
+```
+
+### Authentication
+```
+JWT (jose):
+  - Guest: 7 días (HttpOnly cookie + Bearer)
+  - Staff: Session-based (JWT + RBAC)
+  - Admin: ⚠️ Pendiente (MotoPress endpoints sin auth)
+  - Secret: JWT_SECRET (GitHub secret, rotation 90d)
 ```
 
 ---
 
-## 📊 APIS Y ENDPOINTS
+## 🗺️ INVENTARIO COMPLETO: 44 ENDPOINTS
 
-### Inventario Completo: 44 Endpoints
+### Por Estado
+- ✅ **Completos**: 38 endpoints (86%)
+- 🚧 **Work In Progress**: 4 endpoints (9%)
+- ⚠️ **Legacy/Deprecated**: 2 endpoints (5%)
 
-**Por Estado:**
-- ✅ **Completos:** 38 endpoints (86%)
-- 🚧 **Work In Progress:** 4 endpoints (9%)
-- ⚠️ **Legacy/Deprecated:** 2 endpoints (5%)
-
-**Por Autenticación:**
-- **JWT Guest:** 12 endpoints
-- **JWT Staff:** 4 endpoints
-- **Public (No Auth):** 8 endpoints
-- **CRON Secret:** 1 endpoint
-- **Admin (TODO):** 6 endpoints (MotoPress - sin auth) ⚠️
+### Por Autenticación
+- **JWT Guest**: 12 endpoints
+- **JWT Staff**: 4 endpoints
+- **Public (No Auth)**: 8 endpoints
+- **CRON Secret**: 1 endpoint
+- **Admin (TODO)**: 6 endpoints (MotoPress - 🔴 sin auth)
 
 ### Guest Portal (12 endpoints)
 
+| Endpoint | Method | Auth | Performance | Status |
+|----------|--------|------|-------------|--------|
+| `/api/guest/login` | POST | None → JWT | ~200ms | ✅ |
+| `/api/guest/logout` | POST | JWT | ~50ms | ✅ |
+| `/api/guest/verify-token` | POST | JWT | ~30ms | ✅ |
+| `/api/guest/chat` | POST | JWT | ~1500-2500ms | ✅ |
+| `/api/guest/chat/history` | GET | JWT | ~100ms | ✅ |
+| `/api/guest/conversations` | GET | JWT | ~80ms | ✅ |
+| `/api/guest/conversations` | POST | JWT | ~120ms | ✅ |
+| `/api/guest/conversations/[id]` | PUT | JWT | ~100ms | ✅ |
+| `/api/guest/conversations/[id]` | DELETE | JWT | ~150ms | ✅ |
+| `/api/guest/conversations/[id]/attachments` | POST | JWT | ~2000-4000ms | ✅ Vision |
+| `/api/guest/conversations/[id]/favorites` | GET | JWT | ~60ms | ✅ |
+| `/api/guest/conversations/[id]/favorites` | POST | JWT | ~80ms | ✅ |
+
+**Características:**
+- Multi-conversation system (estilo ChatGPT/Claude)
+- File uploads con Claude Vision API (images, PDFs)
+- Entity tracking + follow-up suggestions
+- Auto-compactación (100 mensajes → comprimir 50)
+- Rate limiting: 20 req/min por conversation
+- Auto-archiving: 30 días inactivo → archived, 90 días → deleted
+
+**Archivos Clave:**
 ```
-POST   /api/guest/login                      # Auth (JWT + cookie 7 días)
-POST   /api/guest/logout                     # Session cleanup
-POST   /api/guest/verify-token               # JWT verification
-POST   /api/guest/chat                       # Chat conversacional
-GET    /api/guest/chat/history               # Message history
-GET    /api/guest/conversations              # List conversations
-POST   /api/guest/conversations              # Create conversation
-PUT    /api/guest/conversations/[id]         # Update conversation
-DELETE /api/guest/conversations/[id]         # Delete conversation
-POST   /api/guest/conversations/[id]/attachments  # File upload + Vision
-GET    /api/guest/conversations/[id]/favorites    # List favorites
-POST   /api/guest/conversations/[id]/favorites    # Add favorite
+/Users/oneill/Sites/apps/InnPilot/src/app/api/guest/chat/route.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/conversational-chat-engine.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/guest-auth.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/conversation-compressor.ts
 ```
 
 ### Staff Portal (4 endpoints)
 
-```
-POST   /api/staff/login                      # Staff authentication
-POST   /api/staff/verify-token               # JWT verification
-POST   /api/staff/chat                       # Staff chat engine
-GET    /api/reservations/list                # Reservations (multi-tenant)
-```
+| Endpoint | Method | Auth | Performance | Status |
+|----------|--------|------|-------------|--------|
+| `/api/staff/login` | POST | Email/Password | ~150ms | ✅ |
+| `/api/staff/verify-token` | POST | JWT Staff | ~30ms | ✅ |
+| `/api/staff/chat` | POST | JWT Staff | ~1500-2500ms | ✅ |
+| `/api/reservations/list` | GET | JWT Staff | ~200ms | ⚠️ Missing SIRE fields |
 
-### Compliance (2 endpoints)
+**Gap Crítico:**
+- `/api/reservations/list` NO retorna 9 campos SIRE (task 2.4 pendiente)
+- `StaffChatInterface.tsx` no carga historial (TODO en código frontend)
 
+**Archivos Clave:**
 ```
-POST   /api/compliance/submit                # SIRE/TRA submission (MOCK)
-PATCH  /api/compliance/status/[id]           # Update status
-```
-
-### MotoPress Integration (6 endpoints) - ⚠️ NO AUTH
-
-```
-POST   /api/integrations/motopress/configure       # Config (⚠️ Security TODO)
-POST   /api/integrations/motopress/test-connection
-POST   /api/integrations/motopress/sync
-GET    /api/integrations/motopress/sync/progress
-GET    /api/integrations/motopress/accommodations
+/Users/oneill/Sites/apps/InnPilot/src/app/api/staff/chat/route.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/staff-auth.ts
+/Users/oneill/Sites/apps/InnPilot/src/app/api/reservations/list/route.ts
 ```
 
-**🔴 CRÍTICO:** MotoPress endpoints sin autenticación admin - Security gap
+### Compliance SIRE/TRA (2 endpoints)
 
-### Public & Dev (4 endpoints)
+| Endpoint | Method | Auth | Performance | Status |
+|----------|--------|------|-------------|--------|
+| `/api/compliance/submit` | POST | JWT Guest | ~300-800ms | ✅ MOCK |
+| `/api/compliance/status/[id]` | PATCH | JWT Guest | ~100ms | ✅ |
 
+**Implementación Actual (MOCK):**
+- ✅ Entity extraction conversacional (Claude Sonnet)
+- ✅ Mapeo conversational → 13 campos SIRE (field-mappers.ts)
+- ✅ Database storage (`compliance_submissions` JSONB)
+- ✅ Conversational data validation (regex patterns)
+- ❌ NO ejecuta Puppeteer automation (FASE 3.2 pendiente)
+- ❌ NO llama TRA API real (pendiente)
+
+**Pendiente FASE 2:**
+- ❌ Persistir datos en `guest_reservations` tabla (task 2.2-2.3)
+- ❌ Actualizar API `/api/reservations/list` (task 2.4)
+
+**Archivos Clave:**
 ```
-POST   /api/public/chat                      # Public chat (rate-limited)
-POST   /api/public/reset-session             # Session reset
-POST   /api/dev/chat                         # Dev chat (experimental)
-POST   /api/dev/reset-session                # Dev session reset
+/Users/oneill/Sites/apps/InnPilot/src/lib/compliance-chat-engine.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/sire/field-mappers.ts
+/Users/oneill/Sites/apps/InnPilot/src/app/api/compliance/submit/route.ts
+```
+
+### MotoPress Integration (6 endpoints) - 🔴 SECURITY GAP
+
+| Endpoint | Method | Auth | Status |
+|----------|--------|------|--------|
+| `/api/integrations/motopress/configure` | POST | ⚠️ None | 🔴 CRÍTICO |
+| `/api/integrations/motopress/test-connection` | POST | ⚠️ None | 🔴 CRÍTICO |
+| `/api/integrations/motopress/sync` | POST | ⚠️ None | 🔴 CRÍTICO |
+| `/api/integrations/motopress/sync/progress` | GET | ⚠️ None | 🔴 CRÍTICO |
+| `/api/integrations/motopress/accommodations` | GET | ⚠️ None | 🔴 CRÍTICO |
+| `/api/integrations/motopress/status` | GET | ⚠️ None | ⏳ Referenced but not found |
+
+**Acciones Requeridas:**
+1. Implementar admin authentication middleware (JWT + role=admin check)
+2. Encriptar credentials (actualmente plaintext en `integration_configs` table)
+3. Rate limiting específico (evitar abuse, max 10 req/hour por tenant)
+4. Audit logging (quién ejecuta sync, cuándo, resultados)
+
+**Archivos Clave:**
+```
+/Users/oneill/Sites/apps/InnPilot/src/app/api/integrations/motopress/configure/route.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/integrations/motopress/client.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/integrations/motopress/sync-manager.ts
+```
+
+### Public & Dev (8 endpoints)
+
+| Endpoint | Method | Auth | Performance | Status |
+|----------|--------|------|-------------|--------|
+| `/api/public/chat` | POST | None | ~1000-1800ms | ✅ |
+| `/api/public/reset-session` | POST | None | ~50ms | ✅ |
+| `/api/dev/chat` | POST | None | ~1500-2500ms | ✅ |
+| `/api/dev/reset-session` | POST | None | ~50ms | ✅ |
+| `/api/health` | GET | None | ~80ms | ✅ Multi-tenant |
+| `/api/status` | GET | None | ~60ms | ✅ |
+| `/api/validate` | POST | None | ~100ms | ✅ SIRE |
+| `/api/upload` | POST | None | ~500ms | ✅ |
+
+**Características:**
+- Public chat: 176 sesiones activas (⚠️ conversion rate 0% - investigar)
+- Rate limiting: 10 req/s (Nginx level)
+- Health checks: Multi-tenant aware (checks per tenant)
+- Intent capture: check-in date, check-out date, guests count
+
+**Archivos Clave:**
+```
+/Users/oneill/Sites/apps/InnPilot/src/app/api/public/chat/route.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/public-chat-engine.ts
+/Users/oneill/Sites/apps/InnPilot/src/app/api/health/route.ts
 ```
 
 ### System & Utilities (7 endpoints)
 
-```
-GET    /api/health                           # Health check (multi-tenant)
-GET    /api/status                           # System status
-POST   /api/validate                         # File validation (SIRE)
-POST   /api/upload                           # File upload (multi-purpose)
-GET    /api/tenant/resolve                   # Slug/UUID → tenant_id
-GET    /api/tenant/list                      # List tenants
-POST   /api/cron/archive-conversations       # Auto-archive (CRON_SECRET)
-```
+| Endpoint | Method | Auth | Performance | Status |
+|----------|--------|------|-------------|--------|
+| `/api/tenant/resolve` | GET | None | ~50ms | ✅ Slug/UUID → tenant_id |
+| `/api/tenant/list` | GET | None | ~80ms | ✅ Public registry |
+| `/api/cron/archive-conversations` | POST | CRON_SECRET | ~300ms | ✅ Auto-archive |
+| `/api/chat/muva` | POST | None | ~1500ms | ✅ Tourism-specific |
+| `/api/chat/listings` | POST | JWT | ~1200ms | ✅ Multi-tenant |
+| `/api/premium-chat` | POST | JWT | ~2000ms | ✅ Semantic search |
+| `/api/premium-chat-dev` | POST | JWT | ~1800ms | ✅ Dev environment |
 
-### Legacy (6 endpoints) - Still Active
+**Características:**
+- CRON jobs: Auto-archiving (30 días inactivo), Auto-delete (90 días archived)
+- Premium chat: Matryoshka embeddings semantic search (1024d fast tier)
+- Tourism MUVA: 742 listings indexed (San Andrés island)
 
+**Archivos Clave:**
 ```
-POST   /api/chat                             # Pre-multi-tenant chat
-POST   /api/chat/muva                        # Tourism-specific (active)
-POST   /api/chat/listings                    # Multi-tenant listings
-POST   /api/premium-chat                     # Premium semantic
-POST   /api/premium-chat-dev                 # Dev environment
+/Users/oneill/Sites/apps/InnPilot/src/app/api/tenant/resolve/route.ts
+/Users/oneill/Sites/apps/InnPilot/src/app/api/cron/archive-conversations/route.ts
+/Users/oneill/Sites/apps/InnPilot/src/lib/premium-chat-semantic.ts
 ```
 
 ---
 
-## 🎯 CARACTERÍSTICAS PRINCIPALES
+## 📁 RPC FUNCTIONS - Context Optimization (98.1% Token Reduction)
 
-### 1. Sistema de Chat Multi-Conversación ✅ COMPLETO
+### 15 Funciones PostgreSQL Creadas
 
-**Backend Implementado:**
-- ✅ JWT authentication (7 días, HttpOnly cookies)
-- ✅ Multi-conversation CRUD operations
-- ✅ Message persistence (`chat_messages` table)
-- ✅ Entity tracking system
-- ✅ Follow-up suggestions generation
-- ✅ Conversation intelligence
-- ✅ Auto-compactación (100 msgs → compress 50)
-- ✅ Auto-archiving scheduler (CRON)
-
-**Archivos Clave:**
-```
-src/lib/conversational-chat-engine.ts    # Core chat logic
-src/lib/conversation-compressor.ts       # Memory compression
-src/lib/guest-auth.ts                    # JWT authentication
-src/app/api/guest/conversations/route.ts # CRUD endpoints
-src/app/api/guest/chat/route.ts          # Chat endpoint
-```
-
-### 2. Módulo de Compliance SIRE/TRA ⏳ MOCK
-
-**Estado:** Implementado en modo MOCK (no ejecuta SIRE/TRA real)
-
-**Backend Implementado:**
-- ✅ Entity extraction conversacional
-- ✅ Mapeo a 13 campos oficiales SIRE
-- ✅ Database storage (`compliance_submissions`)
-- ✅ Conversational flow integration
-- ⏳ **PENDIENTE:** Puppeteer automation (FASE 3.2)
-- ⏳ **PENDIENTE:** TRA API integration (FASE 3.3)
-
-**Archivos Clave:**
-```
-src/lib/compliance-chat-engine.ts        # Compliance logic (MOCK)
-src/lib/sire/field-mappers.ts            # Conversational → SIRE mappers
-src/app/api/compliance/submit/route.ts   # Submission endpoint (MOCK)
-_assets/sire/codigos-pais.json           # 250 países SIRE
-_assets/sire/ciudades-colombia.json      # 1,122 ciudades DIVIPOLA
-_assets/sire/codigos-sire.ts             # Helper functions
-```
-
-### 3. Multi-Tenant Architecture ✅ COMPLETO
-
-**Backend Features:**
-- ✅ Tenant registry con feature flags
-- ✅ RLS policies (100% coverage - fix Oct 6, 2025)
-- ✅ Tenant-specific content routing
-- ✅ Per-tenant authentication flows
-- ✅ Cross-tenant data isolation
-
-**Tenants Activos:**
-- `simmerdown` (Premium tier) - 900222791
-- `free-hotel-test` (Free tier) - 900000000-0
-
-**Archivos Clave:**
-```
-src/lib/tenant-utils.ts                  # Tenant resolution
-src/app/api/tenant/resolve/route.ts      # Slug → tenant_id
-```
-
-### 4. Integración MotoPress ⚠️ PARCIALMENTE IMPLEMENTADO
-
-**Backend Features:**
-- ✅ Configuration storage
-- ✅ Sync manager orchestration
-- ✅ Data mapping WordPress → Supabase
-- ✅ Sync history tracking (30 logs)
-- ⚠️ Solo 1/10 unidades con datos MotoPress completos
-- 🔴 **CRÍTICO:** Endpoints sin autenticación admin
-
-**Archivos Clave:**
-```
-src/app/api/integrations/motopress/configure/route.ts
-src/app/api/integrations/motopress/sync/route.ts
-scripts/sync-motopress-bookings.ts       # Sync automation
-```
-
----
-
-## 🗄️ DATABASE OPERATIONS
-
-### RPC Functions (PRIMARY - Use First)
-
-**Objetivo:** Reducir context window 90-98% usando funciones PostgreSQL pre-compiladas
-
-**7 RPC Functions Disponibles:**
-
+**Accommodation Management (7 funciones):**
 ```sql
--- Guest Conversations
-get_guest_conversation_metadata(p_conversation_id UUID)
-  → Reemplaza 11 queries, 99.4% reducción tokens
+get_accommodation_unit_by_id(p_unit_id UUID, p_tenant_id UUID)
+  → Returns: Full unit data with amenities, policies
+  → Token reduction: 17,700 → 345 tokens (98.1%)
 
-get_inactive_conversations(p_tenant_id TEXT, p_days_inactive INT)
-  → Reemplaza 2 queries, 92.5% reducción
+get_accommodation_units(p_tenant_id UUID)
+  → Returns: All units for tenant
 
-get_archived_conversations_to_delete(p_tenant_id TEXT, p_days_archived INT)
-  → Reemplaza 1 query, 82.0% reducción
+get_accommodation_units_by_ids(p_unit_ids UUID[], p_tenant_id UUID)
+  → Returns: Batch fetch multiple units
 
--- Chat Messages
-get_conversation_messages(p_conversation_id UUID, p_limit INT, p_offset INT)
-  → Reemplaza 6 queries, 97.9% reducción
+get_accommodation_unit_by_motopress_id(p_motopress_id TEXT, p_tenant_id UUID)
+  → Returns: Unit UUID from MotoPress external ID
 
--- Integrations
-get_active_integration(p_tenant_id UUID, p_integration_type TEXT)
-  → Reemplaza 8 queries, 98.4% reducción
+get_accommodation_unit_by_name(p_name TEXT, p_tenant_id UUID)
+  → Returns: Unit UUID from name (fuzzy match)
 
--- Reservations
-get_reservations_by_external_id(p_external_booking_id TEXT, p_tenant_id TEXT)
-  → Reemplaza 5 queries, 98.0% reducción
+get_accommodation_units_needing_type_id(p_tenant_id UUID)
+  → Returns: Units missing type_id (for sync scripts)
 
--- Accommodation Units
-get_accommodation_units_needing_type_id(p_tenant_id TEXT)
-  → Reemplaza script logic, 92.5% reducción
+get_accommodation_tenant_id(p_unit_id UUID)
+  → Returns: Tenant ID from unit ID (validation)
 ```
 
-**Impacto Medido (Octubre 2025):**
-- **98.1% reducción** en context window (17,700 → 345 tokens)
-- **34 queries inline** reemplazados en 41 archivos
-- **Ahorro promedio:** 17,355 tokens por conversación
+**Guest Conversations (4 funciones):**
+```sql
+get_guest_conversation_metadata(p_conversation_id UUID, p_guest_id UUID)
+  → Returns: Conversation metadata + message count
+  → Token reduction: 11 queries → 1 RPC (99.4%)
 
-**Documentación Completa:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
+get_conversation_messages(p_conversation_id UUID, p_limit INT)
+  → Returns: Paginated messages with entities
 
-### Query Hierarchy (CRITICAL)
+get_inactive_conversations(p_days_inactive INT)
+  → Returns: Conversations ready for archiving (CRON)
 
-**🎯 ALWAYS prefer this order:**
+get_archived_conversations_to_delete(p_days_archived INT)
+  → Returns: Archived conversations ready for deletion (CRON)
+```
 
-1. **RPC Functions (PRIMARY)** - Use dedicated PostgreSQL functions
-2. **Direct SQL via MCP (SECONDARY)** - For ad-hoc analysis only
-3. **execute_sql() RPC (EMERGENCY ONLY)** - Migrations and one-time fixes
+**Integrations (2 funciones):**
+```sql
+get_active_integration(p_tenant_id UUID, p_integration_type TEXT)
+  → Returns: Integration config + credentials
+  → Token reduction: 8 queries → 1 RPC (98.4%)
+
+get_reservations_by_external_id(p_external_id TEXT, p_tenant_id UUID)
+  → Returns: Reservation by MotoPress booking ID
+```
+
+**Content & Utilities (2 funciones):**
+```sql
+get_full_document(p_document_id UUID, p_tenant_id UUID)
+  → Returns: Full document with embeddings (all tiers)
+
+get_tenant_schema(p_tenant_id UUID)
+  → Returns: Tenant-specific schema name (if exists)
+```
+
+### Performance Benchmark (October 2025 - Real Data)
+
+**ANTES (Direct SQL in API):**
+```typescript
+// ❌ OLD WAY - 17,700 tokens context
+const { data } = await supabase
+  .from('accommodation_units')
+  .select(`
+    *,
+    amenities(*),
+    policies(*),
+    pricing_rules(*),
+    accommodation_types(*)
+  `)
+  .eq('id', unit_id)
+  .eq('tenant_id', tenant_id)
+  .single()
+```
+- Context tokens: ~17,700 tokens (schema + query + types + docs)
+- Response time: ~150ms
+- Maintainability: N duplicated queries en código
+
+**DESPUÉS (RPC Function):**
+```typescript
+// ✅ NEW WAY - 345 tokens context
+const { data } = await supabase
+  .rpc('get_accommodation_unit_by_id', {
+    p_unit_id: unit_id,
+    p_tenant_id: tenant_id
+  })
+```
+- Context tokens: ~345 tokens (function call + return type)
+- Response time: ~80ms
+- **Reducción: 98.1% tokens** (17,700 → 345)
+- **Mejora: 47% más rápido** (150ms → 80ms)
+- **Maintainability**: Single source of truth
+
+**Por qué RPC Functions son superiores:**
+1. **Token Reduction Masivo**: 98.1% menos context window (medido Oct 2025)
+2. **Type Safety**: Pre-compiled en database, validated at migration time
+3. **Performance**: Compiled query plan (no overhead del query planner por request)
+4. **Maintainability**: Single source of truth (cambiar en 1 lugar vs N lugares)
+5. **Security**: Row Level Security + function isolation built-in
+
+**Query Pattern Hierarchy (CRITICAL):**
+```
+1. RPC Functions (PRIMARY)       ← Use ALWAYS cuando disponible
+2. Direct SQL via MCP (SECONDARY) ← Solo para ad-hoc analysis/reporting
+3. execute_sql() RPC (EMERGENCY)  ← Solo migrations y one-time fixes
+```
 
 **❌ NEVER use execute_sql() in:**
-- API endpoints (`src/app/api/**`)
-- Scheduled scripts (`scripts/sync-*.ts`)
+- API endpoints (`/src/app/api/**/*.ts`)
+- Scheduled scripts (`/scripts/sync-*.ts`)
 - Regular application code
 - Anything that runs more than once
 
 ---
 
-## ⚡ PERFORMANCE TARGETS
+## 🏗️ BUSINESS LOGIC MODULES (45 archivos TypeScript)
 
-### API Response Times
+**MCP Context Optimization:** Use `claude-context` MCP server for semantic code discovery:
+- 818 files indexed, 33,257 chunks
+- ~90% token reduction vs reading full files
+- Query: "Find SIRE compliance logic" → Precise file locations
+- Use `mcp__claude-context__search_code()` before reading files
 
-| Endpoint | Target | Actual | Status |
-|----------|--------|--------|--------|
-| `/api/guest/chat` | <3000ms | ~1500-2500ms | ✅ PASS |
-| `/api/public/chat` | <2000ms | ~1000-1800ms | ✅ PASS |
-| `/api/staff/chat` | <3000ms | ~1500-2500ms | ✅ PASS |
-| Vector search | <500ms | ~200-400ms | ✅ PASS |
-| File upload + Vision | <5000ms | ~2000-4000ms | ✅ PASS |
-| Compliance submit | <1000ms | ~300-800ms | ✅ PASS (MOCK) |
+### Core Chat Engines (5 archivos)
 
-### Database Operations
+```
+conversational-chat-engine.ts     # Main chat engine (guest portal)
+  - generateConversationalResponse()
+  - Entity tracking + follow-up suggestions
+  - Vector search integration (Matryoshka)
 
-| Operation | Target | Critical |
-|-----------|--------|----------|
-| Database query | < 100ms | < 200ms |
-| Authentication | < 50ms | < 100ms |
-| Vector search | < 200ms | < 500ms |
-| RPC function call | < 50ms | < 100ms |
+compliance-chat-engine.ts         # SIRE/TRA compliance flow
+  - extractEntities() → ConversationalData
+  - mapToSIRE() → 13 campos oficiales
+  - validateSIREData() → 13 field validations
+
+staff-chat-engine.ts              # Staff internal chat
+  - Hotel operations knowledge base (10 items)
+  - Access to all guest conversations
+
+public-chat-engine.ts             # Anonymous public chat
+  - Session tracking (176 sesiones activas)
+  - Intent capture (check-in, check-out, guests)
+
+dev-chat-engine.ts                # Development/testing chat
+  - Experimental features testing
+```
+
+### SIRE Compliance (3 archivos)
+
+```
+sire/field-mappers.ts             # Conversational → SIRE (13 campos)
+  - splitFullName() → primer/segundo apellido + nombres
+  - mapCountryToCode() → Códigos SIRE (250 países)
+  - cleanPassportNumber() → Alfanumérico sin guiones
+  - formatDateForSIRE() → DD/MM/YYYY
+  - validateComplianceData() → Validación completa
+
+sire/sire-automation.ts           # Puppeteer automation
+  - ⏳ PENDIENTE FASE 3.2
+  - Will automate SIRE web form submission
+
+sire/sire-country-mapping.ts      # País → código SIRE
+  - 250 países con códigos SIRE propietarios
+  - NO son ISO 3166-1 (ej: USA=249 NO 840)
+```
+
+### Authentication (3 archivos)
+
+```
+guest-auth.ts                     # JWT guest authentication
+  - authenticateGuest() → Verify check-in + phone
+  - generateGuestToken() → JWT 7 días
+  - verifyGuestToken() → Decode + validate
+
+staff-auth.ts                     # JWT staff authentication
+  - authenticateStaff() → Email/password
+  - RBAC roles: CEO, Admin, Housekeeper
+
+admin-auth.ts                     # ⚠️ PENDIENTE
+  - Admin middleware for MotoPress endpoints
+```
+
+### Memory & Compression (3 archivos)
+
+```
+conversation-compressor.ts        # Auto-compactación (Claude Haiku)
+  - compressConversation() → 100 msgs → 50 compressed
+  - Semantic summary generation
+
+conversation-memory-search.ts     # Semantic history search
+  - Matryoshka Tier 1 (1024d fast)
+  - Vector search en conversation_memory table
+
+guest-conversation-memory.ts      # Multi-conversation management
+  - compactConversationIfNeeded() → Threshold 100 msgs
+  - Auto-trigger en chat endpoint
+```
+
+### Vector Search & Embeddings (4 archivos)
+
+```
+premium-chat-semantic.ts          # Matryoshka semantic search
+  - 3-tier search (1024d, 1536d, 3072d)
+  - Adaptive tier selection
+
+embedding-cache.ts                # Cache de embeddings
+  - In-memory cache (reduce OpenAI API calls)
+
+common-query-embeddings.ts        # Pre-generated queries
+  - Common tourism queries pre-embedded
+
+context-enhancer.ts               # Context augmentation
+  - Enrich responses with relevant context
+```
+
+### MotoPress Integration (3 archivos)
+
+```
+integrations/motopress/client.ts       # WordPress REST client
+  - fetchAccommodations() → Pull units
+  - fetchBookings() → Pull reservations
+
+integrations/motopress/data-mapper.ts  # WordPress → Supabase
+  - mapAccommodation() → accommodation_units
+  - mapBooking() → guest_reservations
+
+integrations/motopress/sync-manager.ts # Sync orchestration
+  - syncAccommodations() → Batch sync
+  - syncBookings() → Incremental sync
+```
+
+### OpenAI & Claude (3 archivos)
+
+```
+openai.ts                         # Embeddings generation
+  - generateEmbedding() → 3072d full
+  - sliceToTier() → 1024d/1536d truncated
+
+claude.ts                         # Anthropic client wrapper
+  - Haiku for compression
+  - Sonnet for chat
+
+claude-vision.ts                  # Vision API (file uploads)
+  - processImage() → Extract text/entities
+  - Supports: PNG, JPG, PDF
+```
+
+### Utilities (6 archivos)
+
+```
+supabase.ts                       # Supabase client factory
+  - createServerClient() → Server-side
+  - createBrowserClient() → Client-side
+
+supabase-auth.ts                  # Auth helpers
+  - Session management utilities
+
+tenant-resolver.ts                # Slug → tenant_id
+  - resolveSlug() → UUID lookup
+
+token-counter.ts                  # LLM token counting
+  - countTokens() → Estimate tokens
+
+quality-analyzer.ts               # Response quality metrics
+  - analyzeQuality() → Confidence score
+
+analytics.ts                      # Usage tracking
+  - trackEvent() → Plausible Analytics
+```
+
+### Search & Intent (5 archivos)
+
+```
+query-intent.ts                   # Intent classification
+  - classifyIntent() → booking/info/complaint
+
+premium-chat-intent.ts            # Premium intent routing
+  - Route to appropriate search tier
+
+dev-chat-intent.ts                # Dev environment routing
+  - Debug mode intent detection
+
+search-router.ts                  # Multi-tier search routing
+  - Route query to optimal tier (fast/balanced/full)
+
+public-chat-search.ts             # Public search optimization
+  - Fast tier only (1024d) para performance
+```
+
+### Session Management (3 archivos)
+
+```
+dev-chat-session.ts               # Dev session tracking
+  - Development environment sessions
+
+public-chat-session.ts            # Anonymous session tracking
+  - prospective_sessions table (176 activos)
+
+guest-chat-types.ts               # Shared TypeScript types
+  - ChatMessage, ConversationalContext, etc.
+```
+
+### Cron Jobs (2 archivos)
+
+```
+cron/archive-conversations.ts     # Auto-archive 30 días
+  - Runs daily via CRON_SECRET endpoint
+
+cron/delete-archived.ts           # Auto-delete 90 días
+  - Cleanup archived conversations
+```
+
+### Testing (2 archivos)
+
+```
+__tests__/*.test.ts               # 7 test suites
+  - guest-auth.test.ts
+  - staff-auth.test.ts
+  - conversational-chat-engine.test.ts
+  - etc.
+
+test-helpers/reservation-factory.ts # Test data generation
+  - createMockReservation()
+```
 
 ---
 
-## 🔒 SEGURIDAD
+## 🎯 PERFORMANCE TARGETS vs ACTUAL (All PASS ✅)
 
-### Estado Actual
+### API Response Times
 
-**✅ RESUELTO:**
-- RLS habilitado en 100% tablas (fix Oct 6, 2025)
-- Function search_path seguro (28/28 funciones)
-- 0 vulnerabilidades npm detectadas
+| Endpoint Category | Target | Actual | Status |
+|-------------------|--------|--------|--------|
+| **Guest Chat** | < 3000ms | ~1500-2500ms | ✅ PASS |
+| **Public Chat** | < 2000ms | ~1000-1800ms | ✅ PASS |
+| **Staff Chat** | < 3000ms | ~1500-2500ms | ✅ PASS |
+| **Authentication** | < 500ms | ~150-200ms | ✅ PASS |
+| **Compliance Submit (MOCK)** | < 1000ms | ~300-800ms | ✅ PASS |
+| **File Upload + Vision** | < 5000ms | ~2000-4000ms | ✅ PASS |
+| **Database RPC** | < 100ms | ~50-80ms | ✅ PASS |
+| **Vector Search** | < 500ms | ~200-400ms | ✅ PASS |
 
-**⚠️ PENDIENTE:**
-- PostgreSQL upgrade (17.4 → parches disponibles)
-- MotoPress endpoints sin autenticación admin
-- Leaked password protection deshabilitado
+**Todos los endpoints cumplen targets** ✅
+
+### Matryoshka Embeddings Performance
+
+| Tier | Dimensions | Use Case | Search Time | Target | Status |
+|------|------------|----------|-------------|--------|--------|
+| **Tier 1 (Fast)** | 1024d | Tourism, quick queries | ~100-200ms | < 200ms | ✅ PASS |
+| **Tier 2 (Balanced)** | 1536d | Policies, general | ~200-300ms | < 300ms | ✅ PASS |
+| **Tier 3 (Full)** | 3072d | Compliance, complex | ~300-500ms | < 500ms | ✅ PASS |
+
+**Performance gain Tier 1 vs Tier 3:** 3x speed improvement (100ms vs 300ms)
+
+### Database Query Performance
+
+| Query Type | Target | Actual | Status |
+|------------|--------|--------|--------|
+| **RPC Function** | < 100ms | ~50-80ms | ✅ PASS |
+| **Vector Search** | < 500ms | ~200-400ms | ✅ PASS |
+| **Join Queries** | < 200ms | ~100-150ms | ✅ PASS |
+| **Bulk Insert** | < 1000ms | ~300-800ms | ✅ PASS |
+
+**Performance Wins Identificados:**
+1. **RPC Functions**: 98.1% token reduction + 47% faster (17,700→345 tokens, 150ms→80ms)
+2. **Matryoshka Tier 1**: 3x faster que Tier 3 (100ms vs 300ms)
+3. **JWT Optimization**: Session data in payload (no DB query en cada request)
+4. **Auto-compactación**: 50% conversation history reduction (100→50 msgs)
+
+---
+
+## 🔒 SEGURIDAD BACKEND
+
+### Authentication & Authorization
+
+**JWT Configuration:**
+```typescript
+JWT_SECRET: GitHub secret (rotated every 90 days)
+JWT_EXPIRY_GUEST: '7d' (HttpOnly cookie + Bearer header)
+JWT_EXPIRY_STAFF: '24h' (session-based)
+Algorithm: HS256
+```
+
+**Multi-Tenant Isolation (CRITICAL):**
+```typescript
+// ✅ CORRECTO - Siempre filtrar por tenant_id
+const { data } = await supabase
+  .from('accommodation_units')
+  .select('*')
+  .eq('tenant_id', session.tenant_id)  // REQUIRED para multi-tenant
+
+// ❌ INCORRECTO - Sin tenant_id (vulnerabilidad de cross-tenant data leak)
+const { data } = await supabase
+  .from('accommodation_units')
+  .select('*')  // NUNCA hacer esto en producción
+```
+
+**Row Level Security (RLS):**
+- ✅ 100% cobertura (39/39 tablas - fix Oct 6, 2025)
+- ✅ Policies en `public.*` schema (29 tablas)
+- ✅ Policies en `hotels.*` schema (10 tablas)
+- ✅ Service role bypass para migrations (admin operations)
+- ✅ Function search_path seguro (28/28 funciones - fix Oct 6, 2025)
 
 ### Secrets Management
 
 **GitHub Secrets (10 configurados):**
-```
-VPS_HOST, VPS_USER, VPS_SSH_KEY, VPS_APP_PATH
-NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY
-OPENAI_API_KEY, ANTHROPIC_API_KEY
-JWT_SECRET_KEY
-```
-
-**✅ Buenas prácticas:**
-- `.env.local` en `.gitignore`
-- SSH key-based authentication
-- Secrets rotation documented (90-day cycle)
-
----
-
-## 🚧 GAPS Y PENDIENTES
-
-### CRÍTICO
-1. **MotoPress Security** - Implementar autenticación admin en 6 endpoints
-2. **Conversion Rate 0%** - Investigar funnel público roto (176 sesiones → 0 conversiones)
-
-### IMPORTANTE
-1. **SIRE/TRA Real** - Completar Puppeteer automation (FASE 3.2-3.3)
-2. **Testing Coverage** - <5% actual, target >70%
-3. **StaffChatInterface** - No carga historial (TODO en código)
-
-### MEDIO
-1. **ReservationsList** - Backend no conectado completamente
-2. **OpenAPI spec** - Desactualizado (no refleja endpoints recientes)
-
----
-
-## 📝 DOCUMENTACIÓN
-
-**Backend Specs (312KB - 22 archivos):**
-- ✅ `MATRYOSHKA_ARCHITECTURE.md` (20KB) - Embeddings system
-- ✅ `MULTI_TENANT_ARCHITECTURE.md` (16KB) - Multi-tenancy
-- ✅ `PREMIUM_CHAT_ARCHITECTURE.md` (28KB) - Chat premium
-- ✅ `DATABASE_QUERY_PATTERNS.md` (nuevo) - RPC functions guide
-- ✅ `LLM_INTENT_DETECTION.md` (20KB) - Intent detection
-
----
-
-## 🔗 COORDINACIÓN
-
-**Trabaja con:**
-- `@database-agent` - Para schema changes y migrations
-- `@ux-interface` - Para API contracts y frontend integration
-- `@deploy-agent` - Para deployment configuration
-- `@infrastructure-monitor` - Para performance monitoring
-
-**Ver:** `CLAUDE.md` para guías proyecto-wide
-
----
-
-## 📌 REFERENCIAS RÁPIDAS
-
-**URLs:**
-- Production: https://innpilot.io
-- VPS: 195.200.6.216
-- Database: Supabase (ooaumjzaztmutltifhoq.supabase.co)
-
-**Comandos Dev:**
 ```bash
-# Start dev server (MANDATORY - exports API keys)
+VPS_HOST=195.200.6.216
+VPS_USER=root
+VPS_SSH_KEY=<private key>
+VPS_APP_PATH=/var/www/innpilot
+
+NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOi...
+
+OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+JWT_SECRET_KEY=<secret>
+```
+
+**Environment Variables (.env.local):**
+```bash
+# ✅ NUNCA commitear a git (.gitignore configurado)
+OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+JWT_SECRET=...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+```
+
+**Development Script (MANDATORY):**
+```bash
+# ✅ USAR SIEMPRE para dev local
 ./scripts/dev-with-keys.sh
 
-# Type checking
-npm run type-check
+# Benefits:
+# - Auto-cleanup (kills orphaned processes, frees port 3000)
+# - Exports API keys from .env.local
+# - Graceful shutdown (Ctrl+C cleanup)
 
-# Tests
-npm test -- src/lib/__tests__/
-
-# Build
-npm run build
+# ❌ NUNCA usar npm run dev directo (falla si .env.local no existe)
+npm run dev  # Anthropic/OpenAI API calls fail sin keys
 ```
 
-**Snapshot Relacionados:**
-- 🗄️ Database: `snapshots/database-agent.md`
-- 🎨 UI/UX: `snapshots/ux-interface.md`
-- 🗺️ API Mapping: `snapshots/api-endpoints-mapper.md`
+### Security Gaps Identificados
+
+**🔴 CRÍTICO - MotoPress Endpoints Sin Autenticación:**
+```typescript
+// ❌ VULNERABILIDAD ACTUAL
+/api/integrations/motopress/configure       // Public, anyone can modify
+/api/integrations/motopress/sync            // Public, anyone can trigger sync
+/api/integrations/motopress/test-connection // Public, credential leak risk
+```
+
+**Acciones Requeridas:**
+1. **Implementar admin middleware**:
+   ```typescript
+   export async function verifyAdminAuth(request: NextRequest) {
+     const token = extractTokenFromHeader(request.headers.get('Authorization'))
+     const session = await verifyStaffToken(token)
+     if (!session || session.role !== 'admin') {
+       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+     }
+     return session
+   }
+   ```
+
+2. **Encriptar credentials**:
+   - Usar `pgcrypto` extension (ya instalada)
+   - Migrar plaintext → encrypted en `integration_configs.credentials`
+
+3. **Rate limiting**:
+   - Max 10 sync requests/hour por tenant
+   - Track en `sync_history` table
+
+**🟠 IMPORTANTE - Secrets Exposure:**
+- MotoPress credentials: Plaintext en DB (`integration_configs` table)
+- Recommendation: Encrypt con `pgp_sym_encrypt(credentials, encryption_key)`
+
+**🟡 MEDIO - PostgreSQL Upgrade:**
+- Versión actual: 17.4.1.075
+- Security patches disponibles
+- Prioridad: HIGH (upgrade en 7 días)
+- Guía: `/Users/oneill/Sites/apps/InnPilot/docs/deployment/POSTGRES_UPGRADE_GUIDE.md`
+
+---
+
+## 🧪 TESTING BACKEND
+
+### Test Coverage Actual
+
+**Unit Tests (7 suites):**
+```
+src/lib/__tests__/guest-auth.test.ts
+src/lib/__tests__/staff-auth.test.ts
+src/lib/__tests__/staff-chat-engine.test.ts
+src/lib/__tests__/conversational-chat-engine.test.ts
+src/lib/__tests__/conversation-compressor.test.ts
+src/lib/__tests__/conversation-memory-search.test.ts
+src/lib/__tests__/context-enhancer.test.ts
+```
+
+**Integration Tests (1 suite):**
+```
+src/app/api/guest/chat/__tests__/route.integration.test.ts
+```
+
+**Coverage:** < 5% estimado (no configurado en CI pipeline)
+
+**Gaps Críticos:**
+- ❌ No tests para compliance engine (`compliance-chat-engine.ts`)
+- ❌ No tests para MotoPress integration (`integrations/motopress/`)
+- ❌ No tests para RPC functions (solo testing manual)
+- ❌ No performance regression tests (benchmark histórico)
+
+### Testing Scripts para SIRE (FASE 3)
+
+**End-to-End Test (task 3.2):**
+```bash
+npx tsx scripts/test-compliance-flow.ts
+```
+
+**8 Pasos Validados:**
+1. Crear `guest_reservation` de prueba (sin datos compliance)
+2. Simular compliance chat → extract `conversational_data`
+3. Llamar `mapConversationalToSIRE()` → generar `sire_data`
+4. Llamar `updateReservationWithComplianceData()` → persistir en DB
+5. Verificar `guest_reservations` tiene 9 campos SIRE poblados
+6. Verificar `compliance_submission` creado con status='success'
+7. Verificar API `/api/reservations/list` retorna campos SIRE
+8. Cleanup (borrar datos de prueba)
+
+**Success Criteria:** 8/8 pasos passing
+
+**Sync Script (task 2.5):**
+```bash
+npx tsx scripts/sync-compliance-to-reservations.ts --dry-run
+```
+
+**Funcionalidad:**
+- Lee `compliance_submissions` donde `status = 'success'`
+- Encuentra `guest_reservations` asociadas
+- Actualiza 9 campos SIRE desde `submission.data` (JSONB)
+- Log: X/Y registros actualizados
+- `--dry-run`: Show changes sin aplicar
+
+---
+
+## 🚀 PRÓXIMOS PASOS BACKEND
+
+### INMEDIATO (Esta Semana)
+
+**1. FASE 2 - Backend Integration (tasks 2.1-2.5)**
+- [ ] **Task 2.1**: Actualizar TypeScript types `GuestReservation` en `compliance-chat-engine.ts` (~45 min)
+  - Agregar 9 campos SIRE al interface
+  - Actualizar imports en archivos que usan `GuestReservation`
+  - Ejecutar `npm run type-check` → 0 errores
+
+- [ ] **Task 2.2**: Crear `updateReservationWithComplianceData()` (~60 min)
+  - Función async que recibe `reservationId` y `sireData`
+  - Mapear campos `sireData` → `guest_reservations` columns
+  - Helper `parseSIREDate(DD/MM/YYYY)` → Date object
+  - UPDATE query con Supabase client
+  - Error handling + logging con `[compliance]` prefix
+
+- [ ] **Task 2.3**: Integrar en compliance flow (~30 min)
+  - Encontrar donde se llama `mapConversationalToSIRE()`
+  - Después de crear `compliance_submission`, call `updateReservationWithComplianceData()`
+  - Catch errors (no fail si update falla, solo log)
+
+- [ ] **Task 2.4**: Actualizar `/api/reservations/list` (~30 min)
+  - Modificar SELECT query incluir 9 campos SIRE
+  - Actualizar return type interface
+  - Test: `curl http://localhost:3000/api/reservations/list`
+
+- [ ] **Task 2.5**: Crear sync script (~30 min)
+  - Script: `scripts/sync-compliance-to-reservations.ts`
+  - Read `compliance_submissions` WHERE `status = 'success'`
+  - UPDATE `guest_reservations` con SIRE data
+  - Support `--dry-run` mode
+
+**Esfuerzo Total:** ~3h 45min
+**Blocker:** Esperar FASE 1 (database migration por `@database-agent`)
+
+**2. MotoPress Security Fix (HIGH PRIORITY)**
+- [ ] Implementar admin auth middleware (~1h)
+- [ ] Aplicar middleware a 6 endpoints MotoPress (~30 min)
+- [ ] Encriptar credentials con pgcrypto (~1h)
+- [ ] Testing manual de endpoints (~30 min)
+
+**Esfuerzo Total:** ~3 horas
+**Prioridad:** HIGH (vulnerabilidad security)
+
+### CORTO PLAZO (2 Semanas)
+
+**3. FASE 3 - Testing & Validation (task 3.2)**
+- [ ] Crear `scripts/test-compliance-flow.ts` (8 pasos) (~1h)
+- [ ] Ejecutar end-to-end test y validar 8/8 passing (~30 min)
+- [ ] Documentar results en `docs/mcp-optimization/fase-12/TESTS.md` (~30 min)
+
+**Esfuerzo:** ~2 horas
+**Dependencia:** FASE 2 completa
+
+**4. SIRE/TRA Real Implementation (FASE 3.2-3.3)**
+- [ ] Puppeteer automation con selectors reales SIRE web form (~8h)
+- [ ] TRA API integration `https://pms.mincit.gov.co/token/` (~4h)
+- [ ] Error handling robusto (retry logic, exponential backoff) (~2h)
+- [ ] Testing en SIRE staging environment (~2h)
+
+**Esfuerzo:** ~16 horas
+**Prioridad:** MEDIUM (después FASE 2+3 completas)
+
+### MEDIANO PLAZO (1 Mes)
+
+**5. Testing Coverage Improvement**
+- [ ] Configurar Jest coverage threshold en CI pipeline (>70%)
+- [ ] Agregar tests para compliance engine (10 casos)
+- [ ] Agregar tests para MotoPress integration (8 casos)
+- [ ] Performance regression tests (benchmark histórico)
+
+**Esfuerzo:** ~20-25 horas
+
+**6. API Documentation**
+- [ ] Actualizar OpenAPI spec (`openapi.yaml`) con 44 endpoints
+- [ ] Generar Postman collection (export from OpenAPI)
+- [ ] Documentar authentication flows (Guest/Staff/Admin)
+- [ ] API versioning strategy
+
+**Esfuerzo:** ~8-12 horas
+
+---
+
+## 📋 CHECKLIST DESARROLLO BACKEND
+
+### Antes de Implementar API Endpoint
+
+- [ ] ✅ Verificar authentication requerida (JWT Guest/Staff/Admin)
+- [ ] ✅ Implementar multi-tenant filtering (`eq('tenant_id', session.tenant_id)`)
+- [ ] ✅ Validar input con Zod schema o TypeScript types
+- [ ] ✅ Rate limiting configurado (si endpoint público)
+- [ ] ✅ Error handling comprehensivo (try/catch + logging)
+- [ ] ✅ Return proper HTTP status codes (200, 400, 401, 404, 500)
+- [ ] ✅ TypeScript types definidos (request body + response)
+- [ ] ✅ Logging con prefijo módulo `[module-name]`
+- [ ] ✅ CORS headers si necesario (Next.js auto-configura)
+
+### Antes de Implementar Business Logic
+
+- [ ] ✅ Preferir RPC functions sobre SQL directo (98% token reduction)
+- [ ] ✅ Validar datos con TypeScript strict types
+- [ ] ✅ Implementar error handling robusto (catch + log + return)
+- [ ] ✅ Logging de contexto completo (input params + error details)
+- [ ] ✅ Unit tests (al menos casos críticos: happy path + error cases)
+- [ ] ✅ Performance benchmarks (si critical path > 1000ms)
+- [ ] ✅ Multi-tenant aware (verificar `tenant_id` en queries)
+
+### Antes de Commit
+
+- [ ] ✅ `npm run type-check` → 0 errores
+- [ ] ✅ Tests unitarios passing (`npm test`)
+- [ ] ✅ No secrets expuestos en código (verificar con grep)
+- [ ] ✅ Logging apropiado agregado (info, warn, error levels)
+- [ ] ✅ Documentación inline actualizada (JSDoc comments)
+- [ ] ✅ Performance dentro de targets (medir con timing logs)
+
+---
+
+## 🔗 REFERENCIAS BACKEND
+
+**Archivos Críticos SIRE:**
+- `/Users/oneill/Sites/apps/InnPilot/src/lib/compliance-chat-engine.ts` (SIRE flow)
+- `/Users/oneill/Sites/apps/InnPilot/src/lib/sire/field-mappers.ts` (mappers Oct 6)
+- `/Users/oneill/Sites/apps/InnPilot/_assets/sire/codigos-pais.json` (250 países SIRE)
+- `/Users/oneill/Sites/apps/InnPilot/_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
+
+**Archivos Críticos Auth:**
+- `/Users/oneill/Sites/apps/InnPilot/src/lib/guest-auth.ts` (JWT guest)
+- `/Users/oneill/Sites/apps/InnPilot/src/app/api/guest/chat/route.ts` (main chat endpoint)
+
+**Documentación:**
+- `docs/backend/MATRYOSHKA_ARCHITECTURE.md` (embeddings 3-tier)
+- `docs/backend/MULTI_TENANT_ARCHITECTURE.md` (RLS patterns)
+- `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` (SIRE specs oficiales)
+- `docs/sire/CODIGOS_OFICIALES.md` (códigos país/ciudad)
+
+**Project Management:**
+- `/Users/oneill/Sites/apps/InnPilot/plan.md` (FASE 10-12 SIRE extension)
+- `/Users/oneill/Sites/apps/InnPilot/TODO.md` (tasks 2.1-2.5, 3.2)
+- `/Users/oneill/Sites/apps/InnPilot/CLAUDE.md` (agent guidelines)
+
+---
+
+## 📊 MÉTRICAS BACKEND (All PASS ✅)
+
+### Actual vs Target
+
+| Métrica | Actual | Target | Status |
+|---------|--------|--------|--------|
+| **API Response Time (avg)** | ~1500-2500ms | < 3000ms | ✅ PASS |
+| **RPC Function Calls** | ~50-80ms | < 100ms | ✅ PASS |
+| **Vector Search (avg)** | ~200-400ms | < 500ms | ✅ PASS |
+| **Token Reduction (RPC)** | 98.1% | > 90% | ✅ PASS |
+| **Test Coverage** | < 5% | > 70% | 🔴 FAIL |
+| **TypeScript Strict** | ✅ Enabled | ✅ Enabled | ✅ PASS |
+| **npm Vulnerabilities** | 0 | 0 | ✅ PASS |
+| **RLS Enabled** | 100% (39/39) | 100% | ✅ PASS |
+
+**Performance Wins (Octubre 2025):**
+1. ✅ RPC Functions: 98.1% token reduction (17,700→345 tokens)
+2. ✅ Matryoshka Tier 1: 3x faster que Tier 3 (100ms vs 300ms)
+3. ✅ Auto-compactación: 50% conversation history reduction
+4. ✅ JWT Optimization: Session data in payload (no DB query per request)
+
+**Gaps Identificados:**
+1. 🔴 Test coverage < 5% (target >70%)
+2. 🔴 MotoPress endpoints sin auth (security vulnerability)
+3. 🟠 Conversion rate 0% en public chat (funnel roto)
+
+---
+
+**Última Actualización**: 8 Octubre 2025
+**Siguiente Revisión**: Después de completar FASE 2
+**Contacto Agente**: @backend-developer
+**Versión**: 2.0 Comprehensive Audit
