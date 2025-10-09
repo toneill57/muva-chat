@@ -17,8 +17,9 @@
 
   // AUTO-SAVE: Guardar automáticamente para evitar buffers sucios (optimizado para Claude Code)
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 2000,
+  "files.autoSaveDelay": 1000,
   "files.autoSaveWorkspaceFilesOnly": false,
+  "files.refactoring.autoSave": false,
 
   // HOT EXIT: Evitar restaurar archivos con cambios no guardados (configurar en settings globales)
 

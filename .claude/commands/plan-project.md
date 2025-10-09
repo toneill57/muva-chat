@@ -375,227 +375,82 @@ List which specialized agents are needed:
 - **@agent-database-agent**: Migrations, monitoring, RLS policies
 - **@agent-deploy-agent**: Commits, VPS deployment, verification
 
-### Step 6: Update Agent Configurations
-For each agent in `.claude/agents/*.md`, add a project section:
+### Step 6: Update Specialized Agent Snapshots
+
+For each agent involved in the project, update their **snapshot** (NOT agent config):
+
+**Which snapshot to update:**
+- Database project → `snapshots/database-agent.md`
+- UI/UX project → `snapshots/ux-interface.md`
+- API/Backend project → `snapshots/backend-developer.md` + `snapshots/api-endpoints-mapper.md`
+- Infrastructure → `snapshots/infrastructure-monitor.md`
+- Deployment → `snapshots/deploy-agent.md`
+- Embeddings → `snapshots/embeddings-generator.md`
+- General overview → `snapshots/general-snapshot.md`
+
+**Add project section at the top** (after frontmatter YAML):
 
 ```markdown
-## 🚀 PROYECTO ACTUAL: {Project Name} ({Date})
-
-### Contexto del Proyecto
-{Brief description of what's being built}
-
-### Archivos de Planificación
-Antes de comenzar cualquier tarea, **LEER SIEMPRE**:
-- 📄 `plan.md` - Plan completo del proyecto (X líneas)
-- 📋 `TODO.md` - Tareas organizadas por fases
-- 🎯 `{project-name}-prompt-workflow.md` - Prompts ejecutables por fase
-
-### Mi Responsabilidad Principal
-Soy el **agente principal/secundario** de este proyecto:
-- ✅ FASE 1: {What this agent does in phase 1}
-- ✅ FASE 2: {What this agent does in phase 2}
-- ✅ FASE 3: {What this agent does in phase 3}
-
-### Archivos Objetivo
-
-**A CREAR:**
-- `path/to/new-file.tsx` - {Purpose} (FASE X)
-- `path/to/another.ts` - {Purpose} (FASE Y)
-
-**REFERENCIA (NO MODIFICAR):**
-- `path/to/existing.tsx` - Base de código a copiar
-
-### Workflow
-1. Leer plan.md → TODO.md → {project}-prompt-workflow.md
-2. Identificar próxima tarea `[ ]` en TODO.md
-3. Usar prompt correspondiente de workflow.md
-4. Implementar siguiendo specs de plan.md
-5. Testing según test commands en TODO.md
-6. Documentar en docs/{project-name}/fase-{N}/
-
 ---
-```
+title: "{Agent} Snapshot"
+agent: "{agent-name}"
+last_updated: "{Date}"
+status: "active"
+---
 
-**IMPORTANT:** Add this section BELOW the agent's core capabilities, don't remove existing content. Just add focused project section.
+## 🎯 CURRENT PROJECT: {Project Name} ({Date})
 
-### Step 7: Update SNAPSHOT.md
-Review and update `SNAPSHOT.md`:
+**Status:** Planning Complete - Ready for FASE 1
 
-1. **Remove obsolete content:**
-   - Completed projects
-   - Historical roadmaps (older than 6 months)
-   - Deprecated systems
-   - Old architecture diagrams
+**My Responsibility:**
+- FASE 1: {What this agent does}
+- FASE 2: {What this agent does}
+- FASE 3: {What this agent does}
 
-2. **Add new current project section:**
+**Planning Files:**
+- `plan.md` - Complete architecture (X lines)
+- `TODO.md` - Tasks by phase (Y lines)
+- `{project}-prompt-workflow.md` - Ready prompts (Z lines)
 
-```markdown
-## 🎯 PROYECTO ACTUAL: {Project Name} ({Month Year})
+**Key Files:**
+- **Create:** `path/to/new-file.tsx` - {Purpose} (FASE X)
+- **Modify:** `path/to/existing.ts` - {Changes} (FASE Y)
+- **Reference:** `path/to/base.tsx` - Don't modify
 
-### Objetivo
-{1-2 sentence description}
-
-### ¿Por qué?
-- {Reason 1}
-- {Reason 2}
-
-### Alcance
-- {Scope item 1}
-- {Scope item 2}
+**Workflow:**
+1. Read plan.md → TODO.md → workflow.md
+2. Find next `[ ]` task in TODO.md
+3. Use corresponding prompt from workflow.md
+4. Implement following plan.md specs
+5. Test per TODO.md commands
+6. Document in docs/{project-name}/fase-{N}/
 
 ---
 
-## 📊 ESTADO DEL PROYECTO
-
-### Planificación
-✅ **COMPLETADA** ({Date})
-
-**Archivos creados:**
-- 📄 `plan.md` (X líneas) - Arquitectura completa, {N} fases
-- 📋 `TODO.md` (Y líneas) - Tareas detalladas por fase
-- 🎯 `{project}-prompt-workflow.md` (Z líneas) - Prompts ejecutables
-- 🤖 `.claude/agents/{agent}.md` (W líneas) - Agent config actualizado
-
-### Fases de Desarrollo
-
-#### FASE 1: {Name} (Xh) - 🔜 READY TO START
-- [ ] Task 1.1 (estimate)
-- [ ] Task 1.2 (estimate)
-
-#### FASE 2: {Name} (Xh) - Pending
-- [ ] Task 2.1 (estimate)
-
-**Timeline Total**: X-Y horas de desarrollo
-
----
-
-## 🤖 AGENTES Y WORKFLOW
-
-### Agente Principal: @agent-{agent-name}
-**Responsabilidad**: {What agent does}
-
-**Tareas por fase:**
-- FASE 1: {Tasks}
-- FASE 2: {Tasks}
-
-**Configuración**: `.claude/agents/{agent-name}.md` (X líneas actualizadas)
-
-### Workflow de Desarrollo
-1. **Leer planificación**: plan.md → TODO.md → workflow.md
-2. **Identificar fase**: Buscar próxima tarea `[ ]` en TODO.md
-3. **Usar prompt**: Copiar de {project}-prompt-workflow.md
-4. **Implementar**: Seguir specs de plan.md
-5. **Testing**: {Testing approach}
-6. **Documentar**: Crear docs/{project-name}/fase-{N}/
-
----
-
-## 🚀 PRÓXIMOS PASOS INMEDIATOS
-
-### 1. Ejecutar FASE 1 con @agent-{agent-name}
-**Usar prompt 1.1** de `{project}-prompt-workflow.md`:
-```
-@agent-{agent-name}
-
-TAREA: {First task}
-...
+{Rest of snapshot content...}
 ```
 
-### 2. Validar {Deliverable}
-- {Validation step 1}
-- {Validation step 2}
+**IMPORTANT:**
+- Update **snapshots/{agent}.md** (NOT `.claude/agents/{agent}.md`)
+- Add section at TOP (after frontmatter)
+- Don't remove existing snapshot content
+- Update multiple snapshots if project involves multiple domains
 
-### 3. Continuar con FASE 2
-- {Next steps}
+### Step 7: Cleanup After Project Completion
 
----
-```
+When a project is complete, remove the "CURRENT PROJECT" section from affected snapshots:
 
-3. **Keep only relevant sections:**
-   - Environment variables (if still valid)
-   - Tech stack (current versions only)
-   - Development scripts (active ones)
-   - Project structure (current files)
+1. **Identify which snapshots were updated** (from Step 6)
+2. **Remove the "🎯 CURRENT PROJECT" section** from each snapshot
+3. **Update `last_updated`** in frontmatter YAML
+4. **Keep permanent improvements** if project added features to snapshot
 
-4. **Remove:**
-   - Old project timelines (completed)
-   - Deprecated features
-   - Historical migration notes
-   - Obsolete API references
+**Example:** Mobile-first project completed
+- Remove "CURRENT PROJECT" from `snapshots/ux-interface.md`
+- Keep new components in inventory (permanent change)
+- Update last_updated date
 
-**Goal:** SNAPSHOT.md should be 200-500 lines focused on CURRENT project only.
-
-### Step 8: Update CLAUDE.md
-Simplify `CLAUDE.md` to focus on current project:
-
-1. **Add/Update "CURRENT PROJECT" section at the top:**
-
-```markdown
-## 🎯 CURRENT PROJECT: {Project Name} ({Month Year})
-
-### Objective
-{Brief 1-sentence description}
-
-### Project Files
-- 📄 **Plan**: `plan.md` (X lines) - Complete architecture & phases
-- 📋 **Tasks**: `TODO.md` (Y lines) - Organized by FASE 1-{N}
-- 🎯 **Prompts**: `{project}-prompt-workflow.md` - Ready-to-use prompts per phase
-
-### Status
-- **Planning**: ✅ Complete
-- **FASE 1**: 🔜 Ready to start ({Description})
-- **FASE 2**: Pending ({Description})
-- **FASE 3**: Pending ({Description})
-
-### Key Specs
-- {Spec 1}
-- {Spec 2}
-- {Spec 3}
-
----
-```
-
-2. **Remove obsolete project references:**
-   - Completed projects
-   - Deprecated features
-   - Old architecture notes
-
-3. **Keep essential sections:**
-   - Development setup
-   - Common commands
-   - Specialized agents list
-   - Testing methodology
-   - VSCode sync notes
-
-4. **Add quick start for new conversations:**
-
-```markdown
-## 🚦 Getting Started
-
-### For New Conversations
-1. Read `plan.md` for project context
-2. Read `TODO.md` for current tasks
-3. Use prompts from `{project}-prompt-workflow.md`
-4. Invoke `@agent-{agent-name}` for {work type}
-
-### Quick Start FASE 1
-```bash
-# Context prompt (copy-paste to new conversation)
-CONTEXTO: {Project Name}
-
-Estoy en el proyecto "{Project Name}".
-- Plan: plan.md
-- Tareas: TODO.md
-- Prompts: {project}-prompt-workflow.md
-
-Próxima fase: FASE 1 ({Description})
-Agente: @agent-{agent-name}
-
-Por favor lee los archivos y ejecuta Prompt 1.1
-```
-```
-
-**Goal:** CLAUDE.md should be 100-200 lines, onboarding-focused, current project only.
+**Note:** SNAPSHOT.md and CLAUDE.md remain unchanged (they don't have project sections anymore)
 
 ---
 
@@ -624,10 +479,89 @@ Show:
 - ✅ plan.md created (X lines)
 - ✅ TODO.md created (Y lines)
 - ✅ {project}-prompt-workflow.md created (Z lines)
-- ✅ Updated .claude/agents/{agent}.md
-- ✅ Updated SNAPSHOT.md (old→new line count)
-- ✅ Updated CLAUDE.md (old→new line count)
+- ✅ Updated snapshots/{agent}.md (added CURRENT PROJECT section)
+- ℹ️ SNAPSHOT.md and CLAUDE.md remain unchanged (by design)
 - 🔜 Ready to execute FASE 1
+
+---
+
+## 🚨 TEST-FIRST EXECUTION POLICY
+
+**Status:** MANDATORY - All agents must follow this policy
+**Reference:** `.claude/TEST_FIRST_POLICY.md` (complete documentation)
+
+### Core Rules
+
+**PROHIBIDO:**
+- ❌ Reportar tarea completada sin ejecutar tests
+- ❌ Marcar [x] en TODO.md sin mostrar evidencia al usuario
+- ❌ Confiar en reportes de agentes sin verificación
+- ❌ Ejecutar operaciones en "black box" sin transparencia
+
+**OBLIGATORIO:**
+- ✅ Ejecutar TODOS los tests especificados antes de marcar completo
+- ✅ Mostrar salida de herramientas MCP al usuario
+- ✅ Solicitar aprobación del usuario antes de marcar [x]
+- ✅ Documentar evidencia en sección **COMPLETADO:**
+
+### Workflow Mandatorio
+
+**PASO 1: Antes de Ejecutar**
+- Identificar agente correcto según TODO.md
+- Listar herramientas MCP requeridas
+- Describir salida esperada
+
+**PASO 2: Durante Ejecución**
+```markdown
+VALIDATION (MUST EXECUTE BEFORE MARKING COMPLETE):
+
+**Test 1: [Nombre Descriptivo]**
+EXECUTE: mcp__tool_name(parameters)
+VERIFY: ✅ Expected result A
+VERIFY: ✅ Expected result B
+SHOW: Output to user for approval
+```
+
+**PASO 3: Después de Ejecución**
+```markdown
+**COMPLETADO:** [DATE] - [AGENT_NAME]
+
+**Evidence:**
+- Test 1: ✅ Passed - [Result summary]
+  ```
+  [Actual tool output]
+  ```
+
+**User Approval:** [Timestamp or "Awaiting approval"]
+```
+
+### Transparencia con MCP Tools
+
+**MAL (Black Box):**
+```markdown
+✅ Knowledge Graph configurado correctamente
+```
+
+**BIEN (Transparente):**
+```markdown
+**Test 1: Verify Knowledge Graph**
+EXECUTED: mcp__knowledge-graph__aim_read_graph()
+
+**Output:**
+{
+  "entities": [...],
+  "relations": [...]
+}
+
+VERIFY: ✅ 10 entities exist
+```
+
+### Enforcement
+
+- Se aplica a TODAS las FASES
+- Se aplica a TODOS los agentes
+- Usuario puede rechazar completado sin evidencia
+- Ver `.claude/TEST_FIRST_POLICY.md` para ejemplos completos
 
 ---
 
@@ -738,8 +672,8 @@ When a user completes a fase, they should use the documentation prompt to:
 - DO NOT create implementation files
 - ONLY create planning documentation
 - Be thorough and detailed
-- Update SNAPSHOT.md to focus on current project
-- Simplify CLAUDE.md for onboarding
+- Update affected snapshots (NOT SNAPSHOT.md or CLAUDE.md)
+- Add CURRENT PROJECT section to relevant snapshots only
 
 ### File Naming
 - plan.md (generic)
@@ -750,8 +684,9 @@ When a user completes a fase, they should use the documentation prompt to:
 ### Agent Integration
 - Use `@agent-{agent-name}` mentions in workflow prompts (CRITICAL: Always include @agent- prefix)
 - Use bold `**@agent-{agent-name}**` in TODO.md Agent labels
-- Add project section to agent config, don't remove existing content
+- Add CURRENT PROJECT section to affected snapshots (NOT agent configs)
 - Specify clear responsibilities per FASE
+- Update snapshots/{agent}.md (NOT .claude/agents/{agent}.md)
 
 ### Documentation Requirements
 - Cannot mark tasks as done without tests

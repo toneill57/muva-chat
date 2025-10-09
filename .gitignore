@@ -72,3 +72,4 @@ VPS-ENV-PRODUCTION.txt
 
 # Claude Code error logs (hooks)
 .claude/errors.jsonl
+.mcp.json
