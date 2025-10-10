@@ -50,9 +50,35 @@ Aplica a: scripts, bash, leer archivos, APIs, reiniciar servidores, testing
 
 ## 🤖 MCP Servers
 
-**Available:** 5 servers (claude-context, knowledge-graph, memory-keeper, context7, supabase)
+**Available:** 4 servers (supabase, knowledge-graph, memory-keeper, context7)
 
-**Quick Test:** `/mcp` should show "5/5 ✓ connected"
+**Quick Test:** `/mcp` should show "4/4 ✓ connected"
+
+### Semantic Code Search (pgvector)
+
+**Current Backend:** ✅ Supabase pgvector (migrated Oct 9, 2025)
+**Previous Backend:** ~~Zilliz Cloud~~ (deprecated Oct 9, 2025)
+
+**Configuration:**
+- Storage: PostgreSQL table `code_embeddings` (4,333 embeddings)
+- Model: OpenAI text-embedding-3-small (1536 dimensions)
+- Index: HNSW (m=16, ef_construction=64)
+- Performance: ~2s avg (<3s target ✅)
+- Files indexed: 692 source files (no build artifacts)
+
+**Migration Details:**
+- Date: October 9, 2025
+- Strategy: Fresh embeddings generation (NOT Zilliz export)
+- Reason: Zilliz export incomplete (90.6%) + included 218 build artifacts
+- MCP Decision: `claude-context` server removed (Zilliz-specific package)
+- Documentation: `docs/projects/zilliz-to-pgvector/README.md`
+
+**Access Methods:**
+- **Semantic Search**: `npx tsx scripts/semantic-search-pgvector.ts "query"`
+- **Re-indexing**: `npx tsx scripts/generate-embeddings.ts`
+- **RPC Function**: `search_code_embeddings(query_embedding, match_threshold, match_count)`
+
+**Note**: `claude-context` MCP server was removed as `@zilliz/claude-context-mcp` package is Zilliz-specific. Semantic search now uses standalone TypeScript scripts with direct pgvector integration.
 
 ---
 

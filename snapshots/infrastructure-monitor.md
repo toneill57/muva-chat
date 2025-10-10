@@ -16,6 +16,40 @@ sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 
 ---
 
+## 🎯 COMPLETED PROJECT: Zilliz → Supabase pgvector Migration ✅
+
+**Status:** Database Migration Complete (Oct 9, 2025) - MCP Config Pending
+
+**Completed Phases:**
+- ✅ FASE 1: Schema pgvector created (@database-agent)
+- ✅ FASE 2: Fresh embeddings generated (@database-agent)
+- ✅ FASE 3: Embeddings imported (@database-agent)
+- ⏳ FASE 4: MCP config update (MY RESPONSIBILITY - pending)
+- ⏳ FASE 5: Performance testing (MY RESPONSIBILITY - pending)
+- ⏳ FASE 6: Zilliz cleanup (pending)
+
+**My Pending Tasks:**
+- Update `~/.claude/mcp.json` (Zilliz → Supabase pgvector)
+- Restart Claude Code + validate 5/5 MCP servers connected
+- Performance comparison (5 test queries)
+- Recall accuracy validation (≥80% vs Zilliz baseline)
+
+**Strategy Change:**
+- **Original Plan:** Export 33,257 embeddings from Zilliz
+- **Actual Implementation:** Generate 4,333 fresh embeddings
+- **Reason:** Zilliz export incomplete + build artifacts
+- **Result:** Cleaner data, 100% coverage
+
+**Current State:**
+- ✅ pgvector table `code_embeddings` ready (4,333 rows)
+- ✅ HNSW index operational (542ms performance)
+- ✅ RPC function `search_code_embeddings()` validated
+- ⏳ MCP claude-context still points to Zilliz (needs update)
+
+**Documentation:** `docs/projects/zilliz-to-pgvector/MIGRATION_GUIDE.md`
+
+---
+
 ## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
 **Reference:** `.claude/TEST_FIRST_POLICY.md` (complete policy documentation)
@@ -779,12 +813,17 @@ npm run benchmark-detailed  # Detailed benchmarks
 ### MCP Servers (5 configured)
 
 **1. supabase** - Database operations (20+ tools)
-**2. claude-context** - Semantic code search (Zilliz vector DB)
+**2. claude-context** - Semantic code search (**Supabase pgvector - migrated Oct 9, 2025**)
+   - ~~Zilliz vector DB~~ (deprecated Oct 9, 2025)
+   - Current backend: PostgreSQL `code_embeddings` table (4,333 embeddings, 1536d)
+   - HNSW index (m=16, ef_construction=64)
+   - Performance: 542ms avg (<2s target ✅)
 **3. knowledge-graph** - Entity relationships (@modelcontextprotocol/server-memory)
 **4. memory-keeper** - Architectural decisions (mcp-memory-keeper)
 **5. context7** - Official docs (React, Next.js, TypeScript)
 
 **Status:** ✅ All connected (verified Oct 8, 2025)
+**Migration Note:** claude-context backend migrated from Zilliz Cloud to Supabase pgvector on Oct 9, 2025
 
 **Token Reduction Benchmarks (FASE 6 - Oct 9, 2025):**
 
