@@ -55,7 +55,7 @@ const nextConfig: NextConfig = {
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|innpilot\\.io)(?:\\:\\d+)?',
+              value: '(?<subdomain>[^.]+)\\.(localhost|innpilot\\.io|muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain/:path*',
@@ -66,7 +66,7 @@ const nextConfig: NextConfig = {
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|innpilot\\.io)(?:\\:\\d+)?',
+              value: '(?<subdomain>[^.]+)\\.(localhost|innpilot\\.io|muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain',

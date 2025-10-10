@@ -50,7 +50,17 @@ export function getSubdomain(hostname: string): string | null {
     }
   }
 
-  // No subdomain found (innpilot.io, www.innpilot.io, or unknown domain)
+  // Production: subdomain.muva.chat
+  if (host.endsWith('.muva.chat')) {
+    const parts = host.split('.');
+    // subdomain.muva.chat → ["subdomain", "muva", "chat"]
+    if (parts.length === 3) {
+      // Treat "www" as no subdomain
+      return parts[0] === 'www' ? null : parts[0];
+    }
+  }
+
+  // No subdomain found (innpilot.io, muva.chat, www.innpilot.io, www.muva.chat, or unknown domain)
   return null;
 }
 
