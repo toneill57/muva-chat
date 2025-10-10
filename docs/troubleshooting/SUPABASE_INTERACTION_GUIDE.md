@@ -185,13 +185,17 @@ DATABASE OPERATIONS DECISION TREE
 **Environment Variables (`.env.local`):**
 ```bash
 # Supabase Configuration
-SUPABASE_PROJECT_ID=ooaumjzaztmutltifhoq  # ← NEW: Explicit project ID
+SUPABASE_PROJECT_ID=ooaumjzaztmutltifhoq  # ← Explicit project ID
 SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
 SUPABASE_ANON_KEY=eyJhbGci...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...
 
 # MCP Servers Configuration
 SUPABASE_ACCESS_TOKEN=sbp_32b777f1b90ca669a789023b6b0c0ba2e92974fa
+
+# Database Direct Access (psql, pg_dump, etc.)
+# Using connection pooler (port 6543) for better performance
+DATABASE_URL=postgresql://postgres.ooaumjzaztmutltifhoq:[PASSWORD]@aws-0-us-west-1.pooler.supabase.com:6543/postgres
 ```
 
 **MCP Configuration (`~/.claude/mcp.json`):**
@@ -491,6 +495,11 @@ npx tsx scripts/test-staff-endpoints.ts
   2. Fixed RPC function with explicit CAST
   3. Documented correct methodology in this guide
 - Result: **24/24 tests passing (100% coverage)**
+
+**October 10, 2025** - Enhanced with DATABASE_URL
+- Added DATABASE_URL to .env.local for psql direct access
+- Created diagnostic script: `scripts/diagnose-mcp-supabase.ts`
+- Updated CLAUDE.md with MCP workaround summary (reduced from 250→173 lines)
 
 ---
 

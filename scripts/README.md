@@ -1,6 +1,9 @@
-# Scripts Directory
+# InnPilot Scripts Directory
 
-Utility scripts for InnPilot development and maintenance.
+**Last Updated:** October 10, 2025
+**Purpose:** Organized collection of production scripts, tools, and utilities
+
+**📊 Stats:** 33 active scripts + 38 deprecated (53% reduction in noise)
 
 ---
 
@@ -319,4 +322,33 @@ psql -f scripts/validate-public-chat-migrations.sql
 
 ---
 
-**Last Updated**: October 1, 2025
+## 🗑️ Deprecated Scripts (38 files in `deprecated/`)
+
+**Why deprecated:**
+- ✅ Features validated and in production
+- ✅ One-time fixes that are no longer needed
+- ✅ Replaced by better tools (MCP, E2E tests)
+- ✅ Debugging scripts for resolved issues
+
+**Categories:**
+1. **sire/** (8) - SIRE compliance testing (Phase 12 completed)
+2. **motopress/** (6) - MotoPress integration debugging
+3. **ddl-attempts/** (5) - Failed DDL execution methods
+4. **schema-checks/** (5) - One-time schema verifications (replaced by MCP)
+5. **multi-tenant/** (5) - Duplicate tenant testing scripts
+6. **misc-testing/** (9) - Feature validation (now covered by E2E tests)
+7. **admin-settings/** (3) - Admin panel testing (now Playwright)
+
+**Access:** Scripts still available in `deprecated/` subdirectories if needed.
+
+---
+
+## 📚 Documentation References
+
+- **CLAUDE.md** - Main development guide
+- **docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md** - Database patterns
+- **docs/MATRYOSHKA_ARCHITECTURE.md** - Embeddings system
+
+---
+
+**Last Updated**: October 10, 2025 (Major cleanup: 79→33 active scripts)

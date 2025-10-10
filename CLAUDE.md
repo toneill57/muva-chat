@@ -51,34 +51,20 @@ Aplica a: scripts, bash, leer archivos, APIs, reiniciar servidores, testing
 ## 🤖 MCP Servers
 
 **Available:** 4 servers (supabase, knowledge-graph, memory-keeper, context7)
-
 **Quick Test:** `/mcp` should show "4/4 ✓ connected"
 
+### MCP Supabase - CRITICAL Workaround
+**Always use explicit schemas:**
+```typescript
+mcp__supabase__list_tables({ project_id: "ooaumjzaztmutltifhoq", schemas: ["public"] })
+```
+❌ Without `schemas` param → Permission denied (tries to read system schemas)
+📚 Docs: `docs/troubleshooting/MCP_SUPABASE_LIST_TABLES_WORKAROUND.md`
+
 ### Semantic Code Search (pgvector)
-
-**Current Backend:** ✅ Supabase pgvector (migrated Oct 9, 2025)
-**Previous Backend:** ~~Zilliz Cloud~~ (deprecated Oct 9, 2025)
-
-**Configuration:**
-- Storage: PostgreSQL table `code_embeddings` (4,333 embeddings)
-- Model: OpenAI text-embedding-3-small (1536 dimensions)
-- Index: HNSW (m=16, ef_construction=64)
-- Performance: ~2s avg (<3s target ✅)
-- Files indexed: 692 source files (no build artifacts)
-
-**Migration Details:**
-- Date: October 9, 2025
-- Strategy: Fresh embeddings generation (NOT Zilliz export)
-- Reason: Zilliz export incomplete (90.6%) + included 218 build artifacts
-- MCP Decision: `claude-context` server removed (Zilliz-specific package)
-- Documentation: `docs/projects/zilliz-to-pgvector/README.md`
-
-**Access Methods:**
-- **Semantic Search**: `npx tsx scripts/semantic-search-pgvector.ts "query"`
-- **Re-indexing**: `npx tsx scripts/generate-embeddings.ts`
-- **RPC Function**: `search_code_embeddings(query_embedding, match_threshold, match_count)`
-
-**Note**: `claude-context` MCP server was removed as `@zilliz/claude-context-mcp` package is Zilliz-specific. Semantic search now uses standalone TypeScript scripts with direct pgvector integration.
+- **Search:** `npx tsx scripts/semantic-search-pgvector.ts "query"`
+- **Re-index:** `npx tsx scripts/generate-embeddings.ts`
+- **Table:** `code_embeddings` (4,333 embeddings, OpenAI text-embedding-3-small)
 
 ---
 
@@ -137,62 +123,24 @@ set -a && source .env.local && set +a && npx tsx scripts/execute-ddl-via-api.ts 
 
 **Why Management API?** It's the ONLY method that works programmatically for DDL without manual intervention.
 
-### Supabase Interaction Best Practices
+### Supabase Best Practices
 
-#### CRITICAL: Always Use Correct Project ID
-**Source:** `.env.local` → `SUPABASE_PROJECT_ID=ooaumjzaztmutltifhoq`
+**Project ID:** `ooaumjzaztmutltifhoq` (from `.env.local`)
+- ❌ NEVER invent IDs
+- ✅ ALWAYS use explicit `schemas: ["public"]` in MCP calls
 
-- ❌ NEVER invent project IDs
-- ✅ ALWAYS read from .env.local if needed
-- ✅ Use MCP with correct ID + explicit schemas
+**Database Hierarchy:**
+- **Schema inspection:** MCP `list_tables` (must use `schemas` param)
+- **DML queries:** RPC functions > Direct SQL via MCP
+- **DDL changes:** Management API ONLY (`scripts/execute-ddl-via-api.ts`)
 
-**Example:**
-```typescript
-mcp__supabase__list_tables({
-  project_id: "ooaumjzaztmutltifhoq",  // From .env.local
-  schemas: ["public"]  // ← CRITICAL: Must be explicit
-})
-```
-
-#### Hierarchy for Database Operations
-
-**For Schema Inspection (Read-Only):**
-1. **MCP list_tables (PRIMARY)** - Fast, structured response
-   - MUST include `schemas: ["public"]` parameter (see workaround doc)
-   - Returns structured table metadata
-   - Example: `mcp__supabase__list_tables({ project_id: "ooaumjzaztmutltifhoq", schemas: ["public"] })`
-
-2. **TypeScript Scripts (SECONDARY)** - Complex queries, RPC testing
-   - Use Supabase JS client for testing functions
-   - Example: `scripts/debug-rpc-function.ts`
-
-**For Data Queries (DML):**
-1. **RPC Functions via Supabase JS** - Always preferred for production
-2. **Direct SQL via MCP** - Ad-hoc analysis only
-
-**For DDL (Schema Changes):**
-1. **Management API ONLY** - Via `scripts/execute-ddl-via-api.ts`
-   - Required for CREATE/ALTER/DROP functions
-   - See "Database Operations Hierarchy" above
-
-#### Quick Reference Scripts
+**Quick Commands:**
 ```bash
-# List tables via MCP (with correct project_id + schemas)
-mcp__supabase__list_tables({
-  project_id: "ooaumjzaztmutltifhoq",
-  schemas: ["public"]
-})
-
-# Test RPC function (using Supabase JS client)
-set -a && source .env.local && set +a && npx tsx scripts/debug-rpc-function.ts
-
-# Execute DDL migration (via Management API)
-set -a && source .env.local && set +a && npx tsx scripts/execute-ddl-via-api.ts migration.sql
+# List tables: mcp__supabase__list_tables({ project_id: "...", schemas: ["public"] })
+# DDL: set -a && source .env.local && set +a && npx tsx scripts/execute-ddl-via-api.ts migration.sql
 ```
 
-**Reference Docs:**
-- `docs/troubleshooting/MCP_SUPABASE_LIST_TABLES_WORKAROUND.md` - Why `schemas` parameter is required
-- `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md` - Complete interaction patterns
+📚 Docs: `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
 
 ### TypeScript Scripts (tsx)
 Para scripts que necesitan env vars:
