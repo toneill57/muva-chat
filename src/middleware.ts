@@ -69,6 +69,9 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Force log to ensure middleware is executing
+  console.log('[middleware] === MIDDLEWARE EXECUTING ===', pathname)
+
   // 🌐 SUBDOMAIN DETECTION (for multi-tenant routing)
   // Extract subdomain from Nginx header (production) or hostname (local dev)
   const hostname = request.headers.get('host') || request.nextUrl.hostname
@@ -80,18 +83,24 @@ export function middleware(request: NextRequest) {
   // Validate subdomain format (lowercase, alphanumeric, hyphens only)
   const validSubdomain = subdomain && isValidSubdomain(subdomain) ? subdomain : null
 
-  console.log('[middleware] Subdomain detected:', validSubdomain || 'none', '(from:', nginxSubdomain ? 'nginx-header' : 'hostname', ')')
+  console.log('[middleware] Subdomain detected:', validSubdomain || 'none', '(from:', nginxSubdomain ? 'nginx-header' : 'hostname', ')', 'hostname:', hostname)
 
   // 🔄 SUBDOMAIN REWRITE (for multi-tenant routing)
   // If subdomain exists and path doesn't already include tenant, rewrite the URL
   if (validSubdomain && !pathname.startsWith(`/${validSubdomain}`)) {
-    // Skip rewrite for Next.js internal routes
-    if (!pathname.startsWith('/_next') && !pathname.startsWith('/api/')) {
-      console.log('[middleware] Rewriting:', pathname, '→', `/${validSubdomain}${pathname}`)
+    // Skip rewrite for Next.js internal routes and static files
+    if (!pathname.startsWith('/_next') && !pathname.startsWith('/api/') && !pathname.includes('.')) {
+      console.log('[middleware] ✅ Rewriting:', pathname, '→', `/${validSubdomain}${pathname}`)
       const url = request.nextUrl.clone()
       url.pathname = `/${validSubdomain}${pathname}`
       return NextResponse.rewrite(url)
+    } else {
+      console.log('[middleware] ⏭️  Skipping rewrite (internal/api/static):', pathname)
     }
+  } else if (validSubdomain) {
+    console.log('[middleware] ⏭️  Skipping rewrite (path already includes tenant):', pathname)
+  } else {
+    console.log('[middleware] ⏭️  No subdomain detected, skipping rewrite')
   }
 
   // Create new headers with tenant context
