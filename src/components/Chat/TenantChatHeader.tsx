@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/chat/TenantChatHeader.tsx
 interface Tenant {
   id: string;
