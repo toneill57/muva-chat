@@ -1,8 +1,8 @@
 # MCP Servers Setup & Results - InnPilot Project
 
 **Date:** October 9, 2025
-**Status:** ✅ 5/5 Servers Connected
-**Token Reduction:** 90.4% measured, 95.3% projected
+**Status:** ✅ 5/5 Servers Connected | ✅ FASE 1-9 Complete
+**Token Reduction:** 90.4% code search (measured), 96.7% decision retrieval (measured), 95.3% full-stack (projected)
 
 ---
 
@@ -845,10 +845,10 @@ Cost savings: 2,039,300 tokens × ($3/1M) = $6.12/month input tokens
 - [x] API credentials secured
 - [x] Codebase fully indexed
 
-**⏳ Pending (FASE 8-9):**
-- [ ] Knowledge Graph populated with 20+ entities
-- [ ] Memory Keeper populated with 20+ memories
-- [ ] Full 95.3% token reduction unlocked
+**✅ Complete (FASE 8-9):**
+- [x] Knowledge Graph populated with 23 entities + 30 relations ✅ (Oct 9, 2025)
+- [x] Memory Keeper populated with 43 memories ✅ (Oct 9, 2025)
+- [x] 96.7% token reduction measured for decision retrieval ✅
 
 ---
 

@@ -9,6 +9,42 @@ total_tables: 37 (public + hotels schemas)
 sire_validation: 5/5 SQL queries passed (100%)
 ---
 
+## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+
+**Status:** Planning Complete - Ready for Implementation
+**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
+**Estimated Duration:** 16-21 hours (6 phases)
+
+### Database Agent Responsibilities (FASE 1 - 4-5 hours)
+
+**Tables to Create (5 migrations):**
+1. `tenants` - Tenant registry (slug, subdomain, business_name, logo_url)
+2. `tenant_knowledge_embeddings` - Per-tenant vector storage (1536d pgvector)
+3. `tenant_documents` - Uploaded document tracking
+4. `tenant_chat_conversations` - Multi-tenant chat history
+5. `tenant_chat_messages` - Message storage with tenant isolation
+
+**RPC Functions to Create (3):**
+1. `search_tenant_embeddings()` - Tenant-scoped semantic search
+2. `get_tenant_by_subdomain()` - Subdomain → tenant_id resolver
+3. `get_tenant_documents()` - Document list for admin UI
+
+**Key Features:**
+- Row Level Security (RLS) for complete tenant isolation
+- HNSW vector indexes for fast semantic search (1536d)
+- Foreign key cascades for data integrity
+- Unique constraints on slugs/subdomains
+
+**Planning Files:**
+- `docs/tenant-subdomain-chat/plan.md` - Complete architecture
+- `docs/tenant-subdomain-chat/TODO.md` - Phase 1 tasks (1.1-1.5)
+- `docs/tenant-subdomain-chat/fase-1/` - Migration specifications
+
+**Next Steps After Phase 1:**
+Coordinate with @backend-developer for API endpoints (Phase 2-3)
+
+---
+
 ## 🎯 COMPLETED PROJECT: Zilliz → Supabase pgvector Migration ✅
 
 **Status:** Database Migration Complete (Oct 9, 2025) - MCP Config Pending

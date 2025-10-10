@@ -67,6 +67,11 @@ trace.zip
 dump_*.json
 benchmark-results.log
 
+# Vector embeddings and generated data (PGVector migration)
+/data/*.jsonl
+/data/temp/
+/data/codebase-files.json
+
 # VPS Production Environment (contains secrets)
 VPS-ENV-PRODUCTION.txt
 

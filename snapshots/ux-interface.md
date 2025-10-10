@@ -3,7 +3,7 @@ title: "UX-Interface Agent Snapshot"
 description: "Snapshot especializado UI/UX para InnPilot - Componentes, Accesibilidad, Design System, Mobile-First"
 category: agent-snapshot
 agent: ux-interface
-last_updated: "2025-10-08"
+last_updated: "2025-10-09"
 version: "2.0"
 ---
 
@@ -11,7 +11,61 @@ version: "2.0"
 
 **Agent:** `@ux-interface`
 **Dominio:** Componentes React, Accesibilidad, Design System, Mobile-First, Performance UI
-**Última actualización:** 8 Octubre 2025
+**Última actualización:** 9 Octubre 2025
+
+---
+
+## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+
+**Status:** Planning Complete - Ready for Implementation
+**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
+**Estimated Duration:** 16-21 hours (6 phases)
+
+### UX-Interface Agent Responsibilities (FASE 5 - 6-8 hours)
+
+**Phase 5A: Admin Dashboard UI (3-4 hours)**
+- Create `AdminDashboard.tsx` component (tenant admin panel)
+- Implement drag & drop document upload (react-dropzone)
+- Create document list/status component (uploaded, processing, indexed)
+- Add tenant branding upload (logo + business name)
+- Design mobile-responsive admin layout (Tailwind + shadcn/ui)
+
+**Phase 5B: Public Chat UI (3-4 hours)**
+- Create `TenantChatInterface.tsx` (public chat widget)
+- Design mobile-first chat bubble layout (fullscreen on mobile)
+- Implement tenant branding display (logo in header)
+- Add "Powered by InnPilot" footer badge
+- Create loading states & error handling
+
+**Design System Guidelines:**
+- Use existing shadcn/ui primitives (Button, Card, Dialog)
+- Tailwind utility classes (no custom CSS unless necessary)
+- WCAG 2.1 AA compliance (ARIA labels, keyboard nav, color contrast)
+- Mobile-first breakpoints (md:768px, lg:1024px)
+- Touch targets ≥44px (Apple HIG compliance)
+
+**Components to Create:**
+- `src/components/TenantAdmin/AdminDashboard.tsx`
+- `src/components/TenantAdmin/DocumentUploader.tsx`
+- `src/components/TenantAdmin/DocumentList.tsx`
+- `src/components/TenantChat/TenantChatInterface.tsx`
+- `src/components/TenantChat/TenantChatBubble.tsx`
+
+**Key UX Features:**
+- Drag & drop file upload (PDF, DOCX, TXT)
+- Real-time upload progress (percentage + file size)
+- Document processing status (uploading, chunking, embedding, ready)
+- Tenant branding preview (logo + name display)
+- Mobile-responsive design (320px - 430px viewport testing)
+
+**Planning Files:**
+- `docs/tenant-subdomain-chat/plan.md` - UI specifications
+- `docs/tenant-subdomain-chat/TODO.md` - Phase 5 tasks (5.1-5.6)
+- `docs/tenant-subdomain-chat/tenant-subdomain-chat-prompt-workflow.md` - Component prompts
+
+**Coordination:**
+- Phase 5 depends on: @backend-developer completing Phase 2-4 APIs
+- Phase 6 handoff to: @deploy-agent for deployment
 
 ---
 

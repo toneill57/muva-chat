@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateEmbedding } from '@/lib/openai'
-import { createServerClient } from '@/lib/supabase'  // Use supabase client directly for proper multi-tenant search
+import { createClient } from '@supabase/supabase-js'
 import { generateChatResponse } from '@/lib/claude'
 import { determineOptimalSearch } from '@/lib/search-router'
 import { detectQueryIntent, getSearchConfig, calculateSearchCounts } from '@/lib/query-intent'
+import { getTenantBySubdomain, getSubdomainFromRequest } from '@/lib/tenant-utils'
 // Note: Vercel KV not implemented - using memory cache only
 
-export const runtime = 'edge'
+// Use service role key for internal queries (bypasses RLS for system operations)
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('Missing Supabase configuration')
+}
+
+// Temporarily using nodejs runtime for debugging tenant embeddings
+// export const runtime = 'edge'
 
 // Legacy in-memory cache (fallback for Edge Runtime)
 const memoryCache = new Map<string, { data: unknown, expires: number }>()
@@ -95,10 +105,27 @@ function setCached(key: string, data: unknown, ttlSeconds: number = 3600) {
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
   const timestamp = new Date().toISOString()
-  const supabase = createServerClient()
+  // Use service role for tenant-specific embeddings search (public endpoint, no user auth)
+  const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!)
 
   try {
     console.log(`[${timestamp}] Chat API request started`)
+
+    // 1. TENANT DETECTION - Get tenant from subdomain
+    const subdomain = getSubdomainFromRequest(request)
+    console.log(`[${timestamp}] Subdomain detected: ${subdomain || 'none'}`)
+
+    const tenant = await getTenantBySubdomain(subdomain)
+
+    if (!tenant) {
+      console.log(`[${timestamp}] Tenant not found for subdomain: ${subdomain}`)
+      return NextResponse.json(
+        { error: 'Tenant not found', details: 'Invalid subdomain or tenant does not exist' },
+        { status: 404 }
+      )
+    }
+
+    console.log(`[${timestamp}] Tenant loaded: ${tenant.nombre_comercial} (ID: ${tenant.tenant_id})`)
 
     // Parse and validate request body
     let requestBody
@@ -191,107 +218,84 @@ export async function POST(request: NextRequest) {
 
     if (use_context) {
       try {
-        // 🤖 Detect query intent to determine search strategy
-        const intentStart = Date.now()
-        console.log(`[${timestamp}] 🤖 Detecting query intent...`)
-
-        const queryIntent = await detectQueryIntent(question)
-        const intentTime = Date.now() - intentStart
-        console.log(`[${timestamp}] ✅ Intent detected: ${queryIntent.type} (confidence: ${queryIntent.confidence}) - Time: ${intentTime}ms`)
-        console.log(`[${timestamp}] 📝 Reasoning: ${queryIntent.reasoning}`)
-
-        const searchConfig = getSearchConfig(queryIntent, false) // No MUVA access for now
-        const searchCounts = calculateSearchCounts(searchConfig, max_context_chunks)
-
+        // 2. TENANT-SPECIFIC SEARCH - Search only this tenant's embeddings
         const embeddingStart = Date.now()
-        let allResults: any[] = []
-        let detectedDomain = 'unified'
+        console.log(`[${timestamp}] 🔍 Generating embedding for tenant search...`)
 
-        // Check if this is an accommodation-related query
-        const isAccommodationQuery = ['inventory_complete', 'specific_unit', 'feature_inquiry', 'pricing_inquiry'].includes(queryIntent.type)
+        // Generate query embedding (1536 dims - same as tenant_knowledge_embeddings)
+        const queryEmbedding = await generateEmbedding(question, 1536)
+        const embeddingTime = Date.now() - embeddingStart
+        console.log(`[${timestamp}] ✅ Embedding generated - Time: ${embeddingTime}ms`)
 
-        if (isAccommodationQuery) {
-          // 🪆 MATRYOSHKA TIER 1 for accommodation units (ultra-fast)
-          const accommodationStrategy = { tier: 1, dimensions: 1024, description: 'Accommodation units (fast)' }
-          console.log(`[${timestamp}] 🪆 Using Tier 1 (1024 dims) for accommodation search`)
-          console.log(`[${timestamp}] 🔍 Generating ${accommodationStrategy.dimensions}-dimensional embedding...`)
+        const searchStart = Date.now()
+        console.log(`[${timestamp}] 🔎 Searching tenant knowledge base (tenant_id: ${tenant.tenant_id})...`)
 
-          // Generate embedding for accommodation search
-          const queryEmbedding = await generateEmbedding(question, accommodationStrategy.dimensions)
-          const embeddingTime = Date.now() - embeddingStart
-          console.log(`[${timestamp}] ✅ Tier 1 embedding generated - Time: ${embeddingTime}ms, Dimensions: ${accommodationStrategy.dimensions}`)
+        // Search ONLY this tenant's embeddings (threshold 0.0 for debugging)
+        console.log(`[${timestamp}] 🔍 Calling RPC with params:`, {
+          p_tenant_id: tenant.tenant_id,
+          p_match_threshold: 0.0,
+          p_match_count: max_context_chunks,
+          embedding_length: queryEmbedding.length
+        })
 
-          const searchStart = Date.now()
-          console.log(`[${timestamp}] 🏨 Searching accommodation units...`)
+        const { data: relevantDocs, error: searchError } = await supabase
+          .rpc('search_tenant_embeddings', {
+            p_tenant_id: tenant.tenant_id,
+            p_query_embedding: queryEmbedding,
+            p_match_threshold: 0.0,
+            p_match_count: max_context_chunks
+          })
 
-          // Search accommodation units using fast embeddings
-          const { data: accommodationData, error: accommodationError } = await supabase
-            .rpc('match_accommodation_units_fast', {
-              query_embedding: queryEmbedding,
-              similarity_threshold: 0.0,
-              match_count: searchCounts.tenantCount
-            })
+        const searchTime = Date.now() - searchStart
+        console.log(`[${timestamp}] ✅ Search completed - Time: ${searchTime}ms`)
 
-          if (accommodationError) {
-            console.error(`[${timestamp}] ❌ Accommodation search failed:`, accommodationError)
-          } else {
-            allResults.push(...(accommodationData || []))
-            console.log(`[${timestamp}] ✅ Found ${accommodationData?.length || 0} accommodation units`)
-          }
-
-          const searchTime = Date.now() - searchStart
-          console.log(`[${timestamp}] ✅ Accommodation search completed - Time: ${searchTime}ms`)
-          detectedDomain = 'accommodation'
+        if (searchError) {
+          console.error(`[${timestamp}] ❌ Tenant search failed:`, searchError)
+          throw new Error(`Tenant search failed: ${searchError.message}`)
         }
 
-        // Always search SIRE documents as fallback/additional context
-        if (allResults.length < max_context_chunks) {
-          const sireStrategy = { tier: 2, dimensions: 1536, description: 'SIRE documentation (balanced)' }
-          console.log(`[${timestamp}] 🪆 Also searching SIRE documents with Tier 2 (1536 dims)`)
-
-          const sireEmbedding = await generateEmbedding(question, sireStrategy.dimensions)
-          const remainingCount = max_context_chunks - allResults.length
-
-          const { data: sireData, error: sireError } = await supabase
-            .rpc('match_sire_documents', {
-              query_embedding: sireEmbedding,
-              match_threshold: 0.0,
-              match_count: remainingCount
-            })
-
-          if (sireError) {
-            console.error(`[${timestamp}] ❌ SIRE search failed:`, sireError)
-          } else {
-            allResults.push(...(sireData || []))
-            console.log(`[${timestamp}] ✅ Found ${sireData?.length || 0} SIRE documents`)
-          }
-
-          if (!isAccommodationQuery) {
-            detectedDomain = 'sire'
-          }
+        console.log(`[${timestamp}] ✅ Found ${relevantDocs?.length || 0} relevant documents`)
+        console.log(`[${timestamp}] 📊 Raw results:`, JSON.stringify(relevantDocs))
+        if (relevantDocs && relevantDocs.length > 0) {
+          console.log(`[${timestamp}] 📄 First result: ${relevantDocs[0].file_path} (similarity: ${relevantDocs[0].similarity})`)
         }
 
-        const searchResult = {
-          results: allResults,
-          detectedDomain,
-          queryIntent: queryIntent.type
+        // Handle case: no documentation uploaded yet
+        if (!relevantDocs || relevantDocs.length === 0) {
+          console.log(`[${timestamp}] ℹ️ No documents found in tenant knowledge base`)
+          return NextResponse.json({
+            response: "I don't have any documentation loaded yet. Please ask the administrator to upload relevant documents.",
+            context_used: false,
+            question,
+            performance: {
+              total_time_ms: Date.now() - startTime,
+              cache_hit: false,
+              environment: process.env.NODE_ENV || 'unknown',
+              timestamp: timestamp
+            }
+          })
         }
 
-        console.log(`[${timestamp}] ✅ Total results found: ${searchResult.results.length}`)
-        console.log(`[${timestamp}] 🎯 Detected domain: ${searchResult.detectedDomain}`)
-
-        // Construir contexto
-        context = searchResult.results
-          .map(doc => doc.content)
+        // Build context from tenant docs
+        context = relevantDocs
+          .map((doc: { content: string }) => doc.content)
           .join('\n\n')
 
         const claudeStart = Date.now()
-        console.log(`[${timestamp}] 🤖 Generating Claude response...`)
+        console.log(`[${timestamp}] 🤖 Generating response for ${tenant.nombre_comercial}...`)
 
-        // Generar respuesta con Claude (usando el contexto encontrado y dominio detectado)
-        response = await generateChatResponse(question, context, searchResult.detectedDomain)
+        // Generate response with tenant-specific system prompt
+        const systemPrompt = `You are a helpful assistant for ${tenant.business_name || tenant.nombre_comercial}.
+
+Use the following context to answer the user's question. If the context doesn't contain relevant information, politely say you don't have that information.
+
+Context:
+${context}`
+
+        // Use Claude for response generation with custom system prompt
+        response = await generateChatResponse(question, context, 'tenant')
         const claudeTime = Date.now() - claudeStart
-        console.log(`[${timestamp}] ✅ Claude response generated - Time: ${claudeTime}ms`)
+        console.log(`[${timestamp}] ✅ Response generated - Time: ${claudeTime}ms`)
 
       } catch (error) {
         console.error(`[${timestamp}] ❌ Error in context processing:`, error)

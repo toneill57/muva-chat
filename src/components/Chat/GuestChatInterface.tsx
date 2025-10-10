@@ -955,7 +955,21 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               onDismiss={() => {
                 // Handle dismiss if needed
               }}
-              progressPercentage={0}
+              reservation={{
+                document_type: null,
+                document_number: null,
+                birth_date: null,
+                first_surname: null,
+                second_surname: null,
+                given_names: null,
+                nationality_code: null,
+                origin_city_code: null,
+                destination_city_code: null,
+                movement_type: null,
+                movement_date: null,
+                hotel_sire_code: null,
+                hotel_city_code: null,
+              }}
             />
           </div>
 
@@ -1527,10 +1541,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* ComplianceConfirmation Modal */}
       {showComplianceModal && complianceData && (
         <ComplianceConfirmation
-          conversationalData={complianceData.conversational_data}
-          sireData={complianceData.sire_data}
-          onConfirm={handleComplianceSubmit}
-          onEdit={handleEditField}
+          complianceData={complianceData.conversational_data}
+          onConfirm={() => handleComplianceSubmit(complianceData)}
           onCancel={() => setShowComplianceModal(false)}
           isLoading={isSubmitting}
         />
@@ -1539,8 +1551,11 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* ComplianceSuccess Screen */}
       {showComplianceSuccess && submissionData && (
         <ComplianceSuccess
-          sireReferenceNumber={submissionData.mockRefs?.sireRef || 'N/A'}
-          traReferenceNumber={submissionData.mockRefs?.traRef}
+          submissionData={{
+            submission_id: submissionData.submissionId || submissionData.id || '',
+            reservation_id: session.reservation_id,
+            sire_reference: submissionData.sireReference || submissionData.mockRefs?.sireRef,
+          }}
           onClose={() => {
             setShowComplianceSuccess(false)
             // Auto-dismiss reminder

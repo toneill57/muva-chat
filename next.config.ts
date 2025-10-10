@@ -43,6 +43,36 @@ const nextConfig: NextConfig = {
       },
     ]
   },
+  // Subdomain routing rewrites
+  async rewrites() {
+    return {
+      beforeFiles: [
+        // Rewrite subdomain requests to /[tenant] path
+        // Example: simmerdown.localhost:3000/admin -> localhost:3000/simmerdown/admin
+        {
+          source: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: '(?<subdomain>[^.]+)\\.localhost(?:\\:\\d+)?',
+            },
+          ],
+          destination: '/:subdomain/:path*',
+        },
+        // Handle root path with subdomain
+        {
+          source: '/',
+          has: [
+            {
+              type: 'host',
+              value: '(?<subdomain>[^.]+)\\.localhost(?:\\:\\d+)?',
+            },
+          ],
+          destination: '/:subdomain',
+        },
+      ],
+    };
+  },
 };
 
 export default nextConfig;

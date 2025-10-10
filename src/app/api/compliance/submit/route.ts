@@ -21,6 +21,7 @@ import {
   type ConversationalData,
   type TenantComplianceConfig,
   type ReservationData,
+  updateReservationWithComplianceData,
 } from '@/lib/compliance-chat-engine';
 
 // ============================================================================
@@ -191,7 +192,7 @@ export async function POST(request: NextRequest) {
 
     const { data: tenant, error: tenantError } = await supabase
       .from('tenant_registry')
-      .select('tenant_id, tenant_name, features')
+      .select('tenant_id, nombre_comercial, features')
       .eq('tenant_id', tenantId)
       .eq('is_active', true)
       .single();
@@ -228,13 +229,13 @@ export async function POST(request: NextRequest) {
       var tenantConfig: TenantComplianceConfig = {
         codigo_hotel: defaultSireHotelCode,
         codigo_ciudad: defaultSireCityCode,
-        nombre_hotel: tenant.tenant_name
+        nombre_hotel: tenant.nombre_comercial
       };
     } else {
       var tenantConfig: TenantComplianceConfig = {
         codigo_hotel: sireHotelCode,
         codigo_ciudad: sireCityCode,
-        nombre_hotel: tenant.tenant_name
+        nombre_hotel: tenant.nombre_comercial
       };
     }
 
@@ -312,6 +313,32 @@ export async function POST(request: NextRequest) {
       submissionId: submission.id,
       status: submission.status
     });
+
+    // ========================================================================
+    // STEP 5.1: Update guest_reservations with SIRE compliance data (FASE 2)
+    // ========================================================================
+
+    if (reservationId) {
+      try {
+        console.log('[compliance-api] Updating reservation with SIRE data...', {
+          reservation_id: reservationId
+        });
+
+        await updateReservationWithComplianceData(reservationId, sireData);
+
+        console.log('[compliance-api] ✅ Reservation updated with SIRE compliance data');
+      } catch (updateError: any) {
+        // Log error but don't fail the request (submission already saved)
+        console.error('[compliance-api] ⚠️ Failed to update reservation (non-critical):', {
+          error: updateError.message,
+          reservation_id: reservationId
+        });
+
+        // Continue execution - submission is still valid
+      }
+    } else {
+      console.log('[compliance-api] ⚠️ No reservationId provided, skipping reservation update');
+    }
 
     // ========================================================================
     // STEP 6: Generate MOCK references (NO ejecutar SIRE/TRA real)

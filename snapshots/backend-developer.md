@@ -19,6 +19,56 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
+## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+
+**Status:** Planning Complete - Ready for Implementation
+**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
+**Estimated Duration:** 16-21 hours (6 phases)
+
+### Backend Developer Responsibilities (FASE 2-4 - 8-10 hours)
+
+**Phase 2: Subdomain Detection & Routing (2-3 hours)**
+- Create Next.js middleware for subdomain extraction
+- Implement tenant context provider (React Context)
+- Create `/api/tenant/resolve` endpoint (slug/subdomain → tenant_id)
+- Handle subdomain routing edge cases (www, apex domain)
+
+**Phase 3: Chat API with Tenant Isolation (3-4 hours)**
+- Create `/api/tenant-chat/[tenantSlug]` POST endpoint
+- Implement tenant-scoped semantic search (calls RPC)
+- Add tenant_id filtering to all queries (RLS compliance)
+- Create conversation management endpoints
+
+**Phase 4: Document Upload & Processing (3-4 hours)**
+- Create `/api/admin/[tenantSlug]/documents` POST endpoint
+- Implement chunking logic (RecursiveCharacterTextSplitter)
+- Generate embeddings (OpenAI text-embedding-3-small)
+- Store in `tenant_knowledge_embeddings` with tenant_id
+
+**Key Technical Decisions:**
+- Middleware runs on Edge Runtime (fast subdomain detection)
+- RPC functions for all database queries (token optimization)
+- OpenAI embeddings (1536d) for tenant knowledge bases
+- Admin endpoints require authentication (JWT middleware)
+
+**Files to Create/Modify:**
+- `src/middleware.ts` - Subdomain detection
+- `src/contexts/TenantContext.tsx` - Tenant state
+- `src/app/api/tenant-chat/[tenantSlug]/route.ts` - Chat API
+- `src/app/api/admin/[tenantSlug]/documents/route.ts` - Upload API
+- `src/lib/tenant-chat-engine.ts` - Business logic
+
+**Planning Files:**
+- `docs/tenant-subdomain-chat/plan.md` - Complete architecture
+- `docs/tenant-subdomain-chat/TODO.md` - Phase 2-4 tasks
+- `docs/tenant-subdomain-chat/tenant-subdomain-chat-prompt-workflow.md` - Copy-paste prompts
+
+**Coordination:**
+- Phase 2 depends on: @database-agent completing Phase 1 migrations
+- Phase 5 handoff to: @ux-interface for admin/public UI
+
+---
+
 ## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
 **Reference:** `.claude/TEST_FIRST_POLICY.md`

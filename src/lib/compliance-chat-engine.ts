@@ -12,6 +12,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { getSIRECountryCode, getDIVIPOLACityCode } from '@/lib/sire/sire-catalogs';
 
 // ============================================================================
 // INTERFACES - ARQUITECTURA DOS CAPAS
@@ -26,7 +27,24 @@ import Anthropic from '@anthropic-ai/sdk';
 export interface ConversationalData {
   nombre_completo: string;          // "Juan Pérez García"
   numero_pasaporte: string;         // "AB123456" (con o sin guiones)
-  pais_texto: string;               // "Estados Unidos" (nombre en español)
+
+  // ⚠️ CRITICAL: 3 INDEPENDENT GEOGRAPHIC FIELDS (see docs/sire/DATABASE_SCHEMA_CLARIFICATION.md)
+
+  // Field 5 - NATIONALITY: Guest's CITIZENSHIP country (where passport is from)
+  // Example: American guest → "Estados Unidos" (maps to SIRE code 249)
+  pais_texto: string;
+
+  // Field 11 - PROCEDENCIA/ORIGIN: City/country came FROM before arriving at hotel
+  // Example: Came from Bogotá → "Bogotá" (maps to DIVIPOLA 11001)
+  // Example: Came from USA → "Estados Unidos" (maps to SIRE 249)
+  procedencia_texto: string;
+
+  // Field 12 - DESTINO/DESTINATION: City/country going TO after leaving hotel
+  // Example: Going to Medellín → "Medellín" (maps to DIVIPOLA 05001)
+  // Example: Returning to USA → "Estados Unidos" (maps to SIRE 249)
+  // ⚠️ NOT the hotel's city, it's their NEXT destination after checkout
+  destino_texto: string;
+
   fecha_nacimiento: string;         // "15/05/1990" (dd/mm/yyyy)
   proposito_viaje?: string;         // "Turismo y vacaciones" (opcional, contexto adicional)
 }
@@ -47,7 +65,7 @@ export interface SIREData {
   numero_identificacion: string;    // Campo 4: Pasaporte sin guiones
 
   // Nacionalidad
-  codigo_nacionalidad: string;      // Campo 5: ISO 3166-1 numeric
+  codigo_nacionalidad: string;      // Campo 5: SIRE country code (NOT ISO 3166-1)
 
   // Identidad (auto desde nombre_completo)
   primer_apellido: string;          // Campo 6: Primer apellido
@@ -81,6 +99,55 @@ export interface TenantComplianceConfig {
 export interface ReservationData {
   check_in_date: string;            // ISO format (yyyy-mm-dd)
   check_out_date?: string;          // ISO format (opcional)
+}
+
+/**
+ * Guest Reservation Interface (Extended with SIRE compliance fields)
+ *
+ * This interface represents a guest reservation with ALL 13 SIRE compliance fields
+ * that are populated after the compliance chat flow completes.
+ */
+export interface GuestReservation {
+  id: string;
+  tenant_id: string;
+  guest_name: string;
+  phone_full: string;
+  check_in_date: string;
+  check_out_date: string;
+
+  // 🆕 SIRE Compliance Fields (13 campos oficiales)
+
+  // Hotel/Location (2 campos)
+  hotel_sire_code: string | null;            // Código hotel SCH (4-6 dígitos)
+  hotel_city_code: string | null;            // Código ciudad DIVIPOLA (5-6 dígitos)
+
+  // Documento (2 campos)
+  document_type: string | null;              // '3'=Pasaporte, '5'=Cédula, '10'=PEP, '46'=Diplomático
+  document_number: string | null;            // Alfanumérico 6-15 chars sin guiones
+
+  // Nacionalidad (1 campo)
+  nationality_code: string | null;           // Código SIRE (249=USA, 169=COL) - NO ISO
+
+  // Identidad (3 campos)
+  first_surname: string | null;              // Primer apellido (MAYÚSCULAS, con acentos)
+  second_surname: string | null;             // Segundo apellido (opcional, puede estar vacío)
+  given_names: string | null;                // Nombres (MAYÚSCULAS, con acentos)
+
+  // Movimiento (2 campos)
+  movement_type: string | null;              // 'E'=Entrada, 'S'=Salida
+  movement_date: Date | null;                // Fecha movimiento (check-in/check-out)
+
+  // Lugares (2 campos) - ⚠️ Fields accept BOTH city and country codes
+  // These accept BOTH city (DIVIPOLA 5 digits) AND country (SIRE 1-3 digits)
+  origin_city_code: string | null;           // FROM: City/country came from BEFORE arriving (DIVIPOLA or SIRE)
+  destination_city_code: string | null;      // TO: City/country going to AFTER checkout (DIVIPOLA or SIRE)
+  // Example: American guest traveling Bogotá (11001) → Hotel → Medellín (05001)
+  //   nationality_code: '249' (USA - SIRE country)
+  //   origin_city_code: '11001' (Bogotá - DIVIPOLA city)
+  //   destination_city_code: '05001' (Medellín - DIVIPOLA city)
+
+  // Fecha nacimiento (1 campo)
+  birth_date: Date | null;                   // Fecha nacimiento
 }
 
 /**
@@ -154,27 +221,43 @@ Extract the following fields (ONLY if explicitly mentioned):
    - Example: "US123456789" or "AB-123456"
    - Clean any hyphens/spaces later
 
-3. pais_texto: Country of origin (in Spanish)
+3. pais_texto: Country of CITIZENSHIP/NATIONALITY (in Spanish)
    - Example: "Estados Unidos", "Colombia", "España"
    - Convert from English if needed: "United States" → "Estados Unidos"
+   - ⚠️ This is NATIONALITY, NOT travel origin
 
 4. fecha_nacimiento: Birthdate (format: DD/MM/YYYY)
    - Example: "15/05/1990"
    - Parse from various formats if needed
 
-5. proposito_viaje: Travel purpose (optional, free text)
+5. procedencia_texto: COLOMBIAN CITY guest came FROM before checking into THIS hotel (in Spanish)
+   - Example: "Bogotá", "Medellín", "Cali", "Cartagena"
+   - ⚠️ This is the ORIGIN city BEFORE arriving at the hotel
+   - Must be a Colombian city name (will be mapped to DIVIPOLA code)
+
+6. destino_texto: COLOMBIAN CITY guest will go TO after checking out of THIS hotel (in Spanish)
+   - Example: "Medellín", "Bogotá", "Cali", "Cartagena"
+   - ⚠️ This is the DEPARTURE city AFTER leaving the hotel
+   - Must be a Colombian city name (will be mapped to DIVIPOLA code)
+   - CANNOT be the same as hotel's city!
+
+7. proposito_viaje: Travel purpose (optional, free text)
    - Example: "Turismo y vacaciones"
 
 Return ONLY valid JSON with extracted fields. If a field is NOT found, omit it.
 Do NOT make up or infer data - only extract what is explicitly stated.
 
-Example output:
+Example output (guest staying in San Andrés):
 {
   "nombre_completo": "John Michael Smith",
   "numero_pasaporte": "US12345678",
   "pais_texto": "Estados Unidos",
-  "fecha_nacimiento": "25/03/1985"
-}`
+  "fecha_nacimiento": "25/03/1985",
+  "procedencia_texto": "Bogotá",
+  "destino_texto": "Medellín"
+}
+
+This means: American guest flew FROM Bogotá TO San Andrés (hotel), and will fly TO Medellín after checkout.`
           }
         ]
       });
@@ -277,14 +360,16 @@ Example output:
   /**
    * Calculate completeness percentage of conversational data
    *
-   * Required fields: nombre_completo, numero_pasaporte, pais_texto, fecha_nacimiento
+   * Required fields: nombre_completo, numero_pasaporte, pais_texto, fecha_nacimiento, procedencia_texto, destino_texto
    */
   calculateCompleteness(entities: Partial<ConversationalData>): ComplianceState {
     const requiredFields: (keyof ConversationalData)[] = [
       'nombre_completo',
       'numero_pasaporte',
       'pais_texto',
-      'fecha_nacimiento'
+      'fecha_nacimiento',
+      'procedencia_texto',
+      'destino_texto'
     ];
 
     const presentFields = requiredFields.filter(field => entities[field]);
@@ -326,8 +411,10 @@ Example output:
     const labels: Record<keyof ConversationalData, string> = {
       nombre_completo: 'Nombre completo',
       numero_pasaporte: 'Número de pasaporte',
-      pais_texto: 'País de origen',
+      pais_texto: 'Nacionalidad',
       fecha_nacimiento: 'Fecha de nacimiento',
+      procedencia_texto: 'Lugar de procedencia',
+      destino_texto: 'Lugar de destino',
       proposito_viaje: 'Propósito del viaje'
     };
 
@@ -356,8 +443,14 @@ Example output:
     // Split nombre_completo into apellidos + nombres
     const nameParts = this.splitFullName(conversational.nombre_completo);
 
-    // Map pais_texto to codigo_pais (ISO 3166-1 numeric)
-    const codigoPais = this.mapCountryToCode(conversational.pais_texto);
+    // Map nationality to SIRE country code
+    const codigoNacionalidad = this.mapCountryToCode(conversational.pais_texto);
+
+    // Map origin (procedencia) to SIRE/DIVIPOLA code (can be country OR city)
+    const codigoProcedencia = this.mapLocationToCode(conversational.procedencia_texto);
+
+    // Map destination (destino) to SIRE/DIVIPOLA code (can be country OR city)
+    const codigoDestino = this.mapLocationToCode(conversational.destino_texto);
 
     // Format check-in date
     const fechaMovimiento = reservationData?.check_in_date
@@ -373,8 +466,8 @@ Example output:
       tipo_documento: '3', // Pasaporte (SIRE code)
       numero_identificacion: conversational.numero_pasaporte,
 
-      // Nacionalidad
-      codigo_nacionalidad: codigoPais,
+      // Nacionalidad (Campo 5: citizenship)
+      codigo_nacionalidad: codigoNacionalidad,
 
       // Identidad (from nombre_completo)
       primer_apellido: nameParts.primerApellido,
@@ -385,9 +478,9 @@ Example output:
       tipo_movimiento: 'E', // Entrada (fixed)
       fecha_movimiento: fechaMovimiento,
 
-      // Lugares (default: same as nationality for international guests)
-      lugar_procedencia: codigoPais,
-      lugar_destino: codigoPais,
+      // Lugares (Campo 11 & 12: TRAVEL origin and destination)
+      lugar_procedencia: codigoProcedencia,
+      lugar_destino: codigoDestino,
 
       // Fecha nacimiento
       fecha_nacimiento: conversational.fecha_nacimiento
@@ -451,43 +544,62 @@ Example output:
   }
 
   /**
-   * Map country name (Spanish) to ISO 3166-1 numeric code
+   * Map location (country or Colombian city) to SIRE/DIVIPOLA code
    *
-   * TODO: Import from sire-country-mapping.ts when available
+   * ⚠️ CRITICAL: Procedencia and Destino (Campo 11 & 12) can be EITHER:
+   * - Colombian city codes (DIVIPOLA 5 digits): "Bogotá" → 11001
+   * - Country codes (SIRE 1-3 digits): "Estados Unidos" → 249
+   *
+   * ✅ Uses fuzzy search on 1,122 Colombian cities + 250 countries
+   * ✅ Handles accents, case, typos automatically
+   *
+   * Used for Campo 11 (procedencia) and Campo 12 (destino).
+   *
+   * @param locationText - Location name in Spanish (e.g., "Bogotá", "Estados Unidos")
+   * @returns SIRE country code (1-3 digits) OR DIVIPOLA city code (5 digits)
+   */
+  private mapLocationToCode(locationText: string): string {
+    // Try Colombian city first (fuzzy search on 1,122 cities)
+    const cityCode = getDIVIPOLACityCode(locationText);
+    if (cityCode) {
+      console.log('[compliance-engine] Mapped to Colombian city:', {
+        location: locationText,
+        code: cityCode
+      });
+      return cityCode;
+    }
+
+    // Fallback to country code (fuzzy search on 250 countries)
+    const countryCode = this.mapCountryToCode(locationText);
+    console.log('[compliance-engine] Mapped to country:', {
+      location: locationText,
+      code: countryCode
+    });
+    return countryCode;
+  }
+
+  /**
+   * Map country name (Spanish) to SIRE country code
+   *
+   * ✅ Uses official SIRE codes from _assets/sire/codigos-pais.json
+   * ✅ Fuzzy search handles accents, case, typos automatically
+   * ❌ NOT ISO 3166-1 codes (USA=249, not 840)
+   *
+   * Examples (SIRE codes, NOT ISO):
+   * - USA: SIRE 249 (NOT ISO 840)
+   * - Colombia: SIRE 169 (NOT ISO 170)
+   * - Brasil: SIRE 105 (NOT ISO 076)
+   * - España: SIRE 245 (NOT ISO 724)
    */
   private mapCountryToCode(countryText: string): string {
-    // Provisional mapping (top 20 countries)
-    const countryMap: Record<string, string> = {
-      'Estados Unidos': '840',
-      'Colombia': '170',
-      'España': '724',
-      'México': '484',
-      'Argentina': '032',
-      'Brasil': '076',
-      'Chile': '152',
-      'Perú': '604',
-      'Ecuador': '218',
-      'Venezuela': '862',
-      'Reino Unido': '826',
-      'Francia': '250',
-      'Alemania': '276',
-      'Italia': '380',
-      'Canadá': '124',
-      'China': '156',
-      'Japón': '392',
-      'Corea del Sur': '410',
-      'Australia': '036',
-      'Nueva Zelanda': '554'
-    };
-
-    const code = countryMap[countryText];
+    const code = getSIRECountryCode(countryText);
 
     if (!code) {
       console.warn('[compliance-engine] Unknown country:', countryText);
-      return '999'; // Unknown/Other
+      return '249'; // Default to USA (SIRE code)
     }
 
-    return code;
+    return code; // ✅ SIRE official codes (249, 169, 105, 245, etc)
   }
 
   /**
@@ -673,4 +785,149 @@ export function generateSIRETXT(sireData: SIREData): string {
   ].join('\t');
 
   return row + '\n';
+}
+
+// ============================================================================
+// RESERVATION UPDATE FUNCTIONS (FASE 2)
+// ============================================================================
+
+/**
+ * Parse SIRE date format (DD/MM/YYYY) to JavaScript Date object
+ *
+ * @param dateStr - Date string in DD/MM/YYYY format
+ * @returns Date object
+ *
+ * @example
+ * parseSIREDate("15/10/2025") // Returns: Date(2025, 9, 15)
+ * parseSIREDate("25/03/1985") // Returns: Date(1985, 2, 25)
+ */
+export function parseSIREDate(dateStr: string): Date {
+  // Validate format DD/MM/YYYY
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+    throw new Error(`Invalid SIRE date format: "${dateStr}". Expected DD/MM/YYYY`);
+  }
+
+  const [day, month, year] = dateStr.split('/').map(Number);
+
+  // JavaScript Date: month is 0-indexed (0 = January, 11 = December)
+  const date = new Date(year, month - 1, day);
+
+  // Validate the date is valid (handles invalid dates like 32/13/2025)
+  if (
+    date.getDate() !== day ||
+    date.getMonth() !== month - 1 ||
+    date.getFullYear() !== year
+  ) {
+    throw new Error(`Invalid date values: ${dateStr}`);
+  }
+
+  return date;
+}
+
+/**
+ * Update guest reservation with SIRE compliance data
+ *
+ * This function persists ALL 13 SIRE fields extracted during compliance chat
+ * into the guest_reservations table for audit and reporting purposes.
+ *
+ * IMPORTANT: Uses SIRE official codes (NOT ISO 3166-1 numeric codes).
+ * See: _assets/sire/codigos-pais.json for country code reference.
+ *
+ * @param reservationId - UUID of the guest reservation
+ * @param sireData - Complete SIRE data (13 campos oficiales)
+ *
+ * @throws Error if database update fails
+ *
+ * @example
+ * await updateReservationWithComplianceData(
+ *   "550e8400-e29b-41d4-a716-446655440000",
+ *   {
+ *     codigo_hotel: "12345",
+ *     codigo_ciudad: "88001",
+ *     tipo_documento: "3",
+ *     numero_identificacion: "AB1234567",
+ *     codigo_nacionalidad: "249", // USA (SIRE code, not ISO 840)
+ *     primer_apellido: "GARCÍA",
+ *     segundo_apellido: "PÉREZ",
+ *     nombres: "JUAN PABLO",
+ *     tipo_movimiento: "E",
+ *     fecha_movimiento: "09/10/2025",
+ *     lugar_procedencia: "249",
+ *     lugar_destino: "169",
+ *     fecha_nacimiento: "25/03/1985"
+ *   }
+ * )
+ */
+export async function updateReservationWithComplianceData(
+  reservationId: string,
+  sireData: SIREData
+): Promise<void> {
+  console.log('[compliance-engine] Updating reservation with SIRE data:', {
+    reservation_id: reservationId,
+    document_type: sireData.tipo_documento,
+    nationality: sireData.codigo_nacionalidad,
+    hotel_code: sireData.codigo_hotel,
+    movement_type: sireData.tipo_movimiento,
+  });
+
+  try {
+    // Import Supabase client dynamically to avoid circular dependencies
+    const { createServerClient } = await import('@/lib/supabase');
+    const supabase = createServerClient();
+
+    // Parse dates from DD/MM/YYYY to Date object
+    const birthDate = parseSIREDate(sireData.fecha_nacimiento);
+    const movementDate = parseSIREDate(sireData.fecha_movimiento);
+
+    // Update guest_reservations with ALL 13 SIRE compliance fields
+    const { data, error } = await supabase
+      .from('guest_reservations')
+      .update({
+        // Hotel/Location (2 campos)
+        hotel_sire_code: sireData.codigo_hotel,
+        hotel_city_code: sireData.codigo_ciudad,
+
+        // Documento (2 campos)
+        document_type: sireData.tipo_documento,
+        document_number: sireData.numero_identificacion,
+
+        // Nacionalidad (1 campo)
+        nationality_code: sireData.codigo_nacionalidad,
+
+        // Identidad (3 campos)
+        first_surname: sireData.primer_apellido,
+        second_surname: sireData.segundo_apellido,
+        given_names: sireData.nombres,
+
+        // Movimiento (2 campos)
+        movement_type: sireData.tipo_movimiento,
+        movement_date: movementDate.toISOString().split('T')[0], // Store as YYYY-MM-DD
+
+        // Lugares (2 campos)
+        origin_city_code: sireData.lugar_procedencia,
+        destination_city_code: sireData.lugar_destino,
+
+        // Fecha nacimiento (1 campo)
+        birth_date: birthDate.toISOString().split('T')[0], // Store as YYYY-MM-DD
+      })
+      .eq('id', reservationId)
+      .select('id, guest_name')
+      .single();
+
+    if (error) {
+      console.error('[compliance-engine] Reservation update error:', error);
+      throw new Error(`Failed to update reservation: ${error.message}`);
+    }
+
+    console.log('[compliance-engine] ✅ Reservation updated successfully (13 campos):', {
+      reservation_id: data.id,
+      guest_name: data.guest_name,
+      hotel_code: sireData.codigo_hotel,
+      movement: `${sireData.tipo_movimiento} (${sireData.fecha_movimiento})`,
+    });
+  } catch (error: any) {
+    console.error('[compliance-engine] updateReservationWithComplianceData error:', error);
+    // Re-throw to allow caller to handle
+    throw error;
+  }
 }

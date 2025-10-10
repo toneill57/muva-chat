@@ -1,7 +1,7 @@
 ---
 title: "InnPilot Deploy Agent - CI/CD & VPS Deployment Snapshot"
 agent: deploy-agent
-last_updated: "2025-10-08T22:00:00"
+last_updated: "2025-10-09"
 status: PRODUCTION_READY
 version: "2.0-COMPREHENSIVE"
 infrastructure: VPS_HOSTINGER
@@ -10,9 +10,97 @@ infrastructure: VPS_HOSTINGER
 # 🚀 Deploy Agent - CI/CD & VPS Deployment Snapshot
 
 **Agent**: @deploy-agent
-**Última actualización**: 8 Octubre 2025 22:00
+**Última actualización**: 9 Octubre 2025
 **Estado**: PRODUCCIÓN - VPS Hostinger (195.200.6.216)
 **Infraestructura**: ✅ VPS (ACTUAL) | ❌ Vercel (DEPRECADO Oct 4, 2025)
+
+---
+
+## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+
+**Status:** Planning Complete - Ready for Implementation
+**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
+**Estimated Duration:** 16-21 hours (6 phases)
+
+### Deploy Agent Responsibilities (FASE 6 - 2-3 hours)
+
+**Phase 6: Production Deployment & Verification**
+
+**6.1 Wildcard DNS Configuration (30 min)**
+- Verify wildcard DNS record (`*.innpilot.io` → 195.200.6.216)
+- Test subdomain resolution (dig/nslookup for hotel.innpilot.io)
+- Verify SSL wildcard certificate (Let's Encrypt)
+
+**6.2 Nginx Subdomain Routing (1 hour)**
+- Update Nginx config for subdomain handling
+- Configure server blocks for tenant subdomains
+- Test subdomain → localhost:3000 proxy
+- Reload Nginx with zero-downtime
+
+**6.3 Database Migrations (30 min)**
+- Coordinate with @database-agent for migration execution
+- Verify 5 new tables created (tenants, embeddings, docs, convos, msgs)
+- Test RPC functions (search_tenant_embeddings, etc.)
+- Validate RLS policies active
+
+**6.4 Deployment & Testing (30-60 min)**
+- Push code to `dev` branch (triggers GitHub Actions)
+- Monitor CI/CD pipeline (build → deploy → health check)
+- Verify subdomain routing works (curl hotel.innpilot.io)
+- Test public chat endpoint (POST /api/tenant-chat/[slug])
+- Verify admin dashboard accessible (JWT auth)
+- Check PM2 cluster mode running (2 instances)
+
+**Key Configuration Files:**
+- `/etc/nginx/sites-available/innpilot.conf` - Subdomain routing
+- `docs/deployment/ecosystem.config.cjs` - PM2 config
+- `.github/workflows/deploy.yml` - CI/CD pipeline
+
+**Deployment Checklist:**
+- [ ] Wildcard DNS active (*.innpilot.io)
+- [ ] Nginx subdomain routing configured
+- [ ] SSL certificate covers wildcard
+- [ ] Database migrations applied (5 tables)
+- [ ] RPC functions created (3 functions)
+- [ ] Health check passes (/api/health)
+- [ ] Subdomain routing works (test-tenant.innpilot.io)
+- [ ] Public chat functional
+- [ ] Admin dashboard accessible
+
+**Testing Commands:**
+```bash
+# DNS verification
+dig hotel.innpilot.io +short
+nslookup surfschool.innpilot.io
+
+# Subdomain routing test
+curl https://hotel.innpilot.io/api/health
+
+# Chat API test
+curl -X POST https://hotel.innpilot.io/api/tenant-chat/hotel \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Hola"}'
+
+# Admin endpoint test (requires JWT)
+curl https://hotel.innpilot.io/api/admin/hotel/documents \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+**Planning Files:**
+- `docs/tenant-subdomain-chat/plan.md` - Deployment architecture
+- `docs/tenant-subdomain-chat/TODO.md` - Phase 6 tasks (6.1-6.4)
+- `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md` - Nginx config reference
+
+**Coordination:**
+- Phase 6 depends on: @ux-interface completing Phase 5 UI components
+- Final verification: All agents test end-to-end flow
+
+**Estimated Timeline:**
+- DNS/SSL setup: 30 min
+- Nginx config: 1 hour
+- Database migrations: 30 min
+- Deployment + testing: 30-60 min
+- **Total:** 2.5-3 hours
 
 ---
 

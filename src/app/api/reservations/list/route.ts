@@ -44,6 +44,17 @@ interface ReservationListItem {
   external_booking_id: string | null
   booking_notes: string | null
 
+  // 🆕 NEW: SIRE Compliance Fields (FASE 2) - 9 campos oficiales
+  document_type: string | null              // '3'=Pasaporte, '5'=Cédula, '10'=PEP, '46'=Diplomático
+  document_number: string | null            // Alfanumérico 6-15 chars sin guiones
+  birth_date: string | null                 // YYYY-MM-DD format
+  first_surname: string | null              // Primer apellido (MAYÚSCULAS, con acentos)
+  second_surname: string | null             // Segundo apellido (opcional, puede estar vacío)
+  given_names: string | null                // Nombres (MAYÚSCULAS, con acentos)
+  nationality_code: string | null           // Código SIRE (249=USA, 169=COL) - NO ISO
+  origin_city_code: string | null           // Ciudad/país procedencia (DIVIPOLA o SIRE)
+  destination_city_code: string | null      // Ciudad/país destino (DIVIPOLA o SIRE)
+
   created_at: string
   updated_at: string
 }
@@ -144,6 +155,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         booking_source,
         external_booking_id,
         booking_notes,
+        document_type,
+        document_number,
+        birth_date,
+        first_surname,
+        second_surname,
+        given_names,
+        nationality_code,
+        origin_city_code,
+        destination_city_code,
         created_at,
         updated_at,
         accommodation_unit_id
@@ -264,6 +284,17 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         booking_source: res.booking_source || 'manual',
         external_booking_id: res.external_booking_id,
         booking_notes: res.booking_notes,
+
+        // 🆕 NEW: SIRE Compliance Fields (FASE 2) - 9 campos oficiales
+        document_type: res.document_type,
+        document_number: res.document_number,
+        birth_date: res.birth_date,
+        first_surname: res.first_surname,
+        second_surname: res.second_surname,
+        given_names: res.given_names,
+        nationality_code: res.nationality_code,
+        origin_city_code: res.origin_city_code,
+        destination_city_code: res.destination_city_code,
 
         created_at: res.created_at,
         updated_at: res.updated_at,

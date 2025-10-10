@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getSubdomain, isValidSubdomain } from '@/lib/tenant-utils'
 
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 100 // 100 requests per minute for MotoPress sync
@@ -69,19 +70,24 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // 🌐 SUBDOMAIN DETECTION (for multi-tenant routing)
-  // Extract subdomain from Nginx header or hostname
-  const subdomainHeader = request.headers.get('x-tenant-subdomain')
+  // Extract subdomain from Nginx header (production) or hostname (local dev)
+  const hostname = request.headers.get('host') || request.nextUrl.hostname
+  const nginxSubdomain = request.headers.get('x-tenant-subdomain')
 
-  // Fallback: Parse from hostname (for local dev)
-  let subdomain = subdomainHeader
-  if (!subdomain && request.nextUrl.hostname !== 'localhost') {
-    const hostParts = request.nextUrl.hostname.split('.')
-    if (hostParts.length > 2) {
-      subdomain = hostParts[0]
-    }
-  }
+  // Use Nginx header if available (production), otherwise extract from hostname
+  let subdomain = nginxSubdomain || getSubdomain(hostname)
 
-  console.log('[middleware] Subdomain detected:', subdomain || 'none', '(from:', subdomainHeader ? 'nginx-header' : 'hostname', ')')
+  // Validate subdomain format (lowercase, alphanumeric, hyphens only)
+  const validSubdomain = subdomain && isValidSubdomain(subdomain) ? subdomain : null
+
+  console.log('[middleware] Subdomain detected:', validSubdomain || 'none', '(from:', nginxSubdomain ? 'nginx-header' : 'hostname', ')')
+
+  // Create new headers with tenant context
+  const requestHeaders = new Headers(request.headers)
+
+  // Always inject subdomain header for API routes and server components
+  // Set to valid subdomain string or empty string (never undefined)
+  requestHeaders.set('x-tenant-subdomain', validSubdomain || '')
 
   // Only apply rate limiting to API routes
   if (pathname.startsWith('/api/')) {
@@ -108,7 +114,11 @@ export function middleware(request: NextRequest) {
 
     // Add rate limit headers to successful responses
     const clientInfo = rateLimitStore.get(clientId)
-    const response = NextResponse.next()
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
 
     if (clientInfo) {
       response.headers.set('X-RateLimit-Limit', MAX_REQUESTS_PER_WINDOW.toString())
@@ -120,10 +130,14 @@ export function middleware(request: NextRequest) {
   }
 
   // Set subdomain cookie for client-side access (non-API routes)
-  const response = NextResponse.next()
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  })
 
-  if (subdomain && subdomain !== 'www') {
-    response.cookies.set('tenant_subdomain', subdomain, {
+  if (validSubdomain) {
+    response.cookies.set('tenant_subdomain', validSubdomain, {
       httpOnly: false, // Accessible by client JS
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

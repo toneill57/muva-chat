@@ -3,28 +3,30 @@
 import { useEffect, useState } from 'react'
 
 interface ComplianceSuccessProps {
-  sireReferenceNumber: string
-  traReferenceNumber?: string
+  submissionData: {
+    submission_id: string
+    reservation_id: string
+    sire_reference?: string
+  }
   onClose: () => void
 }
 
 export default function ComplianceSuccess({
-  sireReferenceNumber,
-  traReferenceNumber,
+  submissionData,
   onClose,
 }: ComplianceSuccessProps) {
   const [showConfetti, setShowConfetti] = useState(true)
 
   useEffect(() => {
-    // Auto-redirect after 5 seconds
+    // Auto-close after 8 seconds
     const timer = setTimeout(() => {
       onClose()
-    }, 5000)
+    }, 8000)
 
-    // Hide confetti after 3 seconds
+    // Hide confetti after 4 seconds
     const confettiTimer = setTimeout(() => {
       setShowConfetti(false)
-    }, 3000)
+    }, 4000)
 
     return () => {
       clearTimeout(timer)
@@ -86,33 +88,49 @@ export default function ComplianceSuccess({
             id="compliance-success-title"
             className="text-3xl font-bold text-gray-900 mb-3"
           >
-            ¡Registro SIRE exitoso!
+            ¡Registro SIRE completado!
           </h2>
 
           <p className="text-gray-600 mb-8">
-            Tus datos han sido enviados correctamente a las autoridades colombianas
+            Tus datos han sido guardados correctamente en el sistema
           </p>
 
-          {/* Reference numbers */}
+          {/* Reference info */}
           <div className="bg-gray-50 rounded-lg p-6 mb-8 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Referencia SIRE:</span>
-              <span className="text-lg font-mono font-bold text-blue-600">
-                {sireReferenceNumber}
-              </span>
-            </div>
-
-            {traReferenceNumber && (
-              <div className="flex items-center justify-between border-t pt-4">
-                <span className="text-sm font-medium text-gray-700">Referencia TRA:</span>
-                <span className="text-lg font-mono font-bold text-purple-600">
-                  {traReferenceNumber}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">ID de Reserva:</span>
+                <span className="text-sm font-mono text-gray-900">
+                  {submissionData.reservation_id.slice(0, 8)}...
                 </span>
               </div>
-            )}
+
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-700">ID de Submission:</span>
+                <span className="text-sm font-mono text-gray-900">
+                  {submissionData.submission_id.slice(0, 8)}...
+                </span>
+              </div>
+
+              {submissionData.sire_reference && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">Referencia SIRE:</span>
+                  <span className="text-lg font-mono font-bold text-blue-600">
+                    {submissionData.sire_reference}
+                  </span>
+                </div>
+              )}
+            </div>
 
             <div className="border-t pt-4">
-              <span className="text-xs text-gray-500">
+              <p className="text-xs text-gray-600 text-center">
+                ✅ Los datos se guardaron en <code className="bg-gray-200 px-1 rounded">compliance_submissions</code> y{' '}
+                <code className="bg-gray-200 px-1 rounded">guest_reservations</code>
+              </p>
+            </div>
+
+            <div className="border-t pt-4">
+              <span className="text-xs text-gray-500 block text-center">
                 {new Date().toLocaleString('es-CO', {
                   dateStyle: 'long',
                   timeStyle: 'short',
@@ -122,9 +140,9 @@ export default function ComplianceSuccess({
           </div>
 
           {/* Info message */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-blue-800">
-              💡 Guarda estos números de referencia. Te serán útiles durante tu estadía.
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <p className="text-sm text-green-800 text-center">
+              ✓ Registro SIRE completado. Los datos están listos para exportación cuando sea requerido.
             </p>
           </div>
 
@@ -137,9 +155,9 @@ export default function ComplianceSuccess({
             Volver al chat
           </button>
 
-          {/* Auto-redirect notice */}
+          {/* Auto-close notice */}
           <p className="text-xs text-gray-500 mt-4">
-            Esta ventana se cerrará automáticamente en 5 segundos
+            Esta ventana se cerrará automáticamente en 8 segundos
           </p>
         </div>
       </div>

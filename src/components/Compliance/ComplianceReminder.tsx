@@ -3,18 +3,89 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
+// SIRE fields from guest_reservations table
+interface GuestReservation {
+  document_type: string | null
+  document_number: string | null
+  birth_date: string | null
+  first_surname: string | null
+  second_surname: string | null
+  given_names: string | null
+  nationality_code: string | null
+  origin_city_code: string | null
+  destination_city_code: string | null
+  movement_type: string | null
+  movement_date: string | null
+  hotel_sire_code: string | null
+  hotel_city_code: string | null
+}
+
 interface ComplianceReminderProps {
   onStart: () => void
   onDismiss: () => void
-  progressPercentage?: number // 0 = not started, 50 = in progress, 100 = completed
+  reservation?: GuestReservation // SIRE data from guest_reservations
+}
+
+/**
+ * Checks SIRE data completeness in guest_reservations
+ * Returns progress status and percentage
+ */
+function checkSIRECompleteness(reservation?: GuestReservation): {
+  isComplete: boolean
+  progress: number
+  status: 'not_started' | 'in_progress' | 'completed'
+  filledCount: number
+  totalRequired: number
+} {
+  if (!reservation) {
+    return {
+      isComplete: false,
+      progress: 0,
+      status: 'not_started',
+      filledCount: 0,
+      totalRequired: 6,
+    }
+  }
+
+  // Required SIRE fields (6 core fields)
+  const requiredFields = [
+    reservation.document_type,
+    reservation.document_number,
+    reservation.birth_date,
+    reservation.first_surname,
+    reservation.given_names,
+    reservation.nationality_code,
+  ]
+
+  const filledCount = requiredFields.filter(
+    (field) => field !== null && field !== undefined && field !== ''
+  ).length
+  const totalRequired = requiredFields.length
+  const progress = Math.round((filledCount / totalRequired) * 100)
+
+  let status: 'not_started' | 'in_progress' | 'completed' = 'not_started'
+  if (progress === 0) status = 'not_started'
+  else if (progress < 100) status = 'in_progress'
+  else status = 'completed'
+
+  return {
+    isComplete: progress === 100,
+    progress,
+    status,
+    filledCount,
+    totalRequired,
+  }
 }
 
 export default function ComplianceReminder({
   onStart,
   onDismiss,
-  progressPercentage = 0,
+  reservation,
 }: ComplianceReminderProps) {
   const [isDismissed, setIsDismissed] = useState(false)
+
+  const { isComplete, progress, status, filledCount, totalRequired } =
+    checkSIRECompleteness(reservation)
 
   useEffect(() => {
     // Check localStorage for dismissed state
@@ -31,21 +102,39 @@ export default function ComplianceReminder({
   }
 
   // Auto-hide if completed
-  if (progressPercentage === 100 || isDismissed) {
+  if (isComplete || isDismissed) {
     return null
   }
 
   const getProgressBadge = () => {
-    if (progressPercentage === 0) {
+    if (status === 'not_started') {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <span
+          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+          role="status"
+          aria-label="Registro SIRE no iniciado"
+        >
           No iniciado
         </span>
       )
-    } else if (progressPercentage < 100) {
+    } else if (status === 'in_progress') {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-          En progreso {progressPercentage}%
+        <span
+          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+          role="status"
+          aria-label={`Registro SIRE en progreso: ${filledCount} de ${totalRequired} campos completados`}
+        >
+          En progreso ({filledCount}/{totalRequired} campos)
+        </span>
+      )
+    } else if (status === 'completed') {
+      return (
+        <span
+          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+          role="status"
+          aria-label="Registro SIRE completado"
+        >
+          ✅ Completado
         </span>
       )
     }
@@ -88,15 +177,16 @@ export default function ComplianceReminder({
           </p>
 
           {/* Progress bar */}
-          {progressPercentage > 0 && progressPercentage < 100 && (
-            <div className="w-full bg-gray-200 rounded-full h-2">
+          {status === 'in_progress' && (
+            <div className="w-full bg-gray-200 rounded-full h-2" aria-hidden="true">
               <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progressPercentage}%` }}
+                style={{ width: `${progress}%` }}
                 role="progressbar"
-                aria-valuenow={progressPercentage}
+                aria-valuenow={progress}
                 aria-valuemin={0}
                 aria-valuemax={100}
+                aria-label={`Progreso: ${progress}%`}
               />
             </div>
           )}
@@ -105,8 +195,9 @@ export default function ComplianceReminder({
           <button
             onClick={onStart}
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            aria-label={status === 'in_progress' ? 'Continuar registro SIRE' : 'Iniciar registro SIRE'}
           >
-            {progressPercentage > 0 ? 'Continuar registro' : 'Iniciar registro'}
+            {status === 'in_progress' ? 'Continuar registro' : 'Iniciar registro'}
             <svg
               className="ml-2 w-4 h-4"
               fill="none"
