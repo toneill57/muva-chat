@@ -35,66 +35,45 @@ export async function GET() {
       }
     }
 
-    // Test Supabase connection across all active tables (metadata-driven)
+    // Test Supabase connection with simple tenant_registry query
     try {
-      console.log('[Health] Testing Supabase multi-tenant connectivity...')
+      console.log('[Health] Testing Supabase connectivity...')
 
-      const tables = [
-        { name: 'sire_content', schema: 'public' },
-        { name: 'muva_content', schema: 'public' },
-        { name: 'content', schema: 'simmerdown' }
-      ]
+      // Simple test: Check if we can query tenant_registry (always in public schema)
+      const { data, error } = await supabase
+        .from('tenant_registry')
+        .select('tenant_id')
+        .limit(1)
 
-      const tableHealth: Record<string, any> = {}
-      let overallError = null
+      const responseTime = Date.now() - startTime
 
-      // Test each table independently using raw SQL to support custom schemas
-      for (const table of tables) {
-        const tableStartTime = Date.now()
-        try {
-          // Use raw SQL for custom schemas since .schema() method is limited
-          const sqlQuery = `SELECT id FROM ${table.schema}.${table.name} LIMIT 1;`
-          console.log(`[Health] Testing ${table.schema}.${table.name} with raw SQL`)
-
-          const { data, error } = await supabase.rpc('exec_sql', { sql: sqlQuery })
-
-          const tableResponseTime = Date.now() - tableStartTime
-          tableHealth[`${table.schema}.${table.name}`] = {
-            status: error ? 'error' : 'healthy',
-            responseTime: `${tableResponseTime}ms`,
-            error: error?.message || null
+      if (error) {
+        console.error('[Health] ❌ Supabase query failed:', error)
+        health.services.supabase = {
+          status: 'error',
+          responseTime: `${responseTime}ms`,
+          error: error.message,
+          tables: {}
+        }
+        health.status = 'degraded'
+      } else {
+        console.log('[Health] ✅ Supabase query successful')
+        health.services.supabase = {
+          status: 'healthy',
+          responseTime: `${responseTime}ms`,
+          error: null,
+          tables: {
+            'public.tenant_registry': {
+              status: 'healthy',
+              responseTime: `${responseTime}ms`,
+              error: null
+            }
           }
-
-          if (error) {
-            overallError = `${table.schema}.${table.name}: ${error.message}`
-            console.error(`[Health] ❌ Table test failed: ${table.schema}.${table.name}`, error)
-          } else {
-            console.log(`[Health] ✅ Table test successful: ${table.schema}.${table.name}`)
-          }
-        } catch (tableError) {
-          const tableResponseTime = Date.now() - tableStartTime
-          tableHealth[`${table.schema}.${table.name}`] = {
-            status: 'error',
-            responseTime: `${tableResponseTime}ms`,
-            error: tableError instanceof Error ? tableError.message : 'Connection failed'
-          }
-          overallError = `${table.schema}.${table.name}: ${tableError instanceof Error ? tableError.message : 'Connection failed'}`
-          console.error(`[Health] ❌ Table test exception: ${table.schema}.${table.name}`, tableError)
         }
       }
 
-      const responseTime = Date.now() - startTime
-      console.log(`[Health] Multi-tenant test completed in ${responseTime}ms`)
-
-      health.services.supabase = {
-        status: overallError ? 'error' : 'healthy',
-        responseTime: `${responseTime}ms`,
-        error: overallError,
-        tables: tableHealth
-      }
-
       // Set overall status based on critical services
-      const criticalError = overallError || !process.env.OPENAI_API_KEY || !process.env.ANTHROPIC_API_KEY
+      const criticalError = error || !process.env.OPENAI_API_KEY || !process.env.ANTHROPIC_API_KEY
       if (criticalError) {
         health.status = 'degraded'
       }
