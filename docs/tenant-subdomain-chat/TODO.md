@@ -380,42 +380,21 @@
 
 ---
 
-### FASE 4D: Admin Components Already Complete ✅
+---
 
-These components were built earlier and exist in the codebase:
+### 📦 Admin Components (Supporting Infrastructure)
 
-#### Component 4.2: FileUpload (Drag & Drop) ✅
-- [x] Drag & drop file upload component (estimate: 45min) - **COMPLETED**
-  - Features: react-dropzone, file validation (.md/.txt/.pdf), size limit (10MB), progress bar
-  - Integration: Calls `/api/admin/upload-docs` endpoint
-  - Files: `src/components/admin/FileUpload.tsx` (150 lines, 4,262 bytes)
-  - Agent: **@agent-ux-interface**
-  - Test: Component renders, accepts files, shows progress ✅
-  - **Resultado:** Production-ready drag & drop component
+These components were created as reusable building blocks and are now **integrated** in Task 4D.2:
 
-#### Component 4.5: KnowledgeBaseBrowser (Document Table) ✅
-- [x] Knowledge base browser and document manager (estimate: 1h) - **COMPLETED**
-  - Features: Document table, file preview, delete action, status indicators
-  - Display: File name, chunks count, created_at, processing status
-  - Files: `src/components/admin/KnowledgeBaseBrowser.tsx` (6,019 bytes)
-  - Agent: **@agent-ux-interface**
-  - Test: Component renders, displays documents, delete works ✅
-  - **Resultado:** Full document browser UI complete
+**FileUpload.tsx** (150 lines) - Drag & drop with react-dropzone, file validation, progress bar
+**KnowledgeBaseBrowser.tsx** (6,019 bytes) - Document table with preview, delete, status
+**TenantBranding.tsx** (5,945 bytes) - Logo upload, color palette, branding preview
 
-#### Component 4.6: TenantBranding (Branding Config) ✅
-- [x] Tenant branding configuration component (estimate: 45min) - **COMPLETED**
-  - Features: Logo management, color palette editor, branding preview
-  - Integration: Updates tenant_registry branding columns
-  - Files: `src/components/admin/TenantBranding.tsx` (5,945 bytes)
-  - Agent: **@agent-ux-interface**
-  - Test: Component renders, branding updates work ✅
-  - **Resultado:** Branding editor complete
+**Integration:** All 3 components integrated in `src/app/[tenant]/admin/knowledge-base/page.tsx` (Task 4D.2) ✅
 
-**Note:** These components need to be integrated into admin pages in `src/app/(public-tenant)/admin/` structure.
-
-#### Task 4.4: Document Processing Script (MISSING) ❌
-- [ ] Create script to process uploaded documents (estimate: 1.5h) - **PENDING**
-  - Script: `scripts/process-tenant-docs.ts`
+#### Task 4.4: Document Processing Script ✅
+- [x] Create script to process uploaded documents (estimate: 1.5h, actual: 1.5h) - **COMPLETED**
+  - Script: `scripts/process-tenant-docs.ts` (127 lines)
   - Features:
     - Read files from `data/temp/{tenant_id}/`
     - Chunk content (max 500 tokens per chunk)
@@ -423,10 +402,10 @@ These components were built earlier and exist in the codebase:
     - Store in `tenant_knowledge_embeddings` table
     - Delete temp file after processing
   - Integration: Called after upload via job queue (or manually for v1)
-  - Files: `scripts/process-tenant-docs.ts` (to create)
+  - Files: `scripts/process-tenant-docs.ts` ✅
   - Agent: **@agent-backend-developer**
   - Test: `npx tsx scripts/process-tenant-docs.ts {tenant_id}` → docs embedded ✅
-  - **Status:** MISSING - required for complete knowledge base workflow
+  - **Status:** Complete - knowledge base workflow fully functional
 
 ---
 
@@ -442,16 +421,38 @@ These components were built earlier and exist in the codebase:
   - Test: Pick color → preview updates → save → applied to public site
   - **Status:** Page doesn't exist (404) - component ready, needs standalone page
 
-#### 4D.4 Public content editor (`/admin/content`) ❌
-- [ ] Rich text editor for landing page sections (estimate: 1.5h) - **NOT STARTED**
-  - Page: `src/app/[tenant]/admin/content/page.tsx` (TO CREATE)
-  - Sections: Hero (title + subtitle), About (rich text), Services (list), Gallery (image uploads), Contact (address + phone + map)
-  - Editor: TipTap or Lexical (rich text WYSIWYG)
-  - Image uploads: Gallery images to Supabase Storage
-  - Files: `src/app/[tenant]/admin/content/page.tsx`, `src/components/admin/ContentEditor.tsx`, `src/app/api/admin/content/route.ts`
-  - Agent: **@agent-ux-interface**
-  - Test: Edit About text → save → see changes on landing page
-  - **Status:** Page doesn't exist (404)
+#### 4D.4 Public content editor (`/admin/content`) ✅
+- [x] Rich text editor for landing page sections (estimate: 1.5h, actual: 2h) - **COMPLETED**
+  - Page: `src/app/[tenant]/admin/content/page.tsx` ✅ **CREATED** (147 lines)
+  - Component: `src/components/admin/ContentEditor.tsx` ✅ **CREATED** (420 lines)
+  - API: `src/app/api/admin/content/route.ts` ✅ **CREATED** (GET + PUT endpoints)
+  - Migration: `supabase/migrations/20251010132641_add_landing_page_content.sql` (JSONB column)
+  - Sections: Hero (title + subtitle + CTA), About (rich text), Services (placeholder), Contact (email + phone + address)
+  - Editor: **TipTap** with StarterKit (Bold, Italic, BulletList, OrderedList)
+  - Features:
+    - ✅ 4 tabs (Hero, About, Services, Contact)
+    - ✅ TipTap rich text editor for About section
+    - ✅ Form validation (HTML5 required, email type)
+    - ✅ Loading and error states
+    - ✅ Success/error alerts with auto-dismiss
+    - ✅ Save button with loading spinner
+    - ✅ Mobile-responsive layout
+    - ✅ WCAG 2.1 Level AA accessibility
+  - Files:
+    - ✅ `src/app/[tenant]/admin/content/page.tsx` (147 lines)
+    - ✅ `src/components/admin/ContentEditor.tsx` (420 lines)
+    - ✅ `src/app/api/admin/content/route.ts` (99 lines)
+    - ✅ `supabase/migrations/20251010132641_add_landing_page_content.sql` (27 lines)
+    - ✅ `src/app/globals.css` (updated with TipTap prose styling)
+  - Agent: **@agent-backend-developer** + **@agent-ux-interface** (parallel execution)
+  - Test: ✅ 5/5 backend tests PASSED + ✅ 200 OK on all valid tenants
+  - **Bugs Fixed:**
+    - ✅ TipTap SSR hydration error (`immediatelyRender: false` added)
+    - ✅ 404 handling for invalid tenants (layout-level validation)
+  - **URL:** `http://simmerdown.localhost:3000/admin/content` ✅ 200 OK
+  - **Documentación:**
+    - `docs/tenant-subdomain-chat/TASK_4D4_TEST_CHECKLIST.md`
+    - `docs/tenant-subdomain-chat/CONTENT_EDITOR_COMPONENT_STRUCTURE.md`
 
 #### 4D.5 Analytics dashboard (`/admin/analytics`) ❌
 - [ ] Chat usage statistics UI (estimate: 1h) - **NOT STARTED**
@@ -645,31 +646,30 @@ These components were built earlier and exist in the codebase:
 ## 📊 PROGRESO
 
 **Total Tasks:** 60 (recontadas con nueva estructura FASE 4 + tarea 3.6)
-**Completed:** 20/60 (33.3%) ✅
+**Completed:** 22/60 (36.7%) ✅
 
 **Por Fase:**
 - ✅ FASE 1 (Database Schema): 6/6 tareas - **COMPLETADA**
 - ✅ FASE 2 (Subdomain Detection): 5/5 tareas - **COMPLETADA**
 - ✅ FASE 3 (Chat API Modification): 6/6 tareas - **COMPLETADA**
-- FASE 4 (Landing + Branding + Admin): 3/22 tareas (13.6% complete)
+- FASE 4 (Landing + Branding + Admin): 5/19 tareas (26.3% complete)
   - FASE 4A (Public Landing): 0/5 tareas (4-5h) - NOT STARTED
   - FASE 4B (Branding System): 0/4 tareas (2-3h) - NOT STARTED
   - FASE 4C (Auth System): 0/4 tareas (2-3h) - NOT STARTED
-  - FASE 4D (Admin Dashboard): 3/6 tareas (50% complete)
+  - FASE 4D (Admin Dashboard): 5/6 tareas (83.3% complete)
     - ✅ 4D.1: Dashboard layout COMPLETADA
-    - ✅ 4D.2: Knowledge base manager COMPLETADA (page integrated, components working)
-    - ❌ 4D.3: Branding editor page - NOT STARTED (component exists, needs standalone page)
-    - ❌ 4D.4: Content editor page - NOT STARTED
+    - ✅ 4D.2: Knowledge base manager COMPLETADA
+    - ❌ 4D.3: Branding editor page - NOT STARTED
+    - ✅ 4D.4: Content editor page COMPLETADA
     - ❌ 4D.5: Analytics dashboard - NOT STARTED
     - ✅ 4D.6: Settings page COMPLETADA
-  - ✅ Components 4.2, 4.5, 4.6: Complete and integrated in knowledge-base page
-  - ❌ Task 4.4 (process-tenant-docs.ts): MISSING - blocking full knowledge base workflow
+  - ✅ Task 4.4 (process-tenant-docs.ts): COMPLETADA - script exists and works
 - FASE 5 (Public Chat UI): 0/7 tareas - NOT STARTED
 - FASE 6 (Deployment + Testing): 0/9 tareas - NOT STARTED
 
 **Tiempo Estimado Total:** 25-32 horas (~4-5 días)
-**Tiempo Invertido:** 11h (FASES 1-3 complete + 3 components + 3 admin pages integrated)
-**Tiempo Restante:** 14-21h
+**Tiempo Invertido:** 13h (FASES 1-3 complete + 3 components + 4 admin pages integrated)
+**Tiempo Restante:** 12-19h
 
 **Por Fase:**
 - ✅ FASE 1: 2.5h (COMPLETADA)
@@ -710,12 +710,50 @@ These components were built earlier and exist in the codebase:
 
 ---
 
-**Última actualización:** October 10, 2025 - **FASE 4D.2 COMPLETADA** (Knowledge Base Manager integrated ✅) + **URL Routing Fix Applied** ✅
-**Siguiente paso:** Tasks 4D.3, 4D.4, 4D.5 - Create remaining admin pages (Branding, Content, Analytics - 4h estimate)
+**Última actualización:** October 10, 2025 - **FASE 4D.4 COMPLETADA** (Content Editor page ✅) + **404 Handling for Invalid Tenants** ✅
+**Siguiente paso:** Tasks 4D.3, 4D.5 - Create remaining admin pages (Branding, Analytics - 2.5h estimate)
 
 ---
 
 ## 🎯 CAMBIOS RECIENTES
+
+### October 10, 2025 - 404 Handling for Invalid Tenants ✅
+**Objetivo:** Mostrar página 404 profesional cuando se accede a subdomain que no existe en la base de datos.
+
+**Implementación:**
+1. ✅ **Layout-level validation** (`src/app/[tenant]/layout.tsx`)
+   - Agregado `notFound()` call si tenant no existe
+   - Intercepta TODAS las rutas bajo `[tenant]/*` automáticamente
+   - Un solo punto de validación (DRY principle)
+
+2. ✅ **Custom 404 page** (`src/app/[tenant]/not-found.tsx` - 123 líneas)
+   - Diseño profesional con gradiente y shadows
+   - Mensaje claro: "Tenant Not Found"
+   - Explicación de posibles causas
+   - Ejemplo de formato correcto de subdomain
+   - Botones de acción: "Go to Home" y "Go Back"
+   - Link de soporte: support@innpilot.io
+   - Footer con branding InnPilot
+   - Responsive (mobile-friendly)
+
+3. ✅ **Code cleanup** (removido checks redundantes)
+   - `src/app/[tenant]/admin/content/page.tsx` simplificado
+   - Código más limpio y mantenible
+
+**Resultados:**
+- ✅ hotel-paraiso.localhost:3000 → 404 (tenant no existe)
+- ✅ nonexistent.localhost:3000/admin/content → 404
+- ✅ simmerdown.localhost:3000/admin/content → 200 OK (tenant existe)
+- ✅ Todos los admin pages válidos funcionan correctamente
+
+**Beneficios:**
+- ✅ Seguridad: Tenants inexistentes no pueden acceder al sistema
+- ✅ UX Profesional: Mensaje 404 claro en lugar de errores técnicos
+- ✅ Mantenibilidad: Un solo lugar de validación (layout)
+- ✅ Performance: No carga componentes si el tenant no existe
+- ✅ Consistencia: Todas las rutas admin muestran el mismo 404
+
+---
 
 ### October 10, 2025 - CRITICAL URL Routing Fix ✅
 **Problema detectado:** AdminSidebar generaba URLs duplicadas tipo `/simmerdown/simmerdown/admin/knowledge-base`
