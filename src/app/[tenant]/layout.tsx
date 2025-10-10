@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { getTenantBySubdomain, getSubdomain } from '@/lib/tenant-utils';
 import { TenantProvider } from '@/contexts/TenantContext';
 
@@ -18,6 +19,11 @@ export default async function TenantLayout({ children }: TenantLayoutProps) {
 
   // Fetch tenant from database
   const tenant = await getTenantBySubdomain(subdomain);
+
+  // If tenant not found, show 404 page
+  if (!tenant) {
+    notFound();
+  }
 
   // Wrap children with TenantProvider to provide tenant context to client components
   return (

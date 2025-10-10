@@ -96,8 +96,9 @@ Agentes leen AUTOMÁTICAMENTE `snapshots/{nombre}.md`
 ### Database Operations Hierarchy
 
 #### For DML (Data Queries: SELECT/INSERT/UPDATE/DELETE)
-1. **RPC Functions (PRIMARY)** - `get_accommodation_unit_by_id()`, `get_sire_statistics()`
-2. **Direct SQL via MCP (SECONDARY)** - Ad-hoc analysis only with `mcp__supabase__execute_sql`
+1. **Supabase Client (PRIMARY)** - Use `npx tsx -e` with createClient() for day-to-day queries. Use `|| ''` instead of `!` operator.
+2. **RPC Functions (SECONDARY)** - `get_accommodation_unit_by_id()`, `get_sire_statistics()`
+3. **Direct SQL via MCP (LAST RESORT)** - Emergency only with `mcp__supabase__execute_sql`
 
 #### For DDL (Schema Changes: CREATE/ALTER/DROP)
 **CRITICAL:** MCP Supabase tools (`mcp__supabase__apply_migration`, `mcp__supabase__execute_sql`) **DO NOT WORK** for DDL due to permission issues.

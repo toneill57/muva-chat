@@ -244,9 +244,9 @@ PostgreSQL Database (Supabase)
 
 **IMPORTANT Query Hierarchy:**
 ```
-1. RPC Functions (PRIMARY)       ← Use ALWAYS (98.1% token reduction)
-2. MCP execute_sql (SECONDARY)   ← Ad-hoc analysis only
-3. execute_sql() RPC (EMERGENCY) ← Migrations only
+1. Supabase Client (PRIMARY)     ← Use `npx tsx -e` with createClient() for day-to-day
+2. RPC Functions (SECONDARY)     ← `get_accommodation_unit_by_id()`, `get_sire_statistics()`
+3. MCP execute_sql (LAST RESORT) ← Emergency ad-hoc analysis only
 ```
 
 **Example Usage:**

@@ -182,11 +182,12 @@ RPC Functions: 15 creadas (98.1% token reduction medido)
 Migrations: 235 aplicadas (12 locales en /supabase/migrations/)
 
 MCP Tools (Supabase):
-  - 29 tools disponibles (execute_sql, list_tables, apply_migration, etc.)
+  - 29 tools disponibles (list_tables, apply_migration, execute_sql, etc.)
   - Token benefit: 98%+ reduction vs schema dumps
-  - Use case: Development/debugging (NOT regular app code)
-  - Primary: Use RPC functions always
-  - Secondary: MCP execute_sql for ad-hoc queries only
+  - Use case: Emergency ad-hoc analysis only (LAST RESORT)
+  - Primary: Supabase Client (`npx tsx -e` with createClient())
+  - Secondary: RPC functions
+  - Last Resort: MCP execute_sql
 ```
 
 ### AI/LLM Integration
@@ -551,9 +552,9 @@ const { data } = await supabase
 
 **Query Pattern Hierarchy (CRITICAL):**
 ```
-1. RPC Functions (PRIMARY)       ← Use ALWAYS cuando disponible
-2. Direct SQL via MCP (SECONDARY) ← Solo para ad-hoc analysis/reporting
-3. execute_sql() RPC (EMERGENCY)  ← Solo migrations y one-time fixes
+1. Supabase Client (PRIMARY)     ← Use `npx tsx -e` with createClient() for day-to-day
+2. RPC Functions (SECONDARY)     ← Use when available for token optimization
+3. MCP execute_sql (LAST RESORT) ← Emergency ad-hoc analysis only
 ```
 
 **❌ NEVER use execute_sql() in:**
