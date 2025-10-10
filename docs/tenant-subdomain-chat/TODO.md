@@ -517,26 +517,42 @@ These components were created as reusable building blocks and are now **integrat
 - `/chat` → Nueva ruta con multi-tenant system (implementar en esta fase)
 - Coexisten hasta que `/chat` esté 100% probado, luego migrar tráfico
 
-### 5.1 Create tenant chat page (`/chat`)
-- [ ] Implement NEW public chat route with tenant branding (estimate: 1.5h)
-  - Page: `src/app/(public-tenant)/chat/page.tsx` (NUEVA, NO modificar chat-mobile-dev)
+### 5.1 Create tenant chat page (`/chat`) ✅
+- [x] Implement NEW public chat route with tenant branding (estimate: 1.5h, actual: 1.5h) - **COMPLETED**
+  - Page: `src/app/[tenant]/chat/page.tsx` ✅ **CREATED** (4,364 bytes)
+  - Layout: `src/app/[tenant]/chat/layout.tsx` ✅ **CREATED** (398 bytes)
+  - Component: `src/components/Chat/TenantChatHeader.tsx` ✅ **CREATED** (1,169 bytes)
+  - CSS: `src/app/globals.css` ✅ **UPDATED** (slideUp animation)
   - Auth: Public (no login required)
-  - Tenant detection: Inherited from `(public-tenant)/layout.tsx` via TenantContext
-  - Layout: `src/app/(public-tenant)/chat/layout.tsx` (chat-specific wrapper)
-  - Full-screen mobile-first design
-  - Files: `src/app/(public-tenant)/chat/page.tsx`, `src/app/(public-tenant)/chat/layout.tsx`
+  - Tenant detection: Via `[tenant]/layout.tsx` → TenantContext
+  - Features:
+    - ✅ Tenant branding in header (logo + business name)
+    - ✅ Real-time message sending/receiving
+    - ✅ Auto-scroll to bottom on new messages
+    - ✅ Keyboard shortcuts (Enter to send)
+    - ✅ Loading states ("Typing..." indicator)
+    - ✅ Error handling with user-friendly messages
+    - ✅ Mobile-first responsive design
+    - ✅ GPU-accelerated animations
   - Agent: **@agent-ux-interface**
-  - Test: Visit simmerdown.innpilot.io/chat → chat loads with Simmerdown branding
-  - **Note:** `src/app/(internal)/chat-mobile-dev/` NO se modifica (testing)
+  - Test: ✅ 200 OK - http://simmerdown.localhost:3000/chat
+  - **Architecture note:** Moved from `(public-tenant)` to `[tenant]` to match existing rewrite rules
+  - **Note:** `/chat-mobile-dev` unchanged (testing route)
+  - **Documentación:** `docs/tenant-subdomain-chat/PHASE_5_TENANT_CHAT_UI.md`
 
-### 5.2 Create TenantChatHeader component
-- [ ] Implement header with tenant logo and name (estimate: 30min)
-  - Component: `<TenantChatHeader tenant={tenant} />`
-  - Display: Logo (if available), business name, "Powered by InnPilot" subtext
-  - Styling: Sticky header, border bottom, InnPilot branding
-  - Files: `src/components/chat/TenantChatHeader.tsx`
+### 5.2 Create TenantChatHeader component ✅
+- [x] Implement header with tenant logo and name (estimate: 30min, actual: included in 5.1) - **COMPLETED**
+  - Component: `src/components/Chat/TenantChatHeader.tsx` ✅ **CREATED** (1,169 bytes)
+  - Display: Logo (if available), business name or nombre_comercial, "AI Assistant" subtext
+  - Styling: Sticky header, border bottom, shadow, responsive
+  - Features:
+    - ✅ Next.js Image optimization
+    - ✅ ARIA labels for accessibility
+    - ✅ Fallback when no logo
+    - ✅ Mobile-first responsive design
   - Agent: **@agent-ux-interface**
-  - Test: Header shows tenant logo and name
+  - Test: ✅ Header shows "Simmer Down Guest House" with logo placeholder
+  - **Note:** Integrated in Task 5.1 (same implementation)
 
 ### 5.3 Create TenantChatAvatar component
 - [ ] Implement chat avatar with tenant logo (estimate: 20min)
@@ -669,7 +685,7 @@ These components were created as reusable building blocks and are now **integrat
 ## 📊 PROGRESO
 
 **Total Tasks:** 60 (recontadas con nueva estructura FASE 4 + tarea 3.6)
-**Completed:** 23/60 (38.3%) ✅
+**Completed:** 25/60 (41.7%) ✅
 
 **Por Fase:**
 - ✅ FASE 1 (Database Schema): 6/6 tareas - **COMPLETADA**
@@ -687,7 +703,10 @@ These components were created as reusable building blocks and are now **integrat
     - ✅ 4D.5: Analytics dashboard COMPLETADA
     - ✅ 4D.6: Settings page COMPLETADA
   - ✅ Task 4.4 (process-tenant-docs.ts): COMPLETADA - script exists and works
-- FASE 5 (Public Chat UI): 0/7 tareas - NOT STARTED
+- FASE 5 (Public Chat UI): 2/7 tareas (28.6% complete) - **IN PROGRESS**
+  - ✅ 5.1: Tenant chat page (`/chat`) COMPLETADA
+  - ✅ 5.2: TenantChatHeader component COMPLETADA
+  - 5.3-5.7: Remaining tasks (5 tareas, ~1.5h estimado)
 - FASE 6 (Deployment + Testing): 0/9 tareas - NOT STARTED
 
 **Tiempo Estimado Total:** 25-32 horas (~4-5 días)

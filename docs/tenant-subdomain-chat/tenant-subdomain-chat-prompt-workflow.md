@@ -1668,6 +1668,10 @@ SIGUIENTE: FASE 5 - Public Chat UI
 **COPY-PASTE DESDE AQUÍ:**
 
 ```
+
+**Nota importante:** La ruta `/chat-mobile-dev` existente NO se modifica (es para testing). Esta fase crea una NUEVA ruta `/chat` con multi-tenant system.
+
+
 TAREA: Implementar NUEVA ruta pública de chat con tenant branding
 
 CONTEXTO:
