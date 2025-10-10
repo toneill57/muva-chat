@@ -52,7 +52,7 @@ jobs:
 
       - name: Health check
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
+          response=$(curl -L -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
           if [ $response != "200" ]; then
             echo "Health check failed with status $response"
             exit 1
