@@ -92,6 +92,7 @@ export interface Tenant {
   // Optional branding fields (will be added in Phase 4)
   logo_url?: string | null;
   business_name?: string | null;
+  primary_color?: string | null;
   // Additional tenant_registry fields
   nit?: string | null;
   razon_social?: string | null;
