@@ -82,6 +82,18 @@ export function middleware(request: NextRequest) {
 
   console.log('[middleware] Subdomain detected:', validSubdomain || 'none', '(from:', nginxSubdomain ? 'nginx-header' : 'hostname', ')')
 
+  // 🔄 SUBDOMAIN REWRITE (for multi-tenant routing)
+  // If subdomain exists and path doesn't already include tenant, rewrite the URL
+  if (validSubdomain && !pathname.startsWith(`/${validSubdomain}`)) {
+    // Skip rewrite for Next.js internal routes
+    if (!pathname.startsWith('/_next') && !pathname.startsWith('/api/')) {
+      console.log('[middleware] Rewriting:', pathname, '→', `/${validSubdomain}${pathname}`)
+      const url = request.nextUrl.clone()
+      url.pathname = `/${validSubdomain}${pathname}`
+      return NextResponse.rewrite(url)
+    }
+  }
+
   // Create new headers with tenant context
   const requestHeaders = new Headers(request.headers)
 
