@@ -360,19 +360,23 @@
   - **Fix applied:** Auth guard path fixed (`/${tenantSlug}/login` instead of `/login`)
   - **Documentación:** `docs/tenant-subdomain-chat/TASK_4D1_ADMIN_LAYOUT_REPORT.md`
 
-#### 4D.2 Knowledge base manager (`/admin/knowledge`)
-- [ ] Implement knowledge base upload + browser UI (estimate: 2h) - **PARTIALLY COMPLETED**
-  - Page: `src/app/(public-tenant)/admin/knowledge/page.tsx` (NUEVA) - **PENDING**
-  - Upload: ✅ Drag & drop component completed (`src/components/admin/FileUpload.tsx` - 150 lines)
-  - Browser: ✅ Table component completed (`src/components/admin/KnowledgeBaseBrowser.tsx` - exists)
-  - Processing: ❌ Script missing (`scripts/process-tenant-docs.ts` - Task 4.4)
+#### 4D.2 Knowledge base manager (`/admin/knowledge-base`) ✅
+- [x] Implement knowledge base upload + browser UI (estimate: 2h, actual: 1.5h) - **COMPLETED**
+  - Page: `src/app/[tenant]/admin/knowledge-base/page.tsx` ✅ **CREATED**
+  - Upload: ✅ Drag & drop component integrated (`src/components/admin/FileUpload.tsx` - 150 lines)
+  - Browser: ✅ Table component integrated (`src/components/admin/KnowledgeBaseBrowser.tsx`)
+  - Branding: ✅ TenantBranding component integrated in tabs
+  - Processing: ❌ Script missing (`scripts/process-tenant-docs.ts` - Task 4.4 - required for full workflow)
   - Files:
+    - ✅ `src/app/[tenant]/admin/knowledge-base/page.tsx` (55 líneas - tabs UI)
     - ✅ `src/components/admin/FileUpload.tsx` (4,262 bytes)
     - ✅ `src/components/admin/KnowledgeBaseBrowser.tsx` (6,019 bytes)
+    - ✅ `src/components/admin/TenantBranding.tsx` (5,945 bytes)
     - ✅ `src/app/api/admin/upload-docs/route.ts` (195 lines - Task 3.6)
     - ❌ `scripts/process-tenant-docs.ts` (MISSING - Task 4.4)
-  - Agent: **@agent-ux-interface** + **@agent-backend-developer**
-  - Test: Components exist but page integration pending
+  - Agent: **@agent-ux-interface**
+  - Test: ✅ 200 OK - http://simmerdown.localhost:3000/admin/knowledge-base
+  - **Resultado:** Knowledge base manager UI fully integrated with 3 tabs (Upload, Browse, Branding)
 
 ---
 
@@ -426,35 +430,39 @@ These components were built earlier and exist in the codebase:
 
 ---
 
-#### 4D.3 Branding editor (`/admin/branding`)
-- [ ] Implement branding config UI with live preview (estimate: 1.5h)
-  - Page: `src/app/(public-tenant)/admin/branding/page.tsx` (NUEVA)
+#### 4D.3 Branding editor (`/admin/branding`) ❌
+- [ ] Implement branding config UI with live preview (estimate: 1.5h) - **NOT STARTED**
+  - Page: `src/app/[tenant]/admin/branding/page.tsx` (TO CREATE)
   - Logo upload: Drag & drop, preview, crop/resize (optional)
   - Color palette: 4 presets + custom picker with WCAG validator
   - Live preview: Show header/button with selected colors
-  - Files: `src/app/(public-tenant)/admin/branding/page.tsx`, `src/components/admin/BrandingEditor.tsx`, `src/components/admin/ColorPicker.tsx`, `src/app/api/admin/branding/route.ts`
+  - Note: `TenantBranding` component already exists and is integrated in knowledge-base tabs
+  - Files: `src/app/[tenant]/admin/branding/page.tsx` (to create), `src/components/admin/TenantBranding.tsx` (exists)
   - Agent: **@agent-ux-interface**
   - Test: Pick color → preview updates → save → applied to public site
+  - **Status:** Page doesn't exist (404) - component ready, needs standalone page
 
-#### 4D.4 Public content editor (`/admin/content`)
-- [ ] Rich text editor for landing page sections (estimate: 1.5h)
-  - Page: `src/app/(public-tenant)/admin/content/page.tsx` (NUEVA)
+#### 4D.4 Public content editor (`/admin/content`) ❌
+- [ ] Rich text editor for landing page sections (estimate: 1.5h) - **NOT STARTED**
+  - Page: `src/app/[tenant]/admin/content/page.tsx` (TO CREATE)
   - Sections: Hero (title + subtitle), About (rich text), Services (list), Gallery (image uploads), Contact (address + phone + map)
   - Editor: TipTap or Lexical (rich text WYSIWYG)
   - Image uploads: Gallery images to Supabase Storage
-  - Files: `src/app/(public-tenant)/admin/content/page.tsx`, `src/components/admin/ContentEditor.tsx`, `src/app/api/admin/content/route.ts`
+  - Files: `src/app/[tenant]/admin/content/page.tsx`, `src/components/admin/ContentEditor.tsx`, `src/app/api/admin/content/route.ts`
   - Agent: **@agent-ux-interface**
   - Test: Edit About text → save → see changes on landing page
+  - **Status:** Page doesn't exist (404)
 
-#### 4D.5 Analytics dashboard (`/admin/analytics`)
-- [ ] Chat usage statistics UI (estimate: 1h)
-  - Page: `src/app/(public-tenant)/admin/analytics/page.tsx` (NUEVA)
+#### 4D.5 Analytics dashboard (`/admin/analytics`) ❌
+- [ ] Chat usage statistics UI (estimate: 1h) - **NOT STARTED**
+  - Page: `src/app/[tenant]/admin/analytics/page.tsx` (TO CREATE)
   - Metrics: Total chats, avg response time, top questions, user engagement
   - Charts: Line chart (chats over time), bar chart (top questions)
   - Data source: Query `tenant_chat_sessions` (future table) or aggregate from embeddings search logs
-  - Files: `src/app/(public-tenant)/admin/analytics/page.tsx`, `src/components/admin/AnalyticsCharts.tsx`
+  - Files: `src/app/[tenant]/admin/analytics/page.tsx`, `src/components/admin/AnalyticsCharts.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Visit simmerdown.innpilot.io/admin/analytics → see charts (mock data OK for v1)
+  - **Status:** Page doesn't exist (404)
 
 #### 4D.6 Settings page (`/admin/settings`) ✅
 - [x] General settings form (estimate: 45min, actual: 45min) - **COMPLETED**
@@ -637,28 +645,31 @@ These components were built earlier and exist in the codebase:
 ## 📊 PROGRESO
 
 **Total Tasks:** 60 (recontadas con nueva estructura FASE 4 + tarea 3.6)
-**Completed:** 19/60 (31.7%) ✅
+**Completed:** 20/60 (33.3%) ✅
 
 **Por Fase:**
 - ✅ FASE 1 (Database Schema): 6/6 tareas - **COMPLETADA**
 - ✅ FASE 2 (Subdomain Detection): 5/5 tareas - **COMPLETADA**
 - ✅ FASE 3 (Chat API Modification): 6/6 tareas - **COMPLETADA**
-- FASE 4 (Landing + Branding + Admin): 2/22 tareas (3 components complete + 2 integrated pages)
-  - FASE 4A (Public Landing): 0/5 tareas (4-5h)
-  - FASE 4B (Branding System): 0/4 tareas (2-3h)
-  - FASE 4C (Auth System): 0/4 tareas (2-3h)
-  - FASE 4D (Admin Dashboard): 2/6 tareas (4-5h)
+- FASE 4 (Landing + Branding + Admin): 3/22 tareas (13.6% complete)
+  - FASE 4A (Public Landing): 0/5 tareas (4-5h) - NOT STARTED
+  - FASE 4B (Branding System): 0/4 tareas (2-3h) - NOT STARTED
+  - FASE 4C (Auth System): 0/4 tareas (2-3h) - NOT STARTED
+  - FASE 4D (Admin Dashboard): 3/6 tareas (50% complete)
     - ✅ 4D.1: Dashboard layout COMPLETADA
+    - ✅ 4D.2: Knowledge base manager COMPLETADA (page integrated, components working)
+    - ❌ 4D.3: Branding editor page - NOT STARTED (component exists, needs standalone page)
+    - ❌ 4D.4: Content editor page - NOT STARTED
+    - ❌ 4D.5: Analytics dashboard - NOT STARTED
     - ✅ 4D.6: Settings page COMPLETADA
-    - ⏸️ 4D.2-4D.5: Pending
-  - ✅ Components 4.2, 4.5, 4.6: Complete but need page integration
-  - ❌ Task 4.4 (process-tenant-docs.ts): MISSING - blocking knowledge base workflow
-- FASE 5 (Public Chat UI): 0/7 tareas
-- FASE 6 (Deployment + Testing): 0/9 tareas
+  - ✅ Components 4.2, 4.5, 4.6: Complete and integrated in knowledge-base page
+  - ❌ Task 4.4 (process-tenant-docs.ts): MISSING - blocking full knowledge base workflow
+- FASE 5 (Public Chat UI): 0/7 tareas - NOT STARTED
+- FASE 6 (Deployment + Testing): 0/9 tareas - NOT STARTED
 
 **Tiempo Estimado Total:** 25-32 horas (~4-5 días)
-**Tiempo Invertido:** 9.75h (FASES 1-3 complete + 3 components + settings + dashboard layout)
-**Tiempo Restante:** 15.25-22.25h
+**Tiempo Invertido:** 11h (FASES 1-3 complete + 3 components + 3 admin pages integrated)
+**Tiempo Restante:** 14-21h
 
 **Por Fase:**
 - ✅ FASE 1: 2.5h (COMPLETADA)
@@ -699,12 +710,36 @@ These components were built earlier and exist in the codebase:
 
 ---
 
-**Última actualización:** October 10, 2025 - **FASE 4D.1 COMPLETADA** (Dashboard Layout + Sidebar + Header + Breadcrumbs ✅)
-**Siguiente paso:** Task 4D.2 - Knowledge base manager integration (2h estimate)
+**Última actualización:** October 10, 2025 - **FASE 4D.2 COMPLETADA** (Knowledge Base Manager integrated ✅) + **URL Routing Fix Applied** ✅
+**Siguiente paso:** Tasks 4D.3, 4D.4, 4D.5 - Create remaining admin pages (Branding, Content, Analytics - 4h estimate)
 
 ---
 
 ## 🎯 CAMBIOS RECIENTES
+
+### October 10, 2025 - CRITICAL URL Routing Fix ✅
+**Problema detectado:** AdminSidebar generaba URLs duplicadas tipo `/simmerdown/simmerdown/admin/knowledge-base`
+
+**Causa Raíz:**
+- Next.js subdomain rewrites son **transparentes** al cliente
+- `usePathname()` devuelve `/admin` (NO `/simmerdown/admin`)
+- El código intentaba extraer `tenantSlug` del pathname → obtenía `"admin"` en lugar de `"simmerdown"`
+- Los hrefs se construían con tenant slug → rewrite agregaba el slug OTRA VEZ → duplicación
+
+**Solución Aplicada:**
+1. ❌ **NO usar** tenant slug en hrefs (rewrite ya lo maneja)
+2. ✅ hrefs directos: `/admin/knowledge-base` (no `/simmerdown/admin/knowledge-base`)
+3. ✅ Removido código innecesario que extraía tenant slug del pathname
+
+**Archivos Modificados:**
+- `src/components/admin/AdminSidebar.tsx` - Removido tenantSlug, hrefs directos
+- `src/components/admin/AdminBreadcrumbs.tsx` - Removido tenantSlug, hrefs directos
+- `src/app/[tenant]/admin/layout.tsx` - Removido extracción de tenantSlug
+- `src/app/[tenant]/admin/page.tsx` - Quick actions con hrefs directos
+
+**Resultado:** ✅ Todos los links del admin dashboard ahora funcionan correctamente
+
+---
 
 ### October 9, 2025 - Route Groups Strategy
 **Decisión:** Usar Next.js Route Groups para separar sistema interno vs público.
