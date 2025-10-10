@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTenant } from '@/contexts/TenantContext';
 import { TenantChatHeader } from '@/components/Chat/TenantChatHeader';
-import { TenantChatAvatar } from '@/components/chat/TenantChatAvatar';
+import { TenantChatAvatar } from '@/components/Chat/TenantChatAvatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
