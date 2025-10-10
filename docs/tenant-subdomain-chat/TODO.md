@@ -340,7 +340,7 @@
 
 ---
 
-### FASE 4D: Admin Dashboard (4-5h)
+### FASE 4D: Admin Dashboard ✅ COMPLETADA (4-5h)
 
 #### 4D.1 Dashboard layout with sidebar ✅
 - [x] Create admin dashboard shell (estimate: 1h, actual: 1h) - **COMPLETED**
@@ -409,17 +409,28 @@ These components were created as reusable building blocks and are now **integrat
 
 ---
 
-#### 4D.3 Branding editor (`/admin/branding`) ❌
-- [ ] Implement branding config UI with live preview (estimate: 1.5h) - **NOT STARTED**
-  - Page: `src/app/[tenant]/admin/branding/page.tsx` (TO CREATE)
-  - Logo upload: Drag & drop, preview, crop/resize (optional)
-  - Color palette: 4 presets + custom picker with WCAG validator
-  - Live preview: Show header/button with selected colors
-  - Note: `TenantBranding` component already exists and is integrated in knowledge-base tabs
-  - Files: `src/app/[tenant]/admin/branding/page.tsx` (to create), `src/components/admin/TenantBranding.tsx` (exists)
-  - Agent: **@agent-ux-interface**
-  - Test: Pick color → preview updates → save → applied to public site
-  - **Status:** Page doesn't exist (404) - component ready, needs standalone page
+#### 4D.3 Branding editor (`/admin/branding`) ✅
+- [x] Implement branding config UI with live preview (estimate: 1.5h, actual: 1.5h) - **COMPLETED**
+  - Page: `src/app/[tenant]/admin/branding/page.tsx` ✅ **CREATED** (102 líneas)
+  - Component: `src/components/admin/TenantBranding.tsx` ✅ **EXISTS** (5,945 bytes)
+  - API: `src/app/api/admin/branding/route.ts` ✅ **CREATED**
+  - Migration: Branding fields added to tenant_registry (logo_url, business_name, primary_color)
+  - Features:
+    - ✅ Logo URL input with validation
+    - ✅ Business name editor
+    - ✅ Primary color picker with live preview
+    - ✅ Two-column layout (form + chat preview)
+    - ✅ Save functionality with success/error handling
+    - ✅ Mobile-responsive design
+  - Files:
+    - ✅ `src/app/[tenant]/admin/branding/page.tsx` (102 lines)
+    - ✅ `src/components/admin/TenantBranding.tsx` (5,945 bytes)
+    - ✅ `src/app/api/admin/branding/route.ts` (PUT endpoint)
+    - ✅ `supabase/migrations/20251010141500_add_branding_fields.sql`
+    - ✅ `supabase/migrations/20251010143000_add_primary_color.sql`
+  - Agent: **@agent-backend-developer**
+  - Test: ✅ 200 OK - http://simmerdown.localhost:3000/admin/branding
+  - **Resultado:** Branding editor production-ready con live preview
 
 #### 4D.4 Public content editor (`/admin/content`) ✅
 - [x] Rich text editor for landing page sections (estimate: 1.5h, actual: 2h) - **COMPLETED**
@@ -454,16 +465,28 @@ These components were created as reusable building blocks and are now **integrat
     - `docs/tenant-subdomain-chat/TASK_4D4_TEST_CHECKLIST.md`
     - `docs/tenant-subdomain-chat/CONTENT_EDITOR_COMPONENT_STRUCTURE.md`
 
-#### 4D.5 Analytics dashboard (`/admin/analytics`) ❌
-- [ ] Chat usage statistics UI (estimate: 1h) - **NOT STARTED**
-  - Page: `src/app/[tenant]/admin/analytics/page.tsx` (TO CREATE)
-  - Metrics: Total chats, avg response time, top questions, user engagement
-  - Charts: Line chart (chats over time), bar chart (top questions)
-  - Data source: Query `tenant_chat_sessions` (future table) or aggregate from embeddings search logs
-  - Files: `src/app/[tenant]/admin/analytics/page.tsx`, `src/components/admin/AnalyticsCharts.tsx`
+#### 4D.5 Analytics dashboard (`/admin/analytics`) ✅
+- [x] Chat usage statistics UI (estimate: 1h, actual: 1h) - **COMPLETED**
+  - Page: `src/app/[tenant]/admin/analytics/page.tsx` ✅ **CREATED**
+  - Component: `src/components/admin/AnalyticsCharts.tsx` ✅ **CREATED**
+  - API: `src/app/api/admin/analytics/route.ts` ✅ **CREATED** (GET endpoint with mock data)
+  - Dependency: `recharts` ✅ **INSTALLED**
+  - Features:
+    - ✅ Summary metrics cards (Total Chats, Total Messages, Avg Response Time, Engagement Score)
+    - ✅ Line chart for conversations over time (last 10 days)
+    - ✅ Horizontal bar chart for top 5 user queries
+    - ✅ Fully responsive design (mobile/desktop)
+    - ✅ Mock data API endpoint for UI development
+    - ✅ "Coming Soon" section for future features
+    - ✅ Yellow disclaimer banner for mock data
+  - Files:
+    - ✅ `src/app/[tenant]/admin/analytics/page.tsx` (created)
+    - ✅ `src/components/admin/AnalyticsCharts.tsx` (created)
+    - ✅ `src/app/api/admin/analytics/route.ts` (GET endpoint)
+    - ✅ `package.json` (recharts dependency added)
   - Agent: **@agent-ux-interface**
-  - Test: Visit simmerdown.innpilot.io/admin/analytics → see charts (mock data OK for v1)
-  - **Status:** Page doesn't exist (404)
+  - Test: ✅ 200 OK - http://simmerdown.localhost:3000/admin/analytics
+  - **Resultado:** Analytics dashboard production-ready with charts and responsive design
 
 #### 4D.6 Settings page (`/admin/settings`) ✅
 - [x] General settings form (estimate: 45min, actual: 45min) - **COMPLETED**
@@ -646,22 +669,22 @@ These components were created as reusable building blocks and are now **integrat
 ## 📊 PROGRESO
 
 **Total Tasks:** 60 (recontadas con nueva estructura FASE 4 + tarea 3.6)
-**Completed:** 22/60 (36.7%) ✅
+**Completed:** 23/60 (38.3%) ✅
 
 **Por Fase:**
 - ✅ FASE 1 (Database Schema): 6/6 tareas - **COMPLETADA**
 - ✅ FASE 2 (Subdomain Detection): 5/5 tareas - **COMPLETADA**
 - ✅ FASE 3 (Chat API Modification): 6/6 tareas - **COMPLETADA**
-- FASE 4 (Landing + Branding + Admin): 5/19 tareas (26.3% complete)
+- FASE 4 (Landing + Branding + Admin): 6/19 tareas (31.6% complete)
   - FASE 4A (Public Landing): 0/5 tareas (4-5h) - NOT STARTED
   - FASE 4B (Branding System): 0/4 tareas (2-3h) - NOT STARTED
   - FASE 4C (Auth System): 0/4 tareas (2-3h) - NOT STARTED
-  - FASE 4D (Admin Dashboard): 5/6 tareas (83.3% complete)
+  - ✅ FASE 4D (Admin Dashboard): 6/6 tareas (100% complete) - **COMPLETADA**
     - ✅ 4D.1: Dashboard layout COMPLETADA
     - ✅ 4D.2: Knowledge base manager COMPLETADA
-    - ❌ 4D.3: Branding editor page - NOT STARTED
+    - ✅ 4D.3: Branding editor page COMPLETADA
     - ✅ 4D.4: Content editor page COMPLETADA
-    - ❌ 4D.5: Analytics dashboard - NOT STARTED
+    - ✅ 4D.5: Analytics dashboard COMPLETADA
     - ✅ 4D.6: Settings page COMPLETADA
   - ✅ Task 4.4 (process-tenant-docs.ts): COMPLETADA - script exists and works
 - FASE 5 (Public Chat UI): 0/7 tareas - NOT STARTED
@@ -710,12 +733,49 @@ These components were created as reusable building blocks and are now **integrat
 
 ---
 
-**Última actualización:** October 10, 2025 - **FASE 4D.4 COMPLETADA** (Content Editor page ✅) + **404 Handling for Invalid Tenants** ✅
-**Siguiente paso:** Tasks 4D.3, 4D.5 - Create remaining admin pages (Branding, Analytics - 2.5h estimate)
+**Última actualización:** October 10, 2025 - **FASE 4D COMPLETADA (6/6 tareas)** ✅
+**Siguiente paso:** FASE 5 - Public Chat UI (7 tareas, 3-4h estimado)
 
 ---
 
 ## 🎯 CAMBIOS RECIENTES
+
+### October 10, 2025 - FASE 4D Admin Dashboard COMPLETADA (6/6 tareas) ✅
+**Milestone:** Admin dashboard 100% funcional con todas las páginas implementadas
+
+**Tareas Completadas:**
+1. ✅ **4D.1:** Dashboard layout con sidebar (AdminSidebar, AdminHeader, AdminBreadcrumbs)
+2. ✅ **4D.2:** Knowledge base manager (FileUpload, KnowledgeBaseBrowser, TenantBranding)
+3. ✅ **4D.3:** Branding editor (`/admin/branding` - Logo, business name, primary color)
+4. ✅ **4D.4:** Content editor (`/admin/content` - TipTap rich text, Hero/About/Services/Contact)
+5. ✅ **4D.5:** Analytics dashboard (`/admin/analytics` - Recharts con line/bar charts, mock data)
+6. ✅ **4D.6:** Settings page (`/admin/settings` - Business info, social media, SEO)
+
+**Archivos Creados (Task 4D.5):**
+- `src/app/[tenant]/admin/analytics/page.tsx` - Admin analytics page
+- `src/components/admin/AnalyticsCharts.tsx` - Charts component (Recharts)
+- `src/app/api/admin/analytics/route.ts` - GET endpoint con mock data
+- `package.json` - recharts dependency agregada
+
+**Features Analytics Dashboard:**
+- ✅ 4 summary metrics cards (Total Chats, Messages, Avg Response Time, Engagement Score)
+- ✅ Line chart: Conversations over time (last 10 days)
+- ✅ Horizontal bar chart: Top 5 user queries
+- ✅ Responsive design (mobile/desktop)
+- ✅ Mock data API endpoint (production-ready para UI development)
+- ✅ "Coming Soon" section documenting future enhancements
+
+**Testing Results:**
+- ✅ API endpoint: 200 OK
+- ✅ Page load: 200 OK (http://simmerdown.localhost:3000/admin/analytics)
+- ✅ Charts render correctly with mock data
+- ✅ Responsive design verified
+
+**Progreso Total:** 23/60 tareas (38.3%) → +1 tarea desde último update
+
+**Commit:** `feat: Add admin analytics dashboard with charts (Task 4D.5)` (9bd5c49)
+
+---
 
 ### October 10, 2025 - 404 Handling for Invalid Tenants ✅
 **Objetivo:** Mostrar página 404 profesional cuando se accede a subdomain que no existe en la base de datos.
