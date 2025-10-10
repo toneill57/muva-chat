@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { KnowledgeBaseBrowser } from '@/components/admin/KnowledgeBaseBrowser';
-import { TenantBranding } from '@/components/admin/TenantBranding';
 import { useTenant } from '@/contexts/TenantContext';
 
 export default function KnowledgeBasePage() {
@@ -27,15 +26,14 @@ export default function KnowledgeBasePage() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold">Knowledge Base</h1>
         <p className="text-gray-600 mt-2">
-          Manage documentation and branding for {tenant.business_name || tenant.nombre_comercial}
+          Manage documentation for {tenant.business_name || tenant.nombre_comercial}
         </p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3 max-w-md">
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
           <TabsTrigger value="upload">Upload Documents</TabsTrigger>
           <TabsTrigger value="browse">Browse Knowledge Base</TabsTrigger>
-          <TabsTrigger value="branding">Branding</TabsTrigger>
         </TabsList>
 
         <TabsContent value="upload" className="mt-6">
@@ -44,10 +42,6 @@ export default function KnowledgeBasePage() {
 
         <TabsContent value="browse" className="mt-6">
           <KnowledgeBaseBrowser tenantId={tenant.tenant_id} />
-        </TabsContent>
-
-        <TabsContent value="branding" className="mt-6">
-          <TenantBranding tenant={tenant} />
         </TabsContent>
       </Tabs>
     </div>
