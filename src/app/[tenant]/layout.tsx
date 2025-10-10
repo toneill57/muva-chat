@@ -8,12 +8,13 @@ interface TenantLayoutProps {
 }
 
 export default async function TenantLayout({ children }: TenantLayoutProps) {
-  // Get hostname from headers (set by middleware)
+  // Get tenant subdomain from Nginx header (production) or hostname (dev)
   const headersList = await headers();
+  const nginxSubdomain = headersList.get('x-tenant-subdomain');
   const hostname = headersList.get('host') || '';
 
-  // Extract subdomain from hostname
-  const subdomain = getSubdomain(hostname);
+  // Use Nginx header if available (production), otherwise extract from hostname (dev)
+  const subdomain = nginxSubdomain || getSubdomain(hostname);
 
   // Fetch tenant from database
   const tenant = await getTenantBySubdomain(subdomain);
