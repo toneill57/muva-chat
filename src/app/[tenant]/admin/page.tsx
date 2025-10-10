@@ -1,14 +1,11 @@
 'use client';
 
 import { useTenant } from '@/contexts/TenantContext';
-import { usePathname } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Users, MessageSquare, TrendingUp } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const { tenant } = useTenant();
-  const pathname = usePathname();
-  const tenantSlug = pathname?.split('/')[1] || '';
 
   // TODO (Task 4D.5): Replace with real data from analytics
   const stats = [
@@ -58,21 +55,21 @@ export default function AdminDashboardPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           <a
-            href={`/${tenantSlug}/admin/knowledge-base`}
+            href="/admin/knowledge-base"
             className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <p className="font-medium text-gray-900">Upload Documents</p>
             <p className="text-sm text-gray-600">Add new documents to your knowledge base</p>
           </a>
           <a
-            href={`/${tenantSlug}/admin/settings`}
+            href="/admin/settings"
             className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <p className="font-medium text-gray-900">Update Settings</p>
             <p className="text-sm text-gray-600">Configure your business information and SEO</p>
           </a>
           <a
-            href={`/${tenantSlug}/admin/branding`}
+            href="/admin/branding"
             className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <p className="font-medium text-gray-900">Customize Branding</p>

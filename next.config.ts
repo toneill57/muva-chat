@@ -49,8 +49,9 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         // Rewrite subdomain requests to /[tenant] path
         // Example: simmerdown.localhost:3000/admin -> localhost:3000/simmerdown/admin
+        // IMPORTANT: Exclude Next.js internal routes (_next/*, api/*, favicon.ico, etc.)
         {
-          source: '/:path*',
+          source: '/:path((?!_next|api|favicon.ico|.*\\..*).*)',
           has: [
             {
               type: 'host',

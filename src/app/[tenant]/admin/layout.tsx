@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { supabaseAuth } from '@/lib/supabase-auth';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
@@ -13,12 +13,8 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Extract tenant slug from pathname (first segment after /)
-  const tenantSlug = pathname?.split('/')[1] || '';
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -27,20 +23,20 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       // const { data: { user } } = await supabaseAuth.auth.getUser();
 
       // if (!user) {
-      //   router.push(`/${tenantSlug}/login`);
+      //   router.push('/login');
       //   return;
       // }
 
       // TODO (Task 4C.3): Add tenant permission check
       // const hasPermission = await checkTenantPermission(user, tenant, ['admin', 'owner']);
-      // if (!hasPermission) redirect(`/${tenantSlug}`);
+      // if (!hasPermission) redirect('/');
 
       setIsAuthenticated(true);
       setIsLoading(false);
     };
 
     checkAuth();
-  }, [router, tenantSlug]);
+  }, [router]);
 
   if (isLoading) {
     return (

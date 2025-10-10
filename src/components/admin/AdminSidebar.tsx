@@ -37,9 +37,6 @@ export function AdminSidebar() {
     item.roles.includes(userRole)
   );
 
-  // Extract tenant slug from pathname (e.g., /simmerdown/admin -> simmerdown)
-  const tenantSlug = pathname?.split('/')[1] || '';
-
   return (
     <>
       {/* Mobile menu button */}
@@ -97,7 +94,8 @@ export function AdminSidebar() {
         <nav className="p-4 space-y-1" role="navigation" aria-label="Main navigation">
           {filteredMenuItems.map((item) => {
             const Icon = item.icon;
-            const itemPath = `/${tenantSlug}${item.href}`;
+            // Use item.href directly (no tenant prefix needed - subdomain rewrite handles it)
+            const itemPath = item.href;
             const isActive = pathname === itemPath ||
                            (item.href !== '/admin' && pathname?.startsWith(itemPath));
 
