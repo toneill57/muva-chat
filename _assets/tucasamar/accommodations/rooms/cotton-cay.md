@@ -71,11 +71,15 @@ schema: "hotels"
 - **Aire acondicionado** <!-- EXTRAE: amenities_list -->
 - **Libre de llaves** <!-- EXTRAE: amenities_list -->
 - **Cafetera** <!-- EXTRAE: amenities_list -->
+- **Cortinas de terciopelo azul marino** <!-- EXTRAE: amenities_list -->
+
+### Renovación Reciente (Enero 2025)
+Cotton Cay fue recientemente renovado en enero 2025 con nuevas cortinas de terciopelo azul marino importadas directamente de Italia, diseñadas especialmente para proporcionar aislamiento acústico superior y un ambiente elegante y moderno. Las cortinas italianas de alta calidad complementan perfectamente la decoración interior de la habitación.
 
 ### Amenities en Texto Completo
-Ventanas acústicas, Opción de 2 Camas Sencillas ó 1 matrimonial, Cajilla de seguridad, WiFi gratuito, Aire acondicionado, Libre de llaves, Cafetera <!-- EXTRAE: unit_amenities -->
+Ventanas acústicas, Opción de 2 Camas Sencillas ó 1 matrimonial, Cajilla de seguridad, WiFi gratuito, Aire acondicionado, Libre de llaves, Cafetera, Cortinas de terciopelo azul marino importadas de Italia <!-- EXTRAE: unit_amenities -->
 
-**Ventaja diferencial**: Ubicación privilegiada con todos los servicios necesarios para una estadía cómoda.
+**Ventaja diferencial**: Habitación recientemente renovada con cortinas italianas de alta calidad, ubicación privilegiada con todos los servicios necesarios para una estadía cómoda.
 
 ## Información Visual y Ubicación Detallada {#visual-ubicacion}
 
