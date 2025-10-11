@@ -25,8 +25,8 @@ fi
 
 # Cron job configuration
 CRON_SCHEDULE="0 2 * * *"  # Daily at 2am
-CRON_URL="https://innpilot.io/api/cron/archive-conversations"
-LOG_FILE="/var/log/innpilot/cron-archive.log"
+CRON_URL="https://muva.chat/api/cron/archive-conversations"
+LOG_FILE="/var/log/muva-chat/cron-archive.log"
 
 # Build cron entry
 CRON_ENTRY="${CRON_SCHEDULE} curl -s -H 'Authorization: Bearer ${CRON_SECRET}' ${CRON_URL} >> ${LOG_FILE} 2>&1"
@@ -41,7 +41,7 @@ else
 fi
 
 # Create log directory if not exists
-sudo mkdir -p /var/log/innpilot
+sudo mkdir -p /var/log/muva-chat
 sudo touch $LOG_FILE
 sudo chmod 666 $LOG_FILE
 

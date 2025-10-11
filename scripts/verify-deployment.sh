@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# InnPilot Deployment Verification Script
+# MUVA Chat Deployment Verification Script
 # Run this script on VPS after deployment to verify all systems are working
 
 set -e
@@ -13,11 +13,11 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-DOMAIN="innpilot.io"
+DOMAIN="muva.chat"
 TENANTS=("simmerdown" "xyz" "hotel-boutique")
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}  InnPilot Deployment Verification${NC}"
+echo -e "${BLUE}  MUVA Chat Deployment Verification${NC}"
 echo -e "${BLUE}========================================${NC}"
 echo ""
 
@@ -156,7 +156,7 @@ echo -e "${YELLOW}📊 PM2 Process Status...${NC}"
 echo ""
 
 if command -v pm2 &> /dev/null; then
-    pm2 status innpilot
+    pm2 status muva-chat
 else
     echo -e "${RED}✗ PM2 not found (run on VPS)${NC}"
 fi
