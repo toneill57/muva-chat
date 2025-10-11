@@ -114,14 +114,14 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 **Test Coverage:** 87.5% (21/24 tests passing)
 
 **Context Files:**
-- Plan: `/Users/oneill/Sites/apps/InnPilot/plan.md` (FASE 10-12)
-- Tasks: `/Users/oneill/Sites/apps/InnPilot/TODO.md` (tasks 2.1-2.5, 3.2)
-- Prompts: `/Users/oneill/Sites/apps/InnPilot/sire-compliance-prompt-workflow.md`
-- SIRE Mappers: `/Users/oneill/Sites/apps/InnPilot/src/lib/sire/field-mappers.ts` (actualizado Oct 6)
+- Plan: `/Users/oneill/Sites/apps/muva-chat/plan.md` (FASE 10-12)
+- Tasks: `/Users/oneill/Sites/apps/muva-chat/TODO.md` (tasks 2.1-2.5, 3.2)
+- Prompts: `/Users/oneill/Sites/apps/muva-chat/sire-compliance-prompt-workflow.md`
+- SIRE Mappers: `/Users/oneill/Sites/apps/muva-chat/src/lib/sire/field-mappers.ts` (actualizado Oct 6)
 - Catálogos Oficiales (Oct 6, 2025):
-  - `/Users/oneill/Sites/apps/InnPilot/_assets/sire/codigos-pais.json` (250 países SIRE)
-  - `/Users/oneill/Sites/apps/InnPilot/_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
-  - `/Users/oneill/Sites/apps/InnPilot/_assets/sire/codigos-sire.ts` (helpers)
+  - `/Users/oneill/Sites/apps/muva-chat/_assets/sire/codigos-pais.json` (250 países SIRE)
+  - `/Users/oneill/Sites/apps/muva-chat/_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
+  - `/Users/oneill/Sites/apps/muva-chat/_assets/sire/codigos-sire.ts` (helpers)
 
 **9 Campos SIRE a Integrar:**
 ```typescript
@@ -308,10 +308,10 @@ mcp__knowledge-graph__aim_search_nodes({
 
 **Archivos Clave:**
 ```
-/Users/oneill/Sites/apps/InnPilot/src/app/api/guest/chat/route.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/conversational-chat-engine.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/guest-auth.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/conversation-compressor.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/guest/chat/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/conversational-chat-engine.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/guest-auth.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/conversation-compressor.ts
 ```
 
 ### Staff Portal (4 endpoints)
@@ -329,9 +329,9 @@ mcp__knowledge-graph__aim_search_nodes({
 
 **Archivos Clave:**
 ```
-/Users/oneill/Sites/apps/InnPilot/src/app/api/staff/chat/route.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/staff-auth.ts
-/Users/oneill/Sites/apps/InnPilot/src/app/api/reservations/list/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/staff/chat/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/staff-auth.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/reservations/list/route.ts
 ```
 
 ### Compliance SIRE/TRA (2 endpoints)
@@ -355,9 +355,9 @@ mcp__knowledge-graph__aim_search_nodes({
 
 **Archivos Clave:**
 ```
-/Users/oneill/Sites/apps/InnPilot/src/lib/compliance-chat-engine.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/sire/field-mappers.ts
-/Users/oneill/Sites/apps/InnPilot/src/app/api/compliance/submit/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/compliance-chat-engine.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/sire/field-mappers.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/compliance/submit/route.ts
 ```
 
 ### MotoPress Integration (6 endpoints) - 🔴 SECURITY GAP
@@ -379,9 +379,9 @@ mcp__knowledge-graph__aim_search_nodes({
 
 **Archivos Clave:**
 ```
-/Users/oneill/Sites/apps/InnPilot/src/app/api/integrations/motopress/configure/route.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/integrations/motopress/client.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/integrations/motopress/sync-manager.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/integrations/motopress/configure/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/integrations/motopress/client.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/integrations/motopress/sync-manager.ts
 ```
 
 ### Public & Dev (8 endpoints)
@@ -405,9 +405,9 @@ mcp__knowledge-graph__aim_search_nodes({
 
 **Archivos Clave:**
 ```
-/Users/oneill/Sites/apps/InnPilot/src/app/api/public/chat/route.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/public-chat-engine.ts
-/Users/oneill/Sites/apps/InnPilot/src/app/api/health/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/public/chat/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/public-chat-engine.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/health/route.ts
 ```
 
 ### System & Utilities (7 endpoints)
@@ -429,9 +429,9 @@ mcp__knowledge-graph__aim_search_nodes({
 
 **Archivos Clave:**
 ```
-/Users/oneill/Sites/apps/InnPilot/src/app/api/tenant/resolve/route.ts
-/Users/oneill/Sites/apps/InnPilot/src/app/api/cron/archive-conversations/route.ts
-/Users/oneill/Sites/apps/InnPilot/src/lib/premium-chat-semantic.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/tenant/resolve/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/app/api/cron/archive-conversations/route.ts
+/Users/oneill/Sites/apps/muva-chat/src/lib/premium-chat-semantic.ts
 ```
 
 ---
@@ -929,7 +929,7 @@ npm run dev  # Anthropic/OpenAI API calls fail sin keys
 - Versión actual: 17.4.1.075
 - Security patches disponibles
 - Prioridad: HIGH (upgrade en 7 días)
-- Guía: `/Users/oneill/Sites/apps/InnPilot/docs/deployment/POSTGRES_UPGRADE_GUIDE.md`
+- Guía: `/Users/oneill/Sites/apps/muva-chat/docs/deployment/POSTGRES_UPGRADE_GUIDE.md`
 
 ---
 
@@ -1175,14 +1175,14 @@ npx tsx scripts/sync-compliance-to-reservations.ts --dry-run
 ## 🔗 REFERENCIAS BACKEND
 
 **Archivos Críticos SIRE:**
-- `/Users/oneill/Sites/apps/InnPilot/src/lib/compliance-chat-engine.ts` (SIRE flow)
-- `/Users/oneill/Sites/apps/InnPilot/src/lib/sire/field-mappers.ts` (mappers Oct 6)
-- `/Users/oneill/Sites/apps/InnPilot/_assets/sire/codigos-pais.json` (250 países SIRE)
-- `/Users/oneill/Sites/apps/InnPilot/_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
+- `/Users/oneill/Sites/apps/muva-chat/src/lib/compliance-chat-engine.ts` (SIRE flow)
+- `/Users/oneill/Sites/apps/muva-chat/src/lib/sire/field-mappers.ts` (mappers Oct 6)
+- `/Users/oneill/Sites/apps/muva-chat/_assets/sire/codigos-pais.json` (250 países SIRE)
+- `/Users/oneill/Sites/apps/muva-chat/_assets/sire/ciudades-colombia.json` (1,122 ciudades DIVIPOLA)
 
 **Archivos Críticos Auth:**
-- `/Users/oneill/Sites/apps/InnPilot/src/lib/guest-auth.ts` (JWT guest)
-- `/Users/oneill/Sites/apps/InnPilot/src/app/api/guest/chat/route.ts` (main chat endpoint)
+- `/Users/oneill/Sites/apps/muva-chat/src/lib/guest-auth.ts` (JWT guest)
+- `/Users/oneill/Sites/apps/muva-chat/src/app/api/guest/chat/route.ts` (main chat endpoint)
 
 **Documentación:**
 - `docs/backend/MATRYOSHKA_ARCHITECTURE.md` (embeddings 3-tier)
@@ -1191,9 +1191,9 @@ npx tsx scripts/sync-compliance-to-reservations.ts --dry-run
 - `docs/features/sire-compliance/CODIGOS_OFICIALES.md` (códigos país/ciudad)
 
 **Project Management:**
-- `/Users/oneill/Sites/apps/InnPilot/plan.md` (FASE 10-12 SIRE extension)
-- `/Users/oneill/Sites/apps/InnPilot/TODO.md` (tasks 2.1-2.5, 3.2)
-- `/Users/oneill/Sites/apps/InnPilot/CLAUDE.md` (agent guidelines)
+- `/Users/oneill/Sites/apps/muva-chat/plan.md` (FASE 10-12 SIRE extension)
+- `/Users/oneill/Sites/apps/muva-chat/TODO.md` (tasks 2.1-2.5, 3.2)
+- `/Users/oneill/Sites/apps/muva-chat/CLAUDE.md` (agent guidelines)
 
 ---
 
