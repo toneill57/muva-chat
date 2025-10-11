@@ -6,7 +6,7 @@ destination:
   table: "accommodation_units"
 document:
   title: "Cotton Cay"
-  description: "esta habitación en San Andrés"
+  description: "Habitación doble interior en Tu Casa en el Mar, centro de San Andrés, con todas las comodidades para una estadía confortable"
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
@@ -15,9 +15,9 @@ document:
   tags: ["cotton_cay_doble", "room", "tu_casa_en_el_mar", "san_andres"]
   keywords: ["cotton-cay-doble", "habitacion", "san_andres", "2_personas", "aire_acondicionado", "wifi"]
 title: "Cotton Cay"
-description: "esta habitación en San Andrés"
+description: "Habitación doble interior en Tu Casa en el Mar, centro de San Andrés, con todas las comodidades para una estadía confortable"
 business_name: "Tu Casa en el Mar"
-business_nit: "2263efba-b62b-417b-a422-a84638bc632f"
+business_nit: "900000000-0"
 location: "San Andrés, Colombia"
 tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 unit_type: "room"

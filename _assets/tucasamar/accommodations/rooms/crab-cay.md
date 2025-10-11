@@ -6,7 +6,7 @@ destination:
   table: "accommodation_units"
 document:
   title: "Crab Cay"
-  description: "esta habitación en San Andrés"
+  description: "Habitación doble interior en Tu Casa en el Mar, centro de San Andrés, excelente relación calidad-precio"
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
@@ -15,9 +15,9 @@ document:
   tags: ["habitacion_doble_crab_cay", "room", "tu_casa_en_el_mar", "san_andres"]
   keywords: ["habitacion-doble-crab-cay", "habitacion", "san_andres", "2_personas", "aire_acondicionado", "wifi"]
 title: "Crab Cay"
-description: "esta habitación en San Andrés"
+description: "Habitación doble interior en Tu Casa en el Mar, centro de San Andrés, excelente relación calidad-precio"
 business_name: "Tu Casa en el Mar"
-business_nit: "2263efba-b62b-417b-a422-a84638bc632f"
+business_nit: "900000000-0"
 location: "San Andrés, Colombia"
 tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 unit_type: "room"

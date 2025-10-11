@@ -6,7 +6,7 @@ destination:
   table: "accommodation_units"
 document:
   title: "Rose Cay"
-  description: "Habitación Rose Cay en Tu Casa en el Mar"
+  description: "Apartamento amplio para 6 personas en Tu Casa en el Mar, centro de San Andrés, ideal para familias o grupos con cocina equipada completa"
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
@@ -15,9 +15,9 @@ document:
   tags: ["rose_cay_apartamento", "apartment", "tu_casa_en_el_mar", "san_andres"]
   keywords: ["rose-cay-apartamento", "habitacion", "san_andres", "6_personas", "aire_acondicionado", "wifi"]
 title: "Rose Cay"
-description: "Habitación Rose Cay en Tu Casa en el Mar"
+description: "Apartamento amplio para 6 personas en Tu Casa en el Mar, centro de San Andrés, ideal para familias o grupos con cocina equipada completa"
 business_name: "Tu Casa en el Mar"
-business_nit: "2263efba-b62b-417b-a422-a84638bc632f"
+business_nit: "900000000-0"
 location: "San Andrés, Colombia"
 tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 unit_type: "apartment"

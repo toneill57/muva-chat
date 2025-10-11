@@ -17,7 +17,7 @@ document:
 title: "Serrana Cay"
 description: "Esta habitación con balcón y ventanas acústicas es ideal para parejas, familias  o grupos pequeños que quieren estar cómodos, tranquilos, bien ubicados y tener fácil acceso a todos los planes y servicios que ofrece la isla."
 business_name: "Tu Casa en el Mar"
-business_nit: "2263efba-b62b-417b-a422-a84638bc632f"
+business_nit: "900000000-0"
 location: "San Andrés, Colombia"
 tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 unit_type: "room"
