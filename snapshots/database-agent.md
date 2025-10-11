@@ -1,100 +1,12 @@
 ---
 title: Database Agent Snapshot
 agent: database-agent
-last_updated: 2025-10-09
-status: ✅ Production Ready - SIRE Extension 92% Complete (FASE 12)
+last_updated: 2025-10-11
+status: ✅ Production Ready
 database_version: PostgreSQL 17.4.1.075 (Supabase)
 total_size: 35.5 MB
 total_tables: 37 (public + hotels schemas)
 sire_validation: 5/5 SQL queries passed (100%)
----
-
-## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
-
-**Status:** 🚧 IN PROGRESS - 20/60 Tasks Complete (33.3%)
-**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
-**Last Updated:** October 10, 2025 (5:30 AM)
-**Duration:** 16-21 hours (6 phases) | Elapsed: ~8 hours
-
-### Progress Summary
-
-**✅ FASE 1: Database Schema - COMPLETE (4-5 hours)**
-- [x] Tabla `tenant_knowledge_embeddings` creada con HNSW index (1536d)
-- [x] RPC function `search_tenant_embeddings()` implementada
-- [x] RLS policies configuradas para tenant isolation
-- [x] Migration `20251009140000_create_tenant_knowledge_embeddings.sql` aplicada
-- [x] Subdomain field added to `tenants` table
-- [x] Settings fields added (business_name, social_media, SEO metadata)
-- [x] Validation testing complete (schema, RLS, indexes)
-
-**🎯 FASE 1 Complete** - Ready for handoff to @backend-developer (FASE 2-3) and @ux-interface (FASE 5)
-
-### Database Agent Responsibilities (FASE 1 - 4-5 hours)
-
-**Tables to Create (5 migrations):**
-1. `tenants` - Tenant registry (slug, subdomain, business_name, logo_url)
-2. `tenant_knowledge_embeddings` - Per-tenant vector storage (1536d pgvector)
-3. `tenant_documents` - Uploaded document tracking
-4. `tenant_chat_conversations` - Multi-tenant chat history
-5. `tenant_chat_messages` - Message storage with tenant isolation
-
-**RPC Functions to Create (3):**
-1. `search_tenant_embeddings()` - Tenant-scoped semantic search
-2. `get_tenant_by_subdomain()` - Subdomain → tenant_id resolver
-3. `get_tenant_documents()` - Document list for admin UI
-
-**Key Features:**
-- Row Level Security (RLS) for complete tenant isolation
-- HNSW vector indexes for fast semantic search (1536d)
-- Foreign key cascades for data integrity
-- Unique constraints on slugs/subdomains
-
-**Planning Files:**
-- `docs/tenant-subdomain-chat/plan.md` - Complete architecture
-- `docs/tenant-subdomain-chat/TODO.md` - Phase 1 tasks (1.1-1.5)
-- `docs/tenant-subdomain-chat/fase-1/` - Migration specifications
-
-**Next Steps After Phase 1:**
-Coordinate with @backend-developer for API endpoints (Phase 2-3)
-
----
-
-## 🎯 COMPLETED PROJECT: Zilliz → Supabase pgvector Migration ✅
-
-**Status:** Database Migration Complete (Oct 9, 2025) - MCP Config Pending
-
-**Completed Phases:**
-- ✅ FASE 1: Schema pgvector with HNSW index created
-- ✅ FASE 2: Fresh embeddings generated (4,333 vectors)
-- ✅ FASE 3: Embeddings imported to pgvector (100% success)
-- ⏳ FASE 4: MCP config update (pending)
-- ⏳ FASE 5: Performance testing (pending)
-- ⏳ FASE 6: Zilliz cleanup (pending)
-
-**Strategy Change:**
-- **Original Plan:** Export 33,257 embeddings from Zilliz
-- **Actual Implementation:** Generate 4,333 fresh embeddings
-- **Reason:** Zilliz export incomplete (90.6%) + included 218 build artifacts
-- **Result:** Cleaner data, 100% coverage, no noise
-
-**Files Created:**
-- ✅ `supabase/migrations/20251009120000_create_code_embeddings_table.sql`
-- ✅ `supabase/migrations/20251009120001_add_search_code_embeddings_function.sql`
-- ✅ `scripts/scan-codebase.ts` - 692 clean files
-- ✅ `scripts/chunk-code.ts` - 4,338 chunks
-- ✅ `scripts/generate-embeddings.ts` - 4,333 embeddings
-- ✅ `scripts/import-to-pgvector.ts` - pgvector import
-- ✅ `docs/projects/zilliz-to-pgvector/MIGRATION_GUIDE.md`
-- ✅ `docs/projects/zilliz-to-pgvector/FRESH_GENERATION_DECISION.md`
-
-**Results:**
-- 4,333 embeddings (1536d) in `code_embeddings` table
-- HNSW index (m=16, ef_construction=64)
-- Performance: 542ms (<2s target ✅)
-- Files indexed: 692 source files (zero build artifacts)
-
-**Documentation:** `docs/projects/zilliz-to-pgvector/MIGRATION_GUIDE.md`
-
 ---
 
 # 🗄️ Database Agent Snapshot - MUVA Chat

@@ -1,179 +1,42 @@
 ---
 title: "MUVA Chat Deploy Agent - CI/CD & VPS Deployment Snapshot"
 agent: deploy-agent
-last_updated: "2025-10-09"
+last_updated: "2025-10-11"
 status: PRODUCTION_READY
-version: "2.0-COMPREHENSIVE"
+version: "2.1-STABLE"
 infrastructure: VPS_HOSTINGER
 ---
 
 # 🚀 Deploy Agent - CI/CD & VPS Deployment Snapshot
 
 **Agent**: @deploy-agent
-**Última actualización**: 9 Octubre 2025
+**Última actualización**: 11 Octubre 2025
 **Estado**: PRODUCCIÓN - VPS Hostinger (195.200.6.216)
 **Infraestructura**: ✅ VPS (ACTUAL) | ❌ Vercel (DEPRECADO Oct 4, 2025)
 
 ---
 
-## 🎯 CURRENT PROJECT: MUVA Chat → MUVA Chat Rebrand (2025-10-11)
+## 🔧 RECENT FIX: Automated Deployment Issue (Oct 11, 2025)
 
-**Status:** 📋 Planning Complete - Ready for Execution
-**Documentation:** `docs/projects/innpilot-to-muva-rebrand/` (plan.md, TODO.md, workflow.md)
-**Last Updated:** October 11, 2025
-**Duration:** ~9 hours total (5 FASES)
+**Problem:** Deployment workflow failing after project rebranding (InnPilot → MUVA Chat)
 
-### My Responsibilities: FASE 3 + FASE 5 (~2.5 hours)
+**Root Causes:**
+1. ❌ `VPS_HOST` configured as `muva.chat` (DNS) instead of `195.200.6.216` (IP)
+2. ❌ `VPS_SSH_KEY` contained unauthorized SSH key (not present in VPS authorized_keys)
+3. ❌ `VPS_USER` and `VPS_APP_PATH` secrets missing/incorrect
 
-**FASE 3: VPS Infrastructure (2 hours)**
+**Solution Implemented:**
+1. Generated new SSH keypair: `~/.ssh/muva_deploy`
+2. Authorized public key on VPS: `ssh-copy-id -i ~/.ssh/muva_deploy.pub root@195.200.6.216`
+3. Updated GitHub Secrets:
+   - `VPS_HOST` → `195.200.6.216`
+   - `VPS_SSH_KEY` → New authorized private key
+   - `VPS_USER` → `root`
+   - `VPS_APP_PATH` → `/var/www/muva-chat`
 
-**FASE 3.1: Rename PM2 process (30min)**
-- SSH a VPS: `ssh oneill@muva.chat`
-- Stop process: `pm2 stop muva-chat`
-- Delete process: `pm2 delete muva-chat`
-- Start new: `pm2 start npm --name "muva-chat" -- start`
-- Save: `pm2 save`
-- Test: `pm2 status` debe mostrar "muva-chat" online
-- Agent: **@agent-deploy-agent**
+**Status:** ✅ Deployments working correctly (verified Oct 11, 2025 - 01:35 AM)
 
-**FASE 3.2: Actualizar Nginx config (30min)**
-- Opción A (rename): `sudo mv /etc/nginx/sites-available/innpilot.conf /etc/nginx/sites-available/muva.conf`
-- Opción B (keep): Solo actualizar comentarios internos
-- Actualizar comentarios: "MUVA Chat subdomain routing" → "MUVA Chat subdomain routing"
-- Test config: `sudo nginx -t`
-- Reload: `sudo systemctl reload nginx`
-- Test: `https://muva.chat` carga correctamente
-- Agent: **@agent-deploy-agent**
-
-**FASE 3.3: Verificar deployment (30min)**
-- Verificar: https://muva.chat/api/health
-- Verificar: https://simmerdown.muva.chat/chat
-- Verificar: PM2 logs sin errores
-- Verificar: Nginx logs sin errores
-- Test: Todos los endpoints responden 200 OK
-- Agent: **@agent-deploy-agent**
-
-**FASE 3.4: Actualizar deployment scripts (20min)**
-- Buscar scripts con "innpilot" en nombres o comentarios
-- Actualizar references a PM2 process name
-- Actualizar docs de deployment
-- Files: `scripts/*`, `docs/deployment/*`
-- Agent: **@agent-deploy-agent**
-
-**FASE 5.3: Git commit + tag (15min)**
-- git status (review changes)
-- git add .
-- git commit: "feat(rebrand): Complete MUVA Chat → MUVA Chat rebranding"
-- Incluir BREAKING CHANGE note en commit body
-- git tag -a v2.0-muva-rebrand -m "Complete rebranding to MUVA Chat"
-- git push origin dev
-- git push origin --tags
-- Test: `git log` muestra commit, `git tag` muestra v2.0-muva-rebrand
-- Agent: **@agent-deploy-agent**
-
-### Planning Files
-
-**Read These First:**
-- `docs/projects/innpilot-to-muva-rebrand/plan.md` - Complete rebranding strategy (450+ lines)
-- `docs/projects/innpilot-to-muva-rebrand/TODO.md` - 18 tasks across 5 FASES
-- `docs/projects/innpilot-to-muva-rebrand/innpilot-to-muva-rebrand-prompt-workflow.md` - Copy-paste prompts
-
-### Key Context
-
-**Brand Evolution:**
-- MUVA Chat (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
-- SIRE: NOT deprecated - es gancho comercial premium
-- Package name: "muva-chat" (NOT "muva-platform")
-- PM2 process: "innpilot" → "muva-chat"
-
-**Scope:**
-- PM2 process rename (infrastructure change)
-- Nginx config update (comments + optional rename)
-- Deployment scripts update
-- Git workflow (commit + tag)
-
-### Deployment Commands
-
-**FASE 3.1: PM2 Rename**
-```bash
-ssh oneill@muva.chat
-pm2 stop muva-chat
-pm2 delete muva-chat
-pm2 start npm --name "muva-chat" -- start
-pm2 save
-pm2 status
-```
-
-**FASE 3.2: Nginx Update**
-```bash
-# Option A: Rename config file
-sudo mv /etc/nginx/sites-available/innpilot.conf /etc/nginx/sites-available/muva.conf
-sudo ln -sf /etc/nginx/sites-available/muva.conf /etc/nginx/sites-enabled/muva.conf
-sudo rm /etc/nginx/sites-enabled/innpilot.conf
-
-# Option B: Keep filename, update comments only
-sudo nano /etc/nginx/sites-available/innpilot.conf
-# Update: "MUVA Chat subdomain routing" → "MUVA Chat subdomain routing"
-
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-**FASE 3.3: Verification**
-```bash
-curl -s https://muva.chat/api/health | jq
-curl -s https://simmerdown.muva.chat/chat
-pm2 logs muva-chat --lines 50
-sudo tail -f /var/log/nginx/access.log
-```
-
-**FASE 5.3: Git Workflow**
-```bash
-git status
-git add .
-git commit -m "$(cat <<'EOF'
-feat(rebrand): Complete MUVA Chat → MUVA Chat rebranding
-
-BREAKING CHANGE: Project rebranded from MUVA Chat to MUVA Chat
-- Updated package.json name to "muva-chat"
-- Updated PM2 process name to "muva-chat"
-- Updated all documentation and UI strings
-- SIRE remains as premium feature
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
-git tag -a v2.0-muva-rebrand -m "Complete rebranding to MUVA Chat"
-git push origin dev
-git push origin --tags
-```
-
-### Workflow
-
-**Execute FASE 3.1-3.4:**
-1. Read workflow prompts: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 3.1-3.4)
-2. SSH to VPS
-3. Rename PM2 process
-4. Update Nginx config
-5. Verify deployment
-6. Update deployment scripts
-7. Mark TODO.md tasks 3.1-3.4 complete
-
-**Execute FASE 5.3:**
-1. Read workflow prompt: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 5.3)
-2. Review all changes with `git status`
-3. Create commit with proper message
-4. Create tag v2.0-muva-rebrand
-5. Push to origin
-6. Mark TODO.md task 5.3 complete
-
-### Coordination
-
-- **@agent-backend-developer**: Handles README, package.json, CLAUDE.md, docs, code comments
-- **@agent-ux-interface**: Handles metadata, UI strings
-- **@agent-deploy-agent**: Handles PM2, Nginx, deployment scripts, git workflow (this agent)
+**Documentation:** `docs/deployment/FIX_GITHUB_SECRETS_NOW.md`, `docs/deployment/VERIFY_SECRETS_CHECKLIST.md`
 
 ---
 
@@ -401,7 +264,7 @@ JWT_SECRET_KEY           # 64+ chars random string (guest/staff auth)
 ```javascript
 module.exports = {
   apps: [{
-    name: 'innpilot',
+    name: 'muva-chat',
     script: 'npm',
     args: 'start',
     cwd: '/var/www/muva-chat',
@@ -452,7 +315,7 @@ pm2 startup systemd
 
 ### Nginx Reverse Proxy
 
-**Config Location:** `/etc/nginx/sites-available/innpilot.conf`
+**Config Location:** `/etc/nginx/sites-available/muva.conf`
 
 **Key Features:**
 - **Reverse Proxy:** Port 80/443 → localhost:3000 (PM2)
@@ -478,10 +341,10 @@ sudo systemctl restart nginx
 sudo systemctl status nginx
 
 # Access logs
-sudo tail -f /var/log/nginx/innpilot-access.log
+sudo tail -f /var/log/nginx/muva-access.log
 
 # Error logs
-sudo tail -f /var/log/nginx/muva-chat-error.log
+sudo tail -f /var/log/nginx/muva-error.log
 ```
 
 ### SSL Certificate (Let's Encrypt)
@@ -772,8 +635,8 @@ pm2 logs muva-chat --lines 100
 pm2 monit
 
 # Nginx logs
-sudo tail -f /var/log/nginx/innpilot-access.log
-sudo tail -f /var/log/nginx/muva-chat-error.log
+sudo tail -f /var/log/nginx/muva-access.log
+sudo tail -f /var/log/nginx/muva-error.log
 
 # System resources
 htop
@@ -960,7 +823,7 @@ Monit: pm2 monit
 ```
 Test Config: sudo nginx -t
 Reload: sudo systemctl reload nginx
-Logs: sudo tail -f /var/log/nginx/innpilot-access.log
+Logs: sudo tail -f /var/log/nginx/muva-access.log
 ```
 
 ### GitHub Actions

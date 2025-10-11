@@ -1,9 +1,9 @@
 ---
 title: "MUVA Chat - Infrastructure Monitor Snapshot"
 agent: infrastructure-monitor
-last_updated: "2025-10-09"
+last_updated: "2025-10-11"
 status: PRODUCTION
-version: "2.1"
+version: "2.2-STABLE"
 sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 ---
 
@@ -13,69 +13,6 @@ sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 **Status:** PRODUCTION STABLE - VPS Hostinger
 **Domain:** muva.chat
 **Monitoring Focus:** Performance, availability, error detection, deployment automation
-
----
-
-## 🎯 CURRENT PROJECT: MUVA.chat Migration (2025-10-10)
-
-**Status:** 📋 Planning Complete - Ready for FASE 2-4 Monitoring
-**Duration:** 4-5 hours dev + 1-2 días migration gradual
-
-### My Responsibility:
-
-**FASE 0: DNS & SSL Verification (10min)**
-- Verificar DNS apunta correctamente: `dig +short muva.chat` y `dig +short muva.chat`
-- Ambos deben retornar 195.200.6.216
-- Verificar wildcard SSL actual para `*.muva.chat`
-- Documentar en `docs/projects/muva-migration/fase-0/DNS_VERIFICATION.md`
-
-**FASE 2: Post-Deploy Testing & Monitoring (1h)**
-- Test HTTPS en ambos dominios
-- curl -I https://simmerdown.muva.chat (debe retornar 200 OK con SSL válido)
-- curl -I https://simmerdown.muva.chat (debe seguir funcionando)
-- Test Chat API en ambos dominios
-- Monitor PM2 logs: `pm2 logs muva-chat --lines 100`
-- Monitor Nginx logs: `sudo tail -f /var/log/nginx/muva-subdomain-error.log`
-- Documentar en `docs/projects/muva-migration/fase-2/MONITORING_REPORT.md`
-
-**FASE 3: Gradual Tenant Migration Monitoring (1-2 días)**
-- Monitor cada tenant migration:
-  - SimmerDown (48h monitoring - premium tier)
-  - Hotel-Boutique (24h monitoring - basic tier)
-  - Free tenants (light monitoring)
-- Track metrics: conversations rate, error rate, response time
-- Documentar en `docs/projects/muva-migration/fase-3/tenant-migration-log.md`
-
-**FASE 4: Final Verification (20min)**
-- Verificar redirects 301 funcionan correctamente
-- Test redirect: `curl -I https://simmerdown.muva.chat` → debe redirigir a `simmerdown.muva.chat`
-- Verify SSL grade A+ (ssllabs.com)
-- Check logs limpios (zero errores post-redirect)
-- Documentar en `docs/projects/muva-migration/fase-4/FINAL_CHECKLIST.md`
-
-### Planning Files:
-- `docs/projects/muva-migration/plan.md` - Complete strategy (450 líneas)
-- `docs/projects/muva-migration/TODO.md` - 18 tareas en 5 fases
-- `docs/projects/muva-migration/muva-migration-prompt-workflow.md` - Ready prompts
-
-### Key Responsibilities:
-- **Testing:** HTTPS, Chat API, SSL validation
-- **Monitoring:** PM2 logs, Nginx logs, error detection
-- **Performance:** Response times, error rates, uptime
-- **Documentation:** Test results, monitoring reports
-
-### Workflow:
-1. Execute FASE 0.1 (DNS verification)
-2. Stand by durante FASE 1 (code changes) y SSL generation
-3. Execute FASE 2.4-2.6 (testing & monitoring post-deploy)
-4. Execute FASE 3.1-3.3 (tenant migration monitoring)
-5. Execute FASE 4.2-4.4 (final verification)
-
-### Context:
-**MUVA** = "Muévete" (español) + "Move" (inglés) = Move Around
-**Slogan:** "Muévete como local"
-**Impact:** BAJO RIESGO (100% reversible, dual-domain = zero downtime)
-**Success Criteria:** Zero errores, same performance, smooth migration
 
 ---
 
@@ -175,7 +112,7 @@ MUVA Chat is deployed in **production on VPS Hostinger** with a robust infrastru
 
 ### Nginx Configuration
 
-**File:** `/etc/nginx/sites-available/innpilot.conf`
+**File:** `/etc/nginx/sites-available/muva.conf`
 
 **Key Features:**
 - **Rate Limiting:** 10 req/s for `/api/*` (burst: 20)
@@ -261,7 +198,7 @@ mcp__knowledge-graph__aim_search_nodes({
 
 ```javascript
 {
-  name: 'innpilot',
+  name: 'muva-chat',
   script: 'npm',
   args: 'start',
   cwd: '/var/www/muva-chat',
@@ -615,7 +552,7 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 **Nginx Logs:**
 - **Location:** `/var/log/nginx/`
 - **Files:**
-  - `innpilot-access.log` (all requests)
+  - `muva-chat-access.log` (all requests)
   - `muva-chat-error.log` (errors, level: warn)
 - **Rotation:** logrotate (weekly)
 - **Health check:** `access_log off` (no spam)
@@ -803,7 +740,7 @@ npm run benchmark-detailed  # Detailed benchmarks
 ### Configuration Files
 
 **Nginx:**
-- `docs/deployment/nginx-innpilot.conf` - Main site config
+- `docs/deployment/nginx-muva.conf` - Main site config
 - `docs/deployment/nginx-subdomain.conf` - Wildcard subdomain
 
 **PM2:**
@@ -1006,6 +943,6 @@ npm run benchmark-detailed  # Detailed benchmarks
 
 ---
 
-**Last Updated:** October 9, 2025
-**Version:** 2.1
+**Last Updated:** October 11, 2025
+**Version:** 2.2-STABLE
 **Agent:** @infrastructure-monitor
