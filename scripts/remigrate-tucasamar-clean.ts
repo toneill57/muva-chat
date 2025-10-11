@@ -183,6 +183,42 @@ async function extractUnitTypeFromMarkdown(unitName: string): Promise<string | n
 }
 
 /**
+ * Extract specific highlights from markdown file
+ */
+async function extractHighlightsFromMarkdown(unitName: string): Promise<string[]> {
+  const filepath = await findMarkdownPath(unitName);
+  if (!filepath) {
+    return [];
+  }
+
+  const content = await readFile(filepath, 'utf-8');
+  const highlights: string[] = [];
+
+  // Extract room_type (specific description)
+  const roomTypeMatch = content.match(/- \*\*Tipo\*\*:\s*(.+?)\s*<!--\s*EXTRAE:\s*room_type\s*-->/);
+  if (roomTypeMatch) {
+    highlights.push(roomTypeMatch[1].trim());
+  }
+
+  // Extract capacity if notable (4+ people)
+  const capacityMatch = content.match(/- \*\*Capacidad máxima\*\*:\s*(\d+)\s*personas/);
+  if (capacityMatch) {
+    const capacity = parseInt(capacityMatch[1]);
+    if (capacity >= 4) {
+      highlights.push(`Capacidad para ${capacity} personas`);
+    }
+  }
+
+  // Extract location features (a X cuadras de...)
+  const locationMatch = content.match(/a\s+(\d+\s+cuadras?\s+de[^,<]+)/i);
+  if (locationMatch) {
+    highlights.push(locationMatch[1].trim());
+  }
+
+  return highlights;
+}
+
+/**
  * Generate embeddings using OpenAI Matryoshka architecture
  */
 async function generateEmbeddings(text: string): Promise<{
@@ -219,15 +255,16 @@ async function transformToPublic(unit: AccommodationUnit): Promise<Omit<PublicAc
   // Extract amenities from markdown (CRITICAL - DB has empty amenities)
   const amenitiesFromMarkdown = await extractAmenitiesFromMarkdown(unit.name);
 
-  // Extract highlights from unique_features array (mal-formatted but usable)
-  const highlights: string[] = [];
-  if (unit.view_type) highlights.push(`${unit.view_type} view`);
-  if (Array.isArray(unit.unique_features)) {
-    highlights.push(...unit.unique_features.slice(0, 3));
-  }
-  // Fallback
+  // Extract specific highlights from markdown (FIXED - no more generic fallbacks)
+  const highlights = await extractHighlightsFromMarkdown(unit.name);
+
+  // Fallback only if extraction completely fails
   if (highlights.length === 0) {
-    highlights.push('Ubicación privilegiada en San Andrés');
+    if (unitType === 'apartment') {
+      highlights.push('Apartamento completo con todas las comodidades');
+    } else {
+      highlights.push('Habitación confortable en excelente ubicación');
+    }
   }
 
   // Build amenities object from capacity
