@@ -136,16 +136,25 @@ function parseMarkdown(content: string): ParsedMarkdown {
 }
 
 /**
- * Generate embedding using OpenAI
+ * Generate embeddings using OpenAI Matryoshka architecture
+ * CRITICAL: Must use text-embedding-3-large to match other accommodations
  */
-async function generateEmbedding(text: string): Promise<number[]> {
+async function generateEmbeddings(text: string): Promise<{
+  embedding_3072: number[]
+  embedding_1024: number[]
+}> {
   const response = await openai.embeddings.create({
-    model: 'text-embedding-3-small',
+    model: 'text-embedding-3-large', // MUST match remigrate-tucasamar-clean.ts
     input: text,
-    dimensions: 1024 // Fast tier
+    dimensions: 3072 // Full precision
   })
 
-  return response.data[0].embedding
+  const embedding_3072 = response.data[0].embedding
+
+  // Matryoshka: Tier 1 is first 1024 dimensions
+  const embedding_1024 = embedding_3072.slice(0, 1024)
+
+  return { embedding_3072, embedding_1024 }
 }
 
 /**
@@ -167,10 +176,10 @@ async function main() {
     console.log(`   Amenities: ${parsed.extractedData.amenities_list.length}`)
     console.log(`   Images: ${parsed.extractedData.images.length}`)
 
-    // Generate embedding
-    console.log('\n🤖 Generating embedding...')
-    const embedding = await generateEmbedding(parsed.content)
-    console.log(`   ✅ Generated ${embedding.length}d vector`)
+    // Generate embeddings (Matryoshka: 3072d + 1024d fast tier)
+    console.log('\n🤖 Generating Matryoshka embeddings...')
+    const { embedding_3072, embedding_1024 } = await generateEmbeddings(parsed.content)
+    console.log(`   ✅ Generated 3072d full + 1024d fast tier`)
 
     // Parse base price
     const basePriceMatch = parsed.extractedData.base_price?.match(/\$?([\d,]+)/)
@@ -186,9 +195,9 @@ async function main() {
       description: parsed.frontmatter.description,
       short_description: parsed.extractedData.room_type || null,
 
-      // Embeddings
-      embedding_fast: JSON.stringify(embedding),
-      embedding: null,
+      // Embeddings (Matryoshka architecture)
+      embedding: embedding_3072, // 3072d full precision
+      embedding_fast: embedding_1024, // 1024d fast tier
 
       // Structured data
       photos: parsed.extractedData.images,
@@ -246,7 +255,7 @@ async function main() {
     console.log(`   Price: ${basePrice ? `$${basePrice.toLocaleString()} COP` : 'N/A'}`)
     console.log(`   Amenities: ${parsed.extractedData.amenities_list.length}`)
     console.log(`   Images: ${parsed.extractedData.images.length}`)
-    console.log(`   Embedding: ${embedding.length}d vector`)
+    console.log(`   Embedding: 3072d + 1024d Matryoshka`)
     console.log('============================\n')
 
   } catch (error) {
