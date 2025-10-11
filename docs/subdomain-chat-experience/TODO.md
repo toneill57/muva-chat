@@ -79,7 +79,7 @@
   - NOTA: Implementado nivel page, no layout. Falta OG + Twitter Card para producción
 
 ### 1.6 Production testing
-- [ ] Deploy y verificar en producción (1h)
+- [x] Deploy y verificar en producción (1h)
   - Push to dev branch
   - Verificar GitHub Actions deployment
   - Test https://simmerdown.muva.chat/

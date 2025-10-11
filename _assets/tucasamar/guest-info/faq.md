@@ -1,16 +1,20 @@
 ---
-title: "Preguntas Frecuentes (FAQ)"
-description: "Preguntas y respuestas frecuentes sobre Tu Casa en el Mar"
-type: "services"
-category: "hotel"
-status: "active"
-version: "1.0"
-last_updated: "2025-01-10"
-tags: ["faq", "preguntas_frecuentes", "guest_services", "información_huéspedes"]
-keywords: ["preguntas", "frecuentes", "faq", "reservas", "pago", "servicios", "amenities"]
-language: "es"
-page_number: null
-section_title: null
+version: "2.0"
+type: "hotel_content"
+destination:
+  schema: "hotels"
+  table: "guest_information"
+document:
+  title: "Preguntas Frecuentes (FAQ)"
+  description: "Preguntas y respuestas frecuentes sobre Tu Casa en el Mar"
+  category: "guest_info"
+  subcategory: "faq"
+  language: "es"
+  version: "2.0"
+  status: "active"
+  tags: ["faq", "preguntas_frecuentes", "guest_services", "información_huéspedes"]
+  keywords: ["preguntas", "frecuentes", "faq", "reservas", "pago", "servicios", "amenities"]
+tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 ---
 
 # F.A.Q.

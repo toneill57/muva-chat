@@ -34,6 +34,55 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
+## 🎖️ CURRENT MILESTONE: Multi-Tenant Chat with Complete Data Isolation
+
+**Date Achieved:** October 11, 2025
+**Status:** ✅ COMPLETED
+**Significance:** 🚀 Production-ready multi-tenant foundation
+
+### Security Achievements
+
+**3 Critical Vulnerabilities Fixed:**
+
+1. **Session Hijacking Prevention** (CRITICAL) - `src/lib/dev-chat-session.ts:94`
+   - Added `.eq('tenant_id', resolvedTenantId)` to session loading query
+   - Impact: Prevents cross-tenant session access
+   - Test: ✅ Automated verification in `scripts/test-tenant-isolation.ts`
+
+2. **Accommodation Data Leakage** (HIGH) - `src/lib/dev-chat-search.ts:144`
+   - Changed from `match_accommodation_units_fast` to `match_accommodations_public`
+   - Added `p_tenant_id` parameter to RPC function
+   - Impact: Eliminated accommodation data leakage between tenants
+   - Test: ✅ No ID overlap verified
+
+3. **Dynamic Branding** (UX) - `src/lib/welcome-message-static.ts`
+   - Converted static HTML to `getWelcomeMessageHTML(tenantName)` function
+   - Impact: Each tenant sees correct business name in welcome message
+   - Test: ✅ Verified with Simmer Down, Hotel Boutique, XYZ Hotel
+
+### Testing Suite Created
+
+**File:** `scripts/test-tenant-isolation.ts` (250+ lines)
+
+**Coverage:**
+- ✅ Session Isolation - Verifies cross-tenant session access blocked
+- ✅ Accommodation Isolation - Verifies no ID overlap
+- ✅ Policy Isolation - Verifies tenant-specific filtering
+
+**Usage:** `npx tsx scripts/test-tenant-isolation.ts`
+
+### Behavioral Verification
+
+**Real-World Testing Confirmed:**
+- ✅ Hotel XYZ (no data) → Does NOT hallucinate, falls back to tourism content
+- ✅ Simmer Down (with data) → Responds with actual accommodation information
+- ✅ No false pricing or availability information
+- ✅ Graceful AI degradation when data is missing
+
+**Documentation:** `docs/milestones/MILESTONE-01-MULTI-TENANT-CHAT-ISOLATION.md`
+
+---
+
 ## 🎉 PROYECTO COMPLETADO: SIRE Compliance Extension (92%)
 
 ### Estado Final: FASE 12 - Testing & Validation Complete

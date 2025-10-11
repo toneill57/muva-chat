@@ -23,7 +23,7 @@ export function AdminHeader() {
           <div className="hidden md:block">
             <p className="text-sm text-gray-500">Current Tenant</p>
             <p className="font-semibold text-gray-900">
-              {tenant?.subdomain || 'loading'}.innpilot.io
+              {tenant?.subdomain || 'loading'}.muva.chat
             </p>
           </div>
         </div>

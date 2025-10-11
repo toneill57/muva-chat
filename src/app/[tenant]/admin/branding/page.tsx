@@ -39,7 +39,7 @@ export default async function BrandingPage() {
       <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg">
         <p className="text-sm">
           <strong>Live Preview:</strong> Changes will be reflected immediately in the chat interface
-          at <code className="bg-blue-100 px-2 py-1 rounded text-xs">{subdomain}.innpilot.io/chat</code>
+          at <code className="bg-blue-100 px-2 py-1 rounded text-xs">{subdomain}.muva.chat/chat</code>
         </p>
       </div>
 

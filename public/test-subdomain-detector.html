@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subdomain Detector Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { color: #2563eb; }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .result {
+      background: #f0f0f0;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    .success { color: #10b981; }
+    .error { color: #ef4444; }
+  </style>
+</head>
+<body>
+  <h1>Subdomain Detector Test Suite</h1>
+  <p>Current hostname: <strong id="hostname"></strong></p>
+
+  <div class="test-section">
+    <h2>Test 1: Get Subdomain from Client</h2>
+    <button onclick="testGetSubdomain()">Run Test</button>
+    <div id="test1-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Validate Subdomain Format</h2>
+    <button onclick="testValidation()">Run Test</button>
+    <div id="test2-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Fetch Tenant Branding (simmerdown)</h2>
+    <button onclick="testFetchBranding()">Run Test</button>
+    <div id="test3-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: Fetch by Tenant ID</h2>
+    <button onclick="testFetchById()">Run Test</button>
+    <div id="test4-result" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 5: Cookie Detection</h2>
+    <button onclick="setCookie()">Set Test Cookie</button>
+    <button onclick="testCookie()">Test Cookie Detection</button>
+    <button onclick="clearCookie()">Clear Cookie</button>
+    <div id="test5-result" class="result"></div>
+  </div>
+
+  <script type="module">
+    // Import the subdomain detector functions
+    import {
+      getSubdomainFromClient,
+      fetchTenantBranding,
+      fetchTenantBrandingById,
+      isValidSubdomainClient
+    } from '/src/lib/subdomain-detector.ts'
+
+    // Make functions available globally for onclick handlers
+    window.getSubdomainFromClient = getSubdomainFromClient
+    window.fetchTenantBranding = fetchTenantBranding
+    window.fetchTenantBrandingById = fetchTenantBrandingById
+    window.isValidSubdomainClient = isValidSubdomainClient
+
+    // Display hostname
+    document.getElementById('hostname').textContent = window.location.hostname
+
+    // Test 1: Get subdomain
+    window.testGetSubdomain = () => {
+      const subdomain = getSubdomainFromClient()
+      const result = document.getElementById('test1-result')
+      result.innerHTML = `Detected subdomain: <span class="${subdomain ? 'success' : 'error'}">${subdomain || 'null (no subdomain)'}</span>
+
+Expected:
+- On simmerdown.localhost:3000 → "simmerdown"
+- On localhost:3000 → null
+- On simmerdown.muva.chat → "simmerdown"`
+    }
+
+    // Test 2: Validation
+    window.testValidation = () => {
+      const tests = [
+        { input: 'simmerdown', expected: true },
+        { input: 'free-hotel-test', expected: true },
+        { input: 'hotel123', expected: true },
+        { input: 'Invalid-Upper', expected: false },
+        { input: 'test_underscore', expected: false },
+        { input: 'test.dot', expected: false },
+        { input: '', expected: false },
+      ]
+
+      const results = tests.map(test => {
+        const result = isValidSubdomainClient(test.input)
+        const pass = result === test.expected
+        return `${pass ? '✅' : '❌'} isValidSubdomainClient("${test.input}") = ${result} (expected ${test.expected})`
+      })
+
+      document.getElementById('test2-result').innerHTML = results.join('\n')
+    }
+
+    // Test 3: Fetch branding
+    window.testFetchBranding = async () => {
+      const result = document.getElementById('test3-result')
+      result.textContent = 'Loading...'
+
+      try {
+        const branding = await fetchTenantBranding('simmerdown')
+        result.innerHTML = `<span class="success">✅ Success!</span>\n${JSON.stringify(branding, null, 2)}`
+      } catch (error) {
+        result.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`
+      }
+    }
+
+    // Test 4: Fetch by ID
+    window.testFetchById = async () => {
+      const result = document.getElementById('test4-result')
+      result.textContent = 'Loading...'
+
+      try {
+        const branding = await fetchTenantBrandingById('b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf')
+        result.innerHTML = `<span class="success">✅ Success!</span>\n${JSON.stringify(branding, null, 2)}`
+      } catch (error) {
+        result.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`
+      }
+    }
+
+    // Test 5: Cookie detection
+    window.setCookie = () => {
+      document.cookie = 'tenant_subdomain=simmerdown; path=/'
+      document.getElementById('test5-result').innerHTML = '<span class="success">✅ Cookie set: tenant_subdomain=simmerdown</span>'
+    }
+
+    window.testCookie = () => {
+      const subdomain = getSubdomainFromClient()
+      const cookies = document.cookie
+      document.getElementById('test5-result').innerHTML = `Current cookies: ${cookies || '(none)'}
+
+Detected subdomain: <span class="${subdomain ? 'success' : 'error'}">${subdomain || 'null'}</span>`
+    }
+
+    window.clearCookie = () => {
+      document.cookie = 'tenant_subdomain=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      document.getElementById('test5-result').innerHTML = '<span class="success">✅ Cookie cleared</span>'
+    }
+  </script>
+</body>
+</html>

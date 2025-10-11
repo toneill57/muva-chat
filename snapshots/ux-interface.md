@@ -30,6 +30,93 @@ version: "2.0"
 
 ---
 
+## 🎖️ CURRENT MILESTONE: Multi-Tenant Chat - FASE 1 Complete (2025-10-11)
+
+**Status:** ✅ FASE 1 COMPLETED - Production Ready
+
+**Achieved:**
+- ✅ Subdomain Root Routing - `simmerdown.muva.chat/` now works
+- ✅ Dynamic Tenant Branding - Each tenant shows correct business name
+- ✅ Backward Compatibility - `/chat` route still works
+- ✅ Multi-Tenant Tested - Verified with 3 tenants (Simmer Down, Hotel Boutique, XYZ)
+
+**Files Created/Modified:**
+- Created: `src/app/[tenant]/page.tsx` - Subdomain root page (93 lines)
+- Modified: `src/lib/welcome-message-static.ts` - Dynamic branding function
+- Modified: `src/components/Tenant/TenantChatPage.tsx` - Uses dynamic branding
+
+**UX Achievements:**
+- ✅ Graceful AI degradation verified (XYZ Hotel without data = no hallucinations)
+- ✅ Mobile-first interface working across all tenants
+- ✅ Dynamic welcome messages per tenant
+- ✅ Seamless tenant branding (logo, colors, business name)
+
+**Documentation:** `docs/milestones/MILESTONE-01-MULTI-TENANT-CHAT-ISOLATION.md`
+
+**Next Phases (Planned):**
+- **FASE 2 (8-10h):** Super Chat en MUVA.chat - Chat on steroids que busca en TODO
+- **FASE 3 (8-10h):** Marketplace Debajo - Grid de tenants + mapa Mapbox + destacados
+- **FASE 4 (4-6h):** Botón Minimizar - Transición moderna chat ↔ marketplace
+
+**Planning Files:**
+- `docs/subdomain-chat-experience/plan.md` - Plan completo (1043 líneas)
+- `docs/subdomain-chat-experience/TODO.md` - 40 tareas en 4 fases (463 líneas)
+- `docs/subdomain-chat-experience/subdomain-chat-experience-prompt-workflow.md` - Prompts copy-paste ready
+
+**Key Files to Create:**
+
+**FASE 1:**
+- **Create:** `src/lib/subdomain-detector.ts` - Client-side subdomain helpers
+- **Create:** `src/components/Tenant/TenantHeader.tsx` - Header con branding dinámico
+- **Create:** `src/components/Tenant/TenantChatPage.tsx` - Copy de DevChatMobileDev adaptado
+- **Create:** `src/app/page.tsx` - Root page con routing logic
+- **Modify:** `src/app/layout.tsx` - Meta tags dinámicos por tenant
+
+**FASE 2:**
+- **Create:** `src/components/SuperChat/SuperChatPage.tsx` - Super chat component
+- **Create:** `src/components/SuperChat/SuperChatHeader.tsx` - Header para muva.chat
+- **Create:** `src/components/SuperChat/TenantRecommendation.tsx` - Card recomendación tenant
+
+**FASE 3:**
+- **Create:** `src/components/Marketplace/` (13 componentes)
+  - MarketplaceHome, MarketplaceHeader, TenantGrid, TenantCard
+  - TenantMap (Mapbox GL JS)
+  - FeaturedSection (3 modos: carousel, grid, lista)
+
+**FASE 4:**
+- **Create:** `src/components/SuperChat/MinimizeButton.tsx` - Botón minimizar
+- **Create:** `src/components/SuperChat/FloatingChatIcon.tsx` - Floating icon
+- **Create:** `src/hooks/useChatState.ts` - State management (LocalStorage)
+- **Modify:** `src/app/page.tsx` - Integrar transición slide/fade
+
+**Reference (DO NOT MODIFY):**
+- `src/components/Dev/DevChatMobileDev.tsx` - 🔒 SANTO GRIAL (solo copiar, NO tocar)
+- `src/app/chat-mobile-dev/page.tsx` - 🔒 SANTO GRIAL (NO tocar)
+
+**Workflow:**
+1. Read plan.md + TODO.md + workflow.md
+2. Find next `[ ]` task in TODO.md
+3. Use corresponding prompt from workflow.md (copy entre ⬇️ y ⬆️)
+4. Implement following specifications
+5. Test per TODO.md commands
+6. Document in `docs/subdomain-chat-experience/fase-{N}/`
+
+**Technical Context (Verified):**
+- ✅ Middleware subdomain detection: `src/middleware.ts` (ya existe, funciona)
+- ✅ tenant_registry: Logo, color, SEO meta tags completos
+- ✅ Tenants actuales: Simmerdown (real), hotel-boutique (real), 2 dummies
+- ✅ DevChatMobileDev: 535 líneas, funciona perfecto (solo copiar)
+
+**Success Criteria:**
+- simmerdown.muva.chat → Chat directo fullscreen
+- hotel-boutique.muva.chat → Chat directo fullscreen
+- muva.chat → Super chat + Marketplace minimizable
+- Meta tags únicos por tenant
+- Transición smooth (300ms)
+- Mobile-first responsive
+
+---
+
 ## RESUMEN EJECUTIVO
 
 **Estado general UI/UX:** FUNCIONAL con gaps críticos de accesibilidad y refactoring necesario

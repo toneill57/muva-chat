@@ -283,7 +283,7 @@ export default function SettingsPage() {
                 {formData.nombre_comercial || 'Your Business Name'}
               </p>
               <p className="text-green-700 text-sm">
-                https://{tenant?.subdomain || 'yoursite'}.innpilot.io
+                https://{tenant?.subdomain || 'yoursite'}.muva.chat
               </p>
               <p className="text-sm text-gray-600 line-clamp-2">
                 {formData.seo_meta_description || 'Your meta description will appear here. This helps users understand what your business offers before they click on the search result.'}

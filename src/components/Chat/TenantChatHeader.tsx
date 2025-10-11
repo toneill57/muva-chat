@@ -15,7 +15,7 @@ export function TenantChatHeader({ tenant }: TenantChatHeaderProps) {
           <div className="w-10 h-10 rounded-full bg-gray-300" />
           <div>
             <h1 className="font-semibold text-lg">Chat</h1>
-            <p className="text-sm text-gray-500">Powered by InnPilot</p>
+            <p className="text-sm text-gray-500">Powered by MUVA</p>
           </div>
         </div>
       </header>
@@ -58,7 +58,7 @@ export function TenantChatHeader({ tenant }: TenantChatHeaderProps) {
 
         <div className="flex-1">
           <h1 className="font-semibold text-lg leading-tight">{displayName}</h1>
-          <p className="text-sm text-gray-500">Powered by InnPilot</p>
+          <p className="text-sm text-gray-500">Powered by MUVA</p>
         </div>
       </div>
     </header>

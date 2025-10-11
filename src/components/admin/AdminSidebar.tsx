@@ -84,7 +84,7 @@ export function AdminSidebar() {
               </div>
             )}
             <div>
-              <p className="font-semibold text-gray-900">{tenant?.nombre_comercial || 'InnPilot'}</p>
+              <p className="font-semibold text-gray-900">{tenant?.nombre_comercial || 'MUVA'}</p>
               <p className="text-xs text-gray-500">Admin Dashboard</p>
             </div>
           </div>
@@ -121,7 +121,7 @@ export function AdminSidebar() {
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Powered by <span className="font-semibold">InnPilot</span>
+            Powered by <span className="font-semibold">MUVA</span>
           </p>
         </div>
       </div>

@@ -57,13 +57,13 @@ export default function TenantNotFound() {
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
             <h3 className="font-semibold text-gray-900 mb-3">Valid Subdomain Format</h3>
             <p className="text-gray-700 mb-2">
-              InnPilot tenant URLs follow this format:
+              MUVA tenant URLs follow this format:
             </p>
             <code className="block bg-white border border-gray-300 rounded px-4 py-2 text-sm text-gray-800 font-mono">
-              https://[tenant-name].innpilot.io
+              https://[tenant-name].muva.chat
             </code>
             <p className="text-gray-600 text-sm mt-3">
-              Example: <span className="font-mono">https://simmerdown.innpilot.io</span>
+              Example: <span className="font-mono">https://simmerdown.muva.chat</span>
             </p>
           </div>
 
@@ -90,10 +90,10 @@ export default function TenantNotFound() {
             <p className="text-gray-600 text-sm">
               Need help? Contact your property administrator or{' '}
               <a
-                href="mailto:support@innpilot.io"
+                href="mailto:support@muva.chat"
                 className="text-blue-600 hover:text-blue-700 font-medium underline"
               >
-                InnPilot Support
+                MUVA Support
               </a>
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function TenantNotFound() {
         {/* Footer branding */}
         <div className="text-center mt-6">
           <p className="text-gray-500 text-sm">
-            Powered by <span className="font-semibold">InnPilot</span> – Multi-Tenant Hospitality Platform
+            Powered by <span className="font-semibold">MUVA</span> – Multi-Tenant Hospitality Platform
           </p>
         </div>
       </div>

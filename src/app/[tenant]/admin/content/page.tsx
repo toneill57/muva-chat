@@ -30,7 +30,7 @@ export default async function ContentPage() {
         <p className="text-gray-600">
           Customize the content that appears on your public landing page at{' '}
           <code className="bg-gray-100 px-2 py-1 rounded text-sm">
-            {subdomain}.innpilot.io
+            {subdomain}.muva.chat
           </code>
         </p>
       </div>

@@ -1,16 +1,20 @@
 ---
-title: "Políticas y Normas de la Casa"
-description: "Políticas, normas y reglamentos de Tu Casa en el Mar"
-type: "services"
-category: "hotel"
-status: "active"
-version: "1.0"
-last_updated: "2025-01-10"
-tags: ["policies", "house_rules", "normas_casa", "políticas"]
-keywords: ["políticas", "normas", "reglas", "check-in", "check-out", "cancelación"]
-language: "es"
-page_number: null
-section_title: null
+version: "2.0"
+type: "hotel_content"
+destination:
+  schema: "hotels"
+  table: "policies"
+document:
+  title: "Políticas y Normas de la Casa"
+  description: "Políticas, normas y reglamentos de Tu Casa en el Mar"
+  category: "policies"
+  subcategory: "house_rules"
+  language: "es"
+  version: "2.0"
+  status: "active"
+  tags: ["policies", "house_rules", "normas_casa", "políticas"]
+  keywords: ["políticas", "normas", "reglas", "check-in", "check-out", "cancelación"]
+tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 ---
 
 # Políticas y Normas de la Casa

@@ -44,7 +44,7 @@ export function AuthenticatedDashboard() {
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent">InnPilot</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent">MUVA</h1>
                 <p className="text-sm text-gray-600 font-medium">
                   {activeClient.business_name} • {activeClient.business_type}
                 </p>

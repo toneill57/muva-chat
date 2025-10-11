@@ -23,7 +23,7 @@ export function Dashboard() {
             <div className="flex items-center">
               <Shield className="h-8 w-8 text-blue-600 mr-3" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">InnPilot</h1>
+                <h1 className="text-2xl font-bold text-gray-900">MUVA</h1>
                 <p className="text-sm text-gray-500">Plataforma de Gestión SIRE</p>
               </div>
             </div>

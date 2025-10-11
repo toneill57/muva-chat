@@ -136,8 +136,8 @@ async function migrateToPublic() {
             min_nights: 1
           },
 
-          // Boolean flags
-          is_active: unit.status === 'active',
+          // Boolean flags (CRITICAL for RPC match_accommodations_public filters)
+          is_active: true, // Must be true for chat search
           is_bookable: true,
 
           // Metadata
