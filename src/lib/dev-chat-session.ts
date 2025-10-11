@@ -91,6 +91,7 @@ export async function getOrCreateDevSession(
       .from('prospective_sessions')
       .select('*')
       .eq('session_id', sessionId)
+      .eq('tenant_id', resolvedTenantId) // SECURITY: Prevent session hijacking across tenants
       .eq('status', 'active')
       .single()
 

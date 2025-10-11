@@ -140,10 +140,11 @@ export async function searchAccommodationsPublic(
   console.log('[dev-search] Embedding dimensions:', queryEmbedding.length)
 
   try {
-    // Use existing match_accommodation_units_fast with lower threshold
-    const { data, error } = await supabase.rpc('match_accommodation_units_fast', {
+    // SECURITY: Use match_accommodations_public with tenant_id filtering
+    const { data, error } = await supabase.rpc('match_accommodations_public', {
       query_embedding: queryEmbedding,
-      similarity_threshold: 0.2, // Lower threshold for dev marketing search
+      p_tenant_id: tenantId,
+      match_threshold: 0.2, // Lower threshold for dev marketing search
       match_count: 10,
     })
 
@@ -152,25 +153,19 @@ export async function searchAccommodationsPublic(
       return []
     }
 
-    console.log('[dev-search] Found accommodations:', data?.length || 0)
+    console.log('[dev-search] Found accommodations (tenant-filtered):', data?.length || 0)
 
-    // Filter by tenant_id in results since function doesn't take tenant param
-    const filtered = (data || []).filter((item: any) => {
-      // Skip tenant filtering if function handles it
-      return true
-    })
-
-    return filtered.map((item: any) => ({
+    // No additional filtering needed - RPC function handles tenant isolation
+    return (data || []).map((item: any) => ({
       id: item.id,
       name: item.name || 'Accommodation',
-      content: item.content || item.description || '',
+      content: item.content || '',
       similarity: item.similarity || 0,
-      source_file: `accommodation_${item.name}`,
-      table: 'accommodation_units',
-      metadata: {
-        view_type: item.view_type,
-        is_featured: item.is_featured,
-      },
+      source_file: item.source_file || `accommodation_${item.name}`,
+      table: 'accommodation_units_public',
+      pricing: item.pricing,
+      photos: item.photos,
+      metadata: item.metadata,
     }))
   } catch (error) {
     console.error('[dev-search] Accommodations search error:', error)

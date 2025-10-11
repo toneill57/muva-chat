@@ -137,21 +137,27 @@ export interface Tenant {
 export async function getTenantBySubdomain(
   subdomain: string | null
 ): Promise<Tenant | null> {
+  console.log('[getTenantBySubdomain] Called with subdomain:', subdomain);
+
   // Early return if no subdomain provided
   if (!subdomain) {
+    console.log('[getTenantBySubdomain] No subdomain provided, returning null');
     return null;
   }
 
   // Validate subdomain format before querying
   if (!isValidSubdomain(subdomain)) {
-    console.error(`[tenant-utils] Invalid subdomain format: ${subdomain}`);
+    console.error(`[getTenantBySubdomain] ❌ Invalid subdomain format: ${subdomain}`);
     return null;
   }
 
   try {
     // Dynamic import to avoid build-time errors
+    console.log('[getTenantBySubdomain] Creating Supabase client...');
     const { createServerClient } = await import('@/lib/supabase');
     const supabase = createServerClient();
+
+    console.log('[getTenantBySubdomain] Supabase client created, querying tenant_registry...');
 
     const { data, error } = await supabase
       .from('tenant_registry')
@@ -161,13 +167,14 @@ export async function getTenantBySubdomain(
 
     if (error) {
       // Log error but don't throw - return null for graceful handling
-      console.error('[tenant-utils] Error fetching tenant by subdomain:', error.message);
+      console.error('[getTenantBySubdomain] ❌ Supabase query error:', error.message, error.code, error.details);
       return null;
     }
 
+    console.log('[getTenantBySubdomain] ✅ Query successful, data:', data ? `tenant_id=${data.tenant_id}, name=${data.business_name || data.nombre_comercial}` : 'null');
     return data as Tenant;
   } catch (error) {
-    console.error('[tenant-utils] Unexpected error in getTenantBySubdomain:', error);
+    console.error('[getTenantBySubdomain] ❌ Unexpected error:', error);
     return null;
   }
 }
