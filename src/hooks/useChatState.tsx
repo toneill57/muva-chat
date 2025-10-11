@@ -20,7 +20,7 @@ export interface ChatState {
   }>
 }
 
-const STORAGE_KEY = 'innpilot_chat_state'
+const STORAGE_KEY = 'muva_chat_state'
 
 export function useChatState() {
   const [chatState, setChatState] = useState<ChatState>({

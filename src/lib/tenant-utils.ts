@@ -11,20 +11,20 @@
  * Extracts subdomain from hostname for multi-tenant routing
  *
  * Supported formats:
- * - Production: subdomain.innpilot.io → "subdomain"
+ * - Production: subdomain.muva.chat → "subdomain"
  * - Local dev: subdomain.localhost:3000 → "subdomain"
- * - No subdomain: innpilot.io → null
- * - WWW subdomain: www.innpilot.io → null (treated as no subdomain)
+ * - No subdomain: muva.chat → null
+ * - WWW subdomain: www.muva.chat → null (treated as no subdomain)
  *
  * @param hostname - Full hostname including port (e.g., "simmerdown.localhost:3000")
  * @returns Subdomain string or null if none found
  *
  * @example
  * ```typescript
- * getSubdomain('simmerdown.innpilot.io')        // → "simmerdown"
- * getSubdomain('free-hotel-test.innpilot.io')  // → "free-hotel-test"
- * getSubdomain('www.innpilot.io')              // → null
- * getSubdomain('innpilot.io')                  // → null
+ * getSubdomain('simmerdown.muva.chat')         // → "simmerdown"
+ * getSubdomain('free-hotel-test.muva.chat')    // → "free-hotel-test"
+ * getSubdomain('www.muva.chat')                // → null
+ * getSubdomain('muva.chat')                    // → null
  * getSubdomain('simmerdown.localhost:3000')    // → "simmerdown"
  * getSubdomain('localhost:3000')               // → null
  * ```
@@ -40,16 +40,6 @@ export function getSubdomain(hostname: string): string | null {
     return parts.length > 1 ? parts[0] : null;
   }
 
-  // Production: subdomain.innpilot.io
-  if (host.endsWith('.innpilot.io')) {
-    const parts = host.split('.');
-    // subdomain.innpilot.io → ["subdomain", "innpilot", "io"]
-    if (parts.length === 3) {
-      // Treat "www" as no subdomain
-      return parts[0] === 'www' ? null : parts[0];
-    }
-  }
-
   // Production: subdomain.muva.chat
   if (host.endsWith('.muva.chat')) {
     const parts = host.split('.');
@@ -60,7 +50,7 @@ export function getSubdomain(hostname: string): string | null {
     }
   }
 
-  // No subdomain found (innpilot.io, muva.chat, www.innpilot.io, www.muva.chat, or unknown domain)
+  // No subdomain found (muva.chat, www.muva.chat, or unknown domain)
   return null;
 }
 

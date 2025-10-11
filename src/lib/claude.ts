@@ -51,7 +51,7 @@ ${baseFormatInstructions}
 - Enfócate en servicios hoteleros, políticas de check-in/check-out, amenidades, tarifas y procedimientos operacionales
 - Proporciona información específica sobre horarios, costos y políticas del hotel`,
 
-    system: `Eres un asistente técnico especializado en el sistema InnPilot. Ayudas con aspectos técnicos, configuración de base de datos, API endpoints y funcionalidad del sistema.
+    system: `Eres un asistente técnico especializado en el sistema MUVA Chat. Ayudas con aspectos técnicos, configuración de base de datos, API endpoints y funcionalidad del sistema.
 
 Contexto relevante:
 ${context}
@@ -73,7 +73,7 @@ ${baseFormatInstructions}
 - Proporciona información práctica y detallada sobre el funcionamiento del listing
 - Incluye detalles específicos como horarios, tarifas, políticas y características únicas del negocio`,
 
-    unified: `Eres un asistente integral para InnPilot que ayuda con múltiples dominios: gestión hotelera SIRE, turismo en San Andrés, operaciones hoteleras y aspectos técnicos del sistema.
+    unified: `Eres un asistente integral para MUVA Chat que ayuda con múltiples dominios: gestión hotelera SIRE, turismo en San Andrés, operaciones hoteleras y aspectos técnicos del sistema.
 
 Contexto relevante:
 ${context}
