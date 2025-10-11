@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# InnPilot VPS Deployment Script
+# MUVA Chat VPS Deployment Script
 # Deploys latest changes from dev branch to production
 
 set -e  # Exit on any error
@@ -13,10 +13,10 @@ NC='\033[0m' # No Color
 
 # Configuration
 APP_DIR="/var/www/innpilot"
-PM2_APP_NAME="innpilot"
+PM2_APP_NAME="muva-chat"
 BRANCH="dev"
 
-echo -e "${GREEN}🚀 Starting InnPilot VPS Deployment${NC}"
+echo -e "${GREEN}🚀 Starting MUVA Chat VPS Deployment${NC}"
 echo ""
 
 # Step 1: Navigate to app directory
@@ -63,7 +63,7 @@ echo ""
 # Step 7: Show recent logs
 echo -e "${YELLOW}📋 Recent logs (last 30 lines):${NC}"
 echo -e "${YELLOW}================================${NC}"
-cat /root/.pm2/logs/innpilot-out-0.log | tail -30
+cat /root/.pm2/logs/muva-chat-out.log | tail -30 2>/dev/null || pm2 logs muva-chat --lines 30 --nostream
 echo ""
 echo -e "${YELLOW}================================${NC}"
 
@@ -72,10 +72,10 @@ echo ""
 echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
 echo ""
 echo -e "${YELLOW}Test URLs:${NC}"
-echo "  - https://simmerdown.innpilot.io/admin"
-echo "  - https://simmerdown.innpilot.io/admin/knowledge-base"
-echo "  - https://simmerdown.innpilot.io/admin/settings"
+echo "  - https://simmerdown.muva.chat/admin"
+echo "  - https://simmerdown.muva.chat/admin/knowledge-base"
+echo "  - https://simmerdown.muva.chat/admin/settings"
 echo ""
 echo -e "${YELLOW}Monitor logs with:${NC}"
-echo "  pm2 logs innpilot --nostream --lines 50"
+echo "  pm2 logs muva-chat --nostream --lines 50"
 echo ""
