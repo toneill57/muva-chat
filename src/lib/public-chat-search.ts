@@ -139,10 +139,11 @@ export async function searchAccommodationsPublic(
   console.log('[public-search] Embedding dimensions:', queryEmbedding.length)
 
   try {
-    // Use existing match_accommodation_units_fast with lower threshold
-    const { data, error } = await supabase.rpc('match_accommodation_units_fast', {
+    // Use match_accommodations_public for public chat (searches accommodation_units_public table)
+    const { data, error } = await supabase.rpc('match_accommodations_public', {
       query_embedding: queryEmbedding,
-      similarity_threshold: 0.2, // Lower threshold for public marketing search
+      p_tenant_id: tenantId,
+      match_threshold: 0.2, // Lower threshold for public marketing search
       match_count: 10,
     })
 
@@ -153,23 +154,17 @@ export async function searchAccommodationsPublic(
 
     console.log('[public-search] Found accommodations:', data?.length || 0)
 
-    // Filter by tenant_id in results since function doesn't take tenant param
-    const filtered = (data || []).filter((item: any) => {
-      // Skip tenant filtering if function handles it
-      return true
-    })
-
-    return filtered.map((item: any) => ({
+    // match_accommodations_public already filters by tenant_id
+    return (data || []).map((item: any) => ({
       id: item.id,
-      name: item.name || 'Accommodation',
-      content: item.content || item.description || '',
+      name: item.metadata?.name || 'Accommodation',
+      content: item.content || '',
       similarity: item.similarity || 0,
-      source_file: `accommodation_${item.name}`,
-      table: 'accommodation_units',
-      metadata: {
-        view_type: item.view_type,
-        is_featured: item.is_featured,
-      },
+      source_file: item.source_file,
+      table: 'accommodation_units_public',
+      metadata: item.metadata,
+      pricing: item.pricing,
+      photos: item.photos,
     }))
   } catch (error) {
     console.error('[public-search] Accommodations search error:', error)
