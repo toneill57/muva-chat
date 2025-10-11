@@ -394,7 +394,7 @@ Add to `app/layout.tsx`:
 Create `public/sw.js`:
 
 ```javascript
-const CACHE_NAME = 'innpilot-guest-v1'
+const CACHE_NAME = 'muva-guest-v1'
 const urlsToCache = [
   '/',
   '/guest/login',

@@ -1,6 +1,6 @@
-# InnPilot → MUVA Chat - Plan de Implementación
+# MUVA Chat → MUVA Chat - Plan de Implementación
 
-**Proyecto:** InnPilot to MUVA Chat Rebrand
+**Proyecto:** MUVA Chat to MUVA Chat Rebrand
 **Fecha Inicio:** 2025-10-11
 **Estado:** 📋 Planificación
 
@@ -9,16 +9,16 @@
 ## 🎯 OVERVIEW
 
 ### Objetivo Principal
-Rebrandear completamente InnPilot → MUVA Chat, reflejando la evolución del proyecto hacia una plataforma multi-tenant de turismo con chat como experiencia principal y SIRE como feature premium (gancho comercial para alojamientos).
+Rebrandear completamente MUVA Chat → MUVA Chat, reflejando la evolución del proyecto hacia una plataforma multi-tenant de turismo con chat como experiencia principal y SIRE como feature premium (gancho comercial para alojamientos).
 
 ### ¿Por qué?
-- **Evolución del concepto:** InnPilot (enfoque SIRE) → MUVA Chat (multi-tenant + turismo)
+- **Evolución del concepto:** MUVA Chat (enfoque SIRE) → MUVA Chat (multi-tenant + turismo)
 - **SIRE como gancho comercial:** Feature premium esencial para atraer hoteles y Airbnbs
 - **Claridad de brand:** Posicionar MUVA Chat como plataforma de turismo inteligente
 - **Organización escalable:** Docs estructuradas por features para crecimiento
 
 ### Alcance
-- **Branding:** ~1,777 referencias "InnPilot"/"innpilot" en código + documentación
+- **Branding:** ~1,777 referencias "MUVA Chat"/"innpilot" en código + documentación
 - **Reorganización:** Reestructurar `/docs` con enfoque en features (chat, SIRE, admin)
 - **Infrastructure:** Actualizar VPS (PM2 process, Nginx configs)
 - **Technical:** package.json, metadata, UI strings, comentarios
@@ -28,15 +28,15 @@ Rebrandear completamente InnPilot → MUVA Chat, reflejando la evolución del pr
 ## 📊 ESTADO ACTUAL
 
 ### Sistema Existente
-- ✅ Proyecto "InnPilot" funcionando en producción (muva.chat)
+- ✅ Proyecto "MUVA Chat" funcionando en producción (muva.chat)
 - ✅ Multi-tenant subdomain chat system completo
 - ✅ SIRE compliance module implementado y funcional
 - ✅ 4 tenants activos (simmerdown, xyz, free-hotel-test, hotel-boutique)
-- ✅ Dual-domain support (innpilot.io + muva.chat)
+- ✅ Dual-domain support (muva.chat + muva.chat)
 - ✅ Matryoshka embeddings optimizados (10x performance boost)
 
 ### Limitaciones Actuales
-- ❌ **Branding confuso:** Referencias mixtas InnPilot vs MUVA
+- ❌ **Branding confuso:** Referencias mixtas MUVA Chat vs MUVA
 - ❌ **Docs desorganizadas:** Enfoque legacy en SIRE, no refleja multi-tenant
 - ❌ **Naming inconsistente:** package.json "innpilot", PM2 "innpilot", pero domain "muva.chat"
 - ❌ **Posicionamiento poco claro:** SIRE como proyecto principal en vez de feature
@@ -114,10 +114,10 @@ Rebrandear completamente InnPilot → MUVA Chat, reflejando la evolución del pr
 - Metadata en layout.tsx (browser title, description)
 
 **Archivos a modificar:**
-- `/Users/oneill/Sites/apps/InnPilot/README.md`
-- `/Users/oneill/Sites/apps/InnPilot/package.json`
-- `/Users/oneill/Sites/apps/InnPilot/CLAUDE.md`
-- `/Users/oneill/Sites/apps/InnPilot/src/app/layout.tsx`
+- `/Users/oneill/Sites/apps/MUVA Chat/README.md`
+- `/Users/oneill/Sites/apps/MUVA Chat/package.json`
+- `/Users/oneill/Sites/apps/MUVA Chat/CLAUDE.md`
+- `/Users/oneill/Sites/apps/MUVA Chat/src/app/layout.tsx`
 
 **Testing:**
 - ✅ `npm run build` pasa sin errores
@@ -178,7 +178,7 @@ docs/
 **Entregables:**
 - Nueva estructura de carpetas creada
 - SIRE docs migrados a `features/sire-compliance/`
-- Batch replacement "InnPilot" → "MUVA" en ~200 archivos .md
+- Batch replacement "MUVA Chat" → "MUVA" en ~200 archivos .md
 - Nuevo `docs/README.md` con overview de MUVA Chat
 - Links internos actualizados
 
@@ -196,7 +196,7 @@ docs/
 
 **Testing:**
 - ✅ Links internos funcionan
-- ✅ `grep -r "InnPilot" docs/` → Solo en `archive/` y `muva-migration/`
+- ✅ `grep -r "MUVA Chat" docs/` → Solo en `archive/` y `muva-migration/`
 - ✅ Estructura navegable
 - ✅ SIRE docs accesibles en nueva ubicación
 
@@ -220,10 +220,10 @@ docs/
 ssh oneill@muva.chat
 
 # Stop current process
-pm2 stop innpilot
+pm2 stop muva-chat
 
 # Delete old process
-pm2 delete innpilot
+pm2 delete muva-chat
 
 # Start with new name
 pm2 start npm --name "muva-chat" -- start
@@ -258,7 +258,7 @@ sudo systemctl reload nginx
 **Nginx Config (Option B - Keep filename, update comments):**
 ```bash
 # Just update internal comments in innpilot.conf
-# "InnPilot subdomain routing" → "MUVA Chat subdomain routing"
+# "MUVA Chat subdomain routing" → "MUVA Chat subdomain routing"
 # Keep filename for compatibility
 ```
 
@@ -276,7 +276,7 @@ sudo systemctl reload nginx
 **Objetivo:** Actualizar strings visibles al usuario + comentarios en código
 
 **Entregables:**
-- UI strings actualizados (si hay "InnPilot" visible)
+- UI strings actualizados (si hay "MUVA Chat" visible)
 - Comentarios en código actualizados
 - Metadata de páginas actualizada
 
@@ -286,7 +286,7 @@ sudo systemctl reload nginx
 - Comentarios en código (opcional, low priority)
 
 **Scope:**
-- Solo ~23 archivos .ts/.tsx tienen referencias a "InnPilot"
+- Solo ~23 archivos .ts/.tsx tienen referencias a "MUVA Chat"
 - Mayoría son comentarios técnicos (actualizar si tiene sentido)
 - NO cambiar nombres técnicos (como nombres de tablas DB)
 
@@ -322,7 +322,7 @@ sudo systemctl reload nginx
 - [ ] package.json name: "muva-chat"
 - [ ] PM2 process: "muva-chat"
 - [ ] Browser title: "MUVA Chat"
-- [ ] grep -r "InnPilot" docs/ → Only in archive/ and muva-migration/
+- [ ] grep -r "MUVA Chat" docs/ → Only in archive/ and muva-migration/
 - [ ] grep -r "innpilot" src/ → Only technical (lowercase ok)
 
 ## Documentation
@@ -348,7 +348,7 @@ git diff
 git add .
 
 # Commit with descriptive message
-git commit -m "feat(rebrand): Complete InnPilot → MUVA Chat rebranding
+git commit -m "feat(rebrand): Complete MUVA Chat → MUVA Chat rebranding
 
 - Update package.json name to 'muva-chat'
 - Rebrand README.md and CLAUDE.md
@@ -356,7 +356,7 @@ git commit -m "feat(rebrand): Complete InnPilot → MUVA Chat rebranding
 - Move SIRE docs to features/sire-compliance/
 - Update VPS infrastructure (PM2, Nginx)
 - Update source code strings and metadata
-- Batch replace ~1,777 references InnPilot → MUVA
+- Batch replace ~1,777 references MUVA Chat → MUVA
 
 BREAKING CHANGE: PM2 process renamed from 'innpilot' to 'muva-chat'
 
@@ -397,7 +397,7 @@ git push origin --tags
 - [ ] package.json: `"name": "muva-chat"` ✅
 - [ ] PM2 process: `"muva-chat"` ✅
 - [ ] Browser title: "MUVA Chat" ✅
-- [ ] `grep -r "InnPilot" docs/` → 0 results (excepto archive/ y muva-migration/)
+- [ ] `grep -r "MUVA Chat" docs/` → 0 results (excepto archive/ y muva-migration/)
 - [ ] README.md title: "MUVA Chat - Multi-Tenant Tourism Platform"
 
 ### Documentación
@@ -447,7 +447,7 @@ git push origin --tags
 
 **Tareas:**
 - **FASE 1:** Metadata en layout.tsx (title, description)
-- **FASE 4:** UI strings en components (si hay "InnPilot" visible al usuario)
+- **FASE 4:** UI strings en components (si hay "MUVA Chat" visible al usuario)
 
 **Archivos:**
 - `src/app/layout.tsx`
@@ -485,7 +485,7 @@ git push origin --tags
 
 ### Project Documentation
 ```
-/Users/oneill/Sites/apps/InnPilot/
+/Users/oneill/Sites/apps/MUVA Chat/
 ├── docs/
 │   ├── projects/
 │   │   └── innpilot-to-muva-rebrand/
@@ -520,7 +520,7 @@ docs/
 
 ### Core Files to Update
 ```
-/Users/oneill/Sites/apps/InnPilot/
+/Users/oneill/Sites/apps/MUVA Chat/
 ├── package.json                       # name: "muva-chat"
 ├── README.md                          # Rebrandeado
 ├── CLAUDE.md                          # Context actualizado
@@ -542,7 +542,7 @@ docs/
    - Docs migran a `features/sire-compliance/` pero permanecen activas
 
 2. **Mantener Compatibilidad**
-   - Dual-domain support sigue funcionando (innpilot.io + muva.chat)
+   - Dual-domain support sigue funcionando (muva.chat + muva.chat)
    - Tenants existentes no se afectan
    - API endpoints no cambian
    - Database schema no se modifica
@@ -591,7 +591,7 @@ docs/
 ## 🎯 MÉTRICAS DE ÉXITO
 
 ### Cuantitativas
-- ✅ 0 referencias "InnPilot" en docs (excepto archive/)
+- ✅ 0 referencias "MUVA Chat" en docs (excepto archive/)
 - ✅ ~200 archivos .md actualizados
 - ✅ ~23 archivos .ts/.tsx revisados
 - ✅ 100% tests pasando (npm test)

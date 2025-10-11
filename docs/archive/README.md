@@ -1,6 +1,6 @@
 # Archivo Histórico - Documentación Legacy
 
-> Documentos archivados de fases anteriores del proyecto InnPilot. Mantenidos para referencia histórica.
+> Documentos archivados de fases anteriores del proyecto MUVA Chat. Mantenidos para referencia histórica.
 
 ## 📋 Índice de Documentos Archivados
 

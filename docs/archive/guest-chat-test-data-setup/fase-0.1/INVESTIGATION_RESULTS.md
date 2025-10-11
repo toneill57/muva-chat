@@ -437,7 +437,7 @@ $$;
 
 ## 📚 Referencias
 
-- **Plan principal:** `/Users/oneill/Sites/apps/InnPilot/plan.md` (líneas 13-71)
+- **Plan principal:** `/Users/oneill/Sites/apps/MUVA Chat/plan.md` (líneas 13-71)
 - **Chat Engine:** `src/lib/conversational-chat-engine.ts:423-452`
 - **Queries ejecutadas:** Ver arriba en sección "Hallazgos"
 

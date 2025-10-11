@@ -332,10 +332,10 @@ psql -h YOUR_DB_HOST -U postgres -d innpilot -f MIGRATION_FILE.sql
 **Option A: VPS Deployment (Recommended)**
 ```bash
 # On VPS
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git pull origin main
 npm install
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 **Option B: Vercel Deployment (if still using)**
@@ -408,10 +408,10 @@ Repeat all staff endpoint tests from Pre-Launch section.
 **Monitor Application Logs:**
 ```bash
 # PM2
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 
 # Or direct logs
-tail -f /var/log/innpilot/error.log
+tail -f /var/log/muva-chat/error.log
 ```
 
 **Monitor Database Logs:**
@@ -496,7 +496,7 @@ WHERE error_message IS NOT NULL
 
 ### Step 1: Stop Application
 ```bash
-pm2 stop innpilot
+pm2 stop muva-chat
 ```
 
 ### Step 2: Restore Database Backup

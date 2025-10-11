@@ -284,13 +284,13 @@ sudo systemctl status nginx
 
 ```bash
 # Check error logs for issues
-tail -f /var/log/nginx/innpilot-subdomain-error.log
+tail -f /var/log/nginx/muva-subdomain-error.log
 
 # In another terminal, test request
 curl -I https://simmerdown.muva.chat
 
 # Check access logs
-tail -n 20 /var/log/nginx/innpilot-subdomain-access.log
+tail -n 20 /var/log/nginx/muva-subdomain-access.log
 ```
 
 ---
@@ -332,7 +332,7 @@ curl -I http://simmerdown.muva.chat
 
 ```bash
 # Navigate to app directory
-cd /var/www/innpilot
+cd /var/www/muva-chat
 
 # Start with PM2
 pm2 start ecosystem.config.cjs
@@ -478,11 +478,11 @@ sudo systemctl reload nginx
 sudo netstat -tlnp | grep :3000
 
 # If empty, Next.js is not running. Start it:
-cd /var/www/innpilot
+cd /var/www/muva-chat
 pm2 start ecosystem.config.cjs
 
 # Check PM2 logs
-pm2 logs innpilot
+pm2 logs muva-chat
 ```
 
 ---
@@ -498,7 +498,7 @@ pm2 logs innpilot
 sudo nginx -t
 
 # Check Nginx error logs
-tail -f /var/log/nginx/innpilot-subdomain-error.log
+tail -f /var/log/nginx/muva-subdomain-error.log
 
 # Verify regex captures subdomain
 curl -v https://simmerdown.muva.chat 2>&1 | grep -i subdomain

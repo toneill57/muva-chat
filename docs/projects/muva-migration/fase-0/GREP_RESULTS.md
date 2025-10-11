@@ -1,4 +1,4 @@
-# Grep Results - innpilot.io References
+# Grep Results - muva.chat References
 
 **Date:** 2025-10-10
 **Project:** MUVA.chat Migration - FASE 0
@@ -32,26 +32,26 @@ value: '(?<subdomain>[^.]+)\\.(localhost|innpilot\\.io)(?:\\:\\d+)?',
 
 ```typescript
 // Línea 14: Comment
-* - Production: subdomain.innpilot.io → "subdomain"
+* - Production: subdomain.muva.chat → "subdomain"
 
 // Línea 16-17: Comments
-* - No subdomain: innpilot.io → null
-* - WWW subdomain: www.innpilot.io → null (treated as no subdomain)
+* - No subdomain: muva.chat → null
+* - WWW subdomain: www.muva.chat → null (treated as no subdomain)
 
 // Línea 24-27: Examples in comments
-* getSubdomain('simmerdown.innpilot.io')        // → "simmerdown"
-* getSubdomain('free-hotel-test.innpilot.io')  // → "free-hotel-test"
-* getSubdomain('www.innpilot.io')              // → null
-* getSubdomain('innpilot.io')                  // → null
+* getSubdomain('simmerdown.muva.chat')        // → "simmerdown"
+* getSubdomain('free-hotel-test.muva.chat')  // → "free-hotel-test"
+* getSubdomain('www.muva.chat')              // → null
+* getSubdomain('muva.chat')                  // → null
 
 // Línea 43-46: CORE LOGIC - CRITICAL
-// Production: subdomain.innpilot.io
-if (host.endsWith('.innpilot.io')) {
+// Production: subdomain.muva.chat
+if (host.endsWith('.muva.chat')) {
   const parts = host.split('.');
-  // subdomain.innpilot.io → ["subdomain", "innpilot", "io"]
+  // subdomain.muva.chat → ["subdomain", "innpilot", "io"]
 
 // Línea 53: Comment
-// No subdomain found (innpilot.io, www.innpilot.io, or unknown domain)
+// No subdomain found (muva.chat, www.muva.chat, or unknown domain)
 ```
 
 **Acción:** Agregar bloque similar para `.muva.chat` después línea 51
@@ -64,18 +64,18 @@ if (host.endsWith('.innpilot.io')) {
 
 ```nginx
 # Línea 9: CRITICAL - Server name directive
-server_name *.innpilot.io innpilot.io;
+server_name *.muva.chat muva.chat;
 
 # Línea 12-13: SSL certificate paths
-ssl_certificate /etc/letsencrypt/live/innpilot.io-0001/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/innpilot.io-0001/privkey.pem;
+ssl_certificate /etc/letsencrypt/live/muva.chat-0001/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/muva.chat-0001/privkey.pem;
 
 # Línea 23-24: Comments explaining subdomain extraction
-# Example: simmerdown.innpilot.io -> subdomain = "simmerdown"
-# Example: innpilot.io -> subdomain = "" (empty)
+# Example: simmerdown.muva.chat -> subdomain = "simmerdown"
+# Example: muva.chat -> subdomain = "" (empty)
 
 # Línea 73: HTTP redirect server block
-server_name *.innpilot.io innpilot.io;
+server_name *.muva.chat muva.chat;
 ```
 
 **Acción:**
@@ -91,7 +91,7 @@ server_name *.innpilot.io innpilot.io;
 
 ```typescript
 // Línea 43: Comment explaining resolution
-* (e.g., simmerdown.innpilot.io → tenant_id)
+* (e.g., simmerdown.muva.chat → tenant_id)
 ```
 
 **Acción:** Actualizar comment para incluir ejemplo muva.chat (non-blocking)
@@ -105,7 +105,7 @@ server_name *.innpilot.io innpilot.io;
 **Tipo:** UI placeholder text
 
 ```tsx
-https://{tenant?.subdomain || 'yoursite'}.innpilot.io
+https://{tenant?.subdomain || 'yoursite'}.muva.chat
 ```
 
 **Acción:** Cambiar a `.muva.chat` en FASE 2 (después de migración tenants)
@@ -117,7 +117,7 @@ https://{tenant?.subdomain || 'yoursite'}.innpilot.io
 **Tipo:** UI example text
 
 ```tsx
-at <code className="bg-blue-100 px-2 py-1 rounded text-xs">{subdomain}.innpilot.io/chat</code>
+at <code className="bg-blue-100 px-2 py-1 rounded text-xs">{subdomain}.muva.chat/chat</code>
 ```
 
 **Acción:** Cambiar a `.muva.chat` en FASE 2
@@ -129,7 +129,7 @@ at <code className="bg-blue-100 px-2 py-1 rounded text-xs">{subdomain}.innpilot.
 **Tipo:** UI display text
 
 ```tsx
-{subdomain}.innpilot.io
+{subdomain}.muva.chat
 ```
 
 **Acción:** Cambiar a `.muva.chat` en FASE 2
@@ -142,18 +142,18 @@ at <code className="bg-blue-100 px-2 py-1 rounded text-xs">{subdomain}.innpilot.
 
 ```tsx
 // Línea 63: Example URL in error message
-https://[tenant-name].innpilot.io
+https://[tenant-name].muva.chat
 
 // Línea 66: Example domain
-Example: <span className="font-mono">https://simmerdown.innpilot.io</span>
+Example: <span className="font-mono">https://simmerdown.muva.chat</span>
 
 // Línea 93: Support email link
-href="mailto:support@innpilot.io"
+href="mailto:support@muva.chat"
 ```
 
 **Acción:**
 - Líneas 63, 66: Cambiar a `.muva.chat` en FASE 2
-- Línea 93: Email puede mantener dominio innpilot.io (decisión de negocio)
+- Línea 93: Email puede mantener dominio muva.chat (decisión de negocio)
 
 ---
 
@@ -162,7 +162,7 @@ href="mailto:support@innpilot.io"
 **Tipo:** UI display text
 
 ```tsx
-{tenant?.subdomain || 'loading'}.innpilot.io
+{tenant?.subdomain || 'loading'}.muva.chat
 ```
 
 **Acción:** Cambiar a `.muva.chat` en FASE 2
@@ -177,11 +177,11 @@ href="mailto:support@innpilot.io"
 
 ```nginx
 # Línea 14, 24: Server name
-server_name innpilot.io www.innpilot.io;
+server_name muva.chat www.muva.chat;
 
 # Línea 27-28: SSL paths (commented out)
-# ssl_certificate /etc/letsencrypt/live/innpilot.io/fullchain.pem;
-# ssl_certificate_key /etc/letsencrypt/live/innpilot.io/privkey.pem;
+# ssl_certificate /etc/letsencrypt/live/muva.chat/fullchain.pem;
+# ssl_certificate_key /etc/letsencrypt/live/muva.chat/privkey.pem;
 ```
 
 **Acción:** Mantener para referencia histórica (archivo no activo en VPS)
@@ -193,7 +193,7 @@ server_name innpilot.io www.innpilot.io;
 **Tipo:** Deployment verification script
 
 ```bash
-DOMAIN="innpilot.io"
+DOMAIN="muva.chat"
 ```
 
 **Acción:** Cambiar a `muva.chat` en FASE 3 o hacer configurable
@@ -205,7 +205,7 @@ DOMAIN="innpilot.io"
 **Tipo:** Setup instruction comment
 
 ```bash
-echo "  7. Setup SSL: certbot --nginx -d innpilot.io -d www.innpilot.io"
+echo "  7. Setup SSL: certbot --nginx -d muva.chat -d www.muva.chat"
 ```
 
 **Acción:** Actualizar para incluir muva.chat en FASE 3
@@ -218,15 +218,15 @@ echo "  7. Setup SSL: certbot --nginx -d innpilot.io -d www.innpilot.io"
 
 ```bash
 # Línea 39, 42: Wildcard check
-if grep -q "*.innpilot.io" "$NGINX_CONFIG"; then
-echo -e "${RED}❌ WARNING: Wildcard subdomain (*.innpilot.io) NOT found${NC}"
+if grep -q "*.muva.chat" "$NGINX_CONFIG"; then
+echo -e "${RED}❌ WARNING: Wildcard subdomain (*.muva.chat) NOT found${NC}"
 
 # Línea 124, 127, 131: Health check endpoint
-HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
-curl -s https://innpilot.io/api/health | jq '.'
+HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
+curl -s https://muva.chat/api/health | jq '.'
 
 # Línea 143: Subdomain test
-echo -e "${BLUE}Testing: ${subdomain}.innpilot.io${NC}"
+echo -e "${BLUE}Testing: ${subdomain}.muva.chat${NC}"
 ```
 
 **Acción:** Agregar tests paralelos para muva.chat en FASE 3
@@ -238,9 +238,9 @@ echo -e "${BLUE}Testing: ${subdomain}.innpilot.io${NC}"
 **Tipo:** Deploy success message
 
 ```bash
-echo "  - https://simmerdown.innpilot.io/admin"
-echo "  - https://simmerdown.innpilot.io/admin/knowledge-base"
-echo "  - https://simmerdown.innpilot.io/admin/settings"
+echo "  - https://simmerdown.muva.chat/admin"
+echo "  - https://simmerdown.muva.chat/admin/knowledge-base"
+echo "  - https://simmerdown.muva.chat/admin/settings"
 ```
 
 **Acción:** Cambiar a muva.chat en FASE 3
@@ -252,7 +252,7 @@ echo "  - https://simmerdown.innpilot.io/admin/settings"
 **Tipo:** Cron job URL
 
 ```bash
-CRON_URL="https://innpilot.io/api/cron/archive-conversations"
+CRON_URL="https://muva.chat/api/cron/archive-conversations"
 ```
 
 **Acción:** Cambiar a muva.chat en FASE 3 (funciona con ambos durante transición)
@@ -264,9 +264,9 @@ CRON_URL="https://innpilot.io/api/cron/archive-conversations"
 **Tipo:** Integration test script (deprecated)
 
 ```bash
-run_test "WWW subdomain (should be treated as null)" "www.innpilot.io" "null"
-run_test "Production subdomain (simmerdown.innpilot.io)" "simmerdown.innpilot.io" "simmerdown"
-run_test "Main domain (innpilot.io)" "innpilot.io" "null"
+run_test "WWW subdomain (should be treated as null)" "www.muva.chat" "null"
+run_test "Production subdomain (simmerdown.muva.chat)" "simmerdown.muva.chat" "simmerdown"
+run_test "Main domain (muva.chat)" "muva.chat" "null"
 ```
 
 **Acción:** Agregar tests para muva.chat en FASE 3 (archivo deprecated, low priority)
@@ -358,8 +358,8 @@ value: '(?<subdomain>[^.]+)\\.(localhost|innpilot\\.io|muva\\.chat)(?:\\:\\d+)?'
 
 **Estructura esperada:**
 ```typescript
-// Production: subdomain.innpilot.io
-if (host.endsWith('.innpilot.io')) {
+// Production: subdomain.muva.chat
+if (host.endsWith('.muva.chat')) {
   const parts = host.split('.');
   const subdomain = parts[0];
   return subdomain === 'www' ? null : subdomain;
@@ -379,8 +379,8 @@ if (host.endsWith('.muva.chat')) {
 
 ### 3. docs/deployment/nginx-subdomain.conf
 **Cambios requeridos:**
-- **Línea 9:** `server_name *.innpilot.io innpilot.io *.muva.chat muva.chat;`
-- **Línea 73:** `server_name *.innpilot.io innpilot.io *.muva.chat muva.chat;`
+- **Línea 9:** `server_name *.muva.chat muva.chat *.muva.chat muva.chat;`
+- **Línea 73:** `server_name *.muva.chat muva.chat *.muva.chat muva.chat;`
 
 **Impacto:** Sin estos cambios, Nginx no aceptará requests para dominio muva.chat. Los requests serán rechazados con error 502/503.
 
@@ -414,7 +414,7 @@ La mayoría de referencias son en documentación y comentarios, lo cual confirma
 3. ✅ `docs/deployment/nginx-subdomain.conf` - Agregar server_name muva.chat (líneas 9, 73)
 4. ✅ Crear test script para validar dual-domain functionality
 
-**Validación:** Testing debe confirmar que AMBOS dominios funcionan en paralelo sin afectar tráfico actual de innpilot.io
+**Validación:** Testing debe confirmar que AMBOS dominios funcionan en paralelo sin afectar tráfico actual de muva.chat
 
 ---
 

@@ -1,4 +1,4 @@
-# TODO - InnPilot Development Roadmap
+# TODO - MUVA Chat Development Roadmap
 
 > **Última actualización**: 30 de Septiembre 2025 - 17:00
 > **Estado actual**: FASE 1 COMPLETADA Y VALIDADA ✅ - Sistema 100% funcional con 90% E2E pass rate
@@ -9,7 +9,7 @@
 
 ## 🎯 PRIORIDAD #1: CORE PRODUCT - Sistema Conversacional con Memoria
 
-**Referencia completa**: Ver `/Users/oneill/Sites/apps/InnPilot/plan.md` para especificaciones detalladas
+**Referencia completa**: Ver `/Users/oneill/Sites/apps/MUVA Chat/plan.md` para especificaciones detalladas
 
 **Objetivo**: Desarrollar asistente AI conversacional que permita a huéspedes mantener conversaciones persistentes con contexto completo, ligadas a su reserva.
 
@@ -736,9 +736,9 @@ node scripts/populate-embeddings.js _assets/muva/listings/[categoria]/[archivo].
 ## 📚 REFERENCIAS OBLIGATORIAS
 
 ### Documentos de Planificación
-- **`/Users/oneill/Sites/apps/InnPilot/plan.md`** - Plan completo del sistema conversacional
-- **`/Users/oneill/Sites/apps/InnPilot/CLAUDE.md`** - Guía de trabajo para Claude Code
-- **`/Users/oneill/Sites/apps/InnPilot/SNAPSHOT.md`** - Estado actual del proyecto
+- **`/Users/oneill/Sites/apps/MUVA Chat/plan.md`** - Plan completo del sistema conversacional
+- **`/Users/oneill/Sites/apps/MUVA Chat/CLAUDE.md`** - Guía de trabajo para Claude Code
+- **`/Users/oneill/Sites/apps/MUVA Chat/SNAPSHOT.md`** - Estado actual del proyecto
 
 ### Documentos Técnicos Críticos
 - **`docs/PREMIUM_CHAT_ARCHITECTURE.md`** - LLM intent detection actual

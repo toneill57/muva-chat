@@ -321,10 +321,10 @@ Since rate limiting is handled in-memory at API level, monitor via application l
 
 ```bash
 # Search API logs for rate limit events
-grep "Rate limit exceeded" /var/log/innpilot/api.log | wc -l
+grep "Rate limit exceeded" /var/log/muva-chat/api.log | wc -l
 
 # Top IPs hitting rate limits
-grep "Rate limit exceeded" /var/log/innpilot/api.log | \
+grep "Rate limit exceeded" /var/log/muva-chat/api.log | \
   awk '{print $NF}' | sort | uniq -c | sort -rn | head -20
 ```
 

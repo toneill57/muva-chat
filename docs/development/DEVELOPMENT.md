@@ -70,9 +70,9 @@
    - API Status: http://localhost:3000/api/status
 
    **Production (Vercel):**
-   - Web UI: https://innpilot.vercel.app
-   - API Health: https://innpilot.vercel.app/api/health
-   - API Status: https://innpilot.vercel.app/api/status
+   - Web UI: https://muva.chat
+   - API Health: https://muva.chat/api/health
+   - API Status: https://muva.chat/api/status
 
 ## Project Structure
 
@@ -340,7 +340,7 @@ cat .env.local
 **Recommended - Use API calls:**
 ```javascript
 // Check API health
-const health = await fetch('https://innpilot.vercel.app/api/health')
+const health = await fetch('https://muva.chat/api/health')
   .then(res => res.json());
 console.log('System status:', health.status);
 
@@ -352,7 +352,7 @@ console.log('Services:', status.services);
 
 **For debugging only (cURL):**
 ```bash
-curl https://innpilot.vercel.app/api/health
+curl https://muva.chat/api/health
 curl http://localhost:3000/api/status  # Local only
 ```
 
@@ -375,7 +375,7 @@ npx tsc --noEmit
 ```javascript
 // Monitor response times
 const start = performance.now();
-const response = await fetch('https://innpilot.vercel.app/api/chat', {
+const response = await fetch('https://muva.chat/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ question: "Test performance" })
@@ -391,7 +391,7 @@ console.log(`API response time: ${duration.toFixed(2)}ms`);
 npm run validate-env:test
 
 # Monitor API calls with timing
-curl -w "@curl-format.txt" https://innpilot.vercel.app/api/chat
+curl -w "@curl-format.txt" https://muva.chat/api/chat
 ```
 
 #### Database Issues

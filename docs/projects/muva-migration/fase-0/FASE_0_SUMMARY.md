@@ -21,7 +21,7 @@ FASE 0 completada exitosamente. Todos los sistemas verificados, backups creados,
 **File:** `DNS_VERIFICATION.md`
 **Status:** Ambos dominios apuntan correctamente a 195.200.6.216
 **Details:**
-- `innpilot.io` → 195.200.6.216 ✅
+- `muva.chat` → 195.200.6.216 ✅
 - `muva.chat` → 195.200.6.216 ✅
 - Sin latencia de propagación (ya configurado)
 
@@ -29,11 +29,11 @@ FASE 0 completada exitosamente. Todos los sistemas verificados, backups creados,
 
 ### 0.2 ✅ SSL Certificates Audit
 **File:** `SSL_AUDIT.md`
-**Status:** Certificado wildcard activo para `*.innpilot.io`
+**Status:** Certificado wildcard activo para `*.muva.chat`
 **Details:**
-- Cert activo: `/etc/letsencrypt/live/innpilot.io-0001/`
+- Cert activo: `/etc/letsencrypt/live/muva.chat-0001/`
 - Expiration: >80 días restantes
-- Coverage: `*.innpilot.io` + `innpilot.io`
+- Coverage: `*.muva.chat` + `muva.chat`
 - **Pending:** Generar wildcard para `*.muva.chat` en FASE 2
 
 ---
@@ -206,7 +206,7 @@ docs/projects/muva-migration/backups/
 - ✅ Scope clarificado (solo 3 archivos críticos)
 - ✅ Database verificada (4 tenants activos)
 - ✅ DNS confirmado (ambos dominios ready)
-- ✅ SSL actual verificado (innpilot.io activo)
+- ✅ SSL actual verificado (muva.chat activo)
 
 **Sistema listo para FASE 1 (Dual-Domain Support)**
 

@@ -132,7 +132,7 @@ ssh root@muva.chat
 pm2 status
 
 # 3. Ver últimos logs
-pm2 logs innpilot --lines 200 --err
+pm2 logs muva-chat --lines 200 --err
 
 # 4. Identificar causa en logs
 # Buscar: "Error:", "EADDRINUSE", "Out of memory", "undefined"
@@ -141,19 +141,19 @@ pm2 logs innpilot --lines 200 --err
 lsof -ti:3000 | xargs kill -9
 
 # 5b. Si OOM, reiniciar con más memoria
-pm2 delete innpilot
+pm2 delete muva-chat
 pm2 start ecosystem.config.js --update-env
 # (ecosystem.config.js debe tener max_memory_restart: '500M')
 
 # 5c. Si environment variables faltantes, configurar
 pm2 set pm2:NEXT_PUBLIC_SUPABASE_URL "https://..."
-pm2 restart innpilot --update-env
+pm2 restart muva-chat --update-env
 
 # 5d. Si código crasheando, rollback
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git reset --hard HEAD~1
 npm run build
-pm2 reload innpilot
+pm2 reload muva-chat
 
 # 6. Verificar app corriendo
 pm2 status
@@ -188,8 +188,8 @@ curl http://localhost:3000/api/health
 ssh root@muva.chat
 
 # 2. Verificar PM2 corriendo
-pm2 status innpilot
-# Si stopped: pm2 restart innpilot
+pm2 status muva-chat
+# Si stopped: pm2 restart muva-chat
 
 # 3. Verificar puerto de Next.js
 netstat -tulpn | grep :3000
@@ -265,7 +265,7 @@ sudo cat /etc/nginx/sites-available/innpilot.conf | grep ".well-known/acme-chall
 sudo certbot renew --force-renewal
 
 # 7. Si falla, usar método webroot
-sudo certbot certonly --webroot -w /var/www/innpilot/public -d muva.chat -d www.muva.chat
+sudo certbot certonly --webroot -w /var/www/muva-chat/public -d muva.chat -d www.muva.chat
 
 # 8. Reload Nginx
 sudo systemctl reload nginx
@@ -314,16 +314,16 @@ curl http://localhost:3000/api/health
 curl -I http://localhost:3000/api/health
 
 # 4. Ver logs de Next.js
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 
 # 5. Verificar build completo
-ls -la /var/www/innpilot/.next/server/pages/api/
+ls -la /var/www/muva-chat/.next/server/pages/api/
 # Debe existir: health.js o health.json
 
 # 6. Si falta, rebuild
-cd /var/www/innpilot
+cd /var/www/muva-chat
 npm run build
-pm2 reload innpilot
+pm2 reload muva-chat
 
 # 7. Verificar conexión a Supabase
 curl -s http://localhost:3000/api/health | jq
@@ -333,12 +333,12 @@ curl -s http://localhost:3000/api/health | jq
 curl -H "apikey: YOUR_ANON_KEY" https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/
 
 # 9. Verificar environment variables
-pm2 describe innpilot | grep env
+pm2 describe muva-chat | grep env
 # Debe tener: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
 # 10. Configurar env vars si faltan
 pm2 set pm2:NEXT_PUBLIC_SUPABASE_URL "https://ooaumjzaztmutltifhoq.supabase.co"
-pm2 restart innpilot --update-env
+pm2 restart muva-chat --update-env
 ```
 
 **Prevención**:
@@ -374,13 +374,13 @@ curl -X POST https://muva.chat/api/chat \
 
 # 2. SSH al VPS y ver logs
 ssh root@muva.chat
-pm2 logs innpilot --lines 200 --err
+pm2 logs muva-chat --lines 200 --err
 
 # 3. Verificar environment variables
-cd /var/www/innpilot
+cd /var/www/muva-chat
 cat .env.local | grep API_KEY
 # O verificar en PM2:
-pm2 describe innpilot | grep ANTHROPIC_API_KEY
+pm2 describe muva-chat | grep ANTHROPIC_API_KEY
 
 # 4. Test de API keys
 # Test Anthropic:
@@ -411,7 +411,7 @@ cat next.config.js | grep headers -A 10
 # 9. Rollback si código con bugs
 git reset --hard HEAD~1
 npm run build
-pm2 reload innpilot
+pm2 reload muva-chat
 
 # 10. Fix y re-deploy
 # Fix código → commit → push → auto-deploy via GitHub Actions
@@ -435,7 +435,7 @@ pm2 reload innpilot
 ssh root@muva.chat
 
 # Restart todo
-pm2 restart innpilot
+pm2 restart muva-chat
 sudo systemctl restart nginx
 
 # Verificar
@@ -449,7 +449,7 @@ curl -I https://muva.chat
 
 ```bash
 # Ver todo al mismo tiempo
-pm2 logs innpilot | tee -a /tmp/debug.log &
+pm2 logs muva-chat | tee -a /tmp/debug.log &
 sudo tail -f /var/log/nginx/error.log | tee -a /tmp/debug.log &
 sudo tail -f /var/log/nginx/access.log | tee -a /tmp/debug.log &
 
@@ -460,7 +460,7 @@ sudo tail -f /var/log/nginx/access.log | tee -a /tmp/debug.log &
 ### Rollback de Emergencia (1 comando)
 
 ```bash
-ssh root@muva.chat "cd /var/www/innpilot && git reset --hard HEAD~1 && npm ci && npm run build && pm2 reload innpilot"
+ssh root@muva.chat "cd /var/www/muva-chat && git reset --hard HEAD~1 && npm ci && npm run build && pm2 reload muva-chat"
 ```
 
 ---

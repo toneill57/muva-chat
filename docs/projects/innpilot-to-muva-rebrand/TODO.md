@@ -1,6 +1,6 @@
-# TODO - InnPilot → MUVA Chat Rebrand
+# TODO - MUVA Chat → MUVA Chat Rebrand
 
-**Proyecto:** InnPilot to MUVA Chat Rebrand
+**Proyecto:** MUVA Chat to MUVA Chat Rebrand
 **Fecha:** 2025-10-11
 **Plan:** Ver `plan.md` para contexto completo
 
@@ -10,7 +10,7 @@
 
 ### 1.1 Actualizar README.md
 - [ ] Rebrandear README.md completo (estimate: 30min)
-  - Título: "InnPilot" → "MUVA Chat - Multi-Tenant Tourism Platform"
+  - Título: "MUVA Chat" → "MUVA Chat - Multi-Tenant Tourism Platform"
   - Descripción: Destacar multi-tenant + turismo + SIRE como feature
   - Actualizar todas las secciones manteniendo estructura
   - Preservar ejemplos técnicos (solo cambiar branding)
@@ -29,7 +29,7 @@
 
 ### 1.3 Actualizar CLAUDE.md
 - [ ] Actualizar contexto del proyecto (estimate: 30min)
-  - Cambiar referencias "InnPilot" → "MUVA Chat"
+  - Cambiar referencias "MUVA Chat" → "MUVA Chat"
   - Actualizar descripción del proyecto
   - Mantener reglas técnicas intactas
   - Actualizar ejemplos de URLs si necesario
@@ -80,14 +80,14 @@
   - Test: Leer README.md, verificar links funcionan
 
 ### 2.4 Batch replacement en docs/
-- [ ] Reemplazar "InnPilot" → "MUVA" en ~200 archivos (estimate: 45min)
-  - Ejecutar: `find docs/ -name "*.md" -type f ! -path "*/archive/*" ! -path "*/muva-migration/*" -exec sed -i.bak 's/InnPilot/MUVA/g' {} +`
+- [ ] Reemplazar "MUVA Chat" → "MUVA" en ~200 archivos (estimate: 45min)
+  - Ejecutar: `find docs/ -name "*.md" -type f ! -path "*/archive/*" ! -path "*/muva-migration/*" -exec sed -i.bak 's/MUVA Chat/MUVA/g' {} +`
   - Reemplazar frases comunes: "Plataforma de Gestión SIRE" → "Multi-Tenant Chat Platform"
   - Verificar que no se rompieron links
   - Limpiar archivos .bak: `find docs/ -name "*.bak" -delete`
   - Files: ~200 archivos en `docs/`
   - Agent: **@agent-backend-developer**
-  - Test: `grep -r "InnPilot" docs/ | grep -v muva-migration | grep -v archive` → debe retornar 0 results
+  - Test: `grep -r "MUVA Chat" docs/ | grep -v muva-migration | grep -v archive` → debe retornar 0 results
 
 ### 2.5 Crear docs de multi-tenant chat
 - [ ] Crear documentación de multi-tenant feature (estimate: 45min)
@@ -105,8 +105,8 @@
 ### 3.1 Rename PM2 process
 - [ ] Cambiar process name de "innpilot" → "muva-chat" (estimate: 30min)
   - SSH a VPS: `ssh oneill@muva.chat`
-  - Stop process: `pm2 stop innpilot`
-  - Delete process: `pm2 delete innpilot`
+  - Stop process: `pm2 stop muva-chat`
+  - Delete process: `pm2 delete muva-chat`
   - Start new: `pm2 start npm --name "muva-chat" -- start`
   - Save: `pm2 save`
   - Files: VPS PM2 config
@@ -117,7 +117,7 @@
 - [ ] Update Nginx comments y opcional rename (estimate: 30min)
   - Opción A (rename): `sudo mv /etc/nginx/sites-available/innpilot.conf /etc/nginx/sites-available/muva.conf`
   - Opción B (keep): Solo actualizar comentarios internos en innpilot.conf
-  - Actualizar comentarios: "InnPilot subdomain routing" → "MUVA Chat subdomain routing"
+  - Actualizar comentarios: "MUVA Chat subdomain routing" → "MUVA Chat subdomain routing"
   - Test config: `sudo nginx -t`
   - Reload: `sudo systemctl reload nginx`
   - Files: VPS Nginx config
@@ -149,7 +149,7 @@
 
 ### 4.1 Actualizar UI strings
 - [ ] Buscar y actualizar strings visibles (estimate: 30min)
-  - Buscar: `grep -r "InnPilot" src/components/ --include="*.tsx"`
+  - Buscar: `grep -r "MUVA Chat" src/components/ --include="*.tsx"`
   - Actualizar solo strings visibles al usuario
   - NO cambiar nombres técnicos (funciones, variables)
   - Files: `src/components/**/*.tsx`
@@ -158,7 +158,7 @@
 
 ### 4.2 Actualizar comentarios en código
 - [ ] Revisar comentarios en source (estimate: 20min)
-  - Buscar: `grep -r "InnPilot" src/ --include="*.ts" --include="*.tsx"`
+  - Buscar: `grep -r "MUVA Chat" src/ --include="*.ts" --include="*.tsx"`
   - Actualizar comentarios descriptivos (~23 archivos)
   - Mantener referencias técnicas si necesario
   - Files: `src/**/*.ts`, `src/**/*.tsx`
@@ -190,9 +190,9 @@
   - Test: Todos los tests pasan, funcionalidad intacta
 
 ### 5.2 Búsqueda final de referencias
-- [ ] Verificar que no quedan referencias InnPilot (estimate: 15min)
-  - Ejecutar: `grep -r "InnPilot" docs/ | grep -v muva-migration | grep -v archive`
-  - Ejecutar: `grep -r "InnPilot" src/`
+- [ ] Verificar que no quedan referencias MUVA Chat (estimate: 15min)
+  - Ejecutar: `grep -r "MUVA Chat" docs/ | grep -v muva-migration | grep -v archive`
+  - Ejecutar: `grep -r "MUVA Chat" src/`
   - Ejecutar: `grep -r "innpilot" package.json`
   - Documentar resultados
   - Files: N/A (verification)
@@ -203,7 +203,7 @@
 - [ ] Crear commit descriptivo y tag (estimate: 15min)
   - git status (review changes)
   - git add .
-  - git commit con mensaje: "feat(rebrand): Complete InnPilot → MUVA Chat rebranding"
+  - git commit con mensaje: "feat(rebrand): Complete MUVA Chat → MUVA Chat rebranding"
   - Incluir BREAKING CHANGE note en commit body
   - git tag -a v2.0-muva-rebrand -m "Complete rebranding to MUVA Chat"
   - git push origin dev
@@ -250,7 +250,7 @@
 - [ ] package.json "name": "muva-chat"
 - [ ] PM2 process: "muva-chat"
 - [ ] Browser title: "MUVA Chat"
-- [ ] grep "InnPilot" docs/ → 0 (excepto archive/muva-migration)
+- [ ] grep "MUVA Chat" docs/ → 0 (excepto archive/muva-migration)
 - [ ] README.md title: "MUVA Chat"
 
 ### Documentación

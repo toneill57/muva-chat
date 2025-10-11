@@ -1,5 +1,5 @@
 ---
-title: "API Endpoints Mapper - InnPilot API Inventory"
+title: "API Endpoints Mapper - MUVA Chat API Inventory"
 description: "Complete inventory of all REST API endpoints with authentication, performance, and security analysis"
 category: api-architecture
 status: PRODUCTION_READY
@@ -10,18 +10,18 @@ tags: [api, rest, authentication, security, performance, endpoints]
 keywords: ["guest_portal", "staff_portal", "compliance", "motopress", "matryoshka", "jwt"]
 ---
 
-# API Endpoints Mapper - InnPilot API Inventory
+# API Endpoints Mapper - MUVA Chat API Inventory
 
 **Last Updated:** October 8, 2025
 **Total Endpoints:** 47 routes in 42 files
 **Total LOC:** ~8,236 lines of TypeScript
-**Status:** Production Ready (innpilot.io)
+**Status:** Production Ready (muva.chat)
 
 ---
 
 ## Executive Summary
 
-InnPilot exposes 47 REST API endpoints across 8 functional domains, with 86% complete implementation. Authentication coverage is strong (38 secured endpoints), with MotoPress integration endpoints recently secured (Oct 4, 2025).
+MUVA Chat exposes 47 REST API endpoints across 8 functional domains, with 86% complete implementation. Authentication coverage is strong (38 secured endpoints), with MotoPress integration endpoints recently secured (Oct 4, 2025).
 
 ### Key Metrics
 
@@ -282,7 +282,7 @@ await decryptCredentials(encrypted) // Before WordPress API call
 **Setup:**
 ```bash
 # VPS crontab entry
-0 2 * * * curl -H "Authorization: Bearer $CRON_SECRET" https://innpilot.io/api/cron/archive-conversations
+0 2 * * * curl -H "Authorization: Bearer $CRON_SECRET" https://muva.chat/api/cron/archive-conversations
 ```
 
 ---
@@ -696,7 +696,7 @@ Retry-After: 60 (when 429)
 
 ## Conclusion
 
-InnPilot's API architecture is **production-ready** with excellent performance (all targets met), strong authentication coverage (38/47 endpoints secured), and modern patterns (JWT, multi-tenant, Matryoshka embeddings).
+MUVA Chat's API architecture is **production-ready** with excellent performance (all targets met), strong authentication coverage (38/47 endpoints secured), and modern patterns (JWT, multi-tenant, Matryoshka embeddings).
 
 **Strengths:**
 - 85% endpoint completion rate

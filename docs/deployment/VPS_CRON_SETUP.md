@@ -44,7 +44,7 @@ Save this secret for Step 2.
 
 ### Step 2: Configure Environment Variables
 
-Add to `/var/www/innpilot/.env.local`:
+Add to `/var/www/muva-chat/.env.local`:
 
 ```bash
 # Cron Job Authentication
@@ -54,14 +54,14 @@ CRON_SECRET="K8mJ9nL2pQ5rT7vW1xY3zA6bC8dE0fG2hI4jK6mN8oP="
 Reload PM2 to apply new environment variables:
 
 ```bash
-cd /var/www/innpilot
-pm2 reload innpilot --update-env
+cd /var/www/muva-chat
+pm2 reload muva-chat --update-env
 ```
 
 Verify PM2 loaded the variable:
 
 ```bash
-pm2 env innpilot | grep CRON_SECRET
+pm2 env muva-chat | grep CRON_SECRET
 ```
 
 ---
@@ -72,7 +72,7 @@ SSH to VPS:
 
 ```bash
 ssh root@muva.chat
-cd /var/www/innpilot
+cd /var/www/muva-chat
 ```
 
 Export `CRON_SECRET` and run setup:
@@ -93,13 +93,13 @@ bash scripts/cron/setup-archive-cron.sh
 📋 Configuration:
    Schedule: Daily at 2am (Colombia timezone)
    Endpoint: https://muva.chat/api/cron/archive-conversations
-   Log file: /var/log/innpilot/cron-archive.log
+   Log file: /var/log/muva-chat/cron-archive.log
 
 🔍 Verify installation:
    crontab -l | grep archive-conversations
 
 📊 Monitor logs:
-   tail -f /var/log/innpilot/cron-archive.log
+   tail -f /var/log/muva-chat/cron-archive.log
 
 🧪 Test manually:
    curl -H 'Authorization: Bearer $CRON_SECRET' https://muva.chat/api/cron/archive-conversations
@@ -118,7 +118,7 @@ crontab -l | grep archive-conversations
 **Expected output:**
 
 ```
-0 2 * * * curl -s -H 'Authorization: Bearer K8mJ9nL2pQ5rT7vW1xY3zA6bC8dE0fG2hI4jK6mN8oP=' https://muva.chat/api/cron/archive-conversations >> /var/log/innpilot/cron-archive.log 2>&1
+0 2 * * * curl -s -H 'Authorization: Bearer K8mJ9nL2pQ5rT7vW1xY3zA6bC8dE0fG2hI4jK6mN8oP=' https://muva.chat/api/cron/archive-conversations >> /var/log/muva-chat/cron-archive.log 2>&1
 ```
 
 ---
@@ -157,13 +157,13 @@ curl -H "Authorization: Bearer $CRON_SECRET" \
 View cron execution logs in real-time:
 
 ```bash
-tail -f /var/log/innpilot/cron-archive.log
+tail -f /var/log/muva-chat/cron-archive.log
 ```
 
 View last 50 lines:
 
 ```bash
-tail -n 50 /var/log/innpilot/cron-archive.log
+tail -n 50 /var/log/muva-chat/cron-archive.log
 ```
 
 **Example log output:**
@@ -223,14 +223,14 @@ tail -n 50 /var/log/innpilot/cron-archive.log
 
 1. **Verify `CRON_SECRET` in `.env.local`:**
    ```bash
-   grep CRON_SECRET /var/www/innpilot/.env.local
+   grep CRON_SECRET /var/www/muva-chat/.env.local
    ```
 
 2. **Ensure PM2 loaded new environment variables:**
    ```bash
-   cd /var/www/innpilot
-   pm2 restart innpilot --update-env
-   pm2 env innpilot | grep CRON_SECRET
+   cd /var/www/muva-chat
+   pm2 restart muva-chat --update-env
+   pm2 env muva-chat | grep CRON_SECRET
    ```
 
 3. **Test endpoint manually:**
@@ -249,15 +249,15 @@ tail -n 50 /var/log/innpilot/cron-archive.log
 **Solution:**
 
 ```bash
-sudo mkdir -p /var/log/innpilot
-sudo touch /var/log/innpilot/cron-archive.log
-sudo chmod 666 /var/log/innpilot/cron-archive.log
+sudo mkdir -p /var/log/muva-chat
+sudo touch /var/log/muva-chat/cron-archive.log
+sudo chmod 666 /var/log/muva-chat/cron-archive.log
 ```
 
 Verify permissions:
 
 ```bash
-ls -la /var/log/innpilot/cron-archive.log
+ls -la /var/log/muva-chat/cron-archive.log
 ```
 
 Expected: `-rw-rw-rw-`
@@ -272,8 +272,8 @@ Expected: `-rw-rw-rw-`
 
 1. **Verify Supabase environment variables:**
    ```bash
-   cd /var/www/innpilot
-   pm2 env innpilot | grep SUPABASE
+   cd /var/www/muva-chat
+   pm2 env muva-chat | grep SUPABASE
    ```
 
    Should show:
@@ -283,12 +283,12 @@ Expected: `-rw-rw-rw-`
 
 2. **Restart PM2:**
    ```bash
-   pm2 restart innpilot
+   pm2 restart muva-chat
    ```
 
 3. **Check PM2 logs:**
    ```bash
-   pm2 logs innpilot --lines 50
+   pm2 logs muva-chat --lines 50
    ```
 
 ---
@@ -397,7 +397,7 @@ sudo nano /etc/logrotate.d/innpilot
 Add content:
 
 ```
-/var/log/innpilot/*.log {
+/var/log/muva-chat/*.log {
   daily
   rotate 30
   compress
@@ -416,7 +416,7 @@ sudo logrotate -f /etc/logrotate.d/innpilot
 Verify rotation worked:
 
 ```bash
-ls -la /var/log/innpilot/
+ls -la /var/log/muva-chat/
 ```
 
 ---
@@ -439,14 +439,14 @@ openssl rand -base64 32
 **Update `.env.local`:**
 
 ```bash
-nano /var/www/innpilot/.env.local
+nano /var/www/muva-chat/.env.local
 # Update CRON_SECRET value
 ```
 
 **Reload PM2:**
 
 ```bash
-pm2 reload innpilot --update-env
+pm2 reload muva-chat --update-env
 ```
 
 **Re-run cron setup:**
@@ -463,7 +463,7 @@ bash scripts/cron/setup-archive-cron.sh
 Log files may contain sensitive data. Restrict access:
 
 ```bash
-sudo chmod 600 /var/log/innpilot/cron-archive.log
+sudo chmod 600 /var/log/muva-chat/cron-archive.log
 ```
 
 Only root can read/write: `-rw-------`
@@ -495,12 +495,12 @@ The `/api/cron/archive-conversations` endpoint:
 ### Monitoring Checklist
 
 **Daily:**
-- [ ] Check log file for errors: `tail -n 50 /var/log/innpilot/cron-archive.log`
+- [ ] Check log file for errors: `tail -n 50 /var/log/muva-chat/cron-archive.log`
 - [ ] Verify cron executed (should run at 2am daily)
 
 **Weekly:**
 - [ ] Review archived conversations count: Check database
-- [ ] Verify log rotation is working: `ls -la /var/log/innpilot/`
+- [ ] Verify log rotation is working: `ls -la /var/log/muva-chat/`
 
 **Monthly:**
 - [ ] Rotate `CRON_SECRET` (every 90 days)

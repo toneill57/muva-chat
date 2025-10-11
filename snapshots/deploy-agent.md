@@ -1,5 +1,5 @@
 ---
-title: "InnPilot Deploy Agent - CI/CD & VPS Deployment Snapshot"
+title: "MUVA Chat Deploy Agent - CI/CD & VPS Deployment Snapshot"
 agent: deploy-agent
 last_updated: "2025-10-09"
 status: PRODUCTION_READY
@@ -16,7 +16,7 @@ infrastructure: VPS_HOSTINGER
 
 ---
 
-## 🎯 CURRENT PROJECT: InnPilot → MUVA Chat Rebrand (2025-10-11)
+## 🎯 CURRENT PROJECT: MUVA Chat → MUVA Chat Rebrand (2025-10-11)
 
 **Status:** 📋 Planning Complete - Ready for Execution
 **Documentation:** `docs/projects/innpilot-to-muva-rebrand/` (plan.md, TODO.md, workflow.md)
@@ -29,8 +29,8 @@ infrastructure: VPS_HOSTINGER
 
 **FASE 3.1: Rename PM2 process (30min)**
 - SSH a VPS: `ssh oneill@muva.chat`
-- Stop process: `pm2 stop innpilot`
-- Delete process: `pm2 delete innpilot`
+- Stop process: `pm2 stop muva-chat`
+- Delete process: `pm2 delete muva-chat`
 - Start new: `pm2 start npm --name "muva-chat" -- start`
 - Save: `pm2 save`
 - Test: `pm2 status` debe mostrar "muva-chat" online
@@ -39,7 +39,7 @@ infrastructure: VPS_HOSTINGER
 **FASE 3.2: Actualizar Nginx config (30min)**
 - Opción A (rename): `sudo mv /etc/nginx/sites-available/innpilot.conf /etc/nginx/sites-available/muva.conf`
 - Opción B (keep): Solo actualizar comentarios internos
-- Actualizar comentarios: "InnPilot subdomain routing" → "MUVA Chat subdomain routing"
+- Actualizar comentarios: "MUVA Chat subdomain routing" → "MUVA Chat subdomain routing"
 - Test config: `sudo nginx -t`
 - Reload: `sudo systemctl reload nginx`
 - Test: `https://muva.chat` carga correctamente
@@ -63,7 +63,7 @@ infrastructure: VPS_HOSTINGER
 **FASE 5.3: Git commit + tag (15min)**
 - git status (review changes)
 - git add .
-- git commit: "feat(rebrand): Complete InnPilot → MUVA Chat rebranding"
+- git commit: "feat(rebrand): Complete MUVA Chat → MUVA Chat rebranding"
 - Incluir BREAKING CHANGE note en commit body
 - git tag -a v2.0-muva-rebrand -m "Complete rebranding to MUVA Chat"
 - git push origin dev
@@ -81,7 +81,7 @@ infrastructure: VPS_HOSTINGER
 ### Key Context
 
 **Brand Evolution:**
-- InnPilot (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
+- MUVA Chat (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
 - SIRE: NOT deprecated - es gancho comercial premium
 - Package name: "muva-chat" (NOT "muva-platform")
 - PM2 process: "innpilot" → "muva-chat"
@@ -97,8 +97,8 @@ infrastructure: VPS_HOSTINGER
 **FASE 3.1: PM2 Rename**
 ```bash
 ssh oneill@muva.chat
-pm2 stop innpilot
-pm2 delete innpilot
+pm2 stop muva-chat
+pm2 delete muva-chat
 pm2 start npm --name "muva-chat" -- start
 pm2 save
 pm2 status
@@ -113,7 +113,7 @@ sudo rm /etc/nginx/sites-enabled/innpilot.conf
 
 # Option B: Keep filename, update comments only
 sudo nano /etc/nginx/sites-available/innpilot.conf
-# Update: "InnPilot subdomain routing" → "MUVA Chat subdomain routing"
+# Update: "MUVA Chat subdomain routing" → "MUVA Chat subdomain routing"
 
 sudo nginx -t
 sudo systemctl reload nginx
@@ -132,9 +132,9 @@ sudo tail -f /var/log/nginx/access.log
 git status
 git add .
 git commit -m "$(cat <<'EOF'
-feat(rebrand): Complete InnPilot → MUVA Chat rebranding
+feat(rebrand): Complete MUVA Chat → MUVA Chat rebranding
 
-BREAKING CHANGE: Project rebranded from InnPilot to MUVA Chat
+BREAKING CHANGE: Project rebranded from MUVA Chat to MUVA Chat
 - Updated package.json name to "muva-chat"
 - Updated PM2 process name to "muva-chat"
 - Updated all documentation and UI strings
@@ -211,13 +211,13 @@ Process Manager: PM2 v5.x (cluster mode, 2 instances)
 Runtime: Node.js 20.x LTS
 Framework: Next.js 15.5.3 (production build)
 Database: Supabase PostgreSQL 17.4 (remote)
-SSL: Let's Encrypt wildcard certificate (*.innpilot.io)
+SSL: Let's Encrypt wildcard certificate (*.muva.chat)
 ```
 
 **Domain Configuration:**
 ```
-Primary: innpilot.io (SSL A+ rating)
-Wildcard: *.innpilot.io (subdomain routing ready)
+Primary: muva.chat (SSL A+ rating)
+Wildcard: *.muva.chat (subdomain routing ready)
 DNS: Hostinger nameservers
 HTTPS: Mandatory (HTTP → HTTPS redirect)
 ```
@@ -278,7 +278,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          NEXT_PUBLIC_APP_URL: https://innpilot.io
+          NEXT_PUBLIC_APP_URL: https://muva.chat
 
       # 5. Deploy to VPS via SSH
       - name: Deploy to VPS
@@ -301,7 +301,7 @@ jobs:
       # 7. Health check verification
       - name: Health check
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
           if [ $response != "200" ]; then
             echo "Health check failed with status $response"
             exit 1
@@ -329,7 +329,7 @@ jobs:
         if: success()
         run: |
           echo "✅ Deployment successful!"
-          echo "🌐 https://innpilot.io is live"
+          echo "🌐 https://muva.chat is live"
 ```
 
 **Timeline Breakdown:**
@@ -355,7 +355,7 @@ jobs:
 VPS_HOST                 # 195.200.6.216 (IP del VPS)
 VPS_USER                 # root or deploy user
 VPS_SSH_KEY              # SSH private key (RSA 4096-bit)
-VPS_APP_PATH             # /var/www/innpilot (app directory)
+VPS_APP_PATH             # /var/www/muva-chat (app directory)
 ```
 
 **Database Credentials (3):**
@@ -384,7 +384,7 @@ JWT_SECRET_KEY           # 64+ chars random string (guest/staff auth)
 1. Generate new secret (OpenSSL, platform dashboard, etc.)
 2. Update GitHub Secret via `gh secret set SECRET_NAME`
 3. Update VPS `.env.local` via SSH
-4. Restart PM2: `pm2 reload innpilot --update-env`
+4. Restart PM2: `pm2 reload muva-chat --update-env`
 5. Verify health check passes
 6. Invalidate old secret in provider dashboard
 
@@ -404,7 +404,7 @@ module.exports = {
     name: 'innpilot',
     script: 'npm',
     args: 'start',
-    cwd: '/var/www/innpilot',
+    cwd: '/var/www/muva-chat',
     instances: 2,              // Cluster mode (2 CPUs)
     exec_mode: 'cluster',      // Load balancing
     autorestart: true,         // Auto-restart on crash
@@ -414,8 +414,8 @@ module.exports = {
       NODE_ENV: 'production',
       PORT: 3000
     },
-    error_file: '/var/log/pm2/innpilot-error.log',
-    out_file: '/var/log/pm2/innpilot-out.log',
+    error_file: '/var/log/pm2/muva-chat-error.log',
+    out_file: '/var/log/pm2/muva-chat-out.log',
     log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
     merge_logs: true,
     time: true
@@ -429,16 +429,16 @@ module.exports = {
 pm2 start ecosystem.config.js
 
 # Reload (zero-downtime) - PREFERRED for deploys
-pm2 reload innpilot --update-env
+pm2 reload muva-chat --update-env
 
 # Restart (brief downtime) - Only for major changes
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Status check
 pm2 status
 
 # Real-time logs
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 
 # Interactive monitoring
 pm2 monit
@@ -481,12 +481,12 @@ sudo systemctl status nginx
 sudo tail -f /var/log/nginx/innpilot-access.log
 
 # Error logs
-sudo tail -f /var/log/nginx/innpilot-error.log
+sudo tail -f /var/log/nginx/muva-chat-error.log
 ```
 
 ### SSL Certificate (Let's Encrypt)
 
-**Certificate Type:** Wildcard (`*.innpilot.io` + `innpilot.io`)
+**Certificate Type:** Wildcard (`*.muva.chat` + `muva.chat`)
 
 **Auto-Renewal:**
 ```bash
@@ -525,7 +525,7 @@ git push origin dev
 gh run watch
 
 # 4. Verify deployment success
-curl -s https://innpilot.io/api/health | jq
+curl -s https://muva.chat/api/health | jq
 # Expected: {"status":"ok","timestamp":"..."}
 
 # 5. Check logs (if issues)
@@ -536,7 +536,7 @@ gh run view <run-id> --log
 **Expected Output (successful deploy):**
 ```
 ✅ Deployment successful!
-🌐 https://innpilot.io is live
+🌐 https://muva.chat is live
 ```
 
 ### 2. Manual Deployment (Emergency/Debugging)
@@ -546,10 +546,10 @@ gh run view <run-id> --log
 ```bash
 # 1. SSH to VPS
 ssh root@195.200.6.216
-# Or: ssh deploy@innpilot.io
+# Or: ssh deploy@muva.chat
 
 # 2. Navigate to app directory
-cd /var/www/innpilot
+cd /var/www/muva-chat
 
 # 3. Pull latest code
 git pull origin dev
@@ -574,7 +574,7 @@ sudo systemctl status nginx
 exit
 
 # 10. Verify from local
-curl -s https://innpilot.io/api/health | jq
+curl -s https://muva.chat/api/health | jq
 ```
 
 **Timeline:** ~5 minutos (manual commands)
@@ -596,7 +596,7 @@ curl -s https://innpilot.io/api/health | jq
 ssh root@195.200.6.216
 
 # 2. Navigate to app
-cd /var/www/innpilot
+cd /var/www/muva-chat
 
 # 3. View recent commits
 git log --oneline -10
@@ -610,11 +610,11 @@ npm ci --legacy-peer-deps
 npm run build
 
 # 6. Reload PM2
-pm2 reload innpilot --update-env
+pm2 reload muva-chat --update-env
 
 # 7. Verify rollback successful
 curl -s http://localhost:3000/api/health | jq
-pm2 logs innpilot --lines 50
+pm2 logs muva-chat --lines 50
 ```
 
 **Timeline:** ~2 minutos (emergency rollback)
@@ -695,7 +695,7 @@ npm run test
 
 **Primary Health Check:**
 ```bash
-GET https://innpilot.io/api/health
+GET https://muva.chat/api/health
 
 Response (200 OK):
 {
@@ -712,23 +712,23 @@ Response (200 OK):
 **Additional Verification Endpoints:**
 ```bash
 # SIRE Assistant (Claude 3 Haiku)
-POST https://innpilot.io/api/chat
+POST https://muva.chat/api/chat
 Expected: <3s response, 200 OK
 
 # MUVA Tourism Assistant (Claude 3.5 Haiku + Images)
-POST https://innpilot.io/api/chat/muva
+POST https://muva.chat/api/chat/muva
 Expected: <5s response, 200 OK
 
 # Guest Chat (Multi-conversation)
-POST https://innpilot.io/api/guest/chat
+POST https://muva.chat/api/guest/chat
 Expected: <3s response, 200 OK with JWT auth
 
 # Staff Chat
-POST https://innpilot.io/api/staff/chat
+POST https://muva.chat/api/staff/chat
 Expected: <3s response, 200 OK with JWT auth
 
 # Public Chat (Rate-limited)
-POST https://innpilot.io/api/public/chat
+POST https://muva.chat/api/public/chat
 Expected: <2s response, 200 OK, max 10 req/s
 ```
 
@@ -748,16 +748,16 @@ Expected: <2s response, 200 OK, max 10 req/s
 **From Local Machine:**
 ```bash
 # Health check
-curl -s https://innpilot.io/api/health | jq
+curl -s https://muva.chat/api/health | jq
 
 # Response time measurement
-time curl -s https://innpilot.io/api/health
+time curl -s https://muva.chat/api/health
 
 # HTTP status code only
-curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health
+curl -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health
 
 # Full headers
-curl -I https://innpilot.io/api/health
+curl -I https://muva.chat/api/health
 ```
 
 **From VPS (SSH):**
@@ -766,14 +766,14 @@ curl -I https://innpilot.io/api/health
 pm2 status
 
 # Real-time logs
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 
 # Memory/CPU monitoring
 pm2 monit
 
 # Nginx logs
 sudo tail -f /var/log/nginx/innpilot-access.log
-sudo tail -f /var/log/nginx/innpilot-error.log
+sudo tail -f /var/log/nginx/muva-chat-error.log
 
 # System resources
 htop
@@ -823,16 +823,16 @@ ssh root@195.200.6.216
 pm2 status
 
 # View error logs
-pm2 logs innpilot --err --lines 200
+pm2 logs muva-chat --err --lines 200
 
 # Restart PM2
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 **4. Nginx 502 Bad Gateway**
 ```bash
 # Verify PM2 running
-pm2 status innpilot
+pm2 status muva-chat
 
 # Test local Next.js
 curl http://localhost:3000/api/health
@@ -862,19 +862,19 @@ sudo certbot renew --force-renewal
 curl http://localhost:3000/api/health
 
 # Check PM2 logs
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 
 # Verify build artifacts
-ls -la /var/www/innpilot/.next/server/pages/api/
+ls -la /var/www/muva-chat/.next/server/pages/api/
 
 # Rebuild if needed
 npm run build
-pm2 reload innpilot
+pm2 reload muva-chat
 ```
 
 **Emergency Rollback (1 comando):**
 ```bash
-ssh root@195.200.6.216 "cd /var/www/innpilot && git reset --hard HEAD~1 && npm ci --legacy-peer-deps && npm run build && pm2 reload innpilot"
+ssh root@195.200.6.216 "cd /var/www/muva-chat && git reset --hard HEAD~1 && npm ci --legacy-peer-deps && npm run build && pm2 reload muva-chat"
 ```
 
 **Documentación completa:** `docs/deployment/TROUBLESHOOTING.md` (480 líneas)
@@ -935,24 +935,24 @@ ssh root@195.200.6.216 "cd /var/www/innpilot && git reset --hard HEAD~1 && npm c
 
 ### Production URLs
 ```
-Primary: https://innpilot.io
-Health: https://innpilot.io/api/health
-SSL Report: https://www.ssllabs.com/ssltest/analyze.html?d=innpilot.io
+Primary: https://muva.chat
+Health: https://muva.chat/api/health
+SSL Report: https://www.ssllabs.com/ssltest/analyze.html?d=muva.chat
 ```
 
 ### VPS Access
 ```
 IP: 195.200.6.216
 SSH: ssh root@195.200.6.216
-SSH Alias: ssh innpilot-vps (if configured in ~/.ssh/config)
-App Path: /var/www/innpilot
+SSH Alias: ssh muva-vps (if configured in ~/.ssh/config)
+App Path: /var/www/muva-chat
 ```
 
 ### PM2 Commands
 ```
 Status: pm2 status
-Logs: pm2 logs innpilot
-Reload: pm2 reload innpilot --update-env
+Logs: pm2 logs muva-chat
+Reload: pm2 reload muva-chat --update-env
 Monit: pm2 monit
 ```
 

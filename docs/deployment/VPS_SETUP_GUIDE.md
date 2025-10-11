@@ -254,29 +254,29 @@ pm2 start ecosystem.config.js
 pm2 status
 
 # Check logs
-pm2 logs innpilot --lines 50
+pm2 logs muva-chat --lines 50
 ```
 
 ### 3.4 Comandos PM2 Útiles
 
 ```bash
 # View real-time logs
-pm2 logs innpilot
+pm2 logs muva-chat
 
 # Monitor resources
 pm2 monit
 
 # Restart app
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Stop app
-pm2 stop innpilot
+pm2 stop muva-chat
 
 # View detailed info
 pm2 show innpilot
 
 # Reload app (zero-downtime)
-pm2 reload innpilot
+pm2 reload muva-chat
 ```
 
 **Verification:**
@@ -322,7 +322,7 @@ Add the following configuration:
 limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
 
 # Upstream Next.js app
-upstream innpilot_app {
+upstream muva_app {
     least_conn;
     server localhost:3000 max_fails=3 fail_timeout=30s;
     keepalive 32;
@@ -340,7 +340,7 @@ server {
 
     # Logs
     access_log /var/log/nginx/innpilot-access.log;
-    error_log /var/log/nginx/innpilot-error.log;
+    error_log /var/log/nginx/muva-chat-error.log;
 
     # Client max body size
     client_max_body_size 10M;
@@ -357,7 +357,7 @@ server {
 
     # Proxy settings
     location / {
-        proxy_pass http://innpilot_app;
+        proxy_pass http://muva_app;
         proxy_http_version 1.1;
 
         proxy_set_header Upgrade $http_upgrade;
@@ -377,7 +377,7 @@ server {
     location /api/ {
         limit_req zone=api_limit burst=20 nodelay;
 
-        proxy_pass http://innpilot_app;
+        proxy_pass http://muva_app;
         proxy_http_version 1.1;
 
         proxy_set_header Upgrade $http_upgrade;
@@ -392,14 +392,14 @@ server {
 
     # Static files caching
     location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
-        proxy_pass http://innpilot_app;
+        proxy_pass http://muva_app;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
 
     # Next.js static files
     location /_next/static/ {
-        proxy_pass http://innpilot_app;
+        proxy_pass http://muva_app;
         expires 1y;
         add_header Cache-Control "public, immutable";
     }
@@ -548,7 +548,7 @@ pm2 monit
 sudo tail -f /var/log/nginx/innpilot-access.log
 
 # Check for errors
-sudo tail -f /var/log/nginx/innpilot-error.log
+sudo tail -f /var/log/nginx/muva-chat-error.log
 ```
 
 ### 6.4 System Resources
@@ -573,14 +573,14 @@ free -h
 **Issue 1: PM2 process crashes**
 ```bash
 # Check PM2 logs
-pm2 logs innpilot --err
+pm2 logs muva-chat --err
 
 # Check Node.js memory
 pm2 show innpilot
 
 # Increase memory limit in ecosystem.config.js
 max_memory_restart: '2G'
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 **Issue 2: Nginx 502 Bad Gateway**
@@ -589,10 +589,10 @@ pm2 restart innpilot
 pm2 status
 
 # Check Nginx error logs
-sudo tail -50 /var/log/nginx/innpilot-error.log
+sudo tail -50 /var/log/nginx/muva-chat-error.log
 
 # Restart services
-pm2 restart innpilot
+pm2 restart muva-chat
 sudo systemctl restart nginx
 ```
 
@@ -617,7 +617,7 @@ pm2 monit
 instances: 1  # Instead of 2
 
 # Restart PM2
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ---
@@ -628,17 +628,17 @@ pm2 restart innpilot
 
 ```bash
 # View application logs
-pm2 logs innpilot
+pm2 logs muva-chat
 
 # Restart application (zero downtime)
-pm2 reload innpilot
+pm2 reload muva-chat
 
 # Update application from Git
 cd /home/deploy/innpilot
 git pull origin main
 npm ci
 npm run build
-pm2 reload innpilot
+pm2 reload muva-chat
 ```
 
 ### Weekly Checks
@@ -663,7 +663,7 @@ git log --oneline -5  # Find previous stable commit
 git checkout <commit-hash>
 npm ci
 npm run build
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ---

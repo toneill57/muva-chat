@@ -631,7 +631,7 @@ These components were created as reusable building blocks and are now **integrat
   - Git pull from dev branch
   - npm install (if new dependencies)
   - Build: `npm run build`
-  - Restart: `pm2 restart innpilot`
+  - Restart: `pm2 restart muva-chat`
   - Files: N/A (deployment)
   - Agent: **@agent-deploy-agent**
   - Test: Visit production URL → site loads

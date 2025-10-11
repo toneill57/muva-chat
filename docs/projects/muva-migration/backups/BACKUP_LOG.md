@@ -19,7 +19,7 @@
 
 ### VPS Files
 3. **nginx-subdomain.conf**
-   - Original: `/etc/nginx/sites-available/innpilot.io`
+   - Original: `/etc/nginx/sites-available/muva.chat`
    - Backup: `nginx-subdomain.conf.20251010_170303.backup`
    - Size: 1.5 KB
    - MD5: `c1867de35a95ac59ae4f5d676b30b647`
@@ -54,13 +54,13 @@ scp docs/projects/muva-migration/backups/nginx-subdomain.conf.20251010_170303.ba
 
 # SSH y restaurar
 ssh oneill@195.200.6.216
-sudo cp /tmp/nginx-subdomain.conf.20251010_170303.backup /etc/nginx/sites-available/innpilot.io
+sudo cp /tmp/nginx-subdomain.conf.20251010_170303.backup /etc/nginx/sites-available/muva.chat
 sudo nginx -t
 sudo systemctl reload nginx
 
 # Opción 2: Rollback desde git (si nginx config está versionado)
-cd ~/apps/InnPilot
-git checkout HEAD -- nginx/innpilot.io.conf  # Ajustar path según estructura
+cd ~/apps/MUVA Chat
+git checkout HEAD -- nginx/muva.chat.conf  # Ajustar path según estructura
 # Luego copiar a sites-available y reload nginx
 ```
 

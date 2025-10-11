@@ -1,7 +1,7 @@
 # Nginx Configuration Update - MUVA Chat Rebrand
 
 ## Contexto
-Actualización de la configuración de Nginx en el VPS de producción para reflejar el rebrand de **InnPilot → MUVA Chat**.
+Actualización de la configuración de Nginx en el VPS de producción para reflejar el rebrand de **MUVA Chat → MUVA Chat**.
 
 ## Status
 - **PM2 Process**: ✅ Ya renombrado a "muva-chat"
@@ -78,7 +78,7 @@ git push origin dev
 - Preserva configuración original como backup
 
 ### 4. Actualización de referencias
-- Reemplaza `InnPilot` → `MUVA Chat` en comentarios
+- Reemplaza `MUVA Chat` → `MUVA Chat` en comentarios
 - Reemplaza `innpilot` → `muva-chat` en referencias
 
 ### 5. Actualización de symlinks
@@ -112,7 +112,7 @@ git push origin dev
 📝 Paso 3/6: Renombrando archivo de configuración...
 ✅ Archivo copiado: innpilot.conf → muva.conf
 
-✏️  Paso 4/6: Actualizando referencias InnPilot → MUVA Chat...
+✏️  Paso 4/6: Actualizando referencias MUVA Chat → MUVA Chat...
 ✅ Referencias actualizadas en /etc/nginx/sites-available/muva.conf
 
 🔗 Paso 5/6: Actualizando symlink en sites-enabled...

@@ -1,7 +1,7 @@
 # SSL Certificate Audit - MUVA Migration
 
 **Fecha:** 2025-10-10
-**VPS:** 195.200.6.216 (innpilot.io)
+**VPS:** 195.200.6.216 (muva.chat)
 **Usuario VPS:** root (según deploy-agent.md)
 **Objetivo:** Auditar certificados SSL existentes antes de generar wildcard cert para *.muva.chat
 
@@ -18,11 +18,11 @@ Se utilizó `openssl s_client` para verificar el certificado SSL en producción 
 
 ## Certificados Actuales
 
-### Certificate Name: *.innpilot.io (Wildcard Certificate)
+### Certificate Name: *.muva.chat (Wildcard Certificate)
 
 **Información del Certificado:**
-- **Common Name (CN):** *.innpilot.io
-- **Dominios cubiertos:** *.innpilot.io, innpilot.io (wildcard + root domain)
+- **Common Name (CN):** *.muva.chat
+- **Dominios cubiertos:** *.muva.chat, muva.chat (wildcard + root domain)
 - **Issuer:** Let's Encrypt (R13)
 - **Fecha de emisión:** 2025-10-05 06:02:07 GMT
 - **Fecha de expiración:** 2026-01-03 06:02:06 GMT
@@ -30,8 +30,8 @@ Se utilizó `openssl s_client` para verificar el certificado SSL en producción 
 - **Estado:** ✅ Válido (85 días restantes)
 
 **Path estimado (Let's Encrypt estándar):**
-- Certificate: `/etc/letsencrypt/live/innpilot.io/fullchain.pem` (o `-0001`, `-0002`, etc.)
-- Private Key: `/etc/letsencrypt/live/innpilot.io/privkey.pem`
+- Certificate: `/etc/letsencrypt/live/muva.chat/fullchain.pem` (o `-0001`, `-0002`, etc.)
+- Private Key: `/etc/letsencrypt/live/muva.chat/privkey.pem`
 
 **Detalles Técnicos:**
 - Key Type: RSA (estimado 2048-bit o 4096-bit)
@@ -42,9 +42,9 @@ Se utilizó `openssl s_client` para verificar el certificado SSL en producción 
 
 ## Análisis
 
-### Certificado para innpilot.io
-- ✅ Existe wildcard cert para *.innpilot.io
-- ✅ Cubre dominio raíz innpilot.io (incluido en SAN)
+### Certificado para muva.chat
+- ✅ Existe wildcard cert para *.muva.chat
+- ✅ Cubre dominio raíz muva.chat (incluido en SAN)
 - ✅ Más de 30 días hasta expiración (85 días restantes)
 - ✅ Emisor confiable: Let's Encrypt (R13)
 - ✅ Renovación reciente: 5 de octubre 2025
@@ -62,26 +62,26 @@ Se utilizó `openssl s_client` para verificar el certificado SSL en producción 
 
 ```bash
 # Verificar subject del certificado
-echo | openssl s_client -connect innpilot.io:443 -servername innpilot.io 2>/dev/null | openssl x509 -noout -subject -issuer
+echo | openssl s_client -connect muva.chat:443 -servername muva.chat 2>/dev/null | openssl x509 -noout -subject -issuer
 # Output:
-# subject=CN=*.innpilot.io
+# subject=CN=*.muva.chat
 # issuer=C=US, O=Let's Encrypt, CN=R13
 
 # Verificar fechas de validez
-echo | openssl s_client -connect innpilot.io:443 -servername innpilot.io 2>/dev/null | openssl x509 -noout -dates
+echo | openssl s_client -connect muva.chat:443 -servername muva.chat 2>/dev/null | openssl x509 -noout -dates
 # Output:
 # notBefore=Oct  5 06:02:07 2025 GMT
 # notAfter=Jan  3 06:02:06 2026 GMT
 
 # Verificar dominios cubiertos (SAN)
-echo | openssl s_client -connect innpilot.io:443 -servername innpilot.io 2>/dev/null | openssl x509 -noout -text | grep "DNS:"
+echo | openssl s_client -connect muva.chat:443 -servername muva.chat 2>/dev/null | openssl x509 -noout -text | grep "DNS:"
 # Output:
-# DNS:*.innpilot.io, DNS:innpilot.io
+# DNS:*.muva.chat, DNS:muva.chat
 ```
 
 ### SSL Labs Rating
 
-Verificar calificación SSL: https://www.ssllabs.com/ssltest/analyze.html?d=innpilot.io
+Verificar calificación SSL: https://www.ssllabs.com/ssltest/analyze.html?d=muva.chat
 
 **Esperado:** Calificación A o A+ (según deploy-agent.md)
 
@@ -204,23 +204,23 @@ grep -r "ssl_certificate" /etc/nginx/sites-available/
 
 ### Renovación Automática
 
-**Configuración actual de innpilot.io:**
+**Configuración actual de muva.chat:**
 - Renovación automática: Sí (certbot.timer)
 - Frecuencia: 2 veces al día (certbot estándar)
 - Próxima renovación: ~30 días antes de expiración (2025-12-04 aproximadamente)
 
 **Para muva.chat (después de generación):**
 - La renovación automática se configurará automáticamente
-- Certbot detectará ambos certificados (innpilot.io + muva.chat)
+- Certbot detectará ambos certificados (muva.chat + muva.chat)
 - No requiere configuración adicional
 
 ---
 
 ## Checklist de Verificación
 
-### Certificado innpilot.io (Actual)
-- [x] Nombre del certificado: *.innpilot.io
-- [x] Dominios cubiertos: *.innpilot.io, innpilot.io
+### Certificado muva.chat (Actual)
+- [x] Nombre del certificado: *.muva.chat
+- [x] Dominios cubiertos: *.muva.chat, muva.chat
 - [x] Fecha de expiración: 2026-01-03 06:02:06 UTC
 - [x] Días restantes: 85 días
 - [x] Estado: Válido (> 30 días)
@@ -237,7 +237,7 @@ grep -r "ssl_certificate" /etc/nginx/sites-available/
 
 ## Métricas de Certificado SSL
 
-### Información de Seguridad (innpilot.io)
+### Información de Seguridad (muva.chat)
 
 **Algoritmos soportados:**
 - Signature: SHA256withRSA (rsa_pss_rsae_sha256)
@@ -258,7 +258,7 @@ grep -r "ssl_certificate" /etc/nginx/sites-available/
 
 ## Próximos Pasos (Después de Auditoría)
 
-1. ✅ **COMPLETADO** - Verificar certificado actual de innpilot.io
+1. ✅ **COMPLETADO** - Verificar certificado actual de muva.chat
 2. ✅ **COMPLETADO** - Confirmar expiración > 30 días (85 días)
 3. ⏭️ **SIGUIENTE** - Proceder a Fase 2.1: Generar certificado para muva.chat
 4. ⏭️ **DESPUÉS** - Configurar Nginx con certificado de muva.chat
@@ -268,9 +268,9 @@ grep -r "ssl_certificate" /etc/nginx/sites-available/
 
 ## Referencias
 
-- Deploy Agent Snapshot: `/Users/oneill/Sites/apps/InnPilot/snapshots/deploy-agent.md`
-- Subdomain Setup Guide: `/Users/oneill/Sites/apps/InnPilot/docs/deployment/SUBDOMAIN_SETUP_GUIDE.md`
-- DNS Verification: `/Users/oneill/Sites/apps/InnPilot/docs/projects/muva-migration/fase-0/DNS_VERIFICATION.md`
+- Deploy Agent Snapshot: `/Users/oneill/Sites/apps/MUVA Chat/snapshots/deploy-agent.md`
+- Subdomain Setup Guide: `/Users/oneill/Sites/apps/MUVA Chat/docs/deployment/SUBDOMAIN_SETUP_GUIDE.md`
+- DNS Verification: `/Users/oneill/Sites/apps/MUVA Chat/docs/projects/muva-migration/fase-0/DNS_VERIFICATION.md`
 
 ---
 

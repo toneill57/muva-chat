@@ -1,6 +1,6 @@
 ---
 title: "UX-Interface Agent Snapshot"
-description: "Snapshot especializado UI/UX para InnPilot - Componentes, Accesibilidad, Design System, Mobile-First"
+description: "Snapshot especializado UI/UX para MUVA Chat - Componentes, Accesibilidad, Design System, Mobile-First"
 category: agent-snapshot
 agent: ux-interface
 last_updated: "2025-10-09"
@@ -15,7 +15,7 @@ version: "2.0"
 
 ---
 
-## 🎯 CURRENT PROJECT: InnPilot → MUVA Chat Rebrand (2025-10-11)
+## 🎯 CURRENT PROJECT: MUVA Chat → MUVA Chat Rebrand (2025-10-11)
 
 **Status:** 📋 Planning Complete - Ready for Execution
 **Documentation:** `docs/projects/innpilot-to-muva-rebrand/` (plan.md, TODO.md, workflow.md)
@@ -32,7 +32,7 @@ version: "2.0"
 - Agent: **@agent-ux-interface**
 
 **FASE 4.1: Actualizar UI strings (30min)**
-- Buscar strings visibles: `grep -r "InnPilot" src/components/ --include="*.tsx"`
+- Buscar strings visibles: `grep -r "MUVA Chat" src/components/ --include="*.tsx"`
 - Actualizar SOLO strings visibles al usuario
 - NO cambiar nombres técnicos (funciones, variables)
 - Files: `src/components/**/*.tsx`
@@ -49,13 +49,13 @@ version: "2.0"
 ### Key Context
 
 **Brand Evolution:**
-- InnPilot (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
+- MUVA Chat (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
 - SIRE: NOT deprecated - es gancho comercial premium
 - Package name: "muva-chat" (NOT "muva-platform")
 - PM2 process: "muva-chat"
 
 **Scope:**
-- ~1,777 references to "InnPilot"/"innpilot"
+- ~1,777 references to "MUVA Chat"/"innpilot"
 - UI strings: Solo cambiar texto visible al usuario
 - Mantener nombres técnicos (funciones, variables)
 
@@ -69,7 +69,7 @@ version: "2.0"
 
 **Execute FASE 4.1:**
 1. Read workflow prompt: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 4.1)
-2. Find visible strings: `grep -r "InnPilot" src/components/ --include="*.tsx"`
+2. Find visible strings: `grep -r "MUVA Chat" src/components/ --include="*.tsx"`
 3. Update only user-facing strings
 4. Visual test in browser
 5. Mark TODO.md task 4.1 complete

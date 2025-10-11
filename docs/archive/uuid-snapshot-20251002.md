@@ -127,5 +127,5 @@ This snapshot enables complete rollback via:
 ---
 
 **Prepared by:** @database-agent
-**Migration Plan:** See `/Users/oneill/Sites/apps/InnPilot/plan.md` (lines 162-338)
-**Task Checklist:** See `/Users/oneill/Sites/apps/InnPilot/TODO.md` (lines 11-81)
+**Migration Plan:** See `/Users/oneill/Sites/apps/MUVA Chat/plan.md` (lines 162-338)
+**Task Checklist:** See `/Users/oneill/Sites/apps/MUVA Chat/TODO.md` (lines 11-81)

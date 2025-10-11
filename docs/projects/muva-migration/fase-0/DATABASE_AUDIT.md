@@ -70,10 +70,10 @@
 ### Campo `subdomain` (Agnóstico al dominio)
 ✅ **Formato válido:** Todos los subdomains usan formato lowercase + hyphens
 ✅ **Sin referencias al domain:** Campo solo contiene subdomain, no domain completo
-✅ **Compatibilidad:** `subdomain` funciona con cualquier domain (innpilot.io / muva.chat)
+✅ **Compatibilidad:** `subdomain` funciona con cualquier domain (muva.chat / muva.chat)
 
 **Ejemplos:**
-- `simmerdown` → Funciona con `simmerdown.innpilot.io` Y `simmerdown.muva.chat`
+- `simmerdown` → Funciona con `simmerdown.muva.chat` Y `simmerdown.muva.chat`
 - `free-hotel-test` → Funciona con ambos dominios
 - `xyz` → Funciona con ambos dominios
 - `hotel-boutique` → Funciona con ambos dominios

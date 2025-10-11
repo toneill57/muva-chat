@@ -1,4 +1,4 @@
-# FINDINGS: Análisis Crítico de Sistemas de Búsqueda InnPilot
+# FINDINGS: Análisis Crítico de Sistemas de Búsqueda MUVA Chat
 
 **Fecha**: 27 Septiembre 2025
 **Investigación**: Inconsistencia entre VectorSearchTester y Asistente de Negocio

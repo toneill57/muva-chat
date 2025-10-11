@@ -1,5 +1,5 @@
 ---
-title: "InnPilot - Infrastructure Monitor Snapshot"
+title: "MUVA Chat - Infrastructure Monitor Snapshot"
 agent: infrastructure-monitor
 last_updated: "2025-10-09"
 status: PRODUCTION
@@ -7,11 +7,11 @@ version: "2.1"
 sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 ---
 
-# 🖥️ InnPilot - Infrastructure Monitor Snapshot
+# 🖥️ MUVA Chat - Infrastructure Monitor Snapshot
 
 **Last Updated:** October 9, 2025
 **Status:** PRODUCTION STABLE - VPS Hostinger
-**Domain:** innpilot.io
+**Domain:** muva.chat
 **Monitoring Focus:** Performance, availability, error detection, deployment automation
 
 ---
@@ -24,18 +24,18 @@ sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 ### My Responsibility:
 
 **FASE 0: DNS & SSL Verification (10min)**
-- Verificar DNS apunta correctamente: `dig +short innpilot.io` y `dig +short muva.chat`
+- Verificar DNS apunta correctamente: `dig +short muva.chat` y `dig +short muva.chat`
 - Ambos deben retornar 195.200.6.216
-- Verificar wildcard SSL actual para `*.innpilot.io`
+- Verificar wildcard SSL actual para `*.muva.chat`
 - Documentar en `docs/projects/muva-migration/fase-0/DNS_VERIFICATION.md`
 
 **FASE 2: Post-Deploy Testing & Monitoring (1h)**
 - Test HTTPS en ambos dominios
 - curl -I https://simmerdown.muva.chat (debe retornar 200 OK con SSL válido)
-- curl -I https://simmerdown.innpilot.io (debe seguir funcionando)
+- curl -I https://simmerdown.muva.chat (debe seguir funcionando)
 - Test Chat API en ambos dominios
-- Monitor PM2 logs: `pm2 logs innpilot --lines 100`
-- Monitor Nginx logs: `sudo tail -f /var/log/nginx/innpilot-subdomain-error.log`
+- Monitor PM2 logs: `pm2 logs muva-chat --lines 100`
+- Monitor Nginx logs: `sudo tail -f /var/log/nginx/muva-subdomain-error.log`
 - Documentar en `docs/projects/muva-migration/fase-2/MONITORING_REPORT.md`
 
 **FASE 3: Gradual Tenant Migration Monitoring (1-2 días)**
@@ -48,7 +48,7 @@ sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 
 **FASE 4: Final Verification (20min)**
 - Verificar redirects 301 funcionan correctamente
-- Test redirect: `curl -I https://simmerdown.innpilot.io` → debe redirigir a `simmerdown.muva.chat`
+- Test redirect: `curl -I https://simmerdown.muva.chat` → debe redirigir a `simmerdown.muva.chat`
 - Verify SSL grade A+ (ssllabs.com)
 - Check logs limpios (zero errores post-redirect)
 - Documentar en `docs/projects/muva-migration/fase-4/FINAL_CHECKLIST.md`
@@ -116,12 +116,12 @@ SHOW: Search results to user
 
 ## 📊 Executive Summary
 
-InnPilot is deployed in **production on VPS Hostinger** with a robust infrastructure featuring CI/CD automation, proactive error detection, multi-tenant health checks, and Matryoshka embeddings performance monitoring.
+MUVA Chat is deployed in **production on VPS Hostinger** with a robust infrastructure featuring CI/CD automation, proactive error detection, multi-tenant health checks, and Matryoshka embeddings performance monitoring.
 
 ### Infrastructure Health: **9/10** 🟢
 
 **Strengths:**
-- ✅ Production deployment stable (innpilot.io live)
+- ✅ Production deployment stable (muva.chat live)
 - ✅ CI/CD automation with rollback capability
 - ✅ Proactive error detection (.claude/errors.jsonl)
 - ✅ Multi-tier performance monitoring
@@ -142,7 +142,7 @@ InnPilot is deployed in **production on VPS Hostinger** with a robust infrastruc
 **Provider:** Hostinger
 - **OS:** Ubuntu 22.04 LTS
 - **IP:** 195.200.6.216
-- **Domain:** innpilot.io (SSL: Let's Encrypt wildcard)
+- **Domain:** muva.chat (SSL: Let's Encrypt wildcard)
 - **Region:** Not specified (likely EU/US based on Hostinger)
 
 **Stack Components:**
@@ -191,7 +191,7 @@ InnPilot is deployed in **production on VPS Hostinger** with a robust infrastruc
 
 **Upstream Configuration:**
 ```nginx
-upstream innpilot_app {
+upstream muva_app {
     least_conn;
     server localhost:3000 max_fails=3 fail_timeout=30s;
     keepalive 32;
@@ -201,7 +201,7 @@ upstream innpilot_app {
 **Health Check Endpoint:**
 ```nginx
 location = /api/health {
-    proxy_pass http://innpilot_app;
+    proxy_pass http://muva_app;
     access_log off;  # No logging for health checks
 }
 ```
@@ -264,7 +264,7 @@ mcp__knowledge-graph__aim_search_nodes({
   name: 'innpilot',
   script: 'npm',
   args: 'start',
-  cwd: '/var/www/innpilot',
+  cwd: '/var/www/muva-chat',
   instances: 2,              // Cluster mode
   exec_mode: 'cluster',
   autorestart: true,
@@ -273,8 +273,8 @@ mcp__knowledge-graph__aim_search_nodes({
     NODE_ENV: 'production',
     PORT: 3000
   },
-  error_file: '/var/log/pm2/innpilot-error.log',
-  out_file: '/var/log/pm2/innpilot-out.log',
+  error_file: '/var/log/pm2/muva-chat-error.log',
+  out_file: '/var/log/pm2/muva-chat-out.log',
   log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
   merge_logs: true
 }
@@ -283,8 +283,8 @@ mcp__knowledge-graph__aim_search_nodes({
 **PM2 Commands:**
 ```bash
 pm2 start ecosystem.config.js  # Start app
-pm2 reload innpilot            # Zero-downtime reload
-pm2 logs innpilot --lines 50   # View logs
+pm2 reload muva-chat            # Zero-downtime reload
+pm2 logs muva-chat --lines 50   # View logs
 pm2 monit                      # Real-time monitoring
 ```
 
@@ -332,7 +332,7 @@ JWT_SECRET_KEY
 
 **Health Check Logic:**
 ```bash
-response=$(curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
+response=$(curl -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
 if [ $response != "200" ]; then
   echo "Health check failed with status $response"
   exit 1  # Triggers rollback
@@ -546,7 +546,7 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 ```yaml
 - name: Health check
   run: |
-    response=$(curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
+    response=$(curl -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
     if [ $response != "200" ]; then
       echo "Health check failed with status $response"
       exit 1
@@ -566,10 +566,10 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 ### GitHub Secrets (10 configured)
 
 **VPS Access (4):**
-- `VPS_HOST` - IP/hostname (195.200.6.216 or innpilot.io)
+- `VPS_HOST` - IP/hostname (195.200.6.216 or muva.chat)
 - `VPS_USER` - SSH user (root or deploy)
 - `VPS_SSH_KEY` - Private SSH key (4096-bit RSA)
-- `VPS_APP_PATH` - App directory (/var/www/innpilot)
+- `VPS_APP_PATH` - App directory (/var/www/muva-chat)
 
 **Supabase (3):**
 - `NEXT_PUBLIC_SUPABASE_URL` - Project URL
@@ -591,7 +591,7 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 ### SSL/TLS Configuration
 
 **Provider:** Let's Encrypt
-- **Certificate Type:** Wildcard (*.innpilot.io + innpilot.io)
+- **Certificate Type:** Wildcard (*.muva.chat + muva.chat)
 - **Renewal:** Auto-renewal via Certbot systemd timer
 - **Protocol:** TLS 1.2+ (HTTP/2 enabled)
 - **Expiry Check:** Every 30 days (Certbot timer)
@@ -607,8 +607,8 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 **PM2 Logs:**
 - **Location:** `/var/log/pm2/`
 - **Files:**
-  - `innpilot-error.log` (errors only)
-  - `innpilot-out.log` (stdout)
+  - `muva-chat-error.log` (errors only)
+  - `muva-chat-out.log` (stdout)
 - **Rotation:** Auto-rotation by PM2
 - **Format:** `YYYY-MM-DD HH:mm:ss Z [message]`
 
@@ -616,7 +616,7 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 - **Location:** `/var/log/nginx/`
 - **Files:**
   - `innpilot-access.log` (all requests)
-  - `innpilot-error.log` (errors, level: warn)
+  - `muva-chat-error.log` (errors, level: warn)
 - **Rotation:** logrotate (weekly)
 - **Health check:** `access_log off` (no spam)
 
@@ -755,7 +755,7 @@ npm run benchmark-detailed  # Detailed benchmarks
 
 **4. Setup Uptime Monitoring** (1 hour)
 - Configure UptimeRobot or Pingdom
-- Monitor: https://innpilot.io/api/health
+- Monitor: https://muva.chat/api/health
 - Alert thresholds: 3 failures in 5 min
 - Notification: Email/Slack/SMS
 
@@ -920,7 +920,7 @@ npm run benchmark-detailed  # Detailed benchmarks
 - [x] PM2 running in cluster mode
 - [x] Nginx reverse proxy configured
 - [x] SSL certificate valid (A+ rating)
-- [x] https://innpilot.io returns 200 OK
+- [x] https://muva.chat returns 200 OK
 
 **✅ CI/CD:**
 - [x] GitHub Actions workflow active

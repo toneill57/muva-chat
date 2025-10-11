@@ -306,7 +306,7 @@ export function SomeComponent() {
 ### Deployment Steps
 1. Merge to `main` branch
 2. Deploy to VPS via git pull
-3. Restart PM2 process: `pm2 restart innpilot`
+3. Restart PM2 process: `pm2 restart muva-chat`
 4. Verify subdomain detection works in production
 5. Monitor logs for any issues
 
@@ -316,10 +316,10 @@ export function SomeComponent() {
 curl -H "Host: simmerdown.muva.chat" https://muva.chat/api/test-subdomain
 
 # Check PM2 logs
-pm2 logs innpilot --lines 50 | grep middleware
+pm2 logs muva-chat --lines 50 | grep middleware
 
 # Monitor errors
-pm2 logs innpilot --err
+pm2 logs muva-chat --err
 ```
 
 ## Performance Metrics

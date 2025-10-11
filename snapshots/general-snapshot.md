@@ -1,22 +1,22 @@
 ---
-title: "InnPilot - General Project Snapshot"
+title: "MUVA Chat - General Project Snapshot"
 agent: general-purpose
 last_updated: "2025-10-09"
 status: PRODUCTION_READY
 version: "2.1"
 ---
 
-# 🏗️ InnPilot - General Project Snapshot
+# 🏗️ MUVA Chat - General Project Snapshot
 
 **Last Updated:** October 9, 2025
-**Status:** PRODUCTION - VPS Hostinger (innpilot.io)
+**Status:** PRODUCTION - VPS Hostinger (muva.chat)
 **Platform:** Modern hotel management platform with AI-powered conversational interfaces
 
 ---
 
 ## 📊 Executive Summary
 
-InnPilot is a **production-ready web platform** for managing hotel operations with AI-powered conversational interfaces, currently deployed at **innpilot.io**. The platform features multi-tenant architecture, SIRE compliance tracking, and advanced semantic search capabilities using Matryoshka embeddings.
+MUVA Chat is a **production-ready web platform** for managing hotel operations with AI-powered conversational interfaces, currently deployed at **muva.chat**. The platform features multi-tenant architecture, SIRE compliance tracking, and advanced semantic search capabilities using Matryoshka embeddings.
 
 ### Core Value Proposition
 
@@ -47,7 +47,7 @@ InnPilot is a **production-ready web platform** for managing hotel operations wi
 
 | Component | Value | Status |
 |-----------|-------|--------|
-| **Production URL** | innpilot.io | ✅ Live |
+| **Production URL** | muva.chat | ✅ Live |
 | **VPS Provider** | Hostinger Ubuntu 22.04 | ✅ Active |
 | **VPS IP** | 195.200.6.216 | ✅ Configured |
 | **SSL Certificate** | Let's Encrypt Wildcard | ✅ Valid |
@@ -282,7 +282,7 @@ InnPilot is a **production-ready web platform** for managing hotel operations wi
 ## 📂 Project Structure
 
 ```
-InnPilot/
+MUVA Chat/
 ├── src/                        # Source code (209 TS/TSX files)
 │   ├── app/                    # Next.js 15 App Router
 │   │   ├── api/                # 44 REST endpoints
@@ -330,7 +330,7 @@ InnPilot/
 ```bash
 # Clone and install
 git clone <repo>
-cd InnPilot
+cd MUVA Chat
 npm install
 
 # Environment setup
@@ -362,7 +362,7 @@ git push origin dev  # Auto-deploys via GitHub Actions
 ### Latest Commits (Last 10)
 
 ```
-aa98a72 feat: Add general snapshot for InnPilot project
+aa98a72 feat: Add general snapshot for MUVA Chat project
 44c910a feat: integrate official SIRE catalogs
 3ece75e feat: secure MotoPress integration
 ecc4e7b feat: Add PostgreSQL upgrade guide
@@ -491,7 +491,7 @@ ed0d793 feat: add missing production modules
 ## 📞 Project Resources
 
 ### URLs
-- **Production**: https://innpilot.io
+- **Production**: https://muva.chat
 - **VPS**: 195.200.6.216 (SSH access)
 - **Database**: Supabase PostgreSQL (ooaumjzaztmutltifhoq.supabase.co)
 

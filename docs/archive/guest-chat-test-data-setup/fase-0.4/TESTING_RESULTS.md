@@ -29,7 +29,7 @@ accommodation_units_public      → [HOTEL SIMMERDOWN 🏨]
 ### Setup:
 ```bash
 # 1. Iniciar servidor (en terminal separada)
-cd /Users/oneill/Sites/apps/InnPilot
+cd /Users/oneill/Sites/apps/MUVA Chat
 ./scripts/dev-with-keys.sh
 
 # 2. Abrir navegador

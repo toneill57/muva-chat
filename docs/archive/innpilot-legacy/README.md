@@ -1,6 +1,6 @@
-# InnPilot Legacy Documentation
+# MUVA Chat Legacy Documentation
 
-This folder contains legacy documentation from the InnPilot brand before the MUVA Chat rebrand (October 2025).
+This folder contains legacy documentation from the MUVA Chat brand before the MUVA Chat rebrand (October 2025).
 
 ## Purpose
 

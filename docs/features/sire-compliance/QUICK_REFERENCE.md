@@ -187,7 +187,7 @@ pg_dump -h HOST -U postgres -d innpilot > backup_$(date +%Y%m%d).sql
 ```bash
 git pull origin main
 npm install
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ### 3. Smoke Test

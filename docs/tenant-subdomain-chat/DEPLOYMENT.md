@@ -48,7 +48,7 @@ git push origin main
 #### SSH al Servidor
 ```bash
 ssh user@muva.chat
-cd /var/www/innpilot
+cd /var/www/muva-chat
 ```
 
 #### Pull Últimos Cambios
@@ -75,22 +75,22 @@ echo $?  # Debe retornar 0
 #### Restart PM2
 ```bash
 # Opción 1: Restart sin downtime
-pm2 reload innpilot
+pm2 reload muva-chat
 
 # Opción 2: Restart con breve downtime (más seguro)
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Verificar status
-pm2 status innpilot
+pm2 status muva-chat
 ```
 
 ### 3. Verificar Logs
 ```bash
 # Ver logs en tiempo real
-pm2 logs innpilot --lines 50
+pm2 logs muva-chat --lines 50
 
 # Buscar errores
-pm2 logs innpilot --err --lines 100
+pm2 logs muva-chat --err --lines 100
 
 # Verificar que el servidor arrancó correctamente
 # Buscar: "✓ Ready in Xms"
@@ -142,10 +142,10 @@ curl -I https://xyz.muva.chat/chat
 ### Rollback Rápido (Sin Rebuild)
 ```bash
 # Si hay backup del build anterior
-cd /var/www/innpilot
+cd /var/www/muva-chat
 rm -rf .next
 mv .next.backup.YYYYMMDD_HHMMSS .next
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ### Rollback Completo (Con Rebuild)
@@ -158,10 +158,10 @@ git checkout <commit-hash>
 npm run build
 
 # Restart
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Verificar
-pm2 logs innpilot --lines 50
+pm2 logs muva-chat --lines 50
 ```
 
 ### Rollback de Base de Datos
@@ -190,11 +190,11 @@ npm run build
 **Solución**:
 ```bash
 # Ver logs de error
-pm2 logs innpilot --err --lines 100
+pm2 logs muva-chat --err --lines 100
 
 # Restart completo
-pm2 delete innpilot
-pm2 start npm --name innpilot -- start
+pm2 delete muva-chat
+pm2 start npm --name muva-chat -- start
 
 # Verificar
 pm2 status
@@ -228,7 +228,7 @@ sudo systemctl reload nginx
 ## Monitoring Post-Deployment
 
 ### Métricas Clave
-- **Uptime**: `pm2 status innpilot` → debe estar "online"
+- **Uptime**: `pm2 status muva-chat` → debe estar "online"
 - **Memory**: `pm2 monit` → debe estar < 500MB
 - **Response Time**: APIs deben responder < 2s
 - **Error Rate**: `pm2 logs --err` → debe estar vacío o con errores no críticos
@@ -236,7 +236,7 @@ sudo systemctl reload nginx
 ### Logs a Monitorear
 ```bash
 # PM2 logs
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 
 # Nginx logs
 sudo tail -f /var/log/nginx/access.log

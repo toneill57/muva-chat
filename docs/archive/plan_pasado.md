@@ -19,7 +19,7 @@ Desarrollar un sistema conversacional inteligente que permita a los huéspedes i
 ### Propuesta de Valor
 - **Para Huéspedes**: Asistente personal 24/7 que conoce su reserva y contexto
 - **Para Hoteles**: Reduce carga operativa del staff, mejora experiencia del huésped
-- **Para InnPilot**: Diferenciador competitivo, producto core con valor recurrente
+- **Para MUVA Chat**: Diferenciador competitivo, producto core con valor recurrente
 
 ### Infraestructura Existente ✅
 ```
@@ -640,7 +640,7 @@ export default function GuestChatPage({ params }: { params: { tenant_id: string 
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Guest Chat | InnPilot',
+  title: 'Guest Chat | MUVA Chat',
   description: 'Chat with AI assistant for your reservation',
   robots: 'noindex, nofollow', // Privacy: no index guest pages
   openGraph: {
@@ -690,7 +690,7 @@ export default function GuestChatLayout({ children }: { children: React.ReactNod
   - [ ] No navigation/logout button (está en GuestChatInterface)
 
 - [ ] Backend: Agregar metadata export a page.tsx
-  - [ ] title: "Guest Chat | InnPilot"
+  - [ ] title: "Guest Chat | MUVA Chat"
   - [ ] description para SEO
   - [ ] robots: noindex, nofollow (privacidad guests)
   - [ ] Open Graph tags para sharing (opcional)
@@ -1263,5 +1263,5 @@ npm run test:watch
 ---
 
 **Última revisión**: 30 de Septiembre 2025
-**Responsable**: Equipo InnPilot
+**Responsable**: Equipo MUVA Chat
 **Estado**: ✅ Aprobado para desarrollo

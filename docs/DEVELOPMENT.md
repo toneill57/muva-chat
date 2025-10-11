@@ -286,7 +286,7 @@ Set in VPS via .env.local file:
 ```bash
 # SSH to VPS
 ssh deploy@muva.chat
-cd /var/www/innpilot
+cd /var/www/muva-chat
 
 # Edit .env.local
 nano .env.local

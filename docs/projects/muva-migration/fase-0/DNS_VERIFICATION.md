@@ -5,9 +5,9 @@
 
 ## Resultados
 
-### innpilot.io
+### muva.chat
 ```bash
-$ dig +short innpilot.io
+$ dig +short muva.chat
 195.200.6.216
 ```
 
@@ -18,12 +18,12 @@ $ dig +short muva.chat
 ```
 
 ## Verificación
-- ✅ innpilot.io apunta a 195.200.6.216
+- ✅ muva.chat apunta a 195.200.6.216
 - ✅ muva.chat apunta a 195.200.6.216
 - ✅ Ambos dominios apuntan al mismo IP
 
 ## Conclusión
-La configuración DNS está correcta. Ambos dominios (innpilot.io y muva.chat) resuelven al mismo VPS IP 195.200.6.216. La infraestructura DNS está lista para soportar la estrategia de dual-domain.
+La configuración DNS está correcta. Ambos dominios (muva.chat y muva.chat) resuelven al mismo VPS IP 195.200.6.216. La infraestructura DNS está lista para soportar la estrategia de dual-domain.
 
 ## Siguiente Paso
 Proceder con Fase 1 - Dual-Domain Support

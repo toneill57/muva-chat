@@ -1,5 +1,5 @@
 ---
-title: "Backend Developer Snapshot - InnPilot"
+title: "Backend Developer Snapshot - MUVA Chat"
 description: "Estado completo del backend: APIs, business logic, integrations, SIRE compliance"
 category: specialized-snapshot
 agent: backend-developer
@@ -10,16 +10,16 @@ audit_date: "2025-10-09"
 sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 ---
 
-# 🔧 Backend Developer Snapshot - InnPilot
+# 🔧 Backend Developer Snapshot - MUVA Chat
 
 **Última actualización**: 9 Octubre 2025
-**Estado**: PRODUCCIÓN - VPS Hostinger (innpilot.io)
+**Estado**: PRODUCCIÓN - VPS Hostinger (muva.chat)
 **Agente**: @backend-developer
 **Versión**: 2.1 Comprehensive Audit + SIRE Compliance Complete
 
 ---
 
-## 🎯 CURRENT PROJECT: InnPilot → MUVA Chat Rebrand (2025-10-11)
+## 🎯 CURRENT PROJECT: MUVA Chat → MUVA Chat Rebrand (2025-10-11)
 
 **Status:** 📋 Planning Complete - Ready for FASE 1
 **Duration:** ~9 horas total (5 FASES)
@@ -27,7 +27,7 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 ### My Responsibility:
 
 **FASE 1: Core Branding (2h)**
-- Actualizar README.md completo: "InnPilot" → "MUVA Chat - Multi-Tenant Tourism Platform"
+- Actualizar README.md completo: "MUVA Chat" → "MUVA Chat - Multi-Tenant Tourism Platform"
 - Cambiar package.json: `"name": "innpilot"` → `"name": "muva-chat"`
 - Actualizar CLAUDE.md con nuevo contexto de proyecto
 - npm run build verification
@@ -36,7 +36,7 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 - Crear estructura `docs/features/` (sire-compliance/, multi-tenant-chat/, tourism-content/)
 - ✅ Migrar `docs/sire/*` → `docs/features/sire-compliance/` (COMPLETE)
 - Crear `docs/README.md` nuevo con overview MUVA Chat
-- Batch replacement: `find docs/ -name "*.md" -exec sed -i.bak 's/InnPilot/MUVA/g' {} +`
+- Batch replacement: `find docs/ -name "*.md" -exec sed -i.bak 's/MUVA Chat/MUVA/g' {} +`
 - Limpiar ~200 archivos .md
 
 **FASE 4: Source Code (1h)**
@@ -45,7 +45,7 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 - npm run lint + build verification
 
 **FASE 5: Final Verification (1h)**
-- grep final: `grep -r "InnPilot" docs/` → 0 results (except archive/muva-migration)
+- grep final: `grep -r "MUVA Chat" docs/` → 0 results (except archive/muva-migration)
 - Documentar results en VERIFICATION_RESULTS.md
 
 ### Planning Files:
@@ -70,9 +70,9 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 6. Document each FASE in `docs/projects/innpilot-to-muva-rebrand/fase-{N}/`
 
 ### Context:
-**Brand Evolution:** InnPilot (SIRE-focused) → MUVA Chat (multi-tenant + tourism)
+**Brand Evolution:** MUVA Chat (SIRE-focused) → MUVA Chat (multi-tenant + tourism)
 **SIRE Status:** NO deprecar - Es feature premium (gancho comercial para hoteles)
-**Impact:** ~1,777 referencias "InnPilot"/"innpilot" en código + docs
+**Impact:** ~1,777 referencias "MUVA Chat"/"innpilot" en código + docs
 **Risk:** LOW (mayoría docs, código mínimo)
 **New Name:** "muva-chat" (package.json, PM2 process)
 
@@ -856,7 +856,7 @@ const { data } = await supabase
 VPS_HOST=195.200.6.216
 VPS_USER=root
 VPS_SSH_KEY=<private key>
-VPS_APP_PATH=/var/www/innpilot
+VPS_APP_PATH=/var/www/muva-chat
 
 NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...

@@ -33,8 +33,8 @@ This report documents the completion of PHASE 6 deployment tasks for the Multi-T
 # Deploy process
 git pull origin dev
 npm run build
-pm2 restart innpilot
-pm2 logs innpilot --lines 50
+pm2 restart muva-chat
+pm2 logs muva-chat --lines 50
 
 # Health checks
 curl -I https://muva.chat/api/health
@@ -43,7 +43,7 @@ curl -I https://simmerdown.muva.chat/chat
 # Rollback
 git checkout <previous-commit>
 npm run build
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ---
@@ -139,7 +139,7 @@ The project uses **GitHub Actions** for automated deployment. When code is pushe
 1. Pulls latest changes on VPS
 2. Runs `npm install` (if package.json changed)
 3. Builds production bundle (`npm run build`)
-4. Restarts PM2 process (`pm2 restart innpilot`)
+4. Restarts PM2 process (`pm2 restart muva-chat`)
 
 **Manual Deployment Script:** `/scripts/deploy-vps.sh`
 (Available for emergency manual deployments if needed)
@@ -147,7 +147,7 @@ The project uses **GitHub Actions** for automated deployment. When code is pushe
 **VPS Configuration:**
 - **Provider:** Hostinger VPS
 - **OS:** Ubuntu 22.04 LTS
-- **App Directory:** `/var/www/innpilot`
+- **App Directory:** `/var/www/muva-chat`
 - **PM2 Process:** `innpilot`
 - **Branch:** `dev`
 
@@ -457,20 +457,20 @@ If deployment issues occur:
 ### Quick Rollback (< 5 minutes)
 ```bash
 ssh vps
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git log --oneline -5
 git checkout <previous-stable-commit>
 npm run build
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ### Complete Rollback (< 15 minutes)
 ```bash
 # Restore .next build from backup
-cd /var/www/innpilot
+cd /var/www/muva-chat
 rm -rf .next
 mv .next.backup.YYYYMMDD_HHMMSS .next
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Rollback database changes (if needed)
 set -a && source .env.local && set +a

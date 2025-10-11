@@ -1,4 +1,4 @@
-# Migración InnPilot.io → MUVA.chat - Plan de Implementación
+# Migración MUVA Chat.io → MUVA.chat - Plan de Implementación
 
 **Proyecto:** MUVA.chat Migration
 **Fecha Inicio:** 2025-10-10
@@ -10,7 +10,7 @@
 
 ### Objetivo Principal
 
-Migrar el dominio principal de **innpilot.io** a **muva.chat** manteniendo 100% de funcionalidad, sin downtime, y con estrategia de rollback disponible.
+Migrar el dominio principal de **muva.chat** a **muva.chat** manteniendo 100% de funcionalidad, sin downtime, y con estrategia de rollback disponible.
 
 **MUVA** = "Muévete" (español) + "Move" (inglés) = **Move Around**
 
@@ -24,18 +24,18 @@ Migrar el dominio principal de **innpilot.io** a **muva.chat** manteniendo 100% 
    - MUVA = Muévete (imperativo español)
    - MUVA ≈ Move (homófono inglés)
    - MUVA = Multi-Unit Virtual Assistant (acrónimo técnico)
-4. **Conexión Emocional**: "Muévete como local" vs "Use InnPilot" (experiencia humana vs software)
+4. **Conexión Emocional**: "Muévete como local" vs "Use MUVA Chat" (experiencia humana vs software)
 5. **Visión del Fundador**: MUVA fue siempre la visión original del proyecto
 
 ### Alcance
 
 **IN SCOPE:**
-- ✅ Soporte dual-domain (innpilot.io + muva.chat funcionan en paralelo)
+- ✅ Soporte dual-domain (muva.chat + muva.chat funcionan en paralelo)
 - ✅ Generación SSL wildcard para `*.muva.chat`
 - ✅ Modificación de 3 archivos core (next.config.ts, tenant-utils.ts, nginx-subdomain.conf)
 - ✅ Testing exhaustivo en producción
 - ✅ Migración gradual tenant-por-tenant
-- ✅ Redirect 301 final de innpilot.io → muva.chat
+- ✅ Redirect 301 final de muva.chat → muva.chat
 
 **OUT OF SCOPE:**
 - ❌ Cambios en database schema (subdomain field es agnóstico)
@@ -51,7 +51,7 @@ Migrar el dominio principal de **innpilot.io** a **muva.chat** manteniendo 100% 
 
 **DNS Configuration:**
 ```bash
-innpilot.io → 195.200.6.216 ✅
+muva.chat → 195.200.6.216 ✅
 muva.chat   → 195.200.6.216 ✅  (YA APUNTA AL MISMO VPS)
 ```
 
@@ -63,26 +63,26 @@ muva.chat   → 195.200.6.216 ✅  (YA APUNTA AL MISMO VPS)
 
 **Tenants Actuales (4):**
 ```
-1. simmerdown.innpilot.io       → simmerdown (premium)
-2. free-hotel-test.innpilot.io  → free-hotel-test (free)
-3. xyz.innpilot.io              → xyz (free)
-4. hotel-boutique.innpilot.io   → hotel-boutique (basic)
+1. simmerdown.muva.chat       → simmerdown (premium)
+2. free-hotel-test.muva.chat  → free-hotel-test (free)
+3. xyz.muva.chat              → xyz (free)
+4. hotel-boutique.muva.chat   → hotel-boutique (basic)
 ```
 
 **Referencias al Dominio:**
 ```
 next.config.ts:58         → Regex rewrite: innpilot\\.io
 next.config.ts:69         → Regex rewrite: innpilot\\.io
-tenant-utils.ts:44        → Logic: host.endsWith('.innpilot.io')
-nginx-subdomain.conf:9    → server_name: *.innpilot.io innpilot.io
+tenant-utils.ts:44        → Logic: host.endsWith('.muva.chat')
+nginx-subdomain.conf:9    → server_name: *.muva.chat muva.chat
 nginx-subdomain.conf:26   → Regex: innpilot\.io
 ```
 
 ### Limitaciones Actuales
 
-- ❌ Dominio `innpilot.io` no refleja la visión de marca
+- ❌ Dominio `muva.chat` no refleja la visión de marca
 - ❌ `.io` TLD genérico sin diferenciación
-- ❌ "InnPilot" es funcional/técnico vs experiencial
+- ❌ "MUVA Chat" es funcional/técnico vs experiencial
 - ❌ Oportunidad de branding perdida (MUVA.chat comunica propuesta instantáneamente)
 
 ---
@@ -100,13 +100,13 @@ hotel-boutique.muva.chat/local    ← Propuesta clara
 
 **vs URLs Actuales (legacy):**
 ```
-simmerdown.innpilot.io/chat       ← Genérico, técnico
+simmerdown.muva.chat/chat       ← Genérico, técnico
 ```
 
 **Posicionamiento de Marca:**
-- **InnPilot** = Plataforma técnica (backend, admin dashboard)
+- **MUVA Chat** = Plataforma técnica (backend, admin dashboard)
 - **MUVA** = Experiencia del huésped (chat, conversación)
-- **Tagline:** "InnPilot powered by MUVA.chat"
+- **Tagline:** "MUVA Chat powered by MUVA.chat"
 
 ### Características Clave
 
@@ -148,15 +148,15 @@ simmerdown.innpilot.io/chat       ← Genérico, técnico
 **Objetivo:** Verificar estado actual y preparar ambiente para cambios
 
 **Entregables:**
-- ✅ Verificar DNS apunta correctamente (dig innpilot.io, dig muva.chat)
+- ✅ Verificar DNS apunta correctamente (dig muva.chat, dig muva.chat)
 - ✅ Auditar SSL actual (certbot certificates)
 - ✅ Backup de configuraciones (nginx, next.config, .env)
-- ✅ Listar todas las referencias hardcoded a `innpilot.io` en codebase
+- ✅ Listar todas las referencias hardcoded a `muva.chat` en codebase
 - ✅ Verificar tenant_registry en database (4 tenants esperados)
 - ✅ Snapshot de logs actuales (nginx, PM2) como baseline
 
 **Archivos a verificar:**
-- `/etc/nginx/sites-available/innpilot.io` (nginx config actual)
+- `/etc/nginx/sites-available/muva.chat` (nginx config actual)
 - `/etc/letsencrypt/live/` (SSL certs actuales)
 - `next.config.ts` (rewrites actuales)
 - `src/lib/tenant-utils.ts` (getSubdomain logic)
@@ -165,13 +165,13 @@ simmerdown.innpilot.io/chat       ← Genérico, técnico
 **Testing:**
 ```bash
 # DNS verification
-dig +short innpilot.io
+dig +short muva.chat
 dig +short muva.chat
 
 # SSL check
 sudo certbot certificates
 
-# Grep all innpilot.io references
+# Grep all muva.chat references
 grep -r "innpilot\.io" src/ --include="*.ts" --include="*.tsx"
 
 # Database check
@@ -180,8 +180,8 @@ node -e "const { createClient } = require('@supabase/supabase-js'); ..."
 
 **Success Criteria:**
 - [x] DNS para ambos dominios apunta a 195.200.6.216
-- [x] SSL actual para `*.innpilot.io` está activo
-- [x] 3 archivos identificados con referencias a innpilot.io
+- [x] SSL actual para `*.muva.chat` está activo
+- [x] 3 archivos identificados con referencias a muva.chat
 - [x] 4 tenants en database confirmados
 - [x] Backup de configs creado en `docs/projects/muva-migration/backups/`
 
@@ -189,7 +189,7 @@ node -e "const { createClient } = require('@supabase/supabase-js'); ..."
 
 ### FASE 1: Dual-Domain Support (2h)
 
-**Objetivo:** Habilitar ambos dominios (innpilot.io + muva.chat) funcionando en paralelo sin afectar tráfico actual
+**Objetivo:** Habilitar ambos dominios (muva.chat + muva.chat) funcionando en paralelo sin afectar tráfico actual
 
 **Entregables:**
 - ✅ Modificar `next.config.ts` para soportar ambos dominios en rewrites
@@ -224,10 +224,10 @@ if (host.endsWith('.muva.chat')) {
 **3. `docs/deployment/nginx-subdomain.conf` (líneas 9, 26)**
 ```nginx
 # ANTES (línea 9)
-server_name *.innpilot.io innpilot.io;
+server_name *.muva.chat muva.chat;
 
 # DESPUÉS
-server_name *.innpilot.io innpilot.io *.muva.chat muva.chat;
+server_name *.muva.chat muva.chat *.muva.chat muva.chat;
 
 # ANTES (línea 26)
 if ($host ~* ^([^.]+)\.innpilot\.io$) {
@@ -244,7 +244,7 @@ npm run dev
 # Test subdomain detection
 node -e "
 const { getSubdomain } = require('./src/lib/tenant-utils');
-console.log(getSubdomain('simmerdown.innpilot.io')); // → 'simmerdown'
+console.log(getSubdomain('simmerdown.muva.chat')); // → 'simmerdown'
 console.log(getSubdomain('simmerdown.muva.chat'));   // → 'simmerdown'
 console.log(getSubdomain('muva.chat'));              // → null
 "
@@ -272,7 +272,7 @@ console.log(getSubdomain('muva.chat'));              // → null
 **Archivos a desplegar:**
 - `next.config.ts` (modificado)
 - `src/lib/tenant-utils.ts` (modificado)
-- Copy `docs/deployment/nginx-subdomain.conf` → `/etc/nginx/sites-available/innpilot.io`
+- Copy `docs/deployment/nginx-subdomain.conf` → `/etc/nginx/sites-available/muva.chat`
 
 **Comandos en VPS:**
 ```bash
@@ -281,13 +281,13 @@ sudo certbot certonly --nginx \
   -d "*.muva.chat" \
   -d "muva.chat" \
   --agree-tos \
-  --email oneill@innpilot.io
+  --email oneill@muva.chat
 
 # 2. Verify SSL
 sudo certbot certificates | grep muva.chat
 
 # 3. Copy nginx config
-sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/innpilot.io
+sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/muva.chat
 
 # 4. Test nginx config
 sudo nginx -t
@@ -296,18 +296,18 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 # 6. Deploy Next.js app
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git pull origin feat/muva-migration
 npm ci
 npm run build
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 **Testing:**
 ```bash
 # 1. Test DNS resolution
 curl -I https://simmerdown.muva.chat
-curl -I https://simmerdown.innpilot.io
+curl -I https://simmerdown.muva.chat
 
 # 2. Test chat API
 curl -X POST https://simmerdown.muva.chat/api/public/chat \
@@ -315,13 +315,13 @@ curl -X POST https://simmerdown.muva.chat/api/public/chat \
   -d '{"message":"Hola","tenant_id":"b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"}'
 
 # 3. Monitor logs
-pm2 logs innpilot --lines 50
-sudo tail -f /var/log/nginx/innpilot-subdomain-access.log
+pm2 logs muva-chat --lines 50
+sudo tail -f /var/log/nginx/muva-subdomain-access.log
 ```
 
 **Manual Testing Checklist:**
 - [ ] `https://simmerdown.muva.chat` carga correctamente
-- [ ] `https://simmerdown.innpilot.io` sigue funcionando
+- [ ] `https://simmerdown.muva.chat` sigue funcionando
 - [ ] Chat interface funciona en muva.chat
 - [ ] Admin panel accesible en muva.chat
 - [ ] SSL certificate válido (sin warnings)
@@ -373,7 +373,7 @@ Hola [Cliente],
 Estamos actualizando nuestro dominio principal a MUVA.chat.
 
 **Cambios:**
-- URL anterior: simmerdown.innpilot.io
+- URL anterior: simmerdown.muva.chat
 - URL nueva: simmerdown.muva.chat
 
 **Acción requerida:**
@@ -388,7 +388,7 @@ Estamos actualizando nuestro dominio principal a MUVA.chat.
 La URL anterior seguirá funcionando durante 30 días.
 
 Saludos,
-InnPilot Team
+MUVA Chat Team
 ```
 
 **Step 2: Update Links**
@@ -403,7 +403,7 @@ InnPilot Team
 **Step 3: Monitor**
 ```bash
 # Check logs for specific tenant
-pm2 logs innpilot | grep "simmerdown"
+pm2 logs muva-chat | grep "simmerdown"
 
 # Check analytics
 # Query guest_conversations for simmerdown
@@ -424,7 +424,7 @@ pm2 logs innpilot | grep "simmerdown"
 ## simmerdown (Premium)
 **Date:** 2025-10-10
 **Status:** ✅ Complete
-**Old URL:** simmerdown.innpilot.io
+**Old URL:** simmerdown.muva.chat
 **New URL:** simmerdown.muva.chat
 
 **Actions:**
@@ -453,10 +453,10 @@ Cliente muy satisfecho con nuevo branding.
 
 ### FASE 4: Full Cutover (30min)
 
-**Objetivo:** Establecer muva.chat como dominio principal, redirigir innpilot.io permanentemente
+**Objetivo:** Establecer muva.chat como dominio principal, redirigir muva.chat permanentemente
 
 **Entregables:**
-- ✅ Agregar redirect 301 en Nginx: `innpilot.io → muva.chat`
+- ✅ Agregar redirect 301 en Nginx: `muva.chat → muva.chat`
 - ✅ Limpiar código legacy (opcional, mantener compatibilidad)
 - ✅ Actualizar documentación interna
 - ✅ Comunicado público sobre nuevo branding
@@ -465,26 +465,26 @@ Cliente muy satisfecho con nuevo branding.
 
 **1. `docs/deployment/nginx-subdomain.conf` (agregar redirect block)**
 ```nginx
-# Redirect innpilot.io to muva.chat (permanent)
+# Redirect muva.chat to muva.chat (permanent)
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name *.innpilot.io innpilot.io;
+    server_name *.muva.chat muva.chat;
 
     # SSL (usar mismo cert por ahora)
-    ssl_certificate /etc/letsencrypt/live/innpilot.io-0001/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/innpilot.io-0001/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/muva.chat-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/muva.chat-0001/privkey.pem;
 
     # 301 Redirect permanente
     return 301 https://$host$request_uri;
 
-    # Rewrite .innpilot.io → .muva.chat
+    # Rewrite .muva.chat → .muva.chat
     if ($host ~* ^([^.]+)\.innpilot\.io$) {
         return 301 https://$1.muva.chat$request_uri;
     }
 
     # Root domain
-    if ($host = "innpilot.io") {
+    if ($host = "muva.chat") {
         return 301 https://muva.chat$request_uri;
     }
 }
@@ -499,12 +499,12 @@ server {
 **Comandos:**
 ```bash
 # 1. Deploy nginx redirect
-sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/innpilot.io
+sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/muva.chat
 sudo nginx -t
 sudo systemctl reload nginx
 
 # 2. Test redirect
-curl -I https://simmerdown.innpilot.io
+curl -I https://simmerdown.muva.chat
 # Should return: Location: https://simmerdown.muva.chat
 
 # 3. Update all docs
@@ -519,9 +519,9 @@ git push origin feat/muva-migration
 **Testing:**
 ```bash
 # Verify redirects
-curl -I https://innpilot.io
-curl -I https://simmerdown.innpilot.io
-curl -I https://free-hotel-test.innpilot.io
+curl -I https://muva.chat
+curl -I https://simmerdown.muva.chat
+curl -I https://free-hotel-test.muva.chat
 
 # All should return 301 with Location: https://...muva.chat
 
@@ -534,7 +534,7 @@ curl -I https://simmerdown.muva.chat
 ```markdown
 # Presentamos MUVA.chat 🎉
 
-InnPilot ahora es **MUVA.chat**
+MUVA Chat ahora es **MUVA.chat**
 
 **MUVA** viene de "Muévete" - porque viajar no es quedarse quieto.
 
@@ -545,7 +545,7 @@ Descubre más en: https://muva.chat
 
 **Success Criteria:**
 - [ ] Redirect 301 funcionando para todos los tenants
-- [ ] innpilot.io URLs redirigen a muva.chat
+- [ ] muva.chat URLs redirigen a muva.chat
 - [ ] SEO preserved (301 mantiene ranking)
 - [ ] Documentación actualizada
 - [ ] Zero broken links internos
@@ -600,7 +600,7 @@ Descubre más en: https://muva.chat
 **Responsabilidad:** Modificaciones de código core (Next.js, TypeScript)
 
 **Tareas:**
-- FASE 0: Auditar referencias a innpilot.io en codebase
+- FASE 0: Auditar referencias a muva.chat en codebase
 - FASE 1: Modificar `next.config.ts` y `tenant-utils.ts`
 - FASE 1: Validar cambios con tests locales
 - FASE 2: Asistir en debugging si hay issues post-deploy
@@ -625,7 +625,7 @@ Descubre más en: https://muva.chat
 
 **Archivos:**
 - `docs/deployment/nginx-subdomain.conf` (modificar y deploy)
-- VPS: `/etc/nginx/sites-available/innpilot.io`
+- VPS: `/etc/nginx/sites-available/muva.chat`
 - VPS: `/etc/letsencrypt/live/` (SSL certs)
 
 **Comandos VPS:**
@@ -633,7 +633,7 @@ Descubre más en: https://muva.chat
 sudo certbot certonly --nginx -d "*.muva.chat" -d "muva.chat"
 sudo nginx -t
 sudo systemctl reload nginx
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ---
@@ -657,8 +657,8 @@ curl -w "@curl-format.txt" -o /dev/null -s https://simmerdown.muva.chat
 npx tsx scripts/test-multi-tenant.ts
 
 # Log monitoring
-pm2 logs innpilot --lines 100 | grep -i error
-sudo tail -f /var/log/nginx/innpilot-subdomain-error.log
+pm2 logs muva-chat --lines 100 | grep -i error
+sudo tail -f /var/log/nginx/muva-subdomain-error.log
 ```
 
 **Tools:**
@@ -674,7 +674,7 @@ sudo tail -f /var/log/nginx/innpilot-subdomain-error.log
 **Responsabilidad:** Branding visual updates (logos, colors, marketing copy)
 
 **Tareas:**
-- POST-MIGRATION: Actualizar referencias visuales a "InnPilot" → "MUVA"
+- POST-MIGRATION: Actualizar referencias visuales a "MUVA Chat" → "MUVA"
 - POST-MIGRATION: Crear landing page muva.chat (si se desea)
 - POST-MIGRATION: Actualizar chat widget branding
 
@@ -685,7 +685,7 @@ sudo tail -f /var/log/nginx/innpilot-subdomain-error.log
 ## 📂 ESTRUCTURA DE ARCHIVOS
 
 ```
-/Users/oneill/Sites/apps/InnPilot/
+/Users/oneill/Sites/apps/MUVA Chat/
 ├── src/
 │   ├── lib/
 │   │   ├── tenant-utils.ts                    # MODIFICAR (FASE 1)
@@ -738,7 +738,7 @@ sudo tail -f /var/log/nginx/innpilot-subdomain-error.log
 
 **2. SSL Certificates:**
 - Wildcard cert para `*.muva.chat` requiere DNS challenge (Certbot maneja automáticamente)
-- Cert actual `*.innpilot.io` se mantiene activo durante migración
+- Cert actual `*.muva.chat` se mantiene activo durante migración
 - Ambos certs coexisten sin conflicto
 
 **3. Database Schema:**
@@ -764,11 +764,11 @@ sudo tail -f /var/log/nginx/innpilot-subdomain-error.log
 **7. Rollback Strategy:**
 ```bash
 # Si algo sale mal en FASE 2:
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git revert HEAD
-sudo cp backups/nginx-subdomain.conf.backup /etc/nginx/sites-available/innpilot.io
+sudo cp backups/nginx-subdomain.conf.backup /etc/nginx/sites-available/muva.chat
 sudo systemctl reload nginx
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Tiempo estimado de rollback: < 5 minutos
 ```
@@ -776,7 +776,7 @@ pm2 restart innpilot
 **8. SEO Considerations:**
 - 301 redirects preservan SEO ranking (Google mantiene 90-99% del link juice)
 - Redirect debe estar activo mínimo 6 meses para transición completa
-- Considerar mantener innpilot.io activo 12 meses para SEO safety
+- Considerar mantener muva.chat activo 12 meses para SEO safety
 
 **9. Testing Strategy:**
 - FASE 2: Testing exhaustivo en producción (simmerdown tenant)
@@ -800,7 +800,7 @@ pm2 restart innpilot
 | Tenant confusion | Baja | Medio | ✅ Comunicación clara + dual-domain por 30 días |
 | Performance degradation | Muy Baja | Alto | ✅ Monitoring en FASE 2-4, rollback disponible |
 | SEO ranking drop | Baja | Medio | ✅ 301 redirects preserve SEO (standard practice) |
-| Broken external links | Media | Bajo | ✅ innpilot.io mantiene redirect permanente |
+| Broken external links | Media | Bajo | ✅ muva.chat mantiene redirect permanente |
 
 ---
 

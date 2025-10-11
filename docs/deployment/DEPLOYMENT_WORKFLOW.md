@@ -46,7 +46,7 @@ Developer → GitHub (push to dev) → GitHub Actions → VPS Build & Deploy →
    - ✅ `git pull origin dev`
    - ✅ `npm ci` (instala deps exactas)
    - ✅ `npm run build`
-   - ✅ `pm2 reload innpilot --update-env`
+   - ✅ `pm2 reload muva-chat --update-env`
    - ✅ Health check a https://muva.chat/api/health
 
 3. **Verificación Post-Deploy**:
@@ -67,7 +67,7 @@ Developer → GitHub (push to dev) → GitHub Actions → VPS Build & Deploy →
 gh run watch
 
 # Ver logs de PM2 en VPS (SSH)
-ssh root@muva.chat "pm2 logs innpilot --lines 100"
+ssh root@muva.chat "pm2 logs muva-chat --lines 100"
 ```
 
 ---
@@ -79,12 +79,12 @@ ssh root@muva.chat "pm2 logs innpilot --lines 100"
 1. **SSH al Servidor**:
    ```bash
    ssh root@muva.chat
-   # O con alias: ssh innpilot-vps
+   # O con alias: ssh muva-vps
    ```
 
 2. **Navegar al Directorio**:
    ```bash
-   cd /var/www/innpilot
+   cd /var/www/muva-chat
    ```
 
 3. **Pull Latest Changes**:
@@ -108,9 +108,9 @@ ssh root@muva.chat "pm2 logs innpilot --lines 100"
 
 6. **Restart PM2**:
    ```bash
-   pm2 reload innpilot --update-env
+   pm2 reload muva-chat --update-env
    # O para restart completo (downtime breve):
-   # pm2 restart innpilot
+   # pm2 restart muva-chat
    ```
 
 7. **Verificar Deploy**:
@@ -119,7 +119,7 @@ ssh root@muva.chat "pm2 logs innpilot --lines 100"
    curl -s http://localhost:3000/api/health | jq
 
    # PM2 status
-   pm2 status innpilot
+   pm2 status muva-chat
 
    # Nginx status
    sudo systemctl status nginx
@@ -135,17 +135,17 @@ set -e  # Exit on error
 
 echo "🚀 Starting manual deployment..."
 
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git pull origin dev
 npm ci
 npm run build
-pm2 reload innpilot --update-env
+pm2 reload muva-chat --update-env
 
 echo "✅ Deployment complete. Running health check..."
 sleep 5
 curl -s http://localhost:3000/api/health | jq
 
-pm2 status innpilot
+pm2 status muva-chat
 ```
 
 ---
@@ -171,7 +171,7 @@ pm2 status innpilot
 1. **SSH al Servidor**:
    ```bash
    ssh root@muva.chat
-   cd /var/www/innpilot
+   cd /var/www/muva-chat
    ```
 
 2. **Reset a Commit Anterior**:
@@ -184,13 +184,13 @@ pm2 status innpilot
    ```bash
    npm ci
    npm run build
-   pm2 reload innpilot --update-env
+   pm2 reload muva-chat --update-env
    ```
 
 4. **Verificar Rollback**:
    ```bash
    curl -s http://localhost:3000/api/health | jq
-   pm2 logs innpilot --lines 50
+   pm2 logs muva-chat --lines 50
    ```
 
 ### Rollback de Dependencias
@@ -202,7 +202,7 @@ Si un `npm update` causa problemas:
 git checkout HEAD~1 package-lock.json
 npm ci
 npm run build
-pm2 reload innpilot --update-env
+pm2 reload muva-chat --update-env
 ```
 
 ---
@@ -240,16 +240,16 @@ Respuesta esperada:
 pm2 status
 
 # Logs en tiempo real
-pm2 logs innpilot
+pm2 logs muva-chat
 
 # Logs filtrados
-pm2 logs innpilot --lines 100 --err  # Solo errores
+pm2 logs muva-chat --lines 100 --err  # Solo errores
 
 # Monit (dashboard interactivo)
 pm2 monit
 
 # Info detallada
-pm2 describe innpilot
+pm2 describe muva-chat
 ```
 
 ### Nginx Logs
@@ -272,15 +272,15 @@ sudo grep "500" /var/log/nginx/access.log
 
 ```bash
 # Logs de Next.js (PM2)
-pm2 logs innpilot --lines 200
+pm2 logs muva-chat --lines 200
 
 # Logs de PM2 guardados
 ls ~/.pm2/logs/
-cat ~/.pm2/logs/innpilot-out.log    # stdout
-cat ~/.pm2/logs/innpilot-error.log  # stderr
+cat ~/.pm2/logs/muva-chat-out.log    # stdout
+cat ~/.pm2/logs/muva-chat-error.log  # stderr
 
 # Rotar logs (si crecen demasiado)
-pm2 flush innpilot
+pm2 flush muva-chat
 ```
 
 ### Alertas Automáticas
@@ -301,9 +301,9 @@ pm2 register
 
 | Síntoma                        | Diagnóstico                              | Solución                                    |
 |--------------------------------|------------------------------------------|---------------------------------------------|
-| 502 Bad Gateway                | `pm2 status` → app stopped               | `pm2 restart innpilot`                      |
-| 504 Gateway Timeout            | App lenta/colgada                        | `pm2 logs innpilot` → identificar bottleneck|
-| High Memory Usage              | `pm2 monit` → > 80% RAM                  | `pm2 reload innpilot` (zero-downtime)       |
+| 502 Bad Gateway                | `pm2 status` → app stopped               | `pm2 restart muva-chat`                      |
+| 504 Gateway Timeout            | App lenta/colgada                        | `pm2 logs muva-chat` → identificar bottleneck|
+| High Memory Usage              | `pm2 monit` → > 80% RAM                  | `pm2 reload muva-chat` (zero-downtime)       |
 | Build Failures                 | `npm run build` error                    | Ver logs, fix code, re-deploy               |
 | SSL Certificate Error          | Certbot renewal failed                   | `sudo certbot renew --dry-run`              |
 

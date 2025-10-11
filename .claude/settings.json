@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/oneill/Sites/apps/InnPilot/.claude/hooks/post-tool-use-error-detector.sh"
+            "command": "/Users/oneill/Sites/apps/muva-chat/.claude/hooks/post-tool-use-error-detector.sh"
           }
         ]
       }

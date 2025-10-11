@@ -102,7 +102,7 @@ After deployment, test these URLs:
 Check PM2 logs to verify subdomain detection:
 
 ```bash
-pm2 logs innpilot --lines 50 | grep middleware
+pm2 logs muva-chat --lines 50 | grep middleware
 # Should see: [middleware] Subdomain detected: simmerdown (from: nginx-header)
 ```
 
@@ -114,7 +114,7 @@ pm2 logs innpilot --lines 50 | grep middleware
 ```bash
 sudo nginx -t
 sudo systemctl reload nginx
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ### Issue: "nginx-header" not appearing in logs
@@ -126,7 +126,7 @@ pm2 restart innpilot
 **Fix**:
 ```bash
 pm2 status
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ### Issue: SSL certificate errors
@@ -156,7 +156,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 # Restart app
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ## Monitoring
@@ -169,11 +169,11 @@ After deployment, monitor for:
 
 Check PM2 logs:
 ```bash
-pm2 logs innpilot --lines 100
+pm2 logs muva-chat --lines 100
 ```
 
 Check Nginx logs:
 ```bash
-sudo tail -f /var/log/nginx/innpilot-subdomain-access.log
-sudo tail -f /var/log/nginx/innpilot-subdomain-error.log
+sudo tail -f /var/log/nginx/muva-subdomain-access.log
+sudo tail -f /var/log/nginx/muva-subdomain-error.log
 ```

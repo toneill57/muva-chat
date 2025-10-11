@@ -21,37 +21,37 @@ ssh oneill@195.200.6.216
 
 ### 2. Capturar PM2 Logs
 ```bash
-cd /Users/oneill/Sites/apps/InnPilot
+cd /Users/oneill/Sites/apps/MUVA Chat
 
 # Capturar últimas 100 líneas de PM2 logs
-pm2 logs innpilot --lines 100 --nostream > docs/projects/muva-migration/fase-0/pm2-baseline.log 2>&1
+pm2 logs muva-chat --lines 100 --nostream > docs/projects/muva-migration/fase-0/pm2-baseline.log 2>&1
 
 # O alternativamente, desde local si tienes rsync:
-ssh oneill@195.200.6.216 "pm2 logs innpilot --lines 100 --nostream" > docs/projects/muva-migration/fase-0/pm2-baseline.log
+ssh oneill@195.200.6.216 "pm2 logs muva-chat --lines 100 --nostream" > docs/projects/muva-migration/fase-0/pm2-baseline.log
 ```
 
 ### 3. Capturar Nginx Access Log
 ```bash
 # En VPS
-sudo tail -n 200 /var/log/nginx/innpilot-subdomain-access.log > /tmp/nginx-access-baseline.log
+sudo tail -n 200 /var/log/nginx/muva-subdomain-access.log > /tmp/nginx-access-baseline.log
 
 # Copiar a repo local
-scp /tmp/nginx-access-baseline.log oneill@local:/Users/oneill/Sites/apps/InnPilot/docs/projects/muva-migration/fase-0/
+scp /tmp/nginx-access-baseline.log oneill@local:/Users/oneill/Sites/apps/MUVA Chat/docs/projects/muva-migration/fase-0/
 
 # O desde local:
-ssh oneill@195.200.6.216 "sudo tail -n 200 /var/log/nginx/innpilot-subdomain-access.log" > docs/projects/muva-migration/fase-0/nginx-access-baseline.log
+ssh oneill@195.200.6.216 "sudo tail -n 200 /var/log/nginx/muva-subdomain-access.log" > docs/projects/muva-migration/fase-0/nginx-access-baseline.log
 ```
 
 ### 4. Capturar Nginx Error Log
 ```bash
 # En VPS
-sudo tail -n 100 /var/log/nginx/innpilot-subdomain-error.log > /tmp/nginx-error-baseline.log
+sudo tail -n 100 /var/log/nginx/muva-subdomain-error.log > /tmp/nginx-error-baseline.log
 
 # Copiar a repo local
-scp /tmp/nginx-error-baseline.log oneill@local:/Users/oneill/Sites/apps/InnPilot/docs/projects/muva-migration/fase-0/
+scp /tmp/nginx-error-baseline.log oneill@local:/Users/oneill/Sites/apps/MUVA Chat/docs/projects/muva-migration/fase-0/
 
 # O desde local:
-ssh oneill@195.200.6.216 "sudo tail -n 100 /var/log/nginx/innpilot-subdomain-error.log" > docs/projects/muva-migration/fase-0/nginx-error-baseline.log
+ssh oneill@195.200.6.216 "sudo tail -n 100 /var/log/nginx/muva-subdomain-error.log" > docs/projects/muva-migration/fase-0/nginx-error-baseline.log
 ```
 
 ---
@@ -124,15 +124,15 @@ echo "📊 Capturando logs baseline desde VPS..."
 
 # PM2 logs
 echo "1/3 - PM2 logs..."
-ssh ${REMOTE_USER}@${REMOTE_HOST} "pm2 logs innpilot --lines 100 --nostream" > ${LOCAL_DIR}/pm2-baseline.log 2>&1
+ssh ${REMOTE_USER}@${REMOTE_HOST} "pm2 logs muva-chat --lines 100 --nostream" > ${LOCAL_DIR}/pm2-baseline.log 2>&1
 
 # Nginx access
 echo "2/3 - Nginx access log..."
-ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo tail -n 200 /var/log/nginx/innpilot-subdomain-access.log" > ${LOCAL_DIR}/nginx-access-baseline.log 2>&1
+ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo tail -n 200 /var/log/nginx/muva-subdomain-access.log" > ${LOCAL_DIR}/nginx-access-baseline.log 2>&1
 
 # Nginx error
 echo "3/3 - Nginx error log..."
-ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo tail -n 100 /var/log/nginx/innpilot-subdomain-error.log" > ${LOCAL_DIR}/nginx-error-baseline.log 2>&1
+ssh ${REMOTE_USER}@${REMOTE_HOST} "sudo tail -n 100 /var/log/nginx/muva-subdomain-error.log" > ${LOCAL_DIR}/nginx-error-baseline.log 2>&1
 
 echo "✅ Logs baseline capturados en ${LOCAL_DIR}/"
 ls -lh ${LOCAL_DIR}/*.log
@@ -152,7 +152,7 @@ chmod +x scripts/capture-logs-baseline.sh
 **Solución:** Configurar SSH key authentication:
 ```bash
 # Generar key si no existe
-ssh-keygen -t ed25519 -C "oneill@innpilot.io"
+ssh-keygen -t ed25519 -C "oneill@muva.chat"
 
 # Copiar key al VPS
 ssh-copy-id oneill@195.200.6.216

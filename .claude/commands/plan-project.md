@@ -126,7 +126,7 @@ Generate comprehensive `plan.md` with:
 ## 📂 ESTRUCTURA DE ARCHIVOS
 
 ```
-/Users/oneill/Sites/apps/InnPilot/
+/Users/oneill/Sites/apps/muva-chat/
 ├── src/
 │   └── {files to create}
 └── docs/

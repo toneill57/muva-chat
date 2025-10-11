@@ -97,7 +97,7 @@ Coordinate with @backend-developer for API endpoints (Phase 2-3)
 
 ---
 
-# 🗄️ Database Agent Snapshot - InnPilot
+# 🗄️ Database Agent Snapshot - MUVA Chat
 
 ## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 

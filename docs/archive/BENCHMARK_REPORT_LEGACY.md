@@ -1,7 +1,7 @@
 # 📊 Benchmark Report: Asistente de Negocio vs Vector Search
 
 **Fecha:** 29 de septiembre, 2025
-**Proyecto:** InnPilot - Sistema Matryoshka Multi-Tenant
+**Proyecto:** MUVA Chat - Sistema Matryoshka Multi-Tenant
 **Objetivo:** Comparar rendimiento entre chat tradicional y búsqueda vectorial optimizada
 
 ---

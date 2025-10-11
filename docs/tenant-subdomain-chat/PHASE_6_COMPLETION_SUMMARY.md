@@ -37,15 +37,15 @@ All deployment infrastructure for the Multi-Tenant Subdomain Chat system has bee
 # Deploy
 git pull origin dev
 npm run build
-pm2 restart innpilot
+pm2 restart muva-chat
 
 # Verify
 curl https://muva.chat/api/health
-pm2 logs innpilot --lines 50
+pm2 logs muva-chat --lines 50
 
 # Rollback
 git checkout <prev-commit>
-npm run build && pm2 restart innpilot
+npm run build && pm2 restart muva-chat
 ```
 
 ---
@@ -153,7 +153,7 @@ To https://github.com/toneill57/innpilot.git
    - Pulls latest code
    - Runs `npm install` (if needed)
    - Executes `npm run build`
-   - Restarts PM2: `pm2 restart innpilot`
+   - Restarts PM2: `pm2 restart muva-chat`
 
 **Manual Fallback:** `/scripts/deploy-vps.sh` available
 
@@ -395,7 +395,7 @@ Code Push → GitHub → GitHub Actions Workflow
                      ↓
                 npm run build
                      ↓
-             pm2 restart innpilot
+             pm2 restart muva-chat
                      ↓
               ✅ Deployment Complete
 ```
@@ -403,12 +403,12 @@ Code Push → GitHub → GitHub Actions Workflow
 ### Manual Deployment (Fallback)
 ```bash
 # On VPS
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git pull origin dev
 npm install --legacy-peer-deps
 npm run build
-pm2 restart innpilot
-pm2 logs innpilot --lines 50
+pm2 restart muva-chat
+pm2 logs muva-chat --lines 50
 ```
 
 ---
@@ -426,7 +426,7 @@ pm2 logs innpilot --lines 50
 2. **Run Verification Script**
    ```bash
    ssh vps
-   cd /var/www/innpilot
+   cd /var/www/muva-chat
    bash scripts/verify-deployment.sh
    ```
 
@@ -453,16 +453,16 @@ pm2 logs innpilot --lines 50
 curl https://muva.chat/api/health
 
 # Monitor PM2
-pm2 monit innpilot
+pm2 monit muva-chat
 ```
 
 **Error Monitoring:**
 ```bash
 # PM2 error logs
-pm2 logs innpilot --err
+pm2 logs muva-chat --err
 
 # Nginx error logs
-tail -f /var/log/nginx/innpilot-error.log
+tail -f /var/log/nginx/muva-chat-error.log
 ```
 
 ---
@@ -473,20 +473,20 @@ tail -f /var/log/nginx/innpilot-error.log
 
 **Quick Rollback (< 5 minutes):**
 ```bash
-cd /var/www/innpilot
+cd /var/www/muva-chat
 git log --oneline -5
 git checkout cb0667e  # Previous stable commit
 npm run build
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 **Complete Rollback (< 15 minutes):**
 ```bash
 # Restore build from backup
-cd /var/www/innpilot
+cd /var/www/muva-chat
 rm -rf .next
 mv .next.backup.YYYYMMDD_HHMMSS .next
-pm2 restart innpilot
+pm2 restart muva-chat
 ```
 
 ---
