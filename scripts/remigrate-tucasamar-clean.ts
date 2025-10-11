@@ -89,12 +89,36 @@ function parseImages(images: any): string[] {
 }
 
 /**
+ * Find markdown file path (checks both /rooms/ and /apartments/)
+ */
+async function findMarkdownPath(unitName: string): Promise<string | null> {
+  const filename = unitName.toLowerCase().replace(/\s+/g, '-') + '.md';
+
+  const paths = [
+    join(process.cwd(), '_assets', 'tucasamar', 'accommodations', 'rooms', filename),
+    join(process.cwd(), '_assets', 'tucasamar', 'accommodations', 'apartments', filename),
+  ];
+
+  for (const path of paths) {
+    try {
+      await readFile(path, 'utf-8');
+      return path;
+    } catch {
+      // File not found, try next path
+    }
+  }
+
+  return null;
+}
+
+/**
  * Extract price from markdown file
  */
 async function extractPriceFromMarkdown(unitName: string): Promise<number | null> {
   try {
-    const filename = unitName.toLowerCase().replace(/\s+/g, '-') + '.md';
-    const filepath = join(process.cwd(), '_assets', 'tucasamar', 'accommodations', 'rooms', filename);
+    const filepath = await findMarkdownPath(unitName);
+    if (!filepath) return null;
+
     const content = await readFile(filepath, 'utf-8');
 
     // Look for: "Precio por noche**: $280,000 COP"
@@ -106,7 +130,54 @@ async function extractPriceFromMarkdown(unitName: string): Promise<number | null
 
     return null;
   } catch (error) {
-    // File not found or parse error - return null
+    return null;
+  }
+}
+
+/**
+ * Extract amenities from markdown file
+ */
+async function extractAmenitiesFromMarkdown(unitName: string): Promise<string[]> {
+  try {
+    const filepath = await findMarkdownPath(unitName);
+    if (!filepath) return [];
+
+    const content = await readFile(filepath, 'utf-8');
+    const amenities: string[] = [];
+
+    // Find lines with: "- **Amenity name** <!-- EXTRAE: amenities_list -->"
+    const amenityMatches = content.matchAll(/^-\s*\*\*(.*?)\*\*\s*<!--\s*EXTRAE:\s*amenities_list\s*-->/gm);
+
+    for (const match of amenityMatches) {
+      if (match[1]) {
+        amenities.push(match[1].trim());
+      }
+    }
+
+    return amenities;
+  } catch (error) {
+    return [];
+  }
+}
+
+/**
+ * Extract unit type from markdown frontmatter
+ */
+async function extractUnitTypeFromMarkdown(unitName: string): Promise<string | null> {
+  try {
+    const filepath = await findMarkdownPath(unitName);
+    if (!filepath) return null;
+
+    const content = await readFile(filepath, 'utf-8');
+
+    // Look for: unit_type: "room" or "apartment" in frontmatter
+    const typeMatch = content.match(/^unit_type:\s*["']?(room|apartment)["']?/m);
+    if (typeMatch) {
+      return typeMatch[1];
+    }
+
+    return null;
+  } catch (error) {
     return null;
   }
 }
@@ -141,6 +212,13 @@ async function generateEmbeddings(text: string): Promise<{
  * Transform accommodation unit to marketing-focused public format with CLEAN data parsing
  */
 async function transformToPublic(unit: AccommodationUnit): Promise<Omit<PublicAccommodation, 'embedding' | 'embedding_fast'>> {
+  // Extract unit type from markdown (for Rose Cay apartment fix)
+  const markdownUnitType = await extractUnitTypeFromMarkdown(unit.name);
+  const unitType = markdownUnitType || unit.unit_type || 'room';
+
+  // Extract amenities from markdown (CRITICAL - DB has empty amenities)
+  const amenitiesFromMarkdown = await extractAmenitiesFromMarkdown(unit.name);
+
   // Extract highlights from unique_features array (mal-formatted but usable)
   const highlights: string[] = [];
   if (unit.view_type) highlights.push(`${unit.view_type} view`);
@@ -155,22 +233,24 @@ async function transformToPublic(unit: AccommodationUnit): Promise<Omit<PublicAc
   // Build amenities object from capacity
   const max_capacity = unit.capacity?.max_capacity || unit.capacity || 2;
   const amenities = {
-    bedrooms: 1, // Tucasamar units are mostly rooms
+    bedrooms: unitType === 'apartment' ? 2 : 1, // Apartments have more bedrooms
     bathrooms: 1,
     max_guests: typeof max_capacity === 'number' ? max_capacity : 2,
     size_sqm: unit.size_m2 || null,
-    features: [], // Empty in source data
+    features: amenitiesFromMarkdown, // FIXED: Now reads from markdown
     accessibility: [],
   };
 
-  // Build pricing - try DB first, then markdown fallback
-  let base_price_night = unit.base_price_low_season || unit.base_price_high_season;
+  // Build pricing - extract from markdown (DB has NULL)
+  let base_price_night = await extractPriceFromMarkdown(unit.name);
+
+  // Fallback to DB if markdown fails
   if (!base_price_night) {
-    base_price_night = await extractPriceFromMarkdown(unit.name);
+    base_price_night = unit.base_price_low_season || unit.base_price_high_season;
   }
 
   const pricing = {
-    base_price_night: base_price_night || 250000, // Fallback: 250k COP avg
+    base_price_night: base_price_night || 250000, // Last resort fallback
     currency: 'COP',
     seasonal_pricing: [],
     min_nights: 1,
@@ -193,7 +273,7 @@ async function transformToPublic(unit: AccommodationUnit): Promise<Omit<PublicAc
     tenant_id: unit.tenant_id,
     name: unit.name,
     unit_number: unit.unit_number || unit.name,
-    unit_type: unit.unit_type || 'room',
+    unit_type: unitType, // FIXED: Now uses markdown value (fixes Rose Cay)
     description,
     short_description,
     highlights,
@@ -303,7 +383,7 @@ Price: $${publicUnit.pricing.base_price_night}/night
           throw insertError;
         }
 
-        console.log(`   ✅ Migrated with ${publicUnit.photos.length} photos, price: ${publicUnit.pricing.base_price_night} COP\n`);
+        console.log(`   ✅ Type: ${publicUnit.unit_type}, Price: ${publicUnit.pricing.base_price_night} COP, Amenities: ${publicUnit.amenities.features.length}\n`);
         successCount++;
 
         // Rate limiting for OpenAI API
