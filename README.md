@@ -1,18 +1,20 @@
-# InnPilot - Plataforma de Gestión SIRE
+# MUVA Chat - Multi-Tenant Tourism Platform
 
 **Estado**: ✅ **PRODUCTION-READY** | **Performance**: 0.490s (80% mejor que target) | **Uptime**: 99.9%
 
-InnPilot es una plataforma web moderna para ayudar a hoteles colombianos con la gestión y subida de información al SIRE (Sistema de Información y Registro de Extranjeros).
+MUVA Chat es una plataforma multi-tenant que combina chat inteligente para negocios turísticos con contenido turístico de San Andrés y módulo SIRE completo para compliance gubernamental colombiano.
 
 ## 🚀 Características
 
-- **Validador de Archivos SIRE**: Validación en tiempo real de archivos .txt con formato SIRE
-- **Multi-Tenant Chat System**: Sistema unificado con acceso por planes (Basic/Premium)
+- **Multi-Tenant Chat System**: Sistema unificado con subdomain routing y branding personalizado por tenant (Basic/Premium plans)
 - **Premium Chat System**: 🚀 **NEW** - Asistente conversacional premium combinando hotel + turismo (77% más rápido)
-- **Chat Assistant Inteligente**: Asistente AI especializado en procedimientos SIRE
-- **MUVA Tourism Access**: Contenido turístico San Andrés para clientes Premium
-- **Business Listings Assistant**: Sistema multi-tenant con acceso combinado negocio + turismo
-- **Dashboard Integral**: Interface moderna con métricas y navegación intuitiva
+- **Tourism Content Access**: Contenido turístico San Andrés para clientes Premium (actividades, restaurantes, playas)
+- **Business Listings Assistant**: Chat multi-tenant con acceso combinado negocio + turismo según plan
+- ⭐ **SIRE Compliance Module** (Premium Feature): Sistema completo de gestión SIRE para hoteles colombianos
+  - Validación en tiempo real de archivos .txt con formato SIRE oficial
+  - Chat Assistant especializado en procedimientos SIRE gubernamentales
+  - Dashboard de reportes y métricas de compliance
+- **Admin Dashboard**: Interface moderna con métricas, branding y navegación intuitiva
 - **Performance Optimizada**: ~0.490s response time (80% mejor que target <2.5s) ✅
 
 ## 🛠️ Stack Tecnológico
@@ -21,7 +23,7 @@ InnPilot es una plataforma web moderna para ayudar a hoteles colombianos con la 
 - **Backend**: Next.js API Routes (Edge Runtime)
 - **Database**: Supabase (PostgreSQL + pgvector + 🪆 Matryoshka Multi-Tier Embeddings ✅)
 - **AI**: OpenAI text-embedding-3-large + Anthropic Claude
-- **Deploy**: VPS Hostinger (innpilot.io) + GitHub Actions
+- **Deploy**: VPS Hostinger (muva.chat) + GitHub Actions
 
 ## 🪆 Matryoshka Multi-Tier Embeddings ⚡
 
@@ -49,7 +51,7 @@ InnPilot es una plataforma web moderna para ayudar a hoteles colombianos con la 
 
 ```bash
 git clone <repo-url>
-cd InnPilot
+cd InnPilot  # Project folder name unchanged for git compatibility
 npm install
 ```
 
@@ -71,12 +73,12 @@ CLAUDE_MAX_TOKENS=800
 ```bash
 npm run dev
 
-# Process documents into embeddings
+# Process tourism and business documents into embeddings
 node scripts/populate-embeddings.js
 ```
 
 La aplicación está disponible en:
-- **Producción**: https://innpilot.io
+- **Producción**: https://muva.chat
 - **Desarrollo local**: http://localhost:3000
 
 ## 📁 Estructura del Proyecto
@@ -86,23 +88,23 @@ src/
 ├── app/
 │   ├── api/
 │   │   ├── chat/
-│   │   │   ├── route.ts          # SIRE chat assistant (legacy)
+│   │   │   ├── route.ts          # SIRE chat assistant (premium feature)
 │   │   │   ├── muva/route.ts     # Tourism chat (San Andrés) - standalone
-│   │   │   └── listings/route.ts # Multi-tenant chat (Business + MUVA)
-│   │   ├── validate/route.ts     # File validation endpoint
+│   │   │   └── listings/route.ts # Multi-tenant chat (Business + Tourism)
+│   │   ├── validate/route.ts     # SIRE file validation endpoint (premium)
 │   │   └── health/route.ts       # Health check endpoint
-│   ├── globals.css               # Estilos globales
-│   └── page.tsx                  # Dashboard principal
+│   ├── globals.css               # Global styles
+│   └── page.tsx                  # Main dashboard
 ├── components/
-│   ├── Dashboard/                # Componente dashboard
-│   ├── ChatAssistant/           # Chat assistant
-│   ├── FileUploader/            # Validador de archivos
-│   └── ui/                      # Componentes UI base
+│   ├── Dashboard/                # Dashboard component
+│   ├── ChatAssistant/           # Multi-tenant chat assistant
+│   ├── FileUploader/            # SIRE file validator (premium)
+│   └── ui/                      # Base UI components
 └── lib/
-    ├── supabase.ts              # Cliente Supabase + pgvector auto-detection
-    ├── openai.ts                # Cliente OpenAI (embeddings)
-    ├── claude.ts                # Cliente Anthropic (responses)
-    └── utils.ts                 # Utilidades y validaciones
+    ├── supabase.ts              # Supabase client + pgvector auto-detection
+    ├── openai.ts                # OpenAI client (embeddings)
+    ├── claude.ts                # Anthropic client (chat responses)
+    └── utils.ts                 # Utilities and validations
 
 scripts/                         # Embeddings & maintenance tools
 ├── populate-embeddings.js      # Document upload & embedding (CONSOLIDATED SCRIPT)
@@ -118,8 +120,8 @@ sql/                            # Database functions
 
 #### 🚀 Premium Chat API (NEW - 77% más rápido)
 ```javascript
-// Premium conversational chat - hotel + tourism combined
-const response = await fetch('https://innpilot.io/api/premium-chat', {
+// Premium conversational chat - business + tourism combined
+const response = await fetch('https://muva.chat/api/premium-chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -132,7 +134,7 @@ const response = await fetch('https://innpilot.io/api/premium-chat', {
 });
 
 const data = await response.json();
-console.log(data.response); // Intelligent combination of hotel + tourism data
+console.log(data.response); // Intelligent combination of business + tourism data
 console.log(data.performance); // Response time metrics
 console.log(data.sources); // Source attribution for transparency
 ```
@@ -140,7 +142,7 @@ console.log(data.sources); // Source attribution for transparency
 #### Multi-tenant Listings Chat (Recomendado)
 ```javascript
 // Chat con acceso a negocio + turismo (según plan)
-const response = await fetch('https://innpilot.io/api/chat/listings', {
+const response = await fetch('https://muva.chat/api/chat/listings', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -157,10 +159,10 @@ const data = await response.json();
 console.log(data.response); // Respuesta combinada negocio + MUVA
 ```
 
-#### SIRE Chat (Legacy)
+#### ⭐ SIRE Chat (Premium Feature)
 ```javascript
-// Consultar el asistente SIRE específico
-const response = await fetch('https://innpilot.io/api/chat', {
+// Consultar el asistente SIRE especializado (premium feature)
+const response = await fetch('https://muva.chat/api/chat', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -176,13 +178,13 @@ const data = await response.json();
 console.log(data.response);
 ```
 
-### File Validation API
+### ⭐ File Validation API (Premium Feature)
 ```javascript
-// Validar archivo SIRE
+// Validar archivo SIRE (premium feature)
 const formData = new FormData();
 formData.append('file', fileInput.files[0]);
 
-const response = await fetch('https://innpilot.io/api/validate', {
+const response = await fetch('https://muva.chat/api/validate', {
   method: 'POST',
   body: formData
 });
@@ -198,7 +200,7 @@ if (validation.isValid) {
 ### System Health Check
 ```javascript
 // Verificar estado del sistema
-const health = await fetch('https://innpilot.io/api/health')
+const health = await fetch('https://muva.chat/api/health')
   .then(res => res.json());
 
 console.log('Sistema:', health.status); // "healthy"
@@ -220,7 +222,7 @@ console.log('Servicios:', health.services);
 ### MUVA Tourism Chat API (Standalone)
 ```javascript
 // Chat especializado SOLO para turismo en San Andrés
-const response = await fetch('https://innpilot.io/api/chat/muva', {
+const response = await fetch('https://muva.chat/api/chat/muva', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -267,7 +269,11 @@ console.log(data.response); // Solo respuesta turística
 | Caribbean Flavors | `12d6c76e-73e1-4399-82fc-dfb3c59feee2` | restaurant | 2 chunks |
 | Adventure Tours SA | `455ff8c6-1b8f-44c5-b305-a75ed46aba5f` | activity | 2 chunks |
 
-## 📋 Proceso y Validaciones SIRE
+## ⭐ SIRE Compliance Module (Premium Feature)
+
+### Descripción General
+
+El módulo SIRE de MUVA Chat es una característica premium diseñada para hoteles colombianos que necesitan cumplir con el Sistema de Información y Registro de Extranjeros (SIRE) del gobierno colombiano.
 
 ### 7 Pasos Oficiales para Reportar al SIRE
 
@@ -319,7 +325,7 @@ La aplicación se despliega automáticamente vía GitHub Actions cuando se hace 
 ```bash
 git push origin dev
 # → GitHub Actions build + deploy
-# → Live on https://innpilot.io (< 5min)
+# → Live on https://muva.chat (< 5min)
 ```
 
 **Manual Deployment:**
@@ -328,22 +334,22 @@ Ver guía completa en [docs/deployment/VPS_SETUP_GUIDE.md](docs/deployment/VPS_S
 **Verificación:**
 ```bash
 # Health check
-curl https://innpilot.io/api/health
+curl https://muva.chat/api/health
 
 # Check SSL
-curl -vI https://innpilot.io
+curl -vI https://muva.chat
 ```
 
 **Logs:**
 ```bash
 # SSH to VPS
-ssh user@innpilot.io
+ssh user@muva.chat
 
 # View PM2 logs
-pm2 logs innpilot
+pm2 logs innpilot  # Process name unchanged for VPS compatibility
 
 # View Nginx logs
-sudo tail -f /var/log/nginx/innpilot-access.log
+sudo tail -f /var/log/nginx/innpilot-access.log  # Log file names unchanged
 sudo tail -f /var/log/nginx/innpilot-error.log
 ```
 
@@ -448,7 +454,7 @@ CREATE INDEX CONCURRENTLY idx_client_info_embedding_hnsw ON client_info USING hn
 node scripts/populate-embeddings.js --test
 
 # Monitor API performance via health endpoint
-curl https://innpilot.io/api/health
+curl https://muva.chat/api/health
 ```
 
 ### **🪆 Matryoshka Document Embedding Management**
@@ -502,11 +508,12 @@ curl -X POST http://localhost:3000/api/chat/listings -H "Content-Type: applicati
 
 ## 📞 Soporte
 
-Para usar InnPilot y resolver dudas sobre SIRE:
+Para usar MUVA Chat y resolver dudas:
 
 ### 🌐 Interfaz Web Principal
-- **Chat Assistant**: https://innpilot.io
-- **Validación de Archivos**: Disponible en la interfaz web
+- **Multi-Tenant Chat**: https://muva.chat
+- **Tourism Content**: Contenido turístico San Andrés (plan Premium)
+- ⭐ **SIRE Validation**: Validación de archivos SIRE (feature premium)
 - **Documentación Técnica**: `/docs/` (para desarrolladores)
 
 ### 💻 Para Desarrolladores
@@ -516,7 +523,7 @@ Para usar InnPilot y resolver dudas sobre SIRE:
 
 ---
 
-**InnPilot** - Simplificando la gestión SIRE para hoteles colombianos 🇨🇴
+**MUVA Chat** - Multi-Tenant Tourism Platform con módulo SIRE premium 🇨🇴
 # Deploy trigger
 # Cache optimization deployed
 # Deployment test

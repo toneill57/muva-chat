@@ -23,8 +23,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "InnPilot - Plataforma de Gestión Hotelera",
-  description: "Sistema inteligente para gestión hotelera y compliance SIRE en Colombia",
+  title: "MUVA Chat - Multi-Tenant Tourism Platform",
+  description: "AI-powered chat platform for tourism businesses with SIRE compliance",
 };
 
 export default function RootLayout({

@@ -1,7 +1,8 @@
 {
-  "name": "innpilot",
+  "name": "muva-chat",
   "version": "0.1.0",
   "private": true,
+  "description": "Multi-tenant chat platform with SIRE compliance for tourism businesses",
   "scripts": {
     "dev": "npm run kill-port && next dev --turbopack",
     "dev:force": "npm run kill-all && next dev --turbopack",

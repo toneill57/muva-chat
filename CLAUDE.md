@@ -4,6 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ---
 
+## 📋 Project Context
+
+**MUVA Chat** - Multi-Tenant Tourism Platform
+- AI-powered guest communication platform for hotels and tourism businesses
+- Multi-tenant architecture with subdomain-based isolation
+- Premium SIRE compliance features for Colombian tourism regulatory reporting
+- Built with Next.js 15, TypeScript, Supabase, and Claude AI
+
+---
+
 ## 🚨 REGLAS CRÍTICAS
 
 ### 1. NO Modificar Targets de Performance
