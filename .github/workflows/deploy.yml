@@ -31,8 +31,8 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          NEXT_PUBLIC_APP_URL: https://innpilot.io
-          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: innpilot.io
+          NEXT_PUBLIC_APP_URL: https://muva.chat
+          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -45,16 +45,16 @@ jobs:
             git pull origin dev
             npm ci --legacy-peer-deps
             npm run build
-            sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/innpilot
+            sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/muva
             sudo nginx -t && sudo systemctl reload nginx
-            pm2 reload docs/deployment/ecosystem.config.cjs --update-env
+            pm2 reload docs/deployment/ecosystem.config.js --update-env
 
       - name: Wait for deployment
         run: sleep 10
 
       - name: Health check
         run: |
-          response=$(curl -L -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
+          response=$(curl -L -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
           if [ $response != "200" ]; then
             echo "Health check failed with status $response"
             exit 1
@@ -73,11 +73,11 @@ jobs:
             git reset --hard HEAD~1
             npm ci --legacy-peer-deps
             npm run build
-            pm2 reload docs/deployment/ecosystem.config.cjs --update-env
+            pm2 reload docs/deployment/ecosystem.config.js --update-env
             echo "Rolled back to previous version"
 
       - name: Notify success
         if: success()
         run: |
           echo "✅ Deployment successful!"
-          echo "🌐 https://innpilot.io is live"
+          echo "🌐 https://muva.chat is live"
