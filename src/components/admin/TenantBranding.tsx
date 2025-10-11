@@ -202,7 +202,7 @@ export function TenantBranding({ tenant }: { tenant: Tenant }) {
                 )}
                 <div>
                   <p className="font-semibold">{businessName || 'Business Name'}</p>
-                  <p className="text-xs text-gray-500">Powered by InnPilot</p>
+                  <p className="text-xs text-gray-500">Powered by MUVA</p>
                 </div>
               </div>
 
