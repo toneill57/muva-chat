@@ -4,7 +4,7 @@ Esta guía explica cómo configurar los Secrets necesarios para el deployment au
 
 ## Acceso a GitHub Secrets
 
-1. Ve al repositorio: https://github.com/toneill57/innpilot
+1. Ve al repositorio: https://github.com/toneill57/muva-chat
 2. Click en **Settings** (tab superior)
 3. En el menú izquierdo: **Secrets and variables** → **Actions**
 4. Click en **New repository secret**
@@ -58,7 +58,7 @@ cat ~/.ssh/innpilot_deploy
 ### 4. VPS_APP_PATH
 **Descripción:** Path absoluto donde está la aplicación en el VPS
 
-**Valor:** `/var/www/innpilot`
+**Valor:** `/var/www/muva-chat`
 
 ---
 

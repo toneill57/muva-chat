@@ -3,7 +3,7 @@ module.exports = {
     name: 'muva-chat',
     script: 'npm',
     args: 'start',
-    cwd: '/var/www/innpilot',
+    cwd: '/var/www/muva-chat',
     instances: 2,
     exec_mode: 'cluster',
     autorestart: true,
