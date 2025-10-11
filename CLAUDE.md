@@ -171,6 +171,96 @@ set -a && source .env.local && set +a && npx tsx script.ts
 
 ---
 
+## 📋 Workflow Commands
+
+### `/plan-project` - Traditional Multi-Phase Planning
+
+**Use when:**
+- Project requires >3 hours of work
+- Needs multi-phase execution (FASE 1, 2, 3...)
+- Requires multiple specialized agents
+- Complex architecture or coordination needed
+
+**Generates:**
+- `docs/projects/{name}/plan.md` - Complete project plan
+- `docs/projects/{name}/TODO.md` - Tasks organized by phases
+- `docs/projects/{name}/{name}-prompt-workflow.md` - Ready-to-use prompts
+- Updates `snapshots/{agent}.md` with CURRENT PROJECT section
+
+**Characteristics:**
+- Comprehensive planning (100-500+ lines per file)
+- Agent coordination via snapshots
+- Phase-based execution
+- Detailed documentation per phase
+- Higher context usage (~100k tokens)
+
+**Examples:**
+- Mobile-first chat interface (6 phases, 25 tasks)
+- SIRE compliance system (4 phases, 18 tasks)
+- Multi-tenant architecture refactor
+
+### `/workflow-express` - Rapid Task Execution
+
+**Use when:**
+- Task is focused and specific (1-3 hours max)
+- Well-defined scope (2-5 tasks)
+- Single-agent execution
+- No complex coordination needed
+
+**Generates:**
+- `docs/projects/{name}/workflow-express.md` - Single-file workflow
+- Includes copy-paste ready prompt with delimiters
+- Self-contained execution plan
+
+**Characteristics:**
+- Compact single file (~500 lines)
+- Immediate execution (no multi-file planning)
+- TodoList-driven tracking
+- Testing + commits per task
+- Lower context usage (~20k tokens)
+
+**Examples:**
+- Fix health check endpoint (3 tasks, 1.5h)
+- Cleanup legacy references (5 tasks, 2h)
+- Add rate limiting (4 tasks, 2.5h)
+
+### Comparison Matrix
+
+| Feature | `/plan-project` | `/workflow-express` |
+|---------|----------------|---------------------|
+| **Duration** | >3 hours | 1-3 hours |
+| **Files Generated** | 3+ files | 1 file |
+| **Agents** | Multiple | Single |
+| **Context Usage** | High (~100k) | Low (~20k) |
+| **Planning Depth** | Comprehensive | Focused |
+| **Best For** | Features, architecture | Bugs, cleanups, tweaks |
+| **Execution** | Multi-session phases | Single session |
+| **Documentation** | Per-phase docs | Inline docs |
+
+### Usage Workflow
+
+**For Express Tasks (Recommended for most):**
+```bash
+1. /workflow-express
+2. Fill in project details
+3. Review generated workflow
+4. /clear
+5. Copy-paste PROMPT (between ⬇️ and ⬆️)
+6. Execute with TodoList tracking
+```
+
+**For Complex Projects:**
+```bash
+1. /plan-project
+2. Answer planning questions
+3. Review plan.md + TODO.md + workflow.md
+4. Start FASE 1 using workflow prompts
+5. Execute phase by phase
+6. Document each phase completion
+```
+
+---
+
 ## 📚 Documentation References
 
 - **MCP Setup:** `docs/optimization/MCP_SERVERS_RESULTS.md`
