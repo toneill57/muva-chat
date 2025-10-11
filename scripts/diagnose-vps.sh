@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}============================================${NC}"
-echo -e "${BLUE}  InnPilot VPS Multi-Tenant Diagnostics${NC}"
+echo -e "${BLUE}  MUVA Chat VPS Multi-Tenant Diagnostics${NC}"
 echo -e "${BLUE}============================================${NC}"
 echo ""
 
@@ -63,13 +63,13 @@ echo -e "${YELLOW}[2/6] Checking PM2 Application Status...${NC}"
 echo ""
 
 if command -v pm2 &> /dev/null; then
-  pm2 status | grep -E "innpilot|Status|online|stopped"
+  pm2 status | grep -E "muva-chat|Status|online|stopped"
 
-  APP_STATUS=$(pm2 jlist | jq -r '.[] | select(.name=="innpilot") | .pm2_env.status')
+  APP_STATUS=$(pm2 jlist | jq -r '.[] | select(.name=="muva-chat") | .pm2_env.status')
   if [ "$APP_STATUS" == "online" ]; then
-    echo -e "${GREEN}✅ PM2 app 'innpilot' is online${NC}"
+    echo -e "${GREEN}✅ PM2 app 'muva-chat' is online${NC}"
   else
-    echo -e "${RED}❌ PM2 app 'innpilot' status: $APP_STATUS${NC}"
+    echo -e "${RED}❌ PM2 app 'muva-chat' status: $APP_STATUS${NC}"
   fi
 else
   echo -e "${RED}❌ PM2 not found${NC}"
@@ -82,7 +82,7 @@ echo ""
 echo -e "${YELLOW}[3/6] Checking Environment Variables...${NC}"
 echo ""
 
-APP_DIR="/var/www/innpilot"
+APP_DIR="/var/www/muva-chat"
 if [ -f "$APP_DIR/.env.local" ]; then
   echo -e "${GREEN}✅ .env.local found${NC}"
 
@@ -106,7 +106,7 @@ echo ""
 echo -e "${YELLOW}[4/6] Recent Middleware Logs (last 20 lines)...${NC}"
 echo ""
 
-PM2_LOG="/root/.pm2/logs/innpilot-out-0.log"
+PM2_LOG="/root/.pm2/logs/muva-chat-out.log"
 if [ -f "$PM2_LOG" ]; then
   echo -e "${BLUE}Looking for middleware subdomain detection...${NC}"
   grep -i "middleware" "$PM2_LOG" | tail -20 || echo -e "${YELLOW}No middleware logs found${NC}"
@@ -121,14 +121,14 @@ echo ""
 echo -e "${YELLOW}[5/6] Testing Health Check Endpoint...${NC}"
 echo ""
 
-HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://innpilot.io/api/health)
+HEALTH_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
 if [ "$HEALTH_RESPONSE" == "200" ]; then
   echo -e "${GREEN}✅ Health check returned 200${NC}"
-  curl -s https://innpilot.io/api/health | jq '.'
+  curl -s https://muva.chat/api/health | jq '.'
 else
   echo -e "${RED}❌ Health check returned $HEALTH_RESPONSE${NC}"
   echo -e "${YELLOW}Response body:${NC}"
-  curl -s https://innpilot.io/api/health | jq '.'
+  curl -s https://muva.chat/api/health | jq '.'
 fi
 echo ""
 
@@ -140,10 +140,10 @@ echo ""
 
 SUBDOMAINS=("simmerdown" "demo")
 for subdomain in "${SUBDOMAINS[@]}"; do
-  echo -e "${BLUE}Testing: ${subdomain}.innpilot.io${NC}"
+  echo -e "${BLUE}Testing: ${subdomain}.muva.chat${NC}"
 
   # Test subdomain detection endpoint
-  SUBDOMAIN_TEST=$(curl -s "https://${subdomain}.innpilot.io/api/test-subdomain")
+  SUBDOMAIN_TEST=$(curl -s "https://${subdomain}.muva.chat/api/test-subdomain")
   DETECTED=$(echo "$SUBDOMAIN_TEST" | jq -r '.subdomain')
 
   if [ "$DETECTED" == "$subdomain" ]; then
@@ -166,21 +166,21 @@ echo ""
 echo -e "${YELLOW}If you see any ❌ errors above:${NC}"
 echo ""
 echo -e "1. ${YELLOW}Nginx X-Tenant-Subdomain missing:${NC}"
-echo -e "   sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/innpilot"
+echo -e "   sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/innpilot.io"
 echo -e "   sudo nginx -t && sudo systemctl reload nginx"
 echo ""
 echo -e "2. ${YELLOW}PM2 app stopped:${NC}"
-echo -e "   pm2 restart innpilot"
+echo -e "   pm2 restart muva-chat"
 echo ""
 echo -e "3. ${YELLOW}Environment variables missing:${NC}"
 echo -e "   cd $APP_DIR && cat .env.local (verify all required vars)"
 echo ""
 echo -e "4. ${YELLOW}Health check failing:${NC}"
-echo -e "   Check PM2 logs: pm2 logs innpilot --lines 50"
+echo -e "   Check PM2 logs: pm2 logs muva-chat --lines 50"
 echo ""
 echo -e "5. ${YELLOW}Subdomain routing failing:${NC}"
 echo -e "   Verify Nginx config + restart PM2"
 echo ""
 echo -e "${GREEN}Monitor logs in real-time:${NC}"
-echo -e "pm2 logs innpilot --nostream --lines 100"
+echo -e "pm2 logs muva-chat --nostream --lines 100"
 echo ""

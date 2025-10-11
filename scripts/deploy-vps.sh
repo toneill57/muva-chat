@@ -12,7 +12,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-APP_DIR="/var/www/innpilot"
+APP_DIR="/var/www/muva-chat"
 PM2_APP_NAME="muva-chat"
 BRANCH="dev"
 
