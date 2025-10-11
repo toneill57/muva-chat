@@ -19,68 +19,62 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
-## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+## 🎯 CURRENT PROJECT: InnPilot → MUVA Chat Rebrand (2025-10-11)
 
-**Status:** 🚧 IN PROGRESS - 20/60 Tasks Complete (33.3%)
-**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
-**Last Updated:** October 10, 2025 (5:30 AM)
-**Duration:** 16-21 hours (6 phases) | Elapsed: ~8 hours
+**Status:** 📋 Planning Complete - Ready for FASE 1
+**Duration:** ~9 horas total (5 FASES)
 
-### Progress Summary
+### My Responsibility:
 
-**✅ Phases Complete:**
-- FASE 1: Database Schema (4-5 hours) - COMPLETE
-- FASE 2: Subdomain Detection (2-3 hours) - COMPLETE
-- FASE 3: Chat API Modification (3-4 hours) - COMPLETE
+**FASE 1: Core Branding (2h)**
+- Actualizar README.md completo: "InnPilot" → "MUVA Chat - Multi-Tenant Tourism Platform"
+- Cambiar package.json: `"name": "innpilot"` → `"name": "muva-chat"`
+- Actualizar CLAUDE.md con nuevo contexto de proyecto
+- npm run build verification
 
-**🚧 Phase In Progress:**
-- FASE 4: Admin Dashboard (4D.1, 4D.2, 4D.6 complete | 4D.3-4D.5 pending)
+**FASE 2: Documentation Restructure (3h)**
+- Crear estructura `docs/features/` (sire-compliance/, multi-tenant-chat/, tourism-content/)
+- ✅ Migrar `docs/sire/*` → `docs/features/sire-compliance/` (COMPLETE)
+- Crear `docs/README.md` nuevo con overview MUVA Chat
+- Batch replacement: `find docs/ -name "*.md" -exec sed -i.bak 's/InnPilot/MUVA/g' {} +`
+- Limpiar ~200 archivos .md
 
-**⏸️ Phases Pending:**
-- FASE 5: Public Chat UI (3-4 hours)
-- FASE 6: Deployment + Testing (2-3 hours)
+**FASE 4: Source Code (1h)**
+- Buscar y actualizar comentarios en ~23 archivos .ts/.tsx
+- Actualizar solo strings descriptivos (NO nombres técnicos)
+- npm run lint + build verification
 
-### Backend Developer Responsibilities (FASE 2-4 - 8-10 hours)
+**FASE 5: Final Verification (1h)**
+- grep final: `grep -r "InnPilot" docs/` → 0 results (except archive/muva-migration)
+- Documentar results en VERIFICATION_RESULTS.md
 
-**Phase 2: Subdomain Detection & Routing (2-3 hours)**
-- Create Next.js middleware for subdomain extraction
-- Implement tenant context provider (React Context)
-- Create `/api/tenant/resolve` endpoint (slug/subdomain → tenant_id)
-- Handle subdomain routing edge cases (www, apex domain)
+### Planning Files:
+- `docs/projects/innpilot-to-muva-rebrand/plan.md` - Complete architecture (450+ líneas)
+- `docs/projects/innpilot-to-muva-rebrand/TODO.md` - 18 tareas en 5 fases
+- `docs/projects/innpilot-to-muva-rebrand/innpilot-to-muva-rebrand-prompt-workflow.md` - Ready prompts (800+ líneas)
 
-**Phase 3: Chat API with Tenant Isolation (3-4 hours)**
-- Create `/api/tenant-chat/[tenantSlug]` POST endpoint
-- Implement tenant-scoped semantic search (calls RPC)
-- Add tenant_id filtering to all queries (RLS compliance)
-- Create conversation management endpoints
+### Key Files:
+- **Modify:** `README.md` - Complete rebrand
+- **Modify:** `package.json` - name: "muva-chat"
+- **Modify:** `CLAUDE.md` - Update project context
+- **Modify:** ~200 archivos .md - Batch replacement
+- **Create:** `docs/README.md` - New MUVA Chat overview
+- **Create:** `docs/features/sire-compliance/README.md` - SIRE value proposition
 
-**Phase 4: Document Upload & Processing (3-4 hours)**
-- Create `/api/admin/[tenantSlug]/documents` POST endpoint
-- Implement chunking logic (RecursiveCharacterTextSplitter)
-- Generate embeddings (OpenAI text-embedding-3-small)
-- Store in `tenant_knowledge_embeddings` with tenant_id
+### Workflow:
+1. Use prompts from `innpilot-to-muva-rebrand-prompt-workflow.md`
+2. Execute FASE 1: Core branding (README, package.json, CLAUDE.md)
+3. Execute FASE 2: Docs restructure + batch replacement
+4. Execute FASE 4: Source code strings/comments
+5. Execute FASE 5: Final grep verification
+6. Document each FASE in `docs/projects/innpilot-to-muva-rebrand/fase-{N}/`
 
-**Key Technical Decisions:**
-- Middleware runs on Edge Runtime (fast subdomain detection)
-- RPC functions for all database queries (token optimization)
-- OpenAI embeddings (1536d) for tenant knowledge bases
-- Admin endpoints require authentication (JWT middleware)
-
-**Files to Create/Modify:**
-- `src/middleware.ts` - Subdomain detection
-- `src/contexts/TenantContext.tsx` - Tenant state
-- `src/app/api/tenant-chat/[tenantSlug]/route.ts` - Chat API
-- `src/app/api/admin/[tenantSlug]/documents/route.ts` - Upload API
-- `src/lib/tenant-chat-engine.ts` - Business logic
-
-**Planning Files:**
-- `docs/tenant-subdomain-chat/plan.md` - Complete architecture
-- `docs/tenant-subdomain-chat/TODO.md` - Phase 2-4 tasks
-- `docs/tenant-subdomain-chat/tenant-subdomain-chat-prompt-workflow.md` - Copy-paste prompts
-
-**Coordination:**
-- Phase 2 depends on: @database-agent completing Phase 1 migrations
-- Phase 5 handoff to: @ux-interface for admin/public UI
+### Context:
+**Brand Evolution:** InnPilot (SIRE-focused) → MUVA Chat (multi-tenant + tourism)
+**SIRE Status:** NO deprecar - Es feature premium (gancho comercial para hoteles)
+**Impact:** ~1,777 referencias "InnPilot"/"innpilot" en código + docs
+**Risk:** LOW (mayoría docs, código mínimo)
+**New Name:** "muva-chat" (package.json, PM2 process)
 
 ---
 
@@ -1193,8 +1187,8 @@ npx tsx scripts/sync-compliance-to-reservations.ts --dry-run
 **Documentación:**
 - `docs/backend/MATRYOSHKA_ARCHITECTURE.md` (embeddings 3-tier)
 - `docs/backend/MULTI_TENANT_ARCHITECTURE.md` (RLS patterns)
-- `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` (SIRE specs oficiales)
-- `docs/sire/CODIGOS_OFICIALES.md` (códigos país/ciudad)
+- `docs/features/sire-compliance/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` (SIRE specs oficiales)
+- `docs/features/sire-compliance/CODIGOS_OFICIALES.md` (códigos país/ciudad)
 
 **Project Management:**
 - `/Users/oneill/Sites/apps/InnPilot/plan.md` (FASE 10-12 SIRE extension)

@@ -15,84 +15,70 @@ version: "2.0"
 
 ---
 
-## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+## 🎯 CURRENT PROJECT: InnPilot → MUVA Chat Rebrand (2025-10-11)
 
-**Status:** 🚧 IN PROGRESS - 20/60 Tasks Complete (33.3%)
-**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
-**Last Updated:** October 10, 2025 (5:30 AM)
-**Duration:** 16-21 hours (6 phases) | Elapsed: ~8 hours
+**Status:** 📋 Planning Complete - Ready for Execution
+**Documentation:** `docs/projects/innpilot-to-muva-rebrand/` (plan.md, TODO.md, workflow.md)
+**Last Updated:** October 11, 2025
+**Duration:** ~9 hours total (5 FASES)
 
-### Progress Summary
+### My Responsibilities: FASE 1 + FASE 4 (~1.5 hours)
 
-**✅ Components Created:**
-- AdminLayout.tsx - Layout wrapper with auth check + sidebar + header + breadcrumbs
-- AdminDashboard (page.tsx) - Dashboard with stats + quick actions
-- Knowledge Base Manager - FileUpload + KnowledgeBaseBrowser + TenantBranding (3 tabs)
-- Settings Page - Business info + social media + SEO configuration
+**FASE 1.4: Actualizar Metadata en layout.tsx (15min)**
+- Cambiar browser title: "MUVA Chat"
+- Cambiar metadata.description: Describir multi-tenant platform
+- Files: `src/app/layout.tsx`
+- Test: Abrir https://muva.chat, verificar tab title
+- Agent: **@agent-ux-interface**
 
-**✅ Critical Fix Applied (October 10):**
-- **Issue**: URL duplication in admin sidebar (`/admin/admin/knowledge-base`)
-- **Root Cause**: Next.js subdomain rewrites transparent to client, `usePathname()` returns `/admin` not `/simmerdown/admin`
-- **Solution**: Removed tenant slug from all href constructions (subdomain rewrite handles it automatically)
-- **Files Fixed**: AdminSidebar.tsx, AdminBreadcrumbs.tsx, admin layout.tsx, admin page.tsx
-- **Status**: ✅ Verified - All existing admin pages work correctly
+**FASE 4.1: Actualizar UI strings (30min)**
+- Buscar strings visibles: `grep -r "InnPilot" src/components/ --include="*.tsx"`
+- Actualizar SOLO strings visibles al usuario
+- NO cambiar nombres técnicos (funciones, variables)
+- Files: `src/components/**/*.tsx`
+- Test: Visual check en browser
+- Agent: **@agent-ux-interface**
 
-**🚧 Phase In Progress:**
-- FASE 4D: Admin Dashboard (3/6 tasks complete)
-  - ✅ Task 4D.2: Knowledge base manager page
-  - ✅ Task 4D.6: Settings page
-  - ❌ Task 4D.3: Branding editor page (NOT STARTED)
-  - ❌ Task 4D.4: Content editor page (NOT STARTED)
-  - ❌ Task 4D.5: Analytics dashboard page (NOT STARTED)
+### Planning Files
 
-**⏸️ Phases Pending:**
-- FASE 5: Public Chat UI with tenant branding (3-4 hours)
+**Read These First:**
+- `docs/projects/innpilot-to-muva-rebrand/plan.md` - Complete rebranding strategy (450+ lines)
+- `docs/projects/innpilot-to-muva-rebrand/TODO.md` - 18 tasks across 5 FASES
+- `docs/projects/innpilot-to-muva-rebrand/innpilot-to-muva-rebrand-prompt-workflow.md` - Copy-paste prompts
 
-### UX-Interface Agent Responsibilities (FASE 5 - 6-8 hours)
+### Key Context
 
-**Phase 5A: Admin Dashboard UI (3-4 hours)**
-- Create `AdminDashboard.tsx` component (tenant admin panel)
-- Implement drag & drop document upload (react-dropzone)
-- Create document list/status component (uploaded, processing, indexed)
-- Add tenant branding upload (logo + business name)
-- Design mobile-responsive admin layout (Tailwind + shadcn/ui)
+**Brand Evolution:**
+- InnPilot (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
+- SIRE: NOT deprecated - es gancho comercial premium
+- Package name: "muva-chat" (NOT "muva-platform")
+- PM2 process: "muva-chat"
 
-**Phase 5B: Public Chat UI (3-4 hours)**
-- Create `TenantChatInterface.tsx` (public chat widget)
-- Design mobile-first chat bubble layout (fullscreen on mobile)
-- Implement tenant branding display (logo in header)
-- Add "Powered by InnPilot" footer badge
-- Create loading states & error handling
+**Scope:**
+- ~1,777 references to "InnPilot"/"innpilot"
+- UI strings: Solo cambiar texto visible al usuario
+- Mantener nombres técnicos (funciones, variables)
 
-**Design System Guidelines:**
-- Use existing shadcn/ui primitives (Button, Card, Dialog)
-- Tailwind utility classes (no custom CSS unless necessary)
-- WCAG 2.1 AA compliance (ARIA labels, keyboard nav, color contrast)
-- Mobile-first breakpoints (md:768px, lg:1024px)
-- Touch targets ≥44px (Apple HIG compliance)
+### Workflow
 
-**Components to Create:**
-- `src/components/TenantAdmin/AdminDashboard.tsx`
-- `src/components/TenantAdmin/DocumentUploader.tsx`
-- `src/components/TenantAdmin/DocumentList.tsx`
-- `src/components/TenantChat/TenantChatInterface.tsx`
-- `src/components/TenantChat/TenantChatBubble.tsx`
+**Execute FASE 1.4:**
+1. Read workflow prompt: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 1.4)
+2. Update `src/app/layout.tsx` metadata
+3. Test in browser: https://muva.chat
+4. Mark TODO.md task 1.4 complete
 
-**Key UX Features:**
-- Drag & drop file upload (PDF, DOCX, TXT)
-- Real-time upload progress (percentage + file size)
-- Document processing status (uploading, chunking, embedding, ready)
-- Tenant branding preview (logo + name display)
-- Mobile-responsive design (320px - 430px viewport testing)
+**Execute FASE 4.1:**
+1. Read workflow prompt: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 4.1)
+2. Find visible strings: `grep -r "InnPilot" src/components/ --include="*.tsx"`
+3. Update only user-facing strings
+4. Visual test in browser
+5. Mark TODO.md task 4.1 complete
 
-**Planning Files:**
-- `docs/tenant-subdomain-chat/plan.md` - UI specifications
-- `docs/tenant-subdomain-chat/TODO.md` - Phase 5 tasks (5.1-5.6)
-- `docs/tenant-subdomain-chat/tenant-subdomain-chat-prompt-workflow.md` - Component prompts
+### Coordination
 
-**Coordination:**
-- Phase 5 depends on: @backend-developer completing Phase 2-4 APIs
-- Phase 6 handoff to: @deploy-agent for deployment
+- **@agent-backend-developer**: Handles README, package.json, CLAUDE.md, docs, code comments
+- **@agent-deploy-agent**: Handles PM2, Nginx, deployment scripts, git workflow
+- **@agent-ux-interface**: Handles metadata, UI strings (this agent)
 
 ---
 

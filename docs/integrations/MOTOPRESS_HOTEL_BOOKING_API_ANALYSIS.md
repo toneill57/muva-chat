@@ -1,8 +1,8 @@
-# MotoPress Hotel Booking API Analysis & InnPilot Migration Mapping
+# MotoPress Hotel Booking API Analysis & MUVA Migration Mapping
 
 ## Executive Summary
 
-This document provides a comprehensive analysis of the MotoPress Hotel Booking plugin's REST API endpoints from https://simmerdown.house and their mapping to InnPilot's multi-tenant Matryoshka embeddings architecture. The analysis covers 10 accommodation types with complete booking, pricing, and amenity data structures.
+This document provides a comprehensive analysis of the MotoPress Hotel Booking plugin's REST API endpoints from https://simmerdown.house and their mapping to MUVA's multi-tenant Matryoshka embeddings architecture. The analysis covers 10 accommodation types with complete booking, pricing, and amenity data structures.
 
 **Key Findings:**
 - **10 accommodation types** discovered (9 active, 1 pending)
@@ -173,7 +173,7 @@ Common amenities across accommodations:
 - Balcón (Balcony)
 - Lavadero (Laundry)
 
-## InnPilot Schema Mapping
+## MUVA Schema Mapping
 
 ### 1. Hotels Table Mapping
 ```sql
@@ -295,7 +295,7 @@ CREATE TABLE bookings (
 ## Matryoshka Embeddings Integration
 
 ### Content Processing Strategy
-The accommodation data will be processed through InnPilot's Matryoshka embeddings system:
+The accommodation data will be processed through MUVA's Matryoshka embeddings system:
 
 #### Tier 1 (1024 dims - Fast Tourism Searches)
 - **Target:** Tourism-related queries about accommodations
@@ -430,7 +430,7 @@ curl -X GET "https://simmerdown.house/wp-json/mphb/v1/accommodation_types" \
 
 ## Conclusion
 
-The MotoPress Hotel Booking API provides a comprehensive accommodation management system that maps well to InnPilot's multi-tenant architecture. The migration will significantly enhance InnPilot's tourism and accommodation search capabilities through the Matryoshka embeddings system.
+The MotoPress Hotel Booking API provides a comprehensive accommodation management system that maps well to MUVA's multi-tenant architecture. The migration will significantly enhance MUVA's tourism and accommodation search capabilities through the Matryoshka embeddings system.
 
 **Key Success Factors:**
 1. **Proper tier routing** for accommodation searches
@@ -439,8 +439,8 @@ The MotoPress Hotel Booking API provides a comprehensive accommodation managemen
 4. **Multi-language content processing** for embeddings
 5. **Performance optimization** for image-heavy content
 
-The integration will position InnPilot as a comprehensive hospitality management platform with advanced search capabilities powered by the revolutionary Matryoshka embeddings architecture.
+The integration will position MUVA as a comprehensive hospitality management platform with advanced search capabilities powered by the revolutionary Matryoshka embeddings architecture.
 
 ---
 
-*Generated as part of InnPilot's API analysis and migration planning documentation.*
+*Generated as part of MUVA's API analysis and migration planning documentation.*

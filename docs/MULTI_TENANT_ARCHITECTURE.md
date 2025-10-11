@@ -5,7 +5,7 @@
 
 ## Overview
 
-InnPilot implements a sophisticated multi-tenant architecture that allows multiple businesses (tenants) to use the same system while maintaining complete data isolation. Each tenant has their own data, embeddings, and search contexts while sharing the same underlying infrastructure.
+MUVA implements a sophisticated multi-tenant architecture that allows multiple businesses (tenants) to use the same system while maintaining complete data isolation. Each tenant has their own data, embeddings, and search contexts while sharing the same underlying infrastructure.
 
 ## Architecture Principles
 

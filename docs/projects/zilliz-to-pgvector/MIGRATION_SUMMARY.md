@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Successfully migrated **InnPilot's semantic code search** from Zilliz Cloud to Supabase pgvector, delivering:
+Successfully migrated **MUVA's semantic code search** from Zilliz Cloud to Supabase pgvector, delivering:
 
 - ✅ **100% cost reduction** ($20-50/month → $0/month)
 - ✅ **73% faster than target** (542ms vs 2000ms target)

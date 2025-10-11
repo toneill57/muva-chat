@@ -1,12 +1,12 @@
 # VPS Cron Jobs Setup Guide
 
-Complete guide for setting up automated cron jobs on VPS for InnPilot.
+Complete guide for setting up automated cron jobs on VPS for MUVA.
 
 ---
 
 ## Overview
 
-InnPilot uses **VPS crontab** (NOT Vercel Cron) for scheduled tasks:
+MUVA uses **VPS crontab** (NOT Vercel Cron) for scheduled tasks:
 
 - **Conversation Archiving**: Daily at 2am (Colombia timezone)
   - Archives conversations inactive for 30+ days
@@ -17,8 +17,8 @@ InnPilot uses **VPS crontab** (NOT Vercel Cron) for scheduled tasks:
 ## Prerequisites
 
 1. SSH access to VPS (root or sudo privileges)
-2. InnPilot deployed on VPS (see `VPS_SETUP_GUIDE.md`)
-3. PM2 running with InnPilot process
+2. MUVA deployed on VPS (see `VPS_SETUP_GUIDE.md`)
+3. PM2 running with MUVA process
 4. `CRON_SECRET` environment variable configured
 
 ---
@@ -71,7 +71,7 @@ pm2 env innpilot | grep CRON_SECRET
 SSH to VPS:
 
 ```bash
-ssh root@innpilot.io
+ssh root@muva.chat
 cd /var/www/innpilot
 ```
 
@@ -92,7 +92,7 @@ bash scripts/cron/setup-archive-cron.sh
 
 📋 Configuration:
    Schedule: Daily at 2am (Colombia timezone)
-   Endpoint: https://innpilot.io/api/cron/archive-conversations
+   Endpoint: https://muva.chat/api/cron/archive-conversations
    Log file: /var/log/innpilot/cron-archive.log
 
 🔍 Verify installation:
@@ -102,7 +102,7 @@ bash scripts/cron/setup-archive-cron.sh
    tail -f /var/log/innpilot/cron-archive.log
 
 🧪 Test manually:
-   curl -H 'Authorization: Bearer $CRON_SECRET' https://innpilot.io/api/cron/archive-conversations
+   curl -H 'Authorization: Bearer $CRON_SECRET' https://muva.chat/api/cron/archive-conversations
 ```
 
 ---
@@ -118,7 +118,7 @@ crontab -l | grep archive-conversations
 **Expected output:**
 
 ```
-0 2 * * * curl -s -H 'Authorization: Bearer K8mJ9nL2pQ5rT7vW1xY3zA6bC8dE0fG2hI4jK6mN8oP=' https://innpilot.io/api/cron/archive-conversations >> /var/log/innpilot/cron-archive.log 2>&1
+0 2 * * * curl -s -H 'Authorization: Bearer K8mJ9nL2pQ5rT7vW1xY3zA6bC8dE0fG2hI4jK6mN8oP=' https://muva.chat/api/cron/archive-conversations >> /var/log/innpilot/cron-archive.log 2>&1
 ```
 
 ---
@@ -131,7 +131,7 @@ Test the cron endpoint without waiting for scheduled time:
 
 ```bash
 curl -H "Authorization: Bearer $CRON_SECRET" \
-  https://innpilot.io/api/cron/archive-conversations
+  https://muva.chat/api/cron/archive-conversations
 ```
 
 **Expected response:**
@@ -237,7 +237,7 @@ tail -n 50 /var/log/innpilot/cron-archive.log
    ```bash
    export CRON_SECRET="<value_from_env>"
    curl -H "Authorization: Bearer $CRON_SECRET" \
-     https://innpilot.io/api/cron/archive-conversations
+     https://muva.chat/api/cron/archive-conversations
    ```
 
 ---
@@ -544,5 +544,5 @@ Common cron schedule patterns:
 ---
 
 **Last Updated:** October 5, 2025
-**Applies To:** VPS deployment on innpilot.io
+**Applies To:** VPS deployment on muva.chat
 **Related FASE:** 2.6 (Conversation Intelligence)

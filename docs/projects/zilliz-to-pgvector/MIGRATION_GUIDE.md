@@ -330,9 +330,9 @@ npx tsx scripts/semantic-search-pgvector.ts "your search query"
 ```
 
 **Top Results:**
-1. `docs/sire/TEST_RESULTS_SUMMARY.md` - 63.3%
-2. `docs/sire/PHASE_10_1_DATABASE_IMPLEMENTATION.md` - 62.7%
-3. `docs/sire/E2E_TEST_COMPLIANCE_FLOW_REPORT.md` - 61.9%
+1. `docs/features/sire-compliance/TEST_RESULTS_SUMMARY.md` - 63.3%
+2. `docs/features/sire-compliance/PHASE_10_1_DATABASE_IMPLEMENTATION.md` - 62.7%
+3. `docs/features/sire-compliance/E2E_TEST_COMPLIANCE_FLOW_REPORT.md` - 61.9%
 
 **Test 2: "guest authentication" (threshold 0.3)**
 ```

@@ -111,25 +111,25 @@ Vector Search →
 ## Files Created/Modified
 
 ### Database (4 migrations)
-1. `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251001095039_consolidate_accommodation_data.sql`
-2. `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251001095243_add_accommodation_units_manual_table.sql`
-3. `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251001095355_split_accommodation_units_data.sql`
-4. `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251001095314_add_match_guest_accommodations_function.sql`
+1. `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251001095039_consolidate_accommodation_data.sql`
+2. `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251001095243_add_accommodation_units_manual_table.sql`
+3. `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251001095355_split_accommodation_units_data.sql`
+4. `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251001095314_add_match_guest_accommodations_function.sql`
 
 ### Scripts (2 scripts)
-5. `/Users/oneill/Sites/apps/InnPilot/scripts/process-accommodation-manuals.js` (NEW)
-6. `/Users/oneill/Sites/apps/InnPilot/scripts/rollback_accommodation_split.sql` (NEW)
+5. `/Users/oneill/Sites/apps/MUVA/scripts/process-accommodation-manuals.js` (NEW)
+6. `/Users/oneill/Sites/apps/MUVA/scripts/rollback_accommodation_split.sql` (NEW)
 
 ### Backend (1 core file)
-7. `/Users/oneill/Sites/apps/InnPilot/src/lib/conversational-chat-engine.ts` (MODIFIED)
+7. `/Users/oneill/Sites/apps/MUVA/src/lib/conversational-chat-engine.ts` (MODIFIED)
 
 ### Documentation (3 reports)
-8. `/Users/oneill/Sites/apps/InnPilot/docs/backend/GUEST_CHAT_ENHANCEMENT_VALIDATION.md`
-9. `/Users/oneill/Sites/apps/InnPilot/docs/backend/FASE_C_MIGRATION_ASSESSMENT.md`
-10. `/Users/oneill/Sites/apps/InnPilot/FASE_C_EXECUTION_REPORT.md`
+8. `/Users/oneill/Sites/apps/MUVA/docs/backend/GUEST_CHAT_ENHANCEMENT_VALIDATION.md`
+9. `/Users/oneill/Sites/apps/MUVA/docs/backend/FASE_C_MIGRATION_ASSESSMENT.md`
+10. `/Users/oneill/Sites/apps/MUVA/FASE_C_EXECUTION_REPORT.md`
 
 ### Backup
-11. `/Users/oneill/Sites/apps/InnPilot/backups/accommodation_units_backup_20251001_094434.sql`
+11. `/Users/oneill/Sites/apps/MUVA/backups/accommodation_units_backup_20251001_094434.sql`
 
 ---
 

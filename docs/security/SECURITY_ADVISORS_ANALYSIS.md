@@ -1,4 +1,4 @@
-# Security Advisors Analysis - InnPilot Database
+# Security Advisors Analysis - MUVA Database
 
 **Date:** October 9, 2025
 **Database:** PostgreSQL 17.4.1.075 (Supabase)
@@ -105,7 +105,7 @@ Leaked password protection (HaveIBeenPwned.org integration) deshabilitado.
 **Riesgo:**
 - **Severidad:** Baja (para este proyecto)
 - **Exposición:** Usuarios podrían usar passwords comprometidos
-- **Impacto:** Limitado - InnPilot usa magic links para guests (no passwords)
+- **Impacto:** Limitado - MUVA usa magic links para guests (no passwords)
 
 **Remediación:**
 1. Dashboard Supabase → Authentication → Policies

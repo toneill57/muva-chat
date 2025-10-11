@@ -597,4 +597,4 @@ ed0d793 feat: add missing production modules
 - [ ] Track query performance (target <300ms avg)
 - [ ] Fix staff JWT test automation (optional, non-blocking)
 
-**Reference:** See `docs/sire/README.md` for complete documentation index
+**Reference:** See `docs/features/sire-compliance/README.md` for complete documentation index

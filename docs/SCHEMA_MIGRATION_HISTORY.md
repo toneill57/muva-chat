@@ -1,12 +1,12 @@
 # Schema Migration History
 
 > **Status**: Current as of September 2025
-> **Project**: InnPilot Multi-tenant Architecture Evolution
+> **Project**: MUVA Multi-tenant Architecture Evolution
 > **Database**: PostgreSQL with pgvector (Supabase)
 
 ## Migration Timeline Overview
 
-This document chronicles the complete evolution of InnPilot's database schema, with detailed focus on the critical simmerdown → hotels schema migration completed in September 2025.
+This document chronicles the complete evolution of MUVA's database schema, with detailed focus on the critical simmerdown → hotels schema migration completed in September 2025.
 
 ## Early Development (2025-01-19 to 2025-09-20)
 

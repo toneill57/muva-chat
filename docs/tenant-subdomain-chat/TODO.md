@@ -75,7 +75,7 @@
 
 ### 2.1 Implement subdomain extraction in middleware ✅
 - [x] Create/modify middleware for subdomain detection (estimate: 30min) - **COMPLETED**
-  - Extract subdomain from hostname (e.g., "simmerdown" from "simmerdown.innpilot.io")
+  - Extract subdomain from hostname (e.g., "simmerdown" from "simmerdown.muva.chat")
   - Inject subdomain into request headers (`x-tenant-subdomain`)
   - Handle edge cases: www, localhost, invalid subdomains
   - Files: `src/middleware.ts`, `src/lib/tenant-utils.ts`
@@ -138,7 +138,7 @@
   - Return 404 if tenant not found (line 120-126)
   - Files: `src/app/api/chat/route.ts`
   - Agent: **@agent-backend-developer**
-  - Test: POST to /api/chat with Host: simmerdown.innpilot.io → 200 OK ✅
+  - Test: POST to /api/chat with Host: simmerdown.muva.chat → 200 OK ✅
   - **Resultado:** Tenant detection implementado con subdomain routing
 
 ### 3.2 Replace global embeddings search with tenant-filtered ✅
@@ -203,10 +203,10 @@
 **Objetivo:** SEO-friendly landing page + constrained branding system + admin dashboard
 
 **Arquitectura de Rutas:**
-- `simmerdown.innpilot.io/` → Landing pública (Hero, About, Services, Gallery, Contact)
-- `simmerdown.innpilot.io/chat` → Chat público (nueva ruta, NO chat-mobile-dev)
-- `simmerdown.innpilot.io/login` → Login (email/password + Google OAuth)
-- `simmerdown.innpilot.io/admin/*` → Admin dashboard (protegido)
+- `simmerdown.muva.chat/` → Landing pública (Hero, About, Services, Gallery, Contact)
+- `simmerdown.muva.chat/chat` → Chat público (nueva ruta, NO chat-mobile-dev)
+- `simmerdown.muva.chat/login` → Login (email/password + Google OAuth)
+- `simmerdown.muva.chat/admin/*` → Admin dashboard (protegido)
 
 ---
 
@@ -220,7 +220,7 @@
   - Responsive: Mobile-first, tablet, desktop breakpoints
   - Files: `src/app/(public-tenant)/page.tsx`, `src/app/(public-tenant)/layout.tsx`
   - Agent: **@agent-ux-interface**
-  - Test: Visit simmerdown.innpilot.io/ → see landing page
+  - Test: Visit simmerdown.muva.chat/ → see landing page
   - **Note:** NO tocar `src/app/page.tsx` existente (sistema interno)
 
 #### 4A.2 Dynamic meta tags per tenant
@@ -231,7 +231,7 @@
   - Twitter Card: summary_large_image
   - Files: `src/app/(public-tenant)/layout.tsx` (modify to add meta tags)
   - Agent: **@agent-backend-developer**
-  - Test: curl -I simmerdown.innpilot.io → verify meta tags
+  - Test: curl -I simmerdown.muva.chat → verify meta tags
 
 #### 4A.3 Schema.org structured data
 - [ ] Add JSON-LD for SEO (estimate: 30min)
@@ -253,7 +253,7 @@
 #### 4A.5 Content storage schema
 - [ ] Add landing page content columns to tenant_registry (estimate: 30min)
   - Columns: `hero_title text`, `hero_subtitle text`, `about_text text`, `services_json jsonb`, `contact_info jsonb`
-  - Defaults: Generic InnPilot content as fallback
+  - Defaults: Generic MUVA content as fallback
   - Files: `supabase/migrations/20251010_add_landing_content.sql`
   - Agent: **@agent-database-agent**
   - Test: UPDATE tenant with content → renders on landing page
@@ -310,7 +310,7 @@
   - Tenant branding: Logo + colors from TenantContext
   - Files: `src/app/(public-tenant)/login/page.tsx`, `src/lib/tenant-auth.ts` (new helpers)
   - Agent: **@agent-backend-developer**
-  - Test: Visit simmerdown.innpilot.io/login → see Simmerdown branding, click Google → OAuth flow
+  - Test: Visit simmerdown.muva.chat/login → see Simmerdown branding, click Google → OAuth flow
   - **Note:** Login interno en `src/app/(internal)/login/page.tsx` NO se modifica
 
 #### 4C.2 Document existing RBAC system
@@ -557,7 +557,7 @@ These components were created as reusable building blocks and are now **integrat
 ### 5.3 Create TenantChatAvatar component
 - [ ] Implement chat avatar with tenant logo (estimate: 20min)
   - Component: `<TenantChatAvatar tenant={tenant} size="sm" />`
-  - Display: Tenant logo or InnPilot default
+  - Display: Tenant logo or MUVA default
   - Styling: Rounded circle, 32px x 32px
   - Files: `src/components/chat/TenantChatAvatar.tsx`
   - Agent: **@agent-ux-interface**
@@ -567,7 +567,7 @@ These components were created as reusable building blocks and are now **integrat
 - [ ] Use TenantContext to fetch and display branding (estimate: 30min)
   - Fetch tenant on page load
   - Pass to header and avatar components
-  - Fallback to InnPilot branding if tenant has no logo
+  - Fallback to MUVA branding if tenant has no logo
   - Files: `src/app/[tenant]/chat-mobile-dev/page.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Tenant with logo → shows custom branding, tenant without → shows default
@@ -590,9 +590,9 @@ These components were created as reusable building blocks and are now **integrat
 
 ### 5.7 Test multi-tenant branding isolation
 - [ ] Verify each tenant sees their own branding (estimate: 20min)
-  - Visit simmerdown.innpilot.io/chat-mobile-dev → Simmerdown logo
-  - Visit xyz.innpilot.io/chat-mobile-dev → XYZ logo
-  - Visit tenant-without-logo.innpilot.io/chat-mobile-dev → InnPilot default
+  - Visit simmerdown.muva.chat/chat-mobile-dev → Simmerdown logo
+  - Visit xyz.muva.chat/chat-mobile-dev → XYZ logo
+  - Visit tenant-without-logo.muva.chat/chat-mobile-dev → MUVA default
   - Files: N/A (testing)
   - Agent: **@agent-ux-interface**
   - Test: All tenants show correct branding
@@ -638,9 +638,9 @@ These components were created as reusable building blocks and are now **integrat
 
 ### 6.5 Verify wildcard DNS configuration
 - [ ] Test subdomain routing in production (estimate: 15min)
-  - DNS: Verify `*.innpilot.io` CNAME → VPS
-  - Test: `dig simmerdown.innpilot.io` → resolves to VPS IP
-  - Test: Visit simmerdown.innpilot.io → loads correctly
+  - DNS: Verify `*.muva.chat` CNAME → VPS
+  - Test: `dig simmerdown.muva.chat` → resolves to VPS IP
+  - Test: Visit simmerdown.muva.chat → loads correctly
   - Files: N/A (DNS testing)
   - Agent: **@agent-deploy-agent**
   - Test: nslookup for 3 subdomains → all resolve
@@ -811,8 +811,8 @@ These components were created as reusable building blocks and are now **integrat
    - Explicación de posibles causas
    - Ejemplo de formato correcto de subdomain
    - Botones de acción: "Go to Home" y "Go Back"
-   - Link de soporte: support@innpilot.io
-   - Footer con branding InnPilot
+   - Link de soporte: support@muva.chat
+   - Footer con branding MUVA
    - Responsive (mobile-friendly)
 
 3. ✅ **Code cleanup** (removido checks redundantes)
@@ -864,7 +864,7 @@ These components were created as reusable building blocks and are now **integrat
 **Estructura:**
 ```
 src/app/
-├── (internal)/        → Sistema interno InnPilot (NO TOCAR)
+├── (internal)/        → Sistema interno MUVA (NO TOCAR)
 │   ├── login/         → Login interno existente
 │   ├── dashboard/     → Dashboard interno existente
 │   └── chat-mobile-dev/ → Chat dev existente
@@ -890,15 +890,15 @@ src/app/
 **Motivación:** Priorizar SEO y landing page pública antes que admin dashboard.
 
 **Nueva Arquitectura de Rutas:**
-- `{tenant}.innpilot.io/` → Landing pública (Hero, About, Services, Gallery, Contact) - SEO optimized
-- `{tenant}.innpilot.io/chat` → Chat público (nueva ruta, `/chat-mobile-dev` se mantiene para testing)
-- `{tenant}.innpilot.io/login` → Login (email/password + Google OAuth)
-- `{tenant}.innpilot.io/admin/*` → Admin dashboard (protegido con auth guard)
+- `{tenant}.muva.chat/` → Landing pública (Hero, About, Services, Gallery, Contact) - SEO optimized
+- `{tenant}.muva.chat/chat` → Chat público (nueva ruta, `/chat-mobile-dev` se mantiene para testing)
+- `{tenant}.muva.chat/login` → Login (email/password + Google OAuth)
+- `{tenant}.muva.chat/admin/*` → Admin dashboard (protegido con auth guard)
 
 **Branding System:**
 - **Logos:** Favicon, logo horizontal, logo cuadrado (uploads a Supabase Storage)
 - **Color Palette:** 4 presets (Ocean, Forest, Sunset, Royal) + custom con WCAG validator
-- **Constraints:** No MySpace-style customization - mantener consistencia visual de InnPilot
+- **Constraints:** No MySpace-style customization - mantener consistencia visual de MUVA
 
 **Auth System (basado en SimmerDown):**
 - **Tabla:** `user_tenant_permissions` (ya existe)

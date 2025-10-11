@@ -9,7 +9,7 @@
 
 ## Summary
 
-Created a fully functional admin dashboard layout with sidebar navigation, header, breadcrumbs, and responsive design for the InnPilot multi-tenant subdomain chat system. All components were already in place from previous work, requiring only path fixes to work correctly with the `[tenant]` dynamic route.
+Created a fully functional admin dashboard layout with sidebar navigation, header, breadcrumbs, and responsive design for the MUVA multi-tenant subdomain chat system. All components were already in place from previous work, requiring only path fixes to work correctly with the `[tenant]` dynamic route.
 
 ---
 

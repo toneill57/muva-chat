@@ -549,4 +549,4 @@ See `MUVA_LISTINGS_GUIDE.md` for content management details.
 
 **Last Updated**: 2025-09-29
 **Status**: ✅ Production Ready
-**Maintainer**: InnPilot Engineering Team
+**Maintainer**: MUVA Engineering Team

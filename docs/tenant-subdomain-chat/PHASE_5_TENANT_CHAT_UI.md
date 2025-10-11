@@ -6,7 +6,7 @@
 
 ## Overview
 
-Implemented public-facing tenant chat interface accessible at `{tenant}.innpilot.io/chat` with tenant-specific branding and knowledge base integration.
+Implemented public-facing tenant chat interface accessible at `{tenant}.muva.chat/chat` with tenant-specific branding and knowledge base integration.
 
 ## Implementation Summary
 

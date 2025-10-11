@@ -304,6 +304,6 @@ The API key remediation agent successfully completed its primary mission of find
 
 ---
 
-**Document Owner**: InnPilot Development Team
+**Document Owner**: MUVA Development Team
 **Last Updated**: October 1, 2025
 **Next Review**: After implementing short-term action items

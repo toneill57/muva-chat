@@ -40,9 +40,9 @@ The `getSubdomain()` function supports:
 - `localhost:3000` → `null`
 
 **Production:**
-- `subdomain.innpilot.io` → `"subdomain"`
-- `www.innpilot.io` → `null` (treated as main domain)
-- `innpilot.io` → `null`
+- `subdomain.muva.chat` → `"subdomain"`
+- `www.muva.chat` → `null` (treated as main domain)
+- `muva.chat` → `null`
 
 **Port Handling:**
 - Automatically strips port numbers before parsing
@@ -106,10 +106,10 @@ export async function GET(req: NextRequest) {
 
 ```
 ✅ getSubdomain() Tests: 10/10 PASSED
-   - simmerdown.innpilot.io → "simmerdown"
-   - free-hotel-test.innpilot.io → "free-hotel-test"
-   - www.innpilot.io → null
-   - innpilot.io → null
+   - simmerdown.muva.chat → "simmerdown"
+   - free-hotel-test.muva.chat → "free-hotel-test"
+   - www.muva.chat → null
+   - muva.chat → null
    - simmerdown.localhost:3000 → "simmerdown"
    - localhost:3000 → null
    - Unknown domains → null
@@ -143,11 +143,11 @@ export async function GET(req: NextRequest) {
    Result: null ✅
 
 ✅ Test 4: WWW subdomain (should be treated as null)
-   Host: www.innpilot.io
+   Host: www.muva.chat
    Result: null ✅
 
-✅ Test 5: Production subdomain (simmerdown.innpilot.io)
-   Host: simmerdown.innpilot.io
+✅ Test 5: Production subdomain (simmerdown.muva.chat)
+   Host: simmerdown.muva.chat
    Result: "simmerdown" ✅
 
 ✅ Test 6: Invalid subdomain - uppercase (should be rejected)
@@ -158,8 +158,8 @@ export async function GET(req: NextRequest) {
    Host: my-hotel-123.localhost:3000
    Result: "my-hotel-123" ✅
 
-✅ Test 8: Main domain (innpilot.io)
-   Host: innpilot.io
+✅ Test 8: Main domain (muva.chat)
+   Host: muva.chat
    Result: null ✅
 
 📊 Overall: 8/8 tests passed (100% success rate)
@@ -256,7 +256,7 @@ For local development, add to `/etc/hosts`:
 
 For production, configure wildcard DNS:
 ```
-*.innpilot.io → Production server IP
+*.muva.chat → Production server IP
 ```
 
 ## Next Steps (Phase 3)

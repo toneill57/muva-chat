@@ -13,8 +13,8 @@
  * - `_assets/sire/codigos-pais.json` - 250 official SIRE country codes
  * - `_assets/sire/ciudades-colombia.json` - 1,122 DIVIPOLA city codes
  *
- * @see docs/sire/CODIGOS_OFICIALES.md - Official SIRE specification
- * @see docs/sire/CODIGOS_SIRE_VS_ISO.md - Differences between SIRE and ISO codes
+ * @see docs/features/sire-compliance/CODIGOS_OFICIALES.md - Official SIRE specification
+ * @see docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md - Differences between SIRE and ISO codes
  */
 
 import countryCatalog from '../../../_assets/sire/codigos-pais.json';

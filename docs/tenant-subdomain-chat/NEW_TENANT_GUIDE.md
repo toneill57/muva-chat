@@ -1,15 +1,15 @@
 # New Tenant Onboarding Guide
 
-**InnPilot Multi-Tenant Subdomain Chat System**
+**MUVA Multi-Tenant Subdomain Chat System**
 
-This guide explains how to onboard a new client (hotel, surf school, tourism agency) to the InnPilot platform with their own custom subdomain and isolated knowledge base.
+This guide explains how to onboard a new client (hotel, surf school, tourism agency) to the MUVA platform with their own custom subdomain and isolated knowledge base.
 
 ---
 
 ## Overview
 
 Each tenant gets:
-- Custom subdomain: `{tenant}.innpilot.io`
+- Custom subdomain: `{tenant}.muva.chat`
 - Isolated knowledge base (documents, FAQs)
 - Branded chat interface with their logo
 - Admin dashboard for content management
@@ -24,7 +24,7 @@ Before onboarding a new tenant, ensure you have:
 - ✅ Desired subdomain (lowercase, alphanumeric, hyphens only)
 - ✅ Logo image (optional, PNG/JPG recommended)
 - ✅ Access to production database (Supabase)
-- ✅ Admin access to InnPilot platform
+- ✅ Admin access to MUVA platform
 
 ---
 
@@ -122,12 +122,12 @@ INSERT INTO tenant_registry (
 
 ### DNS Configuration (Already configured via wildcard)
 
-The wildcard DNS `*.innpilot.io` is already pointing to the VPS, so no additional DNS configuration is needed. Once the tenant is created in the database, the subdomain will work immediately.
+The wildcard DNS `*.muva.chat` is already pointing to the VPS, so no additional DNS configuration is needed. Once the tenant is created in the database, the subdomain will work immediately.
 
 **Verify DNS:**
 ```bash
-dig hotel-abc.innpilot.io
-# Should return: same IP as innpilot.io
+dig hotel-abc.muva.chat
+# Should return: same IP as muva.chat
 ```
 
 ---
@@ -137,7 +137,7 @@ dig hotel-abc.innpilot.io
 ### Via Admin Dashboard (Recommended)
 
 1. **Access Admin Panel:**
-   - Navigate to: `https://{tenant}.innpilot.io/admin`
+   - Navigate to: `https://{tenant}.muva.chat/admin`
    - Login with admin credentials
 
 2. **Go to Knowledge Base:**
@@ -176,7 +176,7 @@ npx tsx scripts/process-tenant-docs.ts \
 ### Logo Upload
 
 1. **Access Settings:**
-   - Navigate to: `https://{tenant}.innpilot.io/admin/settings`
+   - Navigate to: `https://{tenant}.muva.chat/admin/settings`
 
 2. **Upload Logo:**
    - Click: `Branding` tab
@@ -215,7 +215,7 @@ npm run test:knowledge-base
 ### Manual Testing
 
 1. **Access Chat:**
-   - Go to: `https://{tenant}.innpilot.io/chat`
+   - Go to: `https://{tenant}.muva.chat/chat`
 
 2. **Test Questions:**
    - Ask: "What services do you offer?"
@@ -260,7 +260,7 @@ npm run test:knowledge-base
 
 ```bash
 # Test response times
-curl -w "@curl-format.txt" -X POST https://{tenant}.innpilot.io/api/tenant-chat \
+curl -w "@curl-format.txt" -X POST https://{tenant}.muva.chat/api/tenant-chat \
   -H "Content-Type: application/json" \
   -d '{"message":"test","history":[]}'
 
@@ -273,7 +273,7 @@ curl -w "@curl-format.txt" -X POST https://{tenant}.innpilot.io/api/tenant-chat 
 
 ### Issue 1: Subdomain Not Resolving
 
-**Symptom:** `nslookup {tenant}.innpilot.io` fails
+**Symptom:** `nslookup {tenant}.muva.chat` fails
 
 **Solution:**
 1. Verify tenant exists in `tenant_registry`
@@ -380,9 +380,9 @@ Use this checklist for each new tenant:
 - [ ] Business name displays in chat header
 
 ### Testing
-- [ ] Subdomain resolves: `dig {tenant}.innpilot.io`
-- [ ] Chat page loads: `https://{tenant}.innpilot.io/chat`
-- [ ] Admin panel accessible: `https://{tenant}.innpilot.io/admin`
+- [ ] Subdomain resolves: `dig {tenant}.muva.chat`
+- [ ] Chat page loads: `https://{tenant}.muva.chat/chat`
+- [ ] Admin panel accessible: `https://{tenant}.muva.chat/admin`
 - [ ] Chat responds correctly to questions
 - [ ] Response time < 2s
 - [ ] Tenant isolation verified (no cross-tenant data)
@@ -404,20 +404,20 @@ Use this checklist for each new tenant:
 
 ### For Technical Issues
 - **Slack:** #innpilot-tech-support
-- **Email:** dev@innpilot.io
+- **Email:** dev@muva.chat
 - **On-call:** PagerDuty rotation
 
 ### For Business Issues
 - **Slack:** #innpilot-client-success
-- **Email:** support@innpilot.io
+- **Email:** support@muva.chat
 
 ### Emergency (Production Down)
-1. Check status page: https://status.innpilot.io
+1. Check status page: https://status.muva.chat
 2. Escalate to on-call engineer via PagerDuty
 3. Post in #incidents Slack channel
 
 ---
 
 **Last Updated:** October 2025
-**Maintained by:** InnPilot Platform Team
+**Maintained by:** MUVA Platform Team
 **Version:** 1.0

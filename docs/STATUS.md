@@ -1,4 +1,4 @@
-# InnPilot - Project Status
+# MUVA - Project Status
 
 **Last Updated:** October 1, 2025
 **Current Version:** Pre-1.0 (Development)

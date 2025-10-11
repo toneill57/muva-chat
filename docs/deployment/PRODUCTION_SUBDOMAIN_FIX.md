@@ -7,8 +7,8 @@
 ## Problem Analysis
 
 ### Symptoms
-- `https://simmerdown.innpilot.io/admin/admin/knowledge-base` ✅ Works (double `/admin`)
-- `https://simmerdown.innpilot.io/admin/knowledge-base` ❌ Doesn't work
+- `https://simmerdown.muva.chat/admin/admin/knowledge-base` ✅ Works (double `/admin`)
+- `https://simmerdown.muva.chat/admin/knowledge-base` ❌ Doesn't work
 - Tenant "simmerdown" is NOT being detected
 
 ### Root Cause
@@ -41,7 +41,7 @@ On your VPS, replace the current Nginx config with `nginx-subdomain.conf`:
 
 ```bash
 # SSH into VPS
-ssh user@innpilot.io
+ssh user@muva.chat
 
 # Backup current config
 sudo cp /etc/nginx/sites-available/innpilot /etc/nginx/sites-available/innpilot.backup
@@ -61,7 +61,7 @@ sudo systemctl reload nginx
 Test that Nginx is now sending the `X-Tenant-Subdomain` header:
 
 ```bash
-curl -I https://simmerdown.innpilot.io/admin
+curl -I https://simmerdown.muva.chat/admin
 # Should see: X-Tenant-Subdomain: simmerdown (in backend logs)
 ```
 
@@ -83,8 +83,8 @@ This ensures subdomain rewrites work in BOTH development and production.
 
 After these fixes:
 
-- ✅ `https://simmerdown.innpilot.io/admin` → Works
-- ✅ `https://simmerdown.innpilot.io/admin/knowledge-base` → Works
+- ✅ `https://simmerdown.muva.chat/admin` → Works
+- ✅ `https://simmerdown.muva.chat/admin/knowledge-base` → Works
 - ✅ Tenant "simmerdown" correctly detected
 - ✅ No more double slashes in URLs
 - ✅ Admin sidebar navigation functional
@@ -93,11 +93,11 @@ After these fixes:
 
 - [ ] Nginx config deployed and reloaded
 - [ ] Subdomain header verified in middleware logs
-- [ ] Admin dashboard loads at `https://simmerdown.innpilot.io/admin`
-- [ ] Knowledge Base link works: `https://simmerdown.innpilot.io/admin/knowledge-base`
-- [ ] Settings link works: `https://simmerdown.innpilot.io/admin/settings`
-- [ ] Branding link works: `https://simmerdown.innpilot.io/admin/branding`
-- [ ] Main site still works: `https://innpilot.io`
+- [ ] Admin dashboard loads at `https://simmerdown.muva.chat/admin`
+- [ ] Knowledge Base link works: `https://simmerdown.muva.chat/admin/knowledge-base`
+- [ ] Settings link works: `https://simmerdown.muva.chat/admin/settings`
+- [ ] Branding link works: `https://simmerdown.muva.chat/admin/branding`
+- [ ] Main site still works: `https://muva.chat`
 
 ## Files Changed
 

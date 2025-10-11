@@ -8,7 +8,7 @@
 
 ## 📋 Quick Overview
 
-This directory documents the complete migration of InnPilot's semantic code search infrastructure from **Zilliz Cloud** (Milvus serverless) to **Supabase pgvector**.
+This directory documents the complete migration of MUVA's semantic code search infrastructure from **Zilliz Cloud** (Milvus serverless) to **Supabase pgvector**.
 
 ### Key Metrics
 

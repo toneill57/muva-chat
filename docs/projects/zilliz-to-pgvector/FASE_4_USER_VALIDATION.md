@@ -31,7 +31,7 @@
 **Test Query 1: "SIRE compliance validation"**
 ```
 ✅ Results: 9 matches found
-   Files: docs/sire/*.md (TEST_RESULTS_SUMMARY, PHASE_10_1_DATABASE_IMPLEMENTATION, etc.)
+   Files: docs/features/sire-compliance/*.md (TEST_RESULTS_SUMMARY, PHASE_10_1_DATABASE_IMPLEMENTATION, etc.)
    Avg Similarity: 61.4%
    Total Time: 2.8s
 ```
@@ -94,7 +94,7 @@ npx tsx scripts/semantic-search-pgvector.ts "SIRE compliance"
 **Expected Output:**
 - Query completes in <3s
 - Returns 5-10 relevant results
-- Files from `docs/sire/` directory appear in results
+- Files from `docs/features/sire-compliance/` directory appear in results
 
 ---
 

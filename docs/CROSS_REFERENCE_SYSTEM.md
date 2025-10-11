@@ -5,7 +5,7 @@
 
 ## Overview
 
-The Cross-Reference System is a unique feature of InnPilot's documentation template that significantly improves search quality and contextual relevance. By creating explicit links between related concepts, the system enhances both semantic search results and AI response quality.
+The Cross-Reference System is a unique feature of MUVA's documentation template that significantly improves search quality and contextual relevance. By creating explicit links between related concepts, the system enhances both semantic search results and AI response quality.
 
 ## Core Concept
 

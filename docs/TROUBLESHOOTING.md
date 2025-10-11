@@ -1,11 +1,11 @@
-# InnPilot Troubleshooting & Debugging Guide
+# MUVA Troubleshooting & Debugging Guide
 
 > **Status**: Current as of September 2025
 > **Last Updated**: After resolving SimmerDown authentication and chat issues
 
 ## Overview
 
-This guide documents common issues encountered in the InnPilot system and their proven solutions. All solutions have been tested in real-world scenarios during active development.
+This guide documents common issues encountered in the MUVA system and their proven solutions. All solutions have been tested in real-world scenarios during active development.
 
 ## Authentication & Login Issues
 

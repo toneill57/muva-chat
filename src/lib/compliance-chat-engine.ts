@@ -6,7 +6,7 @@
  * - Capa 2 (SIRE): 13 campos oficiales auto-generados
  *
  * Basado en especificación oficial SIRE:
- * - Fuente: docs/sire/CODIGOS_OFICIALES.md
+ * - Fuente: docs/features/sire-compliance/CODIGOS_OFICIALES.md
  * - 13 campos obligatorios
  * - Validaciones estrictas
  */
@@ -28,7 +28,7 @@ export interface ConversationalData {
   nombre_completo: string;          // "Juan Pérez García"
   numero_pasaporte: string;         // "AB123456" (con o sin guiones)
 
-  // ⚠️ CRITICAL: 3 INDEPENDENT GEOGRAPHIC FIELDS (see docs/sire/DATABASE_SCHEMA_CLARIFICATION.md)
+  // ⚠️ CRITICAL: 3 INDEPENDENT GEOGRAPHIC FIELDS (see docs/features/sire-compliance/DATABASE_SCHEMA_CLARIFICATION.md)
 
   // Field 5 - NATIONALITY: Guest's CITIZENSHIP country (where passport is from)
   // Example: American guest → "Estados Unidos" (maps to SIRE code 249)

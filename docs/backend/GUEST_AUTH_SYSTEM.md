@@ -434,8 +434,8 @@ export async function POST(request: NextRequest) {
    - Security audit
 
 **Referencias:**
-- Plan completo: `/Users/oneill/Sites/apps/InnPilot/plan.md`
-- TODO tasks: `/Users/oneill/Sites/apps/InnPilot/TODO.md`
+- Plan completo: `/Users/oneill/Sites/apps/MUVA/plan.md`
+- TODO tasks: `/Users/oneill/Sites/apps/MUVA/TODO.md`
 
 ## Changelog
 
@@ -449,5 +449,5 @@ export async function POST(request: NextRequest) {
 
 ---
 
-**Mantenido por**: InnPilot Development Team
+**Mantenido por**: MUVA Development Team
 **Última actualización**: 30 de Septiembre 2025

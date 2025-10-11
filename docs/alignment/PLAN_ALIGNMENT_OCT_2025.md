@@ -67,7 +67,7 @@ Compliance Legal: SIRE requiere 13 campos obligatorios (actualmente solo 4/13)
 - Brasil = 105 (SIRE) vs 076 (ISO)
 
 **Discovery Made:** FASE 11.8 (Oct 9, 2025)
-- Document: `docs/sire/CODIGOS_SIRE_VS_ISO.md` (248 lines)
+- Document: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (248 lines)
 - Helpers: `src/lib/sire/sire-catalogs.ts` (214 lines)
 - Tests: `scripts/test-sire-catalogs.ts` (27/27 passed)
 
@@ -87,7 +87,7 @@ SIRE codes are **proprietary** to Colombian Migration, NOT ISO 3166-1:
 
 **Implication:** NEVER hardcode ISO codes. Use `getSIRECountryCode()` from `src/lib/sire/sire-catalogs.ts`.
 
-**Reference:** `docs/sire/CODIGOS_SIRE_VS_ISO.md`
+**Reference:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 ```
 
 **Insert after line 541 (SIRE Específico section in FASE 8):**
@@ -131,7 +131,7 @@ SIRE codes are **proprietary** to Colombian Migration, NOT ISO 3166-1:
 - `src/lib/sire/sire-catalogs.ts` (NUEVO - 214 líneas)
 - `src/lib/compliance-chat-engine.ts` (MODIFICAR - eliminar hardcode)
 - `scripts/test-sire-catalogs.ts` (NUEVO - 125 líneas)
-- `docs/sire/CODIGOS_SIRE_VS_ISO.md` (NUEVO - 248 líneas)
+- `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (NUEVO - 248 líneas)
 - `CLAUDE.md` (MODIFICAR - agregar sección SIRE helpers)
 
 **Testing:**
@@ -222,7 +222,7 @@ ESPECIFICACIONES:
    - 10 city tests (verify DIVIPOLA codes)
    - 3 date tests (verify formatting)
 
-4. Crear `docs/sire/CODIGOS_SIRE_VS_ISO.md`:
+4. Crear `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`:
    - Tabla comparativa SIRE vs ISO
    - Ejemplos de uso correcto
    - Guía de migración
@@ -231,7 +231,7 @@ ARCHIVOS:
 - `src/lib/sire/sire-catalogs.ts` (NUEVO)
 - `src/lib/compliance-chat-engine.ts` (MODIFICAR)
 - `scripts/test-sire-catalogs.ts` (NUEVO)
-- `docs/sire/CODIGOS_SIRE_VS_ISO.md` (NUEVO)
+- `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (NUEVO)
 - `CLAUDE.md` (MODIFICAR)
 - `package.json` (add fuse.js)
 
@@ -316,9 +316,9 @@ SIGUIENTE: Continuar con FASE 12 (SIRE Testing & Validation)
 **Insert after line 60 (Context Files section):**
 ```markdown
 - SIRE Catalog Helpers (Oct 9, 2025):
-  - `/Users/oneill/Sites/apps/InnPilot/src/lib/sire/sire-catalogs.ts` (214 lines)
-  - `/Users/oneill/Sites/apps/InnPilot/docs/sire/CODIGOS_SIRE_VS_ISO.md` (248 lines)
-  - `/Users/oneill/Sites/apps/InnPilot/scripts/test-sire-catalogs.ts` (125 lines)
+  - `/Users/oneill/Sites/apps/MUVA/src/lib/sire/sire-catalogs.ts` (214 lines)
+  - `/Users/oneill/Sites/apps/MUVA/docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (248 lines)
+  - `/Users/oneill/Sites/apps/MUVA/scripts/test-sire-catalogs.ts` (125 lines)
 ```
 
 **Insert after line 89 (SIRE Codes section):**

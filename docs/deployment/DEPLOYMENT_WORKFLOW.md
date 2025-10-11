@@ -1,6 +1,6 @@
-# Deployment Workflow - InnPilot VPS
+# Deployment Workflow - MUVA VPS
 
-Guía de referencia rápida para deployments y troubleshooting en VPS Hostinger (innpilot.io).
+Guía de referencia rápida para deployments y troubleshooting en VPS Hostinger (muva.chat).
 
 ---
 
@@ -47,12 +47,12 @@ Developer → GitHub (push to dev) → GitHub Actions → VPS Build & Deploy →
    - ✅ `npm ci` (instala deps exactas)
    - ✅ `npm run build`
    - ✅ `pm2 reload innpilot --update-env`
-   - ✅ Health check a https://innpilot.io/api/health
+   - ✅ Health check a https://muva.chat/api/health
 
 3. **Verificación Post-Deploy**:
    ```bash
    # Desde local, verificar deployment exitoso
-   curl -s https://innpilot.io/api/health | jq
+   curl -s https://muva.chat/api/health | jq
    # Debe retornar: {"status": "ok", "timestamp": "..."}
 
    # Ver logs de GitHub Actions
@@ -67,7 +67,7 @@ Developer → GitHub (push to dev) → GitHub Actions → VPS Build & Deploy →
 gh run watch
 
 # Ver logs de PM2 en VPS (SSH)
-ssh root@innpilot.io "pm2 logs innpilot --lines 100"
+ssh root@muva.chat "pm2 logs innpilot --lines 100"
 ```
 
 ---
@@ -78,7 +78,7 @@ ssh root@innpilot.io "pm2 logs innpilot --lines 100"
 
 1. **SSH al Servidor**:
    ```bash
-   ssh root@innpilot.io
+   ssh root@muva.chat
    # O con alias: ssh innpilot-vps
    ```
 
@@ -170,7 +170,7 @@ pm2 status innpilot
 
 1. **SSH al Servidor**:
    ```bash
-   ssh root@innpilot.io
+   ssh root@muva.chat
    cd /var/www/innpilot
    ```
 
@@ -214,7 +214,7 @@ pm2 reload innpilot --update-env
 #### Endpoint de Salud
 ```bash
 # Desde local
-curl -s https://innpilot.io/api/health | jq
+curl -s https://muva.chat/api/health | jq
 
 # Desde VPS
 curl -s http://localhost:3000/api/health | jq
@@ -293,7 +293,7 @@ pm2 register
 
 # UptimeRobot (HTTP monitoring)
 # Crear monitor en https://uptimerobot.com
-# URL: https://innpilot.io/api/health
+# URL: https://muva.chat/api/health
 # Interval: 5min
 ```
 
@@ -311,5 +311,5 @@ pm2 register
 
 **Last Updated**: Oct 4, 2025
 **VPS**: Hostinger (Ubuntu 22.04)
-**Domain**: https://innpilot.io
+**Domain**: https://muva.chat
 **Support**: GitHub Actions logs + PM2 logs

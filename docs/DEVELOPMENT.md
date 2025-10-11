@@ -1,4 +1,4 @@
-# InnPilot Development Guide
+# MUVA Development Guide
 
 ## Table of Contents
 - [Quick Start](#quick-start)
@@ -24,7 +24,7 @@
 1. **Clone and install dependencies:**
    ```bash
    git clone <repository-url>
-   cd InnPilot
+   cd MUVA
    npm install
    ```
 
@@ -52,14 +52,14 @@
    - API Status: http://localhost:3000/api/status
 
    **Production (VPS):**
-   - Web UI: https://innpilot.io
-   - API Health: https://innpilot.io/api/health
-   - API Status: https://innpilot.io/api/status
+   - Web UI: https://muva.chat
+   - API Health: https://muva.chat/api/health
+   - API Status: https://muva.chat/api/status
 
 ## Project Structure
 
 ```
-InnPilot/
+MUVA/
 ├── src/
 │   ├── app/                    # Next.js 13+ App Router
 │   │   ├── api/               # API routes (Edge Runtime)
@@ -285,7 +285,7 @@ Set in VPS via .env.local file:
 
 ```bash
 # SSH to VPS
-ssh deploy@innpilot.io
+ssh deploy@muva.chat
 cd /var/www/innpilot
 
 # Edit .env.local
@@ -324,7 +324,7 @@ cat .env.local
 **Recommended - Use API calls:**
 ```javascript
 // Check API health
-const health = await fetch('https://innpilot.io/api/health')
+const health = await fetch('https://muva.chat/api/health')
   .then(res => res.json());
 console.log('System status:', health.status);
 
@@ -336,7 +336,7 @@ console.log('Services:', status.services);
 
 **For debugging only (cURL):**
 ```bash
-curl https://innpilot.io/api/health
+curl https://muva.chat/api/health
 curl http://localhost:3000/api/status  # Local only
 ```
 
@@ -359,7 +359,7 @@ npx tsc --noEmit
 ```javascript
 // Monitor response times
 const start = performance.now();
-const response = await fetch('https://innpilot.io/api/chat', {
+const response = await fetch('https://muva.chat/api/chat', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ question: "Test performance" })
@@ -375,7 +375,7 @@ console.log(`API response time: ${duration.toFixed(2)}ms`);
 npm run validate-env:test
 
 # Monitor API calls with timing
-curl -w "@curl-format.txt" https://innpilot.io/api/chat
+curl -w "@curl-format.txt" https://muva.chat/api/chat
 ```
 
 #### Database Issues

@@ -86,7 +86,7 @@ npx tsx scripts/test-subdomain-helpers.ts
 ```
 
 **Test Coverage:**
-- ✅ Production domain parsing (subdomain.innpilot.io)
+- ✅ Production domain parsing (subdomain.muva.chat)
 - ✅ Localhost development (subdomain.localhost:3000)
 - ✅ No subdomain scenarios
 - ✅ WWW subdomain handling
@@ -120,10 +120,10 @@ Success Rate: 100.00%
 2. Valid subdomain with hyphens (free-hotel-test.localhost)
 3. No subdomain (localhost)
 4. WWW subdomain (should be null)
-5. Production subdomain (simmerdown.innpilot.io)
+5. Production subdomain (simmerdown.muva.chat)
 6. Invalid uppercase subdomain (should be rejected)
 7. Complex subdomain with numbers (my-hotel-123.localhost)
-8. Main domain (innpilot.io)
+8. Main domain (muva.chat)
 
 ### Manual Testing (curl)
 
@@ -299,7 +299,7 @@ export function SomeComponent() {
 ## Production Deployment
 
 ### Prerequisites
-- ✅ DNS wildcard configured: `*.innpilot.io`
+- ✅ DNS wildcard configured: `*.muva.chat`
 - ✅ SSL certificate supports wildcards
 - ⏳ Nginx subdomain extraction configured (optional)
 
@@ -313,7 +313,7 @@ export function SomeComponent() {
 ### Verification Commands
 ```bash
 # Test production subdomain
-curl -H "Host: simmerdown.innpilot.io" https://innpilot.io/api/test-subdomain
+curl -H "Host: simmerdown.muva.chat" https://muva.chat/api/test-subdomain
 
 # Check PM2 logs
 pm2 logs innpilot --lines 50 | grep middleware

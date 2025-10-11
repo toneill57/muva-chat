@@ -416,7 +416,7 @@ Irrelevant Query (0 results):  378ms (fastest - no results)
 2. **A/B testing framework**
    - Compare different threshold values
    - Measure precision/recall metrics
-   - Optimize for InnPilot's specific use case
+   - Optimize for MUVA's specific use case
 
 3. **Query analytics dashboard**
    - Most common search terms

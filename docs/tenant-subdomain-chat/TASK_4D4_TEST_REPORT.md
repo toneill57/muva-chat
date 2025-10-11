@@ -14,7 +14,7 @@ Successfully implemented the backend infrastructure for tenant landing page cont
 
 ## 1. Database Migration ✅
 
-**File:** `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251010132641_add_landing_page_content.sql`
+**File:** `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251010132641_add_landing_page_content.sql`
 
 ### Changes Made:
 - Added `landing_page_content` JSONB column to `tenant_registry` table
@@ -70,7 +70,7 @@ AND column_name = 'landing_page_content';
 
 ## 2. API Endpoints ✅
 
-**File:** `/Users/oneill/Sites/apps/InnPilot/src/app/api/admin/content/route.ts`
+**File:** `/Users/oneill/Sites/apps/MUVA/src/app/api/admin/content/route.ts`
 
 ### GET /api/admin/content
 **Purpose:** Retrieve landing page content for a tenant
@@ -274,10 +274,10 @@ PUT /api/admin/content
 ## 6. Files Created/Modified
 
 ### New Files:
-1. `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251010132641_add_landing_page_content.sql`
-2. `/Users/oneill/Sites/apps/InnPilot/src/app/api/admin/content/route.ts`
-3. `/Users/oneill/Sites/apps/InnPilot/scripts/test-content-api.ts`
-4. `/Users/oneill/Sites/apps/InnPilot/docs/tenant-subdomain-chat/TASK_4D4_TEST_REPORT.md` (this file)
+1. `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251010132641_add_landing_page_content.sql`
+2. `/Users/oneill/Sites/apps/MUVA/src/app/api/admin/content/route.ts`
+3. `/Users/oneill/Sites/apps/MUVA/scripts/test-content-api.ts`
+4. `/Users/oneill/Sites/apps/MUVA/docs/tenant-subdomain-chat/TASK_4D4_TEST_REPORT.md` (this file)
 
 ### Modified Files:
 - None (this was a greenfield implementation)

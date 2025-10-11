@@ -1,6 +1,6 @@
 # 🪆 Matryoshka Multi-Tier Embedding Architecture
 
-> **Revolutionary Performance**: Comprehensive technical guide to InnPilot's Matryoshka implementation
+> **Revolutionary Performance**: Comprehensive technical guide to MUVA's Matryoshka implementation
 > **Status**: Production-ready as of September 2025
 > **Performance**: 10x speed improvement for frequent queries
 
@@ -22,9 +22,9 @@
 
 Matryoshka Representation Learning is a revolutionary approach to embeddings that allows a single model to produce embeddings of multiple dimensions simultaneously. Like Russian nesting dolls (Matryoshka), smaller dimensional representations are "nested" within larger ones, enabling optimal performance-precision trade-offs.
 
-### InnPilot's Implementation
+### MUVA's Implementation
 
-InnPilot implements a 3-tier Matryoshka system that automatically selects optimal embedding dimensions based on query complexity and content type:
+MUVA implements a 3-tier Matryoshka system that automatically selects optimal embedding dimensions based on query complexity and content type:
 
 - **Tier 1 (Ultra Fast)**: 1024 dimensions - 10x performance improvement
 - **Tier 2 (Balanced)**: 1536 dimensions - 5x performance improvement
@@ -596,7 +596,7 @@ async function searchWithFallback(query: string) {
 
 ## Conclusion
 
-The Matryoshka Multi-Tier Embedding Architecture represents a revolutionary advancement in vector search performance for InnPilot. By intelligently routing queries to optimal embedding dimensions, the system achieves:
+The Matryoshka Multi-Tier Embedding Architecture represents a revolutionary advancement in vector search performance for MUVA. By intelligently routing queries to optimal embedding dimensions, the system achieves:
 
 - **10x performance improvement** for frequent queries
 - **Seamless backward compatibility** with existing systems

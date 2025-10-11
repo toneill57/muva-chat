@@ -7,7 +7,7 @@
 
 ## 📊 Executive Summary
 
-Se ejecutó un health check completo del sistema InnPilot y se implementaron fixes para todos los issues CRITICAL y HIGH priority detectados por el Infrastructure Monitor Agent.
+Se ejecutó un health check completo del sistema MUVA y se implementaron fixes para todos los issues CRITICAL y HIGH priority detectados por el Infrastructure Monitor Agent.
 
 **Resultados:**
 - ✅ **26 funciones** con search_path fijado correctamente

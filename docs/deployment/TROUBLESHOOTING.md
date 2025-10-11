@@ -1,4 +1,4 @@
-# Troubleshooting Guide - InnPilot VPS
+# Troubleshooting Guide - MUVA VPS
 
 Guía de solución de problemas comunes en deployment y operación del VPS.
 
@@ -61,7 +61,7 @@ gh run rerun <run-id>
 **Síntoma**:
 - ⏱️ GitHub Actions falla en step de SSH
 - Error: `Connection timed out` o `Permission denied (publickey)`
-- Deployment manual falla con `ssh: connect to host innpilot.io port 22: Operation timed out`
+- Deployment manual falla con `ssh: connect to host muva.chat port 22: Operation timed out`
 
 **Causa**:
 - Firewall bloqueando puerto 22
@@ -73,7 +73,7 @@ gh run rerun <run-id>
 
 ```bash
 # 1. Verificar conexión desde local
-ssh -vvv root@innpilot.io
+ssh -vvv root@muva.chat
 # Analizar verbose output para identificar problema
 
 # 2. Verificar firewall en VPS (desde consola Hostinger)
@@ -92,7 +92,7 @@ gh secret list
 # 5. Regenerar SSH key si necesario
 ssh-keygen -t ed25519 -C "github-actions@innpilot"
 # Copiar ~/.ssh/id_ed25519.pub al VPS
-ssh-copy-id root@innpilot.io
+ssh-copy-id root@muva.chat
 
 # 6. Actualizar GitHub Secret con nueva key privada
 gh secret set VPS_SSH_PRIVATE_KEY < ~/.ssh/id_ed25519
@@ -126,7 +126,7 @@ curl -s https://api.github.com/meta | jq .actions
 
 ```bash
 # 1. SSH al VPS
-ssh root@innpilot.io
+ssh root@muva.chat
 
 # 2. Ver status de PM2
 pm2 status
@@ -172,7 +172,7 @@ curl http://localhost:3000/api/health
 
 **Síntoma**:
 - 🚫 Browser muestra "502 Bad Gateway"
-- `curl https://innpilot.io` retorna 502
+- `curl https://muva.chat` retorna 502
 - Nginx logs: `connect() failed (111: Connection refused)`
 
 **Causa**:
@@ -185,7 +185,7 @@ curl http://localhost:3000/api/health
 
 ```bash
 # 1. SSH al VPS
-ssh root@innpilot.io
+ssh root@muva.chat
 
 # 2. Verificar PM2 corriendo
 pm2 status innpilot
@@ -216,7 +216,7 @@ sudo tail -50 /var/log/nginx/error.log
 sudo systemctl restart nginx
 
 # 10. Verificar desde local
-curl -I https://innpilot.io
+curl -I https://muva.chat
 # Debe retornar: HTTP/2 200
 ```
 
@@ -231,7 +231,7 @@ curl -I https://innpilot.io
 
 **Síntoma**:
 - ⚠️ Browser muestra "Your connection is not private"
-- `curl https://innpilot.io` retorna SSL error
+- `curl https://muva.chat` retorna SSL error
 - Email de Let's Encrypt: "Certificate expiring soon"
 
 **Causa**:
@@ -244,7 +244,7 @@ curl -I https://innpilot.io
 
 ```bash
 # 1. SSH al VPS
-ssh root@innpilot.io
+ssh root@muva.chat
 
 # 2. Verificar certificado actual
 sudo certbot certificates
@@ -265,14 +265,14 @@ sudo cat /etc/nginx/sites-available/innpilot.conf | grep ".well-known/acme-chall
 sudo certbot renew --force-renewal
 
 # 7. Si falla, usar método webroot
-sudo certbot certonly --webroot -w /var/www/innpilot/public -d innpilot.io -d www.innpilot.io
+sudo certbot certonly --webroot -w /var/www/innpilot/public -d muva.chat -d www.muva.chat
 
 # 8. Reload Nginx
 sudo systemctl reload nginx
 
 # 9. Verificar SSL funcionando
-curl -I https://innpilot.io
-openssl s_client -connect innpilot.io:443 -servername innpilot.io
+curl -I https://muva.chat
+openssl s_client -connect muva.chat:443 -servername muva.chat
 
 # 10. Configurar auto-renewal (si no existe)
 sudo systemctl status certbot.timer
@@ -307,7 +307,7 @@ sudo systemctl start certbot.timer
 curl http://localhost:3000/api/health
 
 # 2. SSH al VPS
-ssh root@innpilot.io
+ssh root@muva.chat
 
 # 3. Test desde VPS
 curl http://localhost:3000/api/health
@@ -368,12 +368,12 @@ pm2 restart innpilot --update-env
 # 1. Identificar endpoint problemático
 # Desde browser DevTools → Network tab
 # O curl específico:
-curl -X POST https://innpilot.io/api/chat \
+curl -X POST https://muva.chat/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"test"}'
 
 # 2. SSH al VPS y ver logs
-ssh root@innpilot.io
+ssh root@muva.chat
 pm2 logs innpilot --lines 200 --err
 
 # 3. Verificar environment variables
@@ -432,7 +432,7 @@ pm2 reload innpilot
 
 ```bash
 # SSH al VPS
-ssh root@innpilot.io
+ssh root@muva.chat
 
 # Restart todo
 pm2 restart innpilot
@@ -442,7 +442,7 @@ sudo systemctl restart nginx
 pm2 status
 sudo systemctl status nginx
 curl http://localhost:3000/api/health
-curl -I https://innpilot.io
+curl -I https://muva.chat
 ```
 
 ### Logs Centralizados
@@ -460,7 +460,7 @@ sudo tail -f /var/log/nginx/access.log | tee -a /tmp/debug.log &
 ### Rollback de Emergencia (1 comando)
 
 ```bash
-ssh root@innpilot.io "cd /var/www/innpilot && git reset --hard HEAD~1 && npm ci && npm run build && pm2 reload innpilot"
+ssh root@muva.chat "cd /var/www/innpilot && git reset --hard HEAD~1 && npm ci && npm run build && pm2 reload innpilot"
 ```
 
 ---
@@ -469,7 +469,7 @@ ssh root@innpilot.io "cd /var/www/innpilot && git reset --hard HEAD~1 && npm ci 
 
 - **GitHub Actions Logs**: `gh run list --workflow=deploy.yml`
 - **VPS Console**: Hostinger Panel → VPS → Console
-- **SSL Check**: https://www.ssllabs.com/ssltest/analyze.html?d=innpilot.io
+- **SSL Check**: https://www.ssllabs.com/ssltest/analyze.html?d=muva.chat
 - **Uptime Monitor**: UptimeRobot dashboard
 - **PM2 Dashboard**: `pm2 plus` (opcional, de pago)
 

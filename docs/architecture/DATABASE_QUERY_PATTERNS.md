@@ -243,7 +243,7 @@ interface AccommodationUnit {
 ```
 
 #### `get_accommodation_unit_by_motopress_id()`
-**Purpose:** Find InnPilot unit by MotoPress accommodation type ID
+**Purpose:** Find MUVA unit by MotoPress accommodation type ID
 **Used in:** `scripts/sync-motopress-bookings.ts`
 
 ```sql

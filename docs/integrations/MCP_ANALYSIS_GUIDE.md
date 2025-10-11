@@ -1,4 +1,4 @@
-# MCP Analysis Guide - InnPilot Project
+# MCP Analysis Guide - MUVA Project
 
 ## Overview
 
@@ -176,7 +176,7 @@ const searchFunctions = Object.keys(functions).filter(name => name.includes('mat
 - **Always Make Visible**: Usar helper functions para mostrar resultados
 - **Document Insights**: Capturar findings importantes
 
-### Impact en InnPilot
+### Impact en MUVA
 - Mejor debugging de problemas de datos
 - Análisis más eficiente del estado del sistema
 - Troubleshooting más rápido

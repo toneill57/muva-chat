@@ -8,7 +8,7 @@
 
 ## 📋 Overview
 
-This document tracks the **3 critical security issues** identified in the InnPilot database audit:
+This document tracks the **3 critical security issues** identified in the MUVA database audit:
 
 1. ✅ **COMPLETED:** 4 tables without Row Level Security (RLS) - **FIXED Oct 6, 2025**
 2. ✅ **COMPLETED:** 28 functions without immutable `search_path` - **FIXED Oct 6, 2025**

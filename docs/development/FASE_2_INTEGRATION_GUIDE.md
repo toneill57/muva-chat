@@ -356,8 +356,8 @@ Create `public/manifest.json`:
 
 ```json
 {
-  "name": "InnPilot Guest Chat",
-  "short_name": "InnPilot",
+  "name": "MUVA Guest Chat",
+  "short_name": "MUVA",
   "description": "Chat asistente para huéspedes",
   "start_url": "/guest/login",
   "display": "standalone",

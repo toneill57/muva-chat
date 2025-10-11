@@ -10,7 +10,7 @@
 
 ### 1. Iniciar servidor de desarrollo
 ```bash
-cd /Users/oneill/Sites/apps/InnPilot
+cd /Users/oneill/Sites/apps/MUVA
 ./scripts/dev-with-keys.sh
 ```
 

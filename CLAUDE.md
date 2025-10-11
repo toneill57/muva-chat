@@ -167,7 +167,7 @@ set -a && source .env.local && set +a && npx tsx script.ts
   - `formatDateToSIRE()` - DB format (YYYY-MM-DD) → SIRE (dd/mm/yyyy)
 - ❌ NUNCA usar ISO 3166-1 (USA=840❌, usar USA=249✅)
 - ⚠️ 100% de archivos TXT con ISO codes serán RECHAZADOS por SIRE
-- 📚 Ref: `docs/sire/CODIGOS_SIRE_VS_ISO.md`
+- 📚 Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ---
 
@@ -175,8 +175,8 @@ set -a && source .env.local && set +a && npx tsx script.ts
 
 - **MCP Setup:** `docs/optimization/MCP_SERVERS_RESULTS.md`
 - **Database Patterns:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
-- **SIRE Compliance:** `docs/sire/CODIGOS_OFICIALES.md`
-- **SIRE vs ISO:** `docs/sire/CODIGOS_SIRE_VS_ISO.md` (códigos oficiales)
+- **SIRE Compliance:** `docs/features/sire-compliance/CODIGOS_OFICIALES.md`
+- **SIRE vs ISO:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (códigos oficiales)
 - **Agent Snapshots:** `snapshots/{agent-name}.md`
 
 ---

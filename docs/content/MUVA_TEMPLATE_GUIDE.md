@@ -2,7 +2,7 @@
 
 **Fecha:** Septiembre 2025
 **Template:** `_assets/muva/MUVA_LISTING_TEMPLATE_V2.md`
-**Sistema:** InnPilot Matryoshka Embeddings + Metadata Optimization
+**Sistema:** MUVA Matryoshka Embeddings + Metadata Optimization
 
 ---
 
@@ -538,4 +538,4 @@ node scripts/populate-embeddings.js _assets/muva/listings-by-category/tu-archivo
 
 **Guía Version:** 2.0
 **Última actualización:** Septiembre 2025
-**Sistema:** InnPilot Matryoshka Embeddings + Metadata Optimization
+**Sistema:** MUVA Matryoshka Embeddings + Metadata Optimization

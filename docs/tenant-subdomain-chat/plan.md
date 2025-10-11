@@ -10,12 +10,12 @@
 
 ### Objetivo Principal
 
-Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hoteles, surf schools, agencias de turismo) tiene:
+Implementar un sistema de chat multi-tenant donde cada cliente de MUVA (hoteles, surf schools, agencias de turismo) tiene:
 
-1. **Chat público** en `{tenant}.innpilot.io/chat-mobile-dev` (acceso sin login)
-2. **Dashboard admin** en `{tenant}.innpilot.io` (requiere login)
+1. **Chat público** en `{tenant}.muva.chat/chat-mobile-dev` (acceso sin login)
+2. **Dashboard admin** en `{tenant}.muva.chat` (requiere login)
 3. **Knowledge base específica** por tenant (embeddings aislados)
-4. **Branding lite** (logo + nombre del tenant, diseño InnPilot estándar)
+4. **Branding lite** (logo + nombre del tenant, diseño MUVA estándar)
 
 ### ¿Por qué?
 
@@ -28,7 +28,7 @@ Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hote
 ### Alcance
 
 **En Scope**:
-- ✅ Subdomain detection (`simmerdown.innpilot.io` → tenant "simmerdown")
+- ✅ Subdomain detection (`simmerdown.muva.chat` → tenant "simmerdown")
 - ✅ Tenant-specific embeddings (tabla `tenant_knowledge_embeddings`)
 - ✅ Chat API filtrado por tenant (solo documentación del tenant)
 - ✅ Admin UI para upload de documentación (.md, .pdf, .txt)
@@ -51,7 +51,7 @@ Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hote
 - ✅ **Chat mobile-dev funcional** (`/chat-mobile-dev`)
   - Basado en RAG (Retrieval-Augmented Generation)
   - Usa pgvector para semantic search
-  - 4,333 embeddings globales (código de InnPilot)
+  - 4,333 embeddings globales (código de MUVA)
 
 - ✅ **Multi-tenant architecture**
   - Tabla `tenants` con `tenant_id`
@@ -71,9 +71,9 @@ Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hote
 ### Limitaciones Actuales
 
 - ❌ **Chat tiene knowledge base global**: Todos los tenants ven la misma documentación
-- ❌ **No subdomain detection**: Chat siempre usa `innpilot.io` (no `{tenant}.innpilot.io`)
+- ❌ **No subdomain detection**: Chat siempre usa `muva.chat` (no `{tenant}.muva.chat`)
 - ❌ **No admin UI para docs**: No hay forma de subir documentación personalizada
-- ❌ **No branding por tenant**: Chat es genérico InnPilot
+- ❌ **No branding por tenant**: Chat es genérico MUVA
 
 ---
 
@@ -82,14 +82,14 @@ Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hote
 ### Nueva Experiencia
 
 #### **Para el Tenant Admin (ej: Simmerdown)**
-1. Login en `simmerdown.innpilot.io`
+1. Login en `simmerdown.muva.chat`
 2. Dashboard con sección "Knowledge Base"
 3. Upload de archivos (`surf-classes.md`, `equipment-rental.md`, etc.)
 4. Sistema procesa automáticamente (chunking + embeddings)
 5. Preview del chat con su documentación
 
 #### **Para el Usuario Final (ej: Turista)**
-1. Visita `simmerdown.innpilot.io/chat-mobile-dev` (sin login)
+1. Visita `simmerdown.muva.chat/chat-mobile-dev` (sin login)
 2. Ve logo de Simmerdown + nombre del negocio
 3. Pregunta: "¿Cuánto cuesta una clase de surf?"
 4. Chat responde basado SOLO en docs de Simmerdown
@@ -116,7 +116,7 @@ Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hote
 4. **Public Chat UI**
    - Muestra logo del tenant (avatar del chat)
    - Header con nombre del negocio
-   - Diseño InnPilot estándar (no customizable)
+   - Diseño MUVA estándar (no customizable)
    - Acceso público (no login)
 
 5. **Multi-Tenant Testing**
@@ -146,7 +146,7 @@ Implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hote
 
 ### Infrastructure
 - **Subdomain Detection**: Next.js middleware
-- **Wildcard DNS**: `*.innpilot.io` → VPS
+- **Wildcard DNS**: `*.muva.chat` → VPS
 - **File Storage**: Supabase Storage (opcional) o local processing
 - **VPS Deployment**: PM2 + Git
 
@@ -225,7 +225,7 @@ ON tenant_knowledge_embeddings(tenant_id);
 // middleware.ts
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
-  const subdomain = getSubdomain(hostname); // "simmerdown" from "simmerdown.innpilot.io"
+  const subdomain = getSubdomain(hostname); // "simmerdown" from "simmerdown.muva.chat"
 
   if (subdomain && subdomain !== 'www') {
     // Inject subdomain in headers for server components
@@ -394,7 +394,7 @@ export async function POST(req: Request) {
 - Chat page en `/{tenant}/chat-mobile-dev`
 - Header con logo + nombre del tenant
 - Avatar del chat con logo del tenant
-- Diseño InnPilot estándar (no customizable)
+- Diseño MUVA estándar (no customizable)
 - Acceso público (no requiere login)
 
 **Archivos a crear/modificar:**
@@ -414,7 +414,7 @@ export async function POST(req: Request) {
     )}
     <div>
       <h1 className="font-semibold text-lg">{tenant.name}</h1>
-      <p className="text-sm text-gray-500">Powered by InnPilot</p>
+      <p className="text-sm text-gray-500">Powered by MUVA</p>
     </div>
   </div>
 </header>
@@ -444,9 +444,9 @@ export async function POST(req: Request) {
 - ✅ Fallback a logo default si tenant no tiene logo
 
 **Testing:**
-- Abrir `simmerdown.innpilot.io/chat-mobile-dev` → ver logo de Simmerdown
-- Abrir `xyz.innpilot.io/chat-mobile-dev` → ver logo de XYZ
-- Tenant sin logo → ver logo default InnPilot
+- Abrir `simmerdown.muva.chat/chat-mobile-dev` → ver logo de Simmerdown
+- Abrir `xyz.muva.chat/chat-mobile-dev` → ver logo de XYZ
+- Tenant sin logo → ver logo default MUVA
 - Mobile responsive (320px, 375px, 414px widths)
 - Performance < 2s first load
 
@@ -458,7 +458,7 @@ export async function POST(req: Request) {
 
 **Entregables:**
 - Deploy en VPS production
-- Verificar wildcard DNS (`*.innpilot.io`)
+- Verificar wildcard DNS (`*.muva.chat`)
 - Seed 3 tenants de prueba (simmerdown, xyz, hotel-boutique)
 - E2E testing multi-tenant
 - Documentation final
@@ -476,11 +476,11 @@ export async function POST(req: Request) {
 6. Verify wildcard DNS
 
 **Testing Checklist:**
-- [ ] `simmerdown.innpilot.io` → login funciona
-- [ ] `simmerdown.innpilot.io/admin/knowledge-base` → upload docs funciona
-- [ ] `simmerdown.innpilot.io/chat-mobile-dev` → chat público funciona
+- [ ] `simmerdown.muva.chat` → login funciona
+- [ ] `simmerdown.muva.chat/admin/knowledge-base` → upload docs funciona
+- [ ] `simmerdown.muva.chat/chat-mobile-dev` → chat público funciona
 - [ ] Chat responde con docs de Simmerdown (no XYZ)
-- [ ] `xyz.innpilot.io/chat-mobile-dev` → chat responde con docs de XYZ
+- [ ] `xyz.muva.chat/chat-mobile-dev` → chat responde con docs de XYZ
 - [ ] Tenant isolation: A no ve docs de B
 - [ ] Branding: Logo + nombre correcto por tenant
 - [ ] Performance: < 2s chat response
@@ -498,7 +498,7 @@ export async function POST(req: Request) {
 
 ### Funcionalidad
 
-- [ ] **Subdomain detection funciona** (simmerdown.innpilot.io → tenant "simmerdown")
+- [ ] **Subdomain detection funciona** (simmerdown.muva.chat → tenant "simmerdown")
 - [ ] **Tenant isolation verificado** (tenant A no ve docs de tenant B)
 - [ ] **Admin UI funcional** (upload docs, ver knowledge base, config branding)
 - [ ] **Public chat funcional** (acceso sin login, responde con tenant docs)
@@ -636,7 +636,7 @@ export async function POST(req: Request) {
 - `scripts/seed-test-tenants.ts`
 
 **Testing:**
-- Production URLs: `simmerdown.innpilot.io`, `xyz.innpilot.io`
+- Production URLs: `simmerdown.muva.chat`, `xyz.muva.chat`
 - E2E: Upload docs, chat queries, verify isolation
 - Performance: Measure chat response times
 - Monitoring: Check PM2 logs for errors
@@ -646,7 +646,7 @@ export async function POST(req: Request) {
 ## 📂 ESTRUCTURA DE ARCHIVOS
 
 ```
-/Users/oneill/Sites/apps/InnPilot/
+/Users/oneill/Sites/apps/MUVA/
 ├── src/
 │   ├── middleware.ts                          # FASE 2: Subdomain detection
 │   ├── app/
@@ -738,7 +738,7 @@ export async function POST(req: Request) {
    - Logo: Recomendar 200x200px, max 100KB
    - Formatos: PNG, JPG, SVG
    - Storage: Supabase Storage o URL externa
-   - Fallback: Logo InnPilot default
+   - Fallback: Logo MUVA default
 
 6. **Security Considerations**
    - File upload: Validate MIME type (not just extension)

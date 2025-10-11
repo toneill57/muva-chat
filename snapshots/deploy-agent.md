@@ -16,111 +16,164 @@ infrastructure: VPS_HOSTINGER
 
 ---
 
-## 🚀 CURRENT PROJECT: Multi-Tenant Subdomain Chat System
+## 🎯 CURRENT PROJECT: InnPilot → MUVA Chat Rebrand (2025-10-11)
 
-**Status:** 🚧 IN PROGRESS - 20/60 Tasks Complete (33.3%)
-**Documentation:** `docs/tenant-subdomain-chat/` (plan.md, TODO.md, workflow.md)
-**Last Updated:** October 10, 2025 (5:30 AM)
-**Duration:** 16-21 hours (6 phases) | Elapsed: ~8 hours
+**Status:** 📋 Planning Complete - Ready for Execution
+**Documentation:** `docs/projects/innpilot-to-muva-rebrand/` (plan.md, TODO.md, workflow.md)
+**Last Updated:** October 11, 2025
+**Duration:** ~9 hours total (5 FASES)
 
-### Progress Summary
+### My Responsibilities: FASE 3 + FASE 5 (~2.5 hours)
 
-**✅ Infrastructure Ready:**
-- Wildcard DNS already configured (`*.innpilot.io` → 195.200.6.216)
-- SSL wildcard certificate active (Let's Encrypt)
-- Next.js subdomain rewrites configured in `next.config.ts`
-- Database migrations applied (tenant_knowledge_embeddings + subdomain field)
-- Dev environment testing with `simmerdown.localhost:3000` functional
+**FASE 3: VPS Infrastructure (2 hours)**
 
-**✅ Subdomain Routing Fix Applied (October 10):**
-- Fixed URL duplication bug in admin sidebar
-- Solution: Direct hrefs without tenant prefix (rewrite handles it server-side)
-- Verified: All existing admin pages return 200 OK
+**FASE 3.1: Rename PM2 process (30min)**
+- SSH a VPS: `ssh oneill@muva.chat`
+- Stop process: `pm2 stop innpilot`
+- Delete process: `pm2 delete innpilot`
+- Start new: `pm2 start npm --name "muva-chat" -- start`
+- Save: `pm2 save`
+- Test: `pm2 status` debe mostrar "muva-chat" online
+- Agent: **@agent-deploy-agent**
 
-**⏸️ FASE 6: Deployment - PENDING (depends on FASE 4-5 completion)**
-- Awaiting: Branding/Content/Analytics pages (FASE 4D.3-4D.5)
-- Awaiting: Public chat UI with branding (FASE 5)
-- Ready: Database schema, subdomain routing, admin dashboard components
+**FASE 3.2: Actualizar Nginx config (30min)**
+- Opción A (rename): `sudo mv /etc/nginx/sites-available/innpilot.conf /etc/nginx/sites-available/muva.conf`
+- Opción B (keep): Solo actualizar comentarios internos
+- Actualizar comentarios: "InnPilot subdomain routing" → "MUVA Chat subdomain routing"
+- Test config: `sudo nginx -t`
+- Reload: `sudo systemctl reload nginx`
+- Test: `https://muva.chat` carga correctamente
+- Agent: **@agent-deploy-agent**
 
-### Deploy Agent Responsibilities (FASE 6 - 2-3 hours)
+**FASE 3.3: Verificar deployment (30min)**
+- Verificar: https://muva.chat/api/health
+- Verificar: https://simmerdown.muva.chat/chat
+- Verificar: PM2 logs sin errores
+- Verificar: Nginx logs sin errores
+- Test: Todos los endpoints responden 200 OK
+- Agent: **@agent-deploy-agent**
 
-**Phase 6: Production Deployment & Verification**
+**FASE 3.4: Actualizar deployment scripts (20min)**
+- Buscar scripts con "innpilot" en nombres o comentarios
+- Actualizar references a PM2 process name
+- Actualizar docs de deployment
+- Files: `scripts/*`, `docs/deployment/*`
+- Agent: **@agent-deploy-agent**
 
-**6.1 Wildcard DNS Configuration (30 min)**
-- Verify wildcard DNS record (`*.innpilot.io` → 195.200.6.216)
-- Test subdomain resolution (dig/nslookup for hotel.innpilot.io)
-- Verify SSL wildcard certificate (Let's Encrypt)
+**FASE 5.3: Git commit + tag (15min)**
+- git status (review changes)
+- git add .
+- git commit: "feat(rebrand): Complete InnPilot → MUVA Chat rebranding"
+- Incluir BREAKING CHANGE note en commit body
+- git tag -a v2.0-muva-rebrand -m "Complete rebranding to MUVA Chat"
+- git push origin dev
+- git push origin --tags
+- Test: `git log` muestra commit, `git tag` muestra v2.0-muva-rebrand
+- Agent: **@agent-deploy-agent**
 
-**6.2 Nginx Subdomain Routing (1 hour)**
-- Update Nginx config for subdomain handling
-- Configure server blocks for tenant subdomains
-- Test subdomain → localhost:3000 proxy
-- Reload Nginx with zero-downtime
+### Planning Files
 
-**6.3 Database Migrations (30 min)**
-- Coordinate with @database-agent for migration execution
-- Verify 5 new tables created (tenants, embeddings, docs, convos, msgs)
-- Test RPC functions (search_tenant_embeddings, etc.)
-- Validate RLS policies active
+**Read These First:**
+- `docs/projects/innpilot-to-muva-rebrand/plan.md` - Complete rebranding strategy (450+ lines)
+- `docs/projects/innpilot-to-muva-rebrand/TODO.md` - 18 tasks across 5 FASES
+- `docs/projects/innpilot-to-muva-rebrand/innpilot-to-muva-rebrand-prompt-workflow.md` - Copy-paste prompts
 
-**6.4 Deployment & Testing (30-60 min)**
-- Push code to `dev` branch (triggers GitHub Actions)
-- Monitor CI/CD pipeline (build → deploy → health check)
-- Verify subdomain routing works (curl hotel.innpilot.io)
-- Test public chat endpoint (POST /api/tenant-chat/[slug])
-- Verify admin dashboard accessible (JWT auth)
-- Check PM2 cluster mode running (2 instances)
+### Key Context
 
-**Key Configuration Files:**
-- `/etc/nginx/sites-available/innpilot.conf` - Subdomain routing
-- `docs/deployment/ecosystem.config.cjs` - PM2 config
-- `.github/workflows/deploy.yml` - CI/CD pipeline
+**Brand Evolution:**
+- InnPilot (SIRE-focused) → MUVA Chat (multi-tenant + tourism + SIRE premium)
+- SIRE: NOT deprecated - es gancho comercial premium
+- Package name: "muva-chat" (NOT "muva-platform")
+- PM2 process: "innpilot" → "muva-chat"
 
-**Deployment Checklist:**
-- [ ] Wildcard DNS active (*.innpilot.io)
-- [ ] Nginx subdomain routing configured
-- [ ] SSL certificate covers wildcard
-- [ ] Database migrations applied (5 tables)
-- [ ] RPC functions created (3 functions)
-- [ ] Health check passes (/api/health)
-- [ ] Subdomain routing works (test-tenant.innpilot.io)
-- [ ] Public chat functional
-- [ ] Admin dashboard accessible
+**Scope:**
+- PM2 process rename (infrastructure change)
+- Nginx config update (comments + optional rename)
+- Deployment scripts update
+- Git workflow (commit + tag)
 
-**Testing Commands:**
+### Deployment Commands
+
+**FASE 3.1: PM2 Rename**
 ```bash
-# DNS verification
-dig hotel.innpilot.io +short
-nslookup surfschool.innpilot.io
-
-# Subdomain routing test
-curl https://hotel.innpilot.io/api/health
-
-# Chat API test
-curl -X POST https://hotel.innpilot.io/api/tenant-chat/hotel \
-  -H "Content-Type: application/json" \
-  -d '{"message":"Hola"}'
-
-# Admin endpoint test (requires JWT)
-curl https://hotel.innpilot.io/api/admin/hotel/documents \
-  -H "Authorization: Bearer <JWT_TOKEN>"
+ssh oneill@muva.chat
+pm2 stop innpilot
+pm2 delete innpilot
+pm2 start npm --name "muva-chat" -- start
+pm2 save
+pm2 status
 ```
 
-**Planning Files:**
-- `docs/tenant-subdomain-chat/plan.md` - Deployment architecture
-- `docs/tenant-subdomain-chat/TODO.md` - Phase 6 tasks (6.1-6.4)
-- `docs/deployment/SUBDOMAIN_SETUP_GUIDE.md` - Nginx config reference
+**FASE 3.2: Nginx Update**
+```bash
+# Option A: Rename config file
+sudo mv /etc/nginx/sites-available/innpilot.conf /etc/nginx/sites-available/muva.conf
+sudo ln -sf /etc/nginx/sites-available/muva.conf /etc/nginx/sites-enabled/muva.conf
+sudo rm /etc/nginx/sites-enabled/innpilot.conf
 
-**Coordination:**
-- Phase 6 depends on: @ux-interface completing Phase 5 UI components
-- Final verification: All agents test end-to-end flow
+# Option B: Keep filename, update comments only
+sudo nano /etc/nginx/sites-available/innpilot.conf
+# Update: "InnPilot subdomain routing" → "MUVA Chat subdomain routing"
 
-**Estimated Timeline:**
-- DNS/SSL setup: 30 min
-- Nginx config: 1 hour
-- Database migrations: 30 min
-- Deployment + testing: 30-60 min
-- **Total:** 2.5-3 hours
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+**FASE 3.3: Verification**
+```bash
+curl -s https://muva.chat/api/health | jq
+curl -s https://simmerdown.muva.chat/chat
+pm2 logs muva-chat --lines 50
+sudo tail -f /var/log/nginx/access.log
+```
+
+**FASE 5.3: Git Workflow**
+```bash
+git status
+git add .
+git commit -m "$(cat <<'EOF'
+feat(rebrand): Complete InnPilot → MUVA Chat rebranding
+
+BREAKING CHANGE: Project rebranded from InnPilot to MUVA Chat
+- Updated package.json name to "muva-chat"
+- Updated PM2 process name to "muva-chat"
+- Updated all documentation and UI strings
+- SIRE remains as premium feature
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+EOF
+)"
+git tag -a v2.0-muva-rebrand -m "Complete rebranding to MUVA Chat"
+git push origin dev
+git push origin --tags
+```
+
+### Workflow
+
+**Execute FASE 3.1-3.4:**
+1. Read workflow prompts: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 3.1-3.4)
+2. SSH to VPS
+3. Rename PM2 process
+4. Update Nginx config
+5. Verify deployment
+6. Update deployment scripts
+7. Mark TODO.md tasks 3.1-3.4 complete
+
+**Execute FASE 5.3:**
+1. Read workflow prompt: `innpilot-to-muva-rebrand-prompt-workflow.md` (Prompt 5.3)
+2. Review all changes with `git status`
+3. Create commit with proper message
+4. Create tag v2.0-muva-rebrand
+5. Push to origin
+6. Mark TODO.md task 5.3 complete
+
+### Coordination
+
+- **@agent-backend-developer**: Handles README, package.json, CLAUDE.md, docs, code comments
+- **@agent-ux-interface**: Handles metadata, UI strings
+- **@agent-deploy-agent**: Handles PM2, Nginx, deployment scripts, git workflow (this agent)
 
 ---
 

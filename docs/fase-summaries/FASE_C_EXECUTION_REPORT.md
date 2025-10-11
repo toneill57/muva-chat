@@ -52,7 +52,7 @@ Successfully executed FASE C (Opción A) implementing a dual-table accommodation
 
 ### Documentation
 
-1. `/Users/oneill/Sites/apps/InnPilot/docs/backend/GUEST_CHAT_ENHANCEMENT_VALIDATION.md`
+1. `/Users/oneill/Sites/apps/MUVA/docs/backend/GUEST_CHAT_ENHANCEMENT_VALIDATION.md`
    - Comprehensive validation report
    - Schema diagrams
    - Performance metrics
@@ -60,14 +60,14 @@ Successfully executed FASE C (Opción A) implementing a dual-table accommodation
 
 ### Scripts
 
-1. `/Users/oneill/Sites/apps/InnPilot/scripts/rollback_accommodation_split.sql`
+1. `/Users/oneill/Sites/apps/MUVA/scripts/rollback_accommodation_split.sql`
    - Emergency rollback procedure
    - Drops Phase 2 artifacts
    - Preserves Phase 1 consolidation
 
 ### Backups
 
-1. `/Users/oneill/Sites/apps/InnPilot/backups/accommodation_units_backup_20251001_094434.sql`
+1. `/Users/oneill/Sites/apps/MUVA/backups/accommodation_units_backup_20251001_094434.sql`
    - Pre-migration backup (created before FASE C)
    - Contains 10 units from consolidated state
 
@@ -222,11 +222,11 @@ If issues arise:
 ```bash
 # Method 1: Rollback Phase 2 only (keeps Phase 1)
 psql -h <host> -U <user> -d <database> \
-  -f /Users/oneill/Sites/apps/InnPilot/scripts/rollback_accommodation_split.sql
+  -f /Users/oneill/Sites/apps/MUVA/scripts/rollback_accommodation_split.sql
 
 # Method 2: Full rollback to pre-FASE C
 psql -h <host> -U <user> -d <database> \
-  -f /Users/oneill/Sites/apps/InnPilot/backups/accommodation_units_backup_20251001_094434.sql
+  -f /Users/oneill/Sites/apps/MUVA/backups/accommodation_units_backup_20251001_094434.sql
 ```
 
 **Note**: Method 1 is recommended (preserves Phase 1 consolidation)

@@ -40,7 +40,7 @@ npm run build
 pm2 restart innpilot
 
 # Verify
-curl https://innpilot.io/api/health
+curl https://muva.chat/api/health
 pm2 logs innpilot --lines 50
 
 # Rollback
@@ -70,9 +70,9 @@ npm run build && pm2 restart innpilot
 | hotel-boutique | Hotel Boutique Casa Colonial | basic | ✅ Active |
 
 **Test URLs:**
-- https://simmerdown.innpilot.io/chat
-- https://xyz.innpilot.io/chat
-- https://hotel-boutique.innpilot.io/chat
+- https://simmerdown.muva.chat/chat
+- https://xyz.muva.chat/chat
+- https://hotel-boutique.muva.chat/chat
 
 ---
 
@@ -170,16 +170,16 @@ To https://github.com/toneill57/innpilot.git
 **Verification Commands:**
 ```bash
 # DNS resolution
-dig simmerdown.innpilot.io
-dig xyz.innpilot.io
-dig hotel-boutique.innpilot.io
+dig simmerdown.muva.chat
+dig xyz.muva.chat
+dig hotel-boutique.muva.chat
 
 # Expected: All resolve to same VPS IP
 
 # HTTP access
-curl -I https://simmerdown.innpilot.io/chat
-curl -I https://xyz.innpilot.io/chat
-curl -I https://hotel-boutique.innpilot.io/chat
+curl -I https://simmerdown.muva.chat/chat
+curl -I https://xyz.muva.chat/chat
+curl -I https://hotel-boutique.muva.chat/chat
 
 # Expected: HTTP 200 OK on all endpoints
 ```
@@ -198,12 +198,12 @@ curl -I https://hotel-boutique.innpilot.io/chat
 **Test Scenarios:**
 
 1. **Subdomain Access Test**
-   - Access `simmerdown.innpilot.io/chat`
+   - Access `simmerdown.muva.chat/chat`
    - Verify header shows "Simmer Down Guest House"
    - Verify chat interface loads
 
 2. **Different Tenant Branding Test**
-   - Access `xyz.innpilot.io/chat`
+   - Access `xyz.muva.chat/chat`
    - Verify header shows "XYZ Hotel" (distinct branding)
 
 3. **Document Upload & Knowledge Base Test**
@@ -213,7 +213,7 @@ curl -I https://hotel-boutique.innpilot.io/chat
    - Verify response uses simmerdown docs
 
 4. **Cross-Tenant Isolation Test**
-   - Query `xyz.innpilot.io/chat`: "What are your services?"
+   - Query `xyz.muva.chat/chat`: "What are your services?"
    - Verify response does NOT include simmerdown data
    - Confirm zero data leaks
 
@@ -240,10 +240,10 @@ curl -I https://hotel-boutique.innpilot.io/chat
 **Test Commands:**
 ```bash
 # Page load performance
-curl -w "Total: %{time_total}s\n" -I https://simmerdown.innpilot.io/chat
+curl -w "Total: %{time_total}s\n" -I https://simmerdown.muva.chat/chat
 
 # Chat API response time
-curl -w "%{time_total}" -X POST https://simmerdown.innpilot.io/api/tenant-chat \
+curl -w "%{time_total}" -X POST https://simmerdown.muva.chat/api/tenant-chat \
   -H "Content-Type: application/json" \
   -d '{"message":"test","history":[]}'
 
@@ -282,7 +282,7 @@ bash scripts/verify-deployment.sh
 3. **API Filtering Verification**
    ```bash
    # Test tenant-chat API filtering
-   curl -X POST https://simmerdown.innpilot.io/api/tenant-chat \
+   curl -X POST https://simmerdown.muva.chat/api/tenant-chat \
      -H "Content-Type: application/json" \
      -d '{"message":"What documents do you have?","history":[]}'
 
@@ -450,7 +450,7 @@ pm2 logs innpilot --lines 50
 **Health Checks:**
 ```bash
 # Every 5 minutes
-curl https://innpilot.io/api/health
+curl https://muva.chat/api/health
 
 # Monitor PM2
 pm2 monit innpilot

@@ -1,10 +1,10 @@
 # Subdomain Setup Guide - Guest Portal Multi-Conversation
 
-Complete guide for configuring wildcard subdomain routing for InnPilot Guest Portal Multi-Conversation architecture.
+Complete guide for configuring wildcard subdomain routing for MUVA Guest Portal Multi-Conversation architecture.
 
 **Last Updated**: Oct 5, 2025
 **Status**: Production-ready
-**DNS**: `*.innpilot.io` → VPS 195.200.6.216
+**DNS**: `*.muva.chat` → VPS 195.200.6.216
 
 ---
 
@@ -25,15 +25,15 @@ Complete guide for configuring wildcard subdomain routing for InnPilot Guest Por
 
 ### What is Subdomain Architecture?
 
-InnPilot uses wildcard subdomain routing to enable multi-tenant guest portal access:
+MUVA uses wildcard subdomain routing to enable multi-tenant guest portal access:
 
-- **Main site**: `innpilot.io` - Marketing & staff login
-- **Tenant subdomains**: `simmerdown.innpilot.io`, `cabanabeach.innpilot.io`, etc. - Guest portals
+- **Main site**: `muva.chat` - Marketing & staff login
+- **Tenant subdomains**: `simmerdown.muva.chat`, `cabanabeach.muva.chat`, etc. - Guest portals
 
 ### Flow
 
 ```
-Guest → simmerdown.innpilot.io
+Guest → simmerdown.muva.chat
   ↓
 DNS (Cloudflare) → 195.200.6.216
   ↓
@@ -52,7 +52,7 @@ Guest Chat loads tenant-specific context
 
 ### Benefits
 
-- **No URL parameters**: Clean URLs (`simmerdown.innpilot.io` vs `innpilot.io?tenant=simmerdown`)
+- **No URL parameters**: Clean URLs (`simmerdown.muva.chat` vs `muva.chat?tenant=simmerdown`)
 - **Tenant isolation**: Each tenant feels like separate site
 - **SEO-friendly**: Subdomains can be indexed independently
 - **Security**: Middleware validates tenant exists before processing
@@ -62,7 +62,7 @@ Guest Chat loads tenant-specific context
 ## Prerequisites
 
 - VPS: Ubuntu 20.04+ with root access
-- Domain: `innpilot.io` registered and managed
+- Domain: `muva.chat` registered and managed
 - DNS Provider: Cloudflare (or equivalent with wildcard support)
 - Software: Nginx, Certbot, PM2, Node.js 18+
 
@@ -72,7 +72,7 @@ Guest Chat loads tenant-specific context
 
 ### Step 1: Configure Cloudflare DNS
 
-Login to Cloudflare → Select `innpilot.io` domain → DNS Records
+Login to Cloudflare → Select `muva.chat` domain → DNS Records
 
 **Add Wildcard A Record:**
 
@@ -90,14 +90,14 @@ Login to Cloudflare → Select `innpilot.io` domain → DNS Records
 
 ```bash
 # Test wildcard DNS resolution
-dig simmerdown.innpilot.io +short
+dig simmerdown.muva.chat +short
 # Expected output: 195.200.6.216 (or Cloudflare proxy IP)
 
-dig cabanabeach.innpilot.io +short
+dig cabanabeach.muva.chat +short
 # Expected output: 195.200.6.216 (or Cloudflare proxy IP)
 
 # Test root domain
-dig innpilot.io +short
+dig muva.chat +short
 # Expected output: 195.200.6.216 (or Cloudflare proxy IP)
 ```
 
@@ -122,7 +122,7 @@ Navigate to: **SSL/TLS** → **Edge Certificates**
 ### Step 1: SSH to VPS
 
 ```bash
-ssh root@innpilot.io
+ssh root@muva.chat
 ```
 
 ### Step 2: Install Certbot (if not installed)
@@ -141,8 +141,8 @@ apt install -y certbot python3-certbot-nginx
 # Request wildcard certificate
 certbot certonly --manual \
   --preferred-challenges dns \
-  -d innpilot.io \
-  -d *.innpilot.io \
+  -d muva.chat \
+  -d *.muva.chat \
   --email your-email@example.com \
   --agree-tos
 ```
@@ -151,7 +151,7 @@ certbot certonly --manual \
 
 ```
 Please deploy a DNS TXT record under the name
-_acme-challenge.innpilot.io with the following value:
+_acme-challenge.muva.chat with the following value:
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -170,7 +170,7 @@ In Cloudflare DNS:
 
 ```bash
 # On local machine (wait 1-2 minutes for propagation)
-dig _acme-challenge.innpilot.io TXT +short
+dig _acme-challenge.muva.chat TXT +short
 
 # Expected: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 ```
@@ -184,10 +184,10 @@ Press Enter in Certbot to continue verification.
 ls -la /etc/letsencrypt/live/
 
 # Expected output:
-# innpilot.io-0001/  (or similar with -0001 suffix)
+# muva.chat-0001/  (or similar with -0001 suffix)
 
 # List certificate contents
-ls -la /etc/letsencrypt/live/innpilot.io-0001/
+ls -la /etc/letsencrypt/live/muva.chat-0001/
 
 # Expected files:
 # cert.pem       - Server certificate only
@@ -228,7 +228,7 @@ certbot renew --force-renewal
 
 ```bash
 # Copy nginx-subdomain.conf to VPS
-scp docs/deployment/nginx-subdomain.conf root@innpilot.io:/etc/nginx/sites-available/
+scp docs/deployment/nginx-subdomain.conf root@muva.chat:/etc/nginx/sites-available/
 ```
 
 ### Step 2: Create Symlink (Enable Site)
@@ -287,7 +287,7 @@ sudo systemctl status nginx
 tail -f /var/log/nginx/innpilot-subdomain-error.log
 
 # In another terminal, test request
-curl -I https://simmerdown.innpilot.io
+curl -I https://simmerdown.muva.chat
 
 # Check access logs
 tail -n 20 /var/log/nginx/innpilot-subdomain-access.log
@@ -301,7 +301,7 @@ tail -n 20 /var/log/nginx/innpilot-subdomain-access.log
 
 ```bash
 # Test root domain
-curl -I https://innpilot.io
+curl -I https://muva.chat
 
 # Expected HTTP status: 200 OK (or 502 if Next.js not running)
 ```
@@ -310,7 +310,7 @@ curl -I https://innpilot.io
 
 ```bash
 # Test subdomain
-curl -I https://simmerdown.innpilot.io
+curl -I https://simmerdown.muva.chat
 
 # Expected HTTP status: 200 OK (or 502 if Next.js not running)
 ```
@@ -319,11 +319,11 @@ curl -I https://simmerdown.innpilot.io
 
 ```bash
 # Test HTTP redirect
-curl -I http://simmerdown.innpilot.io
+curl -I http://simmerdown.muva.chat
 
 # Expected output:
 # HTTP/1.1 301 Moved Permanently
-# Location: https://simmerdown.innpilot.io/
+# Location: https://simmerdown.muva.chat/
 ```
 
 ### Test 4: Custom Header Injection (Requires Next.js Running)
@@ -345,7 +345,7 @@ pm2 status
 
 ```bash
 # Test custom header injection
-curl -v https://simmerdown.innpilot.io 2>&1 | grep X-Tenant-Subdomain
+curl -v https://simmerdown.muva.chat 2>&1 | grep X-Tenant-Subdomain
 
 # Expected output:
 # < X-Tenant-Subdomain: simmerdown
@@ -354,7 +354,7 @@ curl -v https://simmerdown.innpilot.io 2>&1 | grep X-Tenant-Subdomain
 **Test root domain (no subdomain):**
 
 ```bash
-curl -v https://innpilot.io 2>&1 | grep X-Tenant-Subdomain
+curl -v https://muva.chat 2>&1 | grep X-Tenant-Subdomain
 
 # Expected output:
 # < X-Tenant-Subdomain: (empty value)
@@ -364,19 +364,19 @@ curl -v https://innpilot.io 2>&1 | grep X-Tenant-Subdomain
 
 ```bash
 # Check SSL certificate details
-openssl s_client -connect simmerdown.innpilot.io:443 -servername simmerdown.innpilot.io < /dev/null 2>&1 | grep -A 5 "subject="
+openssl s_client -connect simmerdown.muva.chat:443 -servername simmerdown.muva.chat < /dev/null 2>&1 | grep -A 5 "subject="
 
 # Expected:
-# subject=CN = innpilot.io
+# subject=CN = muva.chat
 ```
 
 **Browser test:**
 
-1. Visit `https://simmerdown.innpilot.io` in browser
+1. Visit `https://simmerdown.muva.chat` in browser
 2. Click padlock icon in address bar
 3. Verify:
    - Certificate issued by: Let's Encrypt
-   - Valid for: `innpilot.io` and `*.innpilot.io`
+   - Valid for: `muva.chat` and `*.muva.chat`
    - Expiration date: ~90 days from issuance
 
 ### Test 6: Next.js Middleware Detection
@@ -403,22 +403,22 @@ export async function GET(request: NextRequest) {
 
 ```bash
 # Test subdomain detection
-curl https://simmerdown.innpilot.io/api/test-subdomain
+curl https://simmerdown.muva.chat/api/test-subdomain
 
 # Expected output:
 # {
 #   "subdomain": "simmerdown",
-#   "host": "simmerdown.innpilot.io",
+#   "host": "simmerdown.muva.chat",
 #   "nginx_header_present": true
 # }
 
 # Test root domain
-curl https://innpilot.io/api/test-subdomain
+curl https://muva.chat/api/test-subdomain
 
 # Expected output:
 # {
 #   "subdomain": "",
-#   "host": "innpilot.io",
+#   "host": "muva.chat",
 #   "nginx_header_present": true
 # }
 ```
@@ -446,7 +446,7 @@ apt install nginx-full
 
 ### Issue 2: Certificate Not Found
 
-**Error**: `nginx: [emerg] cannot load certificate "/etc/letsencrypt/live/innpilot.io-0001/fullchain.pem"`
+**Error**: `nginx: [emerg] cannot load certificate "/etc/letsencrypt/live/muva.chat-0001/fullchain.pem"`
 
 **Cause**: Certificate path incorrect or permissions issue.
 
@@ -457,9 +457,9 @@ apt install nginx-full
 ls -la /etc/letsencrypt/live/
 
 # Update nginx-subdomain.conf with correct path
-# Example: If path is innpilot.io-0002, change config:
-ssl_certificate /etc/letsencrypt/live/innpilot.io-0002/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/innpilot.io-0002/privkey.pem;
+# Example: If path is muva.chat-0002, change config:
+ssl_certificate /etc/letsencrypt/live/muva.chat-0002/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/muva.chat-0002/privkey.pem;
 
 # Reload Nginx
 sudo systemctl reload nginx
@@ -501,7 +501,7 @@ sudo nginx -t
 tail -f /var/log/nginx/innpilot-subdomain-error.log
 
 # Verify regex captures subdomain
-curl -v https://simmerdown.innpilot.io 2>&1 | grep -i subdomain
+curl -v https://simmerdown.muva.chat 2>&1 | grep -i subdomain
 
 # If still empty, check Nginx version (requires 1.7+)
 nginx -v
@@ -517,8 +517,8 @@ nginx -v
 
 ```bash
 # Check DNS from multiple locations
-dig simmerdown.innpilot.io @8.8.8.8 +short
-dig simmerdown.innpilot.io @1.1.1.1 +short
+dig simmerdown.muva.chat @8.8.8.8 +short
+dig simmerdown.muva.chat @1.1.1.1 +short
 
 # If empty, verify Cloudflare wildcard record exists:
 # Type: A, Name: *, Content: 195.200.6.216
@@ -541,7 +541,7 @@ dig simmerdown.innpilot.io @1.1.1.1 +short
 # SSL/TLS → Overview → Encryption mode: Full (strict)
 
 # Verify Let's Encrypt certificate is valid
-openssl s_client -connect innpilot.io:443 -servername innpilot.io < /dev/null 2>&1 | grep "Verify return code"
+openssl s_client -connect muva.chat:443 -servername muva.chat < /dev/null 2>&1 | grep "Verify return code"
 
 # Expected: Verify return code: 0 (ok)
 ```
@@ -575,13 +575,13 @@ certbot certificates
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Guest Browser                                               │
-│  https://simmerdown.innpilot.io                             │
+│  https://simmerdown.muva.chat                             │
 └────────────────────┬────────────────────────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  Cloudflare DNS (Proxy Enabled)                             │
-│  *.innpilot.io → 195.200.6.216                             │
+│  *.muva.chat → 195.200.6.216                             │
 │  SSL/TLS: Full (strict)                                     │
 └────────────────────┬────────────────────────────────────────┘
                      │
@@ -661,12 +661,12 @@ location /api/guest/ {
 
 For issues or questions:
 
-- GitHub Issues: [InnPilot Repository](https://github.com/yourusername/innpilot)
+- GitHub Issues: [MUVA Repository](https://github.com/yourusername/innpilot)
 - Documentation: `docs/deployment/`
 - Workflow: `guest-portal-compliance-workflow.md`
 
 ---
 
 **Last Updated**: Oct 5, 2025
-**Author**: InnPilot Development Team
+**Author**: MUVA Development Team
 **Version**: 1.0.0

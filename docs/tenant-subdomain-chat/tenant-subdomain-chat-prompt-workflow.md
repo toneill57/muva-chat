@@ -13,7 +13,7 @@
 ```
 CONTEXTO DEL PROYECTO: Multi-Tenant Subdomain Chat
 
-Estoy trabajando en implementar un sistema de chat multi-tenant donde cada cliente de InnPilot (hoteles, surf schools, agencias de turismo) tiene su propio chat público con knowledge base aislada.
+Estoy trabajando en implementar un sistema de chat multi-tenant donde cada cliente de MUVA (hoteles, surf schools, agencias de turismo) tiene su propio chat público con knowledge base aislada.
 
 ARCHIVOS CLAVE:
 - docs/tenant-subdomain-chat/plan.md → Plan completo del proyecto (788 líneas)
@@ -21,14 +21,14 @@ ARCHIVOS CLAVE:
 - docs/tenant-subdomain-chat/tenant-subdomain-chat-prompt-workflow.md → Este archivo
 
 OBJETIVO:
-Chat público en `{tenant}.innpilot.io/chat` donde cada tenant solo ve su documentación, con branding lite (logo + nombre), acceso sin login, y admin UI para gestionar knowledge base.
+Chat público en `{tenant}.muva.chat/chat` donde cada tenant solo ve su documentación, con branding lite (logo + nombre), acceso sin login, y admin UI para gestionar knowledge base.
 
 STACK TÉCNICO:
 - Next.js 14 (App Router)
 - Supabase PostgreSQL 17.4 + pgvector 0.8.0
 - OpenAI embeddings (text-embedding-3-small, 1536 dims)
 - OpenAI gpt-4o-mini (chat completion)
-- Wildcard DNS: *.innpilot.io
+- Wildcard DNS: *.muva.chat
 - VPS deployment via PM2 + Git
 
 ESTADO ACTUAL (October 10, 2025 - 5:30 AM):
@@ -177,7 +177,7 @@ export default async function BrandingPage() {
       <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded">
         <p className="text-sm">
           <strong>Live Preview:</strong> Changes will be reflected immediately in the chat interface
-          at <code className="bg-blue-100 px-2 py-1 rounded">{subdomain}.innpilot.io/chat</code>
+          at <code className="bg-blue-100 px-2 py-1 rounded">{subdomain}.muva.chat/chat</code>
         </p>
       </div>
 
@@ -232,7 +232,7 @@ TEST:
 2. Edit logo URL → See preview update in TenantBranding component
 3. Edit business name → See preview update
 4. Save changes → Verify persisted in DB
-5. Visit `{tenant}.innpilot.io/chat` → See updated branding
+5. Visit `{tenant}.muva.chat/chat` → See updated branding
 6. Invalid tenant subdomain → See error message
 
 SIGUIENTE: Prompt 4D.4 para Content Editor Page
@@ -691,7 +691,7 @@ export default async function ContentPage() {
         <p className="text-gray-600">
           Edit the content that appears on your public landing page at{' '}
           <code className="bg-gray-100 px-2 py-1 rounded text-sm">
-            {subdomain}.innpilot.io
+            {subdomain}.muva.chat
           </code>
         </p>
       </div>
@@ -1609,7 +1609,7 @@ export function TenantBranding({ tenant }: { tenant: Tenant }) {
                 )}
                 <div>
                   <p className="font-semibold">{businessName}</p>
-                  <p className="text-xs text-gray-500">Powered by InnPilot</p>
+                  <p className="text-xs text-gray-500">Powered by MUVA</p>
                 </div>
               </div>
 
@@ -1677,7 +1677,7 @@ TAREA: Implementar NUEVA ruta pública de chat con tenant branding
 CONTEXTO:
 - Proyecto: Multi-Tenant Subdomain Chat (ver plan.md líneas 388-405)
 - Ruta: `src/app/(public-tenant)/chat/page.tsx` (NUEVA, usar Route Group)
-- Objetivo: Chat público accesible en `{tenant}.innpilot.io/chat`
+- Objetivo: Chat público accesible en `{tenant}.muva.chat/chat`
 - ⚠️ NO modificar `/chat-mobile-dev` existente (solo para testing)
 
 PREREQUISITOS:
@@ -1884,7 +1884,7 @@ TAREA: Implementar header con tenant logo y nombre
 CONTEXTO:
 - Proyecto: Multi-Tenant Subdomain Chat (ver plan.md líneas 408-421)
 - Component: Header sticky en top del chat
-- Display: Logo + nombre del negocio + "Powered by InnPilot"
+- Display: Logo + nombre del negocio + "Powered by MUVA"
 
 ARCHIVOS:
 - Crear: `src/components/chat/TenantChatHeader.tsx`
@@ -1913,7 +1913,7 @@ export function TenantChatHeader({ tenant }: TenantChatHeaderProps) {
           <div className="w-10 h-10 rounded-full bg-gray-300" />
           <div>
             <h1 className="font-semibold text-lg">Chat</h1>
-            <p className="text-sm text-gray-500">Powered by InnPilot</p>
+            <p className="text-sm text-gray-500">Powered by MUVA</p>
           </div>
         </div>
       </header>
@@ -1955,7 +1955,7 @@ export function TenantChatHeader({ tenant }: TenantChatHeaderProps) {
 
         <div className="flex-1">
           <h1 className="font-semibold text-lg leading-tight">{displayName}</h1>
-          <p className="text-sm text-gray-500">Powered by InnPilot</p>
+          <p className="text-sm text-gray-500">Powered by MUVA</p>
         </div>
       </div>
     </header>
@@ -2106,7 +2106,7 @@ SIGUIENTE: Prompt 5.4 para tenant branding utilities
 **6.2:** Seed script for test tenants → `scripts/seed-test-tenants.ts` (simmerdown, xyz, hotel-boutique)
 **6.3:** Commit changes → Conventional commits format
 **6.4:** Deploy to VPS → PM2 restart, build verification
-**6.5:** Verify wildcard DNS → `dig simmerdown.innpilot.io`, `nslookup xyz.innpilot.io`
+**6.5:** Verify wildcard DNS → `dig simmerdown.muva.chat`, `nslookup xyz.muva.chat`
 **6.6:** E2E multi-tenant tests → 3 tenants, upload docs, chat queries, verify isolation
 **6.7:** Performance testing → Chat response < 2s, upload processing < 30s
 **6.8:** Security audit → RLS policies, auth guards, tenant isolation

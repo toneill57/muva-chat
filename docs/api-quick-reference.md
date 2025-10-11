@@ -1,4 +1,4 @@
-# InnPilot API Quick Reference
+# MUVA API Quick Reference
 **Generated:** 2025-10-06 | **Total:** 44 Endpoints
 
 ---

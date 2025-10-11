@@ -7,13 +7,13 @@
  * - Capa 1 (conversational_data): Datos extraídos del chat en formato natural
  * - Capa 2 (sire_data): 13 campos oficiales SIRE formateados según especificaciones
  *
- * Catálogo de referencia: docs/sire/CODIGOS_OFICIALES.md
+ * Catálogo de referencia: docs/features/sire-compliance/CODIGOS_OFICIALES.md
  * Documento oficial: _assets/sire/pasos-para-reportar-al-sire.md
  */
 
 /**
  * Tipos de documento SIRE oficiales
- * Fuente: docs/sire/CODIGOS_OFICIALES.md sección "Tipos de Documento Válidos"
+ * Fuente: docs/features/sire-compliance/CODIGOS_OFICIALES.md sección "Tipos de Documento Válidos"
  */
 export type TipoDocumentoSIRE = '3' | '5' | '46' | '10'
 
@@ -35,7 +35,7 @@ export interface ConversationalData {
 
 /**
  * Interfaz Capa 2: 13 campos oficiales SIRE
- * Fuente: docs/sire/CODIGOS_OFICIALES.md sección "13 Campos Obligatorios SIRE"
+ * Fuente: docs/features/sire-compliance/CODIGOS_OFICIALES.md sección "13 Campos Obligatorios SIRE"
  */
 export interface SIREData {
   codigo_hotel: string              // Ej: "7706" (de tenant_compliance_credentials)
@@ -147,7 +147,7 @@ export function splitFullName(nombre_completo: string): {
  * Son códigos propietarios del sistema SIRE de Migración Colombia.
  *
  * Fuente oficial: _assets/sire/codigos-pais.json (250 países)
- * Documentación: docs/sire/CODIGOS_OFICIALES.md sección "Códigos de Nacionalidad"
+ * Documentación: docs/features/sire-compliance/CODIGOS_OFICIALES.md sección "Códigos de Nacionalidad"
  *
  * @param pais_texto - Ej: "Estados Unidos", "Colombia", "España"
  * @returns codigo_nacionalidad - Ej: "249" (no 840), "169" (no 170), "245" (no 724)
@@ -224,7 +224,7 @@ export function mapCountryToCode(pais_texto: string): string {
     throw new Error(
       `País no encontrado en catálogo SIRE: "${pais_texto}". ` +
       `Verificar _assets/sire/codigos-pais.json (250 países disponibles) ` +
-      `o docs/sire/CODIGOS_OFICIALES.md para catálogo completo.`
+      `o docs/features/sire-compliance/CODIGOS_OFICIALES.md para catálogo completo.`
     )
   }
 

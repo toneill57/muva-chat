@@ -198,7 +198,7 @@ Before proceeding with either phase, need confirmation:
 
 Migration HALTED at Step 1 (Backup completed successfully).
 
-**Backup Location**: `/Users/oneill/Sites/apps/InnPilot/backups/accommodation_units_backup_20251001_094434.sql`
+**Backup Location**: `/Users/oneill/Sites/apps/MUVA/backups/accommodation_units_backup_20251001_094434.sql`
 
 **Next Action**: Awaiting confirmation on decision before proceeding.
 

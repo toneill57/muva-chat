@@ -216,18 +216,18 @@ interface LandingPageContent {
 ## Files Created
 
 1. **Migration:**
-   - `/Users/oneill/Sites/apps/InnPilot/supabase/migrations/20251010132641_add_landing_page_content.sql`
+   - `/Users/oneill/Sites/apps/MUVA/supabase/migrations/20251010132641_add_landing_page_content.sql`
 
 2. **API Endpoint:**
-   - `/Users/oneill/Sites/apps/InnPilot/src/app/api/admin/content/route.ts`
+   - `/Users/oneill/Sites/apps/MUVA/src/app/api/admin/content/route.ts`
 
 3. **Testing Scripts:**
-   - `/Users/oneill/Sites/apps/InnPilot/scripts/test-content-api.ts`
-   - `/Users/oneill/Sites/apps/InnPilot/scripts/verify-landing-page-content.ts`
+   - `/Users/oneill/Sites/apps/MUVA/scripts/test-content-api.ts`
+   - `/Users/oneill/Sites/apps/MUVA/scripts/verify-landing-page-content.ts`
 
 4. **Documentation:**
-   - `/Users/oneill/Sites/apps/InnPilot/docs/tenant-subdomain-chat/TASK_4D4_TEST_REPORT.md`
-   - `/Users/oneill/Sites/apps/InnPilot/docs/tenant-subdomain-chat/TASK_4D4_IMPLEMENTATION_SUMMARY.md` (this file)
+   - `/Users/oneill/Sites/apps/MUVA/docs/tenant-subdomain-chat/TASK_4D4_TEST_REPORT.md`
+   - `/Users/oneill/Sites/apps/MUVA/docs/tenant-subdomain-chat/TASK_4D4_IMPLEMENTATION_SUMMARY.md` (this file)
 
 ---
 

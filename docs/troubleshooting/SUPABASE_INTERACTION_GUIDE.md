@@ -8,7 +8,7 @@
 
 ## 🎯 Executive Summary
 
-This guide documents the **correct and efficient methodology** for interacting with Supabase in the InnPilot project, based on lessons learned during SIRE Compliance Phase 12 testing (Oct 9, 2025).
+This guide documents the **correct and efficient methodology** for interacting with Supabase in the MUVA project, based on lessons learned during SIRE Compliance Phase 12 testing (Oct 9, 2025).
 
 **Key Learnings:**
 1. ✅ **NEVER invent project IDs** - Always use `SUPABASE_PROJECT_ID` from `.env.local`

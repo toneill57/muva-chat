@@ -15,7 +15,7 @@
 1. **scripts/validate-sire-compliance-data.sql** - Manual validation queries (SQL)
 2. **scripts/run-validation-queries.ts** - Automated validation script (TypeScript)
 3. **scripts/rollback-sire-fields-migration.sql** - Emergency rollback procedure
-4. **docs/sire/VALIDATION_REPORT_SIRE_MIGRATION.md** - Full validation report
+4. **docs/features/sire-compliance/VALIDATION_REPORT_SIRE_MIGRATION.md** - Full validation report
 
 ---
 
@@ -94,9 +94,9 @@ No action required. Migration is complete and validated.
 
 ## References
 
-- **Full Report:** `docs/sire/VALIDATION_REPORT_SIRE_MIGRATION.md`
+- **Full Report:** `docs/features/sire-compliance/VALIDATION_REPORT_SIRE_MIGRATION.md`
 - **Migration Files:** `supabase/migrations/2025100*_*sire*.sql`
-- **SIRE Documentation:** `docs/sire/CODIGOS_OFICIALES.md`
+- **SIRE Documentation:** `docs/features/sire-compliance/CODIGOS_OFICIALES.md`
 
 ---
 

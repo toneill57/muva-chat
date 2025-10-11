@@ -262,11 +262,11 @@ const { completedFields, progressPercentage } = await fetchSIREProgress(reservat
 | `supabase/migrations/20251009000002_add_sire_codes_to_countries.sql` | ✅ | ✅ (6,330 bytes) | ✅ OK |
 | `supabase/migrations/20251009000003_rename_location_fields_to_city.sql` | ✅ | ✅ (1,357 bytes) | ❌ NO APLICADA |
 | `scripts/populate-sire-codes.ts` | ✅ | ✅ (8,547 bytes) | ✅ OK |
-| `docs/sire/DATABASE_SCHEMA_CLARIFICATION.md` | ✅ | ✅ (308 líneas) | ✅ OK |
+| `docs/features/sire-compliance/DATABASE_SCHEMA_CLARIFICATION.md` | ✅ | ✅ (308 líneas) | ✅ OK |
 | **SIRE Catalogs (FASE 11.8)** | | | |
 | `src/lib/sire/sire-catalogs.ts` | ✅ | ✅ (214 líneas) | ✅ OK |
 | `scripts/test-sire-catalogs.ts` | ✅ | ✅ (125 líneas) | ✅ OK |
-| `docs/sire/CODIGOS_SIRE_VS_ISO.md` | ✅ | ✅ (248 líneas) | ✅ OK |
+| `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` | ✅ | ✅ (248 líneas) | ✅ OK |
 | **UI Compliance (FASE 11.2)** | | | |
 | `src/components/Compliance/ComplianceConfirmation.tsx` | ✅ | ✅ (352 líneas) | ✅ OK |
 | `src/lib/sire-formatters.ts` | ✅ | ✅ (185 líneas) | ✅ OK |

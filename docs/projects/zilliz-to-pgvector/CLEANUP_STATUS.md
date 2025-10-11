@@ -21,7 +21,7 @@
 
 ### ✅ MCP Configuration Status
 
-**Location**: `/Users/oneill/Sites/apps/InnPilot/.mcp.json`
+**Location**: `/Users/oneill/Sites/apps/MUVA/.mcp.json`
 
 **Current servers** (4/5):
 - ✅ `supabase` - Supabase Management API
@@ -124,7 +124,7 @@ Results:
 - Files found: 7
 - Chunks found: 9
 - Avg similarity: 61.4%
-- Top match: docs/sire/TEST_RESULTS_SUMMARY.md (63.3%)
+- Top match: docs/features/sire-compliance/TEST_RESULTS_SUMMARY.md (63.3%)
 ```
 
 **Performance verdict**: ⚠️ Slightly over <2s target (2.36s actual)

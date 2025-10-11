@@ -1,4 +1,4 @@
-# MCP Token Benchmarks - InnPilot Project
+# MCP Token Benchmarks - MUVA Project
 
 **Date:** October 9, 2025
 **Project:** MCP Optimization (FASE 6)
@@ -39,7 +39,7 @@
 - **Results:** 3 highly relevant code snippets (Rank 1-3)
   1. `src/lib/compliance-chat-engine.ts:328-412` (mapToSIRE function)
   2. `src/lib/compliance-chat-engine.ts:339-405` (SIRE data structure)
-  3. `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md:450-547` (specs)
+  3. `docs/features/sire-compliance/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md:450-547` (specs)
 - **Total Tokens:** ~2,163 tokens
 
 **Reduction:** **91.3%** (25,000 → 2,163 tokens) ✅

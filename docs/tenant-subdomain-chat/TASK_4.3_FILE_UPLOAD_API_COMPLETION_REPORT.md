@@ -170,8 +170,8 @@ data/temp/
 
 ### File Locations
 
-**API Route:** `/Users/oneill/Sites/apps/InnPilot/src/app/api/admin/upload-docs/route.ts`
-**Upload Directory:** `/Users/oneill/Sites/apps/InnPilot/data/temp/{tenant_id}/`
+**API Route:** `/Users/oneill/Sites/apps/MUVA/src/app/api/admin/upload-docs/route.ts`
+**Upload Directory:** `/Users/oneill/Sites/apps/MUVA/data/temp/{tenant_id}/`
 
 ---
 

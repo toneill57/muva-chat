@@ -6,7 +6,7 @@
 
 ## Overview
 
-This guide covers essential database maintenance operations for InnPilot's multi-tenant architecture, including schema management, vector embeddings, and performance optimization procedures.
+This guide covers essential database maintenance operations for MUVA's multi-tenant architecture, including schema management, vector embeddings, and performance optimization procedures.
 
 ## Architecture Summary
 

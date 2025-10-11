@@ -16,7 +16,7 @@ Esta guía explica cómo configurar los Secrets necesarios para el deployment au
 ### 1. VPS_HOST
 **Descripción:** IP o hostname del servidor VPS Hostinger
 
-**Valor:** `123.45.67.89` o `innpilot.io`
+**Valor:** `123.45.67.89` o `muva.chat`
 
 **Cómo obtenerlo:**
 - Panel de Hostinger → VPS → Información del servidor → IP Address
@@ -42,11 +42,11 @@ Esta guía explica cómo configurar los Secrets necesarios para el deployment au
 **Cómo generarlo:**
 ```bash
 # En tu máquina local
-ssh-keygen -t rsa -b 4096 -C "github-actions@innpilot.io"
+ssh-keygen -t rsa -b 4096 -C "github-actions@muva.chat"
 # Guardar en: ~/.ssh/innpilot_deploy
 
 # Copiar clave pública al servidor
-ssh-copy-id -i ~/.ssh/innpilot_deploy.pub user@innpilot.io
+ssh-copy-id -i ~/.ssh/innpilot_deploy.pub user@muva.chat
 
 # Obtener clave privada para GitHub Secret
 cat ~/.ssh/innpilot_deploy

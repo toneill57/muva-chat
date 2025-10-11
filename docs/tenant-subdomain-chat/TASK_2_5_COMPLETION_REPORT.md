@@ -64,7 +64,7 @@ Test 3: No subdomain (localhost)
 Test 4: WWW subdomain (should be treated as null)
 ✅ PASS - Expected: null, Got: null
 
-Test 5: Production subdomain (simmerdown.innpilot.io)
+Test 5: Production subdomain (simmerdown.muva.chat)
 ✅ PASS - Expected: simmerdown, Got: simmerdown
 
 Test 6: Invalid subdomain - uppercase (should be rejected)
@@ -73,7 +73,7 @@ Test 6: Invalid subdomain - uppercase (should be rejected)
 Test 7: Complex subdomain (my-hotel-123.localhost)
 ✅ PASS - Expected: my-hotel-123, Got: my-hotel-123
 
-Test 8: Main domain (innpilot.io)
+Test 8: Main domain (muva.chat)
 ✅ PASS - Expected: null, Got: null
 
 ===============================================
@@ -149,7 +149,7 @@ Route (app)                                Size  First Load JS
 |-------------|-------------|--------|
 | Middleware extracts subdomain from hostname | Integration test | ✅ PASS |
 | `x-tenant-subdomain` header injected | API endpoint test | ✅ PASS |
-| Works with `simmerdown.innpilot.io` | cURL test | ✅ PASS |
+| Works with `simmerdown.muva.chat` | cURL test | ✅ PASS |
 | Works with `subdomain.localhost` | cURL test | ✅ PASS |
 | Returns empty string for main domain | cURL test | ✅ PASS |
 | Existing auth middleware preserved | Manual verification | ✅ PASS |
@@ -163,11 +163,11 @@ Route (app)                                Size  First Load JS
 | Edge Case | Expected Behavior | Actual Behavior | Status |
 |-----------|-------------------|-----------------|--------|
 | No subdomain (localhost:3000) | Header = "" | Header = "" | ✅ |
-| WWW subdomain (www.innpilot.io) | Header = "", subdomain = null | Header = "", subdomain = null | ✅ |
+| WWW subdomain (www.muva.chat) | Header = "", subdomain = null | Header = "", subdomain = null | ✅ |
 | Invalid uppercase (INVALID.localhost) | Header = "", subdomain = null | Header = "", subdomain = null | ✅ |
 | Valid subdomain (simmerdown.localhost) | Header = "simmerdown" | Header = "simmerdown" | ✅ |
 | Complex subdomain (my-hotel-123.localhost) | Header = "my-hotel-123" | Header = "my-hotel-123" | ✅ |
-| Main domain (innpilot.io) | Header = "", subdomain = null | Header = "", subdomain = null | ✅ |
+| Main domain (muva.chat) | Header = "", subdomain = null | Header = "", subdomain = null | ✅ |
 
 ---
 
@@ -258,7 +258,7 @@ export default async function Page() {
 ### Production (VPS)
 - ⚠️ Requires Nginx to forward `Host` header correctly
 - ✅ Middleware will extract subdomain from `x-tenant-subdomain` header (Nginx) or `host` header (fallback)
-- ✅ Works with `subdomain.innpilot.io` pattern
+- ✅ Works with `subdomain.muva.chat` pattern
 
 ### Nginx Configuration (Required for Production)
 ```nginx

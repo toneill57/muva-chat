@@ -5,7 +5,7 @@
 
 ## Overview
 
-This guide documents the complete workflow for processing raw documents into searchable, contextual embeddings for the InnPilot multi-tenant system. This process was refined through real-world implementation with SimmerDown's house rules documentation.
+This guide documents the complete workflow for processing raw documents into searchable, contextual embeddings for the MUVA multi-tenant system. This process was refined through real-world implementation with SimmerDown's house rules documentation.
 
 ## Prerequisites
 

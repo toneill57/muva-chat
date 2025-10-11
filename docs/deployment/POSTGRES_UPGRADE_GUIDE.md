@@ -217,7 +217,7 @@ New version: PostgreSQL 17.x.x
 
 ```typescript
 // Run health check endpoint
-const response = await fetch('https://innpilot.io/api/health')
+const response = await fetch('https://muva.chat/api/health')
 const data = await response.json()
 
 console.log('Status:', data.status)
@@ -377,7 +377,7 @@ If restore fails:
 - [PostgreSQL Release Notes](https://www.postgresql.org/docs/release/)
 - [Supabase Platform Status](https://status.supabase.com/)
 
-**InnPilot Internal:**
+**MUVA Internal:**
 - [Database Architecture](/docs/backend/MULTI_TENANT_ARCHITECTURE.md)
 - [Health Check Endpoint](/src/app/api/health/route.ts)
 - [Deployment Workflow](/docs/deployment/DEPLOYMENT_WORKFLOW.md)

@@ -37,8 +37,8 @@ pm2 restart innpilot
 pm2 logs innpilot --lines 50
 
 # Health checks
-curl -I https://innpilot.io/api/health
-curl -I https://simmerdown.innpilot.io/chat
+curl -I https://muva.chat/api/health
+curl -I https://simmerdown.muva.chat/chat
 
 # Rollback
 git checkout <previous-commit>
@@ -73,9 +73,9 @@ pm2 restart innpilot
 3. **hotel-boutique** - Hotel Boutique Casa Colonial (basic tier) ✅
 
 **Test URLs Ready:**
-- https://simmerdown.innpilot.io/chat
-- https://xyz.innpilot.io/chat
-- https://hotel-boutique.innpilot.io/chat
+- https://simmerdown.muva.chat/chat
+- https://xyz.muva.chat/chat
+- https://hotel-boutique.muva.chat/chat
 
 ---
 
@@ -162,14 +162,14 @@ The project uses **GitHub Actions** for automated deployment. When code is pushe
 **Commands to Run:**
 ```bash
 # Test DNS resolution
-dig simmerdown.innpilot.io
-dig xyz.innpilot.io
-dig hotel-boutique.innpilot.io
+dig simmerdown.muva.chat
+dig xyz.muva.chat
+dig hotel-boutique.muva.chat
 
 # Test HTTP access
-curl -I https://simmerdown.innpilot.io/chat
-curl -I https://xyz.innpilot.io/chat
-curl -I https://hotel-boutique.innpilot.io/chat
+curl -I https://simmerdown.muva.chat/chat
+curl -I https://xyz.muva.chat/chat
+curl -I https://hotel-boutique.muva.chat/chat
 ```
 
 **Expected Results:**
@@ -188,23 +188,23 @@ curl -I https://hotel-boutique.innpilot.io/chat
 **Test Plan Created:**
 
 #### Test 1: Subdomain Access
-- [ ] Access `simmerdown.innpilot.io/chat`
+- [ ] Access `simmerdown.muva.chat/chat`
 - [ ] Verify header shows "Simmer Down Guest House" logo/name
 - [ ] Verify chat interface loads correctly
 
 #### Test 2: Different Tenant Branding
-- [ ] Access `xyz.innpilot.io/chat`
+- [ ] Access `xyz.muva.chat/chat`
 - [ ] Verify header shows "XYZ Hotel" (different from simmerdown)
 - [ ] Verify distinct branding
 
 #### Test 3: Document Upload & Isolation
-- [ ] Upload document in `simmerdown.innpilot.io/admin`
+- [ ] Upload document in `simmerdown.muva.chat/admin`
 - [ ] Verify document appears in simmerdown knowledge base
 - [ ] Query chat: "What are your services?"
 - [ ] Verify response uses ONLY simmerdown docs
 
 #### Test 4: Cross-Tenant Isolation
-- [ ] Query `xyz.innpilot.io/chat`: "What are your services?"
+- [ ] Query `xyz.muva.chat/chat`: "What are your services?"
 - [ ] Verify response does NOT include simmerdown information
 - [ ] Confirm tenant isolation is working
 
@@ -232,12 +232,12 @@ curl -I https://hotel-boutique.innpilot.io/chat
 **Test Commands:**
 ```bash
 # Chat API performance
-curl -w "@curl-format.txt" -X POST https://simmerdown.innpilot.io/api/tenant-chat \
+curl -w "@curl-format.txt" -X POST https://simmerdown.muva.chat/api/tenant-chat \
   -H "Content-Type: application/json" \
   -d '{"message":"test","history":[]}'
 
 # Page load performance
-curl -w "Total time: %{time_total}s\n" -I https://simmerdown.innpilot.io/chat
+curl -w "Total time: %{time_total}s\n" -I https://simmerdown.muva.chat/chat
 ```
 
 **Performance Targets:**
@@ -272,7 +272,7 @@ WHERE tablename = 'tenant_knowledge_embeddings';
 #### API Filtering
 ```bash
 # Test tenant-chat API filtering
-curl -X POST https://simmerdown.innpilot.io/api/tenant-chat \
+curl -X POST https://simmerdown.muva.chat/api/tenant-chat \
   -H "Content-Type: application/json" \
   -d '{"message":"What documents do you have?","history":[]}'
 
@@ -347,9 +347,9 @@ curl -X POST https://simmerdown.innpilot.io/api/tenant-chat \
 | hotel-boutique | Hotel Boutique Casa Colonial | hotel | basic | ✅ Active |
 
 **Test URLs:**
-- https://simmerdown.innpilot.io/chat
-- https://xyz.innpilot.io/chat
-- https://hotel-boutique.innpilot.io/chat
+- https://simmerdown.muva.chat/chat
+- https://xyz.muva.chat/chat
+- https://hotel-boutique.muva.chat/chat
 
 ---
 
@@ -381,16 +381,16 @@ curl -X POST https://simmerdown.innpilot.io/api/tenant-chat \
 
 2. **DNS Verification:**
    ```bash
-   dig simmerdown.innpilot.io
-   dig xyz.innpilot.io
-   dig hotel-boutique.innpilot.io
+   dig simmerdown.muva.chat
+   dig xyz.muva.chat
+   dig hotel-boutique.muva.chat
    ```
 
 3. **Health Checks:**
    ```bash
-   curl https://innpilot.io/api/health
-   curl https://simmerdown.innpilot.io/chat
-   curl https://xyz.innpilot.io/chat
+   curl https://muva.chat/api/health
+   curl https://simmerdown.muva.chat/chat
+   curl https://xyz.muva.chat/chat
    ```
 
 ### Testing Phase

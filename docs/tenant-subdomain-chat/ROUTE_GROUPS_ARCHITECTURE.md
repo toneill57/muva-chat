@@ -18,7 +18,7 @@ Implementar sistema público multi-tenant **sin modificar** el sistema interno e
 
 ```
 src/app/
-├── (internal)/                          ← Grupo 1: Sistema interno InnPilot
+├── (internal)/                          ← Grupo 1: Sistema interno MUVA
 │   ├── login/page.tsx                   ← Login interno (existente, NO TOCAR)
 │   ├── dashboard/page.tsx               ← Dashboard interno (existente, NO TOCAR)
 │   ├── chat-mobile-dev/page.tsx         ← Chat desarrollo (existente, NO TOCAR)
@@ -51,7 +51,7 @@ src/app/
 
 ### URLs SIN Subdomain (Sistema Interno)
 
-**Base URL:** `localhost:3000` o `innpilot.io`
+**Base URL:** `localhost:3000` o `muva.chat`
 
 ```
 localhost:3000/login               → (internal)/login/page.tsx
@@ -62,7 +62,7 @@ localhost:3000/dashboard/[tenant]  → (internal)/dashboard/[tenant]/page.tsx
 
 **Características:**
 - ✅ Sistema existente (proof of concept SimmerDown)
-- ✅ Gestión interna de InnPilot
+- ✅ Gestión interna de MUVA
 - ✅ Testing y desarrollo
 - ✅ **NO se modifica nada**
 
@@ -70,14 +70,14 @@ localhost:3000/dashboard/[tenant]  → (internal)/dashboard/[tenant]/page.tsx
 
 ### URLs CON Subdomain (Sistema Público Multi-Tenant)
 
-**Base URL:** `{tenant}.innpilot.io` (e.g., `simmerdown.innpilot.io`)
+**Base URL:** `{tenant}.muva.chat` (e.g., `simmerdown.muva.chat`)
 
 ```
-simmerdown.innpilot.io/            → (public-tenant)/page.tsx (landing)
-simmerdown.innpilot.io/chat        → (public-tenant)/chat/page.tsx
-simmerdown.innpilot.io/login       → (public-tenant)/login/page.tsx
-simmerdown.innpilot.io/admin       → (public-tenant)/admin/page.tsx
-simmerdown.innpilot.io/admin/knowledge → (public-tenant)/admin/knowledge/page.tsx
+simmerdown.muva.chat/            → (public-tenant)/page.tsx (landing)
+simmerdown.muva.chat/chat        → (public-tenant)/chat/page.tsx
+simmerdown.muva.chat/login       → (public-tenant)/login/page.tsx
+simmerdown.muva.chat/admin       → (public-tenant)/admin/page.tsx
+simmerdown.muva.chat/admin/knowledge → (public-tenant)/admin/knowledge/page.tsx
 ```
 
 **Características:**
@@ -261,13 +261,13 @@ export default async function AdminLayout({ children }) {
 
 | URL | Route Group | File Path | Purpose |
 |-----|-------------|-----------|---------|
-| `localhost:3000/login` | `(internal)` | `(internal)/login/page.tsx` | Login interno InnPilot |
+| `localhost:3000/login` | `(internal)` | `(internal)/login/page.tsx` | Login interno MUVA |
 | `localhost:3000/dashboard` | `(internal)` | `(internal)/dashboard/page.tsx` | Dashboard interno |
 | `localhost:3000/chat-mobile-dev` | `(internal)` | `(internal)/chat-mobile-dev/page.tsx` | Chat desarrollo |
-| `simmerdown.innpilot.io/` | `(public-tenant)` | `(public-tenant)/page.tsx` | Landing pública |
-| `simmerdown.innpilot.io/chat` | `(public-tenant)` | `(public-tenant)/chat/page.tsx` | Chat público |
-| `simmerdown.innpilot.io/login` | `(public-tenant)` | `(public-tenant)/login/page.tsx` | Login por tenant |
-| `simmerdown.innpilot.io/admin` | `(public-tenant)` | `(public-tenant)/admin/page.tsx` | Admin dashboard |
+| `simmerdown.muva.chat/` | `(public-tenant)` | `(public-tenant)/page.tsx` | Landing pública |
+| `simmerdown.muva.chat/chat` | `(public-tenant)` | `(public-tenant)/chat/page.tsx` | Chat público |
+| `simmerdown.muva.chat/login` | `(public-tenant)` | `(public-tenant)/login/page.tsx` | Login por tenant |
+| `simmerdown.muva.chat/admin` | `(public-tenant)` | `(public-tenant)/admin/page.tsx` | Admin dashboard |
 
 ---
 
@@ -287,7 +287,7 @@ export default async function AdminLayout({ children }) {
 Si eventualmente quieres deprecar el sistema interno:
 
 1. **Mantener ambos** hasta que todos los usuarios migren
-2. **Agregar banner** en `(internal)` routes: "Este sistema será deprecado, usa {tenant}.innpilot.io"
+2. **Agregar banner** en `(internal)` routes: "Este sistema será deprecado, usa {tenant}.muva.chat"
 3. **Redirigir automáticamente** después de X meses
 4. **Eliminar `(internal)` folder** cuando ya no se use
 

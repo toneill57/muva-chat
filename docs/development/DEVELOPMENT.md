@@ -1,8 +1,8 @@
-# InnPilot Development Guide
+# MUVA Development Guide
 
 > **⚠️ OUTDATED DOCUMENTATION WARNING**
 >
-> This document contains **obsolete references to Vercel deployment**. InnPilot migrated to **VPS Hostinger** on October 4, 2025.
+> This document contains **obsolete references to Vercel deployment**. MUVA migrated to **VPS Hostinger** on October 4, 2025.
 >
 > **For current deployment information, see:**
 > - `docs/deployment/VPS_SETUP_GUIDE.md` - VPS deployment guide
@@ -10,9 +10,9 @@
 > - `CLAUDE.md` - Current infrastructure overview
 >
 > **Production URLs (current):**
-> - Web UI: https://innpilot.io
-> - API Health: https://innpilot.io/api/health
-> - API Status: https://innpilot.io/api/status
+> - Web UI: https://muva.chat
+> - API Health: https://muva.chat/api/health
+> - API Status: https://muva.chat/api/status
 >
 > This document is kept for **historical reference only**. Do not follow Vercel-specific instructions.
 
@@ -42,7 +42,7 @@
 1. **Clone and install dependencies:**
    ```bash
    git clone <repository-url>
-   cd InnPilot
+   cd MUVA
    npm install
    ```
 
@@ -77,7 +77,7 @@
 ## Project Structure
 
 ```
-InnPilot/
+MUVA/
 ├── src/
 │   ├── app/                    # Next.js 13+ App Router
 │   │   ├── api/               # API routes (Edge Runtime)

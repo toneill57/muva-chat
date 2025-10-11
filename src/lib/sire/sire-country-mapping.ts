@@ -3,7 +3,7 @@
  *
  * ISO 3166-1 numeric country codes for SIRE compliance.
  *
- * Fuente: docs/sire/CODIGOS_OFICIALES.md
+ * Fuente: docs/features/sire-compliance/CODIGOS_OFICIALES.md
  * Estándar: ISO 3166-1 numeric
  * URL: https://en.wikipedia.org/wiki/ISO_3166-1_numeric
  *

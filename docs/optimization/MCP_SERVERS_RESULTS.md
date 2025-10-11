@@ -1,4 +1,4 @@
-# MCP Servers Setup & Results - InnPilot Project
+# MCP Servers Setup & Results - MUVA Project
 
 **Date:** October 9, 2025
 **Status:** ✅ 5/5 Servers Connected | ✅ FASE 1-9 Complete
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-InnPilot successfully implemented a **5-server MCP stack** (October 2025) that delivers **90.4% average token reduction** on semantic code queries, with projected **95.3% reduction** across all query types once Knowledge Graph and Memory Keeper are fully populated.
+MUVA successfully implemented a **5-server MCP stack** (October 2025) that delivers **90.4% average token reduction** on semantic code queries, with projected **95.3% reduction** across all query types once Knowledge Graph and Memory Keeper are fully populated.
 
 ### MCP Stack Overview
 
@@ -148,7 +148,7 @@ InnPilot successfully implemented a **5-server MCP stack** (October 2025) that d
 ```
 
 **Storage Locations:**
-- **Project-local:** `.aim/memory-{context}.jsonl` (preferred for InnPilot)
+- **Project-local:** `.aim/memory-{context}.jsonl` (preferred for MUVA)
 - **Global:** `~/.claude/aim/memory-{context}.jsonl` (user-wide)
 
 **Planned Entities (FASE 8):**

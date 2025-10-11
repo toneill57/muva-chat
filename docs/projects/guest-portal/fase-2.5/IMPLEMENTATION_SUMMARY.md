@@ -129,7 +129,7 @@ const result = await analyzePassport('https://...')
 **Request:**
 ```bash
 curl -X POST \
-  "https://innpilot.io/api/guest/conversations/CONV_ID/attachments" \
+  "https://muva.chat/api/guest/conversations/CONV_ID/attachments" \
   -H "Authorization: Bearer <guest_jwt_token>" \
   -F "file=@/path/to/image.jpg" \
   -F "analysisType=passport"  # or "location" or "general"
@@ -366,7 +366,7 @@ describe('POST /api/guest/conversations/:id/attachments', () => {
 ```typescript
 test('Guest uploads passport photo and data auto-fills compliance form', async ({ page }) => {
   // 1. Login as guest
-  await page.goto('https://simmerdown.innpilot.io')
+  await page.goto('https://simmerdown.muva.chat')
   await loginAsGuest(page)
 
   // 2. Open compliance flow

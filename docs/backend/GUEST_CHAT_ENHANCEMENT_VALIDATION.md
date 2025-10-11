@@ -372,7 +372,7 @@ WHERE source_table = 'accommodation_units_manual';
 If issues arise, execute:
 ```bash
 psql -h <host> -U <user> -d <database> \
-  -f /Users/oneill/Sites/apps/InnPilot/scripts/rollback_accommodation_split.sql
+  -f /Users/oneill/Sites/apps/MUVA/scripts/rollback_accommodation_split.sql
 ```
 
 **This will**:
@@ -381,7 +381,7 @@ psql -h <host> -U <user> -d <database> \
 - Preserve `accommodation_units` and `accommodation_units_public`
 
 **Backup Available**:
-`/Users/oneill/Sites/apps/InnPilot/backups/accommodation_units_backup_20251001_094434.sql`
+`/Users/oneill/Sites/apps/MUVA/backups/accommodation_units_backup_20251001_094434.sql`
 
 ---
 

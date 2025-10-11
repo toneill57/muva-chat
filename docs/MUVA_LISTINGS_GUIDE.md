@@ -493,5 +493,5 @@ done
 ---
 
 **Last Updated:** Sept 2025
-**Maintainer:** InnPilot Development Team
+**Maintainer:** MUVA Development Team
 **Questions?** See `TROUBLESHOOTING.md` or file an issue

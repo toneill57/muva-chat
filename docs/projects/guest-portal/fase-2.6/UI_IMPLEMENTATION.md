@@ -357,9 +357,9 @@ transition={{ duration: 0.3 }}        // Smooth 300ms
 
 ## Documentación Adicional
 
-- **Plan completo:** `/Users/oneill/Sites/apps/InnPilot/plan.md` (líneas 713-772)
-- **TODO tasks:** `/Users/oneill/Sites/apps/InnPilot/TODO.md` (líneas 153-160)
-- **Workflow prompt:** `/Users/oneill/Sites/apps/InnPilot/guest-portal-compliance-workflow.md` (Prompt 2.6)
+- **Plan completo:** `/Users/oneill/Sites/apps/MUVA/plan.md` (líneas 713-772)
+- **TODO tasks:** `/Users/oneill/Sites/apps/MUVA/TODO.md` (líneas 153-160)
+- **Workflow prompt:** `/Users/oneill/Sites/apps/MUVA/guest-portal-compliance-workflow.md` (Prompt 2.6)
 
 ---
 

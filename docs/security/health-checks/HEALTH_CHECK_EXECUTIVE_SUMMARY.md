@@ -368,6 +368,6 @@ ORDER BY bloat_pct DESC;
 
 Este health check detectó y resolvió **26 de 30 security issues**, validó que el código vectorial está correcto, preparó scripts de mantenimiento, y estableció baselines de performance.
 
-**El sistema InnPilot está en excelente estado de salud** 🎉
+**El sistema MUVA está en excelente estado de salud** 🎉
 
 **Próximo health check recomendado:** 1 mes (Noviembre 2025)

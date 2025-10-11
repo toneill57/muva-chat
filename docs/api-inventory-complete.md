@@ -1,4 +1,4 @@
-# InnPilot API Inventory - Complete Mapping
+# MUVA API Inventory - Complete Mapping
 **Generated:** 2025-10-06
 **Total Endpoints:** 44 routes
 **Version:** Current (dev branch)
@@ -1911,7 +1911,7 @@ Field: file (.txt, .csv, .md, max 10MB)
 
 **Documentation:** `/docs/api-inventory-complete.md`
 **Last Updated:** 2025-10-06
-**Maintained By:** InnPilot Backend Team
+**Maintained By:** MUVA Backend Team
 **Issues:** GitHub Issues / Internal Slack
 
 ---

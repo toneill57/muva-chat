@@ -1,7 +1,7 @@
-# VPS Setup Guide - InnPilot Deployment
+# VPS Setup Guide - MUVA Deployment
 
 **Target Environment:** Hostinger VPS (Ubuntu 22.04 LTS)
-**Domain:** innpilot.io
+**Domain:** muva.chat
 **Stack:** Node.js 20.x + PM2 + Nginx + Let's Encrypt SSL
 
 ---
@@ -11,7 +11,7 @@
 Before starting, ensure you have:
 - ✅ VPS access credentials from Hostinger
 - ✅ SSH key pair generated locally
-- ✅ Domain innpilot.io DNS pointed to VPS IP
+- ✅ Domain muva.chat DNS pointed to VPS IP
 - ✅ GitHub repository access
 - ✅ All environment variables (Supabase, OpenAI, Anthropic, JWT)
 
@@ -89,7 +89,7 @@ sudo apt install -y git
 
 # Configure Git
 git config --global user.name "Deploy Bot"
-git config --global user.email "deploy@innpilot.io"
+git config --global user.email "deploy@muva.chat"
 ```
 
 **Verification:**
@@ -331,7 +331,7 @@ upstream innpilot_app {
 server {
     listen 80;
     listen [::]:80;
-    server_name innpilot.io www.innpilot.io;
+    server_name muva.chat www.muva.chat;
 
     # Security headers
     add_header X-Frame-Options "SAMEORIGIN" always;
@@ -430,7 +430,7 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 **Verification:**
 ```bash
 # Test HTTP access
-curl -I http://innpilot.io
+curl -I http://muva.chat
 
 # Should return: HTTP/1.1 200 OK
 ```
@@ -453,7 +453,7 @@ certbot --version
 
 ```bash
 # Run Certbot with Nginx plugin
-sudo certbot --nginx -d innpilot.io -d www.innpilot.io
+sudo certbot --nginx -d muva.chat -d www.muva.chat
 
 # Follow prompts:
 # 1. Enter email address (for renewal notifications)
@@ -462,7 +462,7 @@ sudo certbot --nginx -d innpilot.io -d www.innpilot.io
 # 4. Redirect HTTP to HTTPS: 2 (Yes, redirect)
 ```
 
-⚠️ **Important:** Ensure DNS is properly configured before running Certbot. Both `innpilot.io` and `www.innpilot.io` must resolve to your VPS IP.
+⚠️ **Important:** Ensure DNS is properly configured before running Certbot. Both `muva.chat` and `www.muva.chat` must resolve to your VPS IP.
 
 ### 5.3 Configurar Renovación Automática
 
@@ -474,7 +474,7 @@ sudo certbot renew --dry-run
 sudo systemctl status certbot.timer
 
 # View renewal configuration
-sudo cat /etc/letsencrypt/renewal/innpilot.io.conf
+sudo cat /etc/letsencrypt/renewal/muva.chat.conf
 ```
 
 Let's Encrypt certificates expire after 90 days. Certbot automatically renews them via systemd timer.
@@ -492,19 +492,19 @@ sudo systemctl reload nginx
 **Verification:**
 ```bash
 # Test HTTPS access
-curl -I https://innpilot.io
+curl -I https://muva.chat
 
 # Should return: HTTP/2 200 OK
 
 # Test HTTP redirect
-curl -I http://innpilot.io
+curl -I http://muva.chat
 # Should return: HTTP/1.1 301 Moved Permanently
-# Location: https://innpilot.io/
+# Location: https://muva.chat/
 ```
 
 ### 5.5 SSL Security Test
 
-Visit https://www.ssllabs.com/ssltest/analyze.html?d=innpilot.io
+Visit https://www.ssllabs.com/ssltest/analyze.html?d=muva.chat
 
 **Target rating:** A or A+
 
@@ -516,8 +516,8 @@ Visit https://www.ssllabs.com/ssltest/analyze.html?d=innpilot.io
 
 ```bash
 # Test all critical endpoints
-curl -s https://innpilot.io/api/health | jq
-curl -s https://innpilot.io/api/health/ready | jq
+curl -s https://muva.chat/api/health | jq
+curl -s https://muva.chat/api/health/ready | jq
 
 # Expected response:
 # {
@@ -675,7 +675,7 @@ pm2 restart innpilot
 - [ ] PM2 process running in cluster mode
 - [ ] Nginx reverse proxy configured
 - [ ] SSL certificate valid (A/A+ rating)
-- [ ] https://innpilot.io returns 200 OK
+- [ ] https://muva.chat returns 200 OK
 - [ ] API endpoints responding correctly
 - [ ] Response time ≤ 0.500s
 - [ ] PM2 auto-restart on failure

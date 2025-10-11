@@ -30,7 +30,7 @@ Esta guía te ayudará a ejecutar los 120+ regression tests de manera eficiente 
 ### 1.1 Start Development Server
 
 ```bash
-cd /Users/oneill/Sites/apps/InnPilot
+cd /Users/oneill/Sites/apps/MUVA
 ./scripts/dev-with-keys.sh
 ```
 

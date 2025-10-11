@@ -1,7 +1,7 @@
 # 📊 METADATA OPTIMIZATION REPORT
 
 **Fecha:** 30 Septiembre 2025
-**Sistema:** InnPilot Multi-tenant con Matryoshka Embeddings
+**Sistema:** MUVA Multi-tenant con Matryoshka Embeddings
 **Objetivo:** Optimizar metadata y tags para búsqueda eficiente sin latencia adicional
 
 ---

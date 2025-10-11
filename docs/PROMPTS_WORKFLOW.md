@@ -48,8 +48,8 @@
 Necesito implementar el Guest Authentication System (FASE 1.1 del sistema conversacional).
 
 CONTEXTO:
-- Especificaciones completas: /Users/oneill/Sites/apps/InnPilot/plan.md líneas 45-100
-- Tareas detalladas: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 23-43
+- Especificaciones completas: /Users/oneill/Sites/apps/MUVA/plan.md líneas 45-100
+- Tareas detalladas: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 23-43
 - Sistema: Login de huéspedes con check-in date + últimos 4 dígitos de teléfono
 
 ARCHIVOS A CREAR:
@@ -87,8 +87,8 @@ INFRAESTRUCTURA EXISTENTE:
 Implementar Conversational Chat Engine (FASE 1.2) - Core del sistema conversacional.
 
 CONTEXTO:
-- Especificaciones: /Users/oneill/Sites/apps/InnPilot/plan.md líneas 140-260
-- Tareas: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 47-79
+- Especificaciones: /Users/oneill/Sites/apps/MUVA/plan.md líneas 140-260
+- Tareas: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 47-79
 - Engine mantiene contexto conversacional y genera respuestas con Claude Sonnet 3.5
 
 ARCHIVOS A CREAR:
@@ -144,9 +144,9 @@ Tests: Unit + integration requeridos
 Ejecutar y validar Database Migrations para Guest Chat System (FASE 1.3).
 
 REFERENCIA:
-- Especificaciones: /Users/oneill/Sites/apps/InnPilot/plan.md líneas 306-439
-- Tareas: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 83-122
-- Instrucciones agente: /Users/oneill/Sites/apps/InnPilot/.claude/agents/database-agent.md líneas 13-408
+- Especificaciones: /Users/oneill/Sites/apps/MUVA/plan.md líneas 306-439
+- Tareas: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 83-122
+- Instrucciones agente: /Users/oneill/Sites/apps/MUVA/.claude/agents/database-agent.md líneas 13-408
 
 MIGRATIONS A VALIDAR:
 
@@ -194,9 +194,9 @@ EJECUTAR QUERIES DE VALIDACIÓN (database-agent.md líneas 125-150)
 Crear interfaz visual completa del Guest Chat System (FASE 1.4).
 
 REFERENCIA:
-- Especificaciones UX detalladas: /Users/oneill/Sites/apps/InnPilot/.claude/agents/ux-interface.md líneas 320-595
-- Tareas: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 126-160
-- Design specs: /Users/oneill/Sites/apps/InnPilot/plan.md líneas 444-570
+- Especificaciones UX detalladas: /Users/oneill/Sites/apps/MUVA/.claude/agents/ux-interface.md líneas 320-595
+- Tareas: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 126-160
+- Design specs: /Users/oneill/Sites/apps/MUVA/plan.md líneas 444-570
 
 COMPONENTES A CREAR:
 
@@ -276,7 +276,7 @@ QUALITY TARGETS:
 ```
 Validar sistema Guest Chat completo (FASE 1.5) - Testing & Validation.
 
-REFERENCIA: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 164-200
+REFERENCIA: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 164-200
 
 DIVISIÓN DE RESPONSABILIDADES:
 
@@ -349,9 +349,9 @@ Implementar FASE 2 completa: Enhanced UX Features.
 CONTEXTO:
 - FASE 2 es COMPLETAMENTE ownership del UX Agent
 - Referencias:
-  * Agent specs: /Users/oneill/Sites/apps/InnPilot/.claude/agents/ux-interface.md líneas 526-533
-  * Tareas: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 204-258
-  * Plan: /Users/oneill/Sites/apps/InnPilot/plan.md líneas 611-684
+  * Agent specs: /Users/oneill/Sites/apps/MUVA/.claude/agents/ux-interface.md líneas 526-533
+  * Tareas: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 204-258
+  * Plan: /Users/oneill/Sites/apps/MUVA/plan.md líneas 611-684
 
 SUBSECCIÓN 2.1: Follow-up Suggestion System (4-6 horas)
 - Algoritmo mejorado basado en entities mencionadas
@@ -398,7 +398,7 @@ PUEDES TRABAJAR EN SUBSECCIONES DE MANERA INDEPENDIENTE O COMPLETA.
 ```
 Ejecutar monitoring proactivo del Guest Chat System.
 
-REFERENCIA: /Users/oneill/Sites/apps/InnPilot/.claude/agents/database-agent.md líneas 152-408
+REFERENCIA: /Users/oneill/Sites/apps/MUVA/.claude/agents/database-agent.md líneas 152-408
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 DAILY TASKS
@@ -471,10 +471,10 @@ Desarrollar asistente AI conversacional con memoria persistente que permita a hu
 - Continuar conversaciones a través del tiempo
 
 REFERENCIAS COMPLETAS:
-- Plan maestro: /Users/oneill/Sites/apps/InnPilot/plan.md (1,047 líneas)
-- Tareas detalladas: /Users/oneill/Sites/apps/InnPilot/TODO.md (605 líneas)
-- UX Agent: /Users/oneill/Sites/apps/InnPilot/.claude/agents/ux-interface.md
-- Database Agent: /Users/oneill/Sites/apps/InnPilot/.claude/agents/database-agent.md
+- Plan maestro: /Users/oneill/Sites/apps/MUVA/plan.md (1,047 líneas)
+- Tareas detalladas: /Users/oneill/Sites/apps/MUVA/TODO.md (605 líneas)
+- UX Agent: /Users/oneill/Sites/apps/MUVA/.claude/agents/ux-interface.md
+- Database Agent: /Users/oneill/Sites/apps/MUVA/.claude/agents/database-agent.md
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 WORKFLOW RECOMENDADO
@@ -550,7 +550,7 @@ Ejecutar Database Health Maintenance - VACUUM FULL (Prioridad #2).
 
 PROBLEMA: Tablas con >75% dead tuples afectando performance
 
-REFERENCIA: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 331-343
+REFERENCIA: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 331-343
 
 EJECUTAR:
 
@@ -589,7 +589,7 @@ Procesar MUVA Listings pendientes para completar contenido turístico.
 
 ESTADO ACTUAL: 1 listing procesado (Blue Life Dive), 37 listings restantes
 
-REFERENCIA: /Users/oneill/Sites/apps/InnPilot/TODO.md líneas 362-443
+REFERENCIA: /Users/oneill/Sites/apps/MUVA/TODO.md líneas 362-443
 
 COMANDO:
 node scripts/populate-embeddings.js _assets/muva/listings/[categoria]/[archivo].md

@@ -222,4 +222,4 @@ Automatically determines whether queries require:
 
 ---
 
-*This guide is maintained as part of the InnPilot Premium Features documentation suite. For technical implementation details, see [Premium Chat Architecture](./PREMIUM_CHAT_ARCHITECTURE.md).*
+*This guide is maintained as part of the MUVA Premium Features documentation suite. For technical implementation details, see [Premium Chat Architecture](./PREMIUM_CHAT_ARCHITECTURE.md).*

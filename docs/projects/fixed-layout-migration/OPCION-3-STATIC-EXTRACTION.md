@@ -215,7 +215,7 @@ $ npm run prebuild
 > npx tsx scripts/build-welcome-message.ts
 
 ✅ Welcome message pre-rendered successfully!
-   Output: /Users/oneill/Sites/apps/InnPilot/src/lib/welcome-message-static.ts
+   Output: /Users/oneill/Sites/apps/MUVA/src/lib/welcome-message-static.ts
    HTML size: 670 bytes
 ```
 

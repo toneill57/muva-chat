@@ -779,9 +779,9 @@ validate_sire_completeness(p_reservation_id UUID)
 **Validation Script:** `scripts/validate-sire-compliance-data.sql`
 
 **Documentation:**
-- `docs/sire/FASE_12_FINAL_VALIDATION_REPORT.md` (400+ lines)
-- `docs/sire/DATABASE_SCHEMA_CLARIFICATION.md` (9 SIRE fields)
-- `docs/sire/CODIGOS_SIRE_VS_ISO.md` (CRITICAL - SIRE vs ISO codes)
+- `docs/features/sire-compliance/FASE_12_FINAL_VALIDATION_REPORT.md` (400+ lines)
+- `docs/features/sire-compliance/DATABASE_SCHEMA_CLARIFICATION.md` (9 SIRE fields)
+- `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (CRITICAL - SIRE vs ISO codes)
 - `scripts/rollback-sire-fields-migration.sql` (emergency rollback)
 
 ---
@@ -1004,8 +1004,8 @@ ANALYZE schema.table;
 
 **Internal Docs:**
 - `docs/architecture/DATABASE_QUERY_PATTERNS.md` - RPC hierarchy and usage
-- `docs/sire/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` - SIRE field specs
-- `docs/sire/CODIGOS_OFICIALES.md` - Country/city code catalogs
+- `docs/features/sire-compliance/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` - SIRE field specs
+- `docs/features/sire-compliance/CODIGOS_OFICIALES.md` - Country/city code catalogs
 - `plan.md` - SIRE extension planning (FASE 10-12)
 - `TODO.md` - Database migration tasks
 

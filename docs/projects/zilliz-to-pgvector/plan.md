@@ -848,7 +848,7 @@ Successfully migrated 33,257 code embeddings from Zilliz Cloud to Supabase pgvec
 ## 📂 ESTRUCTURA DE ARCHIVOS
 
 ```
-/Users/oneill/Sites/apps/InnPilot/
+/Users/oneill/Sites/apps/MUVA/
 ├── supabase/migrations/
 │   └── 20251009120000_create_code_embeddings_table.sql (NUEVO)
 ├── scripts/

@@ -415,9 +415,9 @@ Before deploying to production, verify:
 ## Contact & Escalation
 
 **For questions or issues:**
-- Review: `/Users/oneill/Sites/apps/InnPilot/plan.md` (complete architecture)
-- Review: `/Users/oneill/Sites/apps/InnPilot/TODO.md` (updated with validation results)
-- Review: `/Users/oneill/Sites/apps/InnPilot/CLAUDE.md` (development guidelines)
+- Review: `/Users/oneill/Sites/apps/MUVA/plan.md` (complete architecture)
+- Review: `/Users/oneill/Sites/apps/MUVA/TODO.md` (updated with validation results)
+- Review: `/Users/oneill/Sites/apps/MUVA/CLAUDE.md` (development guidelines)
 - Review: Test documentation in `e2e/README.md`
 - Review: Database validation in `docs/GUEST_CHAT_DATABASE_VALIDATION.md`
 

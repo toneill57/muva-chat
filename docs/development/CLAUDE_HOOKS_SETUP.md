@@ -7,7 +7,7 @@
 
 ## 📋 What Are Claude Code Hooks?
 
-Claude Code supports **hooks** - shell scripts that run automatically after specific events (like tool calls). InnPilot uses hooks to:
+Claude Code supports **hooks** - shell scripts that run automatically after specific events (like tool calls). MUVA uses hooks to:
 
 1. **Detect errors automatically** after each tool use
 2. **Capture error context** (tool name, command, error message)
@@ -46,7 +46,7 @@ ls -la .claude/errors.jsonl
 
 ```bash
 # Check hook file exists and is executable
-cd /Users/oneill/Sites/apps/InnPilot
+cd /Users/oneill/Sites/apps/MUVA
 ls -la .claude/hooks/post-tool-use-error-detector.sh
 
 # Expected output:
@@ -225,7 +225,7 @@ fi
 ```bash
 # Add to post-tool-use-error-detector.sh
 if [[ "$ERROR_MSG" =~ "CRITICAL" ]]; then
-  echo "Critical error detected" | mail -s "InnPilot Error" admin@example.com
+  echo "Critical error detected" | mail -s "MUVA Error" admin@example.com
 fi
 ```
 
@@ -346,7 +346,7 @@ Use this checklist to verify hooks are working correctly:
 
 ```bash
 # 1. Navigate to project
-cd /Users/oneill/Sites/apps/InnPilot
+cd /Users/oneill/Sites/apps/MUVA
 
 # 2. Verify hook exists and is executable
 ls -la .claude/hooks/post-tool-use-error-detector.sh

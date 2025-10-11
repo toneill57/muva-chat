@@ -3,8 +3,8 @@
 ## Pre-requisitos
 
 ### DNS Configuration
-- Wildcard DNS record configurado: `*.innpilot.io` → IP del VPS
-- Certificado SSL wildcard para `*.innpilot.io` (via Let's Encrypt)
+- Wildcard DNS record configurado: `*.muva.chat` → IP del VPS
+- Certificado SSL wildcard para `*.muva.chat` (via Let's Encrypt)
 - Nginx configurado para proxy_pass a Next.js
 
 ### VPS Requirements
@@ -47,7 +47,7 @@ git push origin main
 
 #### SSH al Servidor
 ```bash
-ssh user@innpilot.io
+ssh user@muva.chat
 cd /var/www/innpilot
 ```
 
@@ -103,15 +103,15 @@ pm2 logs innpilot --err --lines 100
 ### Health Check Endpoints
 ```bash
 # Health check general
-curl -I https://innpilot.io/api/health
+curl -I https://muva.chat/api/health
 
 # Health check de chat API
-curl -X POST https://innpilot.io/api/chat \
+curl -X POST https://muva.chat/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message":"test","history":[]}'
 
 # Health check de tenant chat
-curl -X POST https://simmerdown.innpilot.io/api/tenant-chat \
+curl -X POST https://simmerdown.muva.chat/api/tenant-chat \
   -H "Content-Type: application/json" \
   -d '{"message":"test","history":[]}'
 ```
@@ -119,9 +119,9 @@ curl -X POST https://simmerdown.innpilot.io/api/tenant-chat \
 ### Verificar Wildcard DNS
 ```bash
 # Test subdomain resolution
-dig simmerdown.innpilot.io +short
-dig xyz.innpilot.io +short
-dig hotel-boutique.innpilot.io +short
+dig simmerdown.muva.chat +short
+dig xyz.muva.chat +short
+dig hotel-boutique.muva.chat +short
 
 # Todos deben retornar la misma IP del VPS
 ```
@@ -129,8 +129,8 @@ dig hotel-boutique.innpilot.io +short
 ### Test Frontend
 ```bash
 # Test page load
-curl -I https://simmerdown.innpilot.io/chat
-curl -I https://xyz.innpilot.io/chat
+curl -I https://simmerdown.muva.chat/chat
+curl -I https://xyz.muva.chat/chat
 
 # Expected: HTTP 200 OK
 ```
@@ -201,7 +201,7 @@ pm2 status
 ```
 
 ### Error: DNS No Resuelve
-**Síntoma**: `dig subdomain.innpilot.io` no retorna IP
+**Síntoma**: `dig subdomain.muva.chat` no retorna IP
 **Solución**:
 1. Verificar wildcard DNS en proveedor (Cloudflare, Route53, etc.)
 2. Esperar propagación DNS (hasta 48h, usualmente 5-10min)
@@ -264,4 +264,4 @@ sudo tail -f /var/log/nginx/error.log
 ---
 
 **Última actualización**: Octubre 2025
-**Autor**: InnPilot Team
+**Autor**: MUVA Team

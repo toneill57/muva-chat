@@ -8,7 +8,7 @@ export default function TestComplianceUI() {
   const [step, setStep] = useState<'confirmation' | 'success'>('confirmation');
 
   // Mock data - Escenario REALISTA: American tourist traveling Bogotá → San Andrés (hotel) → Medellín
-  // ⚠️ CRITICAL: See docs/sire/DATABASE_SCHEMA_CLARIFICATION.md for geographic field explanation
+  // ⚠️ CRITICAL: See docs/features/sire-compliance/DATABASE_SCHEMA_CLARIFICATION.md for geographic field explanation
   //
   // 3 INDEPENDENT GEOGRAPHIC FIELDS:
   // 1. nationality_code (Field 5): CITIZENSHIP country (SIRE country code)

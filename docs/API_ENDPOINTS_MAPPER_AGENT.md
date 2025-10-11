@@ -2,7 +2,7 @@
 
 ## Overview
 
-The api-endpoints-mapper agent is a specialized Claude Code agent designed to analyze, document, and map API endpoints for both internal codebases and external APIs, with particular focus on schema migration and system integration for InnPilot's multi-tenant architecture.
+The api-endpoints-mapper agent is a specialized Claude Code agent designed to analyze, document, and map API endpoints for both internal codebases and external APIs, with particular focus on schema migration and system integration for MUVA's multi-tenant architecture.
 
 ## Core Capabilities
 
@@ -34,7 +34,7 @@ The api-endpoints-mapper agent is a specialized Claude Code agent designed to an
 - **Availability calendar**: date ranges, booking restrictions
 - **Media handling**: accommodation photos, virtual tours
 
-### InnPilot Integration Features
+### MUVA Integration Features
 - **Multi-tenant mapping** to `hotels`, `accommodation_units`, `unit_amenities`, `pricing_rules`
 - **Matryoshka tier planning**:
   - Tier 1 (1024 dims): Tourism content
@@ -76,7 +76,7 @@ Authorization: Bearer jwt_token_here
    - Authentication requirements
 
 3. **Schema Mapping Tables**
-   - External API ↔ InnPilot Database mapping
+   - External API ↔ MUVA Database mapping
    - Data transformation requirements
    - Relationship preservation strategies
 
@@ -110,7 +110,7 @@ App Password: xxxx xxxx xxxx xxxx"
 ### Schema Migration Focus
 ```bash
 # Focus on specific data migration
-@agent-api-endpoints-mapper "Map booking endpoints for migration to InnPilot multi-tenant system"
+@agent-api-endpoints-mapper "Map booking endpoints for migration to MUVA multi-tenant system"
 ```
 
 ## Quality Assurance Process ✅
@@ -128,7 +128,7 @@ App Password: xxxx xxxx xxxx xxxx"
 - Limitation documentation
 - Workaround recommendations
 
-## Integration with InnPilot Architecture
+## Integration with MUVA Architecture
 
 ### Multi-Tenant Considerations
 - **Tenant isolation** strategies
@@ -153,7 +153,7 @@ App Password: xxxx xxxx xxxx xxxx"
 ### Before Analysis
 1. Gather all authentication credentials
 2. Identify specific migration objectives
-3. Review InnPilot's current schema
+3. Review MUVA's current schema
 4. Determine priority endpoints
 
 ### During Analysis
@@ -179,7 +179,7 @@ App Password: xxxx xxxx xxxx xxxx"
 ### Support Resources
 - WordPress REST API documentation
 - MotoPress Hotel Booking API reference
-- InnPilot architecture documentation
+- MUVA architecture documentation
 - Matryoshka embeddings technical guide
 
 ## Version History

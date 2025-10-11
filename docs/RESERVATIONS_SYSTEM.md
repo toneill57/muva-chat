@@ -78,12 +78,12 @@ npm run sync:motopress:bookings b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf
 2. Conecta a API de MotoPress (https://simmerdown.house/wp-json/mphb/v1)
 3. Fetch bookings con `status=confirmed`
 4. Filtra solo reservas futuras (check_in >= HOY)
-5. Mapea campos MotoPress → InnPilot
+5. Mapea campos MotoPress → MUVA
 6. Upsert en tabla `guest_reservations`
 
 **Mapeo de datos**:
 ```typescript
-MotoPress → InnPilot
+MotoPress → MUVA
 -----------------------------------------------
 status: "confirmed" → status: "active"
 status: "cancelled" → status: "cancelled"
@@ -205,7 +205,7 @@ npx tsx test-reservations-api.ts
 ## 📁 Estructura de Archivos
 
 ```
-InnPilot/
+MUVA/
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -262,7 +262,7 @@ WHERE tenant_id = 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'
 
 ```bash
 # Cron job sugerido (diario a las 3 AM)
-0 3 * * * cd /path/to/InnPilot && npm run sync:motopress:bookings >> logs/sync.log 2>&1
+0 3 * * * cd /path/to/MUVA && npm run sync:motopress:bookings >> logs/sync.log 2>&1
 ```
 
 ## 🚀 Implementaciones Futuras (Opcionales)
@@ -339,7 +339,7 @@ WHERE tenant_id = 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'
 
 **Desarrollado por**: Claude Code
 **Cliente**: Simmerdown Guest House
-**Proyecto**: InnPilot Multi-tenant System
+**Proyecto**: MUVA Multi-tenant System
 
 ## 🔗 Referencias
 

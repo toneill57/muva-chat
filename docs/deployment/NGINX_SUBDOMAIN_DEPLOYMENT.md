@@ -1,7 +1,7 @@
 # Nginx Subdomain Configuration Deployment Guide
 
 **Date**: October 10, 2025
-**Purpose**: Deploy wildcard subdomain support for InnPilot multi-tenant architecture
+**Purpose**: Deploy wildcard subdomain support for MUVA multi-tenant architecture
 
 ## Quick Command Reference
 
@@ -23,7 +23,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 
 # 6. Verify it's working
-curl -I https://simmerdown.innpilot.io/admin
+curl -I https://simmerdown.muva.chat/admin
 ```
 
 ## Critical Configuration Lines
@@ -48,7 +48,7 @@ Without these lines, the middleware will NOT detect subdomains and tenant routin
 Copy the entire content from `docs/deployment/nginx-subdomain.conf` to `/etc/nginx/sites-available/innpilot`.
 
 Key features:
-- Wildcard subdomain support: `*.innpilot.io`
+- Wildcard subdomain support: `*.muva.chat`
 - Subdomain extraction and header injection
 - SSL/TLS with Let's Encrypt wildcard certificate
 - HTTP to HTTPS redirect
@@ -58,16 +58,16 @@ Key features:
 
 ## SSL Certificate Requirements
 
-You need a **wildcard SSL certificate** for `*.innpilot.io`:
+You need a **wildcard SSL certificate** for `*.muva.chat`:
 
 ```bash
 # Request wildcard certificate (requires DNS validation)
-sudo certbot certonly --manual --preferred-challenges dns -d "*.innpilot.io" -d "innpilot.io"
+sudo certbot certonly --manual --preferred-challenges dns -d "*.muva.chat" -d "muva.chat"
 
 # Follow prompts to add TXT records to DNS
 # Certificate will be saved to:
-# /etc/letsencrypt/live/innpilot.io-0001/fullchain.pem
-# /etc/letsencrypt/live/innpilot.io-0001/privkey.pem
+# /etc/letsencrypt/live/muva.chat-0001/fullchain.pem
+# /etc/letsencrypt/live/muva.chat-0001/privkey.pem
 ```
 
 ## DNS Configuration
@@ -76,8 +76,8 @@ Ensure your DNS has a wildcard A record:
 
 ```
 Type    Name                Value           TTL
-A       innpilot.io         YOUR_VPS_IP     300
-A       *.innpilot.io       YOUR_VPS_IP     300
+A       muva.chat         YOUR_VPS_IP     300
+A       *.muva.chat       YOUR_VPS_IP     300
 ```
 
 ## Testing Checklist
@@ -85,18 +85,18 @@ A       *.innpilot.io       YOUR_VPS_IP     300
 After deployment, test these URLs:
 
 ### Subdomain Detection
-- [ ] `https://simmerdown.innpilot.io/admin` - Should load admin dashboard
-- [ ] `https://simmerdown.innpilot.io/admin/knowledge-base` - No double slashes
-- [ ] `https://simmerdown.innpilot.io/admin/settings` - No double slashes
-- [ ] `https://simmerdown.innpilot.io/admin/branding` - No double slashes
+- [ ] `https://simmerdown.muva.chat/admin` - Should load admin dashboard
+- [ ] `https://simmerdown.muva.chat/admin/knowledge-base` - No double slashes
+- [ ] `https://simmerdown.muva.chat/admin/settings` - No double slashes
+- [ ] `https://simmerdown.muva.chat/admin/branding` - No double slashes
 
 ### Main Site
-- [ ] `https://innpilot.io` - Should load main landing page
+- [ ] `https://muva.chat` - Should load main landing page
 - [ ] No subdomain detected (empty string in header)
 
 ### Different Tenants
-- [ ] `https://demo.innpilot.io/admin` - Works for "demo" tenant
-- [ ] `https://test.innpilot.io/admin` - Works for "test" tenant
+- [ ] `https://demo.muva.chat/admin` - Works for "demo" tenant
+- [ ] `https://test.muva.chat/admin` - Works for "test" tenant
 
 ### Middleware Logs
 Check PM2 logs to verify subdomain detection:
@@ -137,7 +137,7 @@ pm2 restart innpilot
 
 This Nginx configuration works in conjunction with:
 
-1. **next.config.ts** - Subdomain rewrites (now supports both localhost and innpilot.io)
+1. **next.config.ts** - Subdomain rewrites (now supports both localhost and muva.chat)
 2. **middleware.ts** - Reads `x-tenant-subdomain` header from Nginx
 3. **AdminSidebar.tsx** - Uses direct hrefs (no tenant prefix needed)
 
