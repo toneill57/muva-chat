@@ -4,10 +4,13 @@ import { createServerClient } from '@/lib/supabase'
 /**
  * GET /api/admin/knowledge-base
  *
- * Lists all documents in tenant knowledge base grouped by file_path
+ * Lists all documents in tenant knowledge base from ALL sources:
+ * - tenant_knowledge_embeddings (general knowledge)
+ * - accommodation_units_public (accommodations with pricing)
+ * - hotels.policies (hotel policies)
  *
  * @param request - Query params: tenant_id (required)
- * @returns JSON response with files array containing file_path, chunks count, created_at
+ * @returns JSON response with files array containing file_path, chunks count, created_at, source
  */
 export async function GET(request: NextRequest) {
   try {
@@ -30,61 +33,103 @@ export async function GET(request: NextRequest) {
     // Initialize Supabase client
     const supabase = createServerClient()
 
-    // Query tenant_knowledge_embeddings grouped by file_path
-    // We need: file_path, count of chunks, first created_at timestamp
-    const { data, error } = await supabase
+    // Query 1: tenant_knowledge_embeddings (general knowledge base)
+    const { data: knowledgeData, error: knowledgeError } = await supabase
       .from('tenant_knowledge_embeddings')
       .select('file_path, chunk_index, created_at')
       .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error('[knowledge-base] Database query error:', error)
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Database query failed',
-          message: error.message
-        },
-        { status: 500 }
-      )
+    if (knowledgeError) {
+      console.error('[knowledge-base] Knowledge embeddings query error:', knowledgeError)
     }
 
-    // Group results by file_path
-    const fileMap = new Map<string, { chunks: number; created_at: string }>()
+    // Query 2: accommodation_units_public (accommodations)
+    const { data: accommodationsData, error: accommodationsError } = await supabase
+      .from('accommodation_units_public')
+      .select('unit_id, name, created_at')
+      .eq('tenant_id', tenantId)
+      .order('created_at', { ascending: false })
 
-    data?.forEach((row) => {
+    if (accommodationsError) {
+      console.error('[knowledge-base] Accommodations query error:', accommodationsError)
+    }
+
+    // Query 3: hotels.policies (hotel policies)
+    const { data: policiesData, error: policiesError } = await supabase
+      .from('policies')
+      .select('policy_id, title, source_file, created_at')
+      .eq('tenant_id', tenantId)
+      .order('created_at', { ascending: false })
+
+    if (policiesError) {
+      console.error('[knowledge-base] Policies query error:', policiesError)
+    }
+
+    // Group tenant_knowledge_embeddings by file_path
+    const fileMap = new Map<string, { chunks: number; created_at: string; source: string }>()
+
+    knowledgeData?.forEach((row) => {
       const existing = fileMap.get(row.file_path)
       if (!existing) {
         fileMap.set(row.file_path, {
           chunks: 1,
-          created_at: row.created_at
+          created_at: row.created_at,
+          source: 'tenant_knowledge_embeddings'
         })
       } else {
         existing.chunks += 1
-        // Keep the earliest created_at for the file
         if (new Date(row.created_at) < new Date(existing.created_at)) {
           existing.created_at = row.created_at
         }
       }
     })
 
+    // Add accommodations (each unit = 1 "file")
+    accommodationsData?.forEach((unit) => {
+      const filePath = `accommodations/${unit.name}`
+      fileMap.set(filePath, {
+        chunks: 1,
+        created_at: unit.created_at,
+        source: 'accommodation_units_public'
+      })
+    })
+
+    // Add policies (each policy = 1 "file")
+    policiesData?.forEach((policy) => {
+      const filePath = policy.source_file || `policies/${policy.title}`
+      fileMap.set(filePath, {
+        chunks: 1,
+        created_at: policy.created_at,
+        source: 'hotels.policies'
+      })
+    })
+
     // Convert map to array for response
     const files = Array.from(fileMap.entries()).map(([file_path, meta]) => ({
       file_path,
       chunks: meta.chunks,
-      created_at: meta.created_at
+      created_at: meta.created_at,
+      source: meta.source
     }))
 
     // Sort by created_at DESC (newest first)
     files.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    // Calculate stats by source
+    const statsBySource = {
+      tenant_knowledge_embeddings: files.filter(f => f.source === 'tenant_knowledge_embeddings').length,
+      accommodation_units_public: files.filter(f => f.source === 'accommodation_units_public').length,
+      policies: files.filter(f => f.source === 'hotels.policies').length
+    }
 
     // Success response
     return NextResponse.json({
       success: true,
       files,
       total_files: files.length,
-      total_chunks: files.reduce((sum, f) => sum + f.chunks, 0)
+      total_chunks: files.reduce((sum, f) => sum + f.chunks, 0),
+      by_source: statsBySource
     })
 
   } catch (error) {

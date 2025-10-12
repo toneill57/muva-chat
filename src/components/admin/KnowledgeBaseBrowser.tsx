@@ -14,6 +14,7 @@ interface KnowledgeBaseFile {
   file_path: string;
   chunks: number;
   created_at: string;
+  source: string;
 }
 
 interface APIResponse {
@@ -21,6 +22,11 @@ interface APIResponse {
   files: KnowledgeBaseFile[];
   total_files: number;
   total_chunks: number;
+  by_source?: {
+    tenant_knowledge_embeddings: number;
+    accommodation_units_public: number;
+    policies: number;
+  };
   error?: string;
   message?: string;
 }
@@ -32,6 +38,11 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
   const [error, setError] = useState<string | null>(null);
   const [totalFiles, setTotalFiles] = useState(0);
   const [totalChunks, setTotalChunks] = useState(0);
+  const [bySource, setBySource] = useState<{
+    tenant_knowledge_embeddings: number;
+    accommodation_units_public: number;
+    policies: number;
+  } | null>(null);
 
   useEffect(() => {
     loadFiles();
@@ -52,6 +63,7 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
       setFiles(data.files || []);
       setTotalFiles(data.total_files || 0);
       setTotalChunks(data.total_chunks || 0);
+      setBySource(data.by_source || null);
     } catch (err) {
       console.error('[KnowledgeBaseBrowser] Error loading files:', err);
       setError(err instanceof Error ? err.message : 'Failed to load documents');
@@ -145,7 +157,7 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
   return (
     <div className="space-y-4">
       {/* Header with stats */}
-      <div className="flex items-center justify-between">
+      <div className="space-y-3">
         <div className="flex items-center gap-6 text-sm text-gray-600">
           <span>
             <strong className="text-gray-900">{totalFiles}</strong> {totalFiles === 1 ? 'file' : 'files'}
@@ -154,6 +166,22 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
             <strong className="text-gray-900">{totalChunks}</strong> {totalChunks === 1 ? 'chunk' : 'chunks'}
           </span>
         </div>
+
+        {/* Stats by source */}
+        {bySource && (
+          <div className="flex items-center gap-4 text-xs text-gray-500 bg-gray-50 p-3 rounded-md">
+            <span className="font-medium text-gray-700">By Source:</span>
+            <span>
+              <strong className="text-gray-900">{bySource.tenant_knowledge_embeddings}</strong> Knowledge Base
+            </span>
+            <span>
+              <strong className="text-gray-900">{bySource.accommodation_units_public}</strong> Accommodations
+            </span>
+            <span>
+              <strong className="text-gray-900">{bySource.policies}</strong> Policies
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Search bar */}
@@ -194,6 +222,9 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
                   File Name
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Source
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Chunks
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -219,6 +250,21 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
                         </p>
                       </div>
                     </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      file.source === 'accommodation_units_public'
+                        ? 'bg-blue-100 text-blue-800'
+                        : file.source === 'hotels.policies'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {file.source === 'accommodation_units_public'
+                        ? 'Accommodation'
+                        : file.source === 'hotels.policies'
+                        ? 'Policy'
+                        : 'Knowledge'}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-sm text-gray-900">{file.chunks}</span>
