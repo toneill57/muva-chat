@@ -148,18 +148,46 @@ function extractAmenitiesFromTemplate(content) {
 }
 
 function extractBookingPoliciesFromTemplate(content) {
-  // Extract policies from the template
-  const policiesMatch = content.match(/### Políticas de Uso[\s\S]*?### Recomendaciones de Estadía[\s\S]*?(?=###|$)/i)
+  const policies = []
+
+  // ENHANCED: Extract policies using HTML comments (primary method)
+  const policyCommentMatches = content.matchAll(/<!-- EXTRAE: booking_policies -->\s*(.*?)(?=<!--|\n|$)/gi)
+  for (const match of policyCommentMatches) {
+    if (match && match[1]) {
+      const policyText = match[1].trim()
+        .replace(/\*\*/g, '') // Remove markdown bold
+        .replace(/^-\s*/, '') // Remove bullet point
+        .trim()
+
+      if (policyText && policyText.length > 5) {
+        policies.push(policyText)
+      }
+    }
+  }
+
+  // If HTML comment extraction found policies, return them
+  if (policies.length > 0) {
+    return policies
+  }
+
+  // FALLBACK: Extract policies from the template sections
+  const policiesMatch = content.match(/### Políticas Específicas del Alojamiento[\s\S]*?(?=###|$)/i) ||
+                        content.match(/### Políticas de Uso[\s\S]*?### Recomendaciones de Estadía[\s\S]*?(?=###|$)/i)
+
   if (!policiesMatch) return null
 
   // Clean up the policies text
-  let policies = policiesMatch[0]
-  policies = policies.replace(/###.*$/gm, '') // Remove section headers
-  policies = policies.replace(/\*\*/g, '') // Remove markdown bold
-  policies = policies.replace(/^-\s*/gm, '') // Remove bullet points
-  policies = policies.trim()
+  let policiesText = policiesMatch[0]
+  policiesText = policiesText.replace(/###.*$/gm, '') // Remove section headers
+  policiesText = policiesText.replace(/\*\*/g, '') // Remove markdown bold
 
-  return policies
+  // Extract individual policy items
+  const policyItems = policiesText.split('\n')
+    .filter(line => line.trim().startsWith('-'))
+    .map(line => line.replace(/^-\s*/, '').trim())
+    .filter(line => line.length > 5)
+
+  return policyItems.length > 0 ? policyItems : null
 }
 
 // NEW EXTRACTION FUNCTIONS - PREVENTING "PRICING BUG" FOR OTHER FIELDS
@@ -266,9 +294,9 @@ function extractCapacityFromTemplate(content) {
 function extractSizeFromTemplate(content) {
   // Extract size_m2 using HTML comments and patterns
   const sizePatterns = [
-    // HTML comment guided extraction
+    // HTML comment guided extraction - WITH numeric value
     /<!-- EXTRAE: size_m2 -->\s*.*?(\d+)\s*metros?\s*cuadrados?/i,
-    // Traditional patterns
+    // Traditional patterns with numbers
     /tamaño.*?(\d+)\s*metros?\s*cuadrados?/i,
     /(\d+)\s*m2/i,
     /(\d+)\s*metros?\s*cuadrados?/i,
@@ -283,6 +311,22 @@ function extractSizeFromTemplate(content) {
       if (size > 0 && size < 1000) { // Reasonable size validation
         return size
       }
+    }
+  }
+
+  // ENHANCED: Extract descriptive size when no numeric value (e.g., "pequeña pero optimizada")
+  // Pattern to capture text BEFORE the comment (e.g., "- **Tamaño**: Habitación pequeña pero optimizada <!-- EXTRAE: size_m2 -->")
+  const descriptiveSizePattern = /Tamaño\*\*:\s*(.*?)\s*<!--\s*EXTRAE:\s*size_m2\s*-->/i
+  const descriptiveMatch = content.match(descriptiveSizePattern)
+  if (descriptiveMatch) {
+    const sizeText = descriptiveMatch[1].trim()
+      .replace(/\*\*/g, '') // Remove markdown bold
+      .replace(/\[|\]/g, '') // Remove brackets
+      .trim()
+
+    // Only return if it's descriptive text (not empty, not just a number)
+    if (sizeText && sizeText.length > 3 && !/^\d+$/.test(sizeText)) {
+      return sizeText // Return descriptive size like "Habitación pequeña pero optimizada"
     }
   }
 
@@ -707,18 +751,28 @@ function extractDisplayConfigFromTemplate(content, metadata) {
   if (metadata && metadata.display_order !== undefined) {
     config.display_order = parseInt(metadata.display_order)
   } else {
-    // HTML comment extraction
-    const orderCommentMatch = content.match(/<!-- EXTRAE: display_order -->\s*(.*?)(?=<!--|\n|$)/i)
+    // ENHANCED: HTML comment extraction with flexible parsing
+    // Pattern to capture text BEFORE the comment (e.g., "- **Orden de visualización**: 6 - Buena prioridad <!-- EXTRAE: display_order -->")
+    const orderCommentMatch = content.match(/Orden de visualización\*\*:\s*(.*?)\s*<!--\s*EXTRAE:\s*display_order\s*-->/i)
     if (orderCommentMatch) {
-      const orderText = orderCommentMatch[1].trim().replace(/\[|\]/g, '')
-      const orderNum = parseInt(orderText)
-      if (!isNaN(orderNum)) {
-        config.display_order = orderNum
+      const orderText = orderCommentMatch[1].trim()
+        .replace(/\[|\]/g, '')
+        .replace(/\*\*/g, '') // Remove markdown bold
+        .replace(/^-\s*/, '') // Remove bullet point
+        .trim()
+
+      // Extract first number from text (handles "6 - Buena prioridad" → 6)
+      const numberMatch = orderText.match(/(\d+)/)
+      if (numberMatch) {
+        const orderNum = parseInt(numberMatch[1])
+        if (!isNaN(orderNum) && orderNum >= 0 && orderNum < 100) { // Reasonable display_order validation
+          config.display_order = orderNum
+        }
       }
     } else {
       // Pattern extraction
       const orderPatterns = [
-        /orden de visualización.*?:\s*\[(\d+)\]/i,
+        /orden de visualización.*?:\s*\[?(\d+)\]?/i,
         /display_order.*?:\s*(\d+)/i,
         /prioridad.*?(\d+)/i
       ]
@@ -1410,19 +1464,40 @@ function extractAccommodationData(content, metadata) {
     extracted.capacity = parseInt(capacityMatches[0][1])
   }
 
-  // Extract floor_number
-  const floorMatches = [
-    content.match(/(primer|segundo|tercer|cuarto|quinto) piso/i),
-    content.match(/piso (\d+)/i),
-    metadata.description?.match(/(primer|segundo|tercer|cuarto|quinto) piso/i)
-  ].filter(Boolean)
+  // ENHANCED: Extract floor_number with HTML comment and descriptive text support
+  // Pattern to capture text BEFORE the comment (e.g., "- **Número de piso**: Planta principal <!-- EXTRAE: floor_number -->")
+  const floorCommentMatch = content.match(/Número de piso\*\*:\s*(.*?)\s*<!--\s*EXTRAE:\s*floor_number\s*-->/i)
+  if (floorCommentMatch) {
+    const floorText = floorCommentMatch[1].trim()
+      .replace(/\*\*/g, '') // Remove markdown bold
+      .replace(/\[|\]/g, '') // Remove brackets
+      .trim().toLowerCase()
 
-  if (floorMatches.length > 0) {
-    const floorText = floorMatches[0][1].toLowerCase()
+    // Map descriptive text to numbers
     const floorMap = {
-      'primer': 1, 'segundo': 2, 'tercer': 3, 'cuarto': 4, 'quinto': 5
+      'primer': 1, 'segundo': 2, 'tercer': 3, 'cuarto': 4, 'quinto': 5,
+      'planta baja': 0, 'planta principal': 1, 'ground floor': 0, 'main floor': 1,
+      'piso 1': 1, 'piso 2': 2, 'piso 3': 3, 'piso 4': 4, 'piso 5': 5
     }
-    extracted.floor_number = floorMap[floorText] || parseInt(floorText) || null
+
+    extracted.floor_number = floorMap[floorText] !== undefined ? floorMap[floorText] : floorText
+  } else {
+    // Fallback to traditional patterns
+    const floorMatches = [
+      content.match(/(primer|segundo|tercer|cuarto|quinto) piso/i),
+      content.match(/piso (\d+)/i),
+      content.match(/(planta baja|planta principal)/i),
+      metadata.description?.match(/(primer|segundo|tercer|cuarto|quinto) piso/i)
+    ].filter(Boolean)
+
+    if (floorMatches.length > 0) {
+      const floorText = floorMatches[0][1].toLowerCase()
+      const floorMap = {
+        'primer': 1, 'segundo': 2, 'tercer': 3, 'cuarto': 4, 'quinto': 5,
+        'planta baja': 0, 'planta principal': 1
+      }
+      extracted.floor_number = floorMap[floorText] || parseInt(floorText) || null
+    }
   }
 
   // Extract base_price_cop (temporada baja / lowest price)
@@ -2123,8 +2198,14 @@ async function processDocument(mdFilePath, unitMap = new Map()) {
 
         // Add booking policies if extracted
         if (bookingPolicies) {
-          const policiesText = bookingPolicies.replace(/'/g, "''")
-          additionalUpdates.push(`booking_policies = '${policiesText}'`)
+          // Handle both array and string formats
+          if (Array.isArray(bookingPolicies)) {
+            const policiesJson = JSON.stringify(bookingPolicies).replace(/'/g, "''")
+            additionalUpdates.push(`booking_policies = '${policiesJson}'::jsonb`)
+          } else {
+            const policiesText = bookingPolicies.replace(/'/g, "''")
+            additionalUpdates.push(`booking_policies = '${policiesText}'`)
+          }
         }
 
         // NEW FIELD UPDATES - PREVENTING "PRICING BUG" FOR OTHER FIELDS
@@ -2190,11 +2271,26 @@ async function processDocument(mdFilePath, unitMap = new Map()) {
 
         // ENHANCED FIELD UPDATES - NEW EXTRACTION FUNCTIONS
 
-        // Add size_m2 - METADATA FIRST PRIORITY
+        // Add size_m2 - METADATA FIRST PRIORITY (only numeric values, column is INTEGER type)
         const finalSizeM2 = metadata.accommodation?.size_m2 || sizeData
         if (finalSizeM2) {
-          additionalUpdates.push(`size_m2 = ${finalSizeM2}`)
-          console.log(`✅ Using ${metadata.accommodation?.size_m2 ? 'metadata' : 'extracted'} value for size_m2: ${finalSizeM2}`)
+          // Only insert if it's a number (size_m2 column is INTEGER type)
+          if (typeof finalSizeM2 === 'number') {
+            additionalUpdates.push(`size_m2 = ${finalSizeM2}`)
+            console.log(`✅ Using ${metadata.accommodation?.size_m2 ? 'metadata' : 'extracted'} value for size_m2: ${finalSizeM2}`)
+          } else if (typeof finalSizeM2 === 'string') {
+            // Try to parse number from string (e.g., "18m²" → 18)
+            const numMatch = String(finalSizeM2).match(/(\d+)/)
+            if (numMatch) {
+              const numValue = parseInt(numMatch[1])
+              if (numValue > 0 && numValue < 1000) {
+                additionalUpdates.push(`size_m2 = ${numValue}`)
+                console.log(`✅ Parsed size_m2 from "${finalSizeM2}" → ${numValue}`)
+              }
+            } else {
+              console.log(`⚠️  Skipping size_m2 (descriptive text, no numeric value): ${finalSizeM2}`)
+            }
+          }
         }
 
         // Add view_type if extracted from features
@@ -2222,6 +2318,25 @@ async function processDocument(mdFilePath, unitMap = new Map()) {
         if (finalDisplayOrder !== undefined) {
           additionalUpdates.push(`display_order = ${finalDisplayOrder}`)
           console.log(`✅ Using ${metadata.accommodation?.display_order !== undefined ? 'metadata' : 'extracted'} value for display_order: ${finalDisplayOrder}`)
+        }
+
+        // Add floor_number - extract inline since extractedData not in scope
+        let finalFloorNumber = metadata.accommodation?.floor_number
+        if (finalFloorNumber === undefined) {
+          // Extract floor_number inline
+          const floorCommentMatch = content.match(/Número de piso\*\*:\s*(.*?)\s*<!--\s*EXTRAE:\s*floor_number\s*-->/i)
+          if (floorCommentMatch) {
+            const floorText = floorCommentMatch[1].trim().toLowerCase()
+            const floorMap = {
+              'primer': 1, 'segundo': 2, 'tercer': 3, 'cuarto': 4, 'quinto': 5,
+              'planta baja': 0, 'planta principal': 1, 'ground floor': 0, 'main floor': 1
+            }
+            finalFloorNumber = floorMap[floorText] !== undefined ? floorMap[floorText] : null
+          }
+        }
+        if (finalFloorNumber !== undefined && finalFloorNumber !== null) {
+          additionalUpdates.push(`floor_number = ${finalFloorNumber}`)
+          console.log(`✅ Using ${metadata.accommodation?.floor_number !== undefined ? 'metadata' : 'extracted'} value for floor_number: ${finalFloorNumber}`)
         }
 
         // Add unit_amenities text if extracted

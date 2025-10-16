@@ -41,7 +41,7 @@ schema: "hotels"
 ### Capacidad y Distribución
 - **Capacidad máxima**: 2 personas <!-- EXTRAE: capacity.max_capacity -->
 - **Configuración de camas**: Habitación pequeña con cama matrimonial compacta <!-- EXTRAE: bed_configuration -->
-- **Tamaño**: Habitación pequeña pero optimizada <!-- EXTRAE: size_m2 -->
+- **Tamaño**: 15 metros cuadrados <!-- EXTRAE: size_m2 -->
 - **Número de piso**: Planta principal <!-- EXTRAE: floor_number -->
 - **Tipo de vista**: Ventana anti-ruido con vista al exterior <!-- EXTRAE: view_type -->
 - **Número de unidad**: Habitación Kaya <!-- EXTRAE: unit_number -->

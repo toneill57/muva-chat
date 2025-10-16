@@ -16,7 +16,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-const LATEST_KAYA_HOTELS_ID = '23b75dc4-6d28-4fe2-a4d4-b756e601b90c';
+const LATEST_KAYA_HOTELS_ID = 'bdfe5970-1ce2-4311-a0d0-ca9e385726b7'; // Updated 2025-10-16
 const KAYA_PUBLIC_ID = 'b00f82aa-c471-41b2-814a-5dfc2078de74';
 
 async function syncKayaToPublic() {
