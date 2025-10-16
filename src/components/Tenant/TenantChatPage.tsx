@@ -1,13 +1,10 @@
 'use client'
 
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react'
+import { Send, RotateCcw } from 'lucide-react'
 import remarkGfm from 'remark-gfm'
 import { getWelcomeMessageHTML } from '@/lib/welcome-message-static'
 import TenantHeader from './TenantHeader'
-import SuggestionButton from './SuggestionButton'
-import ErrorRetryButton from './ErrorRetryButton'
-import ErrorCloseButton from './ErrorCloseButton'
-import SendMessageButton from './SendMessageButton'
 
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
@@ -404,11 +401,17 @@ export default function TenantChatPage({ subdomain, tenant }: TenantChatPageProp
                 {message.role === 'assistant' && message.suggestions && message.suggestions.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {message.suggestions.map((suggestion, idx) => (
-                      <SuggestionButton
+                      <button
                         key={idx}
-                        suggestion={suggestion}
-                        onClick={handleSuggestionClick}
-                      />
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="px-4 py-2.5 min-h-[44px] bg-teal-50 hover:bg-teal-100
+                                   text-teal-700 text-base rounded-full
+                                   border border-teal-200
+                                   transition-colors"
+                        aria-label={`Quick reply: ${suggestion}`}
+                      >
+                        {suggestion}
+                      </button>
                     ))}
                   </div>
                 )}
@@ -433,8 +436,18 @@ export default function TenantChatPage({ subdomain, tenant }: TenantChatPageProp
           <div className="flex items-center justify-between max-w-lg mx-auto">
             <p className="text-sm text-red-700 flex-1">{error}</p>
             <div className="flex gap-2">
-              <ErrorRetryButton onClick={retryLastMessage} />
-              <ErrorCloseButton onClick={() => setError(null)} />
+              <button
+                onClick={retryLastMessage}
+                className="text-sm text-red-600 hover:text-red-800 font-medium underline"
+              >
+                Retry
+              </button>
+              <button
+                onClick={() => setError(null)}
+                className="text-sm text-red-400 hover:text-red-600 font-medium"
+              >
+                ✕
+              </button>
             </div>
           </div>
         </div>
@@ -460,13 +473,42 @@ export default function TenantChatPage({ subdomain, tenant }: TenantChatPageProp
             rows={1}
           />
 
-          <SendMessageButton
+          <button
             onClick={sendMessage}
             disabled={!input.trim() || loading || !tenantId}
-            primaryColor={tenant.primary_color}
-          />
+            aria-label="Send message"
+            style={{
+              background: `linear-gradient(to right, ${tenant.primary_color}, ${adjustColor(tenant.primary_color, 20)})`
+            }}
+            className="text-white rounded-xl
+                       w-11 h-11
+                       flex items-center justify-center
+                       hover:shadow-lg
+                       disabled:bg-gray-300 disabled:cursor-not-allowed
+                       transition-all duration-200"
+          >
+            <Send className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </div>
   )
+}
+
+/**
+ * Helper to adjust color brightness
+ * For gradient effect
+ */
+function adjustColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16)
+  const amt = Math.round(2.55 * percent)
+  const R = (num >> 16) + amt
+  const G = (num >> 8 & 0x00FF) + amt
+  const B = (num & 0x0000FF) + amt
+  return '#' + (
+    0x1000000 +
+    (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+    (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+    (B < 255 ? B < 1 ? 0 : B : 255)
+  ).toString(16).slice(1)
 }
