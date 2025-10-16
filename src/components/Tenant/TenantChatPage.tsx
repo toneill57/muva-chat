@@ -5,6 +5,7 @@ import { Send, Bot, RotateCcw } from 'lucide-react'
 import remarkGfm from 'remark-gfm'
 import { getWelcomeMessageHTML } from '@/lib/welcome-message-static'
 import TenantHeader from './TenantHeader'
+import SuggestionButton from './SuggestionButton'
 
 const ReactMarkdown = lazy(() => import('react-markdown'))
 const DevPhotoCarousel = lazy(() => import('../Dev/DevPhotoCarousel'))
@@ -401,17 +402,11 @@ export default function TenantChatPage({ subdomain, tenant }: TenantChatPageProp
                 {message.role === 'assistant' && message.suggestions && message.suggestions.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
                     {message.suggestions.map((suggestion, idx) => (
-                      <button
+                      <SuggestionButton
                         key={idx}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className="px-4 py-2.5 min-h-[44px] bg-teal-50 hover:bg-teal-100
-                                   text-teal-700 text-base rounded-full
-                                   border border-teal-200
-                                   transition-colors"
-                        aria-label={`Quick reply: ${suggestion}`}
-                      >
-                        {suggestion}
-                      </button>
+                        suggestion={suggestion}
+                        onClick={handleSuggestionClick}
+                      />
                     ))}
                   </div>
                 )}
