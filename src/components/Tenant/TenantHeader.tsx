@@ -1,6 +1,7 @@
 'use client'
 
-import { Bot, RotateCcw } from 'lucide-react'
+import { Bot } from 'lucide-react'
+import NewConversationButton from './NewConversationButton'
 
 interface TenantHeaderProps {
   tenant: {
@@ -35,13 +36,7 @@ export default function TenantHeader({ tenant, onNewConversation }: TenantHeader
           <h1 className="font-bold text-lg">{tenant.business_name} Chat</h1>
         </div>
 
-        <button
-          onClick={onNewConversation}
-          className="p-2.5 min-w-[44px] min-h-[44px] hover:bg-white/20 rounded-lg transition-colors flex items-center justify-center"
-          aria-label="Start new conversation"
-        >
-          <RotateCcw className="w-5 h-5" />
-        </button>
+        <NewConversationButton onClick={onNewConversation} />
       </div>
     </header>
   )
