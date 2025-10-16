@@ -161,7 +161,7 @@ export async function getTenantBySubdomain(
 
     const { data, error } = await supabase
       .from('tenant_registry')
-      .select('*')
+      .select('tenant_id, subdomain, nombre_comercial, business_name, slug, logo_url, primary_color, created_at, updated_at, nit, razon_social, is_active, seo_meta_description')
       .eq('subdomain', subdomain)
       .single();
 
