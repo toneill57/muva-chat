@@ -111,6 +111,14 @@ Agentes leen AUTOMÁTICAMENTE `snapshots/{nombre}.md`
 
 ### Database Operations Hierarchy
 
+#### ⚠️ Reuse Tool Results - Don't Re-query
+
+**Before ANY query:** Check if `list_tables` was already called this session.
+- ✅ Schema data is ALREADY in context → Use it
+- ❌ Re-querying same info → 100% wasted tokens
+
+**Example:** `list_tables` returns ALL columns → Don't call `information_schema.columns` again for same table.
+
 #### For DML (Data Queries: SELECT/INSERT/UPDATE/DELETE)
 1. **MCP Supabase (PRIMARY)** - `mcp__supabase__execute_sql` for ALL queries (70% token savings)
 2. **RPC Functions (SECONDARY)** - When available (98% savings vs inline SQL)
