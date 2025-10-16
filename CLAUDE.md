@@ -30,11 +30,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - ✅ SEGUNDO: Informar al usuario cuál es el problema REAL
 - ✅ TERCERO: Solo entonces, si no hay solución directa, proponer work-around
 
-**Ejemplos de errores comunes a investigar PRIMERO:**
-- IDs inventados en lugar de usar los correctos del .env.local
-- Permisos de MCP que requieren parámetros específicos
-- Env vars no cargadas correctamente
-
 ### 3. Autonomía de Ejecución
 **NUNCA solicitar al usuario realizar tareas que yo puedo realizar por mi cuenta.**
 
@@ -86,12 +81,6 @@ Aplica a: scripts, bash, leer archivos, APIs, reiniciar servidores, testing
 mcp__supabase__list_tables({ project_id: "ooaumjzaztmutltifhoq", schemas: ["public"] })
 ```
 ❌ Without `schemas` param → Permission denied (tries to read system schemas)
-📚 Docs: `docs/troubleshooting/MCP_SUPABASE_LIST_TABLES_WORKAROUND.md`
-
-### Semantic Code Search (pgvector)
-- **Search:** `npx tsx scripts/semantic-search-pgvector.ts "query"`
-- **Re-index:** `npx tsx scripts/generate-embeddings.ts`
-- **Table:** `code_embeddings` (4,333 embeddings, OpenAI text-embedding-3-small)
 
 ---
 
@@ -123,52 +112,21 @@ Agentes leen AUTOMÁTICAMENTE `snapshots/{nombre}.md`
 ### Database Operations Hierarchy
 
 #### For DML (Data Queries: SELECT/INSERT/UPDATE/DELETE)
-1. **MCP Supabase (PRIMARY)** - Use `mcp__supabase__execute_sql` for ALL SQL queries. ⚡ 70% faster, 70% less tokens.
-2. **RPC Functions (SECONDARY)** - `get_accommodation_unit_by_id()`, `get_sire_statistics()` when available.
-3. **Supabase Client tsx (AVOID)** - Only for complex logic requiring multiple operations. Costs 3x more tokens.
+1. **MCP Supabase (PRIMARY)** - `mcp__supabase__execute_sql` for ALL queries (70% token savings)
+2. **RPC Functions (SECONDARY)** - When available (98% savings vs inline SQL)
+3. **Supabase Client tsx (AVOID)** - Only for complex multi-operation logic (3x cost)
 
 #### For DDL (Schema Changes: CREATE/ALTER/DROP)
-**CRITICAL:** MCP Supabase tools (`mcp__supabase__apply_migration`, `mcp__supabase__execute_sql`) **DO NOT WORK** for DDL due to permission issues.
+**CRITICAL:** MCP tools DO NOT WORK for DDL. Use Management API ONLY.
 
-**✅ CORRECT METHOD** - Supabase Management API:
 ```bash
-curl -X POST "https://api.supabase.com/v1/projects/{PROJECT_ID}/database/query" \
-  -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{"query":"CREATE OR REPLACE FUNCTION..."}'
+# Use helper script for DDL
+set -a && source .env.local && set +a && npx tsx scripts/execute-ddl-via-api.ts migration.sql
 ```
 
-**Use helper script**: `scripts/execute-ddl-via-api.ts`
-```bash
-set -a && source .env.local && set +a && npx tsx scripts/execute-ddl-via-api.ts path/to/migration.sql
-```
+**❌ NEVER:** `mcp__supabase__apply_migration`, `execute_sql()` RPC, manual user execution
 
-**❌ NEVER USE**:
-- `mcp__supabase__apply_migration` - Permission denied
-- `mcp__supabase__execute_sql` for DDL - Permission denied
-- `execute_sql()` RPC - Fails silently, returns success but doesn't execute DDL
-- Manual user execution - Violates autonomy principle
-
-**Why Management API?** It's the ONLY method that works programmatically for DDL without manual intervention.
-
-### Supabase Best Practices
-
-**Project ID:** `ooaumjzaztmutltifhoq` (from `.env.local`)
-- ❌ NEVER invent IDs
-- ✅ ALWAYS use explicit `schemas: ["public"]` in MCP calls
-
-**Database Hierarchy:**
-- **Schema inspection:** MCP `list_tables` (must use `schemas` param)
-- **DML queries:** RPC functions > Direct SQL via MCP
-- **DDL changes:** Management API ONLY (`scripts/execute-ddl-via-api.ts`)
-
-**Quick Commands:**
-```bash
-# List tables: mcp__supabase__list_tables({ project_id: "...", schemas: ["public"] })
-# DDL: set -a && source .env.local && set +a && npx tsx scripts/execute-ddl-via-api.ts migration.sql
-```
-
-📚 Docs: `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
+📚 **Full guide:** `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
 
 ### TypeScript Scripts (tsx)
 Para scripts que necesitan env vars:
@@ -176,114 +134,35 @@ Para scripts que necesitan env vars:
 set -a && source .env.local && set +a && npx tsx script.ts
 ```
 
-### SIRE Compliance Helpers
+### SIRE Compliance
 **CRITICAL:** Use official SIRE codes (NOT ISO 3166-1)
-- ✅ USAR: `src/lib/sire/sire-catalogs.ts` (códigos SIRE oficiales)
-  - `getSIRECountryCode()` - Fuzzy search en 250 países (USA=249, NOT 840)
-  - `getDIVIPOLACityCode()` - Fuzzy search en 1,122 ciudades colombianas
-  - `formatDateToSIRE()` - DB format (YYYY-MM-DD) → SIRE (dd/mm/yyyy)
-- ❌ NUNCA usar ISO 3166-1 (USA=840❌, usar USA=249✅)
-- ⚠️ 100% de archivos TXT con ISO codes serán RECHAZADOS por SIRE
+- ✅ USAR: `src/lib/sire/sire-catalogs.ts` (USA=249, NOT 840)
+- ❌ NUNCA usar ISO 3166-1 → 100% RECHAZADO por SIRE
 - 📚 Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ---
 
 ## 📋 Workflow Commands
 
-### `/plan-project` - Traditional Multi-Phase Planning
-
-**Use when:**
-- Project requires >3 hours of work
-- Needs multi-phase execution (FASE 1, 2, 3...)
-- Requires multiple specialized agents
-- Complex architecture or coordination needed
-
-**Generates:**
-- `docs/projects/{name}/plan.md` - Complete project plan
-- `docs/projects/{name}/TODO.md` - Tasks organized by phases
-- `docs/projects/{name}/{name}-prompt-workflow.md` - Ready-to-use prompts
-- Updates `snapshots/{agent}.md` with CURRENT PROJECT section
-
-**Characteristics:**
-- Comprehensive planning (100-500+ lines per file)
-- Agent coordination via snapshots
-- Phase-based execution
-- Detailed documentation per phase
-- Higher context usage (~100k tokens)
-
-**Examples:**
-- Mobile-first chat interface (6 phases, 25 tasks)
-- SIRE compliance system (4 phases, 18 tasks)
-- Multi-tenant architecture refactor
-
-### `/workflow-express` - Rapid Task Execution
-
-**Use when:**
-- Task is focused and specific (1-3 hours max)
-- Well-defined scope (2-5 tasks)
-- Single-agent execution
-- No complex coordination needed
-
-**Generates:**
-- `docs/projects/{name}/workflow-express.md` - Single-file workflow
-- Includes copy-paste ready prompt with delimiters
-- Self-contained execution plan
-
-**Characteristics:**
-- Compact single file (~500 lines)
-- Immediate execution (no multi-file planning)
-- TodoList-driven tracking
-- Testing + commits per task
-- Lower context usage (~20k tokens)
-
-**Examples:**
-- Fix health check endpoint (3 tasks, 1.5h)
-- Cleanup legacy references (5 tasks, 2h)
-- Add rate limiting (4 tasks, 2.5h)
-
-### Comparison Matrix
+### `/plan-project` vs `/workflow-express`
 
 | Feature | `/plan-project` | `/workflow-express` |
 |---------|----------------|---------------------|
 | **Duration** | >3 hours | 1-3 hours |
-| **Files Generated** | 3+ files | 1 file |
+| **Files** | 3+ files | 1 file |
 | **Agents** | Multiple | Single |
-| **Context Usage** | High (~100k) | Low (~20k) |
-| **Planning Depth** | Comprehensive | Focused |
 | **Best For** | Features, architecture | Bugs, cleanups, tweaks |
-| **Execution** | Multi-session phases | Single session |
-| **Documentation** | Per-phase docs | Inline docs |
 
-### Usage Workflow
-
-**For Express Tasks (Recommended for most):**
-```bash
-1. /workflow-express
-2. Fill in project details
-3. Review generated workflow
-4. /clear
-5. Copy-paste PROMPT (between ⬇️ and ⬆️)
-6. Execute with TodoList tracking
-```
-
-**For Complex Projects:**
-```bash
-1. /plan-project
-2. Answer planning questions
-3. Review plan.md + TODO.md + workflow.md
-4. Start FASE 1 using workflow prompts
-5. Execute phase by phase
-6. Document each phase completion
-```
+**Use `/workflow-express` for most tasks.** Use `/plan-project` only for complex multi-phase projects.
 
 ---
 
 ## 📚 Documentation References
 
-- **MCP Setup:** `docs/optimization/MCP_SERVERS_RESULTS.md`
+- **MCP Policy:** `docs/infrastructure/MCP_USAGE_POLICY.md`
 - **Database Patterns:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
-- **SIRE Compliance:** `docs/features/sire-compliance/CODIGOS_OFICIALES.md`
-- **SIRE vs ISO:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (códigos oficiales)
+- **Supabase Guide:** `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
+- **SIRE Codes:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 - **Agent Snapshots:** `snapshots/{agent-name}.md`
 
 ---
