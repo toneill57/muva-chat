@@ -269,50 +269,16 @@ function validateStatusConsistency(unit: any): ValidationResult[] {
 }
 
 async function validateTableSync(unit_id: string): Promise<ValidationResult> {
-  // Check if unit exists in both tables
-  const { data: mainTable } = await supabase
-    .from('accommodation_units')
-    .select('unit_id')
-    .eq('unit_id', unit_id)
-    .single();
-
-  const { data: publicTable } = await supabase
-    .from('accommodation_units_public')
-    .select('unit_id')
-    .eq('unit_id', unit_id)
-    .single();
-
-  if (!mainTable && publicTable) {
-    return {
-      field: 'table_sync',
-      status: 'fail',
-      message: 'Missing from accommodation_units (only in public table)',
-      severity: 'critical',
-    };
-  }
-
-  if (mainTable && !publicTable) {
-    return {
-      field: 'table_sync',
-      status: 'fail',
-      message: 'Missing from accommodation_units_public (only in main table)',
-      severity: 'critical',
-    };
-  }
-
-  if (!mainTable && !publicTable) {
-    return {
-      field: 'table_sync',
-      status: 'fail',
-      message: 'Missing from BOTH tables',
-      severity: 'critical',
-    };
-  }
+  // REMOVED 2025-10-16: This check was flagging a design pattern as a bug.
+  // accommodation_units = MotoPress integrations (2 units)
+  // accommodation_units_public = Markdown uploads for chat (11 units)
+  // They serve DIFFERENT purposes, not duplicate storage.
+  // See: docs/standards/ACCOMMODATION_DATA_STANDARD.md
 
   return {
     field: 'table_sync',
     status: 'pass',
-    message: 'Exists in both tables',
+    message: 'N/A (tables serve different data sources)',
     severity: 'low',
   };
 }
