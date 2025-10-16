@@ -154,29 +154,38 @@ PostgreSQL Database (Supabase)
 - `get_edge_function(slug)` - Function source
 - `deploy_edge_function()` - Deploy/update function
 
-**IMPORTANT Query Hierarchy:**
+**🚨 UPDATED OCT 16, 2025 - MCP-FIRST POLICY:**
+
+**CRITICAL Query Hierarchy (Enforced):**
 ```
-1. Supabase Client (PRIMARY)     ← Use `npx tsx -e` with createClient() for day-to-day
-2. RPC Functions (SECONDARY)     ← `get_accommodation_unit_by_id()`, `get_sire_statistics()`
-3. MCP execute_sql (LAST RESORT) ← Emergency ad-hoc analysis only
+1. MCP Supabase (PRIMARY)        ← mcp__supabase__execute_sql for ALL SQL queries
+2. RPC Functions (SECONDARY)     ← get_accommodation_unit_by_id(), when available
+3. Supabase Client tsx (AVOID)   ← Only for complex multi-operation logic (3x cost)
 ```
+
+**Token Economics:**
+- MCP execute_sql: ~150 tokens (70% savings vs tsx)
+- RPC functions: ~345 tokens (98% savings vs inline SQL)
+- tsx inline SQL: ~17,700 tokens (AVOID)
+
+**Policy Reference:** `docs/infrastructure/MCP_USAGE_POLICY.md`
 
 **Example Usage:**
 ```typescript
-// ✅ PREFERRED - Use RPC function (345 tokens)
+// ✅ PREFERRED - Use MCP for ad-hoc queries (150 tokens)
+mcp__supabase__execute_sql({
+  project_id: 'ooaumjzaztmutltifhoq',
+  query: 'SELECT COUNT(*) FROM guest_reservations WHERE tenant_id = $1'
+})
+
+// ✅ ALTERNATIVE - Use RPC function when available (345 tokens)
 const { data } = await supabase
   .rpc('get_accommodation_unit_by_id', {
     p_unit_id: unit_id,
     p_tenant_id: tenant_id
   })
 
-// ⚠️ SECONDARY - MCP tool for debugging (1,200 tokens)
-mcp__supabase__execute_sql({
-  project_id: 'ooaumjzaztmutltifhoq',
-  query: 'SELECT COUNT(*) FROM guest_reservations WHERE tenant_id = $1'
-})
-
-// ❌ AVOID - Direct SQL in code (17,700 tokens)
+// ❌ AVOID - Direct SQL in code (17,700 tokens, 3x cost)
 const { data } = await supabase
   .from('accommodation_units')
   .select('*, amenities(*), policies(*)')
@@ -729,22 +738,25 @@ CREATE POLICY "tenant_isolation_policy" ON table_name
 
 **Measured Impact:** 3x speed improvement (Tier 1 vs Tier 3) with <2% accuracy loss
 
-### 3. Database Query Hierarchy (Oct 2025)
+### 3. Database Query Hierarchy (Updated Oct 16, 2025 - MCP-FIRST)
 
-**Token Optimization Policy:**
+**🚨 Token Optimization Policy (Enforced):**
 
-1. **RPC Functions (PRIMARY)** - 90-98% token reduction
+1. **MCP Supabase (PRIMARY)** - 70% token reduction over tsx
+   - `mcp__supabase__execute_sql()` for ALL SQL queries
+   - Direct database access without code scaffolding
+   - Fastest option for ad-hoc queries
+
+2. **RPC Functions (SECONDARY)** - 98% token reduction vs inline SQL
    - Example: `get_guest_conversation_metadata()` replaces 11 queries
    - Type-safe, pre-compiled, cached query plans
+   - Use when available for complex operations
 
-2. **Direct SQL via MCP (SECONDARY)** - Ad-hoc analysis only
-   - `mcp__supabase__execute_sql()` for one-time queries
-   - Development and debugging
-
-3. **execute_sql() RPC (EMERGENCY)** - Migrations only
-   - Never in regular application code
+3. **Supabase Client tsx (AVOID)** - 3x more tokens than MCP
+   - Only for complex multi-operation logic
    - Never in scheduled scripts or API endpoints
 
+**Policy Reference:** `docs/infrastructure/MCP_USAGE_POLICY.md`
 **Documentation:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
 
 ### 4. Embedding Generation Strategy

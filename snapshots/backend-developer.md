@@ -165,13 +165,20 @@ pgvector 0.8.0 (Matryoshka embeddings)
 RPC Functions: 15 creadas (98.1% token reduction medido)
 Migrations: 235 aplicadas (12 locales en /supabase/migrations/)
 
+🚨 UPDATED OCT 16, 2025 - MCP-FIRST POLICY:
+
 MCP Tools (Supabase):
   - 29 tools disponibles (list_tables, apply_migration, execute_sql, etc.)
-  - Token benefit: 98%+ reduction vs schema dumps
-  - Use case: Emergency ad-hoc analysis only (LAST RESORT)
-  - Primary: Supabase Client (`npx tsx -e` with createClient())
-  - Secondary: RPC functions
-  - Last Resort: MCP execute_sql
+  - Token benefit: 70% reduction vs tsx inline SQL
+  - CRITICAL Query Hierarchy (Enforced):
+    1. MCP Supabase (PRIMARY)       ← mcp__supabase__execute_sql for ALL SQL queries
+    2. RPC Functions (SECONDARY)    ← get_accommodation_unit_by_id(), when available
+    3. Supabase Client tsx (AVOID)  ← Only for complex multi-operation logic (3x cost)
+
+Token Economics:
+  - MCP execute_sql: ~150 tokens (70% savings vs tsx)
+  - RPC functions: ~345 tokens (98% savings vs inline SQL)
+  - tsx inline SQL: ~17,700 tokens (AVOID)
 ```
 
 ### AI/LLM Integration
@@ -534,11 +541,19 @@ const { data } = await supabase
 4. **Maintainability**: Single source of truth (cambiar en 1 lugar vs N lugares)
 5. **Security**: Row Level Security + function isolation built-in
 
-**Query Pattern Hierarchy (CRITICAL):**
+**🚨 UPDATED OCT 16, 2025 - MCP-FIRST POLICY:**
+
+**Query Pattern Hierarchy (CRITICAL - ENFORCED):**
 ```
-1. Supabase Client (PRIMARY)     ← Use `npx tsx -e` with createClient() for day-to-day
-2. RPC Functions (SECONDARY)     ← Use when available for token optimization
-3. MCP execute_sql (LAST RESORT) ← Emergency ad-hoc analysis only
+1. MCP Supabase (PRIMARY)       ← mcp__supabase__execute_sql for ALL SQL queries
+2. RPC Functions (SECONDARY)    ← Use when available for token optimization
+3. Supabase Client tsx (AVOID)  ← Only for complex multi-operation logic (3x cost)
+```
+
+**Token Economics Comparison:**
+- MCP execute_sql: ~150 tokens (70% savings vs tsx)
+- RPC functions: ~345 tokens (98% savings vs inline SQL)
+- tsx inline SQL: ~17,700 tokens (AVOID unless absolutely necessary)
 ```
 
 **❌ NEVER use execute_sql() in:**
