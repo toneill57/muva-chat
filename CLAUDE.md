@@ -60,8 +60,25 @@ Aplica a: scripts, bash, leer archivos, APIs, reiniciar servidores, testing
 
 ## 🤖 MCP Servers
 
-**Available:** 4 servers (supabase, knowledge-graph, memory-keeper, context7)
+**Available:** 4 servers (supabase, knowledge-graph, playwright, context7)
 **Quick Test:** `/mcp` should show "4/4 ✓ connected"
+**Health Check:** `npx tsx scripts/mcp-health-check.ts`
+
+### 🚨 MCP-FIRST POLICY (OBLIGATORIO)
+
+**ANTES de usar Bash/WebFetch/tsx, VERIFICAR si existe MCP equivalente:**
+
+| Operación | ❌ NUNCA | ✅ SIEMPRE | Ahorro |
+|-----------|----------|------------|--------|
+| SQL queries | `npx tsx -e` | `mcp__supabase__execute_sql` | 70% |
+| DB schema | bash + describe | `mcp__supabase__list_tables` | 80% |
+| Framework docs | WebFetch | `mcp__context7__get-library-docs` | 90% |
+| UI testing | curl | `mcp__playwright__browser_snapshot` | 92% |
+| Project memory | scattered files | `mcp__knowledge-graph__aim_*` | 60% |
+
+**VIOLACIÓN = Desperdicio de tokens = Pérdida de $$$**
+
+📚 **Policy completa:** `docs/infrastructure/MCP_USAGE_POLICY.md`
 
 ### MCP Supabase - CRITICAL Workaround
 **Always use explicit schemas:**
@@ -106,9 +123,9 @@ Agentes leen AUTOMÁTICAMENTE `snapshots/{nombre}.md`
 ### Database Operations Hierarchy
 
 #### For DML (Data Queries: SELECT/INSERT/UPDATE/DELETE)
-1. **Supabase Client (PRIMARY)** - Use `npx tsx -e` with createClient() for day-to-day queries. Use `|| ''` instead of `!` operator.
-2. **RPC Functions (SECONDARY)** - `get_accommodation_unit_by_id()`, `get_sire_statistics()`
-3. **Direct SQL via MCP (LAST RESORT)** - Emergency only with `mcp__supabase__execute_sql`
+1. **MCP Supabase (PRIMARY)** - Use `mcp__supabase__execute_sql` for ALL SQL queries. ⚡ 70% faster, 70% less tokens.
+2. **RPC Functions (SECONDARY)** - `get_accommodation_unit_by_id()`, `get_sire_statistics()` when available.
+3. **Supabase Client tsx (AVOID)** - Only for complex logic requiring multiple operations. Costs 3x more tokens.
 
 #### For DDL (Schema Changes: CREATE/ALTER/DROP)
 **CRITICAL:** MCP Supabase tools (`mcp__supabase__apply_migration`, `mcp__supabase__execute_sql`) **DO NOT WORK** for DDL due to permission issues.
