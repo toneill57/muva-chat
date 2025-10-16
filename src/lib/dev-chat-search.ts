@@ -40,8 +40,9 @@ export interface VectorSearchResult {
   table: string
   metadata?: any
   pricing?: {
-    base_price_night: number
-    currency: string
+    base_price_low_season?: number
+    base_price_high_season?: number
+    currency?: string
   }
   photos?: Array<{ url: string; alt?: string }>
 }

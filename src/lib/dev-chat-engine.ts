@@ -57,10 +57,11 @@ export interface DevChatResponse {
     content: string
     similarity: number
     pricing?: {
-      base_price_night: number
-      currency: string
+      base_price_low_season?: number
+      base_price_high_season?: number
+      currency?: string
     }
-    photos?: Array<{ url: string }>
+    photos?: Array<{ url: string; alt?: string }>
   }>
   suggestions: string[]
 }
@@ -194,12 +195,86 @@ function buildMarketingSystemPrompt(
     .slice(0, 15)
     .map((result, index) => {
       const name = result.name || result.title || 'Unknown'
-      const pricing = result.pricing
-        ? `\nPrecio: ${result.pricing.base_price_night} ${result.pricing.currency}/noche`
-        : ''
+      let details = ''
+
+      // Build comprehensive details for accommodations
+      if (result.table === 'accommodation_units_public' && result.metadata) {
+        const meta = result.metadata
+
+        // Pricing (always show if available)
+        if (result.pricing) {
+          const lowPrice = result.pricing.base_price_low_season
+          const highPrice = result.pricing.base_price_high_season
+
+          if (lowPrice && highPrice) {
+            details += `\n💰 PRECIOS:\n- Temporada Baja: $${lowPrice.toLocaleString()} COP/noche\n- Temporada Alta: $${highPrice.toLocaleString()} COP/noche`
+          } else if (lowPrice) {
+            details += `\n💰 PRECIO: $${lowPrice.toLocaleString()} COP/noche`
+          } else if (highPrice) {
+            details += `\n💰 PRECIO: $${highPrice.toLocaleString()} COP/noche`
+          }
+        }
+
+        // Capacity and configuration
+        if (meta.capacity || meta.bed_configuration) {
+          details += `\n\n👥 CAPACIDAD:`
+          if (meta.capacity) details += `\n- Capacidad máxima: ${meta.capacity} personas`
+          if (meta.bed_configuration) details += `\n- Configuración: ${meta.bed_configuration}`
+        }
+
+        // Physical characteristics
+        const physicalDetails = []
+        if (meta.size_m2) physicalDetails.push(`Tamaño: ${meta.size_m2}m²`)
+        if (meta.floor_number) physicalDetails.push(`Piso: ${meta.floor_number}`)
+        if (meta.view_type) physicalDetails.push(`Vista: ${meta.view_type}`)
+        if (physicalDetails.length > 0) {
+          details += `\n\n🏠 CARACTERÍSTICAS:\n- ${physicalDetails.join('\n- ')}`
+        }
+
+        // Amenities (most important for marketing)
+        if (meta.unit_amenities) {
+          const amenitiesList = meta.unit_amenities.split(',').map((a: string) => a.trim()).slice(0, 8)
+          details += `\n\n✨ AMENITIES:\n- ${amenitiesList.join('\n- ')}`
+        }
+
+        // Unique features (key selling points)
+        if (meta.unique_features) {
+          const features = Array.isArray(meta.unique_features)
+            ? meta.unique_features
+            : [meta.unique_features]
+          details += `\n\n⭐ DESTACADOS:\n- ${features.join('\n- ')}`
+        }
+
+        // Photos (important for visual context)
+        if (result.photos && result.photos.length > 0) {
+          details += `\n\n📸 FOTOS: ${result.photos.length} imágenes disponibles`
+          details += `\n- Foto principal: ${result.photos[0].url}`
+        }
+
+        // Accessibility (important for some guests)
+        if (meta.accessibility_features) {
+          const accessible = Array.isArray(meta.accessibility_features)
+            ? meta.accessibility_features.join(', ')
+            : meta.accessibility_features
+          details += `\n\n♿ ACCESIBILIDAD: ${accessible}`
+        }
+      } else {
+        // For non-accommodation results (policies, MUVA), show basic pricing if available
+        if (result.pricing) {
+          const lowPrice = result.pricing.base_price_low_season
+          const highPrice = result.pricing.base_price_high_season
+
+          if (lowPrice && highPrice) {
+            details += `\n💰 Temporada Baja: $${lowPrice.toLocaleString()} | Temporada Alta: $${highPrice.toLocaleString()} COP/noche`
+          } else if (lowPrice || highPrice) {
+            details += `\n💰 Precio: $${(lowPrice || highPrice)?.toLocaleString()} COP/noche`
+          }
+        }
+      }
+
       const preview = result.content.substring(0, 400)
 
-      return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}...`
+      return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${details}\n\n${preview}...`
     })
     .join('\n\n---\n\n')
 
