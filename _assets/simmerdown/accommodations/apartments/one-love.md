@@ -1,6 +1,9 @@
 ---
-version: "1.0"
 type: "hotel_process"
+business_name: "Simmer Down Guest House"
+business_nit: "900222791"
+location: "San Andrés, Colombia"
+tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +13,42 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["simmerdown", "apartamento", "alojamiento", "one_love", "san_andres"]
   keywords: ["apartamento", "one love", "simmer down", "alojamiento", "luminoso", "aire acondicionado", "netflix", "wifi", "cocina equipada"]
-title: "Apartamento One Love"
-description: "Apartamento ideal para pareja o familia pequeña con capacidad para 3 personas, ubicado en el segundo piso con mucha luz natural"
-business_name: "Simmer Down Guest House"
-business_nit: "900222791"
-location: "San Andrés, Colombia"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
-unit_type: "apartment"
-capacity: 3
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "apartment"
+  capacity: 3
+  bed_configuration: "Dormitorio principal con cama matrimonial, sofá cama individual en sala"
+  size_m2: 35
+  floor_number: 2
+  view_type: "Ventanas duales con vistas a dos costados del edificio"
+  adults: 3
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: ["https://simmerdown.house/wp-content/uploads/2024/06/Apartamento-One-Love.jpg"]
+  amenities:
+    features: ["smart_tv", "netflix", "wifi", "aire_acondicionado", "cocina_equipada", "sofa_cama", "hamaca", "balcon"]
+    attributes:
+      unit_type_detail: "apartamento_luminoso_segundo_piso"
+      category: "couples_families"
+      special_features: ["luminosidad_excepcional", "ventilacion_cruzada", "orientacion_dual", "espacio_optimizado"]
+  pricing:
+    base_price_low_season: 230000
+    base_price_high_season: 250000
+    price_per_person_low: 65000
+    price_per_person_high: 65000
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 3
+  categories: []
+version: "1.0"
 ---
 
 # Apartamento One Love - Simmer Down Guest House

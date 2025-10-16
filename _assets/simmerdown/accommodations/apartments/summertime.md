@@ -1,6 +1,9 @@
 ---
-version: "1.0"
 type: "hotel_process"
+business_name: "Simmer Down Guest House"
+business_nit: "900222791"
+location: "San Andrés, Colombia"
+tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +13,42 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["apartamento", "accommodation", "simmer_down", "san_andres"]
   keywords: ["summertime", "apartamento", "26_metros", "tercer_piso", "capacidad_2", "temporada_alta", "temporada_baja", "reservar"]
-title: "Apartamento Summertime"
-description: "Apartamento de 26 metros cuadrados en tercer piso con capacidad para 2 personas, equipado con amenidades modernas y ubicación privilegiada en Simmer Down Guest House"
-business_name: "Simmer Down Guest House"
-business_nit: "900222791"
-location: "San Andrés, Colombia"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
-unit_type: "apartment"
-capacity: 2
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "apartment"
+  capacity: 2
+  bed_configuration: "Habitación principal con cama matrimonial"
+  size_m2: 26
+  floor_number: 3
+  view_type: "Posición elevada con ventanas anti ruido"
+  adults: 2
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: ["https://simmerdown.house/wp-content/uploads/2021/10/P1080211-scaled.webp"]
+  amenities:
+    features: ["smart_tv", "netflix", "wifi", "aire_acondicionado", "cocina_equipada", "ventanas_anti_ruido"]
+    attributes:
+      unit_type_detail: "apartamento_compacto_tercer_piso"
+      category: "couples"
+      special_features: ["ubicacion_privilegiada", "ventilacion_superior", "aislamiento_acustico", "espacio_optimizado"]
+  pricing:
+    base_price_low_season: 215000
+    base_price_high_season: 235000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 3
+  categories: []
+version: "1.0"
 ---
 
 # Apartamento Summertime

@@ -1,6 +1,9 @@
 ---
-version: "1.0"
 type: "hotel_process"
+business_name: "Simmer Down Guest House"
+business_nit: "900222791"
+location: "San Andrés, Colombia"
+tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,21 +13,43 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["apartamento", "grupo_grande", "san_andres", "4_habitaciones", "lujo"]
   keywords: ["simmer_highs", "apartamento", "4_habitaciones", "10_personas", "grupos_grandes", "san_andres", "simmer_down", "alquiler_vacacional"]
-title: "Apartamento Simmer Highs"
-description: "Apartamento de lujo con 4 habitaciones para hasta 10 personas, ideal para grupos grandes en San Andrés"
-business_name: "Simmer Down Guest House"
-business_nit: "900222791"
-location: "San Andrés, Colombia"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
-unit_type: "apartment"
-capacity: 10
-minimum_guests: 8
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "apartment"
+  capacity: 10
+  minimum_guests: 8
+  bed_configuration: "4 habitaciones con camas dobles o matrimoniales"
+  size_m2: 100
+  floor_number: 1
+  view_type: "Balcón con vista al exterior"
+  adults: 10
+  children: 0
+  base_adults: 8
+  base_children: 0
+  images: ["https://simmerdown.house/wp-content/uploads/2024/06/Apartamento-Simmer-Highs.jpg"]
+  amenities:
+    features: ["4_habitaciones", "4_baños_privados", "smart_tv", "netflix", "wifi", "aire_acondicionado", "cocina_equipada", "sala_amplia", "balcon", "lavadero"]
+    attributes:
+      unit_type_detail: "apartamento_premium_grupos"
+      category: "groups_large"
+      special_features: ["apartamento_mas_grande", "cuatro_baños_privados", "grupos_grandes", "lavadero_incluido"]
+  pricing:
+    base_price_low_season: 1090000
+    base_price_high_season: 1190000
+    price_per_person_low: 65000
+    price_per_person_high: 65000
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 1
+  categories: []
+version: "1.0"
 ---
 
 # Apartamento Simmer Highs

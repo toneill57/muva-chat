@@ -1,6 +1,9 @@
 ---
-version: "1.0"
 type: "hotel_process"
+business_name: "Simmer Down Guest House"
+business_nit: "900222791"
+location: "San Andrés, Colombia"
+tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +13,42 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["sunshine", "apartment", "tercer_piso", "simmer_down", "san_andres"]
   keywords: ["sunshine", "apartamento", "26_metros", "tercer_piso", "capacidad_2", "temporada_alta", "temporada_baja", "aire_acondicionado", "netflix"]
-title: "Apartamento Sunshine - Ubicación Privilegiada Tercer Piso"
-description: "Apartamento compacto de 26 metros cuadrados ubicado en el tercer piso del edificio Simmer Down con capacidad para 2 personas, equipado con amenidades modernas y vista privilegiada"
-business_name: "Simmer Down Guest House"
-business_nit: "900222791"
-location: "San Andrés, Colombia"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
-unit_type: "apartment"
-capacity: 2
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "apartment"
+  capacity: 2
+  bed_configuration: "Habitación principal con cama matrimonial"
+  size_m2: 26
+  floor_number: 3
+  view_type: "Vista desde tercer piso con mayor privacidad"
+  adults: 2
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: ["https://simmerdown.house/wp-content/uploads/2024/06/Apartamento-Sunshine.jpg"]
+  amenities:
+    features: ["smart_tv", "netflix", "wifi", "aire_acondicionado", "cocina_equipada"]
+    attributes:
+      unit_type_detail: "apartamento_compacto_tercer_piso"
+      category: "couples"
+      special_features: ["ubicacion_privilegiada", "ventilacion_superior", "menos_ruido", "espacio_optimizado"]
+  pricing:
+    base_price_low_season: 215000
+    base_price_high_season: 235000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 2
+  categories: []
+version: "1.0"
 ---
 
 # Apartamento Sunshine - Ubicación Privilegiada Tercer Piso

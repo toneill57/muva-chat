@@ -1,6 +1,9 @@
 ---
-version: "1.0"
 type: "hotel_process"
+business_name: "Simmer Down Guest House"
+business_nit: "900222791"
+location: "San Andrés, Colombia"
+tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +13,42 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["dreamland", "room", "baño_privado", "zonas_comunes", "simmer_down", "san_andres"]
   keywords: ["dreamland", "habitacion", "baño_privado", "zonas_comunes", "2_personas", "temporada_alta", "temporada_baja", "netflix", "aire_acondicionado"]
-title: "Habitación Privada Dreamland"
-description: "Habitación privada en Simmer Down Guest House con baño privado y acceso a zonas comunes compartidas, ideal para parejas que buscan privacidad y socialización"
-business_name: "Simmer Down Guest House"
-business_nit: "900222791"
-location: "San Andrés, Colombia"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
-unit_type: "room"
-capacity: 2
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "room"
+  capacity: 2
+  bed_configuration: "Habitación principal con cama matrimonial"
+  size_m2: 20
+  floor_number: 0
+  view_type: "Vista estándar con ventanas naturales"
+  adults: 2
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: ["https://simmerdown.house/wp-content/uploads/2024/06/Habitacion-privada-Dreamland.jpg"]
+  amenities:
+    features: ["smart_tv", "netflix", "wifi", "aire_acondicionado", "baño_privado", "cocina_compartida", "sala_comun"]
+    attributes:
+      unit_type_detail: "habitacion_privada_zonas_comunes"
+      category: "social_travelers"
+      special_features: ["baño_privado_exclusivo", "ambiente_social", "privacidad_garantizada"]
+  pricing:
+    base_price_low_season: 160000
+    base_price_high_season: 180000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 5
+  categories: []
+version: "1.0"
 ---
 
 # Habitación Privada Dreamland - Con Zonas Comunes Compartidas

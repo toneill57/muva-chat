@@ -1,6 +1,9 @@
 ---
-version: "2.0"
 type: "hotel_process"
+business_name: "Simmer Down Guest House"
+business_nit: "900222791"
+location: "San Andrés, Colombia"
+tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +13,42 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["habitacion", "privada", "room", "simmerdown", "san_andres", "optimizada"]
   keywords: ["Kaya", "habitación", "privada", "room", "optimizada", "simmerdown", "guest_house", "2_personas"]
-title: "Habitación Privada Kaya"
-description: "Habitación privada pequeña pero bien optimizada dentro de apartamento con zonas comunes compartidas"
-business_name: "Simmer Down Guest House"
-business_nit: "900222791"
-location: "San Andrés, Colombia"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
-unit_type: "room"
-capacity: 2
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "room"
+  capacity: 2
+  bed_configuration: "Habitación pequeña con cama matrimonial compacta"
+  size_m2: 15
+  floor_number: 0
+  view_type: "Ventana anti-ruido con vista al exterior"
+  adults: 2
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: ["https://simmerdown.house/wp-content/uploads/2024/06/Habitacion-privada-Kaya.jpg"]
+  amenities:
+    features: ["smart_tv", "netflix", "wifi", "aire_acondicionado", "baño_privado", "ventana_anti_ruido", "cocina_compartida", "sala_comun"]
+    attributes:
+      unit_type_detail: "habitacion_privada_zonas_comunes"
+      category: "budget_friendly"
+      special_features: ["ventana_anti_ruido", "planta_principal", "mejor_precio", "diseño_optimizado"]
+  pricing:
+    base_price_low_season: 150000
+    base_price_high_season: 175000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 6
+  categories: []
+version: "1.0"
 ---
 
 # Habitación Privada Kaya
