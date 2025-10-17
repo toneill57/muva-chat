@@ -1,6 +1,10 @@
 ---
-version: "2.0"
+version: "3.0"
 type: "hotel_process"
+business_name: "Tu Casa en el Mar"
+business_nit: "900000000-0"
+location: "San Andrés, Colombia"
+tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +14,41 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["haines_cay_doble", "room", "tu_casa_en_el_mar", "san_andres"]
   keywords: ["haines-cay-doble", "habitacion", "san_andres", "2_personas", "aire_acondicionado", "wifi"]
-title: "Haines Cay"
-description: "Esta habitación con balcón y ventanas acústicas, es ideal para parejas, familias  o grupos pequeños que quieren estar cómodos, bien ubicados y tener fácil acceso a todos los planes y servicios que ofrece la isla. Les hacemos acomodación sencilla o doble según lo requiera el huésped."
-business_name: "Tu Casa en el Mar"
-business_nit: "900000000-0"
-location: "San Andrés, Colombia"
-tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
-unit_type: "room"
-capacity: 2
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "room"
+  capacity: 2
+  bed_configuration: "2 camas sencillas ó 1 cama matrimonial"
+  size_m2: 18
+  floor_number: 2
+  view_type: "Doble exterior con balcón"
+  adults: 2
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: []
+  amenities:
+    features: ["ventanas_acusticas", "balcon", "camas_flexibles", "cajilla_seguridad", "wifi", "aire_acondicionado", "libre_llaves", "cafetera", "cocina_equipada"]
+    attributes:
+      unit_type_detail: "habitacion_doble_exterior_balcon"
+      category: "couples"
+      special_features: ["balcon_privado", "vista_exterior", "versatil"]
+  pricing:
+    base_price_low_season: 280000
+    base_price_high_season: 280000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 1
+  categories: []
 ---
 
 # Haines Cay

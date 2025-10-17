@@ -48,7 +48,7 @@ accommodation:
   is_featured: true
   display_order: 2
   categories: []
-version: "1.0"
+version: "3.0"
 ---
 
 # Apartamento Sunshine - Ubicación Privilegiada Tercer Piso

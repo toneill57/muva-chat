@@ -48,7 +48,7 @@ accommodation:
   is_featured: true
   display_order: 4
   categories: []
-version: "1.0"
+version: "3.0"
 ---
 
 # Habitación Privada Natural Mystic - Con Zonas Comunes Compartidas

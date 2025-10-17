@@ -1,6 +1,10 @@
 ---
-version: "2.0"
+version: "3.0"
 type: "hotel_process"
+business_name: "Tu Casa en el Mar"
+business_nit: "900000000-0"
+location: "San Andrés, Colombia"
+tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +14,47 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["cotton_cay_doble", "room", "tu_casa_en_el_mar", "san_andres"]
   keywords: ["cotton-cay-doble", "habitacion", "san_andres", "2_personas", "aire_acondicionado", "wifi"]
-title: "Cotton Cay"
-description: "Habitación doble interior en Tu Casa en el Mar, centro de San Andrés, con todas las comodidades para una estadía confortable"
-business_name: "Tu Casa en el Mar"
-business_nit: "900000000-0"
-location: "San Andrés, Colombia"
-tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
-unit_type: "room"
-capacity: 2
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "room"
+  capacity: 2
+  bed_configuration: "2 Camas Sencillas ó 1 matrimonial"
+  size_m2: 15
+  floor_number: 1
+  view_type: "Doble Interior sin vista"
+  adults: 2
+  children: 0
+  base_adults: 2
+  base_children: 0
+  images: [
+    "https://tucasaenelmar.com/wp-content/uploads/2023/04/IMG_8697-HDR_1.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/04/IMG_8700-HDR_1.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/04/IMG_8706-HDR_1.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/04/IMG_8709-HDR_1.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/04/IMG_8717_1.jpg"
+  ]
+  amenities:
+    features: ["ventanas_acusticas", "camas_flexibles", "cajilla_seguridad", "wifi", "aire_acondicionado", "libre_llaves", "cafetera", "cortinas_terciopelo"]
+    attributes:
+      unit_type_detail: "habitacion_doble_interior"
+      category: "budget_friendly"
+      special_features: ["renovado_2025", "cortinas_italianas", "aislamiento_acustico"]
+  pricing:
+    base_price_low_season: 280000
+    base_price_high_season: 280000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 2
+  categories: []
 ---
 
 # Cotton Cay

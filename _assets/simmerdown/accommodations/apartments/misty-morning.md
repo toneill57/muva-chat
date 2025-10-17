@@ -52,7 +52,7 @@ accommodation:
   display_order: 2
   # NUEVOS - Motopress Integration
   categories: []
-version: "1.0"
+version: "3.0"
 ---
 
 # Apartamento Misty Morning - Simmer Down Guest House

@@ -27,7 +27,7 @@ const supabase = createClient(
 // MATRYOSHKA EMBEDDING SYSTEM - MULTI-TIER DIMENSIONS
 // Tier 1: 1024 dims (fast), Tier 2: 1536 dims (balanced), Tier 3: 3072 dims (full)
 
-const METADATA_VERSION = "2.0"
+const METADATA_VERSION = "3.0"
 
 // MATRYOSHKA DIMENSION STRATEGY - UPDATED FOR ACCOMMODATION SYSTEM
 const DIMENSION_STRATEGY = {

@@ -1,6 +1,10 @@
 ---
-version: "2.0"
+version: "3.0"
 type: "hotel_process"
+business_name: "Tu Casa en el Mar"
+business_nit: "900000000-0"
+location: "San Andrés, Colombia"
+tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
 destination:
   schema: "hotels"
   table: "accommodation_units"
@@ -10,20 +14,48 @@ document:
   category: "accommodations"
   subcategory: "accommodation_unit"
   language: "es"
-  version: "1.0"
-  status: "active"
   tags: ["rose_cay_apartamento", "apartment", "tu_casa_en_el_mar", "san_andres"]
   keywords: ["rose-cay-apartamento", "habitacion", "san_andres", "6_personas", "aire_acondicionado", "wifi"]
-title: "Rose Cay"
-description: "Apartamento amplio para 6 personas en Tu Casa en el Mar, centro de San Andrés, ideal para familias o grupos con cocina equipada completa"
-business_name: "Tu Casa en el Mar"
-business_nit: "900000000-0"
-location: "San Andrés, Colombia"
-tenant_id: "2263efba-b62b-417b-a422-a84638bc632f"
-unit_type: "apartment"
-capacity: 6
-content_type: "accommodation_unit"
-schema: "hotels"
+accommodation:
+  unit_type: "apartment"
+  capacity: 6
+  bed_configuration: "6 camas sencillas ó 2 camas matrimoniales y 2 Sencillas"
+  size_m2: 80
+  floor_number: 1
+  view_type: "Apartamento amplio"
+  adults: 6
+  children: 0
+  base_adults: 6
+  base_children: 0
+  images: [
+    "https://tucasaenelmar.com/wp-content/uploads/2023/03/las-nubes-9.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/03/las-nubes-10.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/03/las-nubes-11.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/03/las-nubes-12.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/03/las-nubes-13.jpg",
+    "https://tucasaenelmar.com/wp-content/uploads/2023/03/las-nubes-2.jpg"
+  ]
+  amenities:
+    features: ["ventanas_acusticas", "camas_flexibles", "horno_gas", "cajilla_seguridad", "microondas", "wifi", "aire_acondicionado", "libre_llaves", "cafetera", "cocina_equipada"]
+    attributes:
+      unit_type_detail: "apartamento_familiar"
+      category: "families_groups"
+      special_features: ["cocina_completa", "horno_gas", "microondas", "capacidad_6"]
+  pricing:
+    base_price_low_season: 700000
+    base_price_high_season: 700000
+    price_per_person_low: 0
+    price_per_person_high: 0
+    currency: "COP"
+    minimum_stay: 1
+  booking:
+    check_in_time: "15:00:00"
+    check_out_time: "12:00:00"
+    day_restrictions: []
+  status: "active"
+  is_featured: true
+  display_order: 1
+  categories: []
 ---
 
 # Rose Cay

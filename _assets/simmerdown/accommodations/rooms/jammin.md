@@ -48,7 +48,7 @@ accommodation:
   is_featured: true
   display_order: 1
   categories: []
-version: "1.0"
+version: "3.0"
 ---
 
 # Habitación Privada Jammin - Espaciosa para 4 Personas
