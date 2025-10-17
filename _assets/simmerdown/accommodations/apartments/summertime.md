@@ -28,7 +28,7 @@ accommodation:
   base_children: 0
   images: ["https://simmerdown.house/wp-content/uploads/2021/10/P1080211-scaled.webp"]
   amenities:
-    features: ["smart_tv", "netflix", "wifi", "aire_acondicionado", "cocina_equipada", "ventanas_anti_ruido"]
+    features: ["smart_tv", "netflix", "escritorio de trabajo", "wifi", "aire_acondicionado", "cocina_equipada", "ventanas_anti_ruido"]
     attributes:
       unit_type_detail: "apartamento_compacto_tercer_piso"
       category: "couples"
@@ -98,6 +98,7 @@ version: "3.0"
 - **Ventilación superior**: Mejor circulación de aire por altura <!-- EXTRAE: unique_features -->
 - **Aislamiento acústico**: Ventanas anti ruido para descanso óptimo <!-- EXTRAE: unique_features -->
 - **Espacio optimizado**: Distribución eficiente en 26 metros cuadrados <!-- EXTRAE: unique_features -->
+- **Escritorio de trabajo**: Para quienes necesitan balancear entre disfrutar de la isla y trabajar cómodamente <!-- EXTRAE: unique_features -->
 
 ### Características de Accesibilidad
 - **Acceso**: Escaleras hasta tercer piso, no apto para sillas de ruedas <!-- EXTRAE: accessibility_features -->
