@@ -1,8 +1,13 @@
 /**
  * Public Chat Demo Page
  *
- * This page demonstrates the Public Chat components in action.
- * Visit /public-chat-demo to see the chat interface.
+ * ⚠️ DEMO PAGE - Solo para desarrollo/testing
+ * ❌ NO usar en producción
+ *
+ * Para producción usar: [subdomain].muva.chat (ej: simmerdown.muva.chat)
+ *
+ * Este demo usa componentes de /components/Public/ para testing local.
+ * Acceso: http://localhost:3000/public-chat-demo
  */
 
 import { PublicChat } from '@/components/Public'

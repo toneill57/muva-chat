@@ -1,9 +1,13 @@
 /**
  * Dev Chat Demo Page
  *
- * This page demonstrates the Dev Chat components in action.
- * This is a DEVELOPMENT VERSION for testing improvements.
- * Visit /dev-chat-demo to see the chat interface.
+ * ⚠️ DEMO PAGE - Solo para desarrollo/testing de features experimentales
+ * ❌ NO usar en producción
+ *
+ * Para producción usar: [subdomain].muva.chat (ej: simmerdown.muva.chat)
+ *
+ * Este demo usa componentes de /components/Dev/ para testing de features nuevas.
+ * Acceso: http://localhost:3000/dev-chat-demo
  */
 
 import { DevChat } from '@/components/Dev'

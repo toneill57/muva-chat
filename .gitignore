@@ -42,8 +42,12 @@ node_modules
 .cache/
 
 # Ignorar archivos del sistema macOS
+**/.DS_Store
 .DS_Store
 *.log
+*.log.*
+logs/**/*.log
+logs/**/*.gz
 *.tmp
 
 # Test results and reports (Playwright)
@@ -69,8 +73,9 @@ benchmark-results.log
 
 # Vector embeddings and generated data (PGVector migration)
 /data/*.jsonl
-/data/temp/
+/data/temp/**
 /data/codebase-files.json
+node_modules/.cache/**
 
 # VPS Production Environment (contains secrets)
 VPS-ENV-PRODUCTION.txt

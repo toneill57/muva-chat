@@ -32,7 +32,9 @@
     "setup-pgvector": "node scripts/setup-vector-function.js",
     "monitor": "node scripts/system-monitor.js",
     "ensure-server": "node scripts/ensure-server.js",
-    "sync:motopress:bookings": "tsx scripts/sync-motopress-bookings.ts"
+    "sync:motopress:bookings": "tsx scripts/sync-motopress-bookings.ts",
+    "clean": "rm -rf .next node_modules/.cache data/temp logs/*.log && echo '✅ Cache limpiado'",
+    "clean:deep": "npm run clean && rm -rf node_modules && echo '✅ Reinstalando dependencias...' && npm install"
   },
   "type": "module",
   "dependencies": {
