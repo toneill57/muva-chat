@@ -194,9 +194,10 @@ function buildMarketingSystemPrompt(
       const pricing = result.pricing
         ? `\nPrecio: ${result.pricing.base_price_night} ${result.pricing.currency}/noche`
         : ''
-      const preview = result.content.substring(0, 400)
+      // Send FULL chunk to LLM (semantic chunks are already optimized sizes)
+      const preview = result.content
 
-      return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}...`
+      return `[${index + 1}] ${name} (similaridad: ${result.similarity.toFixed(2)})${pricing}\n${preview}`
     })
     .join('\n\n---\n\n')
 
