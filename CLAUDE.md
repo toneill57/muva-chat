@@ -222,6 +222,7 @@ const preview = result.content  // Already optimized size
 - **Supabase Guide:** `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
 - **SIRE Codes:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 - **Workflows:** `docs/workflows/ACCOMMODATION_SYNC_UNIVERSAL.md`
+- **Knowledge Base Sources:** `docs/architecture/KNOWLEDGE_BASE_DATA_SOURCES.md`
 - **Agent Snapshots:** `snapshots/{agent-name}.md`
 
 ---
