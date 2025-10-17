@@ -1,18 +1,41 @@
 'use client';
 
 import { useTenant } from '@/contexts/TenantContext';
+import { useRouter } from 'next/navigation';
 import { LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function AdminHeader() {
   const { tenant } = useTenant();
+  const router = useRouter();
 
-  // TODO (Task 4C.1): Get user from auth context
-  const user = { name: 'Admin User', email: 'admin@example.com' }; // Placeholder
+  // Get user info from localStorage
+  const getUserInfo = () => {
+    if (typeof window === 'undefined') return { name: 'Admin User', email: 'admin@example.com' };
+    const staffInfo = localStorage.getItem('staff_info');
+    if (staffInfo) {
+      try {
+        const parsed = JSON.parse(staffInfo);
+        return {
+          name: parsed.full_name || parsed.username || 'Admin User',
+          email: parsed.email || parsed.username || 'admin@example.com'
+        };
+      } catch {
+        return { name: 'Admin User', email: 'admin@example.com' };
+      }
+    }
+    return { name: 'Admin User', email: 'admin@example.com' };
+  };
+
+  const user = getUserInfo();
 
   const handleLogout = () => {
-    // TODO (Task 4C.1): Implement logout
-    console.log('Logout clicked');
+    // Clear authentication data from localStorage
+    localStorage.removeItem('staff_token');
+    localStorage.removeItem('staff_info');
+
+    // Redirect to login page (use window.location to preserve subdomain)
+    window.location.href = '/login';
   };
 
   return (
