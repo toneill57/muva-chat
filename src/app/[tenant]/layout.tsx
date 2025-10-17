@@ -3,13 +3,14 @@ import { notFound } from 'next/navigation';
 import { getTenantBySubdomain, getSubdomain } from '@/lib/tenant-utils';
 import { TenantProvider } from '@/contexts/TenantContext';
 
+export const dynamic = 'force-dynamic';
+
 interface TenantLayoutProps {
   children: React.ReactNode;
-  params: Promise<{ tenant: string }>;
 }
 
 export default async function TenantLayout({ children }: TenantLayoutProps) {
-  console.log('[TENANT_LAYOUT] === EXECUTING [tenant]/layout.tsx ===');
+  console.log('[DASHBOARD_LAYOUT] === EXECUTING dashboard/layout.tsx (subdomain-based) ===');
 
   // Get tenant subdomain from Nginx header (production) or hostname (dev)
   const headersList = await headers();
