@@ -23,6 +23,8 @@ export interface Tenant {
   is_active?: boolean | null;
   subscription_tier?: string | null;
   features?: Record<string, unknown> | null;
+  // Branding fields
+  primary_color?: string | null;
   // Settings fields (FASE 4D.6)
   address?: string | null;
   phone?: string | null;
