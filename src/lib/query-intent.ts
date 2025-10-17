@@ -86,7 +86,7 @@ Responde ÚNICAMENTE con un JSON válido en este formato:
 
   try {
     const response = await anthropic.messages.create({
-      model: "claude-3-haiku-20240307", // Fast, cost-effective model
+      model: "claude-haiku-4-5", // Fast, cost-effective model
       max_tokens: 200,
       temperature: 0.1, // Low temperature for consistent classification
       messages: [{

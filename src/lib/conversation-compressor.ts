@@ -99,7 +99,7 @@ export async function compressConversationSegment(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-3-5-haiku-latest', // Haiku 3.5: $1/1M input, $5/1M output (fast & cheap)
+      model: 'claude-haiku-4-5', // Haiku 3.5: $1/1M input, $5/1M output (fast & cheap)
       max_tokens: 500,
       temperature: 0.1, // Low temperature for consistent extraction
       messages: [

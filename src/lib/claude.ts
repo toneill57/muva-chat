@@ -97,7 +97,7 @@ export async function generateChatResponse(
   const isComplexDomain = detectedDomain === 'listings'
   const model = isComplexDomain ?
     'claude-3-5-sonnet-20241022' : // More intelligent for listings (keeping working model)
-    (process.env.CLAUDE_MODEL || 'claude-3-haiku-20240307') // Cost-effective for others
+    (process.env.CLAUDE_MODEL || 'claude-haiku-4-5') // Cost-effective for others
 
   const maxTokens = parseInt(process.env.CLAUDE_MAX_TOKENS || (isComplexDomain ? '500' : '250'))
 

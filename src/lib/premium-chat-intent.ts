@@ -77,7 +77,7 @@ Responde ÚNICAMENTE con JSON válido:
     const anthropic = getAnthropicClient()
 
     const response = await anthropic.messages.create({
-      model: "claude-3-haiku-20240307", // Fast & cost-effective
+      model: "claude-haiku-4-5", // Fast & cost-effective
       max_tokens: 200,
       temperature: 0.1, // Low temp for consistent classification
       messages: [{ role: "user", content: prompt }]

@@ -128,7 +128,7 @@ Responde ÚNICAMENTE con JSON válido:`
     const startTime = Date.now()
 
     const response = await anthropic.messages.create({
-      model: "claude-3-haiku-20240307",
+      model: "claude-haiku-4-5",
       max_tokens: 500,
       temperature: 0.1,
       messages: [{ role: "user", content: prompt }]
@@ -236,7 +236,7 @@ Responde ÚNICAMENTE con JSON válido:`
     const startTime = Date.now()
 
     const response = await anthropic.messages.create({
-      model: "claude-3-haiku-20240307",
+      model: "claude-haiku-4-5",
       max_tokens: 400,
       temperature: 0.3, // Slightly higher for creativity
       messages: [{ role: "user", content: prompt }]
@@ -364,7 +364,7 @@ Responde ÚNICAMENTE con JSON válido:
     const startTime = Date.now()
 
     const response = await anthropic.messages.create({
-      model: "claude-3-haiku-20240307",
+      model: "claude-haiku-4-5",
       max_tokens: 800,
       temperature: 0.1,
       messages: [{ role: "user", content: prompt }]

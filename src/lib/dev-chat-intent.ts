@@ -74,7 +74,7 @@ Formato de respuesta:
 
   try {
     const response = await client.messages.create({
-      model: 'claude-3-5-haiku-20241022', // Haiku 3.5 (rápido y barato)
+      model: 'claude-haiku-4-5', // Haiku 4.5 (más rápido, mejor en código)
       max_tokens: 200,
       temperature: 0,
       system: systemPrompt,

@@ -471,7 +471,7 @@ export async function POST(request: NextRequest) {
       dev_info: {
         endpoint_version: "semantic_v1_llm_driven",
         pipeline: "5-step semantic search",
-        llm_model: "claude-3-haiku-20240307",
+        llm_model: "claude-haiku-4-5",
         features: [
           "Deep semantic understanding",
           "Multi-query generation",

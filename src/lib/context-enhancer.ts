@@ -280,7 +280,7 @@ Responde ÚNICAMENTE con la pregunta expandida (sin explicaciones adicionales):`
   try {
     const client = getAnthropicClient()
     const response = await client.messages.create({
-      model: 'claude-3-haiku-20240307', // Fast & cost-effective
+      model: 'claude-haiku-4-5', // Fast & cost-effective
       max_tokens: 100,
       temperature: 0.3, // Low temperature for consistent expansions
       messages: [{ role: 'user', content: prompt }],

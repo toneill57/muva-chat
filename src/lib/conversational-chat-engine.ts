@@ -861,7 +861,7 @@ Responde a la pregunta del huésped de manera natural y útil.`
     // Call Claude Haiku 3.5 (cost-effective, fast, deterministic)
     const client = getAnthropicClient()
     const response = await client.messages.create({
-      model: 'claude-3-5-haiku-latest', // Claude Haiku 3.5 (5x cheaper, faster)
+      model: 'claude-haiku-4-5', // Claude Haiku 3.5 (5x cheaper, faster)
       max_tokens: 800,
       temperature: 0.1, // Low temperature for data-driven, consistent responses
       top_p: 0.9, // Balanced precision and variety (Claude API uses top_p, not top_k)
