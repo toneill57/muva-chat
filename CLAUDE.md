@@ -37,6 +37,18 @@ Aplica a: scripts, bash, leer archivos, APIs, reiniciar servidores, testing
 
 **Único caso para pedir ayuda:** Decisiones de producto/negocio o cuando NO tengo acceso literal.
 
+### 4. Git Workflow - SIEMPRE Trabajar en `dev`
+**NUNCA sugerir merge a `main` - TODO el trabajo se hace en rama `dev`**
+
+- ✅ SIEMPRE hacer commits a `dev`
+- ✅ SIEMPRE hacer push a `dev`
+- ✅ SIEMPRE trabajar en rama `dev`
+- ❌ NUNCA sugerir `git merge dev → main`
+- ❌ NUNCA sugerir `git checkout main`
+- ❌ NUNCA mencionar deploy a producción sin autorización explícita
+
+**Razón:** El usuario decide cuándo y cómo hacer deploy. Claude solo trabaja en `dev`.
+
 ---
 
 ## 🚀 Development Setup
