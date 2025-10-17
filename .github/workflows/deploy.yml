@@ -120,11 +120,12 @@ jobs:
             npm ci --legacy-peer-deps
             echo "✅ Dependencies installed"
 
-            # Clean build cache
+            # Clean build cache and old directories
             echo ""
-            echo "Cleaning build cache..."
+            echo "Cleaning build cache and deprecated routes..."
             rm -rf .next
-            echo "✅ Build cache cleaned"
+            rm -rf src/app/\[tenant\]/admin
+            echo "✅ Build cache and deprecated routes cleaned"
 
             # Build application
             echo ""
