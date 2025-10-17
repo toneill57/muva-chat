@@ -113,7 +113,7 @@ export function ContentEditor({ tenantId }: ContentEditorProps) {
     const fetchContent = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/admin/content?tenant_id=${tenantId}`);
+        const response = await fetch(`/api/content?tenant_id=${tenantId}`);
 
         if (response.ok) {
           const data = await response.json();
@@ -151,7 +151,7 @@ export function ContentEditor({ tenantId }: ContentEditorProps) {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/admin/content', {
+      const response = await fetch('/api/content', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

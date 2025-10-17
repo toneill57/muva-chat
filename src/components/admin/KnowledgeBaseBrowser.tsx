@@ -53,7 +53,7 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
     setError(null);
 
     try {
-      const response = await fetch(`/api/admin/knowledge-base?tenant_id=${encodeURIComponent(tenantId)}`);
+      const response = await fetch(`/api/knowledge-base?tenant_id=${encodeURIComponent(tenantId)}`);
       const data: APIResponse = await response.json();
 
       if (!response.ok || !data.success) {
@@ -86,7 +86,7 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
     }
 
     try {
-      const response = await fetch('/api/admin/knowledge-base', {
+      const response = await fetch('/api/knowledge-base', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

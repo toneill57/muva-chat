@@ -48,10 +48,11 @@ const nextConfig: NextConfig = {
     return {
       beforeFiles: [
         // Rewrite subdomain requests to /[tenant] path
-        // Example: simmerdown.localhost:3000/admin -> localhost:3000/simmerdown/admin
+        // Example: simmerdown.localhost:3000/dashboard -> localhost:3000/simmerdown/dashboard
         // IMPORTANT: Exclude Next.js internal routes (_next/*, api/*, favicon.ico, etc.)
+        // ALSO EXCLUDE guest-chat (handled by direct route)
         {
-          source: '/:path((?!_next|api|favicon.ico|.*\\..*).*)',
+          source: '/:path((?!_next|api|favicon.ico|guest-chat|.*\\..*).*)',
           has: [
             {
               type: 'host',

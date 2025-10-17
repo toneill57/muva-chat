@@ -18,7 +18,7 @@ export function TenantBranding({ tenant }: { tenant: Tenant }) {
   const handleSave = async () => {
     setSaving(true);
 
-    const response = await fetch('/api/admin/branding', {
+    const response = await fetch('/api/branding', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

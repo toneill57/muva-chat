@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTenant } from '@/contexts/TenantContext'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -60,21 +61,37 @@ interface AccommodationUnit {
 }
 
 export function AccommodationUnitsGrid() {
+  const { tenant } = useTenant()
   const [units, setUnits] = useState<AccommodationUnit[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedUnit, setSelectedUnit] = useState<AccommodationUnit | null>(null)
 
   useEffect(() => {
-    fetchUnits()
-  }, [])
+    if (tenant?.tenant_id) {
+      fetchUnits()
+    }
+  }, [tenant?.tenant_id])
 
   const fetchUnits = async () => {
     try {
       setIsLoading(true)
-      // Use tenant_id only (remove hardcoded hotel_id)
-      const tenantId = 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf' // TODO: Get from user context
-      const response = await fetch(`/api/accommodation/units?tenant_id=${tenantId}`)
+
+      // Get authentication token
+      const token = localStorage.getItem('staff_token')
+
+      if (!tenant?.tenant_id) {
+        setError('Tenant information not available')
+        setIsLoading(false)
+        return
+      }
+
+      const response = await fetch(`/api/accommodation/units?tenant_id=${tenant.tenant_id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
       const data = await response.json()
 
       if (data.success) {

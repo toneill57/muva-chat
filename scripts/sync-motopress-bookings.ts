@@ -299,22 +299,31 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
             unitPrice -= reservedUnit.discount
           }
 
-          // Find accommodation unit by MotoPress accommodation TYPE (not instance)
+          // Find accommodation unit by MotoPress accommodation ID (specific unit instance)
           // Uses hotels.accommodation_units as source of truth (multi-tenant)
           let accommodationUnitId: string | null = null
-          const motoPresAccommodationTypeId = reservedUnit.accommodation_type
+          const motoPresAccommodationId = reservedUnit.accommodation
+
+          // DEBUG: Log the MotoPress accommodation ID we're trying to map
+          if (unitIndex === 0) {
+            console.log(`   🔍 DEBUG: Booking MP-${mpBooking.id} - MotoPress accommodation ID: ${motoPresAccommodationId}`)
+          }
 
           // Query hotels schema using custom RPC function
           const { data: unitId, error: unitError } = await supabase.rpc(
             'get_accommodation_unit_by_motopress_id',
             {
               p_tenant_id: tenantId,
-              p_motopress_unit_id: motoPresAccommodationTypeId
+              p_motopress_unit_id: motoPresAccommodationId
             }
           )
 
           if (!unitError && unitId) {
             accommodationUnitId = unitId
+          } else {
+            if (unitIndex === 0) {
+              console.log(`   ⚠️  DEBUG: No unit found for MotoPress ID ${motoPresAccommodationId} - Error: ${unitError?.message || 'Unit ID is null'}`)
+            }
           }
 
           // Check if booking already exists (by external_booking_id + check-in + phone + accommodation_unit_id)

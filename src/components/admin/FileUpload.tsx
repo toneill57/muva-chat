@@ -49,7 +49,7 @@ export function FileUpload({ tenantId }: FileUploadProps) {
         formData.append('file', files[i]);
         formData.append('tenant_id', tenantId);
 
-        const response = await fetch('/api/admin/upload-docs', {
+        const response = await fetch('/api/upload-docs', {
           method: 'POST',
           body: formData,
         });
