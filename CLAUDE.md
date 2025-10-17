@@ -172,6 +172,26 @@ Para scripts que necesitan env vars:
 set -a && source .env.local && set +a && npx tsx script.ts
 ```
 
+### Vector Search & Semantic Chunking
+**CRITICAL:** Send FULL chunks to LLM - they're already optimized by semantic chunking
+
+- ✅ Chunks are pre-sized (~1,000-2,000 chars) by `## Section {#anchor}` headers in markdown v3.0
+- ❌ NEVER truncate chunks in chat engines (`.substring()` in `public-chat-engine.ts` or `dev-chat-engine.ts`)
+- ✅ RPC functions return clean chunks (no metadata concatenation)
+- 📚 Universal Sync Workflow: `docs/workflows/ACCOMMODATION_SYNC_UNIVERSAL.md`
+- 📊 Performance: 81% token reduction (17,136 → 3,251 tokens per query)
+
+**Common Error Pattern:**
+```typescript
+// ❌ WRONG - Truncates chunk before sending to LLM
+const preview = result.content.substring(0, 400)
+
+// ✅ CORRECT - Send full semantic chunk
+const preview = result.content  // Already optimized size
+```
+
+**Why it matters:** Information beyond truncation point becomes invisible to LLM, breaking responses.
+
 ### SIRE Compliance
 **CRITICAL:** Use official SIRE codes (NOT ISO 3166-1)
 - ✅ USAR: `src/lib/sire/sire-catalogs.ts` (USA=249, NOT 840)
@@ -201,8 +221,9 @@ set -a && source .env.local && set +a && npx tsx script.ts
 - **Database Patterns:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
 - **Supabase Guide:** `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
 - **SIRE Codes:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
+- **Workflows:** `docs/workflows/ACCOMMODATION_SYNC_UNIVERSAL.md`
 - **Agent Snapshots:** `snapshots/{agent-name}.md`
 
 ---
 
-**Last Updated:** October 2025
+**Last Updated:** October 2025 (Semantic Chunking + Universal Sync Workflow)
