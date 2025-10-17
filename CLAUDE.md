@@ -49,6 +49,31 @@ Aplica a: scripts, bash, leer archivos, APIs, reiniciar servidores, testing
 
 **Razón:** El usuario decide cuándo y cómo hacer deploy. Claude solo trabaja en `dev`.
 
+### 5. SIEMPRE Verificar `git status` Antes de Diagnosticar 404s
+**Cuando hay diferencias entre local y producción, PRIMERO verificar archivos sin commitear.**
+
+- ✅ **PRIMERO:** `git status --short` para ver archivos sin commitear
+- ✅ **SEGUNDO:** Verificar si archivos faltantes causan los 404s
+- ✅ **TERCERO:** Solo entonces investigar otros problemas (routing, prerendering, etc.)
+- ❌ NUNCA asumir que local y producción tienen los mismos archivos
+- ❌ NUNCA hacer múltiples deploys sin verificar `git status` primero
+
+**Razón:** Archivos sin commitear son la causa más común de 404s en producción vs local.
+
+**Ejemplo del error a EVITAR:**
+```bash
+# ❌ MAL - Diagnosticar 404s sin verificar git primero
+Usuario: "https://example.com/page no funciona en producción"
+Claude: [investiga routing, prerendering, configs... múltiples deploys]
+# 30 minutos después...
+Claude: "¡Ah! El archivo nunca se committeó"
+
+# ✅ BIEN - Verificar git INMEDIATAMENTE
+Usuario: "https://example.com/page no funciona en producción"
+Claude: [ejecuta git status --short]
+Claude: "El archivo page.tsx está sin commitear (??). Ese es el problema."
+```
+
 ---
 
 ## 🚀 Development Setup
