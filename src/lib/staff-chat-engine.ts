@@ -536,7 +536,7 @@ async function generateClaudeResponse(
 
   // Call Claude API
   const response = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-haiku-4-5',
     max_tokens: 1024,
     system: buildSystemPrompt(staffSession),
     messages,
@@ -674,9 +674,9 @@ async function updateConversation(conversationId: string, category: string): Pro
 }
 
 function calculateCost(inputTokens: number, outputTokens: number): number {
-  // Pricing for claude-3-5-sonnet-20241022 (as of Oct 2024)
-  const INPUT_COST_PER_1M = 3.0
-  const OUTPUT_COST_PER_1M = 15.0
+  // Pricing for claude-haiku-4-5 (as of Oct 2025)
+  const INPUT_COST_PER_1M = 1.0
+  const OUTPUT_COST_PER_1M = 5.0
 
   const inputCost = (inputTokens / 1_000_000) * INPUT_COST_PER_1M
   const outputCost = (outputTokens / 1_000_000) * OUTPUT_COST_PER_1M

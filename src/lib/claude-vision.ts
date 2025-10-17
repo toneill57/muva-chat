@@ -124,7 +124,7 @@ Responde en ESPAÑOL de manera clara y útil.`
 
     // 3. Call Claude Vision API
     const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022', // Latest vision-capable model
+      model: 'claude-haiku-4-5', // Latest vision-capable model
       max_tokens: 1024,
       temperature: 0.1, // Low temperature for factual extraction
       messages: [
