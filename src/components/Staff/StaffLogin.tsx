@@ -169,8 +169,8 @@ export default function StaffLogin() {
     setError(null);
   };
 
-  // Check if we're in development
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  // Always show test credentials (needed for production testing)
+  const isDevelopment = true;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
