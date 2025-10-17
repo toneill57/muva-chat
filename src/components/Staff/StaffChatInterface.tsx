@@ -48,7 +48,7 @@ export default function StaffChatInterface() {
   const handleLogout = () => {
     localStorage.removeItem('staff_token');
     localStorage.removeItem('staff_info');
-    router.push('/staff/login');
+    router.push('/login');
   };
 
   const handleNewConversation = () => {

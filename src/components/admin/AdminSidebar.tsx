@@ -12,17 +12,21 @@ import {
   BarChart,
   Settings,
   Menu,
-  X
+  X,
+  Hotel,
+  MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const menuItems = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, roles: ['admin', 'owner', 'staff'] },
-  { name: 'Knowledge Base', href: '/admin/knowledge-base', icon: BookOpen, roles: ['admin', 'owner', 'staff'] },
-  { name: 'Branding', href: '/admin/branding', icon: Palette, roles: ['admin', 'owner'] },
-  { name: 'Content', href: '/admin/content', icon: FileText, roles: ['admin', 'owner'] },
-  { name: 'Analytics', href: '/admin/analytics', icon: BarChart, roles: ['admin', 'owner'] },
-  { name: 'Settings', href: '/admin/settings', icon: Settings, roles: ['admin', 'owner'] },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'owner', 'staff'] },
+  { name: 'Accommodations', href: '/accommodations', icon: Hotel, roles: ['admin', 'owner', 'staff'] },
+  { name: 'Knowledge Base', href: '/knowledge-base', icon: BookOpen, roles: ['admin', 'owner', 'staff'] },
+  { name: 'Branding', href: '/branding', icon: Palette, roles: ['admin', 'owner'] },
+  { name: 'Content', href: '/content', icon: FileText, roles: ['admin', 'owner'] },
+  { name: 'Analytics', href: '/analytics', icon: BarChart, roles: ['admin', 'owner'] },
+  { name: 'Chat', href: '/chat', icon: MessageSquare, roles: ['admin', 'owner', 'staff'] },
+  { name: 'Settings', href: '/settings', icon: Settings, roles: ['admin', 'owner'] },
 ];
 
 export function AdminSidebar() {
@@ -97,7 +101,7 @@ export function AdminSidebar() {
             // Use item.href directly (no tenant prefix needed - subdomain rewrite handles it)
             const itemPath = item.href;
             const isActive = pathname === itemPath ||
-                           (item.href !== '/admin' && pathname?.startsWith(itemPath));
+                           (item.href !== '/dashboard' && pathname?.startsWith(itemPath));
 
             return (
               <Link
