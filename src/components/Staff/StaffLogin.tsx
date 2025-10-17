@@ -137,8 +137,9 @@ export default function StaffLogin() {
       localStorage.setItem('staff_token', loginData.token);
       localStorage.setItem('staff_info', JSON.stringify(loginData.staff_info));
 
-      // Redirect to staff portal
-      router.push('/staff');
+      // Redirect to dashboard (maintain current subdomain)
+      // Use window.location to preserve subdomain in URL
+      window.location.href = '/dashboard';
 
     } catch (err) {
       console.error('Login error:', err);
