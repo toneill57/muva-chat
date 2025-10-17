@@ -119,6 +119,36 @@ Agentes leen AUTOMÁTICAMENTE `snapshots/{nombre}.md`
 
 **Example:** `list_tables` returns ALL columns → Don't call `information_schema.columns` again for same table.
 
+#### ⚠️ NEVER Execute SQL Without Schema Verification
+
+**MANDATORY before ANY SQL query:**
+1. ✅ Call `mcp__supabase__list_tables({ project_id: "ooaumjzaztmutltifhoq", schemas: ["public"] })`
+2. ✅ Verify exact table name and columns from result
+3. ✅ THEN execute SQL using verified schema
+
+**Example - CORRECT workflow:**
+```typescript
+// Step 1: Verify schema FIRST
+mcp__supabase__list_tables({
+  project_id: "ooaumjzaztmutltifhoq",
+  schemas: ["public"]
+})
+// → Returns: accommodation_units_public has columns: name, tenant_id, embedding, etc.
+
+// Step 2: Execute SQL with VERIFIED columns
+mcp__supabase__execute_sql({
+  project_id: "ooaumjzaztmutltifhoq",
+  query: "DELETE FROM accommodation_units_public WHERE tenant_id = '...'"
+})
+```
+
+**❌ NEVER:**
+- Assume schema prefix (`hotels.`, `public.`)
+- Assume column names (`id`, `uuid`, etc.)
+- Execute blind SELECT/INSERT/UPDATE without verification
+
+**Exception:** DELETE with only known WHERE clause (tenant_id verified from .env.local)
+
 #### For DML (Data Queries: SELECT/INSERT/UPDATE/DELETE)
 1. **MCP Supabase (PRIMARY)** - `mcp__supabase__execute_sql` for ALL queries (70% token savings)
 2. **RPC Functions (SECONDARY)** - When available (98% savings vs inline SQL)
