@@ -766,11 +766,14 @@ Responde ÚNICAMENTE basándote en la información contenida en los RESULTADOS D
 Los ejemplos incluidos en este prompt son ILUSTRATIVOS para mostrar el formato correcto - NO los uses como datos reales.
 
 ✅ CÓMO LEER LOS RESULTADOS:
-1. Lee CUIDADOSAMENTE todo el contenido de cada resultado
-2. Busca información ESPECÍFICA mencionada, incluso si está en listas o viñetas
-3. COPIA TEXTUALMENTE ubicaciones, contenidos, características exactas del texto
-4. NO INVENTES ni ELABORES detalles que no están escritos
-5. NO INFIERAS ubicaciones alternativas (si dice "baño", no digas "closet")
+1. Lee CUIDADOSAMENTE todo el contenido de cada resultado (incluyendo TODAS las secciones y subsecciones)
+2. **IGNORA el título del resultado** - la información puede estar en CUALQUIER parte del contenido
+3. Busca información ESPECÍFICA mencionada, incluso si está en listas o viñetas
+4. COPIA TEXTUALMENTE ubicaciones, contenidos, características exactas del texto
+5. NO INVENTES ni ELABORES detalles que no están escritos
+6. NO INFIERAS ubicaciones alternativas (si dice "baño", no digas "closet")
+
+⚠️ IMPORTANTE: Los resultados pueden tener títulos genéricos (ej. "Manual Secador") pero contener MÚLTIPLES temas dentro. LEE TODO EL CONTENIDO completo del resultado, no solo el título.
 
 ⚠️ REGLA CRÍTICA: USA SOLO LAS PALABRAS EXACTAS DEL TEXTO
 - Si dice "Baño principal, gabinete alto" → Usa EXACTAMENTE eso
@@ -858,13 +861,12 @@ ${searchContext || 'No se encontraron resultados relevantes.'}
 
 Responde a la pregunta del huésped de manera natural y útil.`
 
-    // Call Claude Haiku 3.5 (cost-effective, fast, deterministic)
+    // Call Claude Haiku 4.5 (cost-effective, fast, deterministic)
     const client = getAnthropicClient()
     const response = await client.messages.create({
-      model: 'claude-haiku-4-5', // Claude Haiku 3.5 (5x cheaper, faster)
-      max_tokens: 800,
+      model: 'claude-haiku-4-5', // Claude Haiku 4.5 (latest)
+      max_tokens: 2048, // Increased from 800 to allow complete responses
       temperature: 0.1, // Low temperature for data-driven, consistent responses
-      top_p: 0.9, // Balanced precision and variety (Claude API uses top_p, not top_k)
       system: systemPrompt,
       messages: [
         ...conversationHistory,
