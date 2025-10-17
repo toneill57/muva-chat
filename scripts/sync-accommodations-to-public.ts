@@ -68,6 +68,7 @@ interface ProcessingStats {
   amenitiesComplete: number;
   metadataComplete: number;
   totalScore: number;
+  totalChunks: number;
 }
 
 /**
@@ -270,6 +271,64 @@ function calculateCompletenessScore(data: AccommodationData): number {
 }
 
 /**
+ * Divide documento markdown por secciones semánticas
+ * Cada sección ## Título {#anchor} se convierte en un chunk
+ */
+function chunkByMarkdownSections(
+  accommodationName: string,
+  markdown: string
+): Array<{ sectionType: string; sectionTitle: string; content: string }> {
+  // Dividir por headers de nivel 2 (## )
+  const sections = markdown.split(/(?=^## )/m).filter(s => s.trim().length > 0);
+
+  const chunks: Array<{ sectionType: string; sectionTitle: string; content: string }> = [];
+
+  for (const section of sections) {
+    const lines = section.split('\n');
+    const headerLine = lines[0];
+
+    // Extraer título: "## Tarifas y Precios Detallados {#tarifas-precios}"
+    const match = headerLine.match(/^##\s*(.+?)\s*(?:{#([^}]+)})?$/);
+    if (!match) continue;
+
+    const sectionTitle = match[1].trim();
+    const sectionAnchor = match[2] || '';
+
+    // Detectar tipo de sección
+    const sectionType = detectSectionType(sectionTitle, sectionAnchor);
+
+    // Construir contenido del chunk con contexto
+    const chunkContent = `${accommodationName} - ${sectionTitle}\n\n${section.trim()}`;
+
+    chunks.push({
+      sectionType,
+      sectionTitle,
+      content: chunkContent
+    });
+  }
+
+  return chunks;
+}
+
+/**
+ * Detecta el tipo semántico de sección
+ */
+function detectSectionType(title: string, anchor: string): string {
+  const titleLower = title.toLowerCase();
+  const anchorLower = anchor.toLowerCase();
+
+  if (titleLower.includes('overview') || anchorLower.includes('overview')) return 'overview';
+  if (titleLower.includes('capacidad') || anchorLower.includes('capacidad')) return 'capacity';
+  if (titleLower.includes('tarifa') || titleLower.includes('precio') || anchorLower.includes('precio')) return 'pricing';
+  if (titleLower.includes('amenities') || titleLower.includes('características')) return 'amenities';
+  if (titleLower.includes('ubicación') || titleLower.includes('visual') || titleLower.includes('location')) return 'location';
+  if (titleLower.includes('política') || anchorLower.includes('politica')) return 'policies';
+  if (titleLower.includes('reserva') || titleLower.includes('booking')) return 'booking';
+
+  return 'general';
+}
+
+/**
  * Insert or update accommodation in database
  */
 async function syncAccommodation(data: AccommodationData, embedding: number[]): Promise<boolean> {
@@ -347,6 +406,7 @@ async function processTenant(tenantName: string, files: string[]): Promise<Proce
     amenitiesComplete: 0,
     metadataComplete: 0,
     totalScore: 0,
+    totalChunks: 0,
   };
 
   console.log(`\n📊 ${tenantName.toUpperCase()}`);
@@ -373,24 +433,52 @@ async function processTenant(tenantName: string, files: string[]): Promise<Proce
     console.log(`      Amenities: ${data.amenities?.unit_amenities?.substring(0, 50)}...`);
     console.log(`      Metadata fields: ${Object.keys(data.metadata).length}`);
 
+    // ✅ NUEVO: Dividir en chunks semánticos
+    const chunks = chunkByMarkdownSections(data.name, data.description);
+    console.log(`      📦 Chunks: ${chunks.length} secciones semánticas`);
+    stats.totalChunks += chunks.length;
+
     if (isDryRun) {
-      console.log(`      🔍 DRY RUN - No changes made`);
+      console.log(`      🔍 DRY RUN - Would create ${chunks.length} chunks`);
+      chunks.forEach((chunk, i) => {
+        console.log(`         ${i + 1}. ${chunk.sectionTitle} (${chunk.content.length} chars)`);
+      });
       continue;
     }
 
-    // Generate embedding
-    console.log(`      ⏳ Generating embedding...`);
-    const embedding = await generateEmbedding(data.description);
+    // ✅ NUEVO: Procesar cada chunk
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
 
-    // Sync to database
-    console.log(`      💾 Syncing to database...`);
-    const success = await syncAccommodation(data, embedding);
+      console.log(`      ⏳ [${i + 1}/${chunks.length}] Generating embedding for: ${chunk.sectionTitle}...`);
+      const embedding = await generateEmbedding(chunk.content);
 
-    if (success) {
-      console.log(`      ✅ Synced successfully`);
-    } else {
-      console.log(`      ❌ Sync failed`);
+      // Crear data del chunk con nombre único
+      const chunkData = {
+        ...data,
+        name: `${data.name} - ${chunk.sectionTitle}`,
+        description: chunk.content,
+        metadata: {
+          ...data.metadata,
+          section_type: chunk.sectionType,
+          section_title: chunk.sectionTitle,
+          original_accommodation: data.name,
+          chunk_index: i + 1,
+          total_chunks: chunks.length
+        }
+      };
+
+      console.log(`      💾 [${i + 1}/${chunks.length}] Syncing chunk to database...`);
+      const success = await syncAccommodation(chunkData, embedding);
+
+      if (success) {
+        console.log(`      ✅ [${i + 1}/${chunks.length}] Chunk synced: ${chunk.sectionTitle}`);
+      } else {
+        console.log(`      ❌ [${i + 1}/${chunks.length}] Chunk sync failed`);
+      }
     }
+
+    console.log(`      ✅ All ${chunks.length} chunks synced for ${data.name}`);
   }
 
   return stats;
@@ -413,6 +501,7 @@ function printSummary(allStats: ProcessingStats[]) {
 
     console.log(`\n📦 ${stats.tenantName.toUpperCase()} (${stats.tenantId})`);
     console.log(`   Accommodations: ${stats.processed}`);
+    console.log(`   Total chunks created: ${stats.totalChunks}`);
     console.log(`   Pricing: ${pricingPct}% (${stats.pricingComplete}/${stats.processed}) ${pricingPct === 100 ? '✅' : '⚠️'}`);
     console.log(`   Amenities: ${amenitiesPct}% (${stats.amenitiesComplete}/${stats.processed}) ${amenitiesPct === 100 ? '✅' : '⚠️'}`);
     console.log(`   Metadata: ${metadataPct}% (${stats.metadataComplete}/${stats.processed}) ${metadataPct === 100 ? '✅' : '⚠️'}`);
