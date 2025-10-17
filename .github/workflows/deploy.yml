@@ -120,6 +120,12 @@ jobs:
             npm ci --legacy-peer-deps
             echo "✅ Dependencies installed"
 
+            # Clean build cache
+            echo ""
+            echo "Cleaning build cache..."
+            rm -rf .next
+            echo "✅ Build cache cleaned"
+
             # Build application
             echo ""
             echo "Building application..."
