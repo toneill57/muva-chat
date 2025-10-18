@@ -66,6 +66,10 @@ interface AccommodationUnit {
   embedding_balanced?: number[]
   images?: any // JSONB
   amenities_list?: any // JSONB
+  categories?: Array<{
+    id: number
+    name: string
+  }> // MotoPress categories for accommodation type classification
   tenant_id: string
   accommodation_type_id?: string
   created_at?: string
