@@ -224,7 +224,7 @@ export class MotoPresDataMapper {
 
     return {
       id: data.id,
-      name: data.title,
+      name: typeof data.title === 'string' ? data.title : data.title?.rendered || `Accommodation ${data.id}`,
       capacity,
       price: meta.mphb_price,
       status: data.status,

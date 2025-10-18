@@ -36,9 +36,10 @@ interface Message {
 interface PublicChatInterfaceProps {
   onMinimize: () => void
   isExpanded: boolean
+  tenantId?: string // Optional: if provided, use this instead of extracting from hostname
 }
 
-export default function PublicChatInterface({ onMinimize, isExpanded }: PublicChatInterfaceProps) {
+export default function PublicChatInterface({ onMinimize, isExpanded, tenantId: tenantIdProp }: PublicChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -58,18 +59,22 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
     }
   }, [])
 
-  // Extract tenant ID from hostname
+  // Set tenant ID from prop or extract from hostname
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (tenantIdProp) {
+      // Use tenant ID from prop if provided
+      setTenantId(tenantIdProp)
+      console.log('[PublicChatInterface] Tenant ID from prop:', tenantIdProp)
+    } else if (typeof window !== 'undefined') {
+      // Fallback: Extract subdomain from hostname (e.g., "tucasamar.localhost" -> "tucasamar")
       const hostname = window.location.hostname
-      // Extract subdomain from hostname (e.g., "tucasamar.localhost" -> "tucasamar")
       const parts = hostname.split('.')
       if (parts.length >= 2 && parts[0] !== 'www') {
         setTenantId(parts[0])
-        console.log('[PublicChatInterface] Tenant ID extracted:', parts[0])
+        console.log('[PublicChatInterface] Tenant ID extracted from hostname:', parts[0])
       }
     }
-  }, [])
+  }, [tenantIdProp])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
