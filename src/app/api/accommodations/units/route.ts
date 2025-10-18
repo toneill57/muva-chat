@@ -103,12 +103,21 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             id: chunk.unit_id,
             name: baseName, // Clean name without " - Section" suffix
             unit_number: chunk.metadata?.display_order?.toString() || 'N/A',
+
+            // NUEVOS CAMPOS MOTOPRESS
+            size_m2: chunk.metadata?.size_m2 || null,
+            location_area: chunk.metadata?.location_area || null,
+            children_capacity: chunk.metadata?.children_capacity || 0,
+            total_capacity: (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0),
+            accommodation_type: chunk.metadata?.accommodation_mphb_type || 'Standard',
+            room_type_id: chunk.metadata?.motopress_room_type_id || null,
+
             description: chunk.description || '',
             short_description: chunk.short_description || chunk.description?.substring(0, 150) || '',
             capacity: {
               adults: chunk.metadata?.capacity || 2,
-              children: 0,
-              total: chunk.metadata?.capacity || 2
+              children: chunk.metadata?.children_capacity || 0,
+              total: (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0)
             },
             bed_configuration: {
               bed_type: chunk.metadata?.bed_configuration?.[0]?.type || 'Queen'
@@ -129,7 +138,10 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             pricing_summary: {
               seasonal_rules: 0,
               hourly_rules: 0,
-              base_price_range: [100000, 200000] // Mock data
+              base_price_range: chunk.pricing ? [
+                chunk.pricing.base_price_low_season || chunk.pricing.base_price || 0,
+                chunk.pricing.base_price_high_season || chunk.pricing.base_price || 0
+              ] : [0, 0]
             },
             amenities_summary: {
               total: chunk.metadata?.unit_amenities?.split(',').length || 0,
@@ -140,6 +152,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             unit_amenities: chunk.metadata?.unit_amenities?.split(',').map((a: string) => ({
               amenity_name: a.trim()
             })) || [],
+            photos: chunk.photos || [],
+            photo_count: chunk.photos?.length || 0,
             pricing_rules: [],
             chunks_count: 1,
             all_chunks: [chunk]

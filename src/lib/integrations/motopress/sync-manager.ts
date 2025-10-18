@@ -42,17 +42,24 @@ export class MotoPresSyncManager {
     return data
   }
 
-  private decrypt(configData: any): { api_key?: string; consumer_key?: string; consumer_secret: string; site_url: string } {
-    // TODO: Implement proper decryption
-    // For now, using base64 decode (NEVER use in production)
+  private async decrypt(configData: any): Promise<{ api_key?: string; consumer_key?: string; consumer_secret: string; site_url: string }> {
+    // Import decryptCredentials dynamically to avoid circular dependencies
+    const { decryptCredentials } = await import('@/lib/admin-auth')
+
     try {
-      if (configData.encrypted) {
-        return JSON.parse(Buffer.from(configData.encrypted, 'base64').toString())
+      // Decrypt the credentials using the proper crypto function
+      const decryptedApiKey = await decryptCredentials(configData.api_key)
+      const decryptedConsumerSecret = await decryptCredentials(configData.consumer_secret)
+
+      return {
+        api_key: decryptedApiKey,
+        consumer_key: decryptedApiKey, // Alias for backwards compatibility
+        consumer_secret: decryptedConsumerSecret,
+        site_url: configData.site_url // site_url is not encrypted
       }
-      // If already decrypted or in plain format
-      return configData
-    } catch {
-      return configData
+    } catch (error) {
+      console.error('Failed to decrypt credentials:', error)
+      throw new Error('Failed to decrypt MotoPress credentials')
     }
   }
 
@@ -80,7 +87,7 @@ export class MotoPresSyncManager {
       }
 
       // Decrypt credentials
-      const credentials = this.decrypt(config.config_data)
+      const credentials = await this.decrypt(config.config_data)
 
       // Initialize MotoPress client
       const client = new MotoPresClient({
@@ -402,48 +409,207 @@ export class MotoPresSyncManager {
     return data
   }
 
+  /**
+   * Create semantic chunks from MotoPress accommodation data
+   * Replicates Simmerdown's chunking strategy but for JSON instead of markdown
+   */
+  private createChunksFromUnit(unit: any): Array<{
+    sectionType: string
+    sectionTitle: string
+    content: string
+  }> {
+    const chunks: Array<{ sectionType: string; sectionTitle: string; content: string }> = []
+
+    // Chunk 1: Overview (name + description + capacity + size)
+    const overviewContent = [
+      unit.name,
+      unit.description || unit.short_description || '',
+      unit.capacity ? `Capacidad: ${unit.capacity.adults} adultos, ${unit.capacity.children} niños (Total: ${unit.capacity.total} personas)` : '',
+      unit.size_m2 ? `Tamaño: ${unit.size_m2}m²` : '',
+      unit.unit_type ? `Tipo: ${unit.unit_type}` : ''
+    ].filter(Boolean).join('\n\n')
+
+    chunks.push({
+      sectionType: 'overview',
+      sectionTitle: 'Overview',
+      content: `${unit.name} - Overview\n\n${overviewContent}`
+    })
+
+    // Chunk 2: Capacity & Beds
+    const capacityContent = [
+      unit.capacity ? `Capacidad máxima: ${unit.capacity.total} personas (${unit.capacity.adults} adultos, ${unit.capacity.children} niños)` : '',
+      unit.bed_configuration ? `Configuración de camas: ${unit.bed_configuration.bed_type} (${unit.bed_configuration.bed_count} cama(s))` : '',
+      unit.bed_configuration?.details || ''
+    ].filter(Boolean).join('\n\n')
+
+    if (capacityContent) {
+      chunks.push({
+        sectionType: 'capacity',
+        sectionTitle: 'Capacity & Beds',
+        content: `${unit.name} - Capacity & Beds\n\n${capacityContent}`
+      })
+    }
+
+    // Chunk 3: Amenities
+    const amenitiesContent = [
+      unit.amenities_list && unit.amenities_list.length > 0 ? `Amenities: ${unit.amenities_list.join(', ')}` : '',
+      unit.unique_features?.motopress_features && unit.unique_features.motopress_features.length > 0
+        ? `Características especiales: ${unit.unique_features.motopress_features.join(', ')}`
+        : ''
+    ].filter(Boolean).join('\n\n')
+
+    if (amenitiesContent) {
+      chunks.push({
+        sectionType: 'amenities',
+        sectionTitle: 'Amenities',
+        content: `${unit.name} - Amenities\n\n${amenitiesContent}`
+      })
+    }
+
+    // Chunk 4: Location & View
+    const locationContent = [
+      unit.view_type ? `Vista: ${unit.view_type}` : '',
+      unit.location_details?.area ? `Área: ${unit.location_details.area}` : '',
+      unit.location_details?.view ? `Detalles de vista: ${unit.location_details.view}` : '',
+      unit.tourism_features?.view ? `Vista turística: ${unit.tourism_features.view}` : '',
+      unit.tourism_features?.location ? `Ubicación: ${unit.tourism_features.location}` : ''
+    ].filter(Boolean).join('\n\n')
+
+    if (locationContent) {
+      chunks.push({
+        sectionType: 'location',
+        sectionTitle: 'Location & View',
+        content: `${unit.name} - Location & View\n\n${locationContent}`
+      })
+    }
+
+    // Chunk 5: Pricing (if available)
+    if (unit.tourism_features?.price_per_night) {
+      const pricingContent = `Precio por noche: $${unit.tourism_features.price_per_night.toLocaleString()}`
+      chunks.push({
+        sectionType: 'pricing',
+        sectionTitle: 'Pricing',
+        content: `${unit.name} - Pricing\n\n${pricingContent}`
+      })
+    }
+
+    // Chunk 6: Images (if available)
+    if (unit.images && unit.images.length > 0) {
+      const imagesContent = unit.images
+        .map((img: any, idx: number) => `${idx + 1}. ${img.alt || `Imagen ${idx + 1}`}`)
+        .join('\n')
+
+      chunks.push({
+        sectionType: 'images',
+        sectionTitle: 'Images',
+        content: `${unit.name} - Images\n\n${unit.images.length} fotos disponibles:\n${imagesContent}`
+      })
+    }
+
+    // Chunk 7: Features & Attributes
+    const featuresContent = [
+      unit.unique_features?.special_attributes && unit.unique_features.special_attributes.length > 0
+        ? `Atributos especiales: ${JSON.stringify(unit.unique_features.special_attributes)}`
+        : '',
+      unit.tourism_features?.amenities && unit.tourism_features.amenities.length > 0
+        ? `Amenidades turísticas: ${unit.tourism_features.amenities.join(', ')}`
+        : ''
+    ].filter(Boolean).join('\n\n')
+
+    if (featuresContent) {
+      chunks.push({
+        sectionType: 'features',
+        sectionTitle: 'Features',
+        content: `${unit.name} - Features\n\n${featuresContent}`
+      })
+    }
+
+    return chunks
+  }
+
   private async generateEmbeddingsForUnit(unit: any, tenantId: string, hotelId?: string): Promise<void> {
     try {
-      // Create content text for embeddings based on accommodation_units structure
-      const contentParts = [
-        unit.name,
-        unit.description,
-        unit.short_description,
-        unit.capacity && `Capacity: ${JSON.stringify(unit.capacity)}`,
-        unit.bed_configuration && `Bed configuration: ${JSON.stringify(unit.bed_configuration)}`,
-        unit.view_type && `View: ${unit.view_type}`,
-        unit.tourism_features && `Tourism features: ${JSON.stringify(unit.tourism_features)}`,
-        unit.unique_features && `Unique features: ${JSON.stringify(unit.unique_features)}`,
-        unit.location_details && `Location: ${JSON.stringify(unit.location_details)}`
-      ].filter(Boolean).join('\n')
+      console.log(`📦 Creating chunks for: ${unit.name}`)
 
-      console.log(`Generating embeddings for: ${unit.name}`)
+      // ✅ NEW: Create semantic chunks from JSON data (like Simmerdown does with markdown)
+      const chunks = this.createChunksFromUnit(unit)
+      console.log(`   Generated ${chunks.length} chunks`)
 
-      // Generate multi-tier embeddings (Matryoshka system)
-      const [embedding_fast, embedding_balanced] = await Promise.all([
-        generateEmbedding(contentParts, 1024),   // Tier 1 - Fast
-        generateEmbedding(contentParts, 1536)    // Tier 2 - Balanced
-      ])
+      // ✅ NEW: Process each chunk (like Simmerdown)
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i]
 
-      // Update the accommodation unit with embeddings using SQL (hotels schema)
-      const updateEmbeddingsSql = `
-        UPDATE hotels.accommodation_units
-        SET
-          embedding_fast = '${JSON.stringify(embedding_fast)}'::vector,
-          embedding_balanced = '${JSON.stringify(embedding_balanced)}'::vector,
-          updated_at = NOW()
-        WHERE tenant_id = '${tenantId}'
-        AND motopress_unit_id = ${unit.motopress_unit_id}
-      `
+        console.log(`   ⏳ [${i + 1}/${chunks.length}] Generating embeddings (Tier 1 + Tier 2) for: ${chunk.sectionTitle}...`)
 
-      const { error } = await this.supabase.rpc('exec_sql', { sql: updateEmbeddingsSql })
+        // Generate BOTH Tier 1 and Tier 2 embeddings in parallel
+        const [embedding_fast, embedding_balanced] = await Promise.all([
+          generateEmbedding(chunk.content, 1024),   // Tier 1 - Fast (1024d)
+          generateEmbedding(chunk.content, 1536)    // Tier 2 - Balanced (1536d)
+        ])
 
-      if (error) {
-        console.error(`Failed to update embeddings for ${unit.name}:`, error)
-        throw new Error(`Embedding update failed: ${error.message}`)
+        // ✅ NEW: Save to accommodation_units_public (NOT hotels.accommodation_units)
+        const chunkName = `${unit.name} - ${chunk.sectionTitle}`
+
+        const chunkRecord = {
+          tenant_id: tenantId,
+          name: chunkName,
+          unit_number: unit.motopress_unit_id?.toString() || `unit-${i + 1}`,  // ✅ FIX: Use motopress_unit_id as display number
+          unit_type: unit.unit_type || 'accommodation',
+          description: chunk.content,
+          short_description: unit.short_description || '',
+          amenities: unit.amenities_list || [],
+          pricing: unit.tourism_features?.price_per_night
+            ? {
+                base_price: unit.tourism_features.price_per_night,  // ✅ FIX: Use base_price (expected by API)
+                base_price_low_season: unit.tourism_features.price_per_night,
+                base_price_high_season: unit.tourism_features.price_per_night,
+                currency: 'COP'
+              }
+            : {},
+          photos: unit.images || [],
+          metadata: {
+            section_type: chunk.sectionType,
+            section_title: chunk.sectionTitle,
+            original_accommodation: unit.name,
+            chunk_index: i + 1,
+            total_chunks: chunks.length,
+            motopress_unit_id: unit.motopress_unit_id,
+            source_type: 'motopress_json',
+            synced_at: new Date().toISOString(),
+            // ✅ FIX: Campos necesarios para que las cards funcionen correctamente
+            view_type: unit.view_type || null,  // ✅ Ahora en metadata (no como columna directa)
+            capacity: unit.capacity?.total || 2,
+            bed_configuration: unit.bed_configuration ? [{ type: unit.bed_configuration.bed_type }] : [],
+            unit_amenities: unit.amenities_list?.join(', ') || '',
+            // ✅ NUEVOS CAMPOS MOTOPRESS (identificados por mapper)
+            size_m2: unit.size_m2 || null,
+            location_area: unit.location_details?.area || null,
+            children_capacity: unit.capacity?.children || 0,
+            accommodation_mphb_type: unit.accommodation_mphb_type || 'Standard',
+            motopress_room_type_id: unit.motopress_type_id || null
+          },
+          embedding_fast: embedding_fast,
+          embedding: embedding_balanced,
+          is_active: unit.status === 'active',
+          is_bookable: true
+        }
+
+        // Upsert to accommodation_units_public
+        const { error } = await this.supabase
+          .from('accommodation_units_public')
+          .upsert(chunkRecord, {
+            onConflict: 'tenant_id,name'
+          })
+
+        if (error) {
+          console.error(`   ❌ [${i + 1}/${chunks.length}] Failed to save chunk:`, error)
+          throw new Error(`Chunk save failed: ${error.message}`)
+        }
+
+        console.log(`   ✅ [${i + 1}/${chunks.length}] Chunk synced: ${chunk.sectionTitle}`)
       }
 
-      console.log(`✅ Embeddings generated for: ${unit.name}`)
+      console.log(`✅ All ${chunks.length} chunks synced for: ${unit.name}`)
 
     } catch (error: any) {
       console.error(`Embedding generation failed for ${unit.name}:`, error)
@@ -477,7 +643,7 @@ export class MotoPresSyncManager {
       }
 
       // Decrypt credentials
-      const credentials = this.decrypt(config.config_data)
+      const credentials = await this.decrypt(config.config_data)
 
       // Initialize MotoPress client
       const client = new MotoPresClient({
