@@ -16,7 +16,7 @@ interface MotoPresAccommodation {
     title: string
     alt: string
   }>
-  meta: {
+  meta?: {
     mphb_room_type_id?: number
     mphb_adults?: number
     mphb_children?: number
@@ -32,10 +32,10 @@ interface MotoPresAccommodation {
     id: number
     name: string
   }>
-  featured_media: number
+  featured_media?: number
   status: string
-  date: string
-  modified: string
+  date?: string
+  modified?: string
 }
 
 interface AccommodationUnit {
