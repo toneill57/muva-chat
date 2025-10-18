@@ -104,9 +104,10 @@ async function testMotoPresConnection(consumerKey: string, consumerSecret: strin
       headers: {
         'Authorization': `Basic ${credentials}`,
         'Content-Type': 'application/json',
-        'User-Agent': 'InnPilot/1.0'
+        'Accept': '*/*',
+        'User-Agent': 'curl/8.7.1' // Mimic curl to avoid WAF blocking
       },
-      signal: AbortSignal.timeout(10000)
+      signal: AbortSignal.timeout(120000) // 2 minute timeout (some servers are slow)
     })
 
     if (!response.ok) {
