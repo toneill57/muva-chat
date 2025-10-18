@@ -76,7 +76,7 @@ export class MotoPresClient {
   private apiKey: string
   private consumerSecret: string
   private baseUrl: string
-  private timeout: number = 120000 // Increased to 2 minutes (some servers are slow)
+  private timeout: number = 30000
 
   constructor({ apiKey, consumerSecret, siteUrl }: ConnectionInfo) {
     this.apiKey = apiKey
@@ -99,8 +99,7 @@ export class MotoPresClient {
         headers: {
           'Authorization': `Basic ${credentials}`,
           'Content-Type': 'application/json',
-          'Accept': '*/*',
-          'User-Agent': 'curl/8.7.1', // Mimic curl to avoid blocking
+          'User-Agent': 'curl/8.7.1',
           ...options.headers
         },
         signal: AbortSignal.timeout(this.timeout)
@@ -361,8 +360,7 @@ export class MotoPresClient {
         method: 'HEAD',
         headers: {
           'Authorization': `Basic ${credentials}`,
-          'Accept': '*/*',
-          'User-Agent': 'curl/8.7.1' // Mimic curl to avoid blocking
+          'User-Agent': 'curl/8.7.1'
         },
         signal: AbortSignal.timeout(this.timeout)
       })
@@ -405,8 +403,7 @@ export class MotoPresClient {
               headers: {
                 'Authorization': `Basic ${credentials}`,
                 'Content-Type': 'application/json',
-                'Accept': '*/*',
-                'User-Agent': 'curl/8.7.1' // Mimic curl to avoid blocking
+                'User-Agent': 'curl/8.7.1'
               },
               signal: AbortSignal.timeout(120000) // 120s timeout for _embed
             })
