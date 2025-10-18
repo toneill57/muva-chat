@@ -137,7 +137,7 @@ export class MotoPresSyncManager {
       const motoPresAccommodations = response.data
       console.log(`Retrieved ${motoPresAccommodations.length} accommodations from MotoPress`)
 
-      // Fetch all rates (pricing) from MotoPress
+      // Fetch all rates (pricing) from MotoPress in bulk
       console.log('Fetching rates (pricing) from MotoPress...')
       const ratesResponse = await client.getAllRates()
 
@@ -181,7 +181,6 @@ export class MotoPresSyncManager {
       console.log(`🏨 Dynamic lookup: tenant_id="${tenantId}" → hotel_id="${hotelId}"`)
 
       // Map to accommodation units
-      console.log('First MotoPress accommodation sample:', JSON.stringify(motoPresAccommodations[0], null, 2))
       const accommodationUnits = MotoPresDataMapper.mapBulkAccommodations(
         motoPresAccommodations,
         tenantId
@@ -191,17 +190,26 @@ export class MotoPresSyncManager {
       accommodationUnits.forEach(unit => {
         unit.hotel_id = hotelId
 
-        // Add pricing data if available
+        // Add pricing data as JSONB object if available
         const pricing = pricingMap.get(unit.motopress_unit_id)
         if (pricing) {
-          unit.base_price = pricing.base_price
-          unit.base_adults_price = pricing.base_adults
-          unit.base_children_price = pricing.base_children
-          unit.season_id = pricing.season_id
-          unit.price_priority = pricing.priority
-          unit.price_variations = pricing.price_variations
-          console.log(`💰 Added pricing to ${unit.name}: $${pricing.base_price} COP`)
+          unit.pricing = {
+            base_price: pricing.base_price,
+            base_price_low_season: pricing.base_price_low_season,
+            base_price_high_season: pricing.base_price_high_season,
+            currency: pricing.currency,
+            price_per_person_low: pricing.price_per_person_low,
+            price_per_person_high: pricing.price_per_person_high,
+            minimum_stay: pricing.minimum_stay,
+            base_adults: pricing.base_adults,
+            base_children: pricing.base_children,
+            season_id: pricing.season_id,
+            priority: pricing.priority,
+            price_variations: pricing.price_variations
+          }
+          console.log(`💰 Added pricing to ${unit.name}: $${pricing.base_price} COP (Low: $${pricing.base_price_low_season}, High: $${pricing.base_price_high_season})`)
         } else {
+          unit.pricing = {}
           console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_unit_id}`)
         }
       })
@@ -241,6 +249,7 @@ export class MotoPresSyncManager {
                 unique_features = '${JSON.stringify(unit.unique_features)}'::jsonb,
                 images = '${JSON.stringify(unit.images)}'::jsonb,
                 accommodation_mphb_type = '${unit.accommodation_mphb_type || ''}',
+                pricing = '${JSON.stringify(unit.pricing || {})}'::jsonb,
                 status = '${unit.status}',
                 updated_at = NOW()
               WHERE id = '${existing.id}'
@@ -275,7 +284,7 @@ export class MotoPresSyncManager {
                 id,
                 hotel_id, tenant_id, motopress_unit_id, name, description, short_description,
                 capacity, bed_configuration, view_type, tourism_features, unique_features,
-                images, accommodation_mphb_type, status, is_featured, display_order, created_at, updated_at
+                images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
               ) VALUES (
                 hotels.generate_deterministic_uuid('${unit.tenant_id}', ${unit.motopress_unit_id}),
                 '${unit.hotel_id}',
@@ -291,6 +300,7 @@ export class MotoPresSyncManager {
                 '${JSON.stringify(unit.unique_features)}'::jsonb,
                 '${JSON.stringify(unit.images)}'::jsonb,
                 '${unit.accommodation_mphb_type || ''}',
+                '${JSON.stringify(unit.pricing || {})}'::jsonb,
                 '${unit.status}',
                 ${unit.is_featured || false},
                 ${unit.display_order || 1},
@@ -594,14 +604,7 @@ export class MotoPresSyncManager {
           description: chunk.content,
           short_description: unit.short_description || '',
           amenities: unit.amenities_list || [],
-          pricing: unit.tourism_features?.price_per_night
-            ? {
-                base_price: unit.tourism_features.price_per_night,  // ✅ FIX: Use base_price (expected by API)
-                base_price_low_season: unit.tourism_features.price_per_night,
-                base_price_high_season: unit.tourism_features.price_per_night,
-                currency: 'COP'
-              }
-            : {},
+          pricing: unit.pricing || {},
           photos: unit.images || [],
           metadata: {
             section_type: chunk.sectionType,
@@ -777,6 +780,7 @@ export class MotoPresSyncManager {
                 unique_features = '${JSON.stringify(unit.unique_features)}'::jsonb,
                 images = '${JSON.stringify(unit.images)}'::jsonb,
                 accommodation_mphb_type = '${unit.accommodation_mphb_type || ''}',
+                pricing = '${JSON.stringify(unit.pricing || {})}'::jsonb,
                 status = '${unit.status}',
                 updated_at = NOW()
               WHERE id = '${existing.id}'
@@ -811,7 +815,7 @@ export class MotoPresSyncManager {
                 id,
                 hotel_id, tenant_id, motopress_unit_id, name, description, short_description,
                 capacity, bed_configuration, view_type, tourism_features, unique_features,
-                images, accommodation_mphb_type, status, is_featured, display_order, created_at, updated_at
+                images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
               ) VALUES (
                 hotels.generate_deterministic_uuid('${unit.tenant_id}', ${unit.motopress_unit_id}),
                 '${unit.hotel_id}',
@@ -827,6 +831,7 @@ export class MotoPresSyncManager {
                 '${JSON.stringify(unit.unique_features)}'::jsonb,
                 '${JSON.stringify(unit.images)}'::jsonb,
                 '${unit.accommodation_mphb_type || ''}',
+                '${JSON.stringify(unit.pricing || {})}'::jsonb,
                 '${unit.status}',
                 ${unit.is_featured || false},
                 ${unit.display_order || 1},

@@ -234,6 +234,12 @@ export class MotoPresDataMapper {
   static mapRatesToPricing(rates: any[]): {
     accommodation_type_id: number
     base_price: number
+    base_price_low_season: number
+    base_price_high_season: number
+    currency: string
+    price_per_person_low: number
+    price_per_person_high: number
+    minimum_stay: number
     base_adults: number
     base_children: number
     season_id: number
@@ -245,17 +251,45 @@ export class MotoPresDataMapper {
     }>
   }[] {
     return rates.map(rate => {
-      // Get first season price (priority 0 is default)
-      const seasonPrice = rate.season_prices?.[0] || {}
+      const seasonPrices = rate.season_prices || []
+
+      // Handle multiple seasons or single season
+      let basePriceLow = 0
+      let basePriceHigh = 0
+
+      if (seasonPrices.length === 0) {
+        // No seasons defined
+        basePriceLow = 0
+        basePriceHigh = 0
+      } else if (seasonPrices.length === 1) {
+        // Single season (like Tu Casa Mar) - use same price for both
+        basePriceLow = seasonPrices[0].base_price || 0
+        basePriceHigh = seasonPrices[0].base_price || 0
+      } else {
+        // Multiple seasons - find lowest and highest by priority
+        // Lower priority = higher price (common convention)
+        const sortedByPrice = [...seasonPrices].sort((a, b) => (a.base_price || 0) - (b.base_price || 0))
+        basePriceLow = sortedByPrice[0]?.base_price || 0
+        basePriceHigh = sortedByPrice[sortedByPrice.length - 1]?.base_price || 0
+      }
+
+      // Get first season price for other fields (priority 0 is default)
+      const primarySeason = seasonPrices[0] || {}
 
       return {
         accommodation_type_id: rate.accommodation_type_id,
-        base_price: seasonPrice.base_price || 0,
-        base_adults: seasonPrice.base_adults || 2,
-        base_children: seasonPrice.base_children || 0,
-        season_id: seasonPrice.season_id || 0,
-        priority: seasonPrice.priority || 0,
-        price_variations: seasonPrice.variations || []
+        base_price: primarySeason.base_price || 0,
+        base_price_low_season: basePriceLow,
+        base_price_high_season: basePriceHigh,
+        currency: 'COP', // MotoPress uses COP for Colombian properties
+        price_per_person_low: 0, // MotoPress uses variations instead
+        price_per_person_high: 0, // MotoPress uses variations instead
+        minimum_stay: 1, // Default minimum stay
+        base_adults: primarySeason.base_adults || 2,
+        base_children: primarySeason.base_children || 0,
+        season_id: primarySeason.season_id || 0,
+        priority: primarySeason.priority || 0,
+        price_variations: primarySeason.variations || []
       }
     })
   }
