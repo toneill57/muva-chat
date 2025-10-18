@@ -11,9 +11,17 @@ interface TestConnectionRequest {
 
 export async function POST(request: Request) {
   try {
+    console.log('[motopress-test] POST request received')
+    console.log('[motopress-test] Authorization header:', request.headers.get('Authorization')?.substring(0, 20) + '...')
+
     // ✅ Admin authentication required
     const { response: authError, session } = await requireAdminAuth(request)
-    if (authError) return authError
+    if (authError) {
+      console.log('[motopress-test] Auth failed:', authError.status)
+      return authError
+    }
+
+    console.log('[motopress-test] Auth success:', session?.username, session?.role)
 
     const body: TestConnectionRequest = await request.json()
     const { tenant_id, api_key, consumer_secret, site_url } = body
@@ -21,6 +29,7 @@ export async function POST(request: Request) {
     const supabase = createServerClient()
 
     let testApiKey = api_key
+    let testConsumerSecret = consumer_secret
     let testSiteUrl = site_url
     const effectiveTenantId = tenant_id || session!.tenant_id
 
@@ -33,7 +42,7 @@ export async function POST(request: Request) {
     }
 
     // Si no se proporcionan credenciales, obtenerlas de la configuración existente
-    if (!testApiKey || !testSiteUrl) {
+    if (!testApiKey || !testConsumerSecret || !testSiteUrl) {
       const { data: config, error: configError } = await supabase
         .from('integration_configs')
         .select('config_data')
@@ -50,30 +59,21 @@ export async function POST(request: Request) {
 
       // ✅ Decrypt credentials from database
       const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
+      const decryptedConsumerSecret = await decryptCredentials(config.config_data.consumer_secret)
       testApiKey = decryptedApiKey
+      testConsumerSecret = decryptedConsumerSecret
       testSiteUrl = config.config_data.site_url
     }
 
-    if (!testApiKey || !testSiteUrl) {
+    if (!testApiKey || !testConsumerSecret || !testSiteUrl) {
       return NextResponse.json(
-        { error: 'Missing API key or site URL' },
+        { error: 'Missing API key, consumer secret, or site URL' },
         { status: 400 }
       )
     }
 
-    // ✅ Use credentials from environment variables (secured)
-    const realConsumerKey = process.env.MOTOPRESS_KEY!
-    const realConsumerSecret = process.env.MOTOPRESS_SECRET!
-
-    if (!realConsumerKey || !realConsumerSecret) {
-      return NextResponse.json(
-        { error: 'MotoPress credentials not configured on server' },
-        { status: 500 }
-      )
-    }
-
-    // Test de conexión con MotoPress API
-    const testResult = await testMotoPresConnection(realConsumerKey, realConsumerSecret, testSiteUrl)
+    // Use the user-provided credentials for MotoPress REST API
+    const testResult = await testMotoPresConnection(testApiKey, testConsumerSecret, testSiteUrl)
 
     return NextResponse.json(testResult)
 
@@ -92,18 +92,15 @@ export async function POST(request: Request) {
 
 async function testMotoPresConnection(consumerKey: string, consumerSecret: string, siteUrl: string) {
   try {
-    // Usar el endpoint correcto de MotoPress Hotel Booking
-    const apiUrl = `${siteUrl.replace(/\/$/, '')}/wp-json/mphb/v1/accommodation_types`
+    // Build URL with query parameters (MotoPress REST API recommended method for HTTPS)
+    const baseUrl = siteUrl.replace(/\/$/, '')
+    const apiUrl = `${baseUrl}/wp-json/mphb/v1/accommodation_types?per_page=100&consumer_key=${encodeURIComponent(consumerKey)}&consumer_secret=${encodeURIComponent(consumerSecret)}`
 
-    console.log('Testing MotoPress Hotel Booking connection to:', apiUrl)
-
-    // Usar autenticación Basic con Consumer Key y Secret
-    const credentials = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64')
+    console.log('Testing MotoPress Hotel Booking connection to:', baseUrl + '/wp-json/mphb/v1/accommodation_types')
 
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
-        'Authorization': `Basic ${credentials}`,
         'Content-Type': 'application/json',
         'User-Agent': 'InnPilot/1.0'
       }

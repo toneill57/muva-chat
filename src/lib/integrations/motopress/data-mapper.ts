@@ -1,13 +1,10 @@
 interface MotoPresAccommodation {
   id: number
-  title: {
-    rendered: string
-  } | string  // MotoPress can return string directly
+  title: string  // MotoPress returns string directly
   content?: {
     rendered: string
   }
-  description?: string  // MotoPress direct HTML field
-  excerpt?: string      // MotoPress short description
+  description?: string  // MotoPress direct HTML field (NO excerpt field exists)
   // MotoPress direct fields
   size?: number         // Direct size field
   view?: string        // Direct view field
@@ -86,19 +83,13 @@ export class MotoPresDataMapper {
     })
     const meta = motoPresData.meta || {}
 
-    // Clean HTML content for description - MotoPress format handling
-    const rawDescription = motoPresData.description || motoPresData.content?.rendered
-    const cleanDescription = rawDescription
-      ? rawDescription.replace(/<[^>]*>/g, '').trim()
-      : undefined
+    // Use excerpt field which contains clean text (no HTML)
+    const description = motoPresData.excerpt || ''
+    const shortDescription = description.length > 200
+      ? description.substring(0, 200) + '...'
+      : description
 
-    console.log(`📝 Mapping ${motoPresData.id}: description found=${!!rawDescription}, length=${rawDescription?.length || 0}`)
-
-    // Use MotoPress excerpt or create short description from cleaned content
-    const shortDescription = motoPresData.excerpt?.trim() ||
-      (cleanDescription && cleanDescription.length > 200
-        ? cleanDescription.substring(0, 200) + '...'
-        : cleanDescription)
+    console.log(`📝 Mapping ${motoPresData.id}: excerpt length=${description.length}`)
 
     // Build capacity object (JSONB format)
     const adults = meta.mphb_adults || 2
@@ -171,8 +162,8 @@ export class MotoPresDataMapper {
       motopress_type_id: meta.mphb_room_type_id,
       motopress_unit_id: motoPresData.id,
       accommodation_mphb_type: accommodationMphbType,
-      name: (typeof motoPresData.title === 'string' ? motoPresData.title : motoPresData.title?.rendered) || `Accommodation ${motoPresData.id}`,
-      description: cleanDescription,
+      name: motoPresData.title || `Accommodation ${motoPresData.id}`,
+      description: description,
       short_description: shortDescription,
       unit_type: 'accommodation',
       capacity,
@@ -225,21 +216,47 @@ export class MotoPresDataMapper {
     const children = meta.mphb_children || 0
     const capacity = adults + children
 
-    // Get first 100 characters of description without HTML
-    const cleanDescription = data.content?.rendered
-      ? data.content.rendered.replace(/<[^>]*>/g, '').trim()
+    // Use excerpt for clean preview text
+    const descriptionPreview = data.excerpt
+      ? (data.excerpt.length > 100 ? data.excerpt.substring(0, 100) + '...' : data.excerpt)
       : ''
-    const descriptionPreview = cleanDescription.length > 100
-      ? cleanDescription.substring(0, 100) + '...'
-      : cleanDescription
 
     return {
       id: data.id,
-      name: typeof data.title === 'string' ? data.title : data.title.rendered,
+      name: data.title,
       capacity,
       price: meta.mphb_price,
       status: data.status,
       description_preview: descriptionPreview
     }
+  }
+
+  static mapRatesToPricing(rates: any[]): {
+    accommodation_type_id: number
+    base_price: number
+    base_adults: number
+    base_children: number
+    season_id: number
+    priority: number
+    price_variations: Array<{
+      adults: number
+      children: number
+      price: number
+    }>
+  }[] {
+    return rates.map(rate => {
+      // Get first season price (priority 0 is default)
+      const seasonPrice = rate.season_prices?.[0] || {}
+
+      return {
+        accommodation_type_id: rate.accommodation_type_id,
+        base_price: seasonPrice.base_price || 0,
+        base_adults: seasonPrice.base_adults || 2,
+        base_children: seasonPrice.base_children || 0,
+        season_id: seasonPrice.season_id || 0,
+        priority: seasonPrice.priority || 0,
+        price_variations: seasonPrice.variations || []
+      }
+    })
   }
 }

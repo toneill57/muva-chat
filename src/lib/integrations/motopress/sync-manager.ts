@@ -137,6 +137,28 @@ export class MotoPresSyncManager {
       const motoPresAccommodations = response.data
       console.log(`Retrieved ${motoPresAccommodations.length} accommodations from MotoPress`)
 
+      // Fetch all rates (pricing) from MotoPress
+      console.log('Fetching rates (pricing) from MotoPress...')
+      const ratesResponse = await client.getAllRates()
+
+      if (ratesResponse.error || !ratesResponse.data) {
+        console.warn('⚠️ Failed to fetch rates:', ratesResponse.error)
+        // Continue without pricing data
+      }
+
+      const motoPresRates = ratesResponse.data || []
+      console.log(`Retrieved ${motoPresRates.length} rates from MotoPress`)
+
+      // Map rates to pricing by accommodation_type_id
+      const pricingMap = new Map()
+      if (motoPresRates.length > 0) {
+        const pricingData = MotoPresDataMapper.mapRatesToPricing(motoPresRates)
+        pricingData.forEach(pricing => {
+          pricingMap.set(pricing.accommodation_type_id, pricing)
+        })
+        console.log(`📊 Mapped pricing for ${pricingMap.size} accommodations`)
+      }
+
       // Get hotel_id for this tenant (dynamic lookup)
       const { data: hotel, error: hotelError } = await this.supabase
         .from('hotels')
@@ -165,9 +187,23 @@ export class MotoPresSyncManager {
         tenantId
       )
 
-      // Add hotel_id to all units
+      // Add hotel_id and pricing to all units
       accommodationUnits.forEach(unit => {
         unit.hotel_id = hotelId
+
+        // Add pricing data if available
+        const pricing = pricingMap.get(unit.motopress_unit_id)
+        if (pricing) {
+          unit.base_price = pricing.base_price
+          unit.base_adults_price = pricing.base_adults
+          unit.base_children_price = pricing.base_children
+          unit.season_id = pricing.season_id
+          unit.price_priority = pricing.priority
+          unit.price_variations = pricing.price_variations
+          console.log(`💰 Added pricing to ${unit.name}: $${pricing.base_price} COP`)
+        } else {
+          console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_unit_id}`)
+        }
       })
 
       // Process each accommodation unit

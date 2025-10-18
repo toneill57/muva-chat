@@ -1,12 +1,21 @@
 interface MotoPresAccommodation {
   id: number
-  title: {
-    rendered: string
-  }
-  content: {
-    rendered: string
-  }
-  meta: {
+  title: string  // MotoPress returns plain string
+  description?: string  // HTML only (no clean text available)
+  excerpt?: string  // Clean text description
+  status: string
+  // Direct structured fields from MotoPress
+  size?: number
+  view?: string
+  amenities?: string[]
+  images?: Array<{
+    id: number
+    src: string
+    title: string
+    alt: string
+  }>
+  // Meta fields (may not all be present)
+  meta?: {
     mphb_room_type_id?: number
     mphb_adults?: number
     mphb_children?: number
@@ -18,10 +27,37 @@ interface MotoPresAccommodation {
     mphb_view?: string
     mphb_location?: string
   }
-  featured_media: number
+  categories?: Array<{
+    id: number
+    name: string
+  }>
+  featured_media?: number
+  date?: string
+  modified?: string
+}
+
+interface MotoPressPriceVariation {
+  adults: number
+  children: number
+  price: number
+}
+
+interface MotoPresSeasonPrice {
+  priority: number
+  season_id: number
+  base_price: number
+  base_adults: number
+  base_children: number
+  variations: MotoPressPriceVariation[]
+}
+
+interface MotoPresRate {
+  id: number  // Rate ID (internal, not for display)
   status: string
-  date: string
-  modified: string
+  title: string
+  description?: string
+  accommodation_type_id: number  // Links to accommodation
+  season_prices: MotoPresSeasonPrice[]
 }
 
 interface MotoPresApiResponse<T> {
@@ -175,5 +211,49 @@ export class MotoPresClient {
 
     const query = params.toString() ? `?${params.toString()}` : ''
     return this.makeRequest<any[]>(`/bookings${query}`)
+  }
+
+  async getRates(
+    page: number = 1,
+    perPage: number = 100,
+    accommodationTypeId?: number
+  ): Promise<MotoPresApiResponse<MotoPresRate[]>> {
+    const params = new URLSearchParams()
+    params.append('page', page.toString())
+    params.append('per_page', perPage.toString())
+    if (accommodationTypeId) {
+      params.append('accommodation_type_id', accommodationTypeId.toString())
+    }
+
+    return this.makeRequest<MotoPresRate[]>(`/rates?${params.toString()}`)
+  }
+
+  async getAllRates(): Promise<MotoPresApiResponse<MotoPresRate[]>> {
+    const allRates: MotoPresRate[] = []
+    let page = 1
+    let hasMore = true
+
+    while (hasMore) {
+      const response = await this.getRates(page, 100)
+
+      if (response.error) {
+        return response
+      }
+
+      const rates = response.data || []
+      allRates.push(...rates)
+
+      // Si recibimos menos de 100, hemos llegado al final
+      hasMore = rates.length === 100
+      page++
+
+      // Pausa entre requests para no sobrecargar la API
+      await new Promise(resolve => setTimeout(resolve, 250))
+    }
+
+    return {
+      data: allRates,
+      status: 200
+    }
   }
 }
