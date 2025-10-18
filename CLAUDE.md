@@ -74,6 +74,41 @@ Claude: [ejecuta git status --short]
 Claude: "El archivo page.tsx está sin commitear (??). Ese es el problema."
 ```
 
+### 6. TypeScript Interface Changes - ALWAYS Verify Completeness
+**Cuando modificas una interfaz TypeScript, VERIFICA que TODOS los campos usados estén declarados.**
+
+- ✅ **PRIMERO:** Buscar TODOS los archivos que usan la interfaz
+- ✅ **SEGUNDO:** Identificar TODOS los accesos a campos (`object.field`)
+- ✅ **TERCERO:** Agregar TODOS los campos faltantes A LA VEZ
+- ✅ **CUARTO:** `npm run build` local ANTES de commitear
+- ❌ NUNCA commitear cambios de interfaz sin build verification
+- ❌ NUNCA hacer commits iterativos para cada campo faltante
+
+**Razón:** TypeScript dev mode es permisivo, pero build de producción falla. Commits iterativos generan 6+ deployments fallidos innecesarios.
+
+**Ejemplo del error a EVITAR:**
+```bash
+# ❌ MAL - Modificar interfaz sin verificar completeness
+Claude: [agrega campo 'title' a interface]
+Claude: [commit + push]
+GitHub: Build failed - 'meta' missing
+Claude: [agrega 'meta']
+Claude: [commit + push]
+GitHub: Build failed - 'categories' missing
+# ... 6 commits después
+
+# ✅ BIEN - Verificar TODO antes de commitear
+Claude: [modifica interface]
+Claude: grep -rn "AccommodationUnit" src/ # Buscar usos
+Claude: grep -rn "unit\\.\\w+" src/file.tsx # Campos usados
+Claude: [agrega TODOS los campos faltantes]
+Claude: npm run build # ✅ Pasa
+Claude: [commit + push 1 vez]
+GitHub: Build success ✅
+```
+
+📚 **Guía completa:** `docs/troubleshooting/TYPESCRIPT_INTERFACE_COMPLETENESS.md`
+
 ---
 
 ## 🚀 Development Setup
