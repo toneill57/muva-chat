@@ -90,12 +90,37 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
         )
       }
 
-      console.log(`[Accommodations Units API] ✅ Found ${fallbackData.length} units (fallback)`)
+      console.log(`[Accommodations Units API] ✅ Found ${fallbackData.length} chunks (raw)`)
+
+      // Group chunks by original_accommodation to show only base units
+      const groupedUnits = fallbackData.reduce((acc: any, chunk: any) => {
+        const baseName = chunk.metadata?.original_accommodation || chunk.name
+
+        if (!acc[baseName]) {
+          // First chunk for this unit - use as base
+          acc[baseName] = {
+            ...chunk,
+            name: baseName, // Clean name without " - Section" suffix
+            chunks_count: 1,
+            all_chunks: [chunk]
+          }
+        } else {
+          // Additional chunk - increment counter
+          acc[baseName].chunks_count++
+          acc[baseName].all_chunks.push(chunk)
+        }
+
+        return acc
+      }, {})
+
+      const consolidatedUnits = Object.values(groupedUnits)
+
+      console.log(`[Accommodations Units API] ✅ Consolidated to ${consolidatedUnits.length} unique units`)
 
       return NextResponse.json(
         {
           success: true,
-          data: fallbackData || []
+          data: consolidatedUnits
         },
         { status: 200 }
       )

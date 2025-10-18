@@ -105,7 +105,7 @@ export function AccommodationUnitsGrid() {
         return
       }
 
-      const response = await fetch(`/api/accommodation/units?tenant_id=${tenant.tenant_id}`, {
+      const response = await fetch(`/api/accommodations/units`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -114,15 +114,8 @@ export function AccommodationUnitsGrid() {
       const data = await response.json()
 
       if (data.success) {
-        // Remove duplicates by name (keep only unique units)
-        const uniqueUnits = data.units?.reduce((acc: AccommodationUnit[], unit: AccommodationUnit) => {
-          if (!acc.find(u => u.name === unit.name)) {
-            acc.push(unit)
-          }
-          return acc
-        }, []) || []
-
-        setUnits(uniqueUnits)
+        // API already returns consolidated units (grouped from chunks)
+        setUnits(data.data || [])
       } else {
         setError('No units found')
       }
