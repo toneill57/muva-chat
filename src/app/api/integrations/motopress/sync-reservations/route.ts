@@ -16,7 +16,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
 import { MotoPresBookingsMapper, type MotoPresBooking } from '@/lib/integrations/motopress/bookings-mapper'
-import { decryptCredentials } from '@/lib/admin-auth'
+import { getDecryptedMotoPresCredentials } from '@/lib/integrations/motopress/credentials-helper'
 
 // Allow up to 60 seconds for sync operations (pagination + API delays)
 export const maxDuration = 60
@@ -84,19 +84,24 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
     }
 
     // 3. Decrypt credentials and create MotoPresClient
-    const credentials = config.config_data as {
-      api_key: string
-      consumer_secret: string
-      site_url: string
+    let credentials
+    try {
+      credentials = await getDecryptedMotoPresCredentials(config.config_data)
+    } catch (error: any) {
+      console.error('[sync-reservations] Failed to get credentials:', error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: error.message || 'Error al obtener credenciales. Reconfigura en /accommodations/integrations'
+        },
+        { status: 500 }
+      )
     }
 
-    const decryptedApiKey = await decryptCredentials(credentials.api_key)
-    const decryptedConsumerSecret = await decryptCredentials(credentials.consumer_secret)
-
     const client = new MotoPresClient({
-      apiKey: decryptedApiKey,
-      consumerSecret: decryptedConsumerSecret,
-      siteUrl: credentials.site_url
+      apiKey: credentials.apiKey,
+      consumerSecret: credentials.consumerSecret,
+      siteUrl: credentials.siteUrl
     })
 
     console.log('[sync-reservations] Fetching bookings from MotoPress...')
