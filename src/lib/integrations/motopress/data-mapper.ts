@@ -1,6 +1,7 @@
 interface MotoPresAccommodation {
   id: number
-  title: string  // MotoPress returns string directly
+  title: string | { rendered: string }  // MotoPress can return string OR object
+  excerpt?: string  // Clean text preview (used in extractAccommodationPreview)
   content?: {
     rendered: string
   }
