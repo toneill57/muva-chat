@@ -22,17 +22,17 @@ export async function DELETE(request: NextRequest) {
     console.log('[delete-all-reservations] Starting...')
 
     // 1. Authenticate staff user
-    const authResult = await requireAdminAuth(request)
+    const { response: authError, session } = await requireAdminAuth(request)
 
-    if (!authResult.success || !authResult.session) {
+    if (authError || !session) {
       console.log('[delete-all-reservations] Authentication failed')
-      return NextResponse.json(
+      return authError || NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    const { tenant_id } = authResult.session
+    const { tenant_id } = session
 
     console.log(`[delete-all-reservations] Authenticated tenant: ${tenant_id}`)
 
@@ -88,8 +88,8 @@ export async function DELETE(request: NextRequest) {
         metadata: {
           operation: 'delete_all',
           deleted_count: deletedCount,
-          staff_id: authResult.session.staff_id,
-          staff_role: authResult.session.role
+          staff_id: session.staff_id,
+          staff_role: session.role
         },
         started_at: new Date().toISOString(),
         completed_at: new Date().toISOString()
