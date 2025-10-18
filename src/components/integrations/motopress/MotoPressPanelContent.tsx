@@ -75,8 +75,9 @@ export function MotoPressPanelContent({
   const [historyOpen, setHistoryOpen] = useState(false)
 
   // Configuration state
-  const [formData, setFormData] = useState({ api_key: '', site_url: '' })
+  const [formData, setFormData] = useState({ api_key: '', api_secret: '', site_url: '' })
   const [showApiKey, setShowApiKey] = useState(false)
+  const [showApiSecret, setShowApiSecret] = useState(false)
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle')
   const [connectionMessage, setConnectionMessage] = useState('')
 
@@ -98,12 +99,29 @@ export function MotoPressPanelContent({
   // Load existing configuration on mount
   useEffect(() => {
     loadExistingConfig()
-    loadSyncHistory()
+    // Don't auto-load sync history - only load when user opens History section
   }, [tenantId])
+
+  // Load sync history when History section is opened
+  useEffect(() => {
+    if (historyOpen) {
+      loadSyncHistory()
+    }
+  }, [historyOpen])
 
   const loadExistingConfig = async () => {
     try {
-      const response = await fetch(`/api/integrations/motopress/configure?tenant_id=${tenantId}`)
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        console.warn('[MotoPressPanelContent] No authentication token found')
+        return
+      }
+
+      const response = await fetch(`/api/integrations/motopress/configure?tenant_id=${tenantId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       const data = await response.json()
 
       if (data.exists && data.config) {
@@ -112,8 +130,8 @@ export function MotoPressPanelContent({
           site_url: data.config.site_url || ''
         }))
 
-        // Auto-test connection if config exists
-        testConnection(true)
+        // Don't auto-test - user needs to provide credentials first
+        // testConnection(true)
       }
     } catch (error) {
       console.error('Failed to load configuration:', error)
@@ -121,37 +139,56 @@ export function MotoPressPanelContent({
   }
 
   const testConnection = async (isAutoTest = false) => {
-    if (!isAutoTest && (!formData.api_key || !formData.site_url)) {
-      setConnectionMessage('Please provide both API key and site URL')
+    if (!isAutoTest && (!formData.api_key || !formData.api_secret || !formData.site_url)) {
+      setConnectionMessage('Please provide API key, API secret, and site URL')
       setConnectionStatus('error')
       return
     }
 
     try {
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setConnectionMessage('Not authenticated - please login again')
+        setConnectionStatus('error')
+        return
+      }
+
       setConnectionStatus('testing')
       setConnectionMessage('Testing connection...')
 
+      console.log('[MotoPressPanelContent] Testing connection with:', {
+        site_url: formData.site_url,
+        has_api_key: !!formData.api_key,
+        has_api_secret: !!formData.api_secret
+      })
+
       const response = await fetch('/api/integrations/motopress/test-connection', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           tenant_id: tenantId,
           ...(formData.api_key && { api_key: formData.api_key }),
+          ...(formData.api_secret && { consumer_secret: formData.api_secret }),
           ...(formData.site_url && { site_url: formData.site_url })
         })
       })
 
+      console.log('[MotoPressPanelContent] Response status:', response.status)
       const result = await response.json()
+      console.log('[MotoPressPanelContent] Response data:', result)
 
       if (result.connected) {
         setConnectionStatus('success')
         setConnectionMessage(`Connected! Found ${result.accommodations_count || 0} accommodations`)
 
-        // Auto-load preview after successful connection
-        setTimeout(() => {
-          loadAccommodationsPreview()
-          setPreviewOpen(true)
-        }, 500)
+        // Don't auto-load preview - wait for user to save configuration first
+        // setTimeout(() => {
+        //   loadAccommodationsPreview()
+        //   setPreviewOpen(true)
+        // }, 500)
       } else {
         setConnectionStatus('error')
         setConnectionMessage(result.error || 'Connection failed')
@@ -169,12 +206,23 @@ export function MotoPressPanelContent({
     }
 
     try {
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setConnectionMessage('Not authenticated - please login again')
+        setConnectionStatus('error')
+        return
+      }
+
       const response = await fetch('/api/integrations/motopress/configure', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           tenant_id: tenantId,
           api_key: formData.api_key,
+          consumer_secret: formData.api_secret,
           site_url: formData.site_url,
           is_active: true
         })
@@ -184,6 +232,12 @@ export function MotoPressPanelContent({
 
       if (result.success) {
         setConnectionMessage('Configuration saved successfully!')
+
+        // Auto-load preview after successful save
+        setTimeout(() => {
+          loadAccommodationsPreview()
+          setPreviewOpen(true)
+        }, 500)
       } else {
         setConnectionMessage(result.error || 'Failed to save configuration')
         setConnectionStatus('error')
@@ -198,8 +252,21 @@ export function MotoPressPanelContent({
     try {
       setLoadingPreview(true)
 
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setConnectionMessage('Not authenticated - please login again')
+        setConnectionStatus('error')
+        setLoadingPreview(false)
+        return
+      }
+
       const response = await fetch(
-        `/api/integrations/motopress/accommodations?tenant_id=${tenantId}&preview=true`
+        `/api/integrations/motopress/accommodations?tenant_id=${tenantId}&preview=true`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       )
       const data = await response.json()
 
@@ -207,36 +274,15 @@ export function MotoPressPanelContent({
         throw new Error(data.error)
       }
 
-      // Get existing accommodation IDs from database
-      const { createServerClient } = await import('@/lib/supabase')
-      const supabase = createServerClient()
+      // Backend already provides accommodation data - just use it
+      const accommodations = data.accommodations || []
+      setAccommodations(accommodations)
 
-      const { data: existingUnits } = await supabase
-        .from('accommodation_units_public')
-        .select('metadata')
-        .eq('tenant_id', tenantId)
-
-      const existingMotoPresIds = new Set(
-        (existingUnits || [])
-          .map(unit => unit.metadata?.motopress_unit_id)
-          .filter(Boolean)
+      // Pre-select all accommodations by default (backend can mark isNew if needed)
+      const allIds = new Set<number>(
+        accommodations.map((acc: AccommodationPreviewItem) => acc.id)
       )
-
-      // Mark new accommodations and pre-select only new ones
-      const accommodationsWithNewFlag = (data.accommodations || []).map((acc: AccommodationPreviewItem) => ({
-        ...acc,
-        isNew: !existingMotoPresIds.has(acc.id)
-      }))
-
-      setAccommodations(accommodationsWithNewFlag)
-
-      // Pre-select only new accommodations
-      const newIds = new Set<number>(
-        accommodationsWithNewFlag
-          .filter((acc: AccommodationPreviewItem) => acc.isNew)
-          .map((acc: AccommodationPreviewItem) => acc.id)
-      )
-      setSelectedIds(newIds)
+      setSelectedIds(allIds)
 
     } catch (error: any) {
       console.error('Failed to load accommodations:', error)
@@ -272,6 +318,12 @@ export function MotoPressPanelContent({
     }
 
     try {
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setSyncMessage('Not authenticated - please login again')
+        return
+      }
+
       setSyncing(true)
       setSyncOpen(true)
       setSyncMessage('Starting sync...')
@@ -279,7 +331,10 @@ export function MotoPressPanelContent({
 
       const response = await fetch('/api/integrations/motopress/sync', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           tenant_id: tenantId,
           selected_ids: Array.from(selectedIds),
@@ -304,22 +359,40 @@ export function MotoPressPanelContent({
   }
 
   const pollSyncProgress = async () => {
+    const token = localStorage.getItem('staff_token')
+    if (!token) {
+      setSyncMessage('Not authenticated')
+      setSyncing(false)
+      return
+    }
+
     const pollInterval = setInterval(async () => {
       try {
         const response = await fetch(
-          `/api/integrations/motopress/sync/progress?tenant_id=${tenantId}`
+          `/api/integrations/motopress/sync/progress?tenant_id=${tenantId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }
         )
         const data = await response.json()
 
         setSyncProgress(data)
         setSyncMessage(data.message || 'Syncing...')
 
-        if (data.status === 'completed' || data.status === 'error') {
+        // Check for completion: 'success', 'partial_success', or 'error'
+        const isCompleted = data.status === 'success' || data.status === 'partial_success' || data.status === 'error'
+
+        if (isCompleted) {
           clearInterval(pollInterval)
           setSyncing(false)
 
-          if (data.status === 'completed') {
-            setSyncMessage(`✅ Sync completed! ${data.created} created, ${data.updated} updated`)
+          if (data.status === 'success' || data.status === 'partial_success') {
+            const syncDetails = data.sync_details || {}
+            const created = syncDetails.records_created || 0
+            const updated = syncDetails.records_updated || 0
+            setSyncMessage(`✅ Sync completed! ${created} created, ${updated} updated`)
 
             // Auto-close after 2 seconds
             setTimeout(() => {
@@ -327,7 +400,7 @@ export function MotoPressPanelContent({
               onSyncComplete?.()
             }, 2000)
           } else {
-            setSyncMessage(`❌ Sync failed: ${data.error || 'Unknown error'}`)
+            setSyncMessage(`❌ Sync failed: ${data.sync_details?.error_message || 'Unknown error'}`)
           }
 
           // Reload history
@@ -345,8 +418,20 @@ export function MotoPressPanelContent({
     try {
       setLoadingHistory(true)
 
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        console.warn('[MotoPressPanelContent] No token for sync history')
+        setLoadingHistory(false)
+        return
+      }
+
       const response = await fetch(
-        `/api/integrations/motopress/sync?tenant_id=${tenantId}`
+        `/api/integrations/motopress/sync?tenant_id=${tenantId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       )
       const data = await response.json()
 
@@ -428,6 +513,26 @@ export function MotoPressPanelContent({
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="api_secret">Consumer Secret</Label>
+                <div className="relative">
+                  <Input
+                    id="api_secret"
+                    type={showApiSecret ? 'text' : 'password'}
+                    placeholder="cs_..."
+                    value={formData.api_secret}
+                    onChange={(e) => setFormData(prev => ({ ...prev, api_secret: e.target.value }))}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowApiSecret(!showApiSecret)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showApiSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
               {connectionMessage && (
                 <Alert variant={connectionStatus === 'error' ? 'destructive' : 'default'}>
                   {getStatusIcon()}
@@ -439,7 +544,7 @@ export function MotoPressPanelContent({
                 <Button
                   variant="outline"
                   onClick={() => testConnection(false)}
-                  disabled={connectionStatus === 'testing' || !formData.api_key || !formData.site_url}
+                  disabled={connectionStatus === 'testing' || !formData.api_key || !formData.api_secret || !formData.site_url}
                 >
                   {connectionStatus === 'testing' ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -449,7 +554,7 @@ export function MotoPressPanelContent({
                   Test Connection
                 </Button>
 
-                {connectionStatus === 'success' && formData.api_key && (
+                {connectionStatus === 'success' && formData.api_key && formData.api_secret && (
                   <Button onClick={saveConfiguration}>
                     <Settings className="w-4 h-4 mr-2" />
                     Save Configuration

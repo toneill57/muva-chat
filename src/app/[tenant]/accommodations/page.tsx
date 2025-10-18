@@ -98,7 +98,7 @@ export default function AccommodationsDashboardPage() {
         }
       })
       const unitsData = await unitsResponse.json()
-      const totalUnits = unitsData.data?.length || 8
+      const totalUnits = unitsData.data?.length ?? 0
 
       const occupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0
 

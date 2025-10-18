@@ -33,10 +33,22 @@ export function SyncMotoPress({ tenantId, onSyncComplete }: SyncMotoPressProps) 
       setIsSyncing(true)
       setSyncResult(null)
 
+      // Get staff token from localStorage
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setSyncResult({
+          success: false,
+          message: '❌ Not authenticated - please login again'
+        })
+        setIsSyncing(false)
+        return
+      }
+
       const response = await fetch('/api/integrations/motopress/sync', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ tenant_id: tenantId })
       })

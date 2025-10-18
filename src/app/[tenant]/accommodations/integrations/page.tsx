@@ -29,16 +29,30 @@ export default function IntegrationsPage() {
   const [loading, setLoading] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
 
-  useEffect(() => {
-    checkIntegrationStatus()
-  }, [tenant])
+  // ❌ REMOVED: Don't auto-check status on mount - only when user clicks "Verificar Estado"
+  // useEffect(() => {
+  //   checkIntegrationStatus()
+  // }, [tenant])
 
   const checkIntegrationStatus = async () => {
     try {
       setLoading(true)
 
+      // Get staff token from localStorage
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        console.warn('[IntegrationsPage] No authentication token found')
+        setStatus({ connected: false, is_active: false, error: 'Not authenticated' })
+        setLoading(false)
+        return
+      }
+
       // Check if configuration exists
-      const configResponse = await fetch(`/api/integrations/motopress/configure?tenant_id=${tenant?.tenant_id}`)
+      const configResponse = await fetch(`/api/integrations/motopress/configure?tenant_id=${tenant?.tenant_id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       const configData = await configResponse.json()
 
       if (!configData.exists) {
@@ -49,7 +63,10 @@ export default function IntegrationsPage() {
       // Test connection
       const testResponse = await fetch('/api/integrations/motopress/test-connection', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ tenant_id: tenant?.tenant_id })
       })
       const testData = await testResponse.json()

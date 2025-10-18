@@ -54,9 +54,10 @@ export async function GET(request: Request) {
 
     // ✅ Decrypt credentials
     const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
+    const decryptedConsumerSecret = await decryptCredentials(config.config_data.consumer_secret)
     const credentials = {
       api_key: decryptedApiKey,
-      consumer_secret: config.config_data.consumer_secret || process.env.MOTOPRESS_SECRET!,
+      consumer_secret: decryptedConsumerSecret,
       site_url: config.config_data.site_url
     }
 

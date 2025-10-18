@@ -159,9 +159,15 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
               featured: 0
             },
             unit_amenities: Array.isArray(chunk.metadata?.unit_amenities)
-              ? chunk.metadata.unit_amenities.map((a: string) => ({
-                  amenity_name: a.trim()
-                }))
+              ? chunk.metadata.unit_amenities.map((a: any) => {
+                  // Handle both formats: string[] (new) and {id, name}[] (old MotoPress)
+                  if (typeof a === 'string') {
+                    return { amenity_name: a.trim() }
+                  } else if (a && typeof a === 'object' && a.name) {
+                    return { amenity_name: a.name.trim() }
+                  }
+                  return { amenity_name: String(a).trim() }
+                })
               : (typeof chunk.metadata?.unit_amenities === 'string'
                   ? chunk.metadata.unit_amenities.split(',').map((a: string) => ({
                       amenity_name: a.trim()

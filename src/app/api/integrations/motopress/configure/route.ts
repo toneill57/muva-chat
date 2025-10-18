@@ -5,6 +5,7 @@ import { requireAdminAuth, encryptCredentials } from '@/lib/admin-auth'
 interface ConfigureRequest {
   tenant_id: string
   api_key: string
+  consumer_secret: string
   site_url: string
   is_active: boolean
 }
@@ -15,11 +16,11 @@ export async function POST(request: Request) {
     const { response: authError, session } = await requireAdminAuth(request)
     if (authError) return authError
 
-    const { tenant_id, api_key, site_url, is_active }: ConfigureRequest = await request.json()
+    const { tenant_id, api_key, consumer_secret, site_url, is_active }: ConfigureRequest = await request.json()
 
-    if (!tenant_id || !api_key || !site_url) {
+    if (!tenant_id || !api_key || !consumer_secret || !site_url) {
       return NextResponse.json(
-        { error: 'Missing required fields: tenant_id, api_key, site_url' },
+        { error: 'Missing required fields: tenant_id, api_key, consumer_secret, site_url' },
         { status: 400 }
       )
     }
@@ -36,8 +37,10 @@ export async function POST(request: Request) {
 
     // ✅ Encrypt credentials before storing
     const encryptedApiKey = await encryptCredentials(api_key)
+    const encryptedConsumerSecret = await encryptCredentials(consumer_secret)
     const configData = {
       api_key: encryptedApiKey,
+      consumer_secret: encryptedConsumerSecret,
       site_url,
     }
 
@@ -84,9 +87,17 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
+    console.log('[motopress-configure] GET request received')
+    console.log('[motopress-configure] Authorization header:', request.headers.get('Authorization')?.substring(0, 20) + '...')
+
     // ✅ Admin authentication required
     const { response: authError, session } = await requireAdminAuth(request)
-    if (authError) return authError
+    if (authError) {
+      console.log('[motopress-configure] Auth failed:', authError.status)
+      return authError
+    }
+
+    console.log('[motopress-configure] Auth success:', session?.username, session?.role)
 
     const { searchParams } = new URL(request.url)
     const tenant_id = searchParams.get('tenant_id')

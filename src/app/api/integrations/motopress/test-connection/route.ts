@@ -92,18 +92,21 @@ export async function POST(request: Request) {
 
 async function testMotoPresConnection(consumerKey: string, consumerSecret: string, siteUrl: string) {
   try {
-    // Build URL with query parameters (MotoPress REST API recommended method for HTTPS)
+    // Use Basic Auth (same as client.ts)
     const baseUrl = siteUrl.replace(/\/$/, '')
-    const apiUrl = `${baseUrl}/wp-json/mphb/v1/accommodation_types?per_page=100&consumer_key=${encodeURIComponent(consumerKey)}&consumer_secret=${encodeURIComponent(consumerSecret)}`
+    const apiUrl = `${baseUrl}/wp-json/mphb/v1/accommodation_types?per_page=100`
+    const credentials = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64')
 
     console.log('Testing MotoPress Hotel Booking connection to:', baseUrl + '/wp-json/mphb/v1/accommodation_types')
 
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
+        'Authorization': `Basic ${credentials}`,
         'Content-Type': 'application/json',
         'User-Agent': 'InnPilot/1.0'
-      }
+      },
+      signal: AbortSignal.timeout(10000)
     })
 
     if (!response.ok) {

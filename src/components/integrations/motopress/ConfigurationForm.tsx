@@ -24,6 +24,7 @@ interface TestResult {
 export function ConfigurationForm({ tenantId, onConfigured, onCancel }: ConfigurationFormProps) {
   const [formData, setFormData] = useState({
     api_key: '',
+    api_secret: '',
     site_url: ''
   })
   const [loading, setLoading] = useState(false)
@@ -39,8 +40,27 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
   const loadExistingConfig = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/integrations/motopress/configure?tenant_id=${tenantId}`)
+
+      // Get staff token from localStorage
+      const token = localStorage.getItem('staff_token')
+      console.log('[ConfigurationForm] Token exists:', !!token, 'Length:', token?.length)
+
+      if (!token) {
+        console.warn('[ConfigurationForm] No authentication token found')
+        setLoading(false)
+        return
+      }
+
+      console.log('[ConfigurationForm] Fetching config for tenant:', tenantId)
+      const response = await fetch(`/api/integrations/motopress/configure?tenant_id=${tenantId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      console.log('[ConfigurationForm] Response status:', response.status)
       const data = await response.json()
+      console.log('[ConfigurationForm] Response data:', data)
 
       if (data.exists && data.config) {
         // Note: We don't load sensitive data for security
@@ -63,8 +83,8 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
   }
 
   const testConnection = async () => {
-    if (!formData.api_key || !formData.site_url) {
-      setError('Please provide both API key and site URL')
+    if (!formData.api_key || !formData.api_secret || !formData.site_url) {
+      setError('Please provide API key, API secret, and site URL')
       return
     }
 
@@ -72,11 +92,22 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
       setTesting(true)
       setError('')
 
+      // Get staff token from localStorage
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setError('Not authenticated - please login again')
+        return
+      }
+
       const response = await fetch('/api/integrations/motopress/test-connection', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           api_key: formData.api_key,
+          consumer_secret: formData.api_secret,
           site_url: formData.site_url
         })
       })
@@ -107,12 +138,23 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
       setSaving(true)
       setError('')
 
+      // Get staff token from localStorage
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setError('Not authenticated - please login again')
+        return
+      }
+
       const response = await fetch('/api/integrations/motopress/configure', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           tenant_id: tenantId,
           api_key: formData.api_key,
+          consumer_secret: formData.api_secret,
           site_url: formData.site_url,
           is_active: true
         })
@@ -134,12 +176,17 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
     }
   }
 
+  // Debug: Check token in localStorage
+  const debugToken = typeof window !== 'undefined' ? localStorage.getItem('staff_token') : null
+
   if (loading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
           <Loader2 className="w-6 h-6 animate-spin mr-2" />
           Loading configuration...
+          {debugToken && <p className="text-xs text-gray-500 mt-2">Token found: {debugToken.substring(0, 20)}...</p>}
+          {!debugToken && <p className="text-xs text-red-500 mt-2">⚠️ No token in localStorage!</p>}
         </CardContent>
       </Card>
     )
@@ -158,6 +205,22 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* DEBUG: Token Status */}
+        <Alert variant={debugToken ? "default" : "destructive"}>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {debugToken ? (
+              <>
+                ✅ Token found in localStorage: {debugToken.substring(0, 30)}...
+              </>
+            ) : (
+              <>
+                ⚠️ NO TOKEN IN LOCALSTORAGE - Please login again at <a href="/login" className="underline">/login</a>
+              </>
+            )}
+          </AlertDescription>
+        </Alert>
+
         {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -190,7 +253,21 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
               onChange={(e) => handleInputChange('api_key', e.target.value)}
             />
             <p className="text-xs text-muted-foreground">
-              Consumer Key from WooCommerce REST API settings
+              Consumer Key from MotoPress REST API settings
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="api_secret">Consumer Secret</Label>
+            <Input
+              id="api_secret"
+              type="password"
+              placeholder="cs_..."
+              value={formData.api_secret}
+              onChange={(e) => handleInputChange('api_secret', e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              Consumer Secret from MotoPress REST API settings
             </p>
           </div>
         </div>
@@ -219,7 +296,7 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
           <Button
             variant="outline"
             onClick={testConnection}
-            disabled={testing || !formData.api_key || !formData.site_url}
+            disabled={testing || !formData.api_key || !formData.api_secret || !formData.site_url}
             className="flex items-center gap-1"
           >
             {testing ? (
