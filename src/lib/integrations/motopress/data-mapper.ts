@@ -163,7 +163,7 @@ export class MotoPresDataMapper {
       motopress_type_id: meta.mphb_room_type_id,
       motopress_unit_id: motoPresData.id,
       accommodation_mphb_type: accommodationMphbType,
-      name: motoPresData.title || `Accommodation ${motoPresData.id}`,
+      name: title,
       description: description,
       short_description: shortDescription,
       unit_type: 'accommodation',
