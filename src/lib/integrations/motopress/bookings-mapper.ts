@@ -361,9 +361,16 @@ export class MotoPresBookingsMapper {
     bookings: any[],
     tenantId: string,
     supabase: SupabaseClient
-  ): Promise<{ reservations: GuestReservation[]; blocksExcluded: number }> {
+  ): Promise<{ reservations: GuestReservation[]; blocksExcluded: number; pastExcluded: number }> {
     const mapped: GuestReservation[] = []
     let blocksExcluded = 0
+    let pastExcluded = 0
+
+    // Calculate date range: today to 2 years in future
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Start of today
+    const twoYearsFromNow = new Date()
+    twoYearsFromNow.setFullYear(today.getFullYear() + 2)
 
     for (const booking of bookings) {
       try {
@@ -378,6 +385,13 @@ export class MotoPresBookingsMapper {
           continue
         }
 
+        // Skip past reservations and reservations beyond 2 years
+        const checkInDate = new Date(booking.check_in_date)
+        if (checkInDate < today || checkInDate > twoYearsFromNow) {
+          pastExcluded++
+          continue
+        }
+
         const reservation = await this.mapToGuestReservationWithEmbed(booking, tenantId, supabase)
         mapped.push(reservation)
       } catch (error) {
@@ -388,7 +402,8 @@ export class MotoPresBookingsMapper {
 
     return {
       reservations: mapped,
-      blocksExcluded
+      blocksExcluded,
+      pastExcluded
     }
   }
 }
