@@ -72,13 +72,25 @@ interface ProcessingStats {
 }
 
 /**
- * Generate embedding using OpenAI text-embedding-3-large (Tier 1 Matryoshka)
+ * Generate Tier 1 embedding using OpenAI text-embedding-3-large (Fast/1024d)
  */
-async function generateEmbedding(text: string): Promise<number[]> {
+async function generateEmbeddingTier1(text: string): Promise<number[]> {
   const response = await openai.embeddings.create({
     model: 'text-embedding-3-large', // CRITICAL: Must match public-chat-search.ts
     input: text,
-    dimensions: 1024, // Tier 1 Matryoshka
+    dimensions: 1024, // Tier 1 - Fast
+  });
+  return response.data[0].embedding;
+}
+
+/**
+ * Generate Tier 2 embedding using OpenAI text-embedding-3-large (Balanced/1536d)
+ */
+async function generateEmbeddingTier2(text: string): Promise<number[]> {
+  const response = await openai.embeddings.create({
+    model: 'text-embedding-3-large',
+    input: text,
+    dimensions: 1536, // Tier 2 - Balanced
   });
   return response.data[0].embedding;
 }
@@ -331,7 +343,11 @@ function detectSectionType(title: string, anchor: string): string {
 /**
  * Insert or update accommodation in database
  */
-async function syncAccommodation(data: AccommodationData, embedding: number[]): Promise<boolean> {
+async function syncAccommodation(
+  data: AccommodationData,
+  embeddingFast: number[],
+  embeddingBalanced: number[]
+): Promise<boolean> {
   try {
     // Check if exists
     const { data: existing, error: checkError } = await supabase
@@ -357,7 +373,8 @@ async function syncAccommodation(data: AccommodationData, embedding: number[]): 
       pricing: data.pricing,
       photos: data.photos,
       metadata: data.metadata,
-      embedding_fast: embedding,
+      embedding_fast: embeddingFast,
+      embedding: embeddingBalanced, // Tier 2 - Balanced (1536d)
       is_active: data.isActive,
       is_bookable: data.isBookable,
     };
@@ -450,8 +467,13 @@ async function processTenant(tenantName: string, files: string[]): Promise<Proce
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
 
-      console.log(`      ⏳ [${i + 1}/${chunks.length}] Generating embedding for: ${chunk.sectionTitle}...`);
-      const embedding = await generateEmbedding(chunk.content);
+      console.log(`      ⏳ [${i + 1}/${chunks.length}] Generating embeddings (Tier 1 + Tier 2) for: ${chunk.sectionTitle}...`);
+
+      // Generate BOTH Tier 1 and Tier 2 embeddings in parallel
+      const [embeddingFast, embeddingBalanced] = await Promise.all([
+        generateEmbeddingTier1(chunk.content),  // Tier 1 - Fast (1024d)
+        generateEmbeddingTier2(chunk.content)   // Tier 2 - Balanced (1536d)
+      ]);
 
       // Crear data del chunk con nombre único
       const chunkData = {
@@ -469,7 +491,7 @@ async function processTenant(tenantName: string, files: string[]): Promise<Proce
       };
 
       console.log(`      💾 [${i + 1}/${chunks.length}] Syncing chunk to database...`);
-      const success = await syncAccommodation(chunkData, embedding);
+      const success = await syncAccommodation(chunkData, embeddingFast, embeddingBalanced);
 
       if (success) {
         console.log(`      ✅ [${i + 1}/${chunks.length}] Chunk synced: ${chunk.sectionTitle}`);

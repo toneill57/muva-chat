@@ -203,17 +203,11 @@ export function AccommodationUnitsGrid() {
   }
 
   const getThemeColor = (unitName: string) => {
-    if (unitName.includes('Bob Marley')) return 'green'
-    if (unitName.includes('Jimmy Buffett')) return 'blue'
-    if (unitName.includes('Natural Mystic')) return 'purple'
-    return 'gray'
+    return 'gray' // All units use same color
   }
 
   const getThemeIcon = (unitName: string) => {
-    if (unitName.includes('Bob Marley')) return Music
-    if (unitName.includes('Jimmy Buffett')) return Coffee
-    if (unitName.includes('Natural Mystic')) return Palette
-    return Home
+    return Home // All units use same icon
   }
 
   const formatPrice = (priceRange: number[]) => {
@@ -228,24 +222,31 @@ export function AccommodationUnitsGrid() {
     const ThemeIcon = getThemeIcon(unit.name)
 
     return (
-      <Card className={`relative overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer ${
-        unit.is_featured ? `ring-2 ring-${themeColor}-400 bg-gradient-to-br from-${themeColor}-50 to-${themeColor}-100/50 shadow-lg` : 'hover:shadow-lg'
-      }`}>
-        {unit.is_featured && (
-          <div className={`absolute top-0 right-0 bg-gradient-to-r from-${themeColor}-500 to-${themeColor}-600 text-white px-3 py-1.5 text-xs font-bold rounded-bl-lg shadow-lg animate-pulse`}>
-            <Crown className="h-3 w-3 inline mr-1 animate-bounce" />
-            FEATURED
-          </div>
-        )}
+      <Card className="relative overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer hover:shadow-lg">
 
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3">
-              <div className={`p-3 bg-gradient-to-br from-${themeColor}-100 to-${themeColor}-200 rounded-xl shadow-sm group-hover:shadow-md transition-all duration-300`}>
-                <ThemeIcon className={`h-6 w-6 text-${themeColor}-600 group-hover:scale-110 transition-transform duration-300`} />
+              <div className={`p-3 rounded-xl shadow-sm group-hover:shadow-md transition-all duration-300 ${
+                themeColor === 'green' ? 'bg-gradient-to-br from-green-100 to-green-200' :
+                themeColor === 'blue' ? 'bg-gradient-to-br from-blue-100 to-blue-200' :
+                themeColor === 'purple' ? 'bg-gradient-to-br from-purple-100 to-purple-200' :
+                'bg-gradient-to-br from-gray-100 to-gray-200'
+              }`}>
+                <ThemeIcon className={`h-6 w-6 group-hover:scale-110 transition-transform duration-300 ${
+                  themeColor === 'green' ? 'text-green-600' :
+                  themeColor === 'blue' ? 'text-blue-600' :
+                  themeColor === 'purple' ? 'text-purple-600' :
+                  'text-gray-600'
+                }`} />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold text-gray-900 group-hover:text-${themeColor}-700 transition-colors duration-300">{unit.name}</CardTitle>
+                <CardTitle className={`text-lg font-bold text-gray-900 transition-colors duration-300 ${
+                  themeColor === 'green' ? 'group-hover:text-green-700' :
+                  themeColor === 'blue' ? 'group-hover:text-blue-700' :
+                  themeColor === 'purple' ? 'group-hover:text-purple-700' :
+                  'group-hover:text-gray-700'
+                }`}>{unit.name}</CardTitle>
                 <p className="text-sm text-gray-500 font-medium">{unit.unit_number} • {unit.status}</p>
               </div>
             </div>
@@ -255,8 +256,18 @@ export function AccommodationUnitsGrid() {
         <CardContent className="space-y-4">
           {/* Enhanced Basic Info */}
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className={`flex items-center p-2 rounded-lg bg-${themeColor}-50/50 group-hover:bg-${themeColor}-100/70 transition-colors duration-300`}>
-              <Users className={`h-4 w-4 text-${themeColor}-500 mr-2`} />
+            <div className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${
+              themeColor === 'green' ? 'bg-green-50/50 group-hover:bg-green-100/70' :
+              themeColor === 'blue' ? 'bg-blue-50/50 group-hover:bg-blue-100/70' :
+              themeColor === 'purple' ? 'bg-purple-50/50 group-hover:bg-purple-100/70' :
+              'bg-gray-50/50 group-hover:bg-gray-100/70'
+            }`}>
+              <Users className={`h-4 w-4 mr-2 ${
+                themeColor === 'green' ? 'text-green-500' :
+                themeColor === 'blue' ? 'text-blue-500' :
+                themeColor === 'purple' ? 'text-purple-500' :
+                'text-gray-500'
+              }`} />
               <span className="font-medium">{unit.capacity?.adults || 2} guests</span>
             </div>
             <div className={`flex items-center p-2 rounded-lg bg-blue-50/50 group-hover:bg-blue-100/70 transition-colors duration-300`}>
@@ -287,7 +298,12 @@ export function AccommodationUnitsGrid() {
                 {unit.unique_features.slice(0, 2).map((feature, index) => (
                   <span
                     key={index}
-                    className={`px-3 py-1.5 bg-gradient-to-r from-${themeColor}-100 to-${themeColor}-200 text-${themeColor}-800 text-xs rounded-full font-semibold shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer hover:scale-105`}
+                    className={`px-3 py-1.5 text-xs rounded-full font-semibold shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer hover:scale-105 ${
+                      themeColor === 'green' ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800' :
+                      themeColor === 'blue' ? 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800' :
+                      themeColor === 'purple' ? 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800' :
+                      'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800'
+                    }`}
                   >
                     {feature.length > 25 ? `${feature.substring(0, 25)}...` : feature}
                   </span>
@@ -358,7 +374,12 @@ export function AccommodationUnitsGrid() {
           {/* Enhanced Action Button */}
           <Button
             onClick={() => setSelectedUnit(unit)}
-            className={`w-full bg-gradient-to-r from-${themeColor}-500 to-${themeColor}-600 hover:from-${themeColor}-600 hover:to-${themeColor}-700 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group-hover:animate-pulse`}
+            className={`w-full text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group-hover:animate-pulse ${
+              themeColor === 'green' ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700' :
+              themeColor === 'blue' ? 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700' :
+              themeColor === 'purple' ? 'bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700' :
+              'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
+            }`}
           >
             <Eye className="h-4 w-4 mr-2" />
             View Details

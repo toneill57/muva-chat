@@ -100,7 +100,47 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
           // First chunk for this unit - use as base
           acc[baseName] = {
             ...chunk,
+            id: chunk.unit_id,
             name: baseName, // Clean name without " - Section" suffix
+            unit_number: chunk.metadata?.display_order?.toString() || 'N/A',
+            description: chunk.description || '',
+            short_description: chunk.short_description || chunk.description?.substring(0, 150) || '',
+            capacity: {
+              adults: chunk.metadata?.capacity || 2,
+              children: 0,
+              total: chunk.metadata?.capacity || 2
+            },
+            bed_configuration: {
+              bed_type: chunk.metadata?.bed_configuration?.[0]?.type || 'Queen'
+            },
+            view_type: chunk.metadata?.view_type || 'N/A',
+            tourism_features: chunk.metadata?.tourism_features || '',
+            booking_policies: chunk.metadata?.booking_policies || '',
+            unique_features: chunk.metadata?.unique_features || [],
+            is_featured: chunk.metadata?.is_featured || false,
+            display_order: chunk.metadata?.display_order || 0,
+            status: chunk.metadata?.status || 'active',
+            embedding_status: {
+              has_fast: !!chunk.embedding_fast,
+              has_balanced: !!chunk.embedding,
+              fast_dimensions: chunk.embedding_fast?.length || 0,
+              balanced_dimensions: chunk.embedding?.length || 0
+            },
+            pricing_summary: {
+              seasonal_rules: 0,
+              hourly_rules: 0,
+              base_price_range: [100000, 200000] // Mock data
+            },
+            amenities_summary: {
+              total: chunk.metadata?.unit_amenities?.split(',').length || 0,
+              included: chunk.metadata?.unit_amenities?.split(',').length || 0,
+              premium: 0,
+              featured: 0
+            },
+            unit_amenities: chunk.metadata?.unit_amenities?.split(',').map((a: string) => ({
+              amenity_name: a.trim()
+            })) || [],
+            pricing_rules: [],
             chunks_count: 1,
             all_chunks: [chunk]
           }

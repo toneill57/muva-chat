@@ -63,14 +63,21 @@ export async function performPublicSearch(
   console.log('[public-search] Starting search for:', query.substring(0, 50))
 
   try {
-    // Generate embedding (Tier 1 - 1024d for fast marketing searches)
-    const queryEmbedding = await generateEmbedding(query, 1024)
+    // Generate BOTH embeddings in parallel for hybrid search
+    // Tier 1 (1024d): Fast HNSW search
+    // Tier 2 (1536d): Precision re-ranking
+    const [queryEmbeddingFast, queryEmbeddingBalanced] = await Promise.all([
+      generateEmbedding(query, 1024),  // Tier 1
+      generateEmbedding(query, 1536),  // Tier 2
+    ])
+
+    console.log('[public-search] Generated embeddings: Tier 1 (1024d) + Tier 2 (1536d)')
 
     // Execute searches in parallel
     const [accommodationResults, policyResults, muvaResults] = await Promise.all([
-      searchAccommodationsPublic(queryEmbedding, sessionInfo.tenant_id),
-      searchPolicies(queryEmbedding, sessionInfo.tenant_id),
-      searchMUVABasic(queryEmbedding),
+      searchAccommodationsPublic(queryEmbeddingFast, queryEmbeddingBalanced, sessionInfo.tenant_id),
+      searchPolicies(queryEmbeddingFast, sessionInfo.tenant_id),
+      searchMUVABasic(queryEmbeddingFast),
     ])
 
     console.log('[public-search] Results:', {
@@ -124,24 +131,29 @@ async function generateEmbedding(text: string, dimensions: number): Promise<numb
 
 /**
  * Search public accommodation units with pricing and photos
+ * Uses hybrid multi-tier search (Tier 1 + Tier 2) for better precision
  *
- * @param queryEmbedding - Query embedding vector (1024d)
+ * @param queryEmbeddingFast - Query embedding vector Tier 1 (1024d)
+ * @param queryEmbeddingBalanced - Query embedding vector Tier 2 (1536d)
  * @param tenantId - Tenant ID for filtering
  * @returns Array of accommodation results with pricing/photos
  */
 export async function searchAccommodationsPublic(
-  queryEmbedding: number[],
+  queryEmbeddingFast: number[],
+  queryEmbeddingBalanced: number[],
   tenantId: string
 ): Promise<VectorSearchResult[]> {
   const supabase = createServerClient()
 
   console.log('[public-search] Searching accommodations for tenant:', tenantId)
-  console.log('[public-search] Embedding dimensions:', queryEmbedding.length)
+  console.log('[public-search] Using hybrid search: Tier 1 (1024d) + Tier 2 (1536d)')
 
   try {
-    // Use match_accommodations_public for public chat (searches accommodation_units_public table)
-    const { data, error } = await supabase.rpc('match_accommodations_public', {
-      query_embedding: queryEmbedding,
+    // Use match_accommodations_hybrid for better precision
+    // Fast HNSW search with Tier 1, re-ranked with Tier 2
+    const { data, error } = await supabase.rpc('match_accommodations_hybrid', {
+      query_embedding_fast: queryEmbeddingFast,
+      query_embedding_balanced: queryEmbeddingBalanced,
       p_tenant_id: tenantId,
       match_threshold: 0.2, // Lower threshold for public marketing search
       match_count: 10,
@@ -154,15 +166,28 @@ export async function searchAccommodationsPublic(
 
     console.log('[public-search] Found accommodations:', data?.length || 0)
 
-    // match_accommodations_public already filters by tenant_id
+    if (data && data.length > 0) {
+      console.log('[public-search] Top result similarities:', {
+        combined: data[0].similarity_combined?.toFixed(3),
+        tier1: data[0].similarity_fast?.toFixed(3),
+        tier2: data[0].similarity_balanced?.toFixed(3),
+      })
+    }
+
+    // match_accommodations_hybrid returns combined similarity score
     return (data || []).map((item: any) => ({
       id: item.id,
       name: item.metadata?.name || 'Accommodation',
       content: item.content || '',
-      similarity: item.similarity || 0,
+      similarity: item.similarity_combined || 0, // Use combined score (Tier 1 + Tier 2)
       source_file: item.source_file,
       table: 'accommodation_units_public',
-      metadata: item.metadata,
+      metadata: {
+        ...item.metadata,
+        // Include individual tier similarities for debugging
+        tier1_similarity: item.similarity_fast,
+        tier2_similarity: item.similarity_balanced,
+      },
       pricing: item.pricing,
       photos: item.photos,
     }))
