@@ -1152,6 +1152,103 @@ Basado en lo que hemos aprendido, estos son los campos más útiles para agregar
 
 ---
 
+## 🎉 Campos Recién Implementados (Octubre 2025)
+
+### 1. **Amenities (Lista Completa)**
+**Implementado:** Octubre 2025
+**Problema resuelto:** Solo se mostraba 1 amenity en las tarjetas
+
+**Cambios realizados:**
+```typescript
+// sync-manager.ts línea 622
+unit_amenities: unit.amenities_list || [], // Array format for proper mapping
+
+// route.ts línea 152-160
+unit_amenities: Array.isArray(chunk.metadata?.unit_amenities)
+  ? chunk.metadata.unit_amenities.map((a: string) => ({
+      amenity_name: a.trim()
+    }))
+  : [], // Fallback para legacy data
+
+// AccommodationUnitsGrid.tsx línea 644
+<h4 className="font-medium mb-2">Amenities ({selectedUnit.unit_amenities?.length || 0})</h4>
+{selectedUnit.unit_amenities?.map((amenity, index) => (
+  <div key={index} className="text-sm text-gray-600 flex items-center">
+    <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
+    {amenity.amenity_name}
+  </div>
+))}
+```
+
+**Resultado:** Todas las amenities ahora se muestran en el modal de detalles
+
+---
+
+### 2. **Categories (Clasificación de Alojamiento)**
+**Implementado:** Octubre 2025
+**Beneficio:** Permite filtrar y clasificar room/apartment/suite
+
+**Cambios realizados:**
+```typescript
+// data-mapper.ts línea 178
+categories: motoPresData.categories || [],
+
+// sync-manager.ts línea 629
+categories: unit.categories || []
+
+// route.ts línea 129
+categories: chunk.metadata?.categories || [],
+
+// AccommodationUnitsGrid.tsx línea 317-321
+{unit.categories && unit.categories.length > 0 && unit.categories.map((cat) => (
+  <Badge key={cat.id} variant="secondary" className="bg-green-100 text-green-800 text-xs">
+    {cat.name}
+  </Badge>
+))}
+```
+
+**Resultado:** Badges verdes muestran categorías en las tarjetas (ej: "Apartment", "Room")
+
+---
+
+### 3. **Gallery Completa (Todas las Imágenes)**
+**Implementado:** Octubre 2025
+**Problema resuelto:** Solo se mostraba contador de fotos, no las fotos reales
+
+**Cambios realizados:**
+```typescript
+// AccommodationUnitsGrid.tsx línea 79
+photos: Array<{ url: string; alt?: string; is_primary?: boolean }>
+
+// AccommodationUnitsGrid.tsx línea 602-623
+{selectedUnit.photos && selectedUnit.photos.length > 0 && (
+  <div className="mb-6">
+    <h4 className="font-medium mb-3">Gallery ({selectedUnit.photos.length} photos)</h4>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+      {selectedUnit.photos.map((photo, index) => (
+        <div key={index} className="relative aspect-video bg-gray-100 rounded overflow-hidden group">
+          <img
+            src={photo.url}
+            alt={photo.alt || `Photo ${index + 1}`}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
+            loading="lazy"
+          />
+          {photo.is_primary && (
+            <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+              Primary
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+```
+
+**Resultado:** Modal de detalles ahora muestra grid responsive con todas las fotos + hover effect
+
+---
+
 ## ✅ Resumen
 
 **Pipeline completo en 7 pasos:**

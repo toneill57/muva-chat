@@ -126,6 +126,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             tourism_features: chunk.metadata?.tourism_features || '',
             booking_policies: chunk.metadata?.booking_policies || '',
             unique_features: chunk.metadata?.unique_features || [],
+            categories: chunk.metadata?.categories || [],
             is_featured: chunk.metadata?.is_featured || false,
             display_order: chunk.metadata?.display_order || 0,
             status: chunk.metadata?.status || 'active',
@@ -138,20 +139,34 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             pricing_summary: {
               seasonal_rules: 0,
               hourly_rules: 0,
-              base_price_range: chunk.pricing ? [
-                chunk.pricing.base_price_low_season || chunk.pricing.base_price || 0,
-                chunk.pricing.base_price_high_season || chunk.pricing.base_price || 0
+              base_price_range: chunk.pricing?.base_price ? [
+                chunk.pricing.base_price,
+                chunk.pricing.base_price
               ] : [0, 0]
             },
             amenities_summary: {
-              total: chunk.metadata?.unit_amenities?.split(',').length || 0,
-              included: chunk.metadata?.unit_amenities?.split(',').length || 0,
+              total: Array.isArray(chunk.metadata?.unit_amenities)
+                ? chunk.metadata.unit_amenities.length
+                : (typeof chunk.metadata?.unit_amenities === 'string'
+                    ? chunk.metadata.unit_amenities.split(',').length
+                    : 0),
+              included: Array.isArray(chunk.metadata?.unit_amenities)
+                ? chunk.metadata.unit_amenities.length
+                : (typeof chunk.metadata?.unit_amenities === 'string'
+                    ? chunk.metadata.unit_amenities.split(',').length
+                    : 0),
               premium: 0,
               featured: 0
             },
-            unit_amenities: chunk.metadata?.unit_amenities?.split(',').map((a: string) => ({
-              amenity_name: a.trim()
-            })) || [],
+            unit_amenities: Array.isArray(chunk.metadata?.unit_amenities)
+              ? chunk.metadata.unit_amenities.map((a: string) => ({
+                  amenity_name: a.trim()
+                }))
+              : (typeof chunk.metadata?.unit_amenities === 'string'
+                  ? chunk.metadata.unit_amenities.split(',').map((a: string) => ({
+                      amenity_name: a.trim()
+                    }))
+                  : []),
             photos: chunk.photos || [],
             photo_count: chunk.photos?.length || 0,
             pricing_rules: [],

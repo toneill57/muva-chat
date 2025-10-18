@@ -175,6 +175,7 @@ export class MotoPresDataMapper {
       unique_features,
       images,
       amenities_list: motoPresData.amenities || meta.mphb_amenities || [],
+      categories: motoPresData.categories || [],
       status: motoPresData.status === 'publish' ? 'active' : 'inactive',
       is_featured: false,
       display_order: 1,

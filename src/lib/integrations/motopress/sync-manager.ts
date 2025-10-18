@@ -619,13 +619,14 @@ export class MotoPresSyncManager {
             view_type: unit.view_type || null,  // ✅ Ahora en metadata (no como columna directa)
             capacity: unit.capacity?.total || 2,
             bed_configuration: unit.bed_configuration ? [{ type: unit.bed_configuration.bed_type }] : [],
-            unit_amenities: unit.amenities_list?.join(', ') || '',
+            unit_amenities: unit.amenities_list || [], // Array format for proper mapping
             // ✅ NUEVOS CAMPOS MOTOPRESS (identificados por mapper)
             size_m2: unit.size_m2 || null,
             location_area: unit.location_details?.area || null,
             children_capacity: unit.capacity?.children || 0,
             accommodation_mphb_type: unit.accommodation_mphb_type || 'Standard',
-            motopress_room_type_id: unit.motopress_type_id || null
+            motopress_room_type_id: unit.motopress_type_id || null,
+            categories: unit.categories || []
           },
           embedding_fast: embedding_fast,
           embedding: embedding_balanced,

@@ -23,7 +23,9 @@ import {
   Layers,
   Crown,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  Baby,
+  Maximize
 } from "lucide-react"
 import {
   AlertDialog,
@@ -36,6 +38,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 
 interface AccommodationUnit {
@@ -50,6 +53,7 @@ interface AccommodationUnit {
   tourism_features: string
   booking_policies: string
   unique_features: string[]
+  categories: Array<{ id: number; name: string }>
   is_featured: boolean
   display_order: number
   status: string
@@ -72,6 +76,16 @@ interface AccommodationUnit {
   }
   unit_amenities: any[]
   pricing_rules: any[]
+  photos: Array<{ url: string; alt?: string; is_primary?: boolean }>
+  photo_count: number
+  chunks_count: number
+  // NEW FIELDS
+  size_m2?: number
+  location_area?: string
+  children_capacity?: number
+  total_capacity?: number
+  accommodation_type?: string
+  room_type_id?: number
 }
 
 export function AccommodationUnitsGrid() {
@@ -217,6 +231,37 @@ export function AccommodationUnitsGrid() {
     return min === max ? `$${min.toLocaleString()}` : `$${min.toLocaleString()} - $${max.toLocaleString()}`
   }
 
+  const InfoCard = ({ icon: Icon, label, value, color = 'blue' }: {
+    icon: React.ComponentType<{ className?: string }>
+    label: string
+    value: string | number
+    color?: 'blue' | 'green' | 'purple' | 'gray' | 'yellow'
+  }) => {
+    const bgColors = {
+      blue: 'bg-blue-50/50 group-hover:bg-blue-100/70',
+      green: 'bg-green-50/50 group-hover:bg-green-100/70',
+      purple: 'bg-purple-50/50 group-hover:bg-purple-100/70',
+      gray: 'bg-gray-50/50 group-hover:bg-gray-100/70',
+      yellow: 'bg-yellow-50/50 group-hover:bg-yellow-100/70'
+    }
+
+    const iconColors = {
+      blue: 'text-blue-500',
+      green: 'text-green-500',
+      purple: 'text-purple-500',
+      gray: 'text-gray-500',
+      yellow: 'text-yellow-500'
+    }
+
+    return (
+      <div className={`flex flex-col items-center p-2 rounded-lg transition-colors duration-300 ${bgColors[color]}`}>
+        <Icon className={`h-4 w-4 mb-1 ${iconColors[color]}`} />
+        <span className="text-xs text-gray-500">{label}</span>
+        <span className="font-medium text-sm">{value}</span>
+      </div>
+    )
+  }
+
   const UnitCard = ({ unit }: { unit: AccommodationUnit }) => {
     const themeColor = getThemeColor(unit.name)
     const ThemeIcon = getThemeIcon(unit.name)
@@ -247,41 +292,99 @@ export function AccommodationUnitsGrid() {
                   themeColor === 'purple' ? 'group-hover:text-purple-700' :
                   'group-hover:text-gray-700'
                 }`}>{unit.name}</CardTitle>
-                <p className="text-sm text-gray-500 font-medium">{unit.unit_number} • {unit.status}</p>
+                <p className="text-sm text-gray-500 font-medium">{unit.status}</p>
               </div>
             </div>
+          </div>
+
+          {/* Badges informativos */}
+          <div className="flex gap-2 mt-2 flex-wrap">
+            <Badge variant="outline" className="text-xs">
+              #{unit.unit_number}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              {unit.accommodation_type || 'Standard'}
+            </Badge>
+            {unit.size_m2 && (
+              <Badge variant="secondary" className="text-xs">
+                {unit.size_m2}m²
+              </Badge>
+            )}
+            {unit.photo_count > 0 && (
+              <Badge variant="default" className="bg-blue-500 text-xs">
+                📸 {unit.photo_count}
+              </Badge>
+            )}
+            {unit.categories && unit.categories.length > 0 && unit.categories.map((cat) => (
+              <Badge key={cat.id} variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                {cat.name}
+              </Badge>
+            ))}
           </div>
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Enhanced Basic Info */}
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className={`flex items-center p-2 rounded-lg transition-colors duration-300 ${
-              themeColor === 'green' ? 'bg-green-50/50 group-hover:bg-green-100/70' :
-              themeColor === 'blue' ? 'bg-blue-50/50 group-hover:bg-blue-100/70' :
-              themeColor === 'purple' ? 'bg-purple-50/50 group-hover:bg-purple-100/70' :
-              'bg-gray-50/50 group-hover:bg-gray-100/70'
-            }`}>
-              <Users className={`h-4 w-4 mr-2 ${
-                themeColor === 'green' ? 'text-green-500' :
-                themeColor === 'blue' ? 'text-blue-500' :
-                themeColor === 'purple' ? 'text-purple-500' :
-                'text-gray-500'
-              }`} />
-              <span className="font-medium">{unit.capacity?.adults || 2} guests</span>
-            </div>
-            <div className={`flex items-center p-2 rounded-lg bg-blue-50/50 group-hover:bg-blue-100/70 transition-colors duration-300`}>
-              <Eye className="h-4 w-4 text-blue-500 mr-2" />
-              <span className="font-medium">{unit.view_type}</span>
-            </div>
-            <div className={`flex items-center p-2 rounded-lg bg-purple-50/50 group-hover:bg-purple-100/70 transition-colors duration-300`}>
-              <Bed className="h-4 w-4 text-purple-500 mr-2" />
-              <span className="font-medium">{unit.bed_configuration?.bed_type || 'Queen'}</span>
-            </div>
-            <div className={`flex items-center p-2 rounded-lg bg-green-50/50 group-hover:bg-green-100/70 transition-colors duration-300`}>
-              <DollarSign className="h-4 w-4 text-green-500 mr-2" />
-              <span className="font-bold text-green-700">{formatPrice(unit.pricing_summary.base_price_range)} COP</span>
-            </div>
+          {/* Grid 3x3 - Responsive: 2 cols mobile, 3 cols desktop */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+            {/* Fila 1: Capacidad */}
+            <InfoCard
+              icon={Users}
+              label="Adultos"
+              value={unit.capacity?.adults || 2}
+              color="blue"
+            />
+            <InfoCard
+              icon={Baby}
+              label="Niños"
+              value={unit.children_capacity || 0}
+              color="purple"
+            />
+            <InfoCard
+              icon={Home}
+              label="Total"
+              value={unit.total_capacity || unit.capacity?.adults || 2}
+              color="green"
+            />
+
+            {/* Fila 2: Espacio & Vista */}
+            <InfoCard
+              icon={Eye}
+              label="Vista"
+              value={unit.view_type || 'Vista estándar'}
+              color="blue"
+            />
+            <InfoCard
+              icon={Bed}
+              label="Cama"
+              value={unit.bed_configuration?.bed_type || 'Queen'}
+              color="purple"
+            />
+            <InfoCard
+              icon={Maximize}
+              label="Tamaño"
+              value={unit.size_m2 ? `${unit.size_m2}m²` : 'N/A'}
+              color="gray"
+            />
+
+            {/* Fila 3: Ubicación & Detalles */}
+            <InfoCard
+              icon={MapPin}
+              label="Ubicación"
+              value={unit.location_area || 'N/A'}
+              color="blue"
+            />
+            <InfoCard
+              icon={Star}
+              label="Amenidades"
+              value={unit.amenities_summary.total}
+              color="yellow"
+            />
+            <InfoCard
+              icon={DollarSign}
+              label="Precio"
+              value={formatPrice(unit.pricing_summary.base_price_range)}
+              color="green"
+            />
           </div>
 
           {/* Enhanced Description */}
@@ -316,6 +419,22 @@ export function AccommodationUnitsGrid() {
               </div>
             </div>
           )}
+
+          {/* Info Técnica */}
+          <div className="border-t pt-3 mt-3">
+            <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center">
+              <Layers className="h-4 w-4 mr-1" />
+              Información Técnica
+            </h4>
+            <div className="flex flex-wrap gap-2 text-xs">
+              <Badge variant="outline">ID: {unit.unit_number}</Badge>
+              <Badge variant="outline">Tipo: {unit.accommodation_type || 'Standard'}</Badge>
+              {unit.room_type_id && (
+                <Badge variant="outline">Room Type: {unit.room_type_id}</Badge>
+              )}
+              <Badge variant="outline">{unit.chunks_count} secciones</Badge>
+            </div>
+          </div>
 
           {/* Embeddings Status */}
           <div className="border-t pt-3">
@@ -357,16 +476,16 @@ export function AccommodationUnitsGrid() {
           <div className="border-t pt-3">
             <div className="grid grid-cols-3 gap-3 text-center">
               <div>
-                <p className="text-sm font-medium text-gray-900">{unit.pricing_summary.seasonal_rules + unit.pricing_summary.hourly_rules}</p>
-                <p className="text-xs text-gray-500">Pricing Rules</p>
+                <p className="text-sm font-medium text-gray-900">{unit.photo_count || 0}</p>
+                <p className="text-xs text-gray-500">Photos</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">{unit.chunks_count || 0}</p>
+                <p className="text-xs text-gray-500">Chunks</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">{unit.amenities_summary.total}</p>
                 <p className="text-xs text-gray-500">Amenities</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900">{unit.amenities_summary.premium}</p>
-                <p className="text-xs text-gray-500">Premium</p>
               </div>
             </div>
           </div>
@@ -479,6 +598,30 @@ export function AccommodationUnitsGrid() {
                 </Button>
               </div>
 
+              {/* Gallery Section */}
+              {selectedUnit.photos && selectedUnit.photos.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="font-medium mb-3">Gallery ({selectedUnit.photos.length} photos)</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    {selectedUnit.photos.map((photo, index) => (
+                      <div key={index} className="relative aspect-video bg-gray-100 rounded overflow-hidden group">
+                        <img
+                          src={photo.url}
+                          alt={photo.alt || `Photo ${index + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
+                          loading="lazy"
+                        />
+                        {photo.is_primary && (
+                          <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                            Primary
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-medium mb-2">Tourism Features (Tier 1)</h4>
@@ -498,9 +641,9 @@ export function AccommodationUnitsGrid() {
                     ))}
                   </div>
 
-                  <h4 className="font-medium mb-2">Amenities</h4>
+                  <h4 className="font-medium mb-2">Amenities ({selectedUnit.unit_amenities?.length || 0})</h4>
                   <div className="grid grid-cols-2 gap-1">
-                    {selectedUnit.unit_amenities?.slice(0, 6).map((amenity, index) => (
+                    {selectedUnit.unit_amenities?.map((amenity, index) => (
                       <div key={index} className="text-sm text-gray-600 flex items-center">
                         <CheckCircle className="h-3 w-3 text-green-500 mr-1" />
                         {amenity.amenity_name}
@@ -522,22 +665,24 @@ export function AccommodationUnitsGrid() {
               <AlertTriangle className="h-5 w-5" />
               ¿Eliminar todos los accommodations?
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-4">
-              <p>
-                Esta acción eliminará <strong>{units.length} accommodations</strong> de forma permanente.
-                No se puede deshacer.
-              </p>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-900">
-                  Para confirmar, escribe el nombre del tenant: <code className="px-2 py-1 bg-gray-100 rounded">{tenant?.slug}</code>
+            <AlertDialogDescription asChild>
+              <div className="space-y-4">
+                <p>
+                  Esta acción eliminará <strong>{units.length} accommodations</strong> de forma permanente.
+                  No se puede deshacer.
                 </p>
-                <Input
-                  value={confirmationText}
-                  onChange={(e) => setConfirmationText(e.target.value)}
-                  placeholder={tenant?.slug}
-                  className="font-mono"
-                  disabled={isDeleting}
-                />
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-900">
+                    Para confirmar, escribe el nombre del tenant: <code className="px-2 py-1 bg-gray-100 rounded">{tenant?.slug}</code>
+                  </p>
+                  <Input
+                    value={confirmationText}
+                    onChange={(e) => setConfirmationText(e.target.value)}
+                    placeholder={tenant?.slug}
+                    className="font-mono"
+                    disabled={isDeleting}
+                  />
+                </div>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
