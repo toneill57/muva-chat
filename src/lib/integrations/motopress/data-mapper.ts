@@ -70,6 +70,49 @@ interface AccommodationUnit {
     id: number
     name: string
   }> // MotoPress categories for accommodation type classification
+  pricing?: {
+    base_price?: number
+    base_price_low_season?: number
+    base_price_high_season?: number
+    currency?: string
+    price_per_person_low?: number
+    price_per_person_high?: number
+    minimum_stay?: number
+    base_adults?: number
+    base_children?: number
+    season_id?: number
+    priority?: number
+    price_variations?: Array<{
+      adults: number
+      children: number
+      price: number
+    }>
+  } // JSONB - MotoPress pricing data from rates API
+  // UI-specific computed fields (added by API route)
+  accommodation_type?: string // Human-readable type name
+  photo_count?: number // Count of images
+  children_capacity?: number // Child capacity
+  total_capacity?: number // adults + children
+  location_area?: string // Location area name
+  amenities_summary?: {
+    total: number
+    included: number
+    premium: number
+    featured: number
+  }
+  pricing_summary?: {
+    seasonal_rules: number
+    hourly_rules: number
+    base_price_range: [number, number]
+  }
+  room_type_id?: number // MotoPress room type ID
+  chunks_count?: number // Number of semantic chunks
+  embedding_status?: {
+    has_fast: boolean
+    has_balanced: boolean
+    fast_dimensions: number
+    balanced_dimensions: number
+  }
   tenant_id: string
   accommodation_type_id?: string
   created_at?: string
