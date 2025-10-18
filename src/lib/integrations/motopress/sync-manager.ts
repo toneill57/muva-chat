@@ -10,6 +10,9 @@ interface SyncResult {
   errors: string[]
   totalProcessed: number
   message: string
+  embeddings_generated?: number
+  embeddings_failed?: number
+  embeddings_skipped?: number
 }
 
 interface IntegrationConfig {
@@ -53,10 +56,13 @@ export class MotoPresSyncManager {
     }
   }
 
-  async syncAccommodations(tenantId: string): Promise<SyncResult> {
+  async syncAccommodations(tenantId: string, forceEmbeddings: boolean = false): Promise<SyncResult> {
     const startTime = Date.now()
     let created = 0
     let updated = 0
+    let embeddingsGenerated = 0
+    let embeddingsFailed = 0
+    let embeddingsSkipped = 0
     const errors: string[] = []
 
     try {
@@ -204,6 +210,20 @@ export class MotoPresSyncManager {
             } else {
               updated++
               console.log(`Updated accommodation: ${unit.name}`)
+
+              // Regenerate embeddings for updated accommodation if forceEmbeddings is true
+              if (forceEmbeddings) {
+                try {
+                  await this.generateEmbeddingsForUnit(unit, tenantId, hotelId)
+                  embeddingsGenerated++
+                } catch (embeddingError: any) {
+                  console.error(`Failed to generate embeddings for ${unit.name}:`, embeddingError)
+                  errors.push(`Embeddings failed for ${unit.name}: ${embeddingError.message}`)
+                  embeddingsFailed++
+                }
+              } else {
+                embeddingsSkipped++
+              }
             }
           } else {
             // Create new using SQL (hotels schema) with deterministic UUID
@@ -247,9 +267,11 @@ export class MotoPresSyncManager {
               // Generate embeddings for new accommodation
               try {
                 await this.generateEmbeddingsForUnit(unit, tenantId, hotelId)
+                embeddingsGenerated++
               } catch (embeddingError: any) {
                 console.error(`Failed to generate embeddings for ${unit.name}:`, embeddingError)
                 errors.push(`Embeddings failed for ${unit.name}: ${embeddingError.message}`)
+                embeddingsFailed++
               }
             }
           }
@@ -289,8 +311,11 @@ export class MotoPresSyncManager {
         errors,
         totalProcessed,
         message: success
-          ? `Successfully synced ${totalProcessed} accommodations`
-          : `Synced ${totalProcessed} accommodations with ${errors.length} errors`
+          ? `Successfully synced ${totalProcessed} accommodations with ${embeddingsGenerated} embeddings generated`
+          : `Synced ${totalProcessed} accommodations with ${errors.length} errors`,
+        embeddings_generated: embeddingsGenerated,
+        embeddings_failed: embeddingsFailed,
+        embeddings_skipped: embeddingsSkipped
       }
 
     } catch (error: any) {
@@ -426,10 +451,13 @@ export class MotoPresSyncManager {
     }
   }
 
-  async syncSelectedAccommodations(tenantId: string, selectedIds: number[]): Promise<SyncResult> {
+  async syncSelectedAccommodations(tenantId: string, selectedIds: number[], forceEmbeddings: boolean = false): Promise<SyncResult> {
     const startTime = Date.now()
     let created = 0
     let updated = 0
+    let embeddingsGenerated = 0
+    let embeddingsFailed = 0
+    let embeddingsSkipped = 0
     const errors: string[] = []
 
     try {
@@ -559,6 +587,20 @@ export class MotoPresSyncManager {
             } else {
               updated++
               console.log(`Updated accommodation: ${unit.name}`)
+
+              // Regenerate embeddings for updated accommodation if forceEmbeddings is true
+              if (forceEmbeddings) {
+                try {
+                  await this.generateEmbeddingsForUnit(unit, tenantId, hotelId)
+                  embeddingsGenerated++
+                } catch (embeddingError: any) {
+                  console.error(`Failed to generate embeddings for ${unit.name}:`, embeddingError)
+                  errors.push(`Embeddings failed for ${unit.name}: ${embeddingError.message}`)
+                  embeddingsFailed++
+                }
+              } else {
+                embeddingsSkipped++
+              }
             }
           } else {
             // Create new using SQL (hotels schema) with deterministic UUID
@@ -602,9 +644,11 @@ export class MotoPresSyncManager {
               // Generate embeddings for new accommodation
               try {
                 await this.generateEmbeddingsForUnit(unit, tenantId, hotelId)
+                embeddingsGenerated++
               } catch (embeddingError: any) {
                 console.error(`Failed to generate embeddings for ${unit.name}:`, embeddingError)
                 errors.push(`Embeddings failed for ${unit.name}: ${embeddingError.message}`)
+                embeddingsFailed++
               }
             }
           }
@@ -645,8 +689,11 @@ export class MotoPresSyncManager {
         errors,
         totalProcessed,
         message: success
-          ? `Successfully imported ${totalProcessed} accommodations with embeddings`
-          : `Imported ${totalProcessed} accommodations with ${errors.length} errors`
+          ? `Successfully imported ${totalProcessed} accommodations with ${embeddingsGenerated} embeddings generated`
+          : `Imported ${totalProcessed} accommodations with ${errors.length} errors`,
+        embeddings_generated: embeddingsGenerated,
+        embeddings_failed: embeddingsFailed,
+        embeddings_skipped: embeddingsSkipped
       }
 
     } catch (error: any) {

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useTenant } from '@/contexts/TenantContext'
-import Link from 'next/link'
 import {
   Link as LinkIcon,
   CheckCircle,
@@ -14,6 +13,7 @@ import {
   Upload
 } from 'lucide-react'
 import { SyncMotoPress } from '@/components/Accommodations/SyncMotoPress'
+import { MotoPressPanelDialog } from '@/components/integrations/motopress/MotoPressPanelDialog'
 
 interface IntegrationStatus {
   connected: boolean
@@ -27,6 +27,7 @@ export default function IntegrationsPage() {
   const { tenant } = useTenant()
   const [status, setStatus] = useState<IntegrationStatus | null>(null)
   const [loading, setLoading] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(false)
 
   useEffect(() => {
     checkIntegrationStatus()
@@ -176,15 +177,15 @@ export default function IntegrationsPage() {
 
           {/* Actions */}
           <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href={`/accommodations/integrations/motopress`}
+            <button
+              onClick={() => setPanelOpen(true)}
               className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors shadow-md"
             >
               <Settings className="w-4 h-4" />
               <span className="text-sm font-medium">
                 {status?.is_active ? 'Reconfigurar' : 'Configurar Integración'}
               </span>
-            </Link>
+            </button>
 
             {status?.is_active && status?.connected && (
               <SyncMotoPress
@@ -224,6 +225,16 @@ export default function IntegrationsPage() {
           Estamos trabajando en soporte para Airbnb, Booking.com, y otras plataformas de gestión hotelera.
         </p>
       </div>
+
+      {/* MotoPress Panel Modal */}
+      {tenant?.tenant_id && (
+        <MotoPressPanelDialog
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          tenantId={tenant.tenant_id}
+          onSyncComplete={checkIntegrationStatus}
+        />
+      )}
     </div>
   )
 }

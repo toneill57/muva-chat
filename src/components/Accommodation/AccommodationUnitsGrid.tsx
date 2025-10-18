@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useTenant } from '@/contexts/TenantContext'
+import { useState, useEffect, useContext } from 'react'
+import { TenantContext } from '@/contexts/TenantContext'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,8 +21,22 @@ import {
   DollarSign,
   Clock,
   Layers,
-  Crown
+  Crown,
+  Trash2,
+  AlertTriangle
 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Input } from "@/components/ui/input"
+import { useToast } from "@/hooks/use-toast"
 
 interface AccommodationUnit {
   id: string
@@ -61,11 +75,16 @@ interface AccommodationUnit {
 }
 
 export function AccommodationUnitsGrid() {
-  const { tenant } = useTenant()
+  const tenantContext = useContext(TenantContext)
+  const tenant = tenantContext?.tenant
+  const { toast } = useToast()
   const [units, setUnits] = useState<AccommodationUnit[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedUnit, setSelectedUnit] = useState<AccommodationUnit | null>(null)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [confirmationText, setConfirmationText] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     if (tenant?.tenant_id) {
@@ -111,6 +130,58 @@ export function AccommodationUnitsGrid() {
       setError('Failed to fetch units data')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleDeleteAll = async () => {
+    if (confirmationText !== tenant?.slug) {
+      toast({
+        title: "Confirmación incorrecta",
+        description: `Debes escribir "${tenant?.slug}" para confirmar`,
+        variant: "destructive"
+      })
+      return
+    }
+
+    try {
+      setIsDeleting(true)
+      const token = localStorage.getItem('staff_token')
+
+      const response = await fetch('/api/accommodation/units/delete-all', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ tenant_id: tenant?.tenant_id })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        toast({
+          title: "Éxito",
+          description: `${data.deleted_count} accommodation(s) eliminados`,
+        })
+        setShowDeleteDialog(false)
+        setConfirmationText('')
+        await fetchUnits()
+      } else {
+        toast({
+          title: "Error",
+          description: data.error || 'Failed to delete accommodations',
+          variant: "destructive"
+        })
+      }
+    } catch (error) {
+      console.error('Delete error:', error)
+      toast({
+        title: "Error",
+        description: 'Failed to delete accommodations',
+        variant: "destructive"
+      })
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -312,9 +383,21 @@ export function AccommodationUnitsGrid() {
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Accommodation Units</h2>
             <p className="text-gray-600">Themed reggae-inspired suites with Matryoshka embeddings</p>
           </div>
-          <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">{units.length} Units Active</p>
-            <p className="text-xs text-gray-500">Multi-tier search enabled</p>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm font-medium text-gray-900">{units.length} Units Active</p>
+              <p className="text-xs text-gray-500">Multi-tier search enabled</p>
+            </div>
+            {units.length > 0 && (
+              <Button
+                onClick={() => setShowDeleteDialog(true)}
+                variant="destructive"
+                className="flex items-center gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete All
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -416,6 +499,64 @@ export function AccommodationUnitsGrid() {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+              ¿Eliminar todos los accommodations?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-4">
+              <p>
+                Esta acción eliminará <strong>{units.length} accommodations</strong> de forma permanente.
+                No se puede deshacer.
+              </p>
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-900">
+                  Para confirmar, escribe el nombre del tenant: <code className="px-2 py-1 bg-gray-100 rounded">{tenant?.slug}</code>
+                </p>
+                <Input
+                  value={confirmationText}
+                  onChange={(e) => setConfirmationText(e.target.value)}
+                  placeholder={tenant?.slug}
+                  className="font-mono"
+                  disabled={isDeleting}
+                />
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setConfirmationText('')
+                setShowDeleteDialog(false)
+              }}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAll}
+              disabled={isDeleting || confirmationText !== tenant?.slug}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? (
+                <>
+                  <span className="animate-spin mr-2">⏳</span>
+                  Eliminando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Eliminar Todo
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

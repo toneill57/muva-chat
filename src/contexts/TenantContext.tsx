@@ -45,7 +45,7 @@ interface TenantContextType {
   isLoading: boolean;
 }
 
-const TenantContext = createContext<TenantContextType | undefined>(undefined);
+export const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
 interface TenantProviderProps {
   children: ReactNode;

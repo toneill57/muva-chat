@@ -5,6 +5,7 @@ import { requireAdminAuth } from '@/lib/admin-auth'
 interface SyncRequest {
   tenant_id: string
   selected_ids?: number[]  // For selective import
+  force_embeddings?: boolean  // Force regeneration of embeddings
 }
 
 export async function POST(request: Request) {
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
     const { response: authError, session } = await requireAdminAuth(request)
     if (authError) return authError
 
-    const { tenant_id, selected_ids }: SyncRequest = await request.json()
+    const { tenant_id, selected_ids, force_embeddings }: SyncRequest = await request.json()
 
     if (!tenant_id) {
       return NextResponse.json(
@@ -34,11 +35,11 @@ export async function POST(request: Request) {
     let result
 
     if (selected_ids && selected_ids.length > 0) {
-      console.log(`Starting selective MotoPress import for tenant: ${tenant_id}, ${selected_ids.length} accommodations`)
-      result = await syncManager.syncSelectedAccommodations(tenant_id, selected_ids)
+      console.log(`Starting selective MotoPress import for tenant: ${tenant_id}, ${selected_ids.length} accommodations, force_embeddings: ${force_embeddings}`)
+      result = await syncManager.syncSelectedAccommodations(tenant_id, selected_ids, force_embeddings || false)
     } else {
-      console.log(`Starting full MotoPress sync for tenant: ${tenant_id}`)
-      result = await syncManager.syncAccommodations(tenant_id)
+      console.log(`Starting full MotoPress sync for tenant: ${tenant_id}, force_embeddings: ${force_embeddings}`)
+      result = await syncManager.syncAccommodations(tenant_id, force_embeddings || false)
     }
 
     console.log('Sync result:', {
@@ -58,6 +59,9 @@ export async function POST(request: Request) {
           created: result.created,
           updated: result.updated,
           total_processed: result.totalProcessed,
+          embeddings_generated: result.embeddings_generated,
+          embeddings_failed: result.embeddings_failed,
+          embeddings_skipped: result.embeddings_skipped,
           errors: result.errors
         }
       })
@@ -69,6 +73,9 @@ export async function POST(request: Request) {
           created: result.created,
           updated: result.updated,
           total_processed: result.totalProcessed,
+          embeddings_generated: result.embeddings_generated,
+          embeddings_failed: result.embeddings_failed,
+          embeddings_skipped: result.embeddings_skipped,
           errors: result.errors
         }
       }, { status: 422 })

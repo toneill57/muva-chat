@@ -28,7 +28,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('🔄 Getting initial session...')
 
         // Check if user is already authenticated without hanging calls
-        const { data: { session } } = await supabaseAuth.auth.getSession()
+        const { data: { session }, error } = await supabaseAuth.auth.getSession()
+
+        // Handle invalid refresh token error by clearing session
+        if (error?.message?.includes('Invalid Refresh Token') || error?.message?.includes('Refresh Token Not Found')) {
+          console.warn('⚠️ Invalid refresh token detected, clearing session...')
+          await supabaseAuth.auth.signOut()
+          setUser(null)
+          setActiveClient(null)
+          setLoading(false)
+          return
+        }
 
         if (session?.user) {
           console.log('✅ Found existing session for:', session.user.email)
@@ -63,6 +73,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error('Error getting initial session:', error)
+        // On any error, ensure we clear state and stop loading
+        setUser(null)
+        setActiveClient(null)
       } finally {
         setLoading(false)
       }
@@ -74,6 +87,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabaseAuth.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
         console.log('🔐 Auth state changed:', event, session?.user?.email)
+
+        // Handle token refresh errors
+        if (event === 'TOKEN_REFRESHED' && !session) {
+          console.warn('⚠️ Token refresh failed, clearing session...')
+          setUser(null)
+          setActiveClient(null)
+          setLoading(false)
+          return
+        }
 
         if (event === 'SIGNED_IN' && session?.user) {
           console.log('🔄 Processing SIGNED_IN event...')
