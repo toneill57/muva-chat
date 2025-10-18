@@ -76,7 +76,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
         .from('accommodation_units_public')
         .select('*')
         .eq('tenant_id', tenantId)
-        .eq('status', 'active')
+        .eq('is_active', true)
 
       if (fallbackError) {
         console.error('[Accommodations Units API] Fallback query error:', fallbackError)
