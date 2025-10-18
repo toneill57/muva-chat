@@ -45,6 +45,7 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
   const [error, setError] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [currentIntent, setCurrentIntent] = useState<Message['travel_intent']>({})
+  const [tenantId, setTenantId] = useState<string>('simmerdown') // Default fallback
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -54,6 +55,19 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
     const storedSessionId = localStorage.getItem('public_chat_session_id')
     if (storedSessionId) {
       setSessionId(storedSessionId)
+    }
+  }, [])
+
+  // Extract tenant ID from hostname
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname
+      // Extract subdomain from hostname (e.g., "tucasamar.localhost" -> "tucasamar")
+      const parts = hostname.split('.')
+      if (parts.length >= 2 && parts[0] !== 'www') {
+        setTenantId(parts[0])
+        console.log('[PublicChatInterface] Tenant ID extracted:', parts[0])
+      }
     }
   }, [])
 
@@ -135,7 +149,7 @@ export default function PublicChatInterface({ onMinimize, isExpanded }: PublicCh
         body: JSON.stringify({
           message: input.trim(),
           session_id: sessionId,
-          tenant_id: 'simmerdown'
+          tenant_id: tenantId
         })
       })
 
