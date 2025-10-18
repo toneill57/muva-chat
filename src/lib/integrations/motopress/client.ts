@@ -245,6 +245,55 @@ export class MotoPresClient {
     }
   }
 
+  /**
+   * Get recent bookings (most recent first, limited pages)
+   * Uses order=desc to get newest bookings first without slow date_from filter
+   *
+   * @param maxPages Maximum pages to fetch (default: 3 = ~300 bookings)
+   */
+  async getRecentBookings(maxPages: number = 3): Promise<MotoPresApiResponse<any[]>> {
+    const allBookings: any[] = []
+    let page = 1
+
+    console.log(`[MotoPresClient] Fetching recent bookings (order=desc, max ${maxPages} pages)...`)
+
+    while (page <= maxPages) {
+      // Use order=desc to get most recent bookings first
+      // This is MUCH faster than date_from filter (16s vs infinite)
+      const params = new URLSearchParams()
+      params.append('page', page.toString())
+      params.append('per_page', '100')
+      params.append('orderby', 'date')
+      params.append('order', 'desc')
+
+      const response = await this.makeRequest<any[]>(`/bookings?${params.toString()}`)
+
+      if (response.error) {
+        return response
+      }
+
+      const bookings = response.data || []
+      allBookings.push(...bookings)
+
+      // Stop if we got less than 100 (no more pages)
+      if (bookings.length < 100) {
+        break
+      }
+
+      page++
+
+      // Pause between requests to avoid overloading the API
+      await new Promise(resolve => setTimeout(resolve, 250))
+    }
+
+    console.log(`[MotoPresClient] ✅ Fetched ${allBookings.length} recent bookings in ${page} pages`)
+
+    return {
+      data: allBookings,
+      status: 200
+    }
+  }
+
   async getRates(
     page: number = 1,
     perPage: number = 100,

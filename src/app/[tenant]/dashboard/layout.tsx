@@ -29,6 +29,8 @@ interface AdminLayoutProps {
 }
 
 export default function DashboardLayout({ children }: AdminLayoutProps) {
+  console.log('[dashboard-layout] 🚀 COMPONENT RENDERING - Client-side code executing');
+
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

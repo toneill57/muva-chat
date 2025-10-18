@@ -151,22 +151,33 @@ export default function ReservationsList() {
         return
       }
 
-      // Get tenant_id from tenantInfo
-      const staffInfo = localStorage.getItem('staff_info')
-      if (!staffInfo) {
-        throw new Error('No staff info found')
+      // Get tenant_id from current tenantInfo state (already fetched from API)
+      if (!tenantInfo) {
+        throw new Error('No tenant info available')
       }
 
-      const parsedStaffInfo = JSON.parse(staffInfo)
-      const tenantId = parsedStaffInfo.tenant_id
+      // Extract tenant_id from tenant_registry via slug
+      const listResponse = await fetch('/api/reservations/list?future=true&status=active', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
 
-      if (!tenantId) {
-        throw new Error('No tenant ID found')
+      if (!listResponse.ok) {
+        throw new Error(`HTTP ${listResponse.status}`)
       }
+
+      const listData = await listResponse.json()
+
+      if (!listData.success || !listData.data?.tenant_info?.tenant_id) {
+        throw new Error('Unable to retrieve tenant ID')
+      }
+
+      const tenantId = listData.data.tenant_info.tenant_id
 
       console.log('[syncMotoPress] Syncing reservations for tenant:', tenantId)
 
-      const response = await fetch('/api/integrations/motopress/sync-reservations', {
+      const syncResponse = await fetch('/api/integrations/motopress/sync-reservations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -175,20 +186,20 @@ export default function ReservationsList() {
         body: JSON.stringify({ tenant_id: tenantId })
       })
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
+      if (!syncResponse.ok) {
+        throw new Error(`HTTP ${syncResponse.status}`)
       }
 
-      const data = await response.json()
+      const syncData = await syncResponse.json()
 
-      if (data.success) {
-        console.log('[syncMotoPress] ✅ Sync successful:', data.data)
-        alert(`✅ Sincronización exitosa!\n\nNuevas: ${data.data.created}\nActualizadas: ${data.data.updated}\nTotal: ${data.data.total}`)
+      if (syncData.success) {
+        console.log('[syncMotoPress] ✅ Sync successful:', syncData.data)
+        alert(`✅ Sincronización exitosa!\n\nNuevas: ${syncData.data.created}\nActualizadas: ${syncData.data.updated}\nTotal: ${syncData.data.total}`)
 
         // Refresh reservations list
         await fetchReservations()
       } else {
-        throw new Error(data.error || 'Unknown error')
+        throw new Error(syncData.error || 'Unknown error')
       }
     } catch (err) {
       console.error('[syncMotoPress] Error:', err)
@@ -359,7 +370,7 @@ export default function ReservationsList() {
 
           {/* Empty State */}
           {!isLoading && !error && reservations.length === 0 && (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+            <div className="py-16 text-center">
               <CheckCircle2 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 No hay reservas futuras
