@@ -298,15 +298,20 @@ export async function GET(request: NextRequest) {
         .eq('tenant_id', tenant_id)
         .eq('integration_type', 'motopress')
 
-      await writer.close()
-
     } catch (error: any) {
       console.error('[sync-all] Unexpected error:', error)
       await sendEvent({
         type: 'error',
         message: error.message || 'Internal server error'
       })
-      await writer.close()
+    } finally {
+      // Always close writer, whether success or error
+      try {
+        await writer.close()
+      } catch (closeError) {
+        // Stream already closed, ignore
+        console.log('[sync-all] Stream already closed')
+      }
     }
   })()
 
