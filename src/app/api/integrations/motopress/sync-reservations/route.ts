@@ -16,6 +16,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
 import { MotoPresBookingsMapper, type MotoPresBooking } from '@/lib/integrations/motopress/bookings-mapper'
+import { decryptCredentials } from '@/lib/admin-auth'
+
+// Allow up to 60 seconds for sync operations (pagination + API delays)
+export const maxDuration = 60
 
 interface SyncReservationsRequest {
   tenant_id: string
@@ -79,23 +83,26 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
       )
     }
 
-    // 3. Create MotoPresClient with credentials
+    // 3. Decrypt credentials and create MotoPresClient
     const credentials = config.config_data as {
       api_key: string
       consumer_secret: string
       site_url: string
     }
 
+    const decryptedApiKey = await decryptCredentials(credentials.api_key)
+    const decryptedConsumerSecret = await decryptCredentials(credentials.consumer_secret)
+
     const client = new MotoPresClient({
-      apiKey: credentials.api_key,
-      consumerSecret: credentials.consumer_secret,
+      apiKey: decryptedApiKey,
+      consumerSecret: decryptedConsumerSecret,
       siteUrl: credentials.site_url
     })
 
     console.log('[sync-reservations] Fetching bookings from MotoPress...')
 
-    // 4. Fetch all bookings from MotoPress
-    const response = await client.getAllBookings()
+    // 4. Fetch recent bookings from MotoPress (most recent first, max 3 pages = ~300 bookings)
+    const response = await client.getRecentBookings(3)
 
     if (response.error) {
       console.error('[sync-reservations] MotoPress API error:', response.error)
