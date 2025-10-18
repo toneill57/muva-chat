@@ -38,6 +38,7 @@ interface SSEMessage {
     updated: number
     errors: number
     blocksExcluded: number
+    pastExcluded: number
   }
 }
 
@@ -182,17 +183,17 @@ export async function GET(request: NextRequest) {
       })
 
       // 4. Map bookings to GuestReservation format (with _embedded data)
-      const { reservations: mappedReservations, blocksExcluded } =
+      const { reservations: mappedReservations, blocksExcluded, pastExcluded } =
         await MotoPresBookingsMapper.mapBulkBookingsWithEmbed(
           bookings,
           tenant_id,
           supabase
         )
 
-      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${blocksExcluded} calendar blocks`)
+      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${blocksExcluded} calendar blocks, ${pastExcluded} past/future`)
       await sendEvent({
         type: 'progress',
-        message: `Mapped ${mappedReservations.length} reservations (excluded ${blocksExcluded} calendar blocks). Saving to database...`
+        message: `Procesadas ${mappedReservations.length} reservas futuras (excluidas ${blocksExcluded} bloqueadas, ${pastExcluded} pasadas). Guardando...`
       })
 
       // 5. Upsert reservations into guest_reservations
@@ -260,6 +261,7 @@ export async function GET(request: NextRequest) {
           metadata: {
             total_bookings: bookings.length,
             blocks_excluded: blocksExcluded,
+            past_excluded: pastExcluded,
             errors,
             sync_method: '_embed'
           },
@@ -272,7 +274,8 @@ export async function GET(request: NextRequest) {
         created,
         updated,
         errors,
-        blocksExcluded
+        blocksExcluded,
+        pastExcluded
       })
 
       // 7. Send completion event
@@ -283,7 +286,8 @@ export async function GET(request: NextRequest) {
           created,
           updated,
           errors,
-          blocksExcluded
+          blocksExcluded,
+          pastExcluded
         }
       })
 

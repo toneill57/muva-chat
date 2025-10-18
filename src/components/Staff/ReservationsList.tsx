@@ -87,6 +87,7 @@ interface SyncStats {
   updated: number
   errors: number
   blocksExcluded?: number
+  pastExcluded?: number
 }
 
 // Helper to extract metadata from booking_notes
@@ -840,6 +841,13 @@ export default function ReservationsList() {
                       <div className="col-span-2">
                         <p className="text-green-600 text-xs">
                           {syncStats.blocksExcluded} bloques de calendario excluidos
+                        </p>
+                      </div>
+                    )}
+                    {syncStats.pastExcluded !== undefined && syncStats.pastExcluded > 0 && (
+                      <div className="col-span-2">
+                        <p className="text-blue-600 text-xs">
+                          {syncStats.pastExcluded} reservas pasadas/lejanas excluidas
                         </p>
                       </div>
                     )}
