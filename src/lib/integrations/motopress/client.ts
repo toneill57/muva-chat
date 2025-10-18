@@ -405,7 +405,8 @@ export class MotoPresClient {
               headers: {
                 'Authorization': `Basic ${credentials}`,
                 'Content-Type': 'application/json',
-                'User-Agent': 'InnPilot/1.0'
+                'Accept': '*/*',
+                'User-Agent': 'curl/8.7.1' // Mimic curl to avoid blocking
               },
               signal: AbortSignal.timeout(120000) // 120s timeout for _embed
             })
