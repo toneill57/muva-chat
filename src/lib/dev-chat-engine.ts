@@ -233,8 +233,20 @@ function buildMarketingSystemPrompt(
 
         // Amenities (most important for marketing)
         if (meta.unit_amenities) {
-          const amenitiesList = meta.unit_amenities.split(',').map((a: string) => a.trim()).slice(0, 8)
-          details += `\n\n✨ AMENITIES:\n- ${amenitiesList.join('\n- ')}`
+          // Handle multiple formats: array of strings, array of objects, or comma-separated string
+          let amenitiesList: string[] = []
+          if (Array.isArray(meta.unit_amenities)) {
+            amenitiesList = meta.unit_amenities.map((a: any) => {
+              if (typeof a === 'string') return a.trim()
+              if (a && typeof a === 'object' && a.name) return a.name.trim()
+              return String(a).trim()
+            }).slice(0, 8)
+          } else if (typeof meta.unit_amenities === 'string') {
+            amenitiesList = meta.unit_amenities.split(',').map((a: string) => a.trim()).slice(0, 8)
+          }
+          if (amenitiesList.length > 0) {
+            details += `\n\n✨ AMENITIES:\n- ${amenitiesList.join('\n- ')}`
+          }
         }
 
         // Unique features (key selling points)
