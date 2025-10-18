@@ -78,6 +78,7 @@ export default function ReservationsList() {
   const [reservations, setReservations] = useState<ReservationItem[]>([])
   const [tenantInfo, setTenantInfo] = useState<{ hotel_name: string; slug: string } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isSyncingMotoPress, setIsSyncingMotoPress] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
 
@@ -104,9 +105,16 @@ export default function ReservationsList() {
 
       if (!response.ok) {
         if (response.status === 401) {
+          // Clear invalid token
           localStorage.removeItem('staff_token')
           localStorage.removeItem('staff_info')
-          router.push('/staff/login')
+
+          // Extract tenant slug from hostname (e.g., "tucasamar.localhost" -> "tucasamar")
+          const hostname = window.location.hostname
+          const tenantSlug = hostname.split('.')[0]
+
+          // Redirect to tenant-specific login page
+          router.push(`/${tenantSlug}/staff/login`)
           return
         }
 
@@ -129,6 +137,66 @@ export default function ReservationsList() {
       setError(err instanceof Error ? err.message : 'Failed to load reservations')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const syncMotoPress = async () => {
+    setIsSyncingMotoPress(true)
+    setError(null)
+
+    try {
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        router.push('/staff/login')
+        return
+      }
+
+      // Get tenant_id from tenantInfo
+      const staffInfo = localStorage.getItem('staff_info')
+      if (!staffInfo) {
+        throw new Error('No staff info found')
+      }
+
+      const parsedStaffInfo = JSON.parse(staffInfo)
+      const tenantId = parsedStaffInfo.tenant_id
+
+      if (!tenantId) {
+        throw new Error('No tenant ID found')
+      }
+
+      console.log('[syncMotoPress] Syncing reservations for tenant:', tenantId)
+
+      const response = await fetch('/api/integrations/motopress/sync-reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ tenant_id: tenantId })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.success) {
+        console.log('[syncMotoPress] ✅ Sync successful:', data.data)
+        alert(`✅ Sincronización exitosa!\n\nNuevas: ${data.data.created}\nActualizadas: ${data.data.updated}\nTotal: ${data.data.total}`)
+
+        // Refresh reservations list
+        await fetchReservations()
+      } else {
+        throw new Error(data.error || 'Unknown error')
+      }
+    } catch (err) {
+      console.error('[syncMotoPress] Error:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to sync with MotoPress'
+      setError(errorMessage)
+      alert(`❌ Error al sincronizar: ${errorMessage}`)
+    } finally {
+      setIsSyncingMotoPress(false)
     }
   }
 
@@ -251,12 +319,13 @@ export default function ReservationsList() {
               </button>
 
               <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors"
-                aria-label="Logout"
+                onClick={syncMotoPress}
+                disabled={isSyncingMotoPress}
+                className="flex items-center space-x-2 px-4 py-2 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Sync with MotoPress"
               >
-                <LogOut className="w-4 h-4" />
-                <span className="text-sm font-medium">Salir</span>
+                <RefreshCw className={`w-4 h-4 ${isSyncingMotoPress ? 'animate-spin' : ''}`} />
+                <span className="text-sm font-medium">Actualizar (nuevo)</span>
               </button>
             </div>
           </div>
