@@ -438,7 +438,7 @@ export function AccommodationUnitsGrid() {
       {/* Units Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {units.map((unit) => (
-          <UnitCard key={unit.id} unit={unit} />
+          <UnitCard key={unit.name || unit.id} unit={unit} />
         ))}
       </div>
 
