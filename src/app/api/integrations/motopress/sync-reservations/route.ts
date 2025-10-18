@@ -1,0 +1,243 @@
+/**
+ * MotoPress Reservations Sync API Endpoint
+ *
+ * POST /api/integrations/motopress/sync-reservations
+ * Syncs reservations/bookings from MotoPress to guest_reservations table.
+ *
+ * Workflow:
+ * 1. Retrieve MotoPress credentials from integration_configs
+ * 2. Fetch all bookings from MotoPress API
+ * 3. Map bookings to GuestReservation format
+ * 4. Upsert into guest_reservations table
+ * 5. Log sync history
+ */
+
+import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase'
+import { MotoPresClient } from '@/lib/integrations/motopress/client'
+import { MotoPresBookingsMapper, type MotoPresBooking } from '@/lib/integrations/motopress/bookings-mapper'
+
+interface SyncReservationsRequest {
+  tenant_id: string
+}
+
+interface SyncReservationsResponse {
+  success: boolean
+  data?: {
+    total: number
+    created: number
+    updated: number
+    skipped: number
+    errors: number
+  }
+  error?: string
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse<SyncReservationsResponse>> {
+  const supabase = createServerClient()
+
+  try {
+    // 1. Parse request body
+    const body: SyncReservationsRequest = await request.json()
+    const { tenant_id } = body
+
+    if (!tenant_id) {
+      return NextResponse.json(
+        { success: false, error: 'Missing tenant_id' },
+        { status: 400 }
+      )
+    }
+
+    console.log('[sync-reservations] Starting sync for tenant:', tenant_id)
+
+    // 2. Retrieve MotoPress credentials from integration_configs
+    const { data: config, error: configError } = await supabase
+      .from('integration_configs')
+      .select('config_data, is_active')
+      .eq('tenant_id', tenant_id)
+      .eq('integration_type', 'motopress')
+      .single()
+
+    if (configError || !config) {
+      console.error('[sync-reservations] Integration config not found:', configError)
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'MotoPress integration not configured for this tenant'
+        },
+        { status: 404 }
+      )
+    }
+
+    if (!config.is_active) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'MotoPress integration is not active'
+        },
+        { status: 400 }
+      )
+    }
+
+    // 3. Create MotoPresClient with credentials
+    const credentials = config.config_data as {
+      api_key: string
+      consumer_secret: string
+      site_url: string
+    }
+
+    const client = new MotoPresClient({
+      apiKey: credentials.api_key,
+      consumerSecret: credentials.consumer_secret,
+      siteUrl: credentials.site_url
+    })
+
+    console.log('[sync-reservations] Fetching bookings from MotoPress...')
+
+    // 4. Fetch all bookings from MotoPress
+    const response = await client.getAllBookings()
+
+    if (response.error) {
+      console.error('[sync-reservations] MotoPress API error:', response.error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: `MotoPress API error: ${response.error}`
+        },
+        { status: 500 }
+      )
+    }
+
+    const bookings = (response.data || []) as MotoPresBooking[]
+    console.log(`[sync-reservations] Fetched ${bookings.length} bookings from MotoPress`)
+
+    // 5. Map bookings to GuestReservation format
+    const mappedReservations = await MotoPresBookingsMapper.mapBulkBookings(
+      bookings,
+      tenant_id,
+      supabase
+    )
+
+    console.log(`[sync-reservations] Mapped ${mappedReservations.length} reservations`)
+
+    // 6. Upsert reservations into guest_reservations
+    let created = 0
+    let updated = 0
+    let skipped = 0
+    let errors = 0
+
+    for (const reservation of mappedReservations) {
+      try {
+        // Check if reservation already exists by external_booking_id
+        const { data: existing } = await supabase
+          .from('guest_reservations')
+          .select('id, updated_at')
+          .eq('tenant_id', tenant_id)
+          .eq('external_booking_id', reservation.external_booking_id)
+          .single()
+
+        if (existing) {
+          // Update existing reservation
+          const { error: updateError } = await supabase
+            .from('guest_reservations')
+            .update({
+              ...reservation,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', existing.id)
+
+          if (updateError) {
+            console.error(`[sync-reservations] Update error for booking ${reservation.external_booking_id}:`, updateError)
+            errors++
+          } else {
+            updated++
+          }
+        } else {
+          // Insert new reservation
+          const { error: insertError } = await supabase
+            .from('guest_reservations')
+            .insert(reservation)
+
+          if (insertError) {
+            console.error(`[sync-reservations] Insert error for booking ${reservation.external_booking_id}:`, insertError)
+            errors++
+          } else {
+            created++
+          }
+        }
+      } catch (err) {
+        console.error(`[sync-reservations] Error processing booking ${reservation.external_booking_id}:`, err)
+        errors++
+      }
+    }
+
+    // 7. Log sync history
+    await supabase
+      .from('sync_history')
+      .insert({
+        tenant_id,
+        integration_type: 'motopress',
+        sync_type: 'reservations',
+        status: errors > 0 ? 'partial' : 'success',
+        records_processed: mappedReservations.length,
+        records_created: created,
+        records_updated: updated,
+        error_message: errors > 0 ? `${errors} errors occurred during sync` : null,
+        metadata: {
+          total_bookings: bookings.length,
+          skipped,
+          errors
+        },
+        started_at: new Date().toISOString(),
+        completed_at: new Date().toISOString()
+      })
+
+    console.log('[sync-reservations] ✅ Sync completed:', {
+      total: mappedReservations.length,
+      created,
+      updated,
+      skipped,
+      errors
+    })
+
+    // 8. Return success response
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          total: mappedReservations.length,
+          created,
+          updated,
+          skipped,
+          errors
+        }
+      },
+      { status: 200 }
+    )
+  } catch (error: any) {
+    console.error('[sync-reservations] Unexpected error:', error)
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || 'Internal server error'
+      },
+      { status: 500 }
+    )
+  }
+}
+
+// OPTIONS handler for CORS
+export async function OPTIONS() {
+  return NextResponse.json(
+    {},
+    {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      }
+    }
+  )
+}

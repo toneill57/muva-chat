@@ -202,15 +202,47 @@ export class MotoPresClient {
   }
 
   async getBookings(
+    page: number = 1,
+    perPage: number = 100,
     dateFrom?: string,
     dateTo?: string
   ): Promise<MotoPresApiResponse<any[]>> {
     const params = new URLSearchParams()
+    params.append('page', page.toString())
+    params.append('per_page', perPage.toString())
     if (dateFrom) params.append('date_from', dateFrom)
     if (dateTo) params.append('date_to', dateTo)
 
-    const query = params.toString() ? `?${params.toString()}` : ''
-    return this.makeRequest<any[]>(`/bookings${query}`)
+    return this.makeRequest<any[]>(`/bookings?${params.toString()}`)
+  }
+
+  async getAllBookings(): Promise<MotoPresApiResponse<any[]>> {
+    const allBookings: any[] = []
+    let page = 1
+    let hasMore = true
+
+    while (hasMore) {
+      const response = await this.getBookings(page, 100)
+
+      if (response.error) {
+        return response
+      }
+
+      const bookings = response.data || []
+      allBookings.push(...bookings)
+
+      // If we received less than 100, we've reached the end
+      hasMore = bookings.length === 100
+      page++
+
+      // Pause between requests to avoid overloading the API
+      await new Promise(resolve => setTimeout(resolve, 250))
+    }
+
+    return {
+      data: allBookings,
+      status: 200
+    }
   }
 
   async getRates(

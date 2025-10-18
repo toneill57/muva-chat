@@ -7,12 +7,13 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateStaff, generateStaffToken } from '@/lib/staff-auth'
+import { resolveSubdomainToTenantId } from '@/lib/tenant-resolver'
 
 export async function POST(request: NextRequest) {
   try {
     // Parse request body
     const body = await request.json()
-    const { username, password, tenant_id } = body
+    const { username, password, tenant_id, subdomain } = body
 
     // Validate required fields
     if (!username || !password || !tenant_id) {
@@ -66,6 +67,46 @@ export async function POST(request: NextRequest) {
         },
         { status: 401 }
       )
+    }
+
+    // SUBDOMAIN VALIDATION: If subdomain is provided, ensure staff belongs to that tenant
+    if (subdomain) {
+      try {
+        const resolvedTenantId = await resolveSubdomainToTenantId(subdomain)
+
+        if (session.tenant_id !== resolvedTenantId) {
+          console.warn('[staff-login-api] Subdomain mismatch:', {
+            username: session.username,
+            staff_tenant_id: session.tenant_id,
+            subdomain_tenant_id: resolvedTenantId,
+            subdomain,
+          })
+
+          return NextResponse.json(
+            {
+              error: 'Access denied',
+              message: `No tienes acceso a este hotel (${subdomain})`,
+              code: 'TENANT_MISMATCH',
+            },
+            { status: 403 }
+          )
+        }
+
+        console.log('[staff-login-api] Subdomain validation passed:', {
+          username: session.username,
+          subdomain,
+          tenant_id: resolvedTenantId,
+        })
+      } catch (error: any) {
+        console.error('[staff-login-api] Subdomain resolution error:', error)
+        return NextResponse.json(
+          {
+            error: 'Invalid subdomain',
+            message: `No se pudo resolver el subdominio: ${subdomain}`,
+          },
+          { status: 400 }
+        )
+      }
     }
 
     // Generate JWT token
