@@ -76,7 +76,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
         .from('accommodation_units_public')
         .select('*')
         .eq('tenant_id', tenantId)
-        .eq('is_active', true)
+        // Removed .eq('is_active', true) to show all accommodations (active + inactive)
 
       if (fallbackError) {
         console.error('[Accommodations Units API] Fallback query error:', fallbackError)
