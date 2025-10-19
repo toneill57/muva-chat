@@ -1,0 +1,26 @@
+============================================
+REPORTE DE RESERVAS CONFIRMADAS
+============================================
+
+Fecha de generación: 2025-10-18 12:38:05
+Total de reservas: 
+Período: Desde 2025-10-18 en adelante
+
+============================================
+LISTADO DETALLADO DE RESERVAS
+============================================
+
+
+============================================
+RESUMEN ESTADÍSTICO
+============================================
+
+Total de reservas: 
+
+Distribución por mes:
+
+Top 5 habitaciones más reservadas:
+
+============================================
+FIN DEL REPORTE
+============================================

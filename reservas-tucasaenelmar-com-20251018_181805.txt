@@ -1,0 +1,38 @@
+============================================
+REPORTE COMPLETO DE RESERVAS - tucasaenelmar.com
+CON DATOS EMBEBIDOS (_embed)
+============================================
+
+Sitio: https://tucasaenelmar.com
+Fecha de generación: 2025-10-18 18:19:09
+Total de reservas en sistema: 4001
+Reservas futuras confirmadas: 0
+Período: Desde 2025-10-18 en adelante
+Tiempo de descarga: 0m 53s
+
+============================================
+DETALLE DE RESERVAS
+============================================
+
+
+============================================
+RESUMEN ESTADÍSTICO
+============================================
+
+Por fuente:
+  Airbnb/iCal: 0
+  Directas: 0
+
+Distribución mensual:
+
+Por tipo de alojamiento:
+
+============================================
+INFORMACIÓN DE DESCARGA
+============================================
+
+Páginas descargadas: 41
+Tiempo total: 0m 53s
+Modo: Datos completos con _embed
+
+============================================

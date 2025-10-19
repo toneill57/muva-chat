@@ -1,0 +1,4400 @@
+============================================
+REPORTE DETALLADO DE RESERVAS CONFIRMADAS
+============================================
+
+Fecha de generación: 2025-10-18 12:47:07
+Total de reservas: 195
+Período: Desde 2025-10-18 en adelante
+
+============================================
+LISTADO DETALLADO DE RESERVAS
+============================================
+
+-------------------------------------------
+RESERVA #30260
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-10-19 (15:00:00)
+Check-out: 2025-10-22 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30243
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2025-11-05 (15:00:00)
+Check-out: 2025-11-15 (12:00:00)
+Noches: 10
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFYJRTJ38
+Teléfono (últimos 4): 8216
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30245
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2025-11-19 (15:00:00)
+Check-out: 2025-11-23 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKP3FS3ST
+Teléfono (últimos 4): 0907
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30247
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2025-12-04 (15:00:00)
+Check-out: 2025-12-07 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMC45KERZJ
+Teléfono (últimos 4): 6164
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30249
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2025-12-27 (15:00:00)
+Check-out: 2026-01-03 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMX3JMX8CK
+Teléfono (últimos 4): 8447
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30251
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2026-01-03 (15:00:00)
+Check-out: 2026-01-06 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRMMEYH4B
+Teléfono (últimos 4): 3969
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30253
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2026-01-26 (15:00:00)
+Check-out: 2026-01-31 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM48FPK4Z4
+Teléfono (últimos 4): 6955
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30255
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30241
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Cotton Cay DOBLE
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-21 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMATD59HQ2
+Teléfono (últimos 4): 0084
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30225
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-22 (15:00:00)
+Check-out: 2026-02-23 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30227
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-03-01 (15:00:00)
+Check-out: 2026-03-02 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30229
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-03-10 (15:00:00)
+Check-out: 2026-03-11 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30231
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-03-17 (15:00:00)
+Check-out: 2026-03-18 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30233
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-03-23 (15:00:00)
+Check-out: 2026-03-24 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30235
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-04-10 (15:00:00)
+Check-out: 2026-04-11 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30237
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-04-15 (15:00:00)
+Check-out: 2026-04-16 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30239
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-10-18 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30209
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2025-12-27 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30211
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 2
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30213
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-01-15 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30215
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-01-19 (15:00:00)
+Check-out: 2026-01-20 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30217
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-01-28 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30219
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-02 (15:00:00)
+Check-out: 2026-02-03 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30221
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-11 (15:00:00)
+Check-out: 2026-02-12 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30223
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-18 (15:00:00)
+Check-out: 2026-02-19 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30193
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-04 (15:00:00)
+Check-out: 2025-11-05 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30195
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-09 (15:00:00)
+Check-out: 2025-11-10 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30197
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-18 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30199
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-25 (15:00:00)
+Check-out: 2025-11-26 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30201
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-30 (15:00:00)
+Check-out: 2025-12-01 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30203
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-08 (15:00:00)
+Check-out: 2025-12-09 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30205
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-12 (15:00:00)
+Check-out: 2025-12-13 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30207
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-19 (15:00:00)
+Check-out: 2025-12-20 (12:00:00)
+Noches: 1
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30165
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-05 (15:00:00)
+Check-out: 2025-11-09 (12:00:00)
+Noches: 4
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMN8J8TYHR
+Teléfono (últimos 4): 7031
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30167
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-11-18 (15:00:00)
+Check-out: 2025-11-25 (12:00:00)
+Noches: 7
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMW8345AHW
+Teléfono (últimos 4): 4571
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30169
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-01 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 7
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM88YJDXFM
+Teléfono (últimos 4): 6887
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30171
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-13 (15:00:00)
+Check-out: 2025-12-19 (12:00:00)
+Noches: 6
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM99WE9WPY
+Teléfono (últimos 4): 3194
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30173
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2025-12-27 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 8
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZB28ZF83
+Teléfono (últimos 4): 6408
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30175
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-01-07 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 8
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5DBRC882
+Teléfono (últimos 4): 6766
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30177
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-01-20 (15:00:00)
+Check-out: 2026-01-27 (12:00:00)
+Noches: 7
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZB4ZP42B
+Teléfono (últimos 4): 7350
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30179
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-03 (15:00:00)
+Check-out: 2026-02-11 (12:00:00)
+Noches: 8
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5JH2HZC5
+Teléfono (últimos 4): 7219
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30181
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-12 (15:00:00)
+Check-out: 2026-02-18 (12:00:00)
+Noches: 6
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2WRBKFR2
+Teléfono (últimos 4): 8510
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30183
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-02-23 (15:00:00)
+Check-out: 2026-03-01 (12:00:00)
+Noches: 8
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJM3MNTYE
+Teléfono (últimos 4): 7042
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30185
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-03-02 (15:00:00)
+Check-out: 2026-03-10 (12:00:00)
+Noches: 8
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR5A5R4Z4
+Teléfono (últimos 4): 4443
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30187
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-03-18 (15:00:00)
+Check-out: 2026-03-23 (12:00:00)
+Noches: 5
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4WTJX9EF
+Teléfono (últimos 4): 5434
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30189
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rose Cay APARTAMENTO
+Check-in:  2026-04-11 (15:00:00)
+Check-out: 2026-04-15 (12:00:00)
+Noches: 4
+Huéspedes: 6 adultos + 5 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJNN5CESE
+Teléfono (últimos 4): 2090
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30163
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DOBLE
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30161
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: East Cay Cuádruple
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30159
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DÚPLEX
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30157
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30155
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30153
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30148
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DÚPLEX
+Check-in:  2026-01-12 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 4
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHZWCPWTT
+Teléfono (últimos 4): 3175
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30150
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DÚPLEX
+Check-in:  2026-01-16 (15:00:00)
+Check-out: 2026-01-17 (12:00:00)
+Noches: 1
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30146
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-13 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYWNCP9BN
+Teléfono (últimos 4): 8103
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30128
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-21 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30126
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-10-20 (15:00:00)
+Check-out: 2025-10-24 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMBA994BBP
+Teléfono (últimos 4): 6360
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30104
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-14 (12:00:00)
+Noches: 8
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMH498M9Y8
+Teléfono (últimos 4): 3468
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30102
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-02-01 (12:00:00)
+Noches: 4
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQS5MQ9FW
+Teléfono (últimos 4): 7981
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30100
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DOBLE
+Check-in:  2025-10-30 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30098
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-10-30 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 6
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFTAFPDAT
+Teléfono (últimos 4): 1564
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30086
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DOBLE
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-22 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMW5CR3FMQ
+Teléfono (últimos 4): 4321
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30088
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DOBLE
+Check-in:  2025-12-03 (15:00:00)
+Check-out: 2025-12-14 (12:00:00)
+Noches: 11
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMM8KE8D5B
+Teléfono (últimos 4): 2200
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30090
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DOBLE
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-02-04 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMWAMTQEQA
+Teléfono (últimos 4): 0424
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30094
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DOBLE
+Check-in:  2025-12-21 (15:00:00)
+Check-out: 2026-01-17 (12:00:00)
+Noches: 26
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30096
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DOBLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30066
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-10-24 (15:00:00)
+Check-out: 2025-10-28 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCCRN4HWC
+Teléfono (últimos 4): 6991
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30056
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-21 (12:00:00)
+Noches: 9
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30058
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2025-12-25 (15:00:00)
+Check-out: 2025-12-31 (12:00:00)
+Noches: 6
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30060
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-12 (12:00:00)
+Noches: 7
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30062
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2026-01-12 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30064
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30052
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DÚPLEX
+Check-in:  2025-12-31 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 4
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5S4MMTCT
+Teléfono (últimos 4): 4581
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30028
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-10-21 (15:00:00)
+Check-out: 2025-10-26 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMS529ADX3
+Teléfono (últimos 4): 0954
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30030
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-10-31 (15:00:00)
+Check-out: 2025-11-04 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMB3P4CCXC
+Teléfono (últimos 4): 4120
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30032
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-11-05 (15:00:00)
+Check-out: 2025-11-09 (12:00:00)
+Noches: 4
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTEW4WK3M
+Teléfono (últimos 4): 1776
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30034
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-11-14 (15:00:00)
+Check-out: 2025-11-22 (12:00:00)
+Noches: 8
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKHPJNS5B
+Teléfono (últimos 4): 5264
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30036
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-11-26 (15:00:00)
+Check-out: 2025-12-04 (12:00:00)
+Noches: 8
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMD2NKBCBM
+Teléfono (últimos 4): 7387
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30038
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMF249N8ST
+Teléfono (últimos 4): 3756
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30040
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2025-12-22 (15:00:00)
+Check-out: 2026-01-03 (12:00:00)
+Noches: 11
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2S2S34XM
+Teléfono (últimos 4): 4082
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30042
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2026-01-03 (15:00:00)
+Check-out: 2026-01-14 (12:00:00)
+Noches: 11
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMNAZMM2XM
+Teléfono (últimos 4): 8100
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30044
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2026-01-18 (15:00:00)
+Check-out: 2026-01-26 (12:00:00)
+Noches: 8
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCBCTKCDB
+Teléfono (últimos 4): 0294
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30046
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2026-02-10 (15:00:00)
+Check-out: 2026-02-18 (12:00:00)
+Noches: 8
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMNT8TNSM3
+Teléfono (últimos 4): 1552
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30048
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2026-02-28 (15:00:00)
+Check-out: 2026-03-08 (12:00:00)
+Noches: 10
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMB4M2XWK3
+Teléfono (últimos 4): 8826
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30050
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Johnny Cay TRIPLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29994
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-13 (12:00:00)
+Noches: 7
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMX8CYMDAB
+Teléfono (últimos 4): 5890
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29996
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-11-16 (15:00:00)
+Check-out: 2025-11-23 (12:00:00)
+Noches: 7
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEA88THWS
+Teléfono (últimos 4): 7287
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29998
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-11-27 (15:00:00)
+Check-out: 2025-12-02 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMN5B24BK3
+Teléfono (últimos 4): 3497
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30000
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-12-03 (15:00:00)
+Check-out: 2025-12-06 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRXW5M8Q4
+Teléfono (últimos 4): 2247
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30002
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-13 (12:00:00)
+Noches: 4
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFRYWQSCQ
+Teléfono (últimos 4): 5776
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30004
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-12-13 (15:00:00)
+Check-out: 2025-12-18 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM3RE3BHFZ
+Teléfono (últimos 4): 2074
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30006
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-12-19 (15:00:00)
+Check-out: 2025-12-28 (12:00:00)
+Noches: 9
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMH425T5X3
+Teléfono (últimos 4): 1797
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30008
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2025-12-31 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 4
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXHNKHTX3
+Teléfono (últimos 4): 7356
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30010
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-10 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8QHR48RH
+Teléfono (últimos 4): 9329
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30012
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 6
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMDT83B485
+Teléfono (últimos 4): 7359
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30014
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-01-20 (15:00:00)
+Check-out: 2026-01-24 (12:00:00)
+Noches: 4
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKFMCHS9M
+Teléfono (últimos 4): 1232
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30016
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-01-29 (15:00:00)
+Check-out: 2026-02-05 (12:00:00)
+Noches: 6
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR523KMDN
+Teléfono (últimos 4): 7975
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30018
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-02-10 (15:00:00)
+Check-out: 2026-02-16 (12:00:00)
+Noches: 6
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMF2WPFXDN
+Teléfono (últimos 4): 6710
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30020
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-02-23 (15:00:00)
+Check-out: 2026-03-03 (12:00:00)
+Noches: 10
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCERQHC5B
+Teléfono (últimos 4): 4800
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30022
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-03-15 (15:00:00)
+Check-out: 2026-03-25 (12:00:00)
+Noches: 10
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTNFCBFQJ
+Teléfono (últimos 4): 8324
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30026
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Rocky Cay TRIPLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 2 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29992
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-04-04 (15:00:00)
+Check-out: 2026-04-11 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZWYP3WKC
+Teléfono (últimos 4): 4415
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29958
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29952
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2026-01-19 (15:00:00)
+Check-out: 2026-01-28 (12:00:00)
+Noches: 9
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMT5EHBJP2
+Teléfono (últimos 4): 1746
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29940
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2025-11-14 (15:00:00)
+Check-out: 2025-11-19 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM93BPSWEH
+Teléfono (últimos 4): 2200
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29942
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2025-12-02 (15:00:00)
+Check-out: 2025-12-07 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHSFRT8S4
+Teléfono (últimos 4): 8389
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29944
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2025-12-24 (15:00:00)
+Check-out: 2025-12-29 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HME3JWKDND
+Teléfono (últimos 4): 7404
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29946
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2025-12-29 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 6
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMANX4H5NS
+Teléfono (últimos 4): 0741
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29948
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2026-01-07 (15:00:00)
+Check-out: 2026-01-10 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMSAZTD9K8
+Teléfono (últimos 4): 2750
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29950
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Bailey Cay TRIPLE
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-13 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRERMZ8KE
+Teléfono (últimos 4): 6382
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29904
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-12-31 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHTPKP82B
+Teléfono (últimos 4): 8343
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29906
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-01-07 (15:00:00)
+Check-out: 2026-01-11 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRDSRQFZY
+Teléfono (últimos 4): 9500
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29908
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-01-12 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZJJ5MTF9
+Teléfono (últimos 4): 4116
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29910
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-01-16 (15:00:00)
+Check-out: 2026-01-19 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8H28PKAN
+Teléfono (últimos 4): 2377
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29912
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-01-22 (15:00:00)
+Check-out: 2026-01-26 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRBTZE8ET
+Teléfono (últimos 4): 6683
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29914
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-01-26 (15:00:00)
+Check-out: 2026-02-02 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEKMT5F34
+Teléfono (últimos 4): 6596
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29916
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-02-02 (15:00:00)
+Check-out: 2026-02-06 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMSW3NN594
+Teléfono (últimos 4): 1983
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29918
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-02-11 (15:00:00)
+Check-out: 2026-02-14 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYWDXWBSM
+Teléfono (últimos 4): 1908
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29920
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-02-15 (15:00:00)
+Check-out: 2026-02-20 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4JQ2ZYST
+Teléfono (últimos 4): 7947
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29922
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-02-22 (15:00:00)
+Check-out: 2026-03-02 (12:00:00)
+Noches: 10
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4W5TT2AA
+Teléfono (últimos 4): 4253
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29924
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-03-05 (15:00:00)
+Check-out: 2026-03-13 (12:00:00)
+Noches: 8
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM9S8HDCJN
+Teléfono (últimos 4): 3056
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29926
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-03-13 (15:00:00)
+Check-out: 2026-03-22 (12:00:00)
+Noches: 9
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMMMTBYR4S
+Teléfono (últimos 4): 4718
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29928
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29884
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-23 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCWSQHBMJ
+Teléfono (últimos 4): 0411
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29886
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-10-23 (15:00:00)
+Check-out: 2025-10-27 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRRQC2WD3
+Teléfono (últimos 4): 7134
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29888
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-11-02 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMPDYWRTRH
+Teléfono (últimos 4): 1838
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29890
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-13 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4JFK3P3H
+Teléfono (últimos 4): 0234
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29892
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-11-15 (15:00:00)
+Check-out: 2025-11-19 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZWYQPS84
+Teléfono (últimos 4): 8885
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29894
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-11-20 (15:00:00)
+Check-out: 2025-11-27 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYQ3WZAYX
+Teléfono (últimos 4): 2914
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29896
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-11-29 (15:00:00)
+Check-out: 2025-12-05 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM294ABTZ2
+Teléfono (últimos 4): 2666
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29898
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-12-06 (15:00:00)
+Check-out: 2025-12-15 (12:00:00)
+Noches: 9
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTNYWBJW2
+Teléfono (últimos 4): 2512
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29900
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-12-17 (15:00:00)
+Check-out: 2025-12-21 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8M3E8DJ2
+Teléfono (últimos 4): 9476
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29902
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: North Cay DOBLE
+Check-in:  2025-12-22 (15:00:00)
+Check-out: 2025-12-28 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8NCRCS2Z
+Teléfono (últimos 4): 3964
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29876
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2026-01-09 (15:00:00)
+Check-out: 2026-01-13 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5RBKKYNA
+Teléfono (últimos 4): 8548
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29870
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2026-03-01 (15:00:00)
+Check-out: 2026-03-04 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQZ2ZDRS5
+Teléfono (últimos 4): 3328
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29850
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: East Cay Cuádruple
+Check-in:  2026-01-02 (15:00:00)
+Check-out: 2026-01-14 (12:00:00)
+Noches: 12
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFMEN8PRC
+Teléfono (últimos 4): 8430
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29837
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-02-23 (15:00:00)
+Check-out: 2026-03-02 (12:00:00)
+Noches: 9
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4CDHKCBF
+Teléfono (últimos 4): 0678
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29835
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2026-01-29 (15:00:00)
+Check-out: 2026-02-02 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXN3W32YW
+Teléfono (últimos 4): 1651
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29833
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DOBLE
+Check-in:  2025-12-01 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2BARQWAS
+Teléfono (últimos 4): 2252
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29831
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-12-01 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 7
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29815
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-11-28 (15:00:00)
+Check-out: 2025-12-01 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMWZEMDJ5W
+Teléfono (últimos 4): 8742
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29793
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-10-22 (15:00:00)
+Check-out: 2025-10-26 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM29KXWAR8
+Teléfono (últimos 4): 7880
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29789
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: East Cay Cuádruple
+Check-in:  2025-12-28 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 4
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29791
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: East Cay Cuádruple
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29785
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-01-13 (15:00:00)
+Check-out: 2026-01-17 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4CJCDQEF
+Teléfono (últimos 4): 0759
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29735
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2026-01-23 (15:00:00)
+Check-out: 2026-01-26 (12:00:00)
+Noches: 3
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCTBT35AA
+Teléfono (últimos 4): 7226
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29717
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DÚPLEX
+Check-in:  2025-12-03 (15:00:00)
+Check-out: 2025-12-14 (12:00:00)
+Noches: 11
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29663
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-11-02 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM3DTAX2H9
+Teléfono (últimos 4): 7443
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29665
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-11-07 (15:00:00)
+Check-out: 2025-11-09 (12:00:00)
+Noches: 2
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQ3PD9AF9
+Teléfono (últimos 4): 5552
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29667
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-11-11 (15:00:00)
+Check-out: 2025-11-18 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQQT5ZW2Y
+Teléfono (últimos 4): 1307
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29669
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-11-22 (15:00:00)
+Check-out: 2025-11-28 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2THXDX94
+Teléfono (últimos 4): 3255
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29671
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-12-02 (15:00:00)
+Check-out: 2025-12-05 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4BFBEJRK
+Teléfono (últimos 4): 4568
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29673
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-12-07 (15:00:00)
+Check-out: 2025-12-15 (12:00:00)
+Noches: 8
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMBC24XBYE
+Teléfono (últimos 4): 9008
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29675
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-12-25 (15:00:00)
+Check-out: 2025-12-28 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZJ8BFBQA
+Teléfono (últimos 4): 5564
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29677
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2025-12-30 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFEWYMHXH
+Teléfono (últimos 4): 2686
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29679
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2026-02-21 (15:00:00)
+Check-out: 2026-02-26 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM43JNW22C
+Teléfono (últimos 4): 7172
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29681
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2026-03-15 (15:00:00)
+Check-out: 2026-03-20 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXJSSY5EA
+Teléfono (últimos 4): 2038
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29685
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Crab Cay DOBLE
+Check-in:  2026-07-15 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29585
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-01-02 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEHF83KS9
+Teléfono (últimos 4): 4623
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29583
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-03-09 (15:00:00)
+Check-out: 2026-03-19 (12:00:00)
+Noches: 10
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEJJCQZ2N
+Teléfono (últimos 4): 1829
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29517
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2025-12-02 (15:00:00)
+Check-out: 2025-12-09 (12:00:00)
+Noches: 7
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHHH8PWM9
+Teléfono (últimos 4): 5093
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29491
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DOBLE
+Check-in:  2026-01-23 (15:00:00)
+Check-out: 2026-01-25 (12:00:00)
+Noches: 2
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29489
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2026-01-23 (15:00:00)
+Check-out: 2026-01-25 (12:00:00)
+Noches: 2
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHKXSWAZJ
+Teléfono (últimos 4): 9082
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29485
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2025-12-19 (15:00:00)
+Check-out: 2025-12-23 (12:00:00)
+Noches: 4
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMAT8PF3ZM
+Teléfono (últimos 4): 8237
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29483
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-20 (12:00:00)
+Noches: 8
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29481
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DOBLE
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-20 (12:00:00)
+Noches: 8
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEEQWZKYB
+Teléfono (últimos 4): 9344
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29475
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: West Cay TRIPLE
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-11 (12:00:00)
+Noches: 5
+Huéspedes: 3 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29425
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DOBLE
+Check-in:  2026-01-04 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMMTJ258AW
+Teléfono (últimos 4): 4026
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29423
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2026-01-04 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29401
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-10-21 (15:00:00)
+Check-out: 2025-10-28 (12:00:00)
+Noches: 7
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTM9NXJZT
+Teléfono (últimos 4): 1205
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29403
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM3ZPZCM89
+Teléfono (últimos 4): 8331
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29405
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 6
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYXZNFFAS
+Teléfono (últimos 4): 5761
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29407
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2026-01-28 (15:00:00)
+Check-out: 2026-02-01 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMS2S85WKJ
+Teléfono (últimos 4): 8109
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29411
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 6
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29413
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DÚPLEX
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29141
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-01-28 (15:00:00)
+Check-out: 2026-02-03 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5A24HPZB
+Teléfono (últimos 4): 6966
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29139
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DOBLE
+Check-in:  2025-12-25 (15:00:00)
+Check-out: 2025-12-30 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMDMMY5NDP
+Teléfono (últimos 4): 8329
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29115
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEXC5FQ98
+Teléfono (últimos 4): 8028
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29097
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-12 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMSAC8TEZH
+Teléfono (últimos 4): 6680
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29099
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-01-17 (15:00:00)
+Check-out: 2026-01-24 (12:00:00)
+Noches: 7
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMDFKDHDW5
+Teléfono (últimos 4): 8091
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29101
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-02-10 (15:00:00)
+Check-out: 2026-02-16 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKF2BYZKD
+Teléfono (últimos 4): 6710
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29103
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-02-20 (15:00:00)
+Check-out: 2026-02-23 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFXEKCHRJ
+Teléfono (últimos 4): 7386
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29107
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29083
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-11 (12:00:00)
+Noches: 5
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMMRRPR8XA
+Teléfono (últimos 4): 6494
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29085
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-16 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJPH8KKRJ
+Teléfono (últimos 4): 5555
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29087
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-26 (12:00:00)
+Noches: 9
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFEKXZY39
+Teléfono (últimos 4): 6581
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29089
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-11-29 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 9
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMPQEYXK54
+Teléfono (últimos 4): 7355
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29091
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-12-16 (15:00:00)
+Check-out: 2025-12-18 (12:00:00)
+Noches: 2
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJ8S9PZ5M
+Teléfono (últimos 4): 2373
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29093
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-12-21 (15:00:00)
+Check-out: 2025-12-25 (12:00:00)
+Noches: 4
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQSCWF2WR
+Teléfono (últimos 4): 1998
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29095
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: South Cay DOBLE
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 6
+Huéspedes: 2 adultos + 1 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXJ8SDHEK
+Teléfono (últimos 4): 9111
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29041
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DOBLE
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-21 (12:00:00)
+Noches: 9
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR34DHTNZ
+Teléfono (últimos 4): 7275
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29045
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DOBLE
+Check-in:  2025-12-30 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 15
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29047
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Haines Cay DOBLE
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29029
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Serrana Cay DÚPLEX
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-02-04 (12:00:00)
+Noches: 7
+Huéspedes: 4 adultos + 3 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28985
+-------------------------------------------
+Estado: CONFIRMED
+Habitación: Queena Reef DOBLE
+Check-in:  2026-01-28 (15:00:00)
+Check-out: 2026-02-01 (12:00:00)
+Noches: 3
+Huéspedes: 2 adultos + 0 niños
+
+DATOS DE IMPORTACIÓN:
+Fuente: Airbnb/iCal
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: No disponible
+
+DATOS FINANCIEROS:
+Precio total: 0 COP
+
+
+
+============================================
+RESUMEN ESTADÍSTICO
+============================================
+
+Total de reservas: 195
+
+Por fuente:
+  Airbnb/iCal: 195
+  Directas: 0
+
+Distribución por mes:
+  2025-10: 19 reservas
+  2025-11: 37 reservas
+  2025-12: 45 reservas
+  2026-01: 46 reservas
+  2026-02: 19 reservas
+  2026-03: 12 reservas
+  2026-04: 15 reservas
+  2026-07: 1 reservas
+  2026-10: 1 reservas
+
+Top 5 habitaciones más reservadas:
+
+============================================
+FIN DEL REPORTE
+============================================

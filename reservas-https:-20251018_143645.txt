@@ -1,0 +1,7115 @@
+============================================
+REPORTE COMPLETO DE RESERVAS - https:
+CON DATOS EMBEBIDOS (_embed)
+============================================
+
+Sitio: https://simmerdown.house
+Fecha de generación: 2025-10-18 14:38:16
+Total de reservas en sistema: 1713
+Reservas futuras confirmadas: 225
+Período: Desde 2025-10-18 en adelante
+Tiempo de descarga: 1m 23s
+
+============================================
+DETALLE DE RESERVAS
+============================================
+
+-------------------------------------------
+RESERVA #30266
+-------------------------------------------
+Check-in:  2025-10-20 (15:00:00)
+Check-out: 2025-10-25 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30260
+-------------------------------------------
+Check-in:  2025-10-19 (15:00:00)
+Check-out: 2025-10-22 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30243
+-------------------------------------------
+Check-in:  2025-11-05 (15:00:00)
+Check-out: 2025-11-15 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFYJRTJ38
+Teléfono (últimos 4): 8216
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30245
+-------------------------------------------
+Check-in:  2025-11-19 (15:00:00)
+Check-out: 2025-11-23 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKP3FS3ST
+Teléfono (últimos 4): 0907
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30247
+-------------------------------------------
+Check-in:  2025-12-04 (15:00:00)
+Check-out: 2025-12-07 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMC45KERZJ
+Teléfono (últimos 4): 6164
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30249
+-------------------------------------------
+Check-in:  2025-12-27 (15:00:00)
+Check-out: 2026-01-03 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMX3JMX8CK
+Teléfono (últimos 4): 8447
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30251
+-------------------------------------------
+Check-in:  2026-01-03 (15:00:00)
+Check-out: 2026-01-06 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRMMEYH4B
+Teléfono (últimos 4): 3969
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30253
+-------------------------------------------
+Check-in:  2026-01-26 (15:00:00)
+Check-out: 2026-01-31 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM48FPK4Z4
+Teléfono (últimos 4): 6955
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30255
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30241
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-21 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 337
+ID Tipo: 335
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMATD59HQ2
+Teléfono (últimos 4): 0084
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30225
+-------------------------------------------
+Check-in:  2026-02-22 (15:00:00)
+Check-out: 2026-02-23 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30227
+-------------------------------------------
+Check-in:  2026-03-01 (15:00:00)
+Check-out: 2026-03-02 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30229
+-------------------------------------------
+Check-in:  2026-03-10 (15:00:00)
+Check-out: 2026-03-11 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30231
+-------------------------------------------
+Check-in:  2026-03-17 (15:00:00)
+Check-out: 2026-03-18 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30233
+-------------------------------------------
+Check-in:  2026-03-23 (15:00:00)
+Check-out: 2026-03-24 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30235
+-------------------------------------------
+Check-in:  2026-04-10 (15:00:00)
+Check-out: 2026-04-11 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30237
+-------------------------------------------
+Check-in:  2026-04-15 (15:00:00)
+Check-out: 2026-04-16 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30239
+-------------------------------------------
+Check-in:  2026-10-18 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30209
+-------------------------------------------
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2025-12-27 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30211
+-------------------------------------------
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 2
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30213
+-------------------------------------------
+Check-in:  2026-01-15 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30215
+-------------------------------------------
+Check-in:  2026-01-19 (15:00:00)
+Check-out: 2026-01-20 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30217
+-------------------------------------------
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-01-28 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30219
+-------------------------------------------
+Check-in:  2026-02-02 (15:00:00)
+Check-out: 2026-02-03 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30221
+-------------------------------------------
+Check-in:  2026-02-11 (15:00:00)
+Check-out: 2026-02-12 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30223
+-------------------------------------------
+Check-in:  2026-02-18 (15:00:00)
+Check-out: 2026-02-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30193
+-------------------------------------------
+Check-in:  2025-11-04 (15:00:00)
+Check-out: 2025-11-05 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30195
+-------------------------------------------
+Check-in:  2025-11-09 (15:00:00)
+Check-out: 2025-11-10 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30197
+-------------------------------------------
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-18 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30199
+-------------------------------------------
+Check-in:  2025-11-25 (15:00:00)
+Check-out: 2025-11-26 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30201
+-------------------------------------------
+Check-in:  2025-11-30 (15:00:00)
+Check-out: 2025-12-01 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30203
+-------------------------------------------
+Check-in:  2025-12-08 (15:00:00)
+Check-out: 2025-12-09 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30205
+-------------------------------------------
+Check-in:  2025-12-12 (15:00:00)
+Check-out: 2025-12-13 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30207
+-------------------------------------------
+Check-in:  2025-12-19 (15:00:00)
+Check-out: 2025-12-20 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30165
+-------------------------------------------
+Check-in:  2025-11-05 (15:00:00)
+Check-out: 2025-11-09 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMN8J8TYHR
+Teléfono (últimos 4): 7031
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30167
+-------------------------------------------
+Check-in:  2025-11-18 (15:00:00)
+Check-out: 2025-11-25 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMW8345AHW
+Teléfono (últimos 4): 4571
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30169
+-------------------------------------------
+Check-in:  2025-12-01 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM88YJDXFM
+Teléfono (últimos 4): 6887
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30171
+-------------------------------------------
+Check-in:  2025-12-13 (15:00:00)
+Check-out: 2025-12-19 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM99WE9WPY
+Teléfono (últimos 4): 3194
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30173
+-------------------------------------------
+Check-in:  2025-12-27 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZB28ZF83
+Teléfono (últimos 4): 6408
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30175
+-------------------------------------------
+Check-in:  2026-01-07 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5DBRC882
+Teléfono (últimos 4): 6766
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30177
+-------------------------------------------
+Check-in:  2026-01-20 (15:00:00)
+Check-out: 2026-01-27 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZB4ZP42B
+Teléfono (últimos 4): 7350
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30179
+-------------------------------------------
+Check-in:  2026-02-03 (15:00:00)
+Check-out: 2026-02-11 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5JH2HZC5
+Teléfono (últimos 4): 7219
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30181
+-------------------------------------------
+Check-in:  2026-02-12 (15:00:00)
+Check-out: 2026-02-18 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2WRBKFR2
+Teléfono (últimos 4): 8510
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30183
+-------------------------------------------
+Check-in:  2026-02-23 (15:00:00)
+Check-out: 2026-03-01 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJM3MNTYE
+Teléfono (últimos 4): 7042
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30185
+-------------------------------------------
+Check-in:  2026-03-02 (15:00:00)
+Check-out: 2026-03-10 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR5A5R4Z4
+Teléfono (últimos 4): 4443
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30187
+-------------------------------------------
+Check-in:  2026-03-18 (15:00:00)
+Check-out: 2026-03-23 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4WTJX9EF
+Teléfono (últimos 4): 5434
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30189
+-------------------------------------------
+Check-in:  2026-04-11 (15:00:00)
+Check-out: 2026-04-15 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10082
+ID Tipo: 10080
+
+HUÉSPEDES:
+Adultos: 6
+Niños: 5
+Total: 11
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJNN5CESE
+Teléfono (últimos 4): 2090
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30163
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12460
+ID Tipo: 12458
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30161
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 334
+ID Tipo: 332
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30159
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30157
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30155
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30153
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-19 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30148
+-------------------------------------------
+Check-in:  2026-01-12 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHZWCPWTT
+Teléfono (últimos 4): 3175
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30150
+-------------------------------------------
+Check-in:  2026-01-16 (15:00:00)
+Check-out: 2026-01-17 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30146
+-------------------------------------------
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-13 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYWNCP9BN
+Teléfono (últimos 4): 8103
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30128
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-21 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30126
+-------------------------------------------
+Check-in:  2025-10-20 (15:00:00)
+Check-out: 2025-10-24 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMBA994BBP
+Teléfono (últimos 4): 6360
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30104
+-------------------------------------------
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-14 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMH498M9Y8
+Teléfono (últimos 4): 3468
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30102
+-------------------------------------------
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-02-01 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQS5MQ9FW
+Teléfono (últimos 4): 7981
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30100
+-------------------------------------------
+Check-in:  2025-10-30 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30098
+-------------------------------------------
+Check-in:  2025-10-30 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFTAFPDAT
+Teléfono (últimos 4): 1564
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30086
+-------------------------------------------
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-22 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12421
+ID Tipo: 12419
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMW5CR3FMQ
+Teléfono (últimos 4): 4321
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30088
+-------------------------------------------
+Check-in:  2025-12-03 (15:00:00)
+Check-out: 2025-12-14 (12:00:00)
+Noches: 11
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12421
+ID Tipo: 12419
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMM8KE8D5B
+Teléfono (últimos 4): 2200
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30090
+-------------------------------------------
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-02-04 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12421
+ID Tipo: 12419
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMWAMTQEQA
+Teléfono (últimos 4): 0424
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30094
+-------------------------------------------
+Check-in:  2025-12-21 (15:00:00)
+Check-out: 2026-01-17 (12:00:00)
+Noches: 26
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12421
+ID Tipo: 12419
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30096
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12421
+ID Tipo: 12419
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30066
+-------------------------------------------
+Check-in:  2025-10-24 (15:00:00)
+Check-out: 2025-10-28 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCCRN4HWC
+Teléfono (últimos 4): 6991
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30056
+-------------------------------------------
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-21 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30058
+-------------------------------------------
+Check-in:  2025-12-25 (15:00:00)
+Check-out: 2025-12-31 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30060
+-------------------------------------------
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-12 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32900
+-------------------------------------------
+Check-in:  2026-01-14 (15:00:00)
+Check-out: 2026-01-18 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMPYYCDQCX
+Teléfono (últimos 4): 0007
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32884
+-------------------------------------------
+Check-in:  2026-02-18 (15:00:00)
+Check-out: 2026-02-25 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFCFKDSXK
+Teléfono (últimos 4): 7148
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32876
+-------------------------------------------
+Check-in:  2025-11-03 (15:00:00)
+Check-out: 2025-11-10 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMS3T44T8A
+Teléfono (últimos 4): 4476
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32878
+-------------------------------------------
+Check-in:  2025-12-12 (15:00:00)
+Check-out: 2025-12-18 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR5ZJ8SX8
+Teléfono (últimos 4): 0613
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32880
+-------------------------------------------
+Check-in:  2026-01-19 (15:00:00)
+Check-out: 2026-01-23 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HME5XZWCSQ
+Teléfono (últimos 4): 9223
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32825
+-------------------------------------------
+Check-in:  2025-12-23 (15:00:00)
+Check-out: 2025-12-30 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMAY23MHZ4
+Teléfono (últimos 4): 2012
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32827
+-------------------------------------------
+Check-in:  2026-01-01 (15:00:00)
+Check-out: 2026-01-06 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRZE8NFEK
+Teléfono (últimos 4): 3535
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32664
+-------------------------------------------
+Check-in:  2025-11-20 (15:00:00)
+Check-out: 2025-11-24 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 5
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #32656
+-------------------------------------------
+Check-in:  2025-10-20 (15:00:00)
+Check-out: 2025-10-25 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 5
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8XDDBD9H
+Teléfono (últimos 4): 5281
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29979
+-------------------------------------------
+Check-in:  2026-02-14 (15:00:00)
+Check-out: 2026-02-18 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: No (Reserva directa)
+
+DATOS DEL CLIENTE:
+Nombre: JOSE LEONARDO OROZCO MORALES
+Email: kowawatravel@gmail.com
+Teléfono: 3158462561
+País: CO
+
+PRECIO:
+Total: 544000 COP
+
+
+-------------------------------------------
+RESERVA #30062
+-------------------------------------------
+Check-in:  2026-01-12 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30064
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30052
+-------------------------------------------
+Check-in:  2025-12-31 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 90
+ID Tipo: 89
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5S4MMTCT
+Teléfono (últimos 4): 4581
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30028
+-------------------------------------------
+Check-in:  2025-10-21 (15:00:00)
+Check-out: 2025-10-26 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMS529ADX3
+Teléfono (últimos 4): 0954
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30030
+-------------------------------------------
+Check-in:  2025-10-31 (15:00:00)
+Check-out: 2025-11-04 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMB3P4CCXC
+Teléfono (últimos 4): 4120
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30032
+-------------------------------------------
+Check-in:  2025-11-05 (15:00:00)
+Check-out: 2025-11-09 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTEW4WK3M
+Teléfono (últimos 4): 1776
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30034
+-------------------------------------------
+Check-in:  2025-11-14 (15:00:00)
+Check-out: 2025-11-22 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKHPJNS5B
+Teléfono (últimos 4): 5264
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30036
+-------------------------------------------
+Check-in:  2025-11-26 (15:00:00)
+Check-out: 2025-12-04 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMD2NKBCBM
+Teléfono (últimos 4): 7387
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30038
+-------------------------------------------
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMF249N8ST
+Teléfono (últimos 4): 3756
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30040
+-------------------------------------------
+Check-in:  2025-12-22 (15:00:00)
+Check-out: 2026-01-03 (12:00:00)
+Noches: 11
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2S2S34XM
+Teléfono (últimos 4): 4082
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30042
+-------------------------------------------
+Check-in:  2026-01-03 (15:00:00)
+Check-out: 2026-01-14 (12:00:00)
+Noches: 11
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMNAZMM2XM
+Teléfono (últimos 4): 8100
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30044
+-------------------------------------------
+Check-in:  2026-01-18 (15:00:00)
+Check-out: 2026-01-26 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCBCTKCDB
+Teléfono (últimos 4): 0294
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30046
+-------------------------------------------
+Check-in:  2026-02-10 (15:00:00)
+Check-out: 2026-02-18 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMNT8TNSM3
+Teléfono (últimos 4): 1552
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30048
+-------------------------------------------
+Check-in:  2026-02-28 (15:00:00)
+Check-out: 2026-03-08 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMB4M2XWK3
+Teléfono (últimos 4): 8826
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30050
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 9969
+ID Tipo: 9967
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29994
+-------------------------------------------
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-13 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMX8CYMDAB
+Teléfono (últimos 4): 5890
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29996
+-------------------------------------------
+Check-in:  2025-11-16 (15:00:00)
+Check-out: 2025-11-23 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEA88THWS
+Teléfono (últimos 4): 7287
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29998
+-------------------------------------------
+Check-in:  2025-11-27 (15:00:00)
+Check-out: 2025-12-02 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMN5B24BK3
+Teléfono (últimos 4): 3497
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30000
+-------------------------------------------
+Check-in:  2025-12-03 (15:00:00)
+Check-out: 2025-12-06 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRXW5M8Q4
+Teléfono (últimos 4): 2247
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30002
+-------------------------------------------
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-13 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFRYWQSCQ
+Teléfono (últimos 4): 5776
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30004
+-------------------------------------------
+Check-in:  2025-12-13 (15:00:00)
+Check-out: 2025-12-18 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM3RE3BHFZ
+Teléfono (últimos 4): 2074
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30006
+-------------------------------------------
+Check-in:  2025-12-19 (15:00:00)
+Check-out: 2025-12-28 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMH425T5X3
+Teléfono (últimos 4): 1797
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30008
+-------------------------------------------
+Check-in:  2025-12-31 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXHNKHTX3
+Teléfono (últimos 4): 7356
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30010
+-------------------------------------------
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-10 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8QHR48RH
+Teléfono (últimos 4): 9329
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30012
+-------------------------------------------
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMDT83B485
+Teléfono (últimos 4): 7359
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30014
+-------------------------------------------
+Check-in:  2026-01-20 (15:00:00)
+Check-out: 2026-01-24 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKFMCHS9M
+Teléfono (últimos 4): 1232
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30016
+-------------------------------------------
+Check-in:  2026-01-29 (15:00:00)
+Check-out: 2026-02-05 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR523KMDN
+Teléfono (últimos 4): 7975
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30018
+-------------------------------------------
+Check-in:  2026-02-10 (15:00:00)
+Check-out: 2026-02-16 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMF2WPFXDN
+Teléfono (últimos 4): 6710
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30020
+-------------------------------------------
+Check-in:  2026-02-23 (15:00:00)
+Check-out: 2026-03-03 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCERQHC5B
+Teléfono (últimos 4): 4800
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30022
+-------------------------------------------
+Check-in:  2026-03-15 (15:00:00)
+Check-out: 2026-03-25 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTNFCBFQJ
+Teléfono (últimos 4): 8324
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #30026
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 2
+Total: 5
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29992
+-------------------------------------------
+Check-in:  2026-04-04 (15:00:00)
+Check-out: 2026-04-11 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZWYP3WKC
+Teléfono (últimos 4): 4415
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29958
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29952
+-------------------------------------------
+Check-in:  2026-01-19 (15:00:00)
+Check-out: 2026-01-28 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMT5EHBJP2
+Teléfono (últimos 4): 1746
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29940
+-------------------------------------------
+Check-in:  2025-11-14 (15:00:00)
+Check-out: 2025-11-19 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM93BPSWEH
+Teléfono (últimos 4): 2200
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29942
+-------------------------------------------
+Check-in:  2025-12-02 (15:00:00)
+Check-out: 2025-12-07 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHSFRT8S4
+Teléfono (últimos 4): 8389
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29944
+-------------------------------------------
+Check-in:  2025-12-24 (15:00:00)
+Check-out: 2025-12-29 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HME3JWKDND
+Teléfono (últimos 4): 7404
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29946
+-------------------------------------------
+Check-in:  2025-12-29 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMANX4H5NS
+Teléfono (últimos 4): 0741
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29948
+-------------------------------------------
+Check-in:  2026-01-07 (15:00:00)
+Check-out: 2026-01-10 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMSAZTD9K8
+Teléfono (últimos 4): 2750
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29950
+-------------------------------------------
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-13 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 331
+ID Tipo: 329
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRERMZ8KE
+Teléfono (últimos 4): 6382
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29904
+-------------------------------------------
+Check-in:  2025-12-31 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHTPKP82B
+Teléfono (últimos 4): 8343
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29906
+-------------------------------------------
+Check-in:  2026-01-07 (15:00:00)
+Check-out: 2026-01-11 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRDSRQFZY
+Teléfono (últimos 4): 9500
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29908
+-------------------------------------------
+Check-in:  2026-01-12 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZJJ5MTF9
+Teléfono (últimos 4): 4116
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29910
+-------------------------------------------
+Check-in:  2026-01-16 (15:00:00)
+Check-out: 2026-01-19 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8H28PKAN
+Teléfono (últimos 4): 2377
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29912
+-------------------------------------------
+Check-in:  2026-01-22 (15:00:00)
+Check-out: 2026-01-26 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRBTZE8ET
+Teléfono (últimos 4): 6683
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29914
+-------------------------------------------
+Check-in:  2026-01-26 (15:00:00)
+Check-out: 2026-02-02 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEKMT5F34
+Teléfono (últimos 4): 6596
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29916
+-------------------------------------------
+Check-in:  2026-02-02 (15:00:00)
+Check-out: 2026-02-06 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMSW3NN594
+Teléfono (últimos 4): 1983
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29918
+-------------------------------------------
+Check-in:  2026-02-11 (15:00:00)
+Check-out: 2026-02-14 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYWDXWBSM
+Teléfono (últimos 4): 1908
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29920
+-------------------------------------------
+Check-in:  2026-02-15 (15:00:00)
+Check-out: 2026-02-20 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4JQ2ZYST
+Teléfono (últimos 4): 7947
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29922
+-------------------------------------------
+Check-in:  2026-02-22 (15:00:00)
+Check-out: 2026-03-02 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4W5TT2AA
+Teléfono (últimos 4): 4253
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29924
+-------------------------------------------
+Check-in:  2026-03-05 (15:00:00)
+Check-out: 2026-03-13 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM9S8HDCJN
+Teléfono (últimos 4): 3056
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29926
+-------------------------------------------
+Check-in:  2026-03-13 (15:00:00)
+Check-out: 2026-03-22 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMMMTBYR4S
+Teléfono (últimos 4): 4718
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29928
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29884
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-23 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCWSQHBMJ
+Teléfono (últimos 4): 0411
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29886
+-------------------------------------------
+Check-in:  2025-10-23 (15:00:00)
+Check-out: 2025-10-27 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMRRQC2WD3
+Teléfono (últimos 4): 7134
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29888
+-------------------------------------------
+Check-in:  2025-11-02 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMPDYWRTRH
+Teléfono (últimos 4): 1838
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29890
+-------------------------------------------
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-13 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4JFK3P3H
+Teléfono (últimos 4): 0234
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29892
+-------------------------------------------
+Check-in:  2025-11-15 (15:00:00)
+Check-out: 2025-11-19 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZWYQPS84
+Teléfono (últimos 4): 8885
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29894
+-------------------------------------------
+Check-in:  2025-11-20 (15:00:00)
+Check-out: 2025-11-27 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYQ3WZAYX
+Teléfono (últimos 4): 2914
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29896
+-------------------------------------------
+Check-in:  2025-11-29 (15:00:00)
+Check-out: 2025-12-05 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM294ABTZ2
+Teléfono (últimos 4): 2666
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29898
+-------------------------------------------
+Check-in:  2025-12-06 (15:00:00)
+Check-out: 2025-12-15 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTNYWBJW2
+Teléfono (últimos 4): 2512
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29900
+-------------------------------------------
+Check-in:  2025-12-17 (15:00:00)
+Check-out: 2025-12-21 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8M3E8DJ2
+Teléfono (últimos 4): 9476
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29902
+-------------------------------------------
+Check-in:  2025-12-22 (15:00:00)
+Check-out: 2025-12-28 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 10096
+ID Tipo: 10094
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8NCRCS2Z
+Teléfono (últimos 4): 3964
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29876
+-------------------------------------------
+Check-in:  2026-01-09 (15:00:00)
+Check-out: 2026-01-13 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5RBKKYNA
+Teléfono (últimos 4): 8548
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29870
+-------------------------------------------
+Check-in:  2026-03-01 (15:00:00)
+Check-out: 2026-03-04 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQZ2ZDRS5
+Teléfono (últimos 4): 3328
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29850
+-------------------------------------------
+Check-in:  2026-01-02 (15:00:00)
+Check-out: 2026-01-14 (12:00:00)
+Noches: 12
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 334
+ID Tipo: 332
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFMEN8PRC
+Teléfono (últimos 4): 8430
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28646
+-------------------------------------------
+Check-in:  2025-12-06 (15:00:00)
+Check-out: 2025-12-09 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: No (Reserva directa)
+
+DATOS DEL CLIENTE:
+Nombre: Liliana Herrera tapasco
+Email: Kowawatravel@gmail.com
+Teléfono: 3158462561
+País: CO
+
+PRECIO:
+Total: 408000 COP
+
+
+-------------------------------------------
+RESERVA #28640
+-------------------------------------------
+Check-in:  2025-12-07 (15:00:00)
+Check-out: 2025-12-10 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: No (Reserva directa)
+
+DATOS DEL CLIENTE:
+Nombre: LINA PATRICIA HENAO HENAO
+Email: kowawatravel@gmail.com
+Teléfono: 3158462561
+País: CO
+
+PRECIO:
+Total: 408000 COP
+
+
+-------------------------------------------
+RESERVA #28635
+-------------------------------------------
+Check-in:  2025-12-07 (15:00:00)
+Check-out: 2025-12-10 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: No (Reserva directa)
+
+DATOS DEL CLIENTE:
+Nombre: GILDARDO GALLEGO RIVERA
+Email: kowawatravel@gmail.com
+Teléfono: 3158462561
+País: CO
+
+PRECIO:
+Total: 981750 COP
+
+
+-------------------------------------------
+RESERVA #28580
+-------------------------------------------
+Check-in:  2025-11-20 (15:00:00)
+Check-out: 2025-11-24 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 0
+Total: 4
+
+ORIGEN DE LA RESERVA:
+Importado: No (Reserva directa)
+
+DATOS DEL CLIENTE:
+Nombre: WINDY TATIANA SANCHEZ RAMIREZ
+Email: kowawatravel@gmail.com
+Teléfono: 3158462561
+País: CO
+
+PRECIO:
+Total: 3876000 COP
+
+
+-------------------------------------------
+RESERVA #28289
+-------------------------------------------
+Check-in:  2025-10-28 (15:00:00)
+Check-out: 2025-11-01 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 325
+ID Tipo: 323
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: No (Reserva directa)
+
+DATOS DEL CLIENTE:
+Nombre: Abelardo Aldemar
+Email: kowawatravel@gmail.com
+Teléfono: 3158462561
+País: CO
+
+PRECIO:
+Total: 1530000 COP
+
+
+-------------------------------------------
+RESERVA #29837
+-------------------------------------------
+Check-in:  2026-02-23 (15:00:00)
+Check-out: 2026-03-02 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4CDHKCBF
+Teléfono (últimos 4): 0678
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29835
+-------------------------------------------
+Check-in:  2026-01-29 (15:00:00)
+Check-out: 2026-02-02 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXN3W32YW
+Teléfono (últimos 4): 1651
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29833
+-------------------------------------------
+Check-in:  2025-12-01 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2BARQWAS
+Teléfono (últimos 4): 2252
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29831
+-------------------------------------------
+Check-in:  2025-12-01 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29815
+-------------------------------------------
+Check-in:  2025-11-28 (15:00:00)
+Check-out: 2025-12-01 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMWZEMDJ5W
+Teléfono (últimos 4): 8742
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29793
+-------------------------------------------
+Check-in:  2025-10-22 (15:00:00)
+Check-out: 2025-10-26 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM29KXWAR8
+Teléfono (últimos 4): 7880
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29789
+-------------------------------------------
+Check-in:  2025-12-28 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 334
+ID Tipo: 332
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29791
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 334
+ID Tipo: 332
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29785
+-------------------------------------------
+Check-in:  2026-01-13 (15:00:00)
+Check-out: 2026-01-17 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4CJCDQEF
+Teléfono (últimos 4): 0759
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29735
+-------------------------------------------
+Check-in:  2026-01-23 (15:00:00)
+Check-out: 2026-01-26 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCTBT35AA
+Teléfono (últimos 4): 7226
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29717
+-------------------------------------------
+Check-in:  2025-12-03 (15:00:00)
+Check-out: 2025-12-14 (12:00:00)
+Noches: 11
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29663
+-------------------------------------------
+Check-in:  2025-11-02 (15:00:00)
+Check-out: 2025-11-06 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM3DTAX2H9
+Teléfono (últimos 4): 7443
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29665
+-------------------------------------------
+Check-in:  2025-11-07 (15:00:00)
+Check-out: 2025-11-09 (12:00:00)
+Noches: 2
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQ3PD9AF9
+Teléfono (últimos 4): 5552
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29667
+-------------------------------------------
+Check-in:  2025-11-11 (15:00:00)
+Check-out: 2025-11-18 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQQT5ZW2Y
+Teléfono (últimos 4): 1307
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29669
+-------------------------------------------
+Check-in:  2025-11-22 (15:00:00)
+Check-out: 2025-11-28 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM2THXDX94
+Teléfono (últimos 4): 3255
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29671
+-------------------------------------------
+Check-in:  2025-12-02 (15:00:00)
+Check-out: 2025-12-05 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM4BFBEJRK
+Teléfono (últimos 4): 4568
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29673
+-------------------------------------------
+Check-in:  2025-12-07 (15:00:00)
+Check-out: 2025-12-15 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMBC24XBYE
+Teléfono (últimos 4): 9008
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29675
+-------------------------------------------
+Check-in:  2025-12-25 (15:00:00)
+Check-out: 2025-12-28 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMZJ8BFBQA
+Teléfono (últimos 4): 5564
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29677
+-------------------------------------------
+Check-in:  2025-12-30 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFEWYMHXH
+Teléfono (últimos 4): 2686
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29679
+-------------------------------------------
+Check-in:  2026-02-21 (15:00:00)
+Check-out: 2026-02-26 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM43JNW22C
+Teléfono (últimos 4): 7172
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29681
+-------------------------------------------
+Check-in:  2026-03-15 (15:00:00)
+Check-out: 2026-03-20 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXJSSY5EA
+Teléfono (últimos 4): 2038
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29685
+-------------------------------------------
+Check-in:  2026-07-15 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 34
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 319
+ID Tipo: 317
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29585
+-------------------------------------------
+Check-in:  2026-01-02 (15:00:00)
+Check-out: 2026-01-05 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEHF83KS9
+Teléfono (últimos 4): 4623
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29583
+-------------------------------------------
+Check-in:  2026-03-09 (15:00:00)
+Check-out: 2026-03-19 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEJJCQZ2N
+Teléfono (últimos 4): 1829
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29517
+-------------------------------------------
+Check-in:  2025-12-02 (15:00:00)
+Check-out: 2025-12-09 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHHH8PWM9
+Teléfono (últimos 4): 5093
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29491
+-------------------------------------------
+Check-in:  2026-01-23 (15:00:00)
+Check-out: 2026-01-25 (12:00:00)
+Noches: 2
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29489
+-------------------------------------------
+Check-in:  2026-01-23 (15:00:00)
+Check-out: 2026-01-25 (12:00:00)
+Noches: 2
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMHKXSWAZJ
+Teléfono (últimos 4): 9082
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29485
+-------------------------------------------
+Check-in:  2025-12-19 (15:00:00)
+Check-out: 2025-12-23 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMAT8PF3ZM
+Teléfono (últimos 4): 8237
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29483
+-------------------------------------------
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-20 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29481
+-------------------------------------------
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-20 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEEQWZKYB
+Teléfono (últimos 4): 9344
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29475
+-------------------------------------------
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-11 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29425
+-------------------------------------------
+Check-in:  2026-01-04 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMMTJ258AW
+Teléfono (últimos 4): 4026
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29423
+-------------------------------------------
+Check-in:  2026-01-04 (15:00:00)
+Check-out: 2026-01-07 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29401
+-------------------------------------------
+Check-in:  2025-10-21 (15:00:00)
+Check-out: 2025-10-28 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMTM9NXJZT
+Teléfono (últimos 4): 1205
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29403
+-------------------------------------------
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM3ZPZCM89
+Teléfono (últimos 4): 8331
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29405
+-------------------------------------------
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMYXZNFFAS
+Teléfono (últimos 4): 5761
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29407
+-------------------------------------------
+Check-in:  2026-01-28 (15:00:00)
+Check-out: 2026-02-01 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMS2S85WKJ
+Teléfono (últimos 4): 8109
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29411
+-------------------------------------------
+Check-in:  2026-01-10 (15:00:00)
+Check-out: 2026-01-16 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29413
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 309
+ID Tipo: 307
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29141
+-------------------------------------------
+Check-in:  2026-01-28 (15:00:00)
+Check-out: 2026-02-03 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM5A24HPZB
+Teléfono (últimos 4): 6966
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29139
+-------------------------------------------
+Check-in:  2025-12-25 (15:00:00)
+Check-out: 2025-12-30 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12460
+ID Tipo: 12458
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMDMMY5NDP
+Teléfono (últimos 4): 8329
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29115
+-------------------------------------------
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMEXC5FQ98
+Teléfono (últimos 4): 8028
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29097
+-------------------------------------------
+Check-in:  2026-01-05 (15:00:00)
+Check-out: 2026-01-12 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMSAC8TEZH
+Teléfono (últimos 4): 6680
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29099
+-------------------------------------------
+Check-in:  2026-01-17 (15:00:00)
+Check-out: 2026-01-24 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMDFKDHDW5
+Teléfono (últimos 4): 8091
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29101
+-------------------------------------------
+Check-in:  2026-02-10 (15:00:00)
+Check-out: 2026-02-16 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMKF2BYZKD
+Teléfono (últimos 4): 6710
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29103
+-------------------------------------------
+Check-in:  2026-02-20 (15:00:00)
+Check-out: 2026-02-23 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFXEKCHRJ
+Teléfono (últimos 4): 7386
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29107
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29083
+-------------------------------------------
+Check-in:  2025-11-06 (15:00:00)
+Check-out: 2025-11-11 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMMRRPR8XA
+Teléfono (últimos 4): 6494
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29085
+-------------------------------------------
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-16 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJPH8KKRJ
+Teléfono (últimos 4): 5555
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29087
+-------------------------------------------
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-26 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMFEKXZY39
+Teléfono (últimos 4): 6581
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29089
+-------------------------------------------
+Check-in:  2025-11-29 (15:00:00)
+Check-out: 2025-12-08 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMPQEYXK54
+Teléfono (últimos 4): 7355
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29091
+-------------------------------------------
+Check-in:  2025-12-16 (15:00:00)
+Check-out: 2025-12-18 (12:00:00)
+Noches: 2
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMJ8S9PZ5M
+Teléfono (últimos 4): 2373
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29093
+-------------------------------------------
+Check-in:  2025-12-21 (15:00:00)
+Check-out: 2025-12-25 (12:00:00)
+Noches: 4
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMQSCWF2WR
+Teléfono (últimos 4): 1998
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29095
+-------------------------------------------
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 322
+ID Tipo: 320
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 1
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMXJ8SDHEK
+Teléfono (últimos 4): 9111
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29041
+-------------------------------------------
+Check-in:  2025-11-12 (15:00:00)
+Check-out: 2025-11-21 (12:00:00)
+Noches: 9
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12460
+ID Tipo: 12458
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMR34DHTNZ
+Teléfono (últimos 4): 7275
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29045
+-------------------------------------------
+Check-in:  2025-12-30 (15:00:00)
+Check-out: 2026-01-15 (12:00:00)
+Noches: 15
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12460
+ID Tipo: 12458
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29047
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12460
+ID Tipo: 12458
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #29029
+-------------------------------------------
+Check-in:  2026-01-27 (15:00:00)
+Check-out: 2026-02-04 (12:00:00)
+Noches: 7
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28985
+-------------------------------------------
+Check-in:  2026-01-28 (15:00:00)
+Check-out: 2026-02-01 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28803
+-------------------------------------------
+Check-in:  2025-11-13 (15:00:00)
+Check-out: 2025-11-19 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28805
+-------------------------------------------
+Check-in:  2026-07-15 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 34
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28793
+-------------------------------------------
+Check-in:  2025-12-29 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8PC4FMR8
+Teléfono (últimos 4): 6072
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28795
+-------------------------------------------
+Check-in:  2026-01-02 (15:00:00)
+Check-out: 2026-01-08 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 316
+ID Tipo: 314
+
+HUÉSPEDES:
+Adultos: 3
+Niños: 0
+Total: 3
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM8AM8ZQKK
+Teléfono (últimos 4): 9670
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28665
+-------------------------------------------
+Check-in:  2025-12-21 (15:00:00)
+Check-out: 2025-12-22 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28663
+-------------------------------------------
+Check-in:  2025-12-22 (15:00:00)
+Check-out: 2025-12-30 (12:00:00)
+Noches: 8
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HMCKW2QPA9
+Teléfono (últimos 4): 6409
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28591
+-------------------------------------------
+Check-in:  2025-11-17 (15:00:00)
+Check-out: 2025-11-22 (12:00:00)
+Noches: 5
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28589
+-------------------------------------------
+Check-in:  2025-12-09 (15:00:00)
+Check-out: 2025-12-12 (12:00:00)
+Noches: 3
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28422
+-------------------------------------------
+Check-in:  2025-12-30 (15:00:00)
+Check-out: 2026-01-01 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28424
+-------------------------------------------
+Check-in:  2026-01-11 (15:00:00)
+Check-out: 2026-01-12 (12:00:00)
+Noches: 1
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28426
+-------------------------------------------
+Check-in:  2026-04-16 (15:00:00)
+Check-out: 2026-10-19 (12:00:00)
+Noches: 33
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28412
+-------------------------------------------
+Check-in:  2026-01-01 (15:00:00)
+Check-out: 2026-01-11 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 328
+ID Tipo: 326
+
+HUÉSPEDES:
+Adultos: 4
+Niños: 3
+Total: 7
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Reserved
+URL Airbnb: https://www.airbnb.com/hosting/reservations/details/HM55J5JPDW
+Teléfono (últimos 4): 6662
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #28198
+-------------------------------------------
+Check-in:  2025-12-26 (15:00:00)
+Check-out: 2026-01-02 (12:00:00)
+Noches: 6
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+-------------------------------------------
+RESERVA #27970
+-------------------------------------------
+Check-in:  2025-10-18 (15:00:00)
+Check-out: 2025-10-28 (12:00:00)
+Noches: 10
+Estado: CONFIRMED
+
+ALOJAMIENTO:
+Habitación: N/A
+Tipo: N/A
+ID Habitación: 12400
+ID Tipo: 12398
+
+HUÉSPEDES:
+Adultos: 2
+Niños: 0
+Total: 2
+
+ORIGEN DE LA RESERVA:
+Importado: Sí (Airbnb/iCal)
+Resumen: Airbnb (Not available)
+
+DATOS DEL CLIENTE:
+Nombre: [No disponible]
+
+PRECIO:
+Total: 0 COP
+
+
+
+============================================
+RESUMEN ESTADÍSTICO
+============================================
+
+Por fuente:
+  Airbnb/iCal: 219
+  Directas: 6
+
+Distribución mensual:
+  2025-10: 23 reservas
+  2025-11: 42 reservas
+  2025-12: 56 reservas
+  2026-01: 52 reservas
+  2026-02: 21 reservas
+  2026-03: 12 reservas
+  2026-04: 16 reservas
+  2026-07: 2 reservas
+  2026-10: 1 reservas
+
+Por tipo de alojamiento:
+  Tipo ID 10080: 37 reservas
+  Tipo ID 10094: 24 reservas
+  Tipo ID 12398: 9 reservas
+  Tipo ID 12419: 5 reservas
+  Tipo ID 12458: 5 reservas
+  Tipo ID 307: 14 reservas
+  Tipo ID 314: 12 reservas
+  Tipo ID 317: 18 reservas
+  Tipo ID 320: 21 reservas
+  Tipo ID 323: 19 reservas
+  Tipo ID 326: 14 reservas
+  Tipo ID 329: 15 reservas
+  Tipo ID 332: 4 reservas
+  Tipo ID 335: 8 reservas
+  Tipo ID 89: 7 reservas
+  Tipo ID 9967: 13 reservas
+
+============================================
+INFORMACIÓN DE DESCARGA
+============================================
+
+Páginas descargadas: 18
+Tiempo total: 1m 23s
+Modo: Datos completos con _embed
+
+============================================
