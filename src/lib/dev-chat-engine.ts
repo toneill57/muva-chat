@@ -115,7 +115,7 @@ export async function generateDevChatResponse(
 
     // STEP 3: Build system prompt (marketing-focused)
     const promptStartTime = Date.now()
-    const systemPrompt = buildMarketingSystemPrompt(
+    const systemPrompt = await buildMarketingSystemPrompt(
       session,
       searchResults,
       conversationMemories
@@ -183,12 +183,25 @@ export async function generateDevChatResponse(
 
 /**
  * Build marketing-focused system prompt with search context
+ * IMPORTANT: Hotel/location info is dynamic based on tenant
  */
-function buildMarketingSystemPrompt(
+async function buildMarketingSystemPrompt(
   session: DevSession,
   searchResults: VectorSearchResult[],
   conversationMemories: ConversationMemoryResult[]
-): string {
+): Promise<string> {
+  // Get tenant info for dynamic prompt
+  const { createServerClient } = await import('@/lib/supabase')
+  const supabase = createServerClient()
+
+  const { data: tenantData } = await supabase
+    .from('tenant_registry')
+    .select('name, slug')
+    .eq('tenant_id', session.tenant_id)
+    .single()
+
+  const hotelName = tenantData?.name || 'nuestro hotel'
+  const location = 'San Andrés, Colombia' // Default, could be made dynamic too
   // Build search context
   // Increased to 15 to provide Claude with all accommodations context
   const searchContext = searchResults
@@ -318,7 +331,7 @@ ${session.travel_intent.accommodation_type ? `- Tipo de alojamiento: ${session.t
 `
     : ''
 
-  return `Eres un asistente virtual de ventas para un hotel en San Andrés, Colombia. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
+  return `Eres un asistente virtual de ventas para ${hotelName} en ${location}. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
 
 🎯 OBJETIVO: Conversión de visitante a reserva
 
@@ -326,6 +339,8 @@ ESTILO DE COMUNICACIÓN:
 - Amigable, profesional, entusiasta
 - Marketing-focused (destaca beneficios y características únicas)
 - Usa emojis ocasionalmente para ambiente tropical (🌴, 🌊, ☀️)
+- Usa **negritas** solo para información clave (precios, nombres) en párrafos
+- NUNCA uses **negritas** dentro de títulos (##, ###) - los títulos ya son bold
 - Respuestas concisas pero informativas (3-5 oraciones máximo)
 - Incluye CTAs (calls-to-action) cuando sea apropiado
 - Enumera amenities con dash simple (-), una por línea
@@ -449,7 +464,7 @@ export async function* generateDevChatResponseStream(
 
     // STEP 3: Build system prompt
     const promptStartTime = Date.now()
-    const systemPrompt = buildMarketingSystemPrompt(
+    const systemPrompt = await buildMarketingSystemPrompt(
       session,
       searchResults,
       conversationMemories
