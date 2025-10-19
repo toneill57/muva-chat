@@ -205,14 +205,14 @@ export async function GET(request: NextRequest) {
       })
 
       // 4. Map bookings to GuestReservation format (with _embedded data)
-      const { reservations: mappedReservations, blocksExcluded, pastExcluded } =
+      const { reservations: mappedReservations, blocksExcluded, pastExcluded, statusExcluded } =
         await MotoPresBookingsMapper.mapBulkBookingsWithEmbed(
           bookings,
           tenant_id,
           supabase
         )
 
-      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${blocksExcluded} calendar blocks, ${pastExcluded} past/future`)
+      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${blocksExcluded} calendar blocks, ${pastExcluded} past/future, ${statusExcluded} cancelled`)
       await sendEvent({
         type: 'progress',
         message: `Procesadas ${mappedReservations.length} reservas futuras (excluidas ${blocksExcluded} bloqueadas, ${pastExcluded} pasadas). Guardando...`
@@ -284,6 +284,7 @@ export async function GET(request: NextRequest) {
             total_bookings: bookings.length,
             blocks_excluded: blocksExcluded,
             past_excluded: pastExcluded,
+            status_excluded: statusExcluded,
             errors,
             sync_method: '_embed'
           },
@@ -297,7 +298,8 @@ export async function GET(request: NextRequest) {
         updated,
         errors,
         blocksExcluded,
-        pastExcluded
+        pastExcluded,
+        statusExcluded
       })
 
       // 7. Send completion event
