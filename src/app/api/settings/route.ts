@@ -60,7 +60,8 @@ export async function PUT(req: NextRequest) {
       email,
       social_media_links,
       seo_meta_description,
-      seo_keywords
+      seo_keywords,
+      features
     } = await req.json();
 
     const supabase = createServerClient();
@@ -78,6 +79,7 @@ export async function PUT(req: NextRequest) {
     if (social_media_links !== undefined) updateData.social_media_links = social_media_links;
     if (seo_meta_description !== undefined) updateData.seo_meta_description = seo_meta_description;
     if (seo_keywords !== undefined) updateData.seo_keywords = seo_keywords;
+    if (features !== undefined) updateData.features = features;
 
     const { error } = await supabase
       .from('tenant_registry')
