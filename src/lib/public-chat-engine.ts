@@ -105,7 +105,7 @@ export async function generatePublicChatResponse(
     // STEP 3: Removed travel intent extraction (matching dev-chat-engine.ts behavior)
 
     // STEP 4: Build system prompt (marketing-focused)
-    const systemPrompt = buildMarketingSystemPrompt(
+    const systemPrompt = await buildMarketingSystemPrompt(
       session,
       searchResults,
       conversationMemories
@@ -179,12 +179,25 @@ export async function generatePublicChatResponse(
 
 /**
  * Build marketing-focused system prompt with search context
+ * IMPORTANT: Hotel/location info is dynamic based on tenant
  */
-function buildMarketingSystemPrompt(
+async function buildMarketingSystemPrompt(
   session: PublicSession,
   searchResults: VectorSearchResult[],
   conversationMemories: ConversationMemoryResult[]
-): string {
+): Promise<string> {
+  // Get tenant info for dynamic prompt
+  const { createServerClient } = await import('@/lib/supabase')
+  const supabase = createServerClient()
+
+  const { data: tenantData } = await supabase
+    .from('tenant_registry')
+    .select('name, slug')
+    .eq('tenant_id', session.tenant_id)
+    .single()
+
+  const hotelName = tenantData?.name || 'nuestro hotel'
+  const location = 'San Andrés, Colombia' // Default, could be made dynamic too
   // Build search context
   // Increased to 15 to provide Claude with all accommodations context
   const searchContext = searchResults
@@ -220,7 +233,7 @@ Preguntas clave: ${m.key_entities.key_questions?.join(', ') || 'N/A'}
   // It's extracted, saved to session, and returned to frontend for UI display
   // Claude responds only to the current message context
 
-  return `Eres un asistente virtual de ventas para un hotel en San Andrés, Colombia. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
+  return `Eres un asistente virtual de ventas para ${hotelName} en ${location}. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
 
 🎯 OBJETIVO: Conversión de visitante a reserva
 
@@ -402,7 +415,7 @@ export async function* generatePublicChatResponseStream(
 
     // STEP 4: Build system prompt
     const promptStartTime = Date.now()
-    const systemPrompt = buildMarketingSystemPrompt(
+    const systemPrompt = await buildMarketingSystemPrompt(
       session,
       searchResults,
       conversationMemories
