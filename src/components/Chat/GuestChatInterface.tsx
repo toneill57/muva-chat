@@ -944,7 +944,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
       <aside
         className={`
-          fixed lg:relative z-50 lg:z-0
+          fixed lg:relative z-30 lg:z-0
           w-80 h-full
           transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -999,7 +999,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* Mobile overlay backdrop */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -1603,10 +1603,22 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           animation: typing-dot 1.4s infinite;
         }
 
-        /* Mobile keyboard handling */
+        /* Mobile keyboard handling - Use stable 100vh instead of dynamic dvh */
         @media (max-width: 768px) {
           .h-screen {
-            height: 100dvh;
+            height: 100vh;
+            height: -webkit-fill-available; /* iOS Safari fallback */
+          }
+
+          /* Prevent iOS Safari bounce/zoom on double-tap */
+          body {
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+          }
+
+          /* Ensure input area stays at bottom without gaps */
+          .flex-shrink-0 {
+            position: relative;
           }
         }
 
