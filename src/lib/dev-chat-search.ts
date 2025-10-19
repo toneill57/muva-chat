@@ -79,7 +79,7 @@ export async function performDevSearch(
     const [accommodationResults, policyResults, muvaResults] = await Promise.all([
       searchAccommodationsPublic(queryEmbeddingFast, queryEmbeddingBalanced, sessionInfo.tenant_id),
       searchPolicies(queryEmbeddingFast, sessionInfo.tenant_id),
-      searchMUVABasic(queryEmbeddingFast),
+      searchMUVABasic(queryEmbeddingFast, sessionInfo.tenant_id),  // Pass tenant_id
     ])
 
     console.log('[dev-search] Results:', {
@@ -250,55 +250,73 @@ export async function searchPolicies(
 }
 
 /**
- * Search MUVA tourism content (highlights only - NO manual content)
+ * Search MUVA tourism content (tenant-specific or global highlights)
  *
  * @param queryEmbedding - Query embedding vector (1024d)
- * @returns Array of MUVA results (highlights only)
+ * @param tenantId - Tenant UUID for filtering tenant-specific MUVA content
+ * @returns Array of MUVA results (tenant-specific documents)
  */
-export async function searchMUVABasic(queryEmbedding: number[]): Promise<VectorSearchResult[]> {
+export async function searchMUVABasic(
+  queryEmbedding: number[],
+  tenantId: string
+): Promise<VectorSearchResult[]> {
   const supabase = createServerClient()
 
-  console.log('[dev-search] Searching MUVA highlights')
+  console.log('[dev-search] Checking tenant MUVA configuration')
 
   try {
-    // Use public MUVA search function (1024d embeddings)
-    // Limited to 4 results - focus is selling accommodations, not tourism guide
-    const { data, error } = await supabase.rpc('match_muva_documents_public', {
-      query_embedding: queryEmbedding,
-      match_threshold: 0.2,
-      match_count: 4, // Low count: dev chat focuses on accommodation sales
-    })
+    // ========================================================================
+    // 1. Fetch tenant's search mode configuration
+    // ========================================================================
+    const { data: tenant, error: tenantError } = await supabase
+      .from('tenant_registry')
+      .select('features')
+      .eq('tenant_id', tenantId)
+      .single()
 
-    if (error) {
-      console.error('[dev-search] MUVA error:', error)
+    if (tenantError) {
+      console.error('[dev-search] Error fetching tenant config:', tenantError)
       return []
     }
 
-    // Filter for highlights only (NO manual content)
-    const highlightResults = (data || []).filter((item: any) => {
-      const sourceFile = item.source_file || ''
-      // Exclude manual content (operational manuals, guest info, etc.)
-      const isManual = sourceFile.includes('manual') ||
-                       sourceFile.includes('operational') ||
-                       sourceFile.includes('guest-info') ||
-                       sourceFile.includes('faq')
-      return !isManual
+    const muvaMatchCount = tenant?.features?.muva_match_count ?? 0  // Default: 0 (hotel mode)
+
+    if (muvaMatchCount === 0) {
+      console.log('[dev-search] MUVA disabled for this tenant (Hotel Mode)')
+      return []
+    }
+
+    console.log('[dev-search] Searching tenant MUVA documents, match_count:', muvaMatchCount)
+
+    // ========================================================================
+    // 2. Search tenant-specific MUVA content (NOT global muva_content)
+    // ========================================================================
+    const { data, error } = await supabase.rpc('match_tenant_muva_documents', {
+      query_embedding: queryEmbedding,
+      p_tenant_id: tenantId,
+      match_threshold: 0.2,
+      match_count: muvaMatchCount,  // Use tenant's configured count
     })
 
-    console.log('[dev-search] Found MUVA highlights:', highlightResults.length)
+    if (error) {
+      console.error('[dev-search] Tenant MUVA error:', error)
+      return []
+    }
 
-    return highlightResults.map((item: any) => ({
+    console.log('[dev-search] Found tenant MUVA documents:', data?.length || 0)
+
+    return (data || []).map((item: any) => ({
       id: item.id,
-      name: item.title || item.name || 'MUVA Content',
+      name: item.title || 'MUVA Content',
       title: item.title,
-      content: item.content || item.description || '',
+      content: item.content || '',
       similarity: item.similarity || 0,
       source_file: item.source_file,
-      table: 'muva_content',
+      table: 'tenant_muva_content',  // New tenant-specific table
       metadata: {
         ...item.metadata,
-        is_highlight: true,
         business_info: item.business_info,
+        tenant_id: tenantId,
       },
     }))
   } catch (error) {
