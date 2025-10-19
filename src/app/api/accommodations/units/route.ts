@@ -129,7 +129,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             categories: chunk.metadata?.categories || [],
             is_featured: chunk.metadata?.is_featured || false,
             display_order: chunk.metadata?.display_order || 0,
-            status: chunk.metadata?.status || 'active',
+            status: chunk.is_active ? 'active' : 'inactive',  // Use is_active field, not metadata.status
+            is_active: chunk.is_active,      // Include for UI badge rendering
+            is_bookable: chunk.is_bookable,  // Include for future filtering
             embedding_status: {
               has_fast: !!chunk.embedding_fast,
               has_balanced: !!chunk.embedding,
