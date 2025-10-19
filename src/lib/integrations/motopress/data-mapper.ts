@@ -22,6 +22,18 @@ interface MotoPresAccommodation {
     title: string
     alt: string
   }>
+  services?: string[]    // Array of service names
+  attributes?: string[]  // Array of attributes
+  tags?: Array<{         // Tags array
+    id: number
+    name: string
+  }>
+  featured_media?: number // Featured media ID
+  _links?: {              // WordPress _links with featured media URL
+    featured_media?: Array<{
+      href: string
+    }>
+  }
   meta?: {
     mphb_room_type_id?: number
     mphb_price?: number
@@ -31,7 +43,6 @@ interface MotoPresAccommodation {
     id: number
     name: string
   }>
-  featured_media?: number
   status: string
   date?: string
   modified?: string
@@ -103,7 +114,16 @@ interface AccommodationUnit {
     seasonal_rules: number
     hourly_rules: number
     base_price_range: [number, number]
+    price_per_person?: number // Calculated: base_price / total_capacity
   }
+  // NEW: Enrichment fields from MotoPress
+  services_list?: string[] // Services array from MotoPress
+  attributes_list?: string[] // Attributes array from MotoPress
+  tags_list?: Array<{ id: number; name: string }> // Tags from MotoPress
+  featured_image_url?: string // Featured media URL
+  capacity_differential?: number // total_capacity - (adults + children) = extra spaces
+  highlights?: string[] // Parsed from excerpt (balcón, acústicas, etc)
+  category_badge?: string // Primary category name for visual badge
   room_type_id?: number // MotoPress room type ID
   chunks_count?: number // Number of semantic chunks
   embedding_status?: {
@@ -119,6 +139,51 @@ interface AccommodationUnit {
 }
 
 export class MotoPresDataMapper {
+  /**
+   * Parse excerpt/description to extract key highlights
+   * Looks for keywords that are selling points
+   */
+  private static extractHighlights(text: string): string[] {
+    if (!text) return []
+
+    const highlights: string[] = []
+    const lowerText = text.toLowerCase()
+
+    // Key features to look for
+    const featureMap: { [key: string]: string } = {
+      'balcón': '🏖️ Con balcón',
+      'balcon': '🏖️ Con balcón',
+      'terraza': '🏖️ Con terraza',
+      'acústica': '🔇 Ventanas acústicas',
+      'acustica': '🔇 Ventanas acústicas',
+      'vista al mar': '🌊 Vista al mar',
+      'vista mar': '🌊 Vista al mar',
+      'frente al mar': '🌊 Frente al mar',
+      'aire acondicionado': '❄️ Aire acondicionado',
+      'wifi': '📶 WiFi gratuito',
+      'wi-fi': '📶 WiFi gratuito',
+      'cocina': '🍳 Cocina equipada',
+      'cocineta': '🍳 Cocineta',
+      'jacuzzi': '🛁 Jacuzzi privado',
+      'piscina': '🏊 Acceso a piscina',
+      'estacionamiento': '🚗 Estacionamiento',
+      'parking': '🚗 Estacionamiento',
+      'pet-friendly': '🐕 Pet-friendly',
+      'mascota': '🐕 Pet-friendly',
+      'desayuno incluido': '🍳 Desayuno incluido',
+      'desayuno': '🍳 Desayuno disponible'
+    }
+
+    // Check for each feature
+    for (const [keyword, highlight] of Object.entries(featureMap)) {
+      if (lowerText.includes(keyword) && !highlights.includes(highlight)) {
+        highlights.push(highlight)
+      }
+    }
+
+    return highlights
+  }
+
   static mapToAccommodationUnit(
     motoPresData: MotoPresAccommodation,
     tenantId: string
@@ -217,6 +282,21 @@ export class MotoPresDataMapper {
 
     console.log(`🏠 Mapping ${motoPresData.id}: accommodation_mphb_type="${accommodationMphbType}", categories=${JSON.stringify(motoPresData.categories)})`)
 
+    // Extract highlights from excerpt/description
+    const highlights = this.extractHighlights(description || motoPresData.description || '')
+
+    // Calculate capacity differential (extra spaces beyond base capacity)
+    const baseCapacity = adults + children
+    const capacityDifferential = capacity.total - baseCapacity
+
+    // Extract featured image URL from _links if available
+    const featuredImageUrl = motoPresData._links?.featured_media?.[0]?.href
+
+    // Extract category badge (first category name)
+    const categoryBadge = motoPresData.categories?.[0]?.name
+
+    console.log(`✨ Enrichment ${motoPresData.id}: highlights=${highlights.length}, capacity_diff=${capacityDifferential}, featured_img=${!!featuredImageUrl}`)
+
     return {
       tenant_id: tenantId,
       motopress_type_id: meta.mphb_room_type_id,
@@ -236,6 +316,14 @@ export class MotoPresDataMapper {
       images,
       amenities_list: motoPresData.amenities || [],
       categories: motoPresData.categories || [],
+      // NEW: Enrichment fields
+      services_list: motoPresData.services || [],
+      attributes_list: motoPresData.attributes || [],
+      tags_list: motoPresData.tags || [],
+      featured_image_url: featuredImageUrl,
+      capacity_differential: capacityDifferential,
+      highlights,
+      category_badge: categoryBadge,
       status: motoPresData.status === 'publish' ? 'active' : 'inactive',
       is_featured: false,
       display_order: 1,

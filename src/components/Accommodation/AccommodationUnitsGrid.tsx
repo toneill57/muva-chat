@@ -69,6 +69,7 @@ interface AccommodationUnit {
     seasonal_rules: number
     hourly_rules: number
     base_price_range: number[]
+    price_per_person?: number
   }
   amenities_summary: {
     total: number
@@ -81,13 +82,21 @@ interface AccommodationUnit {
   photos: Array<{ url: string; alt?: string; is_primary?: boolean }>
   photo_count: number
   chunks_count: number
-  // NEW FIELDS
+  // BASE FIELDS
   size_m2?: number
   location_area?: string
   children_capacity?: number
   total_capacity?: number
   accommodation_type?: string
   room_type_id?: number
+  // ENRICHMENT FIELDS
+  services_list?: string[]
+  attributes_list?: string[]
+  tags_list?: Array<{ id: number; name: string }>
+  featured_image_url?: string
+  capacity_differential?: number
+  highlights?: string[]
+  category_badge?: string
 }
 
 export function AccommodationUnitsGrid() {
@@ -233,11 +242,12 @@ export function AccommodationUnitsGrid() {
     return min === max ? `$${min.toLocaleString()}` : `$${min.toLocaleString()} - $${max.toLocaleString()}`
   }
 
-  const InfoCard = ({ icon: Icon, label, value, color = 'blue' }: {
+  const InfoCard = ({ icon: Icon, label, value, color = 'blue', subtitle }: {
     icon: React.ComponentType<{ className?: string }>
     label: string
     value: string | number
     color?: 'blue' | 'green' | 'purple' | 'gray' | 'yellow'
+    subtitle?: string
   }) => {
     const bgColors = {
       blue: 'bg-blue-50/50 group-hover:bg-blue-100/70',
@@ -260,6 +270,9 @@ export function AccommodationUnitsGrid() {
         <Icon className={`h-4 w-4 mb-1 ${iconColors[color]}`} />
         <span className="text-xs text-gray-500">{label}</span>
         <span className="font-medium text-sm">{value}</span>
+        {subtitle && (
+          <span className="text-xs text-gray-400 mt-0.5">{subtitle}</span>
+        )}
       </div>
     )
   }
@@ -272,6 +285,27 @@ export function AccommodationUnitsGrid() {
       <Card className="relative overflow-hidden group hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer hover:shadow-lg">
 
         <CardHeader className="pb-3">
+          {/* Featured Image (if available) */}
+          {unit.featured_image_url && (
+            <div className="mb-3 -mx-6 -mt-6 overflow-hidden">
+              <img
+                src={unit.featured_image_url}
+                alt={unit.name}
+                className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+          )}
+
+          {/* Category Badge (top-left corner) */}
+          {unit.category_badge && (
+            <div className="absolute top-2 left-2 z-10">
+              <Badge className="bg-blue-600 text-white text-xs shadow-lg">
+                {unit.category_badge}
+              </Badge>
+            </div>
+          )}
+
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3">
               <div className={`p-3 rounded-xl shadow-sm group-hover:shadow-md transition-all duration-300 ${
@@ -308,6 +342,22 @@ export function AccommodationUnitsGrid() {
             </div>
           </div>
 
+          {/* Highlights from excerpt parsing */}
+          {unit.highlights && unit.highlights.length > 0 && (
+            <div className="flex gap-1.5 mt-2 flex-wrap">
+              {unit.highlights.slice(0, 3).map((highlight, idx) => (
+                <Badge key={idx} variant="secondary" className="text-xs bg-amber-50 text-amber-800 border-amber-200">
+                  {highlight}
+                </Badge>
+              ))}
+              {unit.highlights.length > 3 && (
+                <Badge variant="outline" className="text-xs">
+                  +{unit.highlights.length - 3}
+                </Badge>
+              )}
+            </div>
+          )}
+
           {/* Badges informativos */}
           <div className="flex gap-2 mt-2 flex-wrap">
             <Badge variant="outline" className="text-xs">
@@ -326,11 +376,12 @@ export function AccommodationUnitsGrid() {
                 📸 {unit.photo_count}
               </Badge>
             )}
-            {unit.categories && unit.categories.length > 0 && unit.categories.map((cat) => (
-              <Badge key={cat.id} variant="secondary" className="bg-green-100 text-green-800 text-xs">
-                {cat.name}
+            {/* Show capacity differential if there are extra spaces */}
+            {unit.capacity_differential && unit.capacity_differential > 0 && (
+              <Badge variant="default" className="bg-purple-500 text-white text-xs">
+                +{unit.capacity_differential} extra
               </Badge>
-            ))}
+            )}
           </div>
         </CardHeader>
 
@@ -395,6 +446,7 @@ export function AccommodationUnitsGrid() {
               label="Precio"
               value={formatPrice(unit.pricing_summary.base_price_range)}
               color="green"
+              subtitle={unit.pricing_summary.price_per_person ? `$${unit.pricing_summary.price_per_person.toLocaleString()}/persona` : undefined}
             />
           </div>
 
