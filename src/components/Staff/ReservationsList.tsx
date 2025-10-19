@@ -418,12 +418,12 @@ export default function ReservationsList() {
   }
 
   const handleDeleteAllReservations = () => {
-    // Count MotoPress reservations
-    const motoPressReservations = reservations.filter(r => r.booking_source === 'motopress')
-    setMotoPressCount(motoPressReservations.length)
+    // Count MotoPress + Airbnb reservations (all that will be deleted)
+    const externalReservations = reservations.filter(r => ['motopress', 'airbnb'].includes(r.booking_source))
+    setMotoPressCount(externalReservations.length)
 
-    if (motoPressReservations.length === 0) {
-      alert('No hay reservas de MotoPress para eliminar')
+    if (externalReservations.length === 0) {
+      alert('No hay reservas de MotoPress o Airbnb para eliminar')
       return
     }
 
@@ -570,7 +570,7 @@ export default function ReservationsList() {
                 onClick={handleDeleteAllReservations}
                 disabled={syncing || isDeleting}
                 className="flex items-center space-x-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Delete all MotoPress reservations"
+                aria-label="Delete all MotoPress and Airbnb reservations"
               >
                 {isDeleting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -606,14 +606,14 @@ export default function ReservationsList() {
             {/* Modal Body */}
             <div className="p-6">
               <p className="text-slate-700 mb-4">
-                Estás a punto de borrar <strong>TODAS</strong> las reservas de MotoPress de este hotel.
+                Estás a punto de borrar <strong>TODAS</strong> las reservas de MotoPress y Airbnb de este hotel.
               </p>
 
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <p className="text-sm font-medium text-red-900 mb-2">
                   Total de reservas: <span className="text-2xl font-bold">{motoPressCount}</span>
                 </p>
-                <p className="text-sm text-red-700">Fuente: MotoPress</p>
+                <p className="text-sm text-red-700">Fuente: MotoPress + Airbnb</p>
               </div>
 
               <div className="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6">
@@ -675,7 +675,7 @@ export default function ReservationsList() {
             {/* Modal Body */}
             <div className="p-6">
               <p className="text-slate-700 mb-4">
-                Para confirmar el borrado de <strong className="text-red-600">{motoPressCount}</strong> reservas de MotoPress, escribe:
+                Para confirmar el borrado de <strong className="text-red-600">{motoPressCount}</strong> reservas, escribe:
               </p>
 
               <div className="bg-slate-100 border-2 border-slate-300 rounded-lg p-3 mb-4 text-center">
@@ -1016,8 +1016,23 @@ export default function ReservationsList() {
                         </div>
                       </div>
 
-                      {/* Room Name from MotoPress (if available) */}
-                      {metadata.roomName && (
+                      {/* Accommodation Unit */}
+                      {firstReservation.accommodation_unit && (
+                        <div className="mb-4 pb-4 border-b border-slate-200">
+                          <div className="flex items-start space-x-3">
+                            <Home className="w-5 h-5 text-emerald-600 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-semibold text-emerald-900">
+                                {firstReservation.accommodation_unit.name}
+                              </p>
+                              <p className="text-xs text-slate-500">Alojamiento</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Room Name from MotoPress (if available and no accommodation_unit) */}
+                      {!firstReservation.accommodation_unit && metadata.roomName && (
                         <div className="mb-4 pb-4 border-b border-slate-200">
                           <div className="flex items-start space-x-3">
                             <Home className="w-5 h-5 text-blue-600 mt-0.5" />
