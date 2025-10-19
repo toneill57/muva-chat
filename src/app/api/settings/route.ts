@@ -74,10 +74,10 @@ export async function PUT(req: NextRequest) {
     if (nombre_comercial !== undefined) updateData.nombre_comercial = nombre_comercial;
     if (razon_social !== undefined) updateData.razon_social = razon_social;
     if (address !== undefined) updateData.address = address;
-    // Only update phone if it's provided and not empty (to avoid phone_format_check constraint)
-    if (phone !== undefined && phone !== '') updateData.phone = phone;
-    // Only update email if it's provided and not empty (to avoid email_format_check constraint)
-    if (email !== undefined && email !== '') updateData.email = email;
+    // Update phone: allow null (empty string), but validate format if provided
+    if (phone !== undefined) updateData.phone = phone === '' ? null : phone;
+    // Update email: allow null (empty string), but validate format if provided
+    if (email !== undefined) updateData.email = email === '' ? null : email;
     if (social_media_links !== undefined) updateData.social_media_links = social_media_links;
     if (seo_meta_description !== undefined) updateData.seo_meta_description = seo_meta_description;
     if (seo_keywords !== undefined) updateData.seo_keywords = seo_keywords;
