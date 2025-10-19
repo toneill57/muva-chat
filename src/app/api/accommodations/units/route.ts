@@ -107,18 +107,34 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             // NUEVOS CAMPOS MOTOPRESS
             size_m2: chunk.metadata?.size_m2 || null,
             location_area: chunk.metadata?.location_area || null,
-            children_capacity: chunk.metadata?.children_capacity || 0,
-            total_capacity: (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0),
+
+            // Parse capacity object (new format) or fallback to legacy format
+            capacity: typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null
+              ? {
+                  adults: chunk.metadata.capacity.adults || 2,
+                  children: chunk.metadata.capacity.children || 0,
+                  total: chunk.metadata.capacity.total || 2
+                }
+              : {
+                  // Legacy format: capacity was a number (adults count)
+                  adults: chunk.metadata?.capacity || 2,
+                  children: chunk.metadata?.children_capacity || 0,
+                  total: (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0)
+                },
+
+            // Extract for backwards compatibility with components using these fields
+            children_capacity: typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null
+              ? chunk.metadata.capacity.children || 0
+              : chunk.metadata?.children_capacity || 0,
+            total_capacity: typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null
+              ? chunk.metadata.capacity.total || 2
+              : (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0),
+
             accommodation_type: chunk.metadata?.accommodation_mphb_type || 'Standard',
             room_type_id: chunk.metadata?.motopress_room_type_id || null,
 
             description: chunk.description || '',
             short_description: chunk.short_description || chunk.description?.substring(0, 150) || '',
-            capacity: {
-              adults: chunk.metadata?.capacity || 2,
-              children: chunk.metadata?.children_capacity || 0,
-              total: (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0)
-            },
             bed_configuration: {
               bed_type: chunk.metadata?.bed_configuration?.[0]?.type || 'Queen'
             },
