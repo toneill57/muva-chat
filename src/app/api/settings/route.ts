@@ -52,6 +52,9 @@ export async function PUT(req: NextRequest) {
   // }
 
   try {
+    const body = await req.json();
+    console.log('[admin/settings] Request body:', JSON.stringify(body, null, 2));
+
     const {
       nombre_comercial,
       razon_social,
@@ -62,7 +65,7 @@ export async function PUT(req: NextRequest) {
       seo_meta_description,
       seo_keywords,
       features
-    } = await req.json();
+    } = body;
 
     const supabase = createServerClient();
 
@@ -83,10 +86,14 @@ export async function PUT(req: NextRequest) {
     if (seo_keywords !== undefined) updateData.seo_keywords = seo_keywords;
     if (features !== undefined) updateData.features = features;
 
+    console.log('[admin/settings] Update data to be sent to DB:', JSON.stringify(updateData, null, 2));
+
     const { error } = await supabase
       .from('tenant_registry')
       .update(updateData)
       .eq('tenant_id', tenant.tenant_id);
+
+    console.log('[admin/settings] Supabase update result:', error ? `ERROR: ${JSON.stringify(error)}` : 'SUCCESS');
 
     if (error) {
       console.error('[admin/settings] Error updating tenant:', error);
