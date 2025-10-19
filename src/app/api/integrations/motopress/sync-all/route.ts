@@ -205,17 +205,17 @@ export async function GET(request: NextRequest) {
       })
 
       // 4. Map bookings to GuestReservation format (with _embedded data)
-      const { reservations: mappedReservations, blocksExcluded, pastExcluded, statusExcluded } =
+      const { reservations: mappedReservations, pastExcluded, statusExcluded } =
         await MotoPresBookingsMapper.mapBulkBookingsWithEmbed(
           bookings,
           tenant_id,
           supabase
         )
 
-      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${blocksExcluded} calendar blocks, ${pastExcluded} past/future, ${statusExcluded} cancelled`)
+      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${pastExcluded} past/future, ${statusExcluded} cancelled`)
       await sendEvent({
         type: 'progress',
-        message: `Procesadas ${mappedReservations.length} reservas futuras (excluidas ${blocksExcluded} bloqueadas, ${pastExcluded} pasadas). Guardando...`
+        message: `Procesadas ${mappedReservations.length} reservas futuras (excluidas ${pastExcluded} pasadas, ${statusExcluded} canceladas). Guardando...`
       })
 
       // 5. Upsert reservations into guest_reservations
@@ -282,7 +282,6 @@ export async function GET(request: NextRequest) {
           error_message: errors > 0 ? `${errors} errors occurred during sync` : null,
           metadata: {
             total_bookings: bookings.length,
-            blocks_excluded: blocksExcluded,
             past_excluded: pastExcluded,
             status_excluded: statusExcluded,
             errors,
@@ -297,7 +296,6 @@ export async function GET(request: NextRequest) {
         created,
         updated,
         errors,
-        blocksExcluded,
         pastExcluded,
         statusExcluded
       })
@@ -310,7 +308,7 @@ export async function GET(request: NextRequest) {
           created,
           updated,
           errors,
-          blocksExcluded,
+          blocksExcluded: 0, // No longer filtering blocks
           pastExcluded
         }
       })

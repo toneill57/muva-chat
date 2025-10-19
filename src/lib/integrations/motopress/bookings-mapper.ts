@@ -88,6 +88,28 @@ export interface GuestReservation {
 
 export class MotoPresBookingsMapper {
   /**
+   * Maps MotoPress booking status to internal reservation status
+   *
+   * @param motopressStatus - Status from MotoPress API
+   * @returns Internal status (active, pending, inactive)
+   */
+  static mapStatus(motopressStatus: string): string {
+    switch (motopressStatus.toLowerCase()) {
+      case 'confirmed':
+        return 'active'
+      case 'pending-payment':
+      case 'pending':
+        return 'pending'
+      case 'cancelled':
+        return 'inactive'
+      default:
+        // Default to active for any unknown status
+        console.warn(`[MotoPresBookingsMapper] Unknown status: ${motopressStatus}, defaulting to 'active'`)
+        return 'active'
+    }
+  }
+
+  /**
    * Extracts phone last 4 digits from iCal description
    * MotoPress stores Airbnb phone data like: "Phone Number (Last 4 Digits): 8216"
    */
@@ -325,7 +347,7 @@ export class MotoPresBookingsMapper {
       check_in_time: booking.check_in_time || '15:00:00',
       check_out_time: booking.check_out_time || '12:00:00',
       reservation_code: reservationCode,
-      status: booking.status,  // Use MotoPress status as-is (confirmed, pending, active, etc.)
+      status: this.mapStatus(booking.status),  // Map MotoPress status to internal status
       accommodation_unit_id: accommodationUnitId,
       guest_email: booking.customer?.email || null,
       guest_country: booking.customer?.country || null,
@@ -361,9 +383,8 @@ export class MotoPresBookingsMapper {
     bookings: any[],
     tenantId: string,
     supabase: SupabaseClient
-  ): Promise<{ reservations: GuestReservation[]; blocksExcluded: number; pastExcluded: number; statusExcluded: number }> {
+  ): Promise<{ reservations: GuestReservation[]; pastExcluded: number; statusExcluded: number }> {
     const mapped: GuestReservation[] = []
-    let blocksExcluded = 0
     let pastExcluded = 0
     let statusExcluded = 0
 
@@ -377,13 +398,6 @@ export class MotoPresBookingsMapper {
       try {
         // Log every booking we process
         console.log(`[mapper] 🔍 Processing booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}, ical_summary=${booking.ical_summary?.substring(0, 30)}`)
-
-        // Skip calendar blocks (no useful data)
-        if (booking.ical_summary?.includes('Not available')) {
-          blocksExcluded++
-          console.log(`[mapper] ⏩ Skip booking ${booking.id}: calendar block`)
-          continue
-        }
 
         // Skip only cancelled bookings (import all other statuses)
         if (booking.status === 'cancelled') {
@@ -414,7 +428,6 @@ export class MotoPresBookingsMapper {
 
     return {
       reservations: mapped,
-      blocksExcluded,
       pastExcluded,
       statusExcluded
     }
