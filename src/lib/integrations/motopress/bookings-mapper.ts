@@ -325,7 +325,7 @@ export class MotoPresBookingsMapper {
       check_in_time: booking.check_in_time || '15:00:00',
       check_out_time: booking.check_out_time || '12:00:00',
       reservation_code: reservationCode,
-      status: booking.status === 'confirmed' ? 'active' : 'inactive',
+      status: booking.status,  // Use MotoPress status as-is (confirmed, pending, active, etc.)
       accommodation_unit_id: accommodationUnitId,
       guest_email: booking.customer?.email || null,
       guest_country: booking.customer?.country || null,
@@ -361,10 +361,11 @@ export class MotoPresBookingsMapper {
     bookings: any[],
     tenantId: string,
     supabase: SupabaseClient
-  ): Promise<{ reservations: GuestReservation[]; blocksExcluded: number; pastExcluded: number }> {
+  ): Promise<{ reservations: GuestReservation[]; blocksExcluded: number; pastExcluded: number; statusExcluded: number }> {
     const mapped: GuestReservation[] = []
     let blocksExcluded = 0
     let pastExcluded = 0
+    let statusExcluded = 0
 
     // Calculate date range: today to 2 years in future
     const today = new Date()
@@ -374,26 +375,37 @@ export class MotoPresBookingsMapper {
 
     for (const booking of bookings) {
       try {
+        // Log every booking we process
+        console.log(`[mapper] 🔍 Processing booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}, ical_summary=${booking.ical_summary?.substring(0, 30)}`)
+
         // Skip calendar blocks (no useful data)
         if (booking.ical_summary?.includes('Not available')) {
           blocksExcluded++
+          console.log(`[mapper] ⏩ Skip booking ${booking.id}: calendar block`)
           continue
         }
 
-        // Skip non-confirmed bookings
-        if (booking.status !== 'confirmed') {
+        // Skip only cancelled bookings (import all other statuses)
+        if (booking.status === 'cancelled') {
+          statusExcluded++
+          console.log(`[mapper] ⏩ Skip booking ${booking.id}: status=cancelled`)
           continue
         }
 
         // Skip past reservations and reservations beyond 2 years
         const checkInDate = new Date(booking.check_in_date)
+        console.log(`[mapper] 📅 Date check for booking ${booking.id}: checkInDate=${checkInDate.toISOString()}, today=${today.toISOString()}, twoYears=${twoYearsFromNow.toISOString()}`)
+
         if (checkInDate < today || checkInDate > twoYearsFromNow) {
           pastExcluded++
+          console.log(`[mapper] ⏩ Skip booking ${booking.id}: check_in=${booking.check_in_date} (${checkInDate < today ? 'past' : 'too far future'})`)
           continue
         }
 
+        console.log(`[mapper] ✅ Mapping booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}`)
         const reservation = await this.mapToGuestReservationWithEmbed(booking, tenantId, supabase)
         mapped.push(reservation)
+        console.log(`[mapper] ✅ Mapped successfully: ${reservation.guest_name}`)
       } catch (error) {
         console.error(`[MotoPresBookingsMapper] Failed to map booking ${booking.id}:`, error)
         // Continue with next booking instead of failing entire batch
@@ -403,7 +415,8 @@ export class MotoPresBookingsMapper {
     return {
       reservations: mapped,
       blocksExcluded,
-      pastExcluded
+      pastExcluded,
+      statusExcluded
     }
   }
 }
