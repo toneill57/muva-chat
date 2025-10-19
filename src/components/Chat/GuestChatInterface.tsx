@@ -944,7 +944,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
       <aside
         className={`
-          fixed lg:relative z-30 lg:z-0
+          fixed lg:relative z-50 lg:z-0
           w-80 h-full
           transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -1172,8 +1172,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* Main Chat Area */}
       <div className="flex flex-col flex-1 h-screen">
         {/* Header */}
-        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm lg:static sticky top-0 z-20">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -1296,7 +1296,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                   >
                     {/* Avatar */}
                     <div
-                      className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center ${
+                      className={`hidden lg:flex flex-shrink-0 h-8 w-8 rounded-full items-center justify-center ${
                         message.role === 'user'
                           ? 'bg-blue-600'
                           : 'bg-gray-200'
@@ -1367,7 +1367,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                 {/* Typing Indicator */}
                 {isLoading && (
                   <div className="flex gap-3 animate-message-in">
-                    <div className="flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    <div className="hidden lg:flex flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 items-center justify-center">
                       <Bot className="h-4 w-4 text-gray-600" />
                     </div>
                     <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
@@ -1514,7 +1514,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Escribe tu mensaje..."
-              className="flex-1 resize-none rounded-2xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-h-[120px] min-h-[44px]"
+              className="flex-1 resize-none rounded-2xl border border-gray-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent max-h-[120px] min-h-[44px] overflow-hidden hover:overflow-y-auto focus:overflow-y-auto"
               rows={1}
               disabled={isLoading}
               aria-label="Mensaje"
@@ -1534,7 +1534,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             </Button>
           </div>
 
-          <p className="text-xs text-gray-400 mt-2 text-center">
+          <p className="text-xs text-gray-400 mt-2 text-center hidden lg:block">
             <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> para enviar •{' '}
             <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Shift+Enter</kbd> para nueva línea
           </p>
@@ -1603,22 +1603,24 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           animation: typing-dot 1.4s infinite;
         }
 
-        /* Mobile keyboard handling - Use stable 100vh instead of dynamic dvh */
+        /* Mobile viewport handling for iOS Safari */
         @media (max-width: 768px) {
-          .h-screen {
-            height: 100vh;
-            height: -webkit-fill-available; /* iOS Safari fallback */
+          /* Use -webkit-fill-available for iOS Safari (excludes browser chrome) */
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
           }
 
-          /* Prevent iOS Safari bounce/zoom on double-tap */
+          .h-screen {
+            height: 100vh;
+            height: -webkit-fill-available; /* iOS Safari */
+          }
+
+          /* Prevent iOS Safari bounce/zoom */
           body {
             touch-action: manipulation;
             -webkit-text-size-adjust: 100%;
-          }
-
-          /* Ensure input area stays at bottom without gaps */
-          .flex-shrink-0 {
-            position: relative;
           }
         }
 
