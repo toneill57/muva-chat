@@ -42,6 +42,13 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 - ❌ NUNCA `git merge dev → main`
 - ❌ NUNCA mencionar deploy sin autorización explícita
 
+**🚨 COMMITS Y PUSH - REQUIEREN AUTORIZACIÓN EXPLÍCITA:**
+- ❌ NUNCA hacer `git commit` sin que el usuario lo pida
+- ❌ NUNCA hacer `git push` sin que el usuario lo pida
+- ✅ SOLO commitear cuando el usuario explícitamente diga: "commitea", "haz commit", "push", etc.
+- ✅ Puedo PREPARAR el mensaje de commit, pero NO ejecutarlo
+- ✅ Puedo usar `git status`, `git diff`, `git log` sin permiso
+
 ### 5. Verificar `git status` Antes de 404s
 **Archivos sin commitear = causa #1 de diferencias local vs producción**
 

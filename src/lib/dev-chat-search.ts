@@ -286,24 +286,23 @@ export async function searchMUVABasic(
       return []
     }
 
-    console.log('[dev-search] Searching tenant MUVA documents, match_count:', muvaMatchCount)
+    console.log('[dev-search] Searching GLOBAL MUVA content, match_count:', muvaMatchCount)
 
     // ========================================================================
-    // 2. Search tenant-specific MUVA content (NOT global muva_content)
+    // 2. Search GLOBAL MUVA content (shared tourism documents)
     // ========================================================================
-    const { data, error } = await supabase.rpc('match_tenant_muva_documents', {
+    const { data, error } = await supabase.rpc('match_muva_documents_public', {
       query_embedding: queryEmbedding,
-      p_tenant_id: tenantId,
       match_threshold: 0.2,
       match_count: muvaMatchCount,  // Use tenant's configured count
     })
 
     if (error) {
-      console.error('[dev-search] Tenant MUVA error:', error)
+      console.error('[dev-search] Global MUVA error:', error)
       return []
     }
 
-    console.log('[dev-search] Found tenant MUVA documents:', data?.length || 0)
+    console.log('[dev-search] Found GLOBAL MUVA documents:', data?.length || 0)
 
     return (data || []).map((item: any) => ({
       id: item.id,
@@ -312,11 +311,10 @@ export async function searchMUVABasic(
       content: item.content || '',
       similarity: item.similarity || 0,
       source_file: item.source_file,
-      table: 'tenant_muva_content',  // New tenant-specific table
+      table: 'muva_content',  // Global MUVA table
       metadata: {
         ...item.metadata,
-        business_info: item.business_info,
-        tenant_id: tenantId,
+        category: 'muva_tourism',
       },
     }))
   } catch (error) {

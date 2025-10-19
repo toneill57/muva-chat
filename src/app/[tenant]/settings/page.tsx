@@ -55,13 +55,16 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (tenant) {
-      console.log('[Settings] Loading tenant features:', {
+      console.log('[Settings] Loading tenant data:', {
+        phone: tenant.phone,
+        email: tenant.email,
+        address: tenant.address,
         search_mode: tenant.features?.search_mode,
         muva_match_count: tenant.features?.muva_match_count,
-        full_features: tenant.features
+        full_tenant: tenant
       });
 
-      setFormData({
+      const newFormData = {
         nombre_comercial: tenant.nombre_comercial || '',
         razon_social: tenant.razon_social || '',
         address: tenant.address || '',
@@ -78,7 +81,17 @@ export default function SettingsPage() {
         seo_keywords: tenant.seo_keywords || [],
         search_mode: (tenant.features?.search_mode as SearchMode) || 'hotel',
         muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0
+      };
+
+      console.log('[Settings] Setting formData to:', {
+        phone: newFormData.phone,
+        email: newFormData.email,
+        address: newFormData.address,
+        search_mode: newFormData.search_mode,
+        muva_match_count: newFormData.muva_match_count
       });
+
+      setFormData(newFormData);
       setKeywordsInput((tenant.seo_keywords || []).join(', '));
     }
   }, [tenant]);
