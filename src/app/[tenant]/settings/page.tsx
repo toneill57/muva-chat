@@ -3,6 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect} from 'react';
+import { useRouter } from 'next/navigation';
 import { Save, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ type SearchMode = 'hotel' | 'agency' | 'hybrid';
 
 export default function SettingsPage() {
   const { tenant, isLoading } = useTenant();
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     nombre_comercial: '',
@@ -53,6 +55,12 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (tenant) {
+      console.log('[Settings] Loading tenant features:', {
+        search_mode: tenant.features?.search_mode,
+        muva_match_count: tenant.features?.muva_match_count,
+        full_features: tenant.features
+      });
+
       setFormData({
         nombre_comercial: tenant.nombre_comercial || '',
         razon_social: tenant.razon_social || '',
@@ -98,6 +106,8 @@ export default function SettingsPage() {
 
       if (response.ok) {
         setSaveSuccess(true);
+        // Refresh router to re-fetch tenant data from server
+        router.refresh();
         // Auto-hide success message after 3 seconds
         setTimeout(() => setSaveSuccess(false), 3000);
       } else {

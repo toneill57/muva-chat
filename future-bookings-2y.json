@@ -1,0 +1,6037 @@
+[
+  {
+    "id": 30260,
+    "status": "confirmed",
+    "date_created": "2025-10-18T11:45:12",
+    "date_created_utc": "2025-10-18T16:45:12",
+    "key": "",
+    "check_in_date": "2025-10-19",
+    "check_out_date": "2025-10-22",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 322,
+        "accommodation_type": 320,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30260",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/322"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/320"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30243,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2025-11-05",
+    "check_out_date": "2025-11-15",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMFYJRTJ38\nPhone Number (Last 4 Digits): 8216\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30243",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30245,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2025-11-19",
+    "check_out_date": "2025-11-23",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMKP3FS3ST\nPhone Number (Last 4 Digits): 0907\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30245",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30247,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2025-12-04",
+    "check_out_date": "2025-12-07",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMC45KERZJ\nPhone Number (Last 4 Digits): 6164\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30247",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30249,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2025-12-27",
+    "check_out_date": "2026-01-03",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMX3JMX8CK\nPhone Number (Last 4 Digits): 8447\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30249",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30251,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2026-01-03",
+    "check_out_date": "2026-01-06",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMRMMEYH4B\nPhone Number (Last 4 Digits): 3969\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30251",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30253,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2026-01-26",
+    "check_out_date": "2026-01-31",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM48FPK4Z4\nPhone Number (Last 4 Digits): 6955\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30253",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30255,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:28",
+    "date_created_utc": "2025-10-18T06:31:28",
+    "key": "",
+    "check_in_date": "2026-04-16",
+    "check_out_date": "2026-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30255",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30241,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:31:27",
+    "date_created_utc": "2025-10-18T06:31:27",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-21",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 337,
+        "accommodation_type": 335,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMATD59HQ2\nPhone Number (Last 4 Digits): 0084\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30241",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/337"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/335"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30225,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-02-22",
+    "check_out_date": "2026-02-23",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30225",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30227,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-03-01",
+    "check_out_date": "2026-03-02",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30227",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30229,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-03-10",
+    "check_out_date": "2026-03-11",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30229",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30231,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-03-17",
+    "check_out_date": "2026-03-18",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30231",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30233,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-03-23",
+    "check_out_date": "2026-03-24",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30233",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30235,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-04-10",
+    "check_out_date": "2026-04-11",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30235",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30237,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-04-15",
+    "check_out_date": "2026-04-16",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30237",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30239,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:52",
+    "date_created_utc": "2025-10-18T06:00:52",
+    "key": "",
+    "check_in_date": "2026-10-18",
+    "check_out_date": "2026-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30239",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30209,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-12-26",
+    "check_out_date": "2025-12-27",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30209",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30211,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-01-05",
+    "check_out_date": "2026-01-07",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30211",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30213,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-01-15",
+    "check_out_date": "2026-01-16",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30213",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30215,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-01-19",
+    "check_out_date": "2026-01-20",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30215",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30217,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-01-27",
+    "check_out_date": "2026-01-28",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30217",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30219,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-02-02",
+    "check_out_date": "2026-02-03",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30219",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30221,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-02-11",
+    "check_out_date": "2026-02-12",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30221",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30223,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2026-02-18",
+    "check_out_date": "2026-02-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30223",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30193,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-11-04",
+    "check_out_date": "2025-11-05",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30193",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30195,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-11-09",
+    "check_out_date": "2025-11-10",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30195",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30197,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-11-17",
+    "check_out_date": "2025-11-18",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30197",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30199,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-11-25",
+    "check_out_date": "2025-11-26",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30199",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30201,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-11-30",
+    "check_out_date": "2025-12-01",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30201",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30203,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-12-08",
+    "check_out_date": "2025-12-09",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30203",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30205,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-12-12",
+    "check_out_date": "2025-12-13",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30205",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30207,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:51",
+    "date_created_utc": "2025-10-18T06:00:51",
+    "key": "",
+    "check_in_date": "2025-12-19",
+    "check_out_date": "2025-12-20",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30207",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30165,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2025-11-05",
+    "check_out_date": "2025-11-09",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMN8J8TYHR\nPhone Number (Last 4 Digits): 7031\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30165",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30167,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2025-11-18",
+    "check_out_date": "2025-11-25",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMW8345AHW\nPhone Number (Last 4 Digits): 4571\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30167",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30169,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2025-12-01",
+    "check_out_date": "2025-12-08",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM88YJDXFM\nPhone Number (Last 4 Digits): 6887\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30169",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30171,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2025-12-13",
+    "check_out_date": "2025-12-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM99WE9WPY\nPhone Number (Last 4 Digits): 3194\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30171",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30173,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2025-12-27",
+    "check_out_date": "2026-01-05",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMZB28ZF83\nPhone Number (Last 4 Digits): 6408\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30173",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30175,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-01-07",
+    "check_out_date": "2026-01-15",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM5DBRC882\nPhone Number (Last 4 Digits): 6766\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30175",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30177,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-01-20",
+    "check_out_date": "2026-01-27",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMZB4ZP42B\nPhone Number (Last 4 Digits): 7350\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30177",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30179,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-02-03",
+    "check_out_date": "2026-02-11",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM5JH2HZC5\nPhone Number (Last 4 Digits): 7219\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30179",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30181,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-02-12",
+    "check_out_date": "2026-02-18",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM2WRBKFR2\nPhone Number (Last 4 Digits): 8510\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30181",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30183,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-02-23",
+    "check_out_date": "2026-03-01",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMJM3MNTYE\nPhone Number (Last 4 Digits): 7042\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30183",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30185,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-03-02",
+    "check_out_date": "2026-03-10",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMR5A5R4Z4\nPhone Number (Last 4 Digits): 4443\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30185",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30187,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-03-18",
+    "check_out_date": "2026-03-23",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HM4WTJX9EF\nPhone Number (Last 4 Digits): 5434\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30187",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30189,
+    "status": "confirmed",
+    "date_created": "2025-10-18T01:00:50",
+    "date_created_utc": "2025-10-18T06:00:50",
+    "key": "",
+    "check_in_date": "2026-04-11",
+    "check_out_date": "2026-04-15",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 10082,
+        "accommodation_type": 10080,
+        "rate": 0,
+        "adults": 6,
+        "children": 5,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMJNN5CESE\nPhone Number (Last 4 Digits): 2090\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30189",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/10082"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/10080"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30163,
+    "status": "confirmed",
+    "date_created": "2025-10-18T00:01:09",
+    "date_created_utc": "2025-10-18T05:01:09",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12460,
+        "accommodation_type": 12458,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30163",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12460"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12458"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30161,
+    "status": "confirmed",
+    "date_created": "2025-10-18T00:00:49",
+    "date_created_utc": "2025-10-18T05:00:49",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 334,
+        "accommodation_type": 332,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30161",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/334"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/332"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30159,
+    "status": "confirmed",
+    "date_created": "2025-10-18T00:00:42",
+    "date_created_utc": "2025-10-18T05:00:42",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 328,
+        "accommodation_type": 326,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30159",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/328"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/326"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30157,
+    "status": "confirmed",
+    "date_created": "2025-10-18T00:00:38",
+    "date_created_utc": "2025-10-18T05:00:38",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 325,
+        "accommodation_type": 323,
+        "rate": 0,
+        "adults": 3,
+        "children": 2,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30157",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/325"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/323"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30155,
+    "status": "confirmed",
+    "date_created": "2025-10-18T00:00:26",
+    "date_created_utc": "2025-10-18T05:00:26",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 316,
+        "accommodation_type": 314,
+        "rate": 0,
+        "adults": 3,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30155",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/316"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/314"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30153,
+    "status": "confirmed",
+    "date_created": "2025-10-18T00:00:08",
+    "date_created_utc": "2025-10-18T05:00:08",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 90,
+        "accommodation_type": 89,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30153",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/90"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/89"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30148,
+    "status": "confirmed",
+    "date_created": "2025-10-17T20:45:15",
+    "date_created_utc": "2025-10-18T01:45:15",
+    "key": "",
+    "check_in_date": "2026-01-12",
+    "check_out_date": "2026-01-16",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 328,
+        "accommodation_type": 326,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMHZWCPWTT\nPhone Number (Last 4 Digits): 3175\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30148",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/328"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/326"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30150,
+    "status": "confirmed",
+    "date_created": "2025-10-17T20:45:15",
+    "date_created_utc": "2025-10-18T01:45:15",
+    "key": "",
+    "check_in_date": "2026-01-16",
+    "check_out_date": "2026-01-17",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 328,
+        "accommodation_type": 326,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30150",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/328"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/326"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30146,
+    "status": "confirmed",
+    "date_created": "2025-10-17T18:00:13",
+    "date_created_utc": "2025-10-17T23:00:13",
+    "key": "",
+    "check_in_date": "2026-01-10",
+    "check_out_date": "2026-01-13",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 316,
+        "accommodation_type": 314,
+        "rate": 0,
+        "adults": 3,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMYWNCP9BN\nPhone Number (Last 4 Digits): 8103\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30146",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/316"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/314"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30128,
+    "status": "confirmed",
+    "date_created": "2025-10-17T00:00:09",
+    "date_created_utc": "2025-10-17T05:00:09",
+    "key": "",
+    "check_in_date": "2025-10-18",
+    "check_out_date": "2025-10-21",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 309,
+        "accommodation_type": 307,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30128",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/309"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/307"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30126,
+    "status": "confirmed",
+    "date_created": "2025-10-16T22:00:19",
+    "date_created_utc": "2025-10-17T03:00:19",
+    "key": "",
+    "check_in_date": "2025-10-20",
+    "check_out_date": "2025-10-24",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 319,
+        "accommodation_type": 317,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMBA994BBP\nPhone Number (Last 4 Digits): 6360\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30126",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/319"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/317"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30104,
+    "status": "confirmed",
+    "date_created": "2025-10-15T22:15:18",
+    "date_created_utc": "2025-10-16T03:15:18",
+    "key": "",
+    "check_in_date": "2025-11-06",
+    "check_out_date": "2025-11-14",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 331,
+        "accommodation_type": 329,
+        "rate": 0,
+        "adults": 3,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMH498M9Y8\nPhone Number (Last 4 Digits): 3468\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30104",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/331"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/329"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30102,
+    "status": "confirmed",
+    "date_created": "2025-10-15T18:45:20",
+    "date_created_utc": "2025-10-15T23:45:20",
+    "key": "",
+    "check_in_date": "2026-01-27",
+    "check_out_date": "2026-02-01",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 9969,
+        "accommodation_type": 9967,
+        "rate": 0,
+        "adults": 3,
+        "children": 2,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMQS5MQ9FW\nPhone Number (Last 4 Digits): 7981\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30102",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/9969"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/9967"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30100,
+    "status": "confirmed",
+    "date_created": "2025-10-15T16:15:27",
+    "date_created_utc": "2025-10-15T21:15:27",
+    "key": "",
+    "check_in_date": "2025-10-30",
+    "check_out_date": "2025-11-06",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12400,
+        "accommodation_type": 12398,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30100",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12400"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12398"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30098,
+    "status": "confirmed",
+    "date_created": "2025-10-15T16:15:08",
+    "date_created_utc": "2025-10-15T21:15:08",
+    "key": "",
+    "check_in_date": "2025-10-30",
+    "check_out_date": "2025-11-06",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 309,
+        "accommodation_type": 307,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMFTAFPDAT\nPhone Number (Last 4 Digits): 1564\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30098",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/309"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/307"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30086,
+    "status": "confirmed",
+    "date_created": "2025-10-15T04:30:31",
+    "date_created_utc": "2025-10-15T09:30:31",
+    "key": "",
+    "check_in_date": "2025-11-17",
+    "check_out_date": "2025-11-22",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12421,
+        "accommodation_type": 12419,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMW5CR3FMQ\nPhone Number (Last 4 Digits): 4321\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30086",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12421"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12419"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30088,
+    "status": "confirmed",
+    "date_created": "2025-10-15T04:30:31",
+    "date_created_utc": "2025-10-15T09:30:31",
+    "key": "",
+    "check_in_date": "2025-12-03",
+    "check_out_date": "2025-12-14",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12421,
+        "accommodation_type": 12419,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMM8KE8D5B\nPhone Number (Last 4 Digits): 2200\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30088",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12421"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12419"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30090,
+    "status": "confirmed",
+    "date_created": "2025-10-15T04:30:31",
+    "date_created_utc": "2025-10-15T09:30:31",
+    "key": "",
+    "check_in_date": "2026-01-27",
+    "check_out_date": "2026-02-04",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12421,
+        "accommodation_type": 12419,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMWAMTQEQA\nPhone Number (Last 4 Digits): 0424\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30090",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12421"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12419"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30094,
+    "status": "confirmed",
+    "date_created": "2025-10-15T04:30:31",
+    "date_created_utc": "2025-10-15T09:30:31",
+    "key": "",
+    "check_in_date": "2025-12-21",
+    "check_out_date": "2026-01-17",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12421,
+        "accommodation_type": 12419,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30094",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12421"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12419"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30096,
+    "status": "confirmed",
+    "date_created": "2025-10-15T04:30:31",
+    "date_created_utc": "2025-10-15T09:30:31",
+    "key": "",
+    "check_in_date": "2026-04-16",
+    "check_out_date": "2026-10-19",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 12421,
+        "accommodation_type": 12419,
+        "rate": 0,
+        "adults": 2,
+        "children": 0,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30096",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/12421"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/12419"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30066,
+    "status": "confirmed",
+    "date_created": "2025-10-14T23:15:07",
+    "date_created_utc": "2025-10-15T04:15:07",
+    "key": "",
+    "check_in_date": "2025-10-24",
+    "check_out_date": "2025-10-28",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 319,
+        "accommodation_type": 317,
+        "rate": 0,
+        "adults": 2,
+        "children": 1,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "\"Reservation URL: https://www.airbnb.com/hosting/reservations/details/HMCCRN4HWC\nPhone Number (Last 4 Digits): 6991\"",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Reserved\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30066",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/319"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/317"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30056,
+    "status": "confirmed",
+    "date_created": "2025-10-14T22:15:04",
+    "date_created_utc": "2025-10-15T03:15:04",
+    "key": "",
+    "check_in_date": "2025-11-12",
+    "check_out_date": "2025-11-21",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 90,
+        "accommodation_type": 89,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30056",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/90"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/89"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30058,
+    "status": "confirmed",
+    "date_created": "2025-10-14T22:15:04",
+    "date_created_utc": "2025-10-15T03:15:04",
+    "key": "",
+    "check_in_date": "2025-12-25",
+    "check_out_date": "2025-12-31",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 90,
+        "accommodation_type": 89,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30058",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/90"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/89"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30060,
+    "status": "confirmed",
+    "date_created": "2025-10-14T22:15:04",
+    "date_created_utc": "2025-10-15T03:15:04",
+    "key": "",
+    "check_in_date": "2026-01-05",
+    "check_out_date": "2026-01-12",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 90,
+        "accommodation_type": 89,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30060",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/90"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/89"
+        }
+      ]
+    }
+  },
+  {
+    "id": 30062,
+    "status": "confirmed",
+    "date_created": "2025-10-14T22:15:04",
+    "date_created_utc": "2025-10-15T03:15:04",
+    "key": "",
+    "check_in_date": "2026-01-12",
+    "check_out_date": "2026-01-15",
+    "check_in_time": "15:00:00",
+    "check_out_time": "12:00:00",
+    "customer": {
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "phone": "",
+      "country": "",
+      "state": "",
+      "city": "",
+      "zip": "",
+      "address1": ""
+    },
+    "reserved_accommodations": [
+      {
+        "accommodation": 90,
+        "accommodation_type": 89,
+        "rate": 0,
+        "adults": 4,
+        "children": 3,
+        "guest_name": "",
+        "services": [],
+        "accommodation_price_per_days": [],
+        "fees": [],
+        "taxes": {
+          "accommodation": [],
+          "services": [],
+          "fees": []
+        },
+        "discount": 0
+      }
+    ],
+    "coupon_code": "",
+    "currency": "COP",
+    "total_price": 0,
+    "checkout_id": "",
+    "payments": [],
+    "imported": true,
+    "ical_description": "",
+    "ical_prodid": "-//Airbnb Inc//Hosting Calendar 1.0//EN",
+    "ical_summary": "\"Airbnb (Not available)\"",
+    "note": "",
+    "internal_notes": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings/30062",
+          "targetHints": {
+            "allow": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/bookings"
+        }
+      ],
+      "accommodation": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodations/90"
+        }
+      ],
+      "accommodation_type": [
+        {
+          "embeddable": true,
+          "href": "https://tucasaenelmar.com/wp-json/mphb/v1/accommodation_types/89"
+        }
+      ]
+    }
+  }
+]
