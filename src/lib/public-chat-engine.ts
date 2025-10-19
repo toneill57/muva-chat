@@ -295,7 +295,7 @@ async function generateMarketingResponse(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-haiku-4-5', // Latest Sonnet 4.5 for marketing quality
+      model: 'claude-sonnet-4-5-20250929', // Sonnet 4.5 for high-quality marketing responses
       max_tokens: 600,
       temperature: 0.3, // Slightly creative for marketing
       top_k: 10,
@@ -433,7 +433,7 @@ export async function* generatePublicChatResponseStream(
       .map((msg) => ({ role: msg.role, content: msg.content }))
 
     const stream = await client.messages.stream({
-      model: 'claude-haiku-4-5',
+      model: 'claude-sonnet-4-5-20250929',
       max_tokens: 600,
       temperature: 0.3,
       top_k: 10,
