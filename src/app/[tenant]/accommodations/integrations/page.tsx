@@ -29,10 +29,12 @@ export default function IntegrationsPage() {
   const [loading, setLoading] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
 
-  // ❌ REMOVED: Don't auto-check status on mount - only when user clicks "Verificar Estado"
-  // useEffect(() => {
-  //   checkIntegrationStatus()
-  // }, [tenant])
+  // ✅ Auto-check status on mount to display current connection state
+  useEffect(() => {
+    if (tenant?.tenant_id) {
+      checkIntegrationStatus()
+    }
+  }, [tenant?.tenant_id])
 
   const checkIntegrationStatus = async () => {
     try {
