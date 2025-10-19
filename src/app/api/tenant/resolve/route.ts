@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Also fetch the slug for redirect purposes
     const { data: tenantData } = await supabase
       .from('tenant_registry')
-      .select('slug, nombre_comercial')
+      .select('slug, nombre_comercial, logo_url')
       .eq('tenant_id', tenantId)
       .single()
 
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
       tenant_id: tenantId,
       tenant_slug: tenantData?.slug || slugOrUuid,
       tenant_name: tenantData?.nombre_comercial || 'Hotel',
+      logo_url: tenantData?.logo_url || null,
     })
   } catch (error) {
     console.error('[tenant-resolve] Error:', error)
@@ -74,7 +75,7 @@ export async function GET(request: NextRequest) {
     // Fetch additional tenant data
     const { data: tenantData } = await supabase
       .from('tenant_registry')
-      .select('slug, nombre_comercial, razon_social')
+      .select('slug, nombre_comercial, razon_social, logo_url')
       .eq('tenant_id', tenantId)
       .single()
 
@@ -84,6 +85,7 @@ export async function GET(request: NextRequest) {
       tenant_slug: tenantData?.slug || slugOrUuid,
       business_name: tenantData?.nombre_comercial || tenantData?.razon_social || 'Hotel',
       nombre_comercial: tenantData?.nombre_comercial,
+      logo_url: tenantData?.logo_url || null,
     })
   } catch (error) {
     console.error('[tenant-resolve-GET] Error:', error)

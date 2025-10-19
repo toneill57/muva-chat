@@ -31,6 +31,7 @@ import ConversationList from './ConversationList'
 import ComplianceReminder from '@/components/Compliance/ComplianceReminder'
 import ComplianceConfirmation from '@/components/Compliance/ComplianceConfirmation'
 import ComplianceSuccess from '@/components/Compliance/ComplianceSuccess'
+import { TenantChatAvatar } from './TenantChatAvatar'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
 
 interface Conversation {
@@ -70,7 +71,7 @@ interface TopicSuggestion {
  * Complete conversational chat interface for guests
  * Features: Message history, entity tracking, follow-up suggestions, auto-scroll, responsive design
  */
-export function GuestChatInterface({ session, token, onLogout }: GuestChatInterfaceProps) {
+export function GuestChatInterface({ session, token, tenant, onLogout }: GuestChatInterfaceProps) {
   const [messages, setMessages] = useState<GuestChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -956,9 +957,6 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           <div className="flex-shrink-0 p-4">
             <ComplianceReminder
               onStart={() => setShowComplianceModal(true)}
-              onDismiss={() => {
-                // Handle dismiss if needed
-              }}
               reservation={{
                 document_type: null,
                 document_number: null,
@@ -1219,29 +1217,16 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         </div>
         </header>
 
-        {/* Entity Badges */}
-        {trackedEntities.size > 0 && (
-          <div className="flex-shrink-0 bg-white border-b border-gray-100 px-4 py-2">
-            <div className="max-w-4xl mx-auto">
-            <p className="text-xs text-gray-500 mb-2">Hablando sobre:</p>
-            <div className="flex flex-wrap gap-2">
-              {Array.from(trackedEntities.values()).map((entity) => (
-                <EntityBadge
-                  key={entity.name}
-                  entity={entity.name}
-                  type={entity.type}
-                  onClick={() => handleSendMessage(`Cuéntame más sobre ${entity.name}`)}
-                />
-              ))}
-            </div>
-            </div>
-          </div>
-        )}
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="max-w-4xl mx-auto px-4 py-6 space-y-4">
+        <div
+          className="flex-1 overflow-y-auto px-4 bg-gradient-to-b from-blue-50 to-white overscroll-behavior-contain scroll-smooth"
+          style={{
+            paddingTop: '2rem',
+            paddingBottom: '1rem'
+          }}
+        >
+          <div className="space-y-4">
             {isLoadingHistory ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -1295,19 +1280,21 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                     }}
                   >
                     {/* Avatar */}
-                    <div
-                      className={`hidden lg:flex flex-shrink-0 h-8 w-8 rounded-full items-center justify-center ${
-                        message.role === 'user'
-                          ? 'bg-blue-600'
-                          : 'bg-gray-200'
-                      }`}
-                    >
-                      {message.role === 'user' ? (
+                    {message.role === 'user' ? (
+                      <div className="hidden lg:flex flex-shrink-0 h-8 w-8 rounded-full items-center justify-center bg-blue-600">
                         <User className="h-4 w-4 text-white" />
-                      ) : (
-                        <Bot className="h-4 w-4 text-gray-600" />
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div className="hidden lg:flex flex-shrink-0">
+                        {tenant?.logo_url ? (
+                          <TenantChatAvatar tenant={tenant} size="sm" />
+                        ) : (
+                          <div className="h-8 w-8 rounded-full items-center justify-center bg-gray-200 flex">
+                            <Bot className="h-4 w-4 text-gray-600" />
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Message Bubble */}
                     <div
@@ -1340,19 +1327,6 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                         </div>
                       </div>
 
-                      {/* Sources (only for assistant messages) */}
-                      {message.role === 'assistant' && message.sources && message.sources.length > 0 && (
-                        <div className="mt-2 px-2">
-                          <p className="text-xs font-medium text-gray-500 mb-1">Fuentes:</p>
-                          <div className="space-y-1">
-                            {message.sources.slice(0, 3).map((source, idx) => (
-                              <div key={idx} className="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
-                                {source.name}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
 
                       <p className="text-xs text-gray-400 mt-1 px-2">
                         {message.timestamp?.toLocaleTimeString('es-ES', {
@@ -1384,83 +1358,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               </>
             )}
           </div>
-          </ScrollArea>
         </div>
 
-        {/* Follow-up Suggestions */}
-        {followUpSuggestions.length > 0 && !isLoading && (
-          <div className="flex-shrink-0 bg-white border-t border-gray-100">
-          <div className="max-w-4xl mx-auto px-4">
-            <FollowUpSuggestions
-              suggestions={followUpSuggestions}
-              onSuggestionClick={handleSendMessage}
-            />
-            </div>
-          </div>
-        )}
-
-        {/* Topic Suggestion Banner (FASE 2.6 - Conversation Intelligence) */}
-        <AnimatePresence>
-          {topicSuggestion && !isLoading && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="flex-shrink-0 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-200"
-            >
-              <div className="max-w-4xl mx-auto px-4 py-4">
-                <div className="flex items-start gap-3">
-                  {/* Icon */}
-                  <div className="flex-shrink-0 mt-0.5">
-                    <Lightbulb className="h-6 w-6 text-blue-600" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1 text-sm">
-                      Nueva conversación sugerida
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-3">
-                      He notado que estás hablando sobre{' '}
-                      <span className="font-medium text-blue-700">
-                        {topicSuggestion.topic}
-                      </span>
-                      . ¿Te gustaría crear una conversación dedicada para este tema?
-                    </p>
-
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => handleCreateTopicConversation(topicSuggestion.topic)}
-                        className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                        aria-label={`Crear conversación sobre ${topicSuggestion.topic}`}
-                      >
-                        Sí, crear conversación
-                      </button>
-                      <button
-                        onClick={() => setTopicSuggestion(null)}
-                        className="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                        aria-label="Continuar en conversación actual"
-                      >
-                        No, continuar aquí
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setTopicSuggestion(null)}
-                    className="flex-shrink-0 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                    aria-label="Cerrar sugerencia"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Error Bar */}
         {error && (
@@ -1533,11 +1432,6 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               )}
             </Button>
           </div>
-
-          <p className="text-xs text-gray-400 mt-2 text-center hidden lg:block">
-            <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> para enviar •{' '}
-            <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Shift+Enter</kbd> para nueva línea
-          </p>
           </div>
         </div>
       </div>

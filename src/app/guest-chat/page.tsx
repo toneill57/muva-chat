@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { GuestLogin } from '@/components/Chat/GuestLogin'
 import { GuestChatInterface } from '@/components/Chat/GuestChatInterface'
 import type { GuestSession } from '@/lib/guest-auth'
+import type { Tenant } from '@/contexts/TenantContext'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -21,6 +22,7 @@ import { Button } from '@/components/ui/button'
  */
 export default function GuestChatPage() {
   const [tenantId, setTenantId] = useState<string | null>(null)
+  const [tenant, setTenant] = useState<Tenant | null>(null)
   const [session, setSession] = useState<GuestSession | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -54,9 +56,18 @@ export default function GuestChatPage() {
           throw new Error(errorData.error || 'Hotel no encontrado')
         }
 
-        const { tenant_id } = await response.json()
+        const { tenant_id, tenant_name, tenant_slug, logo_url } = await response.json()
         console.log(`[GuestChatPage] Resolved tenant_id: ${tenant_id}`)
         setTenantId(tenant_id)
+        setTenant({
+          tenant_id,
+          nombre_comercial: tenant_name || 'Hotel',
+          slug: tenant_slug,
+          subdomain: subdomain,
+          logo_url: logo_url || null,
+          created_at: '',
+          updated_at: '',
+        })
       } catch (err: any) {
         console.error('[GuestChatPage] Failed to resolve tenant from subdomain:', err)
         setError(err.message || 'Error al identificar el hotel. Verifica la URL.')
@@ -210,5 +221,5 @@ export default function GuestChatPage() {
   }
 
   // Logged in - show chat interface
-  return <GuestChatInterface session={session} token={token} onLogout={handleLogout} />
+  return <GuestChatInterface session={session} token={token} tenant={tenant} onLogout={handleLogout} />
 }
