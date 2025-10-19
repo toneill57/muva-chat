@@ -41,12 +41,20 @@ interface ReservationItem {
   check_out_date: string
   reservation_code: string | null
   status: string
-  accommodation_unit: {
+
+  // 🆕 UPDATED: Multiple accommodations per reservation (junction table)
+  reservation_accommodations: Array<{
     id: string
-    name: string
-    unit_number: string | null
-    unit_type: string | null
-  } | null
+    motopress_accommodation_id: number | null
+    motopress_type_id: number | null
+    room_rate: number | null
+    accommodation_unit: {
+      id: string
+      name: string
+      unit_number: string | null
+      unit_type: string | null
+    } | null
+  }>
 
   // Complete booking details
   guest_email: string | null
@@ -1016,23 +1024,44 @@ export default function ReservationsList() {
                         </div>
                       </div>
 
-                      {/* Accommodation Unit */}
-                      {firstReservation.accommodation_unit && (
+                      {/* Accommodation Units - Multiple rooms support */}
+                      {firstReservation.reservation_accommodations && firstReservation.reservation_accommodations.length > 0 && (
                         <div className="mb-4 pb-4 border-b border-slate-200">
                           <div className="flex items-start space-x-3">
-                            <Home className="w-5 h-5 text-emerald-600 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-semibold text-emerald-900">
-                                {firstReservation.accommodation_unit.name}
-                              </p>
-                              <p className="text-xs text-slate-500">Alojamiento</p>
+                            <Home className={`w-5 h-5 mt-0.5 ${
+                              firstReservation.reservation_accommodations.length === 1
+                                ? 'text-emerald-600'
+                                : 'text-purple-600'
+                            }`} />
+                            <div className="flex-1">
+                              {firstReservation.reservation_accommodations.length === 1 ? (
+                                // Single accommodation - destacado
+                                <>
+                                  <p className="text-sm font-semibold text-emerald-900">
+                                    {firstReservation.reservation_accommodations[0].accommodation_unit?.name || 'Alojamiento sin nombre'}
+                                  </p>
+                                  <p className="text-xs text-slate-500">Alojamiento</p>
+                                </>
+                              ) : (
+                                // Multiple accommodations - lista compacta
+                                <>
+                                  <p className="text-sm font-semibold text-purple-900 mb-1">
+                                    {firstReservation.reservation_accommodations.map(acc =>
+                                      acc.accommodation_unit?.name || 'Sin nombre'
+                                    ).join(', ')}
+                                  </p>
+                                  <p className="text-xs text-slate-500">
+                                    {firstReservation.reservation_accommodations.length} habitaciones
+                                  </p>
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>
                       )}
 
-                      {/* Room Name from MotoPress (if available and no accommodation_unit) */}
-                      {!firstReservation.accommodation_unit && metadata.roomName && (
+                      {/* Room Name from MotoPress (if no accommodations in junction table) */}
+                      {(!firstReservation.reservation_accommodations || firstReservation.reservation_accommodations.length === 0) && metadata.roomName && (
                         <div className="mb-4 pb-4 border-b border-slate-200">
                           <div className="flex items-start space-x-3">
                             <Home className="w-5 h-5 text-blue-600 mt-0.5" />
@@ -1175,28 +1204,36 @@ export default function ReservationsList() {
                                 </div>
                               )}
 
-                              {/* Multi-Unit Details */}
-                              {isMultiUnit && (
+                              {/* Accommodations Details - Always show if multiple rooms */}
+                              {firstReservation.reservation_accommodations && firstReservation.reservation_accommodations.length > 1 && (
                                 <div className="pt-2 border-t border-slate-100">
                                   <div className="flex items-start space-x-3 mb-2">
                                     <Home className="w-4 h-4 text-purple-600 mt-0.5" />
                                     <p className="text-sm font-medium text-slate-700">
-                                      Unidades reservadas ({group.length}):
+                                      Habitaciones ({firstReservation.reservation_accommodations.length}):
                                     </p>
                                   </div>
                                   <div className="grid grid-cols-1 gap-2 ml-7">
-                                    {group.map((unit, idx) => (
+                                    {firstReservation.reservation_accommodations.map((acc, idx) => (
                                       <div
-                                        key={unit.id}
-                                        className="bg-slate-50 rounded-lg p-2 border border-slate-200"
+                                        key={acc.id}
+                                        className="bg-slate-50 rounded-lg p-3 border border-slate-200"
                                       >
-                                        <p className="text-sm font-medium text-slate-900">
-                                          {unit.accommodation_unit?.name || `Unidad ${idx + 1}`}
-                                        </p>
-                                        <p className="text-xs text-slate-600">
-                                          {unit.adults} adulto{unit.adults !== 1 ? 's' : ''}
-                                          {unit.children > 0 && `, ${unit.children} niño${unit.children !== 1 ? 's' : ''}`}
-                                        </p>
+                                        <div className="flex justify-between items-start mb-1">
+                                          <p className="text-sm font-medium text-slate-900">
+                                            {acc.accommodation_unit?.name || `Habitación ${idx + 1}`}
+                                          </p>
+                                          {acc.room_rate && (
+                                            <p className="text-xs font-semibold text-emerald-700">
+                                              {formatPrice(acc.room_rate, firstReservation.currency)}
+                                            </p>
+                                          )}
+                                        </div>
+                                        {acc.motopress_type_id && (
+                                          <p className="text-xs text-slate-500">
+                                            MotoPress ID: {acc.motopress_type_id}
+                                          </p>
+                                        )}
                                       </div>
                                     ))}
                                   </div>

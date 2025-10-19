@@ -179,7 +179,8 @@ export async function generateConversationalResponse(
         type = 'document'
       } else if (result.table.includes('accommodation_units_manual')) {
         // Supports both: accommodation_units_manual (old) and accommodation_units_manual_chunks (new)
-        domainLabel = `[TU ALOJAMIENTO: ${context.guestInfo.accommodation_unit?.name || 'N/A'} 🏠]`
+        const unitName = result.metadata?.unit_name || context.guestInfo.accommodation_unit?.name || 'N/A'
+        domainLabel = `[TU ALOJAMIENTO: ${unitName} 🏠]`
         type = 'accommodation'
       } else if (result.table === 'accommodation_units_public' || result.table === 'accommodation_units') {
         domainLabel = '[HOTEL SIMMERDOWN 🏨]'
@@ -298,12 +299,25 @@ async function performContextAwareSearch(
     // 2. Hotel General Info search (ALWAYS) - FAQ, Arrival instructions (Domain 2)
     searches.push(searchHotelGeneralInfo(queryEmbeddingBalanced, guestInfo.tenant_id))
 
-    // 3. Unit Manual search (ALWAYS) - Guest's private unit manual (Domain 3)
-    if (guestInfo.accommodation_unit?.id) {
-      searches.push(searchUnitManual(queryEmbeddingBalanced, guestInfo.accommodation_unit.id))
+    // 3. Unit Manual search (ALWAYS) - Guest's private unit manuals (Domain 3)
+    // Search in ALL accommodations assigned to the guest (multi-room support)
+    const accommodationUnits = guestInfo.accommodation_units || (guestInfo.accommodation_unit ? [guestInfo.accommodation_unit] : [])
+
+    if (accommodationUnits.length > 0) {
+      console.log(`[Chat Engine] Searching manuals for ${accommodationUnits.length} accommodations:`,
+        accommodationUnits.map(u => u.name).join(', '))
+
+      // Search in parallel for ALL unit manuals
+      const unitManualSearches = accommodationUnits.map(unit =>
+        searchUnitManual(queryEmbeddingBalanced, unit.id, unit.name)  // Pass unit name for labeling
+      )
+
+      // Combine all unit manual results
+      const allUnitManuals = await Promise.all(unitManualSearches)
+      searches.push(Promise.resolve(allUnitManuals.flat()))
     } else {
       searches.push(Promise.resolve([]))
-      console.log('[Chat Engine] ⚠️ No accommodation_unit - skipping unit manual search')
+      console.log('[Chat Engine] ⚠️ No accommodations assigned - skipping unit manual search')
     }
 
     // 4. MUVA search (CONDITIONAL) - only if permission granted
@@ -562,7 +576,8 @@ async function searchHotelGeneralInfo(
  */
 async function searchUnitManual(
   embedding: number[],
-  unitId: string
+  unitId: string,
+  unitName?: string  // Optional: name of the accommodation for labeling
 ): Promise<VectorSearchResult[]> {
   const client = getSupabaseClient()
   const { data, error } = await client.rpc('match_unit_manual_chunks', {
@@ -580,6 +595,7 @@ async function searchUnitManual(
   console.log('[Chat Engine] Unit manual chunks results:', {
     total_found: data?.length || 0,
     unit_id: unitId,
+    unit_name: unitName || 'N/A',
     chunks: data?.map((item: any) => ({
       chunk_index: item.chunk_index,
       similarity: item.similarity?.toFixed(3),
@@ -597,6 +613,7 @@ async function searchUnitManual(
       ...item.metadata,
       chunk_index: item.chunk_index,
       section_title: item.section_title,
+      unit_name: unitName,  // Add unit name to metadata for proper labeling
     },
   }))
 }
@@ -747,9 +764,14 @@ async function generateResponseWithClaude(
       })
       .join('\n\n---\n\n')
 
-    // Build guest accommodation context
-    const accommodationContext = context.guestInfo.accommodation_unit
-      ? `- Alojamiento: ${accommodationDisplay}${context.guestInfo.accommodation_unit.view_type ? `, ${context.guestInfo.accommodation_unit.view_type}` : ''}`
+    // Build guest accommodation context (supports multiple rooms)
+    const accommodationUnitsForPrompt = context.guestInfo.accommodation_units || (context.guestInfo.accommodation_unit ? [context.guestInfo.accommodation_unit] : [])
+    const accommodationContext = accommodationUnitsForPrompt.length > 0
+      ? `- Alojamiento${accommodationUnitsForPrompt.length > 1 ? 's' : ''}: ${accommodationUnitsForPrompt.map(u => {
+          const number = u.unit_number ? `#${u.unit_number}` : ''
+          const view = u.view_type ? `, ${u.view_type}` : ''
+          return `${u.name}${number}${view}`
+        }).join(', ')}`
       : ''
 
     // System prompt with dynamic security restrictions

@@ -218,12 +218,25 @@ export async function GET(request: NextRequest) {
         message: `Procesadas ${mappedReservations.length} reservas futuras (excluidas ${pastExcluded} pasadas, ${statusExcluded} canceladas). Guardando...`
       })
 
-      // 5. Upsert reservations into guest_reservations
+      // Create lookup map: external_booking_id → original booking (for finding reserved_accommodations)
+      const bookingsMap = new Map(
+        bookings.map((booking: any) => [booking.id.toString(), booking])
+      )
+
+      // 5. Upsert reservations into guest_reservations AND reservation_accommodations
       let created = 0
       let updated = 0
       let errors = 0
 
       for (const reservation of mappedReservations) {
+        const originalBooking = bookingsMap.get(reservation.external_booking_id)
+
+        if (!originalBooking) {
+          console.error(`[sync-all] Cannot find original booking for external_booking_id=${reservation.external_booking_id}`)
+          errors++
+          continue
+        }
+
         try {
           // Check if reservation already exists by external_booking_id
           const { data: existing } = await supabase
@@ -248,18 +261,42 @@ export async function GET(request: NextRequest) {
               errors++
             } else {
               updated++
+
+              // Delete old accommodations and insert new ones (handle room changes)
+              await supabase
+                .from('reservation_accommodations')
+                .delete()
+                .eq('reservation_id', existing.id)
+
+              // Save updated accommodations
+              await MotoPresBookingsMapper.saveReservationAccommodations(
+                existing.id,
+                originalBooking,
+                tenant_id,
+                supabase
+              )
             }
           } else {
-            // Insert new reservation
-            const { error: insertError } = await supabase
+            // Insert new reservation and get the ID
+            const { data: insertedReservation, error: insertError } = await supabase
               .from('guest_reservations')
               .insert(reservation)
+              .select('id')
+              .single()
 
-            if (insertError) {
+            if (insertError || !insertedReservation) {
               console.error(`[sync-all] Insert error for booking ${reservation.external_booking_id}:`, insertError)
               errors++
             } else {
               created++
+
+              // Save accommodations to junction table
+              await MotoPresBookingsMapper.saveReservationAccommodations(
+                insertedReservation.id,
+                originalBooking,
+                tenant_id,
+                supabase
+              )
             }
           }
         } catch (err) {
