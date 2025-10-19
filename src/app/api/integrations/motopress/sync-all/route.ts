@@ -150,6 +150,28 @@ export async function GET(request: NextRequest) {
         siteUrl: credentials.siteUrl
       })
 
+      // 2.5. WARM-UP: Test connection to establish session (same as "Verificar Estado" button)
+      // This fixes the issue where clicking "Verify Estado" makes sync work
+      await sendEvent({ type: 'progress', message: 'Establishing connection...' })
+
+      const testResult = await client.testConnection()
+
+      if (!testResult.success) {
+        console.error('[sync-all] Connection test failed:', testResult.message)
+        await sendEvent({
+          type: 'error',
+          message: `Connection failed: ${testResult.message}. Please verify credentials at /accommodations/integrations`
+        })
+        await writer.close()
+        return
+      }
+
+      console.log(`[sync-all] ✅ Connection test successful: ${testResult.accommodationsCount} accommodations found`)
+      await sendEvent({
+        type: 'progress',
+        message: `Connection established (${testResult.accommodationsCount} accommodations). Fetching bookings...`
+      })
+
       // 3. Fetch ALL bookings with _embed (SLOW but complete data)
       await sendEvent({ type: 'progress', message: 'Fetching bookings with complete data...' })
 

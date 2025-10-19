@@ -357,7 +357,7 @@ export class MotoPresClient {
       const credentials = Buffer.from(`${this.apiKey}:${this.consumerSecret}`).toString('base64')
 
       const headResponse = await fetch(`${this.baseUrl}/bookings?per_page=1`, {
-        method: 'HEAD',
+        method: 'GET',
         headers: {
           'Authorization': `Basic ${credentials}`,
           'User-Agent': 'curl/8.7.1'
@@ -392,11 +392,11 @@ export class MotoPresClient {
         params.append('order', 'desc')
         params.append('_embed', '1') // This makes it 10x slower but includes room names
 
-        // Retry logic (max 3 attempts)
+        // Retry logic (max 5 attempts)
         let retries = 0
         let pageData: any[] | null = null
 
-        while (retries < 3 && !pageData) {
+        while (retries < 5 && !pageData) {
           try {
             // Longer timeout for _embed requests (120s instead of 30s)
             const response = await fetch(`${this.baseUrl}/bookings?${params.toString()}`, {
@@ -421,14 +421,14 @@ export class MotoPresClient {
 
           } catch (error: any) {
             retries++
-            if (retries < 3) {
-              const waitTime = 1000 * retries // Exponential backoff: 1s, 2s, 3s
-              console.log(`[MotoPresClient] Retry ${retries}/3 for page ${page} after ${waitTime}ms...`)
-              onProgress?.(page - 1, totalPages, `Retry ${retries}/3 for page ${page}...`)
+            if (retries < 5) {
+              const waitTime = 2000 // Fixed 2 seconds delay between retries
+              console.log(`[MotoPresClient] Retry ${retries}/5 for page ${page} after ${waitTime}ms...`)
+              onProgress?.(page - 1, totalPages, `Retry ${retries}/5 for page ${page}...`)
               await new Promise(resolve => setTimeout(resolve, waitTime))
             } else {
               return {
-                error: `Failed to fetch page ${page} after 3 attempts: ${error.message}`,
+                error: `Failed to fetch page ${page} after 5 attempts: ${error.message}`,
                 status: 0
               }
             }
