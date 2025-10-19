@@ -17,9 +17,33 @@ Each tenant gets:
 
 ---
 
-## Prerequisites
+## 🆕 Self-Service Sign-Up (Recommended)
 
-Before onboarding a new tenant, ensure you have:
+**New tenants can now register themselves!**
+
+Simply direct them to: **https://muva.chat/signup**
+
+The automated sign-up flow will:
+1. ✅ Guide them through a 5-step wizard
+2. ✅ Validate subdomain availability in real-time
+3. ✅ Create all required database records (tenant, hotel, admin user, integration configs)
+4. ✅ Generate login credentials
+5. ✅ Redirect to their new dashboard: `https://{subdomain}.muva.chat/dashboard`
+
+**Default Settings:**
+- Subscription Tier: **Premium** (full access)
+- Status: **Active** (immediate access)
+- Features: MUVA access, premium chat, staff chat, guest chat (all enabled)
+
+---
+
+## Manual Tenant Creation
+
+For special cases where you need manual control:
+
+### Prerequisites
+
+Before onboarding a new tenant manually, ensure you have:
 - ✅ Tenant's business information (NIT, legal name, business name)
 - ✅ Desired subdomain (lowercase, alphanumeric, hyphens only)
 - ✅ Logo image (optional, PNG/JPG recommended)
