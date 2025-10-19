@@ -24,11 +24,10 @@ export function getWelcomeMessageHTML(tenantName: string): string {
 <p>Estoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.</p>
 <p>Para mostrarte las mejores opciones rápidamente, cuéntame tu <strong class="font-semibold text-gray-900">fecha de llegada</strong> y <strong class="font-semibold text-gray-900">fecha de salida</strong>. ¿Vienes solo, en pareja o con más personas?</p>
 <hr class="my-3 border-gray-300"/>
-<p>🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️</p>
-<p>🏝️ ¡También soy tu guía turística! Pregúntame sobre playas, restaurantes, buceo y todo lo que San Andrés tiene para ofrecerte.</p>`
+<p>🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️</p>`
 }
 
 // Legacy exports for backward compatibility (deprecated - use getWelcomeMessageHTML instead)
-export const WELCOME_MESSAGE_RAW = "**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️\n\n🏝️ ¡También soy tu guía turística! Pregúntame sobre playas, restaurantes, buceo y todo lo que San Andrés tiene para ofrecerte."
+export const WELCOME_MESSAGE_RAW = "**¡Hola! Bienvenido a Simmer Down** 🌴\n\nEstoy aquí para ayudarte a encontrar tu alojamiento perfecto en San Andrés.\n\nPara mostrarte las mejores opciones rápidamente, cuéntame tu **fecha de llegada** y **fecha de salida**. ¿Vienes solo, en pareja o con más personas?\n\n---\n\n🗨️ TIP: Puedes hablar conmigo en el idioma que prefieras 🗺️"
 
 export const WELCOME_MESSAGE_HTML = getWelcomeMessageHTML('Simmer Down') // Fallback for legacy code
