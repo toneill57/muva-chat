@@ -57,6 +57,8 @@ interface AccommodationUnit {
   is_featured: boolean
   display_order: number
   status: string
+  is_active?: boolean
+  is_bookable?: boolean
   embedding_status: {
     has_fast: boolean
     has_balanced: boolean
@@ -285,14 +287,23 @@ export function AccommodationUnitsGrid() {
                   'text-gray-600'
                 }`} />
               </div>
-              <div>
+              <div className="flex-1">
                 <CardTitle className={`text-lg font-bold text-gray-900 transition-colors duration-300 ${
                   themeColor === 'green' ? 'group-hover:text-green-700' :
                   themeColor === 'blue' ? 'group-hover:text-blue-700' :
                   themeColor === 'purple' ? 'group-hover:text-purple-700' :
                   'group-hover:text-gray-700'
                 }`}>{unit.name}</CardTitle>
-                <p className="text-sm text-gray-500 font-medium">{unit.status}</p>
+                <Badge
+                  variant={unit.status === 'active' ? 'default' : 'secondary'}
+                  className={`mt-1 text-xs ${
+                    unit.status === 'active'
+                      ? 'bg-green-500 hover:bg-green-600 text-white'
+                      : 'bg-gray-400 hover:bg-gray-500 text-white'
+                  }`}
+                >
+                  {unit.status === 'active' ? '✓ Activa' : '⊗ Inactiva'}
+                </Badge>
               </div>
             </div>
           </div>
