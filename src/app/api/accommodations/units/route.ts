@@ -160,7 +160,13 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
               base_price_range: chunk.pricing?.base_price ? [
                 chunk.pricing.base_price,
                 chunk.pricing.base_price
-              ] : [0, 0]
+              ] : [0, 0],
+              // NEW: Price per person calculation
+              price_per_person: chunk.pricing?.base_price && (typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null)
+                ? Math.round(chunk.pricing.base_price / (chunk.metadata.capacity.total || 1))
+                : (chunk.pricing?.base_price && chunk.metadata?.capacity)
+                  ? Math.round(chunk.pricing.base_price / ((chunk.metadata.capacity || 2) + (chunk.metadata.children_capacity || 0)))
+                  : undefined
             },
             amenities_summary: {
               total: Array.isArray(chunk.metadata?.unit_amenities)
@@ -194,6 +200,14 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             photos: chunk.photos || [],
             photo_count: chunk.photos?.length || 0,
             pricing_rules: [],
+            // NEW: Enrichment fields from MotoPress
+            services_list: chunk.metadata?.services_list || [],
+            attributes_list: chunk.metadata?.attributes_list || [],
+            tags_list: chunk.metadata?.tags_list || [],
+            featured_image_url: chunk.metadata?.featured_image_url || chunk.photos?.[0]?.url,
+            capacity_differential: chunk.metadata?.capacity_differential || 0,
+            highlights: chunk.metadata?.highlights || [],
+            category_badge: chunk.metadata?.category_badge || chunk.metadata?.categories?.[0]?.name,
             chunks_count: 1,
             all_chunks: [chunk]
           }
