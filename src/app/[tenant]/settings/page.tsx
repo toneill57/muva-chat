@@ -3,12 +3,15 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect} from 'react';
-import { Save } from 'lucide-react';
+import { Save, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Slider } from '@/components/ui/slider';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useTenant } from '@/contexts/TenantContext';
 
 interface SocialMediaLinks {
@@ -18,6 +21,8 @@ interface SocialMediaLinks {
   linkedin: string;
   tiktok: string;
 }
+
+type SearchMode = 'hotel' | 'agency' | 'hybrid';
 
 export default function SettingsPage() {
   const { tenant, isLoading } = useTenant();
@@ -36,7 +41,9 @@ export default function SettingsPage() {
       tiktok: ''
     } as SocialMediaLinks,
     seo_meta_description: '',
-    seo_keywords: [] as string[]
+    seo_keywords: [] as string[],
+    search_mode: 'hotel' as SearchMode,
+    muva_match_count: 0
   });
 
   const [keywordsInput, setKeywordsInput] = useState('');
@@ -60,7 +67,9 @@ export default function SettingsPage() {
           tiktok: tenant.social_media_links?.tiktok || ''
         },
         seo_meta_description: tenant.seo_meta_description || '',
-        seo_keywords: tenant.seo_keywords || []
+        seo_keywords: tenant.seo_keywords || [],
+        search_mode: (tenant.features?.search_mode as SearchMode) || 'hotel',
+        muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0
       });
       setKeywordsInput((tenant.seo_keywords || []).join(', '));
     }
@@ -77,7 +86,13 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          seo_keywords: keywordsInput.split(',').map(k => k.trim()).filter(Boolean)
+          seo_keywords: keywordsInput.split(',').map(k => k.trim()).filter(Boolean),
+          features: {
+            ...tenant?.features,
+            search_mode: formData.search_mode,
+            muva_match_count: formData.muva_match_count,
+            accommodation_search_enabled: true // Always enabled for now
+          }
         })
       });
 
@@ -240,6 +255,136 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* Search Mode Configuration Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Search Mode Configuration</CardTitle>
+          <CardDescription>Control how your chat displays content to visitors</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <RadioGroup
+            value={formData.search_mode}
+            onValueChange={(value: SearchMode) => {
+              const newMuvaCount = value === 'hotel' ? 0 : value === 'hybrid' ? 2 : 4;
+              setFormData({
+                ...formData,
+                search_mode: value,
+                muva_match_count: newMuvaCount
+              });
+            }}
+          >
+            {/* Hotel Mode */}
+            <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <RadioGroupItem value="hotel" id="hotel-mode" className="mt-1" />
+              <div className="flex-1">
+                <Label htmlFor="hotel-mode" className="text-base font-semibold cursor-pointer">
+                  Hotel Mode (Recommended)
+                </Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Focus on your accommodations only. Best for hotels, hostels, and vacation rentals.
+                </p>
+                <div className="mt-2 space-y-1 text-sm">
+                  <div className="flex items-center text-green-600">
+                    <span className="mr-2">✓</span>
+                    <span>Shows: Your rooms and units</span>
+                  </div>
+                  <div className="flex items-center text-gray-500">
+                    <span className="mr-2">✗</span>
+                    <span>Hides: Tourism content (tours, restaurants, activities)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Agency Mode */}
+            <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <RadioGroupItem value="agency" id="agency-mode" className="mt-1" />
+              <div className="flex-1">
+                <Label htmlFor="agency-mode" className="text-base font-semibold cursor-pointer">
+                  Agency Mode
+                </Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Promote your tourism listings and partner businesses. Best for travel agencies and tour operators.
+                </p>
+                <div className="mt-2 space-y-1 text-sm">
+                  <div className="flex items-center text-green-600">
+                    <span className="mr-2">✓</span>
+                    <span>Shows: Your MUVA tourism listings + accommodations</span>
+                  </div>
+                  <div className="flex items-center text-blue-600">
+                    <span className="mr-2">ℹ</span>
+                    <span>Upload your listings to MUVA Content section</span>
+                  </div>
+                </div>
+                {formData.search_mode === 'agency' && (
+                  <div className="mt-4 space-y-2">
+                    <Label className="text-sm">MUVA Documents per query: {formData.muva_match_count}</Label>
+                    <Slider
+                      value={[formData.muva_match_count]}
+                      onValueChange={(values) => setFormData({ ...formData, muva_match_count: values[0] })}
+                      min={1}
+                      max={10}
+                      step={1}
+                      className="w-full"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Higher values show more tourism content (recommended: 4-6)
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Hybrid Mode */}
+            <div className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <RadioGroupItem value="hybrid" id="hybrid-mode" className="mt-1" />
+              <div className="flex-1">
+                <Label htmlFor="hybrid-mode" className="text-base font-semibold cursor-pointer">
+                  Hybrid Mode
+                </Label>
+                <p className="text-sm text-gray-600 mt-1">
+                  Balanced mix of accommodations and tourism content. Best for boutique hotels with curated experiences.
+                </p>
+                <div className="mt-2 space-y-1 text-sm">
+                  <div className="flex items-center text-green-600">
+                    <span className="mr-2">✓</span>
+                    <span>Shows: Accommodations + limited tourism content</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-2">⚖</span>
+                    <span>Emphasis on bookings while highlighting local experiences</span>
+                  </div>
+                </div>
+                {formData.search_mode === 'hybrid' && (
+                  <div className="mt-4 space-y-2">
+                    <Label className="text-sm">MUVA Documents per query: {formData.muva_match_count}</Label>
+                    <Slider
+                      value={[formData.muva_match_count]}
+                      onValueChange={(values) => setFormData({ ...formData, muva_match_count: values[0] })}
+                      min={1}
+                      max={4}
+                      step={1}
+                      className="w-full"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Recommended: 1-2 for subtle promotion, 3-4 for more tourism focus
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </RadioGroup>
+
+          {/* Info Alert */}
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Changes take effect immediately. Your chat will reflect the new search mode as soon as you save.
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+
       {/* SEO Section */}
       <Card>
         <CardHeader>
@@ -315,7 +460,9 @@ export default function SettingsPage() {
                   tiktok: tenant.social_media_links?.tiktok || ''
                 },
                 seo_meta_description: tenant.seo_meta_description || '',
-                seo_keywords: tenant.seo_keywords || []
+                seo_keywords: tenant.seo_keywords || [],
+                search_mode: (tenant.features?.search_mode as SearchMode) || 'hotel',
+                muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0
               });
               setKeywordsInput((tenant.seo_keywords || []).join(', '));
             }
