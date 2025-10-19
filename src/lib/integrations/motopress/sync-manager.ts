@@ -209,8 +209,29 @@ export class MotoPresSyncManager {
           }
           console.log(`💰 Added pricing to ${unit.name}: $${pricing.base_price} COP (Low: $${pricing.base_price_low_season}, High: $${pricing.base_price_high_season})`)
         } else {
-          unit.pricing = {}
-          console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_unit_id}`)
+          // Fallback: Try to extract price from unit metadata (mphb_price field)
+          const fallbackPrice = unit.tourism_features?.price_per_night
+
+          if (fallbackPrice && fallbackPrice > 0) {
+            unit.pricing = {
+              base_price: fallbackPrice,
+              base_price_low_season: fallbackPrice,
+              base_price_high_season: fallbackPrice,
+              currency: 'COP',
+              price_per_person_low: 0,
+              price_per_person_high: 0,
+              minimum_stay: 1,
+              base_adults: 2,
+              base_children: 0,
+              season_id: null,
+              priority: 0,
+              price_variations: []
+            }
+            console.log(`💰 Using fallback pricing for ${unit.name}: $${fallbackPrice} COP (from metadata mphb_price)`)
+          } else {
+            unit.pricing = {}
+            console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_unit_id} (checked rates API + metadata)`)
+          }
         }
       })
 
