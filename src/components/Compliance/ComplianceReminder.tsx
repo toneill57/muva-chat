@@ -1,8 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
-
 // SIRE fields from guest_reservations table
 interface GuestReservation {
   document_type: string | null
@@ -22,7 +19,6 @@ interface GuestReservation {
 
 interface ComplianceReminderProps {
   onStart: () => void
-  onDismiss: () => void
   reservation?: GuestReservation // SIRE data from guest_reservations
 }
 
@@ -79,30 +75,13 @@ function checkSIRECompleteness(reservation?: GuestReservation): {
 
 export default function ComplianceReminder({
   onStart,
-  onDismiss,
   reservation,
 }: ComplianceReminderProps) {
-  const [isDismissed, setIsDismissed] = useState(false)
-
   const { isComplete, progress, status, filledCount, totalRequired } =
     checkSIRECompleteness(reservation)
 
-  useEffect(() => {
-    // Check localStorage for dismissed state
-    const dismissed = localStorage.getItem('compliance_reminder_dismissed')
-    if (dismissed === 'true') {
-      setIsDismissed(true)
-    }
-  }, [])
-
-  const handleDismiss = () => {
-    localStorage.setItem('compliance_reminder_dismissed', 'true')
-    setIsDismissed(true)
-    onDismiss()
-  }
-
-  // Auto-hide if completed
-  if (isComplete || isDismissed) {
+  // Auto-hide only when completed
+  if (isComplete) {
     return null
   }
 
@@ -147,16 +126,7 @@ export default function ComplianceReminder({
       role="alert"
       aria-live="polite"
     >
-      {/* Dismiss button */}
-      <button
-        onClick={handleDismiss}
-        className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
-        aria-label="Cerrar recordatorio"
-      >
-        <X className="w-4 h-4" />
-      </button>
-
-      <div className="flex items-start gap-3 pr-8">
+      <div className="flex items-start gap-3">
         {/* Icon */}
         <div className="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
           <span className="text-xl" aria-hidden="true">

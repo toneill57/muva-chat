@@ -5,6 +5,7 @@
  */
 
 import { GuestSession } from './guest-auth'
+import type { Tenant } from '@/contexts/TenantContext'
 
 // ============================================================================
 // Chat Message Types
@@ -97,6 +98,7 @@ export interface GuestLoginProps {
 export interface GuestChatInterfaceProps {
   session: GuestSession
   token: string
+  tenant?: Tenant | null
   onLogout: () => void
 }
 
