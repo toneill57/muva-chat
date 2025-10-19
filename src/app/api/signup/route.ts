@@ -241,6 +241,9 @@ export async function POST(req: NextRequest) {
           premium_chat: true,
           guest_chat_enabled: true,
           staff_chat_enabled: true,
+          search_mode: 'hotel',                    // Default: Hotel Mode
+          muva_match_count: 0,                     // MUVA disabled by default
+          accommodation_search_enabled: true,      // Accommodations enabled
           sire_city_code: null,
           sire_hotel_code: null
         },
