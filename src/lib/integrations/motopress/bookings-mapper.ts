@@ -468,4 +468,119 @@ export class MotoPresBookingsMapper {
       statusExcluded
     }
   }
+
+  /**
+   * Saves multiple accommodations for a reservation to the junction table
+   * Supports multi-room bookings (e.g., family reserving 3 rooms)
+   *
+   * @param reservationId - UUID of the saved guest_reservation
+   * @param booking - MotoPress booking object with reserved_accommodations array
+   * @param tenantId - UUID of the tenant
+   * @param supabase - Supabase client for database operations
+   * @returns Number of accommodations saved
+   */
+  static async saveReservationAccommodations(
+    reservationId: string,
+    booking: MotoPresBooking | any,
+    tenantId: string,
+    supabase: SupabaseClient
+  ): Promise<number> {
+    if (!booking.reserved_accommodations || booking.reserved_accommodations.length === 0) {
+      console.warn(`[mapper] ⚠️ Booking ${booking.id} has no reserved_accommodations`)
+      return 0
+    }
+
+    console.log(`[mapper] 💾 Saving ${booking.reserved_accommodations.length} accommodation(s) for reservation ${reservationId}`)
+
+    const accommodationsToInsert: any[] = []
+
+    // Iterate through ALL reserved accommodations
+    for (const reserved of booking.reserved_accommodations) {
+      const motopressTypeId = reserved.accommodation_type
+      const motopressInstanceId = reserved.accommodation
+      const roomRate = reserved.rate
+
+      console.log(`[mapper]   - Processing accommodation: type_id=${motopressTypeId}, instance_id=${motopressInstanceId}, rate=${roomRate}`)
+
+      // Find matching accommodation_unit_id
+      let accommodationUnitId: string | null = null
+
+      if (motopressTypeId) {
+        const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
+          p_tenant_id: tenantId,
+          p_motopress_unit_id: motopressTypeId
+        })
+
+        if (error) {
+          console.log(`[mapper]     ❌ RPC error for accommodation ${motopressTypeId}:`, error)
+        } else if (units && units.length > 0) {
+          const unit = units[0]
+          accommodationUnitId = unit.id
+          console.log(`[mapper]     ✅ MATCH: Unit "${unit.name}" (id=${unit.id})`)
+        } else {
+          // NO MATCH: Create accommodation automatically from MotoPress data
+          console.log(`[mapper]     ⚠️ NO MATCH: No unit found for motopress_type_id=${motopressTypeId}`)
+
+          // Extract accommodation name from _embedded data
+          let accommodationName = `Alojamiento ${motopressTypeId}` // Fallback
+
+          if (booking._embedded?.accommodation_types) {
+            const matchingType = booking._embedded.accommodation_types.find(
+              (type: any) => type.id === motopressTypeId
+            )
+            if (matchingType?.title) {
+              accommodationName = matchingType.title
+            }
+          }
+
+          console.log(`[mapper]     🔨 AUTO-CREATE: Creating "${accommodationName}" with motopress_type_id=${motopressTypeId}`)
+
+          // Insert into hotels.accommodation_units (cross-schema insert)
+          const { data: newUnit, error: insertError } = await supabase
+            .schema('hotels')
+            .from('accommodation_units')
+            .insert({
+              name: accommodationName,
+              motopress_type_id: motopressTypeId,
+              tenant_id: tenantId,
+              status: 'active'
+            })
+            .select('id, name')
+            .single()
+
+          if (insertError) {
+            console.error(`[mapper]     ❌ Failed to auto-create accommodation:`, insertError)
+          } else if (newUnit) {
+            accommodationUnitId = newUnit.id
+            console.log(`[mapper]     ✅ CREATED: "${newUnit.name}" (id=${newUnit.id})`)
+          }
+        }
+      }
+
+      // Add to batch insert (accommodation_unit_id should always have a value now due to auto-creation)
+      accommodationsToInsert.push({
+        reservation_id: reservationId,
+        accommodation_unit_id: accommodationUnitId,
+        motopress_accommodation_id: motopressInstanceId,
+        motopress_type_id: motopressTypeId,
+        room_rate: roomRate
+      })
+    }
+
+    // Batch insert all accommodations
+    if (accommodationsToInsert.length > 0) {
+      const { error } = await supabase
+        .from('reservation_accommodations')
+        .insert(accommodationsToInsert)
+
+      if (error) {
+        console.error(`[mapper] ❌ Failed to insert reservation_accommodations:`, error)
+        throw error
+      }
+
+      console.log(`[mapper] ✅ Saved ${accommodationsToInsert.length} accommodation(s) to reservation_accommodations`)
+    }
+
+    return accommodationsToInsert.length
+  }
 }

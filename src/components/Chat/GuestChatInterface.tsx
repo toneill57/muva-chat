@@ -114,9 +114,16 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const hasLoadedConversations = useRef(false)  // Prevent double execution in React Strict Mode
 
   // Load conversations on mount
   useEffect(() => {
+    // Prevent double execution in React Strict Mode (development)
+    if (hasLoadedConversations.current) {
+      return
+    }
+    hasLoadedConversations.current = true
+
     loadConversations()
   }, [])
 
@@ -209,7 +216,13 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
       })
 
       if (!createResponse.ok) {
-        throw new Error('Error creating welcome conversation')
+        const errorData = await createResponse.json().catch(() => ({}))
+        console.error('[GuestChat] API error response:', {
+          status: createResponse.status,
+          statusText: createResponse.statusText,
+          error: errorData.error || 'Unknown error'
+        })
+        throw new Error(`Error creating welcome conversation: ${errorData.error || createResponse.statusText}`)
       }
 
       const createData = await createResponse.json()
@@ -237,58 +250,49 @@ export function GuestChatInterface({ session, token, onLogout }: GuestChatInterf
   }
 
   /**
-   * Sends "Hola" to chat engine to generate personalized welcome
-   * Reuses existing chat engine logic (includes guest name + accommodation)
+   * Creates personalized welcome message from assistant
+   * AI greets the guest first (no user "Hola" message)
    */
   const sendWelcomeMessage = async (conversationId: string) => {
     try {
       setIsLoading(true)
 
-      const response = await fetch('/api/guest/chat', {
+      const response = await fetch('/api/guest/welcome', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          message: 'Hola',
           conversation_id: conversationId,
         }),
       })
 
       if (!response.ok) {
-        throw new Error('Failed to send welcome message')
+        throw new Error('Failed to create welcome message')
       }
 
       const data = await response.json()
 
       console.log('[GuestChat] Welcome message received')
 
-      // Add user message "Hola" and AI response to messages
-      const userMessage: GuestChatMessage = {
-        id: `user-${Date.now()}`,
-        role: 'user',
-        content: 'Hola',
-        entities: [],
-        timestamp: new Date(),
-      }
-
+      // Add ONLY assistant message (no user "Hola")
       const assistantMessage: GuestChatMessage = {
-        id: `assistant-${Date.now()}`,
+        id: data.message.id,
         role: 'assistant',
-        content: data.response,
-        entities: data.entities || [],
-        timestamp: new Date(),
+        content: data.message.content,
+        entities: data.message.entities || [],
+        timestamp: new Date(data.message.created_at),
       }
 
-      setMessages([userMessage, assistantMessage])
-      setFollowUpSuggestions(data.followUpSuggestions || [])
+      setMessages([assistantMessage])
+      setFollowUpSuggestions([])
 
-      // Update tracked entities
-      if (data.entities && data.entities.length > 0) {
+      // Update tracked entities (if any)
+      if (data.message.entities && data.message.entities.length > 0) {
         setTrackedEntities((prev) => {
           const updated = new Map(prev)
-          data.entities.forEach((entity: string) => {
+          data.message.entities.forEach((entity: string) => {
             updated.set(entity, {
               name: entity,
               type: 'other',

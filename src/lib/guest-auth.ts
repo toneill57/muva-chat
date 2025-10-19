@@ -29,6 +29,13 @@ export interface GuestSession {
     unit_number?: string
     view_type?: string
   }
+  // 🆕 NUEVO: ALL accommodations in reservation (for multi-room bookings)
+  accommodation_units?: Array<{
+    id: string
+    name: string
+    unit_number?: string
+    view_type?: string
+  }>
 }
 
 export interface GuestCredentials {
@@ -141,6 +148,49 @@ export async function authenticateGuest(
       }
     }
 
+    // 🆕 NUEVO: Load ALL accommodations from reservation_accommodations (multi-room support)
+    const accommodationUnits: Array<{ id: string; name: string; unit_number?: string; view_type?: string }> = []
+
+    const { data: reservationAccommodations, error: accError } = await supabase
+      .from('reservation_accommodations')
+      .select('accommodation_unit_id')
+      .eq('reservation_id', reservation.id)
+
+    if (accError) {
+      console.error('[guest-auth] Failed to load reservation accommodations:', accError)
+    } else if (reservationAccommodations && reservationAccommodations.length > 0) {
+      // Get unique accommodation unit IDs
+      const unitIds = [...new Set(
+        reservationAccommodations
+          .map((ra: any) => ra.accommodation_unit_id)
+          .filter(Boolean)
+      )]
+
+      console.log(`[guest-auth] Loading ${unitIds.length} accommodation units for reservation`)
+
+      // Load details for each accommodation
+      for (const unitId of unitIds) {
+        const { data: units, error: unitError } = await supabase
+          .rpc('get_accommodation_unit_by_id', {
+            p_unit_id: unitId,
+            p_tenant_id: tenant_id
+          })
+
+        if (!unitError && units && units.length > 0) {
+          const unit = units[0]
+          accommodationUnits.push({
+            id: unit.id,
+            name: unit.name,
+            unit_number: unit.unit_number || undefined,
+            view_type: unit.view_type || undefined,
+          })
+        }
+      }
+
+      console.log(`[guest-auth] ✅ Loaded ${accommodationUnits.length} accommodations:`,
+        accommodationUnits.map(u => `${u.name} ${u.unit_number || ''}`).join(', '))
+    }
+
     // Build session object
     const session: GuestSession = {
       reservation_id: reservation.id,
@@ -153,7 +203,8 @@ export async function authenticateGuest(
       tenant_features: {
         muva_access: true,  // Default: ALL guests have MUVA access (tourism info)
       },
-      accommodation_unit: accommodationUnit,
+      accommodation_unit: accommodationUnit,  // First accommodation (backward compatibility)
+      accommodation_units: accommodationUnits.length > 0 ? accommodationUnits : undefined,  // ALL accommodations
     }
 
     console.log(`[guest-auth] ✅ Authentication successful for ${reservation.guest_name}`)
@@ -181,7 +232,8 @@ export async function generateGuestToken(session: GuestSession): Promise<string>
       check_in: session.check_in,                        // Already YYYY-MM-DD string
       check_out: session.check_out,                      // Already YYYY-MM-DD string
       reservation_code: session.reservation_code,        // Código de reserva
-      accommodation_unit: session.accommodation_unit,    // Info de alojamiento
+      accommodation_unit: session.accommodation_unit,    // Info de alojamiento (first room)
+      accommodation_units: session.accommodation_units,  // ALL rooms in reservation
       tenant_features: session.tenant_features,          // Permisos (MUVA access)
       type: 'guest',
     })
@@ -235,6 +287,7 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
         reservation_code: (payload.reservation_code as string) || '',
         tenant_features: (payload.tenant_features as any) || { muva_access: true },
         accommodation_unit: payload.accommodation_unit as any,
+        accommodation_units: payload.accommodation_units as any,  // ALL rooms
       }
 
       console.log(`[guest-auth] ✅ Token verified (from JWT payload) for ${session.guest_name}`)
@@ -282,6 +335,45 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
       }
     }
 
+    // Load ALL accommodations from reservation_accommodations (multi-room support)
+    const accommodationUnits: Array<{ id: string; name: string; unit_number?: string; view_type?: string }> = []
+
+    const { data: reservationAccommodations, error: accError } = await supabase
+      .from('reservation_accommodations')
+      .select('accommodation_unit_id')
+      .eq('reservation_id', reservation.id)
+
+    if (accError) {
+      console.error('[guest-auth] Failed to load reservation accommodations:', accError)
+    } else if (reservationAccommodations && reservationAccommodations.length > 0) {
+      const unitIds = [...new Set(
+        reservationAccommodations
+          .map((ra: any) => ra.accommodation_unit_id)
+          .filter(Boolean)
+      )]
+
+      for (const unitId of unitIds) {
+        const { data: units, error: unitError } = await supabase
+          .rpc('get_accommodation_unit_by_id', {
+            p_unit_id: unitId,
+            p_tenant_id: reservation.tenant_id
+          })
+
+        if (!unitError && units && units.length > 0) {
+          const unit = units[0]
+          accommodationUnits.push({
+            id: unit.id,
+            name: unit.name,
+            unit_number: unit.unit_number || undefined,
+            view_type: unit.view_type || undefined,
+          })
+        }
+      }
+
+      console.log(`[guest-auth] ✅ Loaded ${accommodationUnits.length} accommodations (fallback):`,
+        accommodationUnits.map(u => `${u.name} ${u.unit_number || ''}`).join(', '))
+    }
+
     // Reconstruct session with real data from database
     const session: GuestSession = {
       reservation_id: payload.reservation_id as string,
@@ -294,6 +386,7 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
         muva_access: true,  // Default: ALL guests have MUVA access
       },
       accommodation_unit: accommodationUnit,
+      accommodation_units: accommodationUnits.length > 0 ? accommodationUnits : undefined,
     }
 
     console.log(`[guest-auth] ✅ Token verified (from DB) for ${session.guest_name} (${reservation.check_in_date} - ${reservation.check_out_date})`)

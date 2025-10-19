@@ -24,12 +24,20 @@ interface ReservationListItem {
   check_out_date: string
   reservation_code: string | null
   status: string
-  accommodation_unit: {
+
+  // 🆕 UPDATED: Multiple accommodations per reservation (junction table)
+  reservation_accommodations: Array<{
     id: string
-    name: string
-    unit_number: string | null
-    unit_type: string | null
-  } | null
+    motopress_accommodation_id: number | null
+    motopress_type_id: number | null
+    room_rate: number | null
+    accommodation_unit: {
+      id: string
+      name: string
+      unit_number: string | null
+      unit_type: string | null
+    } | null
+  }>
 
   // 🆕 NEW: Complete booking details (PHASE 3)
   guest_email: string | null
@@ -165,8 +173,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         origin_city_code,
         destination_city_code,
         created_at,
-        updated_at,
-        accommodation_unit_id
+        updated_at
       `)
       .eq('tenant_id', staffSession.tenant_id)
       .eq('status', statusFilter)
@@ -193,20 +200,46 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
       )
     }
 
-    // Get accommodation units from hotels schema (cross-schema lookup)
+    // Get reservation IDs for junction table lookup
+    const reservationIds = (reservationsData || []).map((r: any) => r.id)
+
+    // Fetch reservation_accommodations data
+    const reservationAccommodationsMap = new Map<string, any[]>()
+
+    if (reservationIds.length > 0) {
+      console.log('[reservations-list] Fetching accommodation mappings for', reservationIds.length, 'reservations')
+
+      const { data: accommodationsData, error: accommodationsError } = await supabase
+        .from('reservation_accommodations')
+        .select('id, reservation_id, accommodation_unit_id, motopress_accommodation_id, motopress_type_id, room_rate')
+        .in('reservation_id', reservationIds)
+
+      if (accommodationsError) {
+        console.error('[reservations-list] Accommodations query error:', accommodationsError)
+      } else if (accommodationsData) {
+        // Group accommodations by reservation_id
+        accommodationsData.forEach((acc: any) => {
+          if (!reservationAccommodationsMap.has(acc.reservation_id)) {
+            reservationAccommodationsMap.set(acc.reservation_id, [])
+          }
+          reservationAccommodationsMap.get(acc.reservation_id)!.push(acc)
+        })
+        console.log('[reservations-list] Found', accommodationsData.length, 'accommodation mappings')
+      }
+    }
+
+    // Get unique accommodation_unit_ids for cross-schema lookup
+    const allAccommodations = Array.from(reservationAccommodationsMap.values()).flat()
     const accommodationUnitIds = [...new Set(
-      (reservationsData || [])
-        .map((r: any) => r.accommodation_unit_id)
+      allAccommodations
+        .map((acc: any) => acc.accommodation_unit_id)
         .filter(Boolean)
     )]
 
     const accommodationUnitsMap = new Map<string, any>()
 
     if (accommodationUnitIds.length > 0) {
-      console.log('[reservations-list] Fetching accommodation units:', {
-        total_ids: accommodationUnitIds.length,
-        sample_ids: accommodationUnitIds.slice(0, 3)
-      })
+      console.log('[reservations-list] Fetching', accommodationUnitIds.length, 'unique accommodation units')
 
       const { data: unitsData, error: unitsError } = await supabase.rpc(
         'get_accommodation_units_by_ids',
@@ -215,14 +248,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
       if (unitsError) {
         console.error('[reservations-list] RPC error:', unitsError)
-      } else {
-        console.log('[reservations-list] RPC returned:', {
-          units_found: unitsData?.length || 0,
-          sample: unitsData?.slice(0, 2)
-        })
-      }
-
-      if (!unitsError && unitsData) {
+      } else if (unitsData) {
         unitsData.forEach((unit: any) => {
           accommodationUnitsMap.set(unit.id, {
             id: unit.id,
@@ -256,9 +282,16 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
     // Transform data to match response interface
     const reservations: ReservationListItem[] = (reservationsData || []).map((res: any) => {
-      const accommodationUnit = res.accommodation_unit_id
-        ? accommodationUnitsMap.get(res.accommodation_unit_id)
-        : null
+      // Get accommodations for this reservation from junction table
+      const reservationAccommodations = (reservationAccommodationsMap.get(res.id) || []).map((acc: any) => ({
+        id: acc.id,
+        motopress_accommodation_id: acc.motopress_accommodation_id,
+        motopress_type_id: acc.motopress_type_id,
+        room_rate: acc.room_rate,
+        accommodation_unit: acc.accommodation_unit_id
+          ? accommodationUnitsMap.get(acc.accommodation_unit_id) || null
+          : null
+      }))
 
       return {
         id: res.id,
@@ -270,7 +303,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         check_out_date: res.check_out_date,
         reservation_code: res.reservation_code,
         status: res.status,
-        accommodation_unit: accommodationUnit || null,
+        reservation_accommodations: reservationAccommodations, // Array of accommodations
 
         // 🆕 NEW: Complete booking details (PHASE 3)
         guest_email: res.guest_email,
