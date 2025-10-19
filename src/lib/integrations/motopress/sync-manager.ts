@@ -617,7 +617,7 @@ export class MotoPresSyncManager {
             synced_at: new Date().toISOString(),
             // ✅ FIX: Campos necesarios para que las cards funcionen correctamente
             view_type: unit.view_type || null,  // ✅ Ahora en metadata (no como columna directa)
-            capacity: unit.capacity?.total || 2,
+            capacity: unit.capacity || { adults: 2, children: 0, total: 2 },  // ✅ FIX: Save full capacity object, not just total
             bed_configuration: unit.bed_configuration ? [{ type: unit.bed_configuration.bed_type }] : [],
             unit_amenities: unit.amenities_list || [], // Array format for proper mapping
             // ✅ NUEVOS CAMPOS MOTOPRESS (identificados por mapper)

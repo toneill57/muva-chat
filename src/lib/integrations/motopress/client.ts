@@ -1,30 +1,35 @@
 interface MotoPresAccommodation {
   id: number
   title: string  // MotoPress returns plain string
-  description?: string  // HTML only (no clean text available)
+  description?: string  // HTML description
   excerpt?: string  // Clean text description
   status: string
-  // Direct structured fields from MotoPress
-  size?: number
-  view?: string
-  amenities?: string[]
-  images?: Array<{
+  // Direct top-level fields from MotoPress (NOT in meta!)
+  adults?: number          // Top-level adults capacity
+  children?: number        // Top-level children capacity
+  total_capacity?: number  // Top-level total capacity
+  base_adults?: number     // Top-level base adults
+  base_children?: number   // Top-level base children
+  size?: number           // Room size in m2
+  view?: string          // View type
+  bed_type?: string      // Bed configuration
+  amenities?: string[]   // Array of amenity names
+  images?: Array<{       // Images array
     id: number
     src: string
     title: string
     alt: string
   }>
-  // Meta fields (may not all be present)
+  services?: string[]    // Array of service names
+  attributes?: string[]  // Array of attributes
+  tags?: Array<{         // Tags array
+    id: number
+    name: string
+  }>
+  // Meta fields (minimal, most data is top-level)
   meta?: {
     mphb_room_type_id?: number
-    mphb_adults?: number
-    mphb_children?: number
-    mphb_bed_type?: string
-    mphb_room_size?: string
-    mphb_amenities?: string[]
-    mphb_gallery?: string[]
     mphb_price?: number
-    mphb_view?: string
     mphb_location?: string
   }
   categories?: Array<{
@@ -159,6 +164,8 @@ export class MotoPresClient {
     page: number = 1,
     perPage: number = 100
   ): Promise<MotoPresApiResponse<MotoPresAccommodation[]>> {
+    // Remove _fields parameter to get ALL fields including custom meta (mphb_adults, mphb_children, etc.)
+    // WordPress REST API's _fields parameter doesn't include nested custom meta fields
     return this.makeRequest<MotoPresAccommodation[]>(
       `/accommodation_types?page=${page}&per_page=${perPage}&status=publish`
     )

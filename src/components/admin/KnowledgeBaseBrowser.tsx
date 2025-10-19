@@ -5,6 +5,7 @@ import { Search, File, Trash2, Eye, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface KnowledgeBaseBrowserProps {
   tenantId: string;
@@ -43,6 +44,8 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
     accommodation_units_public: number;
     policies: number;
   } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadFiles();
@@ -114,6 +117,98 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
     }
   };
 
+  const handleBulkDelete = async () => {
+    console.log('[KnowledgeBase] handleBulkDelete called, selectedFiles.size:', selectedFiles.size);
+    console.log('[KnowledgeBase] Selected files:', Array.from(selectedFiles));
+
+    if (selectedFiles.size === 0) {
+      console.log('[KnowledgeBase] No files selected, returning early');
+      return;
+    }
+
+    // Calculate total chunks for selected files
+    const totalChunks = Array.from(selectedFiles).reduce((sum, filePath) => {
+      const file = files.find(f => f.file_path === filePath);
+      return sum + (file?.chunks || 0);
+    }, 0);
+
+    console.log('[KnowledgeBase] Total chunks to delete:', totalChunks);
+
+    // Confirmation dialog
+    const confirmed = confirm(
+      `Delete ${selectedFiles.size} selected document(s)?\n\nThis will remove ${totalChunks} chunk(s) from the knowledge base. This action cannot be undone.`
+    );
+
+    console.log('[KnowledgeBase] User confirmed:', confirmed);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      console.log('[KnowledgeBase] Sending DELETE request with payload:', {
+        tenant_id: tenantId,
+        file_paths: Array.from(selectedFiles)
+      });
+
+      const response = await fetch('/api/knowledge-base', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tenant_id: tenantId,
+          file_paths: Array.from(selectedFiles), // Send array of file paths
+        }),
+      });
+
+      console.log('[KnowledgeBase] Response status:', response.status, response.statusText);
+
+      const data = await response.json();
+      console.log('[KnowledgeBase] Response data:', data);
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to delete documents');
+      }
+
+      // Success - reload files list and clear selection
+      setSelectedFiles(new Set());
+      await loadFiles();
+
+      // Show success feedback
+      alert(`Successfully deleted ${selectedFiles.size} document(s) (${data.deleted_chunks} chunks removed)`);
+    } catch (err) {
+      console.error('[KnowledgeBaseBrowser] Error deleting files:', err);
+      alert(err instanceof Error ? err.message : 'Failed to delete documents. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const toggleFileSelection = (filePath: string) => {
+    const newSelection = new Set(selectedFiles);
+    if (newSelection.has(filePath)) {
+      newSelection.delete(filePath);
+      console.log('[KnowledgeBase] Deselected:', filePath, 'Total selected:', newSelection.size);
+    } else {
+      newSelection.add(filePath);
+      console.log('[KnowledgeBase] Selected:', filePath, 'Total selected:', newSelection.size);
+    }
+    setSelectedFiles(newSelection);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedFiles.size === filteredFiles.length) {
+      // Deselect all
+      setSelectedFiles(new Set());
+    } else {
+      // Select all filtered files
+      setSelectedFiles(new Set(filteredFiles.map(f => f.file_path)));
+    }
+  };
+
   const handlePreview = (filePath: string) => {
     // TODO: Implement preview modal with first few chunks
     alert(`Preview functionality for "${filePath}" coming soon!`);
@@ -156,15 +251,34 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
 
   return (
     <div className="space-y-4">
-      {/* Header with stats */}
+      {/* Header with stats and bulk actions */}
       <div className="space-y-3">
-        <div className="flex items-center gap-6 text-sm text-gray-600">
-          <span>
-            <strong className="text-gray-900">{totalFiles}</strong> {totalFiles === 1 ? 'file' : 'files'}
-          </span>
-          <span>
-            <strong className="text-gray-900">{totalChunks}</strong> {totalChunks === 1 ? 'chunk' : 'chunks'}
-          </span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6 text-sm text-gray-600">
+            <span>
+              <strong className="text-gray-900">{totalFiles}</strong> {totalFiles === 1 ? 'file' : 'files'}
+            </span>
+            <span>
+              <strong className="text-gray-900">{totalChunks}</strong> {totalChunks === 1 ? 'chunk' : 'chunks'}
+            </span>
+            {selectedFiles.size > 0 && (
+              <span className="text-blue-600 font-medium">
+                {selectedFiles.size} selected
+              </span>
+            )}
+          </div>
+          {selectedFiles.size > 0 && (
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleBulkDelete}
+              disabled={isDeleting}
+              className="gap-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              {isDeleting ? 'Deleting...' : `Delete ${selectedFiles.size} Selected`}
+            </Button>
+          )}
         </div>
 
         {/* Stats by source */}
@@ -218,6 +332,13 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
               <tr>
+                <th className="px-4 py-3 w-12">
+                  <Checkbox
+                    checked={filteredFiles.length > 0 && selectedFiles.size === filteredFiles.length}
+                    onCheckedChange={toggleSelectAll}
+                    aria-label="Select all documents"
+                  />
+                </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   File Name
                 </th>
@@ -238,6 +359,13 @@ export function KnowledgeBaseBrowser({ tenantId }: KnowledgeBaseBrowserProps) {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredFiles.map((file) => (
                 <tr key={file.file_path} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-4 py-3">
+                    <Checkbox
+                      checked={selectedFiles.has(file.file_path)}
+                      onCheckedChange={() => toggleFileSelection(file.file_path)}
+                      aria-label={`Select ${getFileName(file.file_path)}`}
+                    />
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <File className="w-4 h-4 text-blue-600 flex-shrink-0" />

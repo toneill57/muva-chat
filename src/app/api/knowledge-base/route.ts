@@ -150,16 +150,16 @@ export async function GET(request: NextRequest) {
 /**
  * DELETE /api/admin/knowledge-base
  *
- * Deletes all chunks for a specific document (file_path) in tenant knowledge base
+ * Deletes all chunks for one or more documents (file_path) in tenant knowledge base
  *
- * @param request - Body: { tenant_id: string, file_path: string }
+ * @param request - Body: { tenant_id: string, file_path?: string, file_paths?: string[] }
  * @returns JSON response with success status
  */
 export async function DELETE(request: NextRequest) {
   try {
     // Parse request body
     const body = await request.json()
-    const { tenant_id, file_path } = body
+    const { tenant_id, file_path, file_paths } = body
 
     // Validation: Check required fields
     if (!tenant_id) {
@@ -173,12 +173,13 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    if (!file_path) {
+    // Accept either single file_path or array of file_paths
+    if (!file_path && (!file_paths || file_paths.length === 0)) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing file_path',
-          message: 'file_path is required in request body'
+          error: 'Missing file_path or file_paths',
+          message: 'Either file_path or file_paths is required in request body'
         },
         { status: 400 }
       )
@@ -187,33 +188,56 @@ export async function DELETE(request: NextRequest) {
     // Initialize Supabase client
     const supabase = createServerClient()
 
-    // Delete all chunks for this file_path
-    const { error, count } = await supabase
-      .from('tenant_knowledge_embeddings')
-      .delete({ count: 'exact' })
-      .eq('tenant_id', tenant_id)
-      .eq('file_path', file_path)
+    // Normalize to array for unified processing
+    const pathsToDelete = file_paths || [file_path]
+    let totalDeleted = 0
 
-    if (error) {
-      console.error('[knowledge-base] Delete error:', error)
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Delete operation failed',
-          message: error.message
-        },
-        { status: 500 }
-      )
+    // Delete from ALL sources (tenant_knowledge_embeddings AND accommodation_units_public)
+    for (const path of pathsToDelete) {
+      // 1. Delete from tenant_knowledge_embeddings (general knowledge base)
+      const { error: knowledgeError, count: knowledgeCount } = await supabase
+        .from('tenant_knowledge_embeddings')
+        .delete({ count: 'exact' })
+        .eq('tenant_id', tenant_id)
+        .eq('file_path', path)
+
+      if (knowledgeError) {
+        console.error(`[knowledge-base] Delete error from tenant_knowledge_embeddings for ${path}:`, knowledgeError)
+      } else {
+        totalDeleted += knowledgeCount || 0
+        console.log(`[knowledge-base] Deleted ${knowledgeCount} chunks from tenant_knowledge_embeddings for: ${path}`)
+      }
+
+      // 2. Delete from accommodation_units_public (accommodation chunks)
+      // Remove 'accommodations/' prefix if present (GET endpoint adds it but DB doesn't have it)
+      const accommodationName = path.startsWith('accommodations/') ? path.replace('accommodations/', '') : path
+
+      const { error: accommodationError, count: accommodationCount } = await supabase
+        .from('accommodation_units_public')
+        .delete({ count: 'exact' })
+        .eq('tenant_id', tenant_id)
+        .eq('name', accommodationName) // accommodation_units_public uses 'name' instead of 'file_path'
+
+      if (accommodationError) {
+        console.error(`[knowledge-base] Delete error from accommodation_units_public for ${path}:`, accommodationError)
+      } else {
+        totalDeleted += accommodationCount || 0
+        console.log(`[knowledge-base] Deleted ${accommodationCount} chunks from accommodation_units_public for: ${path}`)
+      }
     }
 
-    console.log(`[knowledge-base] Deleted ${count} chunks for file: ${file_path} (tenant: ${tenant_id})`)
+    console.log(`[knowledge-base] Total deleted: ${totalDeleted} chunks for ${pathsToDelete.length} file(s) (tenant: ${tenant_id})`)
 
     // Success response
     return NextResponse.json({
       success: true,
-      message: 'Document deleted successfully',
-      deleted_chunks: count || 0,
-      file_path
+      message: pathsToDelete.length === 1
+        ? 'Document deleted successfully'
+        : `${pathsToDelete.length} documents deleted successfully`,
+      deleted_chunks: totalDeleted,
+      deleted_files: pathsToDelete.length,
+      file_path: file_path, // For backward compatibility with single delete
+      file_paths: pathsToDelete
     })
 
   } catch (error) {
@@ -223,7 +247,7 @@ export async function DELETE(request: NextRequest) {
       {
         success: false,
         error: 'Internal server error',
-        message: 'Failed to delete document',
+        message: 'Failed to delete document(s)',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }

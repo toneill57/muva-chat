@@ -6,11 +6,17 @@ interface MotoPresAccommodation {
     rendered: string
   }
   description?: string  // MotoPress direct HTML field (NO excerpt field exists)
-  // MotoPress direct fields
-  size?: number         // Direct size field
-  view?: string        // Direct view field
-  amenities?: string[] // Direct amenities array
-  images?: Array<{     // Direct images array
+  // MotoPress direct fields (TOP LEVEL - not in meta!)
+  adults?: number          // Top-level adults capacity
+  children?: number        // Top-level children capacity
+  total_capacity?: number  // Top-level total capacity
+  base_adults?: number     // Top-level base adults
+  base_children?: number   // Top-level base children
+  size?: number           // Direct size field
+  view?: string          // Direct view field
+  bed_type?: string      // Direct bed type field
+  amenities?: string[]   // Direct amenities array
+  images?: Array<{       // Direct images array
     id: number
     src: string
     title: string
@@ -18,14 +24,7 @@ interface MotoPresAccommodation {
   }>
   meta?: {
     mphb_room_type_id?: number
-    mphb_adults?: number
-    mphb_children?: number
-    mphb_bed_type?: string
-    mphb_room_size?: string
-    mphb_amenities?: string[]
-    mphb_gallery?: string[]
     mphb_price?: number
-    mphb_view?: string
     mphb_location?: string
   }
   categories?: Array<{
@@ -139,61 +138,74 @@ export class MotoPresDataMapper {
 
     console.log(`📝 Mapping ${motoPresData.id}: excerpt length=${description.length}`)
 
+    // 🔍 DEBUG: Log raw capacity data from MotoPress (TOP-LEVEL fields, not meta!)
+    console.log(`[CAPACITY DEBUG] ${motoPresData.id} "${typeof motoPresData.title === 'string' ? motoPresData.title : motoPresData.title?.rendered}":`, {
+      adults_raw: motoPresData.adults,
+      adults_type: typeof motoPresData.adults,
+      children_raw: motoPresData.children,
+      children_type: typeof motoPresData.children,
+      total_capacity_raw: motoPresData.total_capacity,
+      base_adults_raw: motoPresData.base_adults,
+      base_children_raw: motoPresData.base_children
+    });
+
     // Build capacity object (JSONB format)
-    const adults = meta.mphb_adults || 2
-    const children = meta.mphb_children || 0
+    // Use explicit type check to preserve 0 values (0 || 2 would incorrectly return 2)
+    // MotoPress stores capacity at TOP LEVEL, not in meta!
+    const adults = typeof motoPresData.adults === 'number' ? motoPresData.adults :
+                   (typeof motoPresData.base_adults === 'number' ? motoPresData.base_adults : 2)
+    const children = typeof motoPresData.children === 'number' ? motoPresData.children :
+                     (typeof motoPresData.base_children === 'number' ? motoPresData.base_children : 0)
     const capacity = {
       adults,
       children,
-      total: adults + children
+      total: typeof motoPresData.total_capacity === 'number' ? motoPresData.total_capacity : (adults + children)
     }
+
+    console.log(`[CAPACITY MAPPED] ${motoPresData.id}:`, capacity);
 
     // Build bed configuration object (JSONB format)
+    // MotoPress stores bed_type at TOP LEVEL, not in meta!
     const bed_configuration = {
-      bed_type: meta.mphb_bed_type || 'standard',
+      bed_type: motoPresData.bed_type || 'standard',
       bed_count: 1,
-      details: meta.mphb_bed_type || 'Standard bed configuration'
+      details: motoPresData.bed_type || 'Standard bed configuration'
     }
 
-    // Extract size from direct field or meta field
-    const size_m2 = motoPresData.size ||
-      (meta.mphb_room_size ? parseInt(meta.mphb_room_size.match(/(\d+)/)?.[1] || '0') : undefined)
+    // Extract size from top-level field (MotoPress stores size at TOP LEVEL)
+    const size_m2 = motoPresData.size
 
-    console.log(`📐 Mapping ${motoPresData.id}: size=${motoPresData.size}, meta_size=${meta.mphb_room_size}, final_size=${size_m2}`)
+    console.log(`📐 Mapping ${motoPresData.id}: size=${motoPresData.size}`)
 
-    // Build tourism features (JSONB format) - use direct fields first
+    // Build tourism features (JSONB format) - MotoPress stores these at TOP LEVEL
     const tourism_features = {
-      amenities: motoPresData.amenities || meta.mphb_amenities || [],
-      view: motoPresData.view || meta.mphb_view,
+      amenities: motoPresData.amenities || [],
+      view: motoPresData.view,
       location: meta.mphb_location,
       price_per_night: meta.mphb_price
     }
 
     console.log(`🎯 Mapping ${motoPresData.id}: view="${motoPresData.view}", amenities=${motoPresData.amenities?.length || 0}`)
 
-    // Build location details (JSONB format) - use direct fields first
+    // Build location details (JSONB format) - location in meta, view at top level
     const location_details = meta.mphb_location || motoPresData.view ? {
       area: meta.mphb_location,
-      view: motoPresData.view || meta.mphb_view
+      view: motoPresData.view
     } : undefined
 
-    // Build images array (JSONB format) - use direct fields first
+    // Build images array (JSONB format) - MotoPress stores images at TOP LEVEL
     const title = typeof motoPresData.title === 'string' ? motoPresData.title : motoPresData.title?.rendered || `Accommodation ${motoPresData.id}`
     const images = motoPresData.images?.map((img, index) => ({
       url: img.src,
       alt: `${title} - Image ${index + 1}`,
       is_primary: index === 0
-    })) || (meta.mphb_gallery ? meta.mphb_gallery.map((img, index) => ({
-      url: img,
-      alt: `${title} - Image ${index + 1}`,
-      is_primary: index === 0
-    })) : [])
+    })) || []
 
-    console.log(`🖼️ Mapping ${motoPresData.id}: images=${motoPresData.images?.length || 0}, meta_gallery=${meta.mphb_gallery?.length || 0}, final_images=${images.length}`)
+    console.log(`🖼️ Mapping ${motoPresData.id}: images=${motoPresData.images?.length || 0}, final_images=${images.length}`)
 
-    // Build unique features (JSONB format) - use direct fields first
+    // Build unique features (JSONB format) - MotoPress stores amenities at TOP LEVEL
     const unique_features = {
-      motopress_features: motoPresData.amenities || meta.mphb_amenities || [],
+      motopress_features: motoPresData.amenities || [],
       special_attributes: []
     }
 
@@ -217,12 +229,12 @@ export class MotoPresDataMapper {
       capacity,
       bed_configuration,
       size_m2,
-      view_type: motoPresData.view || meta.mphb_view,
+      view_type: motoPresData.view,
       tourism_features,
       location_details,
       unique_features,
       images,
-      amenities_list: motoPresData.amenities || meta.mphb_amenities || [],
+      amenities_list: motoPresData.amenities || [],
       categories: motoPresData.categories || [],
       status: motoPresData.status === 'publish' ? 'active' : 'inactive',
       is_featured: false,
@@ -261,9 +273,12 @@ export class MotoPresDataMapper {
     description_preview: string
   } {
     const meta = data.meta || {}
-    const adults = meta.mphb_adults || 2
-    const children = meta.mphb_children || 0
-    const capacity = adults + children
+    // MotoPress stores capacity at TOP LEVEL, not in meta!
+    const adults = typeof data.adults === 'number' ? data.adults :
+                   (typeof data.base_adults === 'number' ? data.base_adults : 2)
+    const children = typeof data.children === 'number' ? data.children :
+                     (typeof data.base_children === 'number' ? data.base_children : 0)
+    const capacity = typeof data.total_capacity === 'number' ? data.total_capacity : (adults + children)
 
     // Use excerpt for clean preview text
     const descriptionPreview = data.excerpt
