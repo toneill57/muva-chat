@@ -142,28 +142,46 @@ export class MotoPresBookingsMapper {
     tenantId: string,
     supabase: SupabaseClient
   ): Promise<GuestReservation> {
-    // 1. Extract phone data from iCal description (Airbnb bookings)
+    // 1. Detect if this is an Airbnb booking
+    const isAirbnb = (booking.ical_description || '').includes('airbnb.com')
+
+    // 2. Extract phone data from iCal description (Airbnb bookings)
     const phone = this.extractPhoneFromIcal(booking.ical_description || '')
     const reservationCode = this.extractReservationCode(booking.ical_description || '')
 
-    // 2. Find accommodation_unit_id by matching MotoPress accommodation_type
+    // 3. Parse phone_last_4 from customer.phone (MotoPress direct) or iCal (Airbnb)
+    let phoneLast4 = '0000'
+    if (isAirbnb) {
+      // Airbnb: extract from iCal
+      phoneLast4 = phone.last4
+    } else if (booking.customer.phone) {
+      // MotoPress direct: extract last 4 digits from customer.phone
+      const phoneDigits = booking.customer.phone.replace(/[^0-9]/g, '')
+      phoneLast4 = phoneDigits.slice(-4).padStart(4, '0')
+    }
+
+    // 4. Find accommodation_unit_id by matching MotoPress accommodation TYPE ID
     const motopressTypeId = booking.reserved_accommodations[0]?.accommodation_type
     let accommodationUnitId: string | null = null
 
-    if (motopressTypeId) {
-      // Try to find unit in accommodation_units_public by metadata
-      const { data: units } = await supabase
-        .from('accommodation_units_public')
-        .select('unit_id, metadata')
-        .eq('tenant_id', tenantId)
+    console.log(`[mapper] Booking ${booking.id}: Looking for accommodation TYPE ID=${motopressTypeId}`)
 
-      // Find matching unit by motopress_type_id in metadata
-      const matchingUnit = units?.find((unit: any) => {
-        const metadata = unit.metadata || {}
-        return metadata.motopress_type_id === motopressTypeId
+    if (motopressTypeId) {
+      // Query hotels.accommodation_units using RPC (tenant_id must be UUID, not string)
+      const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
+        p_tenant_id: tenantId, // Already UUID string format
+        p_motopress_unit_id: motopressTypeId
       })
 
-      accommodationUnitId = matchingUnit?.unit_id || null
+      if (error) {
+        console.log(`[mapper] ❌ RPC error for accommodation ${motopressTypeId}:`, error)
+      } else if (units && units.length > 0) {
+        const unit = units[0]
+        accommodationUnitId = unit.id
+        console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_unit_id=${unit.motopress_unit_id}) matches booking accommodation ${motopressTypeId}`)
+      } else {
+        console.log(`[mapper] ❌ NO MATCH: No unit found for motopress_unit_id=${motopressTypeId}`)
+      }
     }
 
     // 3. Build guest name
@@ -179,12 +197,12 @@ export class MotoPresBookingsMapper {
       guestName = booking.reserved_accommodations[0].guest_name
     }
 
-    // 4. Map to GuestReservation schema
+    // 5. Map to GuestReservation schema
     return {
       tenant_id: tenantId,
       guest_name: guestName,
       phone_full: booking.customer.phone || phone.full,
-      phone_last_4: phone.last4,
+      phone_last_4: phoneLast4,  // Use parsed phone_last_4 (Airbnb or MotoPress)
       check_in_date: booking.check_in_date,
       check_out_date: booking.check_out_date,
       check_in_time: booking.check_in_time || '15:00:00',
@@ -198,7 +216,7 @@ export class MotoPresBookingsMapper {
       children: booking.reserved_accommodations[0]?.children || 0,
       total_price: booking.total_price || null,
       currency: booking.currency || 'COP',
-      booking_source: 'motopress',
+      booking_source: isAirbnb ? 'airbnb' : 'motopress',  // Detect Airbnb vs MotoPress
       external_booking_id: booking.id.toString(),
       booking_notes: booking.ical_description || null,
       // SIRE compliance fields (null for MotoPress sync - can be filled by guest later)
@@ -288,31 +306,49 @@ export class MotoPresBookingsMapper {
     tenantId: string,
     supabase: SupabaseClient
   ): Promise<GuestReservation> {
-    // 1. Extract phone data from iCal description (Airbnb bookings)
+    // 1. Detect if this is an Airbnb booking
+    const isAirbnb = (booking.ical_description || '').includes('airbnb.com')
+
+    // 2. Extract phone data from iCal description (Airbnb bookings)
     const phone = this.extractPhoneFromIcal(booking.ical_description || '')
     const reservationCode = this.extractReservationCode(booking.ical_description || '')
 
-    // 2. Extract room name from _embedded data
+    // 3. Parse phone_last_4 from customer.phone (MotoPress direct) or iCal (Airbnb)
+    let phoneLast4 = '0000'
+    if (isAirbnb) {
+      // Airbnb: extract from iCal
+      phoneLast4 = phone.last4
+    } else if (booking.customer?.phone) {
+      // MotoPress direct: extract last 4 digits from customer.phone
+      const phoneDigits = booking.customer.phone.replace(/[^0-9]/g, '')
+      phoneLast4 = phoneDigits.slice(-4).padStart(4, '0')
+    }
+
+    // 4. Extract room name from _embedded data
     const roomName = this.extractRoomNameFromEmbedded(booking)
 
-    // 3. Find accommodation_unit_id by matching MotoPress accommodation_type
+    // 5. Find accommodation_unit_id by matching MotoPress accommodation TYPE ID
     const motopressTypeId = booking.reserved_accommodations[0]?.accommodation_type
     let accommodationUnitId: string | null = null
 
-    if (motopressTypeId) {
-      // Try to find unit in accommodation_units_public by metadata
-      const { data: units } = await supabase
-        .from('accommodation_units_public')
-        .select('unit_id, metadata')
-        .eq('tenant_id', tenantId)
+    console.log(`[mapper] Booking ${booking.id}: Looking for accommodation TYPE ID=${motopressTypeId}`)
 
-      // Find matching unit by motopress_type_id in metadata
-      const matchingUnit = units?.find((unit: any) => {
-        const metadata = unit.metadata || {}
-        return metadata.motopress_type_id === motopressTypeId
+    if (motopressTypeId) {
+      // Query hotels.accommodation_units using RPC (tenant_id must be UUID, not string)
+      const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
+        p_tenant_id: tenantId, // Already UUID string format
+        p_motopress_unit_id: motopressTypeId
       })
 
-      accommodationUnitId = matchingUnit?.unit_id || null
+      if (error) {
+        console.log(`[mapper] ❌ RPC error for accommodation ${motopressTypeId}:`, error)
+      } else if (units && units.length > 0) {
+        const unit = units[0]
+        accommodationUnitId = unit.id
+        console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_unit_id=${unit.motopress_unit_id}) matches booking accommodation ${motopressTypeId}`)
+      } else {
+        console.log(`[mapper] ❌ NO MATCH: No unit found for motopress_unit_id=${motopressTypeId}`)
+      }
     }
 
     // 4. Build guest name
@@ -341,7 +377,7 @@ export class MotoPresBookingsMapper {
       tenant_id: tenantId,
       guest_name: guestName,
       phone_full: booking.customer?.phone || phone.full,
-      phone_last_4: phone.last4,
+      phone_last_4: phoneLast4,  // Use parsed phone_last_4 (Airbnb or MotoPress)
       check_in_date: booking.check_in_date,
       check_out_date: booking.check_out_date,
       check_in_time: booking.check_in_time || '15:00:00',
@@ -355,7 +391,7 @@ export class MotoPresBookingsMapper {
       children: booking.reserved_accommodations[0]?.children || 0,
       total_price: booking.total_price || null,
       currency: booking.currency || 'COP',
-      booking_source: 'motopress',
+      booking_source: isAirbnb ? 'airbnb' : 'motopress',  // Detect Airbnb vs MotoPress
       external_booking_id: booking.id?.toString() || '',
       booking_notes: bookingNotes,
       // SIRE compliance fields (null for MotoPress sync - can be filled by guest later)

@@ -52,14 +52,14 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // 4. Delete all MotoPress reservations for this tenant
+    // 4. Delete all MotoPress AND Airbnb reservations for this tenant
     const supabase = createServerClient()
 
     const { data, error, count } = await supabase
       .from('guest_reservations')
       .delete({ count: 'exact' })
       .eq('tenant_id', tenant_id)
-      .eq('booking_source', 'motopress')
+      .in('booking_source', ['motopress', 'airbnb'])
 
     if (error) {
       console.error('[delete-all-reservations] Database error:', error)
