@@ -89,25 +89,6 @@ export async function authenticateStaff(
       return null
     }
 
-    // Check if staff chat is enabled for tenant
-    const { data: tenant, error: tenantError } = await supabase
-      .from('tenant_registry')
-      .select('features')
-      .eq('tenant_id', tenant_id)
-      .single()
-
-    if (tenantError || !tenant) {
-      console.error('[staff-auth] Tenant not found')
-      return null
-    }
-
-    const staffChatEnabled = tenant.features?.staff_chat_enabled === true
-
-    if (!staffChatEnabled) {
-      console.warn('[staff-auth] Staff chat not enabled for tenant:', tenant_id)
-      throw new Error('Staff chat is not enabled for this tenant')
-    }
-
     // Update last_login_at
     await supabase
       .from('staff_users')
