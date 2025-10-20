@@ -1168,7 +1168,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       )}
 
       {/* Main Chat Area */}
-      <div className="flex flex-col flex-1" style={{ height: '100vh', height: '100dvh' }}>
+      <div className="flex flex-col flex-1 h-screen" style={{ height: '100dvh' }}>
         {/* Header */}
         <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm z-20" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
