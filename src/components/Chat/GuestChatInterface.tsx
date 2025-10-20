@@ -1384,8 +1384,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         )}
 
         {/* Input Area */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        <div className="max-w-4xl mx-auto px-4 py-3">
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        <div className="max-w-4xl mx-auto px-4 pt-3 pb-0">
           <div className="flex gap-2 items-end">
             {/* Hidden file input */}
             <input
