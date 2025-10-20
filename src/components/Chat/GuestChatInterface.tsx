@@ -941,7 +941,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="flex min-h-dvh bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
       <aside
         className={`
@@ -1168,7 +1168,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       )}
 
       {/* Main Chat Area */}
-      <div className="flex flex-col flex-1 h-screen" style={{ height: '100dvh' }}>
+      <div className="flex flex-col flex-1" style={{ height: '100dvh' }}>
         {/* Header */}
         <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm z-60" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
@@ -1384,8 +1384,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         )}
 
         {/* Input Area */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-        <div className="max-w-4xl mx-auto px-4 pt-3 pb-0">
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg" style={{ paddingBottom: '0.75rem' }}>
+        <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex gap-2 items-end">
             {/* Hidden file input */}
             <input
@@ -1505,11 +1505,6 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             height: 100%;
             margin: 0;
             padding: 0;
-          }
-
-          .h-screen {
-            height: 100vh;
-            height: -webkit-fill-available; /* iOS Safari */
           }
 
           /* Prevent iOS Safari bounce/zoom */
