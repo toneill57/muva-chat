@@ -281,12 +281,13 @@ async function fetchTenantContext(tenantId: string): Promise<TenantContextData |
 
 /**
  * Detect if query is about reservations and extract parameters
+ * IMPROVED: Detects natural queries without requiring explicit keywords
  */
 function detectReservationQuery(message: string): ReservationQueryDetection {
   const messageLower = message.toLowerCase()
   const params: ReservationSearchParams = {}
 
-  // Keywords for reservation queries
+  // Keywords for reservation queries (optional now)
   const reservationKeywords = [
     'reserva', 'reservas', 'booking',
     'llega', 'llegan', 'llegada', 'llegadas',
@@ -300,16 +301,7 @@ function detectReservationQuery(message: string): ReservationQueryDetection {
     messageLower.includes(keyword)
   )
 
-  if (!hasReservationKeyword) {
-    return {
-      isReservationQuery: false,
-      queryType: 'none',
-      params: {},
-      confidence: 0,
-    }
-  }
-
-  // Extract dates
+  // Extract dates (do this FIRST, regardless of keywords)
   const datePatterns = [
     // "24 de diciembre" → "24 de diciembre"
     /(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/gi,
@@ -405,36 +397,84 @@ function detectReservationQuery(message: string): ReservationQueryDetection {
     }
   }
 
-  // Determine query type and confidence
-  let queryType: 'sql' | 'vector' | 'hybrid' | 'none' = 'vector'
-  let confidence = 0.6
+  // Determine if this is a reservation query and confidence level
+  let queryType: 'sql' | 'vector' | 'hybrid' | 'none' = 'none'
+  let confidence = 0
+  let isReservationQuery = false
 
-  // SQL if we have exact parameters (dates, phone, code)
-  if (params.checkInDate || params.phone || params.reservationCode || params.email) {
+  // Count extracted parameters
+  const hasDate = Boolean(params.checkInDate || params.checkOutDate)
+  const hasPhone = Boolean(params.phone)
+  const hasEmail = Boolean(params.email)
+  const hasCode = Boolean(params.reservationCode)
+  const hasName = Boolean(params.guestName)
+
+  const exactParamCount = [hasDate, hasPhone, hasEmail, hasCode].filter(Boolean).length
+  const totalParamCount = exactParamCount + (hasName ? 1 : 0)
+
+  // HIGH CONFIDENCE: Has explicit reservation keyword
+  if (hasReservationKeyword) {
+    isReservationQuery = true
+
+    // Hybrid if we have both exact params and fuzzy params
+    if (exactParamCount > 0 && hasName) {
+      queryType = 'hybrid'
+      confidence = 0.95
+    }
+    // SQL if we have exact parameters only
+    else if (exactParamCount > 0) {
+      queryType = 'sql'
+      confidence = 0.9
+    }
+    // Vector if we only have name
+    else if (hasName) {
+      queryType = 'vector'
+      confidence = 0.75
+    }
+    // Generic reservation query (no params extracted)
+    else {
+      queryType = 'sql'
+      confidence = 0.7
+    }
+  }
+  // MEDIUM-HIGH CONFIDENCE: Has dates (even without keywords)
+  // Natural queries like "lina del 7 al 10" or "quien llega el 24 de diciembre"
+  else if (hasDate) {
+    isReservationQuery = true
+
+    if (hasName) {
+      queryType = 'hybrid'
+      confidence = 0.85 // Slightly lower than with keywords
+    } else {
+      queryType = 'sql'
+      confidence = 0.8
+    }
+  }
+  // MEDIUM CONFIDENCE: Has phone/email/code without keywords
+  else if (hasPhone || hasEmail || hasCode) {
+    isReservationQuery = true
     queryType = 'sql'
-    confidence = 0.9
+    confidence = 0.75
+  }
+  // LOW CONFIDENCE: Only has name (too ambiguous)
+  // Could be asking about staff member, vendor, etc.
+  else if (hasName && totalParamCount === 1) {
+    isReservationQuery = false
+    queryType = 'none'
+    confidence = 0
   }
 
-  // Hybrid if we have both exact params and fuzzy params (name)
-  if ((params.checkInDate || params.phone) && params.guestName) {
-    queryType = 'hybrid'
-    confidence = 0.95
+  if (isReservationQuery) {
+    console.log('[staff-chat-engine] Detected reservation query:', {
+      queryType,
+      params,
+      confidence,
+      hasKeyword: hasReservationKeyword,
+    })
   }
-
-  // Vector only if we only have fuzzy params (name)
-  if (params.guestName && !params.checkInDate && !params.phone && !params.reservationCode) {
-    queryType = 'vector'
-    confidence = 0.7
-  }
-
-  console.log('[staff-chat-engine] Detected reservation query:', {
-    queryType,
-    params,
-    confidence,
-  })
 
   return {
-    isReservationQuery: true,
+    isReservationQuery,
     queryType,
     params,
     confidence,
