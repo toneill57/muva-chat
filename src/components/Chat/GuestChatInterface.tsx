@@ -1168,14 +1168,14 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       )}
 
       {/* Main Chat Area */}
-      <div className="flex flex-col flex-1 h-screen">
+      <div className="flex flex-col flex-1" style={{ height: '100vh', height: '100dvh' }}>
         {/* Header */}
-        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm lg:static sticky top-0 z-20">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm z-20" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
           >
             {isSidebarOpen ? (
               <X className="h-6 w-6 text-gray-600" />
@@ -1184,7 +1184,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             )}
           </button>
 
-          <div className="flex flex-col">
+          {/* Header content - aligned left */}
+          <div className="flex flex-col flex-1">
             {session.accommodation_unit && (
               <h1 className="text-lg font-bold text-gray-900">
                 Alojamiento {session.accommodation_unit.name}{session.accommodation_unit.unit_number ? ` #${session.accommodation_unit.unit_number}` : ''}
@@ -1198,11 +1199,12 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             </div>
           </div>
 
+          {/* Logout button */}
           <Button
             variant="outline"
             size="sm"
             onClick={onLogout}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 flex-shrink-0"
           >
             <LogOut className="h-4 w-4" />
             <span className="hidden sm:inline">Salir</span>
@@ -1225,7 +1227,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               </div>
             ) : !activeConversationId ? (
-              <div className="flex items-center justify-center h-full py-12">
+              <div className="flex items-center justify-center py-12">
                 <div className="text-center max-w-md px-4">
                   <Bot className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-700 mb-2">
@@ -1240,7 +1242,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                 </div>
               </div>
             ) : messages.length === 0 ? (
-              <div className="flex items-center justify-center h-full py-12">
+              <div className="flex items-center justify-center py-12">
                 <div className="text-center max-w-md px-4">
                   <Bot className="h-16 w-16 text-blue-300 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-gray-700 mb-2">
