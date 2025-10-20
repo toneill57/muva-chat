@@ -952,7 +952,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           bg-white border-r border-slate-200 shadow-lg lg:shadow-none
         `}
       >
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col pt-20">
           {/* ComplianceReminder banner */}
           <div className="flex-shrink-0 p-4">
             <ComplianceReminder
