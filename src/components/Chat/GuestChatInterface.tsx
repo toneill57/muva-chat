@@ -1184,24 +1184,17 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             )}
           </button>
 
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <User className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="font-semibold text-gray-900">{session.guest_name}</h1>
-              {session.accommodation_unit && (
-                <p className="text-xs font-medium text-blue-600">
-                  {session.accommodation_unit.name}{session.accommodation_unit.unit_number ? ` #${session.accommodation_unit.unit_number}` : ''}
-                  {session.accommodation_unit.view_type && ` • ${session.accommodation_unit.view_type}`}
-                </p>
-              )}
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <Calendar className="h-3 w-3" />
-                <span>
-                  {formatDate(session.check_in)} - {formatDate(session.check_out)}
-                </span>
-              </div>
+          <div className="flex flex-col">
+            {session.accommodation_unit && (
+              <h1 className="text-lg font-bold text-gray-900">
+                Alojamiento {session.accommodation_unit.name}{session.accommodation_unit.unit_number ? ` #${session.accommodation_unit.unit_number}` : ''}
+              </h1>
+            )}
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+              <Calendar className="h-3 w-3" />
+              <span>
+                {formatDate(session.check_in)} - {formatDate(session.check_out)}
+              </span>
             </div>
           </div>
 
@@ -1298,7 +1291,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
 
                     {/* Message Bubble */}
                     <div
-                      className={`flex-1 max-w-[75%] ${
+                      className={`flex-1 max-w-[85%] ${
                         message.role === 'user' ? 'text-right' : ''
                       }`}
                     >
@@ -1341,8 +1334,14 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
                 {/* Typing Indicator */}
                 {isLoading && (
                   <div className="flex gap-3 animate-message-in">
-                    <div className="hidden lg:flex flex-shrink-0 h-8 w-8 rounded-full bg-gray-200 items-center justify-center">
-                      <Bot className="h-4 w-4 text-gray-600" />
+                    <div className="hidden lg:flex flex-shrink-0">
+                      {tenant?.logo_url ? (
+                        <TenantChatAvatar tenant={tenant} size="sm" />
+                      ) : (
+                        <div className="h-8 w-8 rounded-full bg-gray-200 items-center justify-center flex">
+                          <Bot className="h-4 w-4 text-gray-600" />
+                        </div>
+                      )}
                     </div>
                     <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
                       <div className="flex gap-1">
