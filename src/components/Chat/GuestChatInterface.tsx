@@ -168,10 +168,12 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
     setIsLoadingConversations(true)
 
     try {
-      const response = await fetch('/api/guest/conversations', {
+      // Add timestamp to prevent mobile browser caching
+      const response = await fetch(`/api/guest/conversations?_t=${Date.now()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        cache: 'no-store',
       })
 
       if (!response.ok) {
@@ -410,12 +412,14 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
     setError(null)
 
     try {
+      // Add timestamp to prevent mobile browser caching
       const response = await fetch(
-        `/api/guest/chat/history?conversation_id=${activeConversationId}`,
+        `/api/guest/chat/history?conversation_id=${activeConversationId}&_t=${Date.now()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          cache: 'no-store',
         }
       )
 

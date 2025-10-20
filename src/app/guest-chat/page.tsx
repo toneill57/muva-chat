@@ -160,11 +160,18 @@ export default function GuestChatPage() {
     } finally {
       // Always clear client-side state
       localStorage.removeItem('guest_token')
+
+      // Clear any cached data that might persist
+      localStorage.removeItem('compliance_reminder_dismissed')
+
+      // Clear session state
       setSession(null)
       setToken(null)
+      setSessionKey('')
       setError(null)
-      // Reload to show login
-      router.refresh()
+
+      // Force full page reload to clear all cache
+      window.location.href = window.location.pathname
     }
   }
 
