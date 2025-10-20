@@ -222,7 +222,7 @@ export default function GuestChatPage() {
 
   // Logged in - show chat interface
   return <GuestChatInterface
-    key={session.id}  // Force remount on session change to clear cached state
+    key={session.reservation_id}  // Force remount on reservation change to clear cached state
     session={session}
     token={token}
     tenant={tenant}
