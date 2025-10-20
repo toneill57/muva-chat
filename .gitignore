@@ -84,3 +84,6 @@ VPS-ENV-PRODUCTION.txt
 .claude/errors.jsonl
 .mcp.json
 .mcp.json.backup*
+
+# Playwright MCP screenshots and cache
+.playwright-mcp/
