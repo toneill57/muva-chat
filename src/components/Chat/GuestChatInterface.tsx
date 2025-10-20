@@ -1170,7 +1170,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* Main Chat Area */}
       <div className="flex flex-col flex-1 h-screen" style={{ height: '100dvh' }}>
         {/* Header */}
-        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm z-20" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <header className="flex-shrink-0 bg-white border-b border-gray-200 shadow-sm z-60" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
           {/* Mobile Menu Button */}
           <button
@@ -1384,8 +1384,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         )}
 
         {/* Input Area */}
-        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg">
-        <div className="max-w-4xl mx-auto px-4 py-4">
+        <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="flex gap-2 items-end">
             {/* Hidden file input */}
             <input
