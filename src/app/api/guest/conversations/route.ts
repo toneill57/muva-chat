@@ -146,6 +146,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       conversations: conversations || [],
       total: conversations?.length || 0,
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
     })
 
   } catch (error) {
