@@ -27,6 +27,7 @@ export default function GuestChatPage() {
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [sessionKey, setSessionKey] = useState<string>('')  // Unique key for component remount
   const router = useRouter()
 
   // Step 0: Resolve tenant from subdomain cookie (set by middleware)
@@ -119,6 +120,8 @@ export default function GuestChatPage() {
             console.log(`[GuestChatPage] Valid session restored`)
             setSession(verifiedSession)
             setToken(storedToken)
+            // Generate unique key for component remount
+            setSessionKey(`${verifiedSession.reservation_id}_${Date.now()}`)
             setLoading(false)
           }
         } else {
@@ -141,6 +144,8 @@ export default function GuestChatPage() {
     localStorage.setItem('guest_token', newToken)
     setSession(newSession)
     setToken(newToken)
+    // Generate unique key for component remount
+    setSessionKey(`${newSession.reservation_id}_${Date.now()}`)
   }
 
   const handleLogout = async () => {
@@ -222,7 +227,7 @@ export default function GuestChatPage() {
 
   // Logged in - show chat interface
   return <GuestChatInterface
-    key={session.reservation_id}  // Force remount on reservation change to clear cached state
+    key={sessionKey}  // Unique key guarantees fresh mount on every login
     session={session}
     token={token}
     tenant={tenant}
