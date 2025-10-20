@@ -945,7 +945,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
       <aside
         className={`
-          fixed lg:relative z-50 lg:z-0
+          fixed lg:relative z-[70] lg:z-0
           w-80 h-full
           transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
