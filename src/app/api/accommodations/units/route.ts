@@ -63,6 +63,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
     const tenantId = tenantData.tenant_id
 
     // Query accommodation units using RPC function (respects RLS)
+    // NOTE: This endpoint ALWAYS uses accommodation_units_public (source of truth for AI/embeddings)
+    // For ICS feed configuration validation, use /api/calendar/feeds which validates against hotels.accommodation_units
     const { data: unitsData, error: unitsError } = await supabase
       .rpc('get_accommodation_units_by_tenant', {
         p_tenant_id: tenantId
@@ -71,7 +73,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
     if (unitsError) {
       console.error('[Accommodations Units API] RPC error:', unitsError)
 
-      // Fallback to direct query if RPC doesn't exist
+      // PRIORITY 3: Fallback to direct query if RPC doesn't exist
       const { data: fallbackData, error: fallbackError } = await supabase
         .from('accommodation_units_public')
         .select('*')
@@ -235,10 +237,102 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
 
     console.log(`[Accommodations Units API] ✅ Found ${unitsData?.length || 0} units`)
 
+    // Apply same transformations as fallback to ensure component compatibility
+    const groupedUnits = (unitsData || []).reduce((acc: any, chunk: any) => {
+      const baseName = chunk.metadata?.original_accommodation || chunk.name
+
+      if (!acc[baseName]) {
+        // First chunk for this unit - use as base
+        acc[baseName] = {
+          ...chunk,
+          id: chunk.unit_id,
+          name: baseName,
+          unit_number: chunk.metadata?.display_order?.toString() || 'N/A',
+
+          size_m2: chunk.metadata?.size_m2 || null,
+          location_area: chunk.metadata?.location_area || null,
+
+          capacity: typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null
+            ? {
+                adults: chunk.metadata.capacity.adults || 2,
+                children: chunk.metadata.capacity.children || 0,
+                total: chunk.metadata.capacity.total || 2
+              }
+            : {
+                adults: chunk.metadata?.capacity || 2,
+                children: chunk.metadata?.children_capacity || 0,
+                total: (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0)
+              },
+
+          children_capacity: typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null
+            ? chunk.metadata.capacity.children || 0
+            : chunk.metadata?.children_capacity || 0,
+          total_capacity: typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null
+            ? chunk.metadata.capacity.total || 2
+            : (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0),
+
+          accommodation_type: chunk.metadata?.accommodation_mphb_type || 'Standard',
+          room_type_id: chunk.metadata?.motopress_room_type_id || null,
+
+          description: chunk.description || '',
+          short_description: chunk.short_description || chunk.description?.substring(0, 150) || '',
+          bed_configuration: {
+            bed_type: chunk.metadata?.bed_configuration?.[0]?.type || 'Queen'
+          },
+          view_type: chunk.metadata?.view_type || 'N/A',
+          tourism_features: chunk.metadata?.tourism_features || '',
+          booking_policies: chunk.metadata?.booking_policies || '',
+          unique_features: chunk.metadata?.unique_features || [],
+          categories: chunk.metadata?.categories || [],
+          is_featured: chunk.metadata?.is_featured || false,
+          display_order: chunk.metadata?.display_order || 0,
+          status: chunk.is_active ? 'active' : 'inactive',
+          is_active: chunk.is_active,
+          is_bookable: chunk.is_bookable,
+          embedding_status: {
+            has_fast: !!chunk.embedding_fast,
+            has_balanced: !!chunk.embedding,
+            fast_dimensions: chunk.embedding_fast?.length || 0,
+            balanced_dimensions: chunk.embedding?.length || 0
+          },
+          pricing_summary: {
+            seasonal_rules: 0,
+            hourly_rules: 0,
+            base_price_range: chunk.pricing?.base_price ? [
+              chunk.pricing.base_price,
+              chunk.pricing.base_price
+            ] : [0, 0],
+            price_per_person: chunk.pricing?.base_price && (typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null)
+              ? Math.round(chunk.pricing.base_price / (chunk.metadata.capacity.total || 1))
+              : (chunk.pricing?.base_price && chunk.metadata?.capacity)
+                ? Math.round(chunk.pricing.base_price / ((chunk.metadata.capacity || 2) + (chunk.metadata.children_capacity || 0)))
+                : undefined
+          },
+          amenities_summary: {
+            total: Array.isArray(chunk.metadata?.unit_amenities)
+              ? chunk.metadata.unit_amenities.length
+              : (typeof chunk.metadata?.unit_amenities === 'string'
+                  ? chunk.metadata.unit_amenities.split(',').length
+                  : 0),
+            included: Array.isArray(chunk.metadata?.unit_amenities)
+              ? chunk.metadata.unit_amenities.length
+              : (typeof chunk.metadata?.unit_amenities === 'string'
+                  ? chunk.metadata.unit_amenities.split(',').length
+                  : 0)
+          }
+        }
+      }
+
+      return acc
+    }, {})
+
+    const consolidatedUnits = Object.values(groupedUnits)
+    console.log(`[Accommodations Units API] ✅ Consolidated to ${consolidatedUnits.length} unique units`)
+
     return NextResponse.json(
       {
         success: true,
-        data: unitsData || []
+        data: consolidatedUnits
       },
       { status: 200 }
     )

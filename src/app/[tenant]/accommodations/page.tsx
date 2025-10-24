@@ -16,9 +16,11 @@ import {
   DollarSign,
   AlertCircle
 } from 'lucide-react'
+import AirbnbSyncCard from '@/components/Accommodations/AirbnbSyncCard'
 
 interface DashboardMetrics {
   totalFutureReservations: number
+  totalAirbnbReservations: number
   checkInsToday: number
   checkInsTomorrow: number
   occupiedUnits: number
@@ -32,6 +34,7 @@ export default function AccommodationsDashboardPage() {
   const { tenant } = useTenant()
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     totalFutureReservations: 0,
+    totalAirbnbReservations: 0,
     checkInsToday: 0,
     checkInsTomorrow: 0,
     occupiedUnits: 0,
@@ -102,8 +105,24 @@ export default function AccommodationsDashboardPage() {
 
       const occupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0
 
+      // Fetch Airbnb reservations count (all events from ICS)
+      const airbnbResponse = await fetch('/api/reservations/airbnb', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      let airbnbCount = 0
+      if (airbnbResponse.ok) {
+        const airbnbData = await airbnbResponse.json()
+        console.log('[Dashboard] Airbnb API response:', airbnbData)
+        airbnbCount = airbnbData.total || 0
+      } else {
+        console.error('[Dashboard] Airbnb API failed:', airbnbResponse.status, await airbnbResponse.text())
+      }
+
       setMetrics({
         totalFutureReservations: reservations.length,
+        totalAirbnbReservations: airbnbCount,
         checkInsToday: checkInsToday.length,
         checkInsTomorrow: checkInsTomorrow.length,
         occupiedUnits,
@@ -142,7 +161,8 @@ export default function AccommodationsDashboardPage() {
       green: 'bg-green-50 text-green-700 border-green-200',
       orange: 'bg-orange-50 text-orange-700 border-orange-200',
       purple: 'bg-purple-50 text-purple-700 border-purple-200',
-      indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200'
+      indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      pink: 'bg-pink-50 text-pink-700 border-pink-200'
     }[color] || 'bg-gray-50 text-gray-700 border-gray-200'
 
     return (
@@ -201,13 +221,13 @@ export default function AccommodationsDashboardPage() {
       {/* Main Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
-          title="Reservas Futuras"
+          title="Reservas Futuras MotoPress"
           value={metrics.totalFutureReservations}
           description="Total de reservas confirmadas"
           icon={Calendar}
           color="blue"
           linkText="Ver todas"
-          linkHref="/accommodations/reservations"
+          linkHref="/accommodations/reservations-motopress"
         />
 
         <StatCard
@@ -217,7 +237,7 @@ export default function AccommodationsDashboardPage() {
           icon={CalendarCheck}
           color="green"
           linkText="Ver detalles"
-          linkHref="/accommodations/reservations?filter=today"
+          linkHref="/accommodations/reservations-motopress?filter=today"
         />
 
         <StatCard
@@ -227,7 +247,7 @@ export default function AccommodationsDashboardPage() {
           icon={CalendarClock}
           color="orange"
           linkText="Ver detalles"
-          linkHref="/accommodations/reservations?filter=tomorrow"
+          linkHref="/accommodations/reservations-motopress?filter=tomorrow"
         />
 
         <StatCard
@@ -249,6 +269,16 @@ export default function AccommodationsDashboardPage() {
         />
 
         <StatCard
+          title="Reservas Airbnb"
+          value={metrics.totalAirbnbReservations}
+          description="Total de reservas sincronizadas del ICS"
+          icon={Home}
+          color="pink"
+          linkText="Ver todas"
+          linkHref="/accommodations/reservations-airbnb"
+        />
+
+        <StatCard
           title="Gestión"
           value="MotoPress"
           description="Integración activa"
@@ -257,16 +287,19 @@ export default function AccommodationsDashboardPage() {
           linkText="Configurar"
           linkHref="/accommodations/integrations"
         />
+
+        {/* Airbnb Sync Card */}
+        <AirbnbSyncCard />
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link
-          href="/accommodations/reservations"
+          href="/accommodations/reservations-motopress"
           className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors group"
         >
           <Calendar className="w-6 h-6 text-blue-600 mb-2 group-hover:scale-110 transition-transform" />
-          <h3 className="font-semibold text-blue-900 mb-1">Ver Reservas</h3>
+          <h3 className="font-semibold text-blue-900 mb-1">Ver Reservas MotoPress</h3>
           <p className="text-sm text-blue-700">
             Gestiona todas las reservas confirmadas
           </p>
@@ -328,7 +361,7 @@ export default function AccommodationsDashboardPage() {
             ))}
             {metrics.checkInsToday > 3 && (
               <Link
-                href="/accommodations/reservations?filter=today"
+                href="/accommodations/reservations-motopress?filter=today"
                 className="block text-center text-sm text-green-700 hover:text-green-900 font-medium pt-2"
               >
                 Ver todas las llegadas de hoy →

@@ -130,8 +130,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
     // Get query parameters
     const url = new URL(request.url)
-    const statusFilter = url.searchParams.get('status') || 'active'
+    const statusParam = url.searchParams.get('status') || 'active,pending_payment,pending_admin'
+    const statusFilter = statusParam.split(',').map(s => s.trim())
     const futureOnly = url.searchParams.get('future') !== 'false' // Default true
+
+    console.log('[reservations-list] Query filters:', { statusFilter, futureOnly })
 
     // Build query
     const supabase = createServerClient()
@@ -176,7 +179,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         updated_at
       `)
       .eq('tenant_id', staffSession.tenant_id)
-      .eq('status', statusFilter)
+      .in('status', statusFilter)
+      .in('booking_source', ['motopress', 'airbnb']) // Show MotoPress + Airbnb reservations
 
     // Filter future reservations only
     if (futureOnly) {

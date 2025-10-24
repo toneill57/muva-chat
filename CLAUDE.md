@@ -24,9 +24,7 @@ Guidance for Claude Code when working with this repository.
 ### 2. NO Work-arounds Facilistas
 **NUNCA crear work-arounds sin investigar la RAÍZ del problema.**
 
-- ✅ PRIMERO: Investigar por qué falla
-- ✅ SEGUNDO: Informar al usuario el problema REAL
-- ✅ TERCERO: Solo entonces proponer work-around (si es necesario)
+Workflow: Investigar causa → Informar problema real → Proponer solución (si es necesario)
 
 ### 3. Autonomía de Ejecución
 **NUNCA pedir al usuario hacer tareas que yo puedo hacer.**
@@ -67,6 +65,24 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 
 📚 **Guía:** `docs/troubleshooting/TYPESCRIPT_INTERFACE_COMPLETENESS.md`
 
+### 7. Autenticación - NO Duplicar Validaciones
+**Layouts ya protegen rutas - NO agregar validaciones adicionales**
+
+**Arquitectura actual:**
+- `/dashboard/layout.tsx` → Valida `staff_token` para `/dashboard/*`
+- `/accommodations/layout.tsx` → Valida `staff_token` para `/accommodations/*`
+- `/staff/page.tsx` → Validación interna con `verifyAuth()`
+
+**REGLAS:**
+- ❌ NUNCA agregar hooks de validación a páginas YA protegidas por layout
+- ❌ NUNCA duplicar validaciones (causa logout inesperado)
+- ✅ ANTES de agregar auth: verificar si existe `layout.tsx` protector
+- ✅ Componentes reutilizables (como `ReservationsList`) NO deben validar
+
+**URLs correctas (subdomain en hostname, NO en path):**
+- ✅ `simmerdown.localhost:3000/staff/login`
+- ❌ `simmerdown.localhost:3000/simmerdown/staff/login`
+
 ---
 
 ## 🚀 Development Setup
@@ -85,7 +101,8 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 
 ## 🤖 MCP Servers
 
-**Available:** 4 servers (supabase, knowledge-graph, playwright, context7)
+**Active:** 2 servers (supabase, knowledge-graph)
+**Disabled:** context7, memory-keeper (Oct 2025 - token optimization)
 
 ### MCP-FIRST POLICY
 
@@ -93,8 +110,8 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 |-----------|----------|------------|
 | SQL queries | `npx tsx -e` | `mcp__supabase__execute_sql` |
 | DB schema | bash + describe | `mcp__supabase__list_tables` |
-| Framework docs | WebFetch | `mcp__context7__get-library-docs` |
-| UI testing | curl | `mcp__playwright__browser_snapshot` |
+| Project memory | Inline docs | `mcp__knowledge-graph__aim_search_nodes` |
+| Framework docs | WebFetch | WebSearch + docs URLs |
 
 **MCP Supabase Workaround:**
 ```typescript
@@ -167,4 +184,4 @@ npx tsx scripts/execute-ddl-via-api.ts migration.sql
 
 ---
 
-**Last Updated:** October 2025
+**Last Updated:** October 23, 2025

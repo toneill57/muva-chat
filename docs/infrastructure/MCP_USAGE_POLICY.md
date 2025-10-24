@@ -1,8 +1,12 @@
 # MCP Usage Policy - Enforcement Obligatorio
 
 **Creado:** 2025-10-16
+**Última actualización:** 2025-10-19 (Consolidación memory-keeper → knowledge-graph)
 **Propósito:** Maximizar eficiencia y reducir consumo de tokens en 60-70%
 **Status:** OBLIGATORIO - Violaciones = Desperdicio de $$
+
+**Servidores Activos:** 2 de 5 (supabase, knowledge-graph)
+**Servidores Deshabilitados:** context7, memory-keeper (ahorro: ~7,440 tokens)
 
 ---
 
@@ -21,11 +25,11 @@ Si NO existe MCP → Métodos tradicionales permitidos
 |-------|---------------|-----------------|---------------|
 | **SQL Queries** | `npx tsx -e "createClient()..."` | `mcp__supabase__execute_sql` | 70% |
 | **DB Schema** | `npx tsx + describe tables` | `mcp__supabase__list_tables` | 80% |
-| **Framework Docs** | `WebFetch(https://nextjs.org/docs)` | `mcp__context7__get-library-docs` | 90% |
-| **Library Lookup** | WebSearch + manual parsing | `mcp__context7__resolve-library-id` | 85% |
-| **UI Testing** | `curl http://localhost:3000` | `mcp__playwright__browser_snapshot` | 92% |
-| **Browser Automation** | Puppeteer manual | `mcp__playwright__browser_*` | 75% |
-| **Project Memory** | Files scattered | `mcp__knowledge-graph__aim_*` | 60% |
+| **Framework Docs** | `WebFetch(https://nextjs.org/docs)` | WebSearch + docs URLs | 60% |
+| **Library Lookup** | WebSearch + manual parsing | WebSearch (context7 DESHABILITADO) | - |
+| **UI Testing** | `curl http://localhost:3000` | Manual testing (playwright DESHABILITADO) | - |
+| **Browser Automation** | Puppeteer manual | Manual (playwright DESHABILITADO) | - |
+| **Project Memory** | Files scattered | `mcp__knowledge-graph__aim_*` | 97%+ |
 | **Audit Tracking** | Manual docs | Knowledge-Graph entities | 70% |
 
 ---
@@ -66,17 +70,21 @@ mcp__supabase__list_tables({
 
 ---
 
-### 2. MCP Context7 (`mcp__context7__*`)
+### 2. ~~MCP Context7~~ (`mcp__context7__*`) - **DESHABILITADO Oct 2025**
 
-**✅ USAR PARA:**
+**STATUS:** ❌ Deshabilitado para optimización de tokens (~1,709 tokens ahorrados)
+
+**ANTES (cuando estaba activo):**
 - Obtener docs oficiales de frameworks (Next.js, React, Supabase, etc.)
 - Buscar ejemplos de código específicos
 - Resolver nombres de librerías a IDs Context7
 
-**❌ NUNCA USAR:**
-- WebFetch a URLs de documentación → PROHIBIDO
-- WebSearch para "next.js server actions docs" → PROHIBIDO
-- Leer archivos markdown de docs localmente → PROHIBIDO (si existen docs oficiales)
+**AHORA (alternativa):**
+- ✅ Usar WebSearch para documentación de frameworks
+- ✅ Visitar URLs oficiales directamente con WebFetch
+- ✅ Consultar documentación local cuando sea posible
+
+**RAZÓN DE DESHABILITACIÓN:** Raramente usado, WebSearch puede reemplazarlo con overhead mínimo
 
 **WORKFLOW CORRECTO:**
 ```typescript
@@ -132,13 +140,33 @@ mcp__playwright__browser_close()
 
 ---
 
+### 3. ~~MCP Memory-Keeper~~ (`mcp__memory-keeper__*`) - **DESHABILITADO Oct 2025**
+
+**STATUS:** ❌ Deshabilitado y consolidado en Knowledge-Graph (~5,731 tokens ahorrados)
+
+**MIGRACIÓN COMPLETADA (Oct 19, 2025):**
+- ✅ 43 memories migradas a Knowledge-graph entities/observations
+- ✅ 11 relations preservadas
+- ✅ 0% pérdida de información
+
+**RAZÓN DE CONSOLIDACIÓN:**
+- Knowledge-graph hace lo mismo (entities + observations = memories)
+- Eliminar duplicación de funcionalidad
+- Memory-keeper era 9 tools, Knowledge-graph es 10 tools → mejor consolidar en uno solo
+
+**MIGRACIÓN:**
+Todas las memories ahora viven en Knowledge-graph como entities con observations.
+
+---
+
 ### 4. MCP Knowledge-Graph (`mcp__knowledge-graph__aim_*`)
 
 **✅ USAR PARA:**
 - Tracking de auditorías y decisiones importantes
-- Memoria persistente entre sesiones
+- Memoria persistente entre sesiones (CONSOLIDA memory-keeper + knowledge-graph)
 - Relaciones entre entidades del proyecto
 - Contextos separados (work, personal, project-specific)
+- **NUEVO (Oct 2025):** 66 entities totales (23 arquitectura + 43 migradas de memory-keeper)
 
 **❌ NUNCA USAR:**
 - Archivos markdown scattered para tracking → INEFICIENTE
