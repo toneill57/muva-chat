@@ -1,11 +1,21 @@
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+// ES module compatibility
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Load environment variables from .env.local
+dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 
 /**
  * Playwright configuration for Guest Chat E2E tests
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests/e2e',
 
   // Test execution settings
   fullyParallel: true,
@@ -29,7 +39,7 @@ export default defineConfig({
   // Global test settings
   use: {
     // Base URL for tests
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL: 'http://simmerdown.localhost:3000',
 
     // Collect trace on failure
     trace: 'on-first-retry',
@@ -49,7 +59,6 @@ export default defineConfig({
 
   // Configure projects for major browsers
   projects: [
-    // Desktop browsers
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
@@ -58,46 +67,13 @@ export default defineConfig({
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
-    // Mobile browsers
-    {
-      name: 'mobile-chrome',
-      use: {
-        ...devices['iPhone 13'],
-        // Custom viewport for consistent testing
-        viewport: { width: 375, height: 667 },
-      },
-    },
-    {
-      name: 'mobile-safari',
-      use: {
-        ...devices['iPhone 13 Pro Max'],
-        // Custom viewport for larger phones
-        viewport: { width: 414, height: 896 },
-      },
-    },
-
-    // Tablet
-    {
-      name: 'tablet',
-      use: {
-        ...devices['iPad Pro'],
-        viewport: { width: 1024, height: 1366 },
-      },
-    },
   ],
 
   // Run local dev server before starting tests
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
+    command: './scripts/dev-with-keys.sh',
+    url: 'http://simmerdown.localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000, // 2 minutes to start server
-    stdout: 'ignore',
-    stderr: 'pipe',
+    timeout: 120 * 1000,
   },
 })

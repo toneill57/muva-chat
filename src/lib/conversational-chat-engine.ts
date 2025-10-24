@@ -10,6 +10,18 @@ import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
 import { enhanceQuery, expandTechnicalTerms, type EnhancedQuery } from '@/lib/context-enhancer'
 import type { GuestSession } from '@/lib/guest-auth'
+import { generateEmbeddingWithDimension } from '@/lib/embeddings/generator'
+import {
+  buildSearchContext,
+  logSearchStrategy,
+} from '@/lib/chat-engine/search-strategy'
+import {
+  executeParallelSearch,
+  searchAccommodationEnhanced,
+  searchTourism,
+  searchHotelGeneralInfo,
+  searchUnitManual,
+} from '@/lib/chat-engine/parallel-search'
 
 // ============================================================================
 // Configuration
@@ -409,214 +421,20 @@ async function performContextAwareSearch(
 
 /**
  * Generate OpenAI embedding
+ * @deprecated Use generateEmbeddingWithDimension from @/lib/embeddings/generator instead
  */
 async function generateEmbedding(text: string, dimensions: number): Promise<number[]> {
-  const client = getOpenAIClient()
-  const response = await client.embeddings.create({
-    model: 'text-embedding-3-large',
-    input: text,
-    dimensions: dimensions,
-    encoding_format: 'float',
-  })
-  return response.data[0].embedding
+  return generateEmbeddingWithDimension(text, dimensions as 1024 | 1536 | 3072);
 }
 
-/**
- * Enhanced accommodation search (public + manual) - FASE C
- *
- * Searches:
- * - accommodation_units_public: ALL units (for re-booking/comparison)
- * - accommodation_units_manual: ONLY guest's unit (private info)
- */
-async function searchAccommodationEnhanced(
-  queryEmbeddingFast: number[],
-  queryEmbeddingBalanced: number[],
-  guestInfo: GuestSession
-): Promise<VectorSearchResult[]> {
-  const client = getSupabaseClient()
-  const guestUnitId = guestInfo.accommodation_unit?.id
+// ✅ REFACTORED: Search functions moved to @/lib/chat-engine/parallel-search
+// - searchAccommodationEnhanced (imported)
+// - searchTourism (imported)
+// - searchHotelGeneralInfo (imported)
+// - searchUnitManual (imported)
 
-  if (!guestUnitId) {
-    console.warn('[Chat Engine] No accommodation assigned to guest')
-    return []
-  }
-
-  const { data, error } = await client.rpc('match_guest_accommodations', {
-    query_embedding_fast: queryEmbeddingFast,
-    query_embedding_balanced: queryEmbeddingBalanced,
-    p_guest_unit_id: guestUnitId,
-    p_tenant_id: guestInfo.tenant_id,
-    match_threshold: 0.15,
-    match_count: 10,
-  })
-
-  if (error) {
-    console.error('[Chat Engine] Enhanced accommodation search error:', error)
-    return []
-  }
-
-  console.log('[Chat Engine] Enhanced accommodation results:', {
-    total: data?.length || 0,
-    public_units: data?.filter((r: any) => r.source_table === 'accommodation_units_public').length || 0,
-    manual_old_deprecated: data?.filter((r: any) => r.source_table === 'accommodation_units_manual').length || 0, // Should be 0 after migration
-    guest_unit_results: data?.filter((r: any) => r.is_guest_unit).length || 0,
-  })
-
-  return (data || []).map((item: any) => ({
-    id: item.id,
-    name: item.name || 'Alojamiento',  // 🆕 FIX: Include name to avoid "Unknown" display
-    content: item.content,
-    similarity: item.similarity,
-    source_file: '', // Not applicable for DB content
-    table: item.source_table,
-    metadata: {
-      is_guest_unit: item.is_guest_unit,
-      is_public_info: item.source_table === 'accommodation_units_public',
-      is_private_info: item.source_table.includes('accommodation_units_manual'), // Supports old and new chunks table
-    },
-  }))
-}
-
-/**
- * Search MUVA tourism content
- */
-async function searchTourism(embedding: number[]): Promise<VectorSearchResult[]> {
-  const client = getSupabaseClient()
-  const { data, error } = await client.rpc('match_muva_documents', {
-    query_embedding: embedding,
-    match_threshold: 0.15,
-    match_count: 5,
-  })
-
-  if (error) {
-    console.error('[Chat Engine] Tourism search error:', error)
-    return []
-  }
-
-  return (data || []).map((item: any) => ({
-    ...item,
-    table: 'muva_content',
-  }))
-}
-
-/**
- * Search guest information (operational manuals, FAQs, policies)
- * @deprecated Use searchHotelGeneralInfo() and searchUnitManual() instead for proper domain separation
- */
-async function searchGuestInformation(
-  embedding: number[],
-  guestInfo: GuestSession
-): Promise<VectorSearchResult[]> {
-  const client = getSupabaseClient()
-  const { data, error } = await client.rpc('match_guest_information_balanced', {
-    query_embedding: embedding,
-    p_tenant_id: guestInfo.tenant_id,
-    similarity_threshold: 0.3,
-    match_count: 5,
-  })
-
-  if (error) {
-    console.error('[Chat Engine] Guest information search error:', error)
-    return []
-  }
-
-  console.log('[Chat Engine] Guest information results:', {
-    total_found: data?.length || 0,
-    tenant: guestInfo.tenant_id,
-  })
-
-  return (data || []).map((item: any) => ({
-    ...item,
-    table: 'guest_information',
-    content: item.info_content,
-    title: item.info_title,
-    name: item.info_title,
-  }))
-}
-
-/**
- * Search HOTEL GENERAL information (FAQ, Arrival instructions)
- * Domain 2: Information that applies to ALL guests of the hotel
- */
-async function searchHotelGeneralInfo(
-  embedding: number[],
-  tenantId: string
-): Promise<VectorSearchResult[]> {
-  const client = getSupabaseClient()
-  const { data, error } = await client.rpc('match_hotel_general_info', {
-    query_embedding: embedding,
-    p_tenant_id: tenantId,
-    similarity_threshold: 0.3,
-    match_count: 5,
-  })
-
-  if (error) {
-    console.error('[Chat Engine] Hotel general info search error:', error)
-    return []
-  }
-
-  console.log('[Chat Engine] Hotel general info results:', {
-    total_found: data?.length || 0,
-    tenant: tenantId,
-  })
-
-  return (data || []).map((item: any) => ({
-    ...item,
-    table: 'guest_information',
-    content: item.info_content,
-    title: item.info_title,
-    name: item.info_title,
-  }))
-}
-
-/**
- * Search UNIT MANUAL CHUNKS (WiFi, safe code, appliances)
- * Domain 3: Private information ONLY for the guest's assigned unit
- * Uses chunked content for improved vector search precision (0.85+ similarity vs 0.24 with full docs)
- */
-async function searchUnitManual(
-  embedding: number[],
-  unitId: string,
-  unitName?: string  // Optional: name of the accommodation for labeling
-): Promise<VectorSearchResult[]> {
-  const client = getSupabaseClient()
-  const { data, error } = await client.rpc('match_unit_manual_chunks', {
-    query_embedding: embedding,
-    p_accommodation_unit_id: unitId,
-    match_threshold: 0.25,
-    match_count: 5,
-  })
-
-  if (error) {
-    console.error('[Chat Engine] Unit manual chunks search error:', error)
-    return []
-  }
-
-  console.log('[Chat Engine] Unit manual chunks results:', {
-    total_found: data?.length || 0,
-    unit_id: unitId,
-    unit_name: unitName || 'N/A',
-    chunks: data?.map((item: any) => ({
-      chunk_index: item.chunk_index,
-      similarity: item.similarity?.toFixed(3),
-      section: item.section_title?.substring(0, 50),
-    })),
-  })
-
-  return (data || []).map((item: any) => ({
-    ...item,
-    table: 'accommodation_units_manual_chunks',
-    content: item.chunk_content || '',
-    title: item.section_title || `Manual - Chunk ${item.chunk_index}`,
-    name: `Manual ${item.section_title || ''}`,
-    metadata: {
-      ...item.metadata,
-      chunk_index: item.chunk_index,
-      section_title: item.section_title,
-      unit_name: unitName,  // Add unit name to metadata for proper labeling
-    },
-  }))
-}
+// ✅ REFACTORED: More search functions moved to @/lib/chat-engine/parallel-search
+// All search functions are now imported from the centralized module
 
 // ============================================================================
 // Full Document Retrieval
