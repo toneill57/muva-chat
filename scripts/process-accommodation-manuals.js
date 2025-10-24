@@ -175,11 +175,31 @@ async function processManualFile(filePath) {
 async function main() {
   console.log('🚀 Starting accommodation manual processing...\n')
 
-  // Find all manual files
-  const manualFiles = await glob('_assets/simmerdown/accommodations-manual/**/*-manual.md', {
-    cwd: projectRoot,
-    absolute: true,
-  })
+  // Parse CLI arguments
+  const args = process.argv.slice(2)
+  const tenantArg = args.find(arg => arg.startsWith('--tenant='))
+  const tenantSlug = tenantArg ? tenantArg.split('=')[1] : null
+
+  if (!tenantSlug) {
+    console.error('❌ ERROR: Missing --tenant parameter')
+    console.error('Usage: node process-accommodation-manuals.js --tenant=simmerdown')
+    console.error('')
+    console.error('Examples:')
+    console.error('  npm run process:manuals -- --tenant=simmerdown')
+    console.error('  npm run process:manuals -- --tenant=otro-tenant')
+    process.exit(1)
+  }
+
+  console.log(`🎯 Processing manuals for tenant: ${tenantSlug}\n`)
+
+  // Find manuals in standard flat location
+  const manualFiles = await glob(
+    `_assets/${tenantSlug}/accommodations-manual/**/*-manual.md`,
+    {
+      cwd: projectRoot,
+      absolute: true,
+    }
+  )
 
   console.log(`Found ${manualFiles.length} manual files\n`)
 

@@ -1,20 +1,73 @@
 ---
 title: "MUVA Chat - General Project Snapshot"
 agent: general-purpose
-last_updated: "2025-10-09"
+last_updated: "2025-10-24"
 status: PRODUCTION_READY
-version: "2.1"
+version: "2.2"
 ---
 
 # 🏗️ MUVA Chat - General Project Snapshot
 
-**Last Updated:** October 11, 2025
+**Last Updated:** October 24, 2025
 **Status:** PRODUCTION - VPS Hostinger (muva.chat)
 **Platform:** Modern hotel management platform with AI-powered conversational interfaces
 
 ---
 
-## 🎖️ CURRENT MILESTONE: Multi-Tenant Chat with Complete Data Isolation
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** 📋 Active - FASE 1 Ready to Execute
+**Priority:** 🔴 CRITICAL
+**Completion:** 0/38 tasks (0%)
+
+### Quick Context
+
+**Problem:** Guest chat NO responde a preguntas de WiFi/Policies (bug crítico en producción)
+**Impact:** Experiencia de usuario degradada, valor del producto comprometido
+**Root Cause:** Desconocido - requiere diagnosis SQL completa (FASE 1)
+
+### Project Overview
+
+Este proyecto consolida y "osifica" el sistema de guest chat para eliminar puntos de fragilidad recurrentes. Identifica 3 posibles causas raíz basadas en incidentes históricos documentados:
+
+**Causa A:** Modelo embedding incorrecto (`text-embedding-3-small` vs `-large`)
+**Causa B:** Chunks no existen o tienen UUIDs huérfanos
+**Causa C:** Mapping `hotel → public` roto
+
+### 6 FASES del Proyecto
+
+| FASE | Objetivo | Agente Principal | Tiempo | Status |
+|------|----------|------------------|--------|--------|
+| **FASE 1** | Diagnosis SQL Completo | @database-agent | 3-4h | 🟡 Ready |
+| **FASE 2** | Fix Inmediato (Path A/B/C) | @backend-developer | 4-6h | ⏸️ Blocked |
+| **FASE 3** | E2E Testing Automatizado | @backend-developer | 6-8h | ⏸️ Blocked |
+| **FASE 4** | Code Consolidation | @backend-developer | 4-6h | ⏸️ Blocked |
+| **FASE 5** | Documentation | All agents | 4-6h | ⏸️ Blocked |
+| **FASE 6** | Monitoring & Alerts | @infrastructure-monitor | 4-6h | ⏸️ Blocked |
+
+**Total Estimated:** 26-36 horas
+
+### Project Documentation
+
+**Main Docs:**
+- `docs/chat-core-stabilization/plan.md` (~900 lines) - Master plan
+- `docs/chat-core-stabilization/TODO.md` (~700 lines) - 38 granular tasks
+- `docs/chat-core-stabilization/chat-core-prompt-workflow.md` (~950 lines) - PHASES 1-2 prompts
+- `docs/chat-core-stabilization/chat-core-prompt-workflow-part2.md` (~600 lines) - PHASES 3-6 prompts
+
+**Agent Snapshots Updated:**
+- `snapshots/backend-developer.md` - Principal developer (FASES 2-5)
+- `snapshots/database-agent.md` - SQL diagnosis lead (FASE 1)
+- `snapshots/embeddings-generator.md` - Conditional (IF Path 2A chosen)
+- `snapshots/infrastructure-monitor.md` - Monitoring setup (FASE 6)
+
+### Next Immediate Action
+
+Execute FASE 1 diagnosis with `@agent-database-agent` to run 4 critical SQL checks and identify root cause.
+
+---
+
+## 🎖️ PREVIOUS MILESTONE: Multi-Tenant Chat with Complete Data Isolation
 
 **Date Achieved:** October 11, 2025
 **Status:** ✅ COMPLETED
@@ -189,20 +242,34 @@ MUVA Chat is a **production-ready web platform** for managing hotel operations w
 
 ### Active Development Tracks
 
-**1. MCP Optimization Project** (FASE 1-9) - ✅ **100% COMPLETE**
+**1. Chat Core Stabilization** (FASE 1-6) - 🔴 **ACTIVE - 0% COMPLETE**
+- **Goal**: Fix guest chat WiFi/Policies responses + eliminate fragility points
+- **Status**: Documentation complete, ready for FASE 1 execution
+- **Priority**: CRITICAL - Production bug affecting user experience
+- **Next Action**: Execute SQL diagnosis with @agent-database-agent
+- **Estimated**: 26-36 hours across 6 phases
+- **Documentation**: `docs/chat-core-stabilization/` (4 comprehensive docs)
+
+**2. Guest Chat ID Mapping** (FASE 1-7) - 🟡 **43% COMPLETE**
+- **Goal**: Eliminate UUID volatility, implement stable ID strategy
+- **Status**: PHASES 1-2 complete (CASCADE FKs, Stable IDs), PHASES 3-7 pending
+- **Integration**: Complements Chat Core Stabilization project
+- **Documentation**: `docs/guest-chat-id-mapping/TODO.md`
+
+**3. MCP Optimization Project** (FASE 1-9) - ✅ **100% COMPLETE**
 - **Goal**: Reduce token consumption 40-60% via semantic search
 - **Status**: Infrastructure deployed, Knowledge Graph complete
 - **Achievement**: 5/5 MCP servers + 23 entities + 30 relations mapped
 - **Measured**: 90.4% token reduction (exceeded 40-60% target)
 
-**2. SIRE Compliance Extension** (FASE 10-12) - ✅ **92% COMPLETE**
+**4. SIRE Compliance Extension** (FASE 10-12) - ✅ **92% COMPLETE**
 - **Goal**: Add 9 SIRE fields to guest_reservations table + full validation
 - **Status**: Database migration complete, backend integration complete, testing 87.5% done
 - **Test Coverage**: 21/24 tests passing (SQL 5/5, E2E 10/11, API 3/6, Performance 3/3)
 - **Production Ready**: ✅ Core guest flow validated, ⚠️ Staff endpoints need manual testing (15-30 min)
 - **Documentation**: 6 comprehensive docs created (400+ lines validation report)
 
-**3. Multi-Conversation System** - ✅ **COMPLETE**
+**5. Multi-Conversation System** - ✅ **COMPLETE**
 - Guest portal with ChatGPT-style multi-conversation UI
 - Auto-archiving, favorites, file uploads
 - Conversation intelligence with entity tracking

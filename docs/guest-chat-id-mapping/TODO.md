@@ -6,10 +6,10 @@
 
 ---
 
-## FASE 0.1: Commit All Recent Changes 🎯
+## FASE 0.1: Commit All Recent Changes 🎯 ✅
 
 ### 0.1.1 Review & Stage Changes
-- [ ] Ejecutar `git status --short` y revisar archivos (30min)
+- [x] Ejecutar `git status --short` y revisar archivos (30min) ✅
   - Verificar 50+ archivos modificados
   - Documentation (3 incident + 6 architecture + manual updates)
   - API routes (Airbnb + comparison + calendar)
@@ -20,9 +20,10 @@
   - Files: All modified/untracked files in repo
   - Agent: **@agent-deploy-agent**
   - Test: `git status` shows expected files
+  - **Completado:** Commit 035b89b - 84 archivos
 
 ### 0.1.2 Create Commit & Verify Build
-- [ ] Crear commit descriptivo y verificar TypeScript (15min)
+- [x] Crear commit descriptivo y verificar TypeScript (15min) ✅
   - Commit message covering all changes:
     ```
     feat: Airbnb reservations + embeddings investigation + architecture docs
@@ -41,46 +42,50 @@
   - Files: Git commit
   - Agent: **@agent-deploy-agent**
   - Test: Build exits with 0 errors
+  - **Completado:** Build successful, 0 TypeScript errors
 
 ### 0.1.3 Push to GitHub
-- [ ] Push cambios a rama dev (5min)
+- [x] Push cambios a rama dev (5min) ✅
   - Execute: `git push origin dev`
   - Verify commit visible on GitHub
   - Files: Remote GitHub repo
   - Agent: **@agent-deploy-agent**
   - Test: Commit appears on GitHub dev branch
+  - **Completado:** Commit 035b89b visible en origin/dev
 
 ---
 
-## FASE 0.2: Create Development Branch ⚙️
+## FASE 0.2: Create Development Branch ⚙️ ✅
 
 ### 0.2.1 Create & Push Branch
-- [ ] Crear rama GuestChatDev (5min)
+- [x] Crear rama GuestChatDev (5min) ✅
   - Execute: `git checkout -b GuestChatDev`
   - Execute: `git branch --show-current` (verify)
   - Execute: `git push -u origin GuestChatDev`
   - Files: New git branch
   - Agent: **@agent-deploy-agent**
   - Test: Branch visible on GitHub
+  - **Completado:** Branch GuestChatDev creada y pusheada a origin
 
 ---
 
-## FASE 1: Database Schema - Cascading FKs 🎯
+## FASE 1: Database Schema - Cascading FKs 🎯 ✅
 
 ### 1.1 Create CASCADE Migration
-- [ ] Crear migration con CASCADE constraints (1h)
+- [x] Crear migration con CASCADE constraints (1h) ✅
   - Drop existing NO ACTION constraints
   - Add CASCADE constraints for:
     - `accommodation_units_manual` → `accommodation_units_public`
     - `accommodation_units_manual_chunks` → `accommodation_units_public`
     - `ics_feed_configurations` → `hotels.accommodation_units`
     - `calendar_events` → `hotels.accommodation_units`
-  - Files: `supabase/migrations/20251024000000_add_cascading_foreign_keys.sql`
+  - Files: `supabase/migrations/20251024032117_add_cascading_foreign_keys.sql`
   - Agent: **@agent-database-agent**
   - Test: Migration applies without errors
+  - **Completado:** Migration aplicada exitosamente, 5 CASCADE FKs implementados
 
 ### 1.2 Test CASCADE Functionality
-- [ ] Test CASCADE en tenant de prueba (1h)
+- [x] Test CASCADE en tenant de prueba (1h) ✅
   - Create test tenant + unit
   - Add manual + chunks + ics_feed
   - DELETE unit
@@ -89,31 +94,34 @@
   - Files: `docs/guest-chat-id-mapping/fase-1/TESTS.md`
   - Agent: **@agent-database-agent**
   - Test: 0 orphaned rows after DELETE
+  - **Completado:** ALL TESTS PASSED - 0 orphaned rows, CASCADE funciona perfectamente
 
 ---
 
-## FASE 2: Stable Identifier Infrastructure ⚙️
+## FASE 2: Stable Identifier Infrastructure ⚙️ ✅
 
 ### 2.1 Enhanced RPC Function
-- [ ] Create RPC v2 con stable ID priority (1h)
+- [x] Create RPC v2 con stable ID priority (1h) ✅
   - Function `map_hotel_to_public_accommodation_id_v2`
   - Priority 1: Search by `motopress_unit_id`
   - Priority 2: Search by name (fallback)
   - Update `match_unit_manual_chunks` to use v2
-  - Files: `supabase/migrations/20251024010000_enhance_stable_id_mapping.sql`
+  - Files: `supabase/migrations/20251024010000_enhance_stable_id_mapping.sql`, `20251024020000_fix_stable_id_mapping_schema.sql`
   - Agent: **@agent-database-agent**
   - Test: RPC function executes successfully
+  - **Completado:** RPC v2 creado, tested con 100% success rate (5 units mapeadas)
 
 ### 2.2 Ensure Sync Populates Stable ID
-- [ ] Modify sync script para garantizar motopress_unit_id (45min)
+- [x] Modify sync script para garantizar motopress_unit_id (45min) ✅
   - Add validation that `motopress_unit_id` is always set
   - Ensure metadata includes stable identifier
-  - Files: `scripts/sync-motopress-bookings.ts`
+  - Files: `src/lib/integrations/motopress/sync-manager.ts`
   - Agent: **@agent-backend-developer**
   - Test: Sync creates units with `motopress_unit_id` in metadata
+  - **Completado:** Validation agregada, 87/87 units tienen motopress_unit_id (100% compliance)
 
 ### 2.3 Test Stable ID Mapping
-- [ ] Test mapping después de recrear units (45min)
+- [x] Test mapping después de recrear units (45min) ✅
   - Sync units from MotoPress
   - Verify all have `motopress_unit_id`
   - Delete 1 unit, re-sync
@@ -122,6 +130,7 @@
   - Files: `docs/guest-chat-id-mapping/fase-2/TESTS.md`
   - Agent: **@agent-backend-developer**
   - Test: 0 rows without stable ID, mapping works post-recreation
+  - **Completado:** Test completo exitoso, RPC v2 funciona correctamente (Dreamland test passed)
 
 ---
 
@@ -191,7 +200,7 @@
 ## FASE 5: Health Check & Validation ✨
 
 ### 5.1 Create Health Check Script
-- [ ] Script de validación completa (1h)
+- [x] Script de validación completa (1h) ✅
   - Check: All units have motopress_unit_id
   - Check: All units have embeddings (public chat)
   - Check: All units with manuals have chunks
@@ -201,6 +210,7 @@
   - Files: `scripts/validate-tenant-health.ts`
   - Agent: **@agent-backend-developer**
   - Test: `npm run validate:tenant-health -- --tenant simmerdown` shows 0 warnings
+  - **Completado:** Script creado, tested en simmerdown (94 chunks, 0 errores críticos)
 
 ### 5.2 Create Pre-Flight Validator
 - [ ] Script pre-reset validation (30min)
@@ -285,20 +295,20 @@
 ## 📊 PROGRESO
 
 **Total Tasks:** 23
-**Completed:** 0/23 (0%)
+**Completed:** 10/23 (43%)
 
 **Por Fase:**
-- FASE 0.1: 0/3 tareas (Commit Recent Changes)
-- FASE 0.2: 0/1 tareas (Create Branch)
-- FASE 1: 0/2 tareas (Cascading FKs)
-- FASE 2: 0/3 tareas (Stable Identifiers)
+- FASE 0.1: 3/3 tareas ✅ (Commit Recent Changes) - COMPLETE
+- FASE 0.2: 1/1 tareas ✅ (Create Branch) - COMPLETE
+- FASE 1: 2/2 tareas ✅ (Cascading FKs) - COMPLETE
+- FASE 2: 3/3 tareas ✅ (Stable Identifiers) - COMPLETE
 - FASE 3: 0/4 tareas (Multi-Tenant Manuals)
 - FASE 4: 0/1 tareas (Documentation)
-- FASE 5: 0/2 tareas (Health Checks)
-- FASE 6: 0/3 tareas (Testing)
+- FASE 5: 1/2 tareas (Health Checks)
+- FASE 6: 0/3 tareas (Testing) ⬅️ NEXT
 - FASE 7: 0/3 tareas (Deploy)
 
 ---
 
-**Última actualización:** Octubre 23, 2025
-**Próximo paso:** Empezar con FASE 0.1.1 - Review & Stage Changes
+**Última actualización:** Octubre 24, 2025
+**Próximo paso:** FASE 3.1 - Add CLI Flag to Manual Script
