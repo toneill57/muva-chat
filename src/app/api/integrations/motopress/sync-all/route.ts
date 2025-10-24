@@ -205,17 +205,17 @@ export async function GET(request: NextRequest) {
       })
 
       // 4. Map bookings to GuestReservation format (with _embedded data)
-      const { reservations: mappedReservations, pastExcluded, statusExcluded } =
+      const { reservations: mappedReservations, icsImports, pastExcluded, statusExcluded, icsExcluded } =
         await MotoPresBookingsMapper.mapBulkBookingsWithEmbed(
           bookings,
           tenant_id,
           supabase
         )
 
-      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations, excluded ${pastExcluded} past/future, ${statusExcluded} cancelled`)
+      console.log(`[sync-all] Mapped ${mappedReservations.length} direct reservations, ${icsImports.length} ICS imports, excluded ${pastExcluded} past/future, ${statusExcluded} cancelled`)
       await sendEvent({
         type: 'progress',
-        message: `Procesadas ${mappedReservations.length} reservas futuras (excluidas ${pastExcluded} pasadas, ${statusExcluded} canceladas). Guardando...`
+        message: `Procesadas ${mappedReservations.length} reservas directas + ${icsImports.length} ICS (excluidas ${pastExcluded} pasadas, ${statusExcluded} canceladas). Guardando...`
       })
 
       // Create lookup map: external_booking_id → original booking (for finding reserved_accommodations)
@@ -305,6 +305,116 @@ export async function GET(request: NextRequest) {
         }
       }
 
+      // 5.5. Save ICS imports to comparison table (TEMPORARILY DISABLED - too slow for testing)
+      // TODO: Re-enable after performance optimization or implement as background job
+      let icsCreated = 0
+      let icsErrors = 0
+
+      if (icsImports.length > 0) {
+        console.log(`[sync-all] 📥 Found ${icsImports.length} ICS imports (Airbnb) - SKIPPING save for now (performance)`)
+        await sendEvent({
+          type: 'progress',
+          message: `Detectadas ${icsImports.length} reservas ICS de Airbnb (no guardadas temporalmente)`
+        })
+      }
+
+      /* COMMENTED OUT - Uncomment when ready to implement ICS sync
+      if (icsImports.length > 0) {
+        console.log(`[sync-all] 📥 Processing ${icsImports.length} ICS imports (Airbnb)...`)
+        await sendEvent({
+          type: 'progress',
+          message: `Guardando ${icsImports.length} reservas ICS de Airbnb...`
+        })
+
+        for (const booking of icsImports) {
+          try {
+            const guestName = `${booking.customer?.first_name || ''} ${booking.customer?.last_name || ''}`.trim() || 'Guest'
+            const phoneRaw = booking.customer?.phone || ''
+            const phoneLast4 = phoneRaw.replace(/\D/g, '').slice(-4) || '0000'
+
+            // Process each accommodation in the booking
+            for (const reservedUnit of booking.reserved_accommodations || []) {
+              // Calculate unit price
+              let unitPrice = 0
+              if (reservedUnit.accommodation_price_per_days && Array.isArray(reservedUnit.accommodation_price_per_days)) {
+                unitPrice = reservedUnit.accommodation_price_per_days.reduce((sum: number, day: any) => sum + (day.price || 0), 0)
+              }
+              if (reservedUnit.discount) {
+                unitPrice -= reservedUnit.discount
+              }
+
+              // Find accommodation unit by TYPE ID
+              let accommodationUnitId: string | null = null
+              const motoPresTypeId = reservedUnit.accommodation_type
+
+              if (motoPresTypeId) {
+                const { data: units } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
+                  p_tenant_id: tenant_id,
+                  p_motopress_type_id: motoPresTypeId
+                })
+
+                if (units && units.length > 0) {
+                  accommodationUnitId = units[0].id
+                }
+              }
+
+              // Upsert to airbnb_mphb_imported_reservations
+              const { error: upsertError } = await supabase
+                .from('airbnb_mphb_imported_reservations')
+                .upsert({
+                  tenant_id,
+                  motopress_booking_id: booking.id,
+                  motopress_accommodation_id: reservedUnit.accommodation,
+                  motopress_type_id: reservedUnit.accommodation_type,
+
+                  guest_name: guestName,
+                  guest_email: booking.customer?.email || null,
+                  phone_full: phoneRaw,
+                  phone_last_4: phoneLast4,
+                  guest_country: booking.customer?.country || null,
+
+                  check_in_date: booking.check_in_date,
+                  check_out_date: booking.check_out_date,
+                  check_in_time: booking.check_in_time || '15:00',
+                  check_out_time: booking.check_out_time || '12:00',
+
+                  adults: reservedUnit.adults || 1,
+                  children: reservedUnit.children || 0,
+                  total_price: unitPrice || null,
+                  currency: booking.currency || 'COP',
+
+                  accommodation_unit_id: accommodationUnitId,
+
+                  given_names: booking.customer?.first_name || null,
+                  first_surname: booking.customer?.last_name || null,
+                  second_surname: null,
+
+                  booking_notes: booking.ical_description || null,
+                  raw_motopress_data: booking,
+
+                  comparison_status: 'pending',
+                  updated_at: new Date().toISOString(),
+                }, {
+                  onConflict: 'tenant_id,motopress_booking_id,check_in_date,motopress_accommodation_id'
+                })
+
+              if (upsertError) {
+                console.error(`[sync-all] Error saving ICS import MP-${booking.id}:`, upsertError)
+                icsErrors++
+              } else {
+                icsCreated++
+              }
+            }
+          } catch (err) {
+            console.error(`[sync-all] Error processing ICS import ${booking.id}:`, err)
+            icsErrors++
+          }
+        }
+
+        console.log(`[sync-all] ✅ ICS imports saved: ${icsCreated} created, ${icsErrors} errors`)
+      }
+      */
+
       // 6. Log sync history
       await supabase
         .from('sync_history')
@@ -321,6 +431,9 @@ export async function GET(request: NextRequest) {
             total_bookings: bookings.length,
             past_excluded: pastExcluded,
             status_excluded: statusExcluded,
+            ics_excluded: icsExcluded,
+            ics_created: icsCreated,
+            ics_errors: icsErrors,
             errors,
             sync_method: '_embed'
           },
@@ -333,8 +446,11 @@ export async function GET(request: NextRequest) {
         created,
         updated,
         errors,
+        icsCreated,
+        icsErrors,
         pastExcluded,
-        statusExcluded
+        statusExcluded,
+        icsExcluded
       })
 
       // 7. Send completion event
@@ -345,7 +461,7 @@ export async function GET(request: NextRequest) {
           created,
           updated,
           errors,
-          blocksExcluded: 0, // No longer filtering blocks
+          blocksExcluded: icsCreated, // ICS imports saved to comparison table
           pastExcluded
         }
       })

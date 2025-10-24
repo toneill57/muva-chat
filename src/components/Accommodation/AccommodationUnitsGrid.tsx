@@ -438,15 +438,15 @@ export function AccommodationUnitsGrid() {
             <InfoCard
               icon={Star}
               label="Amenidades"
-              value={unit.amenities_summary.total}
+              value={unit.amenities_summary?.total || 0}
               color="yellow"
             />
             <InfoCard
               icon={DollarSign}
               label="Precio"
-              value={formatPrice(unit.pricing_summary.base_price_range)}
+              value={formatPrice(unit.pricing_summary?.base_price_range || 0)}
               color="green"
-              subtitle={unit.pricing_summary.price_per_person ? `$${unit.pricing_summary.price_per_person.toLocaleString()}/persona` : undefined}
+              subtitle={unit.pricing_summary?.price_per_person ? `$${unit.pricing_summary.price_per_person.toLocaleString()}/persona` : undefined}
             />
           </div>
 
@@ -507,28 +507,28 @@ export function AccommodationUnitsGrid() {
             </h4>
             <div className="grid grid-cols-2 gap-2">
               <div className={`flex items-center p-2 rounded ${
-                unit.embedding_status.has_fast ? 'bg-green-50' : 'bg-gray-50'
+                unit.embedding_status?.has_fast ? 'bg-green-50' : 'bg-gray-50'
               }`}>
                 <Zap className={`h-3 w-3 mr-1 ${
-                  unit.embedding_status.has_fast ? 'text-green-500' : 'text-gray-400'
+                  unit.embedding_status?.has_fast ? 'text-green-500' : 'text-gray-400'
                 }`} />
                 <div>
                   <p className="text-xs font-medium">Tier 1</p>
                   <p className="text-xs text-gray-500">
-                    {unit.embedding_status.has_fast ? `${unit.embedding_status.fast_dimensions}d` : 'N/A'}
+                    {unit.embedding_status?.has_fast ? `${unit.embedding_status.fast_dimensions}d` : 'N/A'}
                   </p>
                 </div>
               </div>
               <div className={`flex items-center p-2 rounded ${
-                unit.embedding_status.has_balanced ? 'bg-blue-50' : 'bg-gray-50'
+                unit.embedding_status?.has_balanced ? 'bg-blue-50' : 'bg-gray-50'
               }`}>
                 <Shield className={`h-3 w-3 mr-1 ${
-                  unit.embedding_status.has_balanced ? 'text-blue-500' : 'text-gray-400'
+                  unit.embedding_status?.has_balanced ? 'text-blue-500' : 'text-gray-400'
                 }`} />
                 <div>
                   <p className="text-xs font-medium">Tier 2</p>
                   <p className="text-xs text-gray-500">
-                    {unit.embedding_status.has_balanced ? `${unit.embedding_status.balanced_dimensions}d` : 'N/A'}
+                    {unit.embedding_status?.has_balanced ? `${unit.embedding_status.balanced_dimensions}d` : 'N/A'}
                   </p>
                 </div>
               </div>

@@ -13,7 +13,7 @@ document:
   language: "es"
   status: "active"
   tags: ["manual", "natural_mystic", "habitacion", "instrucciones", "operativo", "room"]
-  keywords: ["aire_acondicionado", "wifi", "plancha", "caja_fuerte", "netflix", "jardin"]
+  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay"]
 unit_reference:
   unit_name: "Natural Mystic"
   unit_type: "room"
@@ -23,268 +23,343 @@ tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 
 # Manual Operativo - Habitación Natural Mystic
 
+¡Bienvenid@ a Simmer Down Guest House – Habitación Natural Mystic!
+
+Gracias por elegirnos. En este manual encontrarás toda la información necesaria para tu llegada y estadía.
+
+---
+
+## Información de Llegada {#llegada}
+
+### Tarjeta de Turismo Obligatoria
+**Q: ¿Necesito algún documento especial para entrar a San Andrés?**
+**A:**
+- **Requisito**: Todas las personas mayores de 7 años deben pagar la tarjeta de turismo
+- **Dónde**: Se adquiere en el aeropuerto de origen
+- **Costo**: $137.000 COP
+- **Dirección a registrar**: Barrio Sarie Bay, posada Simmer Down
+
+### Ubicación del Alojamiento
+**Q: ¿Dónde está ubicado Simmer Down?**
+**A:**
+- **Barrio**: Sarie Bay, San Andrés
+- **Referencia principal**: 150 metros después del supermercado Super Todo Express
+- **Edificio**: Primer edificio de la calle
+- **Características distintivas**:
+  - Puerta enrollable color morado
+  - Dos letreros con el nombre "Simmer Down"
+  - Varias puertas de aluminio color natural
+- **Nombre anterior**: Edificio Gallo de Oro (residencia de la Sra. María Said)
+
+**Link de ubicación**: https://maps.app.goo.gl/WnmKPncxLc8Dx4Qo9
+
+### Instrucciones para Llegar Caminando
+**Q: ¿Cómo llego caminando desde el aeropuerto?**
+**A:**
+
+**Ruta estándar:**
+1. Dirígete al barrio Sarie Bay (pregunta su ubicación al salir del aeropuerto)
+2. Entra al barrio girando en el único semáforo, frente al restaurante El Pescadero (Fisherman's Place)
+3. En la segunda cuadra, gira a la derecha
+4. Camina dos cuadras y gira a la izquierda justo después del supermercado Super Todo Express
+5. Simmer Down es el primer edificio de esa calle
+
+**Ruta alternativa (más agradable):**
+1. Sal del aeropuerto caminando hacia el norte hasta la playa
+2. Pasa por la FAC, luego entre el restaurante The Islander y el hotel Decameron Isleño
+3. Al llegar a la playa, gira a la izquierda
+4. Pasa el letrero "I ❤️ San Andrés"
+5. Desde ahí, sigue las instrucciones de la ruta estándar
+
+**Pro tip**: Lleva agua y sombrero si haces este recorrido durante el día.
+
+### Instrucciones para Llegar en Taxi
+**Q: ¿Qué le digo al taxista?**
+**A:**
+
+**Instrucción principal**:
+"Llévame a la posada Simmer Down en Sarie Bay, doblando a la izquierda justo después del supermercado Super Todo Express."
+
+**Si no reconoce el lugar**:
+"Es el edificio que antes se llamaba Edificio Gallo de Oro, donde vivía la Sra. María Said."
+
+---
+
+## Acceso y Claves {#acceso}
+
+### Claves de Ingreso
+**Q: ¿Qué claves necesito para entrar?**
+**A:**
+- **Edificio**: `C8712`
+  - ⚠️ Presiona fuerte la letra C si es necesario
+- **Apartamento Simmer Highs**: `3971`
+- **Habitación Natural Mystic**: `3971`
+
+### Ubicación de la Habitación
+**Q: ¿Cómo llego a mi habitación una vez dentro del edificio?**
+**A:**
+1. Al entrar, sube hasta el último piso
+2. Entra por la primera puerta a la derecha
+3. Busca la puerta **Natural Mystic**
+
+---
+
+## Check-in y Check-out {#check-in-out}
+
+### Horarios
+**Q: ¿Cuáles son los horarios de check-in y check-out?**
+**A:**
+- **Check-in**: A partir de las 15:00
+- **Check-out**: Antes de las 12:00
+
+### Auto Registro (Self Check-in)
+**Q: ¿Necesito hacer algún registro previo?**
+**A:**
+
+Por normas del Ministerio de Comercio y Migración Colombia, todos los alojamientos deben registrar los datos de sus huéspedes.
+
+**Proceso**:
+1. Completa el formulario online antes de tu llegada
+2. Link: https://simmerdown.house/self-check-in/
+3. Es obligatorio para todos los huéspedes
+
+---
+
+## Conectividad {#wifi}
+
+### WiFi
+**Q: ¿Cómo me conecto al WiFi?**
+**A:**
+- **Red**: `SIMMER_DOWN`
+- **Contraseña**: `seeyousoon`
+- **Disponibilidad**: Puedes conectarte gratis desde la puerta principal del edificio
+- **Cobertura**: Excelente señal en toda la habitación
+
+---
+
 ## Aire Acondicionado {#aire-acondicionado}
 
-**Q: ¿Cómo controlar el clima en Natural Mystic?**
+**Q: ¿Cómo funciona el aire acondicionado de la habitación?**
 **A:**
-- **Modelo**: Split inverter eco-friendly 12,000 BTU
-- **Control**: Remoto inteligente con sensor temperatura ambiente
+- **Modelo**: Split convencional 12,000 BTU
+- **Control remoto**: Con pantalla digital
 - **Encendido**: Botón POWER
-- **Display**: Muestra temp actual vs temp deseada
-- **Smart mode**: Ajuste automático según ocupación
-- **Eco mode**: Consumo reducido 40%
-- **Sleep mode**: Incrementa temp gradualmente (ahorro nocturno)
-- **i-Feel**: Sensor en control ajusta según tu ubicación
-- **Ubicación**: Central en techo (distribución 360°)
+- **Temperatura recomendada**: 23-24°C
+- **Modos**:
+  - COOL: Enfriamiento
+  - DRY: Deshumidificación
+  - FAN: Solo ventilador
+- **Timer**: Configurar apagado automático (2-8 horas)
+- **Control**: En mesa de noche
 
-**Especial**: AC central tipo cassette (más eficiente que split tradicional)
-
-## Mini-Cocina {#mini-cocina}
-
-### Rincón Gourmet
-**Q: ¿Qué facilidades de preparación tengo?**
-**A:**
-- **Mini-nevera**: Bajo mesón café
-  - 5 pies cúbicos (más grande que estándar)
-  - Freezer con tapa
-  - 3 estantes ajustables
-  - Luz LED interna
-
-### Estación de Café Premium
-- **Cafetera prensa francesa**: Bodum 8 tazas
-  - Café specialty grade incluido
-  - Molino manual para café fresco
-  - Timer para tiempo perfecto (4 min)
-  - Jarras medidoras graduadas
-
-### Hervidor de Precisión
-- **Modelo**: Eléctrico con control temperatura
-- **Temperaturas**: 60°/70°/80°/90°/100°C
-- **Ideal**: Té verde (80°C), café (95°C), té negro (100°C)
-- **Display**: Temperatura actual visible
-- **Mantener calor**: Función keep-warm 30 min
-
-### Set Té Gourmet
-- **Variedad**: 12 tipos (verde, negro, herbal, frutal)
-- **Tetéra**: Vidrio con infusor acero
-- **Timer**: Para infusión perfecta
-- **Miel**: Artesanal local en jar de vidrio
+---
 
 ## Entretenimiento {#entretenimiento}
 
-### Smart TV Premium
-**Q: ¿Qué opciones de entretenimiento tengo?**
+### TV y Streaming
+**Q: ¿Qué opciones de TV tengo?**
 **A:**
-- **TV**: Samsung QLED 43" 4K
-- **Calidad**: Mejor imagen del edificio (tecnología quantum dot)
-- **Streaming integrado**:
-  - Netflix 4K HDR
-  - Prime Video
-  - Disney+
-  - Spotify Connect
-  - YouTube Premium (sin anuncios)
-- **Gaming mode**: Baja latencia (si traes consola)
-- **Screen mirroring**: iPhone/Android sin app
+- **TV**: Smart TV 32"
+- **Montaje**: Pared (ángulo ajustable)
+- **Netflix**: Acceso disponible
+- **Cable**: Canales básicos
+- **YouTube**: Acceso directo
+- **Control**: Con botones de acceso rápido
 
-### Sistema Audio
-- **Soundbar**: Samsung 2.1 con subwoofer
-- **Bluetooth**: Emparejar con teléfono para música
-- **Modos**: Movie, Music, Voice (optimiza audio)
-- **Control independiente**: Remoto exclusivo soundbar
+### Música
+- **Radio**: Reloj despertador con radio FM
+- **Bluetooth**: Emparejar teléfono con TV para usar como parlante
 
-### Acceso Jardín Zen
-**Exclusivo Natural Mystic**:
-- **Jardín privado**: Puerta directa desde habitación
-- **Espacio**: 15m² con plantas tropicales
-- **Mobiliario**: 2 sillas + hamaca + mesa
-- **Iluminación**: Luces ambientales solares
-- **Privacidad**: 100% cercado con bambú
-
-## Conectividad {#conectividad}
-
-### Internet de Alta Velocidad
-- **Red principal**: `SimmerDown-NaturalMystic`
-- **Contraseña**: `Myst1cNature!`
-- **Velocidad**: 100 Mbps (máxima del edificio)
-- **Router WiFi 6**: Última generación en habitación
-- **Cobertura**: Habitación + jardín completo
-- **Mesh**: 2 puntos de acceso (sin zonas muertas)
-- **QoS**: Prioriza videollamadas automáticamente
+---
 
 ## Seguridad {#seguridad}
 
-### Caja Fuerte Premium
-- **Ubicación**: Empotrada en pared closet
-- **Tamaño**: Grande (laptop 15" + valuables)
-- **Sistema**: Digital + biométrico
-- **Código maestro**: `4444`
-- **Setup completo**:
-  1. Abrir con 4444
-  2. MENU > ADD USER
-  3. Registrar huella digital
-  4. Crear código backup (6 dígitos)
-  5. Confirmar ambos métodos
-- **Apertura**: Huella O código
-- **Backup**: Llave física en recepción
+### Caja Fuerte
+- **Ubicación**: Closet, estante superior o medio
+- **Tamaño**: Compacta a mediana (celular, billetera, pasaporte, posiblemente tablet)
+- **Código**: Configurable por huésped
+- **Instrucciones**: Ver manual en caja fuerte o solicitar asistencia en recepción
 
-### Cerradura Smart
-- **Tipo**: Electrónica programable
-- **Código asignado**: Se entrega en check-in (personalizado)
-- **Duración**: 4-8 dígitos a tu elección
-- **Batería**: Indicador LED (avisa con 48h anticipación)
-- **Backup**: Llave mecánica disponible
+### Puerta
+- **Llave**: Tradicional metálica
+- **Cerrojo**: Manual interno (girar perilla)
+- **Mirilla**: Para verificar visitantes
 
-## Baño Premium {#bano}
+---
 
-### Sistema Ducha Lluvia
-**Q: ¿Cómo funciona la ducha de lujo?**
+## Baño Privado {#bano}
+
+### Ducha
+**Q: ¿Cómo funciona la ducha de la habitación?**
 **A:**
-- **Tipo**: Ducha lluvia 30cm + ducha de mano
-- **Controles termostáticos**:
-  - Dial izquierdo: Temperatura (38°C marcado)
-  - Dial derecho: Presión
-  - Botón central: Alternar lluvia/mano/dual
-- **Temperatura constante**: Termostato mantiene estable
-- **Calentamiento**: Instantáneo, sin variaciones
-- **Vapor**: Baño se puede usar como sauna (cerrar ventana)
+- **Tipo**: Ducha fija con cortina
+- **Agua caliente**: Llave izquierda (roja)
+- **Agua fría**: Llave derecha (azul)
+- **Calentador**: Instantáneo, 30 seg para calentar
+- **Presión**: Estándar, constante
+- **Cortina**: Mantener dentro de bañera
 
-### Amenities de Spa
-- **Línea orgánica**: Productos naturales sin químicos
-- **Shampoo**: Aceite de coco orgánico
-- **Acondicionador**: Manteca de karité
-- **Gel ducha**: Aloe vera + extractos marinos
-- **Jabón**: Barra artesanal glicerina
-- **Sales de baño**: Para relajación muscular
-- **Velas aromáticas**: 2 unidades (lavanda/citronella)
+### Amenities
+- **Shampoo**: Dispensador pared
+- **Jabón**: Dispensador cuerpo
+- **Toallas**: 2 grandes, 1 mano, 1 piso
+- **Papel higiénico**: Extra bajo lavamanos
 
-### Extras
-- **Batas**: 100% algodón turco (2 unidades)
-- **Pantuflas**: Desechables de cortesía
-- **Toallas**: Set de 6 (2 baño, 2 mano, 1 piso, 1 playa)
+---
 
-## Utensilios Premium {#utensilios}
+## Utensilios y Artículos {#utensilios}
 
-### Kit de Lujo
-- **Secador profesional**: Dyson-style, iónico
-- **Plancha pelo**: Cerámica turmalina (solicitar)
-- **Espejo LED**: 3 temperaturas de luz
-- **Balanza inteligente**: Mide peso/BMI/grasa
-- **Kit costura**: Completo en gaveta
+### Ropa y Accesorios
+**Q: ¿Qué artículos están disponibles en la habitación?**
+**A:**
+- **Plancha**: Solicitar en recepción (no está en habitación)
+- **Tabla planchar**: Área común piso 1
+- **Secador pelo**: Gaveta baño
+- **Perchas**: Disponibles en closet
+- **Toallas extra**: Solicitar recepción
 
-### Ropa y Organización
-- **Perchas**: 15 unidades premium acolchadas
-- **Organizador**: Gavetas con separadores
-- **Zapatero**: 8 pares capacidad
-- **Caja joyería**: Forrada terciopelo
-- **Canasta ropa**: Tela natural trenzada
+### Kit de Habitación
+- **Vasos**: 2 de vidrio
+- **Cubiertos**: Set básico (solicitar si necesitas)
+- **Platos**: No incluidos (usar área común)
+
+---
 
 ## Limpieza {#limpieza}
 
-### Servicio Premium
-- **Frecuencia**: Diaria + turn-down nocturno (opcional)
-- **Matutino**: 10am-12pm (limpieza completa)
-- **Turn-down**: 7pm-8pm (prep para noche)
-  - Cama abierta
-  - Luces ambientales
-  - Chocolate en almohada
-  - Música suave (si deseas)
-- **Express**: Reposición rápida 2pm-4pm
+### Servicio de Habitación
+- **Limpieza diaria**: Incluida (hacer camas, reponer toallas, vaciar basura)
+- **Horario**: 10am-2pm
+- **Cartel "No Molestar"**: Colgar en puerta si prefieres privacidad
+- **Toallas**: Dejar en piso si quieres cambio
 
-### Ecológico
-- **Programa verde**: Opción eco-friendly
-  - Cambio toallas cada 3 días
-  - Productos biodegradables
-  - Ahorro agua/energía
-- **Compensación**: Descuento 10% si participas
+### Basura
+- **Bote**: En habitación
+- **Cambio bolsa**: Diario con limpieza
+- **Reciclaje**: Llevar a contenedor pasillo
 
-## Escritorio Ejecutivo {#escritorio}
-
-### Workspace Premium
-- **Escritorio**: L-shape 140cm
-- **Silla**: Herman Miller ergonómica
-- **Monitor**: 24" disponible (solicitar)
-- **Dock station**: USB-C multiport
-- **Lámpara**: LED arquitectónica regulable
-- **Organizador**: Cuero con compartimientos
-
-## Jardín Zen Privado {#jardin-zen}
-
-### Tu Oasis Personal
-**Q: ¿Cómo usar el jardín privado?**
-**A:**
-- **Acceso**: Puerta corrediza vidrio desde habitación
-- **Plantas**: 12 especies tropicales (cactus, bromelias, heliconias)
-- **Mobiliario**:
-  - Hamaca paraguaya (2 personas)
-  - 2 sillas lounge
-  - Mesa auxiliar teca
-  - Cojines impermeables
-- **Iluminación**: Solar automática (enciende al anochecer)
-- **Privacidad**: Cercado vivo bambú (2.5m altura)
-
-### Usos Recomendados
-- **Yoga matutino**: Espacio perfecto (6-7am)
-- **Lectura**: Hamaca + libro + café
-- **Comidas**: Llevar desayuno/cena al jardín
-- **Meditación**: Ambiente tranquilo natural
-- **Siesta**: Hamaca con brisa = perfecto
+---
 
 ## Emergencias {#emergencias}
 
 ### Contactos
-- **Concierge 24/7**: +57 318 812 3456
-- **Emergencia médica**: 125
-- **Hotel Clínica**: +57 8 512 3030 (prioritario para huéspedes)
-- **Seguridad**: Ext 911 desde teléfono habitación
+- **Recepción**: +57 318 812 3456 (WhatsApp 24/7)
+- **Interno**: Marcar 0 desde teléfono habitación
+- **Emergencias**: 123
+- **Médico**: 125
 
 ### Equipos
-- **Extintor CO2**: Junto a puerta jardín
-- **Alarma humo**: Techo + jardín
-- **Botiquín completo**: Baño, incluye termómetro digital
-- **AED**: Planta baja (desfibrilador)
-- **Linterna LED**: Recargable, base en pasillo
+- **Extintor**: Pasillo junto a escaleras
+- **Botiquín**: Recepción (solicitar)
+- **Detector humo**: Techo habitación
 
-## Tips Natural Mystic {#tips-especificos}
+---
 
-### Características Exclusivas
-- **Jardín privado**: Única habitación con outdoor space privado
-- **TV QLED**: Mejor calidad imagen
-- **WiFi 100Mbps**: Más rápido del edificio
-- **Baño spa**: Termostato + lluvia = lujo
-- **Ubicación**: Planta baja, acceso independiente
+## Recomendaciones Importantes {#recomendaciones}
 
-### Experiencia Óptima
-- **Mañanas**: Yoga en jardín + café prensa francesa
-- **Días**: Trabajar con puerta jardín abierta (luz natural + aire)
-- **Tardes**: Hamaca + libro + té de precisión
-- **Noches**: Turn-down service + ducha lluvia + Netflix
+### Cuidado del Alojamiento
+**Q: ¿Qué debo tener en cuenta durante mi estadía?**
+**A:**
 
-### Maximizar Jardín
-- **Desayuno outdoor**: Pedir room service llevarlo a jardín
-- **Videollamadas**: Fondo de plantas = profesional
-- **Ejercicio**: Espacio suficiente para rutina bodyweight
-- **Atardecer**: Mejor momento en hamaca (5:30pm)
+**Llegada**:
+- Llega con el celular cargado
+- Puedes imprimir estas instrucciones o enviarlas a tu acompañante
 
-### Wellness Focus
-- **Termostato ducha**: Hipertermia 38°C (recuperación muscular)
-- **Sales baño**: Uso nocturno relaja para dormir
-- **Aire puro**: Plantas jardín oxigenan espacio
-- **Digital detox**: Jardín perfecto para desconectar
+**Playa y Arena**:
+- Usa la trampa de arena frente a las escaleras para quitarte la arena al regresar
+- No subas con los pies mojados - sécate bien antes de salir de la trampa
+- No uses las toallas del alojamiento para la playa
 
-### Premium Services
-- **Breakfast in garden**: Solicitar room service jardín
-- **Masaje**: Terapeuta puede venir a jardín (coordinado)
-- **Yoga privado**: Instructor disponible (jardín ideal)
-- **Dinner setup**: Mesa romántica en jardín ($80k setup)
+**Limpieza**:
+- Deposita tu basura en la caseta metálica frente al edificio (a la izquierda)
+- Mantén el orden en la habitación
 
-### Ideal Para
-- **Luna de miel**: Privacidad + romance
-- **Retiros personales**: Meditación + naturaleza
-- **Digital nomads**: Oficina con jardín = productividad
-- **Wellness**: Espacio perfecto para rutinas bienestar
+**Energía**:
+- Apaga el aire acondicionado cuando salgas
+- Ayúdanos a cuidar el medio ambiente
+
+**Seguridad**:
+- No dejes la puerta de tu habitación abierta
+- Todas las puertas tienen cerradura electrónica
+- Cuida la lencería del alojamiento
+
+---
+
+## Información Adicional {#info-adicional}
+
+### Guía Completa en Línea
+**Q: ¿Dónde encuentro más información?**
+**A:**
+
+Tenemos una guía completa en línea con información detallada sobre:
+- Amenidades de la habitación
+- Servicios del edificio
+- Recomendaciones locales
+- Y mucho más
+
+**Acceso**:
+- Link: https://simmerdown.house/instrucciones/habitacion-natural-mystic/
+- Clave: `3971`
+- Idiomas disponibles: Español, Inglés, Portugués
+
+**Versión offline**: Este documento es una versión básica útil si no tienes conexión a internet.
+
+### Contacto
+**Q: ¿Cómo puedo contactar a recepción?**
+**A:**
+- **WhatsApp**: +57 318 812 3456
+- **Email**: recepcion@simmerdown.house
+- **Horario**: 24/7 para emergencias
+
+---
+
+## Tips Específicos Natural Mystic {#tips-especificos}
+
+### Características
+- **Diseño**: Habitación acogedora con buena distribución
+- **Ubicación**: Último piso en apartamento Simmer Highs
+- **Privacidad**: Habitación independiente con baño privado
+
+### Servicios Adicionales
+- **Desayuno**: Área común planta baja (7-10am) - adicional
+- **Cocina compartida**: Planta baja, uso libre
+- **Lavandería**: Autoservicio ($15.000 COP/carga)
+- **Zona TV**: Sala común con TV grande
+
+### Comodidades
+- **Ventana**: Buena ventilación natural
+- **Acceso**: Último piso (mejores vistas)
+- **Tranquilidad**: Ubicación con buen nivel de privacidad
+
+---
+
+## Resumen Rápido {#resumen}
+
+### Datos Esenciales
+
+**Ubicación**:
+- 📍 Sarie Bay, después del Super Todo Express
+- 🗺️ https://maps.app.goo.gl/WnmKPncxLc8Dx4Qo9
+
+**Claves**:
+- 🏢 Edificio: `C8712` (presiona fuerte la C)
+- 🏠 Apartamento Simmer Highs: `3971`
+- 🚪 Habitación Natural Mystic: `3971`
+
+**WiFi**:
+- 📶 Red: `SIMMER_DOWN`
+- 🔐 Contraseña: `seeyousoon`
+
+**Horarios**:
+- ⏰ Check-in: 15:00
+- ⏰ Check-out: 12:00
+
+**Links Importantes**:
+- 📝 Self check-in: https://simmerdown.house/self-check-in/
+- 📱 Guía completa: https://simmerdown.house/instrucciones/habitacion-natural-mystic/ (clave: 3971)
 
 ---
 
 **Última actualización**: Enero 2025
-**Versión**: 1.0
+**Versión**: 2.0 (Real)
 **Contacto**: recepcion@simmerdown.house

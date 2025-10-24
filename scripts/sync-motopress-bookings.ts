@@ -43,6 +43,7 @@ interface MotoPresBooking {
   check_out_date: string
   check_in_time: string
   check_out_time: string
+  imported: boolean  // true = from ICS (Airbnb), false = direct MotoPress booking
   customer: {
     first_name: string
     last_name: string
@@ -57,6 +58,11 @@ interface MotoPresBooking {
     adults: number
     children: number
     guest_name: string
+    accommodation_price_per_days?: Array<{
+      date: string
+      price: number
+    }>
+    discount?: number
   }>
   currency: string
   total_price: number
@@ -217,26 +223,45 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
     console.log('━'.repeat(60))
 
     // Get MotoPress integration configuration
-    const { data: config, error: configError } = await supabase
-      .from('integration_configs')
-      .select('*')
-      .eq('tenant_id', tenantId)
-      .eq('integration_type', 'motopress')
-      .eq('is_active', true)
-      .single()
+    // Priority: Environment variables (for testing) → Database (for production)
+    let consumerKey = process.env.MOTOPRESS_CONSUMER_KEY
+    let consumerSecret = process.env.MOTOPRESS_CONSUMER_SECRET
+    let siteUrl = process.env.MOTOPRESS_SITE_URL
+    let configId: string | undefined
 
-    if (configError || !config) {
-      result.errors.push('No active MotoPress integration found')
-      result.duration_ms = Date.now() - startTime
-      return result
+    if (consumerKey && consumerSecret && siteUrl) {
+      // Using environment variables (testing mode)
+      console.log('   🔧 Using MotoPress credentials from environment variables')
+    } else {
+      // Fallback to database credentials (production mode)
+      const { data: config, error: configError } = await supabase
+        .from('integration_configs')
+        .select('*')
+        .eq('tenant_id', tenantId)
+        .eq('integration_type', 'motopress')
+        .eq('is_active', true)
+        .single()
+
+      if (configError || !config) {
+        result.errors.push('No active MotoPress integration found (no env vars or DB config)')
+        result.duration_ms = Date.now() - startTime
+        return result
+      }
+
+      const credentials = config.config_data
+      consumerKey = credentials.consumer_key
+      consumerSecret = credentials.consumer_secret
+      siteUrl = credentials.site_url
+      configId = config.id
+
+      console.log('   🔧 Using MotoPress credentials from database')
     }
 
     // Initialize MotoPress client
-    const credentials = config.config_data
     const client = new MotoPresBookingClient(
-      credentials.consumer_key,
-      credentials.consumer_secret,
-      credentials.site_url
+      consumerKey,
+      consumerSecret,
+      siteUrl
     )
 
     // Fetch all confirmed bookings from MotoPress
@@ -279,6 +304,97 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
         const phoneRaw = mpBooking.customer.phone || ''
         const phoneLast4 = phoneRaw.replace(/\D/g, '').slice(-4) || '0000'
 
+        // 🆕 HANDLE AIRBNB ICS IMPORTS: Save to separate comparison table
+        if (mpBooking.imported === true) {
+          console.log(`   📥 Airbnb ICS import: MP-${mpBooking.id} - ${guestName}`)
+
+          // Process each unit in the imported reservation
+          for (let unitIndex = 0; unitIndex < mpBooking.reserved_accommodations.length; unitIndex++) {
+            const reservedUnit = mpBooking.reserved_accommodations[unitIndex]
+
+            // Calculate unit price
+            let unitPrice = 0
+            if (reservedUnit.accommodation_price_per_days && Array.isArray(reservedUnit.accommodation_price_per_days)) {
+              unitPrice = reservedUnit.accommodation_price_per_days.reduce((sum: number, day: any) => {
+                return sum + (day.price || 0)
+              }, 0)
+            }
+            if (reservedUnit.discount) {
+              unitPrice -= reservedUnit.discount
+            }
+
+            // Find accommodation unit by TYPE ID
+            let accommodationUnitId: string | null = null
+            const motoPresAccommodationTypeId = reservedUnit.accommodation_type
+
+            const { data: unitId, error: unitError } = await supabase.rpc(
+              'get_accommodation_unit_by_motopress_id',
+              {
+                p_tenant_id: tenantId,
+                p_motopress_type_id: motoPresAccommodationTypeId
+              }
+            )
+
+            if (!unitError && unitId && typeof unitId === 'string' && unitId.length > 10) {
+              accommodationUnitId = unitId
+            }
+
+            // Save to airbnb_mphb_imported_reservations table
+            const importedReservationData = {
+              tenant_id: tenantId,
+              motopress_booking_id: mpBooking.id,
+              motopress_accommodation_id: reservedUnit.accommodation,
+              motopress_type_id: reservedUnit.accommodation_type,
+
+              guest_name: guestName,
+              guest_email: mpBooking.customer.email || null,
+              phone_full: phoneRaw,
+              phone_last_4: phoneLast4,
+              guest_country: mpBooking.customer.country || null,
+
+              check_in_date: mpBooking.check_in_date,
+              check_out_date: mpBooking.check_out_date,
+              check_in_time: mpBooking.check_in_time || '15:00',
+              check_out_time: mpBooking.check_out_time || '12:00',
+
+              adults: reservedUnit.adults || 1,
+              children: reservedUnit.children || 0,
+              total_price: unitPrice || null,
+              currency: mpBooking.currency || 'COP',
+
+              accommodation_unit_id: accommodationUnitId,
+
+              given_names: mpBooking.customer.first_name || null,
+              first_surname: mpBooking.customer.last_name || null,
+              second_surname: null,
+
+              booking_notes: mpBooking.customer.address1 || null,
+              raw_motopress_data: mpBooking,  // Store full booking for reference
+
+              comparison_status: 'pending',
+              updated_at: new Date().toISOString(),
+            }
+
+            // Upsert (insert or update if exists)
+            const { error: upsertError } = await supabase
+              .from('airbnb_mphb_imported_reservations')
+              .upsert(importedReservationData, {
+                onConflict: 'tenant_id,motopress_booking_id,check_in_date,motopress_accommodation_id'
+              })
+
+            if (upsertError) {
+              result.errors.push(`Failed to save ICS import MP-${mpBooking.id} unit ${unitIndex + 1}: ${upsertError.message}`)
+            } else {
+              console.log(`      ✓ Saved to comparison table: Unit ${unitIndex + 1}/${mpBooking.reserved_accommodations.length}`)
+            }
+          }
+
+          result.bookings_skipped++
+          continue
+        }
+
+        console.log(`   ✓ Direct MotoPress booking: MP-${mpBooking.id} - ${guestName}`)
+
         // 🆕 MULTI-UNIT SUPPORT: Iterate over ALL reserved accommodations
         // One MotoPress booking can have multiple units (e.g., MP-28675 has 8 units)
         const totalUnits = mpBooking.reserved_accommodations.length
@@ -299,14 +415,14 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
             unitPrice -= reservedUnit.discount
           }
 
-          // Find accommodation unit by MotoPress accommodation ID (specific unit instance)
+          // Find accommodation unit by MotoPress accommodation TYPE (not instance)
           // Uses hotels.accommodation_units as source of truth (multi-tenant)
           let accommodationUnitId: string | null = null
-          const motoPresAccommodationId = reservedUnit.accommodation
+          const motoPresAccommodationTypeId = reservedUnit.accommodation_type
 
-          // DEBUG: Log the MotoPress accommodation ID we're trying to map
+          // DEBUG: Log the MotoPress accommodation TYPE ID we're trying to map
           if (unitIndex === 0) {
-            console.log(`   🔍 DEBUG: Booking MP-${mpBooking.id} - MotoPress accommodation ID: ${motoPresAccommodationId}`)
+            console.log(`   🔍 DEBUG: Booking MP-${mpBooking.id} - MotoPress accommodation TYPE ID: ${motoPresAccommodationTypeId}`)
           }
 
           // Query hotels schema using custom RPC function
@@ -314,15 +430,16 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
             'get_accommodation_unit_by_motopress_id',
             {
               p_tenant_id: tenantId,
-              p_motopress_unit_id: motoPresAccommodationId
+              p_motopress_type_id: motoPresAccommodationTypeId
             }
           )
 
-          if (!unitError && unitId) {
+          // Handle RPC result - can be null, string UUID, or empty array
+          if (!unitError && unitId && unitId !== '[]' && typeof unitId === 'string' && unitId.length > 10) {
             accommodationUnitId = unitId
           } else {
             if (unitIndex === 0) {
-              console.log(`   ⚠️  DEBUG: No unit found for MotoPress ID ${motoPresAccommodationId} - Error: ${unitError?.message || 'Unit ID is null'}`)
+              console.log(`   ⚠️  DEBUG: No unit found for MotoPress TYPE ID ${motoPresAccommodationTypeId} - Error: ${unitError?.message || 'Unit ID is null/invalid'}`)
             }
           }
 
@@ -352,6 +469,12 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
             // 🆕 NEW: Complete booking details (PHASE 2)
             guest_email: mpBooking.customer.email || null,
             guest_country: mpBooking.customer.country || null,
+
+            // 🆕 SIRE Compliance Fields (mapped from MotoPress customer data)
+            given_names: mpBooking.customer.first_name || null,
+            first_surname: mpBooking.customer.last_name || null,
+            second_surname: null,  // MotoPress does not provide second surname
+
             adults: reservedUnit.adults || 1,  // Use specific unit's capacity
             children: reservedUnit.children || 0,  // Use specific unit's capacity
             total_price: unitPrice || null,  // Individual unit price from accommodation_price_per_days
@@ -397,15 +520,18 @@ async function syncBookingsForTenant(tenantId: string): Promise<SyncResult> {
       }
     }
 
-    result.bookings_skipped = result.bookings_fetched - result.bookings_created - result.bookings_updated
+    // Bookings skipped count is already incremented in the loop above
+    // result.bookings_skipped = count of imported bookings (Airbnb ICS imports)
     result.success = result.errors.length === 0
     result.duration_ms = Date.now() - startTime
 
-    // Update last_sync timestamp in integration_configs
-    await supabase
-      .from('integration_configs')
-      .update({ last_sync_at: new Date().toISOString() })
-      .eq('id', config.id)
+    // Update last_sync timestamp in integration_configs (only if using DB credentials)
+    if (configId) {
+      await supabase
+        .from('integration_configs')
+        .update({ last_sync_at: new Date().toISOString() })
+        .eq('id', configId)
+    }
 
     return result
   } catch (error: any) {

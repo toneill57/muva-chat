@@ -91,21 +91,23 @@ export class MotoPresBookingsMapper {
    * Maps MotoPress booking status to internal reservation status
    *
    * @param motopressStatus - Status from MotoPress API
-   * @returns Internal status (active, pending, inactive)
+   * @returns Internal status (active, pending_payment, requires_admin_action, cancelled)
    */
   static mapStatus(motopressStatus: string): string {
     switch (motopressStatus.toLowerCase()) {
       case 'confirmed':
         return 'active'
       case 'pending-payment':
+        return 'pending_payment'
       case 'pending':
-        return 'pending'
+        return 'pending_admin'
       case 'cancelled':
-        return 'inactive'
+      case 'abandoned':
+        return 'cancelled'
       default:
-        // Default to active for any unknown status
-        console.warn(`[MotoPresBookingsMapper] Unknown status: ${motopressStatus}, defaulting to 'active'`)
-        return 'active'
+        // Default to pending_admin for any unknown status
+        console.warn(`[MotoPresBookingsMapper] Unknown status: ${motopressStatus}, defaulting to 'pending_admin'`)
+        return 'pending_admin'
     }
   }
 
@@ -170,7 +172,7 @@ export class MotoPresBookingsMapper {
       // Query hotels.accommodation_units using RPC (tenant_id must be UUID, not string)
       const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
         p_tenant_id: tenantId, // Already UUID string format
-        p_motopress_unit_id: motopressTypeId
+        p_motopress_type_id: motopressTypeId  // Fixed: use correct parameter name
       })
 
       if (error) {
@@ -178,9 +180,9 @@ export class MotoPresBookingsMapper {
       } else if (units && units.length > 0) {
         const unit = units[0]
         accommodationUnitId = unit.id
-        console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_unit_id=${unit.motopress_unit_id}) matches booking accommodation ${motopressTypeId}`)
+        console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_type_id=${unit.motopress_type_id}) matches booking accommodation ${motopressTypeId}`)
       } else {
-        console.log(`[mapper] ❌ NO MATCH: No unit found for motopress_unit_id=${motopressTypeId}`)
+        console.log(`[mapper] ❌ NO MATCH: No unit found for motopress_type_id=${motopressTypeId}`)
       }
     }
 
@@ -216,7 +218,7 @@ export class MotoPresBookingsMapper {
       children: booking.reserved_accommodations[0]?.children || 0,
       total_price: booking.total_price || null,
       currency: booking.currency || 'COP',
-      booking_source: isAirbnb ? 'airbnb' : 'motopress',  // Detect Airbnb vs MotoPress
+      booking_source: isAirbnb ? 'mphb-airbnb' : 'motopress',  // Detect Airbnb via MotoPress vs direct MotoPress
       external_booking_id: booking.id.toString(),
       booking_notes: booking.ical_description || null,
       // SIRE compliance fields (null for MotoPress sync - can be filled by guest later)
@@ -337,7 +339,7 @@ export class MotoPresBookingsMapper {
       // Query hotels.accommodation_units using RPC (tenant_id must be UUID, not string)
       const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
         p_tenant_id: tenantId, // Already UUID string format
-        p_motopress_unit_id: motopressTypeId
+        p_motopress_type_id: motopressTypeId  // Fixed: use correct parameter name
       })
 
       if (error) {
@@ -345,9 +347,9 @@ export class MotoPresBookingsMapper {
       } else if (units && units.length > 0) {
         const unit = units[0]
         accommodationUnitId = unit.id
-        console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_unit_id=${unit.motopress_unit_id}) matches booking accommodation ${motopressTypeId}`)
+        console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_type_id=${unit.motopress_type_id}) matches booking accommodation ${motopressTypeId}`)
       } else {
-        console.log(`[mapper] ❌ NO MATCH: No unit found for motopress_unit_id=${motopressTypeId}`)
+        console.log(`[mapper] ❌ NO MATCH: No unit found for motopress_type_id=${motopressTypeId}`)
       }
     }
 
@@ -391,7 +393,7 @@ export class MotoPresBookingsMapper {
       children: booking.reserved_accommodations[0]?.children || 0,
       total_price: booking.total_price || null,
       currency: booking.currency || 'COP',
-      booking_source: isAirbnb ? 'airbnb' : 'motopress',  // Detect Airbnb vs MotoPress
+      booking_source: isAirbnb ? 'mphb-airbnb' : 'motopress',  // Detect Airbnb via MotoPress vs direct MotoPress
       external_booking_id: booking.id?.toString() || '',
       booking_notes: bookingNotes,
       // SIRE compliance fields (null for MotoPress sync - can be filled by guest later)
@@ -413,16 +415,24 @@ export class MotoPresBookingsMapper {
 
   /**
    * Batch maps multiple MotoPress bookings WITH _embedded data
-   * Filters out calendar blocks ("Airbnb Not available")
+   * Separates direct reservations from ICS imports (Airbnb)
    */
   static async mapBulkBookingsWithEmbed(
     bookings: any[],
     tenantId: string,
     supabase: SupabaseClient
-  ): Promise<{ reservations: GuestReservation[]; pastExcluded: number; statusExcluded: number }> {
+  ): Promise<{
+    reservations: GuestReservation[];
+    icsImports: any[];
+    pastExcluded: number;
+    statusExcluded: number;
+    icsExcluded: number;
+  }> {
     const mapped: GuestReservation[] = []
+    const icsImports: any[] = []
     let pastExcluded = 0
     let statusExcluded = 0
+    let icsExcluded = 0
 
     // Calculate date range: today to 2 years in future
     const today = new Date()
@@ -433,12 +443,20 @@ export class MotoPresBookingsMapper {
     for (const booking of bookings) {
       try {
         // Log every booking we process
-        console.log(`[mapper] 🔍 Processing booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}, ical_summary=${booking.ical_summary?.substring(0, 30)}`)
+        console.log(`[mapper] 🔍 Processing booking ${booking.id}: status=${booking.status}, imported=${booking.imported}, check_in=${booking.check_in_date}`)
 
-        // Skip only cancelled bookings (import all other statuses)
-        if (booking.status === 'cancelled') {
+        // 🆕 SEPARATE ICS IMPORTS: Skip Airbnb ICS imports (handle separately)
+        if (booking.imported === true) {
+          icsExcluded++
+          icsImports.push(booking)
+          console.log(`[mapper] 📥 ICS import (Airbnb): MP-${booking.id} - Will save to comparison table`)
+          continue
+        }
+
+        // Skip only cancelled and abandoned bookings (import all other statuses)
+        if (booking.status === 'cancelled' || booking.status === 'abandoned') {
           statusExcluded++
-          console.log(`[mapper] ⏩ Skip booking ${booking.id}: status=cancelled`)
+          console.log(`[mapper] ⏩ Skip booking ${booking.id}: status=${booking.status}`)
           continue
         }
 
@@ -452,7 +470,7 @@ export class MotoPresBookingsMapper {
           continue
         }
 
-        console.log(`[mapper] ✅ Mapping booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}`)
+        console.log(`[mapper] ✅ Mapping direct MotoPress booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}`)
         const reservation = await this.mapToGuestReservationWithEmbed(booking, tenantId, supabase)
         mapped.push(reservation)
         console.log(`[mapper] ✅ Mapped successfully: ${reservation.guest_name}`)
@@ -464,8 +482,10 @@ export class MotoPresBookingsMapper {
 
     return {
       reservations: mapped,
+      icsImports,
       pastExcluded,
-      statusExcluded
+      statusExcluded,
+      icsExcluded
     }
   }
 
@@ -508,7 +528,7 @@ export class MotoPresBookingsMapper {
       if (motopressTypeId) {
         const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
           p_tenant_id: tenantId,
-          p_motopress_unit_id: motopressTypeId
+          p_motopress_type_id: motopressTypeId  // Fixed: use correct parameter name
         })
 
         if (error) {
@@ -535,24 +555,20 @@ export class MotoPresBookingsMapper {
 
           console.log(`[mapper]     🔨 AUTO-CREATE: Creating "${accommodationName}" with motopress_type_id=${motopressTypeId}`)
 
-          // Insert into hotels.accommodation_units (cross-schema insert)
+          // Use RPC function to create accommodation unit (cross-schema insert)
           const { data: newUnit, error: insertError } = await supabase
-            .schema('hotels')
-            .from('accommodation_units')
-            .insert({
-              name: accommodationName,
-              motopress_type_id: motopressTypeId,
-              tenant_id: tenantId,
-              status: 'active'
+            .rpc('create_accommodation_unit', {
+              p_tenant_id: tenantId,
+              p_name: accommodationName,
+              p_motopress_type_id: motopressTypeId,
+              p_status: 'active'
             })
-            .select('id, name')
-            .single()
 
           if (insertError) {
             console.error(`[mapper]     ❌ Failed to auto-create accommodation:`, insertError)
-          } else if (newUnit) {
-            accommodationUnitId = newUnit.id
-            console.log(`[mapper]     ✅ CREATED: "${newUnit.name}" (id=${newUnit.id})`)
+          } else if (newUnit && Array.isArray(newUnit) && newUnit.length > 0) {
+            accommodationUnitId = newUnit[0].id
+            console.log(`[mapper]     ✅ CREATED: "${newUnit[0].name}" (id=${newUnit[0].id})`)
           }
         }
       }

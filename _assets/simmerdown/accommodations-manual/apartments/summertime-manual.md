@@ -5,7 +5,7 @@ destination:
   schema: "hotels"
   table: "guest_information"
 document:
-  title: "Manual Operativo - Summertime"
+  title: "Manual Operativo - Apartamento Summertime"
   description: "Guía operativa completa para huéspedes del Apartamento Summertime"
   category: "manual"
   subcategory: "accommodation_operations"
@@ -13,7 +13,7 @@ document:
   language: "es"
   status: "active"
   tags: ["manual", "summertime", "apartamento", "instrucciones", "operativo"]
-  keywords: ["aire_acondicionado", "cocina", "wifi", "plancha", "caja_fuerte", "netflix"]
+  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay"]
 unit_reference:
   unit_name: "Summertime"
   unit_type: "apartment"
@@ -23,197 +23,366 @@ tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 
 # Manual Operativo - Apartamento Summertime
 
+¡Bienvenid@ a Simmer Down Guest House – Apartamento Summertime!
+
+Gracias por elegirnos. En este manual encontrarás toda la información necesaria para tu llegada y estadía.
+
+---
+
+## Información de Llegada {#llegada}
+
+### Tarjeta de Turismo Obligatoria
+**Q: ¿Necesito algún documento especial para entrar a San Andrés?**
+**A:**
+- **Requisito**: Todas las personas mayores de 7 años deben pagar la tarjeta de turismo
+- **Dónde**: Se adquiere en el aeropuerto de origen
+- **Costo**: $137.000 COP
+- **Dirección a registrar**: Barrio Sarie Bay, posada Simmer Down
+
+### Ubicación del Alojamiento
+**Q: ¿Dónde está ubicado Simmer Down?**
+**A:**
+- **Barrio**: Sarie Bay, San Andrés
+- **Referencia principal**: 150 metros después del supermercado Super Todo Express
+- **Edificio**: Primer edificio de la calle
+- **Características distintivas**:
+  - Puerta enrollable color morado
+  - Dos letreros con el nombre "Simmer Down"
+  - Varias puertas de aluminio color natural
+- **Nombre anterior**: Edificio Gallo de Oro (residencia de la Sra. María Said)
+
+**Link de ubicación**: https://maps.app.goo.gl/WnmKPncxLc8Dx4Qo9
+
+### Instrucciones para Llegar Caminando
+**Q: ¿Cómo llego caminando desde el aeropuerto?**
+**A:**
+
+**Ruta estándar:**
+1. Dirígete al barrio Sarie Bay (pregunta su ubicación al salir del aeropuerto)
+2. Entra al barrio girando en el único semáforo, frente al restaurante El Pescadero (Fisherman's Place)
+3. En la segunda cuadra, gira a la derecha
+4. Camina dos cuadras y gira a la izquierda justo después del supermercado Super Todo Express
+5. Simmer Down es el primer edificio de esa calle
+
+**Ruta alternativa (más agradable):**
+1. Sal del aeropuerto caminando hacia el norte hasta la playa
+2. Pasa por la FAC, luego entre el restaurante The Islander y el hotel Decameron Isleño
+3. Al llegar a la playa, gira a la izquierda
+4. Pasa el letrero "I ❤️ San Andrés"
+5. Desde ahí, sigue las instrucciones de la ruta estándar
+
+**Pro tip**: Lleva agua y gorra si haces este recorrido durante el día.
+
+### Instrucciones para Llegar en Taxi
+**Q: ¿Qué le digo al taxista?**
+**A:**
+
+**Instrucción principal**:
+"Llévame a la posada Simmer Down en Sarie Bay, doblando a la izquierda justo después del supermercado Super Todo Express."
+
+**Si no reconoce el lugar**:
+"Es el edificio que antes se llamaba Edificio Gallo de Oro, donde vivía la Sra. María Said."
+
+---
+
+## Acceso y Claves {#acceso}
+
+### Claves de Ingreso
+**Q: ¿Qué claves necesito para entrar?**
+**A:**
+- **Edificio**: `C8712`
+  - ⚠️ Presiona fuerte la letra C si es necesario
+- **Apartamento Summertime**: `2814`
+
+### Ubicación del Apartamento
+**Q: ¿Cómo llego al apartamento una vez dentro del edificio?**
+**A:**
+1. Al entrar al edificio, sube dos pisos
+2. Sigue las indicaciones hacia el apartamento **Summertime**
+
+---
+
+## Check-in y Check-out {#check-in-out}
+
+### Horarios
+**Q: ¿Cuáles son los horarios de check-in y check-out?**
+**A:**
+- **Check-in**: A partir de las 15:00
+- **Check-out**: Antes de las 12:00
+
+### Auto Registro (Self Check-in)
+**Q: ¿Necesito hacer algún registro previo?**
+**A:**
+
+Por normas del Ministerio de Comercio y Migración Colombia, todos los alojamientos deben registrar los datos de sus huéspedes.
+
+**Proceso**:
+1. Completa el formulario online antes de tu llegada
+2. Link: https://simmerdown.house/self-check-in/
+3. Es obligatorio para todos los huéspedes
+
+---
+
+## Conectividad {#wifi}
+
+### WiFi
+**Q: ¿Cómo me conecto al WiFi?**
+**A:**
+- **Red**: `SUMMER_SHINE`
+- **Contraseña**: `seeyousoon`
+- **Disponibilidad**: Puedes conectarte gratis desde la puerta principal del edificio
+- **Cobertura**: Excelente señal en todo el apartamento
+
+---
+
 ## Aire Acondicionado {#aire-acondicionado}
 
-**Q: ¿Cómo funciona el sistema de climatización del Summertime?**
+**Q: ¿Cómo funciona el aire acondicionado del apartamento?**
 **A:**
-- **Modelo**: Aire acondicionado split 18,000 BTU
-- **Control**: Remoto infrarrojo negro con pantalla LCD
-- **Encendido**: Botón ON/OFF (icono power)
-- **Temperatura**: Rango 18-30°C, recomendado 23°C
-- **Modos disponibles**:
-  - **COOL**: Enfriamiento estándar
-  - **DRY**: Deshumidificador (ideal días húmedos)
-  - **FAN**: Solo ventilador (sin enfriamiento)
-  - **AUTO**: Ajuste automático según temperatura
-- **Timer programable**: Configurar encendido/apagado automático (botón TIMER)
-- **Ubicación**: Esquina dormitorio, orientación diagonal
+- **Sistema**: Aire acondicionado split moderno
+- **Control remoto**: Con pantalla digital
+- **Encendido**: Botón POWER
+- **Temperatura recomendada**: 23-25°C para clima tropical
+- **Modos**:
+  - COOL: Enfriamiento
+  - DRY: Deshumidificación
+  - FAN: Solo ventilador
+  - SLEEP: Modo nocturno con ahorro de energía
+- **Timer**: Configurar apagado automático
+- **IMPORTANTE**: Mantener ventanas cerradas mientras AC está encendido
 
-**Tip de ahorro**: Usar modo DRY en días nublados consume 40% menos energía
+---
 
 ## Cocina y Electrodomésticos {#cocina-electrodomesticos}
 
-### Estufa Gas + Eléctrica (Híbrida)
-**Q: ¿Cómo funciona la estufa híbrida?**
+### Cocina Equipada
+**Q: ¿Qué facilidades de cocina tiene el apartamento?**
 **A:**
-- **2 quemadores gas**: Encender con encendedor (no automático)
-  - Girar perilla mientras acercas llama
-  - Quemador grande: Ollas grandes
-  - Quemador pequeño: Sartenes
-- **1 hornilla eléctrica**: Girar perilla (1-5)
-  - Ideal para mantener temperatura constante
-- **Seguridad**: Válvula gas en gabinete bajo estufa (cerrar si no usas varios días)
+- **Estufa**: Disponible para cocinar
+- **Refrigerador**: Moderno con espacio amplio
+- **Microondas**: Para calentar alimentos
+- **Cafetera**: Eléctrica de goteo
+- **Utensilios**: Ollas, sartenes, platos, cubiertos, vasos
 
-### Cafetera y Tetera
-- **Cafetera prensa francesa**: En mesón
-  - Café molido + agua caliente + 4 min
-  - Presionar émbolo lentamente
-- **Tetera silbato**: En hornilla gas
-  - Llena agua, tapa, fuego medio
-  - Silbato indica agua hirviendo (3-4 min)
+### Refrigerador
+- **Tipo**: Refrigerador moderno
+- **Temperatura ideal**: Refrigerador 4°C, Congelador -18°C
+- **Gavetas**: Para vegetales y carnes
+- **Hielo**: Bandeja en congelador
 
-### Refrigerador Compacto
-- **Tamaño**: 12 pies cúbicos (óptimo para parejas)
-- **Congelador**: Compartimento superior pequeño
-- **Temperatura**: Dial 1-5, mantener en 3
-- **Nota**: Si guardas mucho, tarda en enfriar nuevos items
+### Microondas
+- **Uso básico**: Ingresar tiempo + START
+- **Descongelar**: Botón DEFROST
+- **Funciones especiales**: Botones preconfigurados (si disponible)
 
-### Tostadora y Sandwichera
-- **Tostadora**: 2 ranuras, dial tostado (1-6)
-- **Sandwichera eléctrica**: En gabinete bajo mesón
-  - Precalentar 2 min (luz verde indica listo)
-  - Perfecta para arepas, sandwiches, paninis
+---
 
 ## Entretenimiento {#entretenimiento}
 
-### TV y Streaming
-**Q: ¿Qué servicios de TV tengo disponibles?**
+### Smart TV
+**Q: ¿Cómo uso el TV y servicios de streaming?**
 **A:**
-- **TV**: Panasonic 40" Smart TV
-- **Ubicación**: Pared frente a cama (vista perfecta)
-- **Netflix**: Botón rojo directo en control
-- **Amazon Prime**: En menú apps
-- **Cable**: 60 canales locales + internacionales
-- **Casting**: Compatible Chromecast (castear desde teléfono)
+- **Modelo**: Smart TV
+- **Encendido**: Botón POWER en control remoto
+- **Netflix**: Acceso disponible
+- **YouTube**: Acceso disponible
+- **Streaming**: Servicios preconfigurados
+- **Chromecast**: Función de transmisión desde celular (si disponible)
 
-### Audio
-- **Parlante Bluetooth**: JBL Flip 5 en estante
-  - Encender: Botón power (luz azul parpadea)
-  - Emparejar: Bluetooth teléfono "JBL Flip 5"
-  - Batería: 12 horas continuas
-  - Carga: Cable USB-C en gaveta
-
-## Conectividad {#conectividad}
-
-### Internet
-- **Red WiFi**: `SimmerDown-Summertime`
-- **Contraseña**: `Summer2024Time!`
-- **Router**: Instalado en apartamento (señal excelente)
-- **Velocidad**: 60 Mbps
-- **Tip**: Para videollamadas importantes, ubicarse cerca del router (closet entrada)
+---
 
 ## Seguridad {#seguridad}
 
-### Caja Fuerte Compacta
-- **Ubicación**: Closet, estante superior derecho
-- **Tamaño**: Mediana (pasaportes, celular, dinero)
-- **Código maestro**: `5555`
-- **Programar tu código**:
-  - Abrir con 5555
-  - Presionar `*` + nuevo código (4-6 dígitos) + `#`
-  - Probar código antes de guardar objetos
-- **Llave emergencia**: Con recepción
+### Caja Fuerte
+- **Ubicación**: Closet principal
+- **Tamaño**: Mediana a grande
+- **Código**: Configurable por huésped
+- **Instrucciones**: Ver manual en caja fuerte o solicitar asistencia en recepción
 
-### Puertas y Seguridad
-- **Puerta principal**: Cerradura convencional + cerrojo manual
-- **Llave**: No perder (reposición $50.000 COP)
-- **Ventanas**: Seguros en marco (girar para bloquear)
+### Cerradura
+- **Tipo**: Cerradura electrónica con código
+- **Código**: Proporcionado en check-in
+- **Uso**: Ingresar código + # para abrir
+- **Cierre manual**: Girar perilla desde adentro
 
-## Utensilios y Artículos {#utensilios-articulos}
-
-### Plancha
-- **Ubicación**: Closet pasillo, bolsa azul
-- **Tipo**: Plancha seca (sin vapor)
-- **Tabla**: Plegable, detrás puerta baño
-- **Uso**: Enchufar, esperar luz indicadora, planchar
-
-### Secador
-- **Ubicación**: Gaveta del baño
-- **Potencia**: 1600W, 2 velocidades
-- **Cable**: 1.8m
-
-### Toallas
-- **Set inicial**: 2 grandes, 2 medianas por persona
-- **Extra**: Estante baño
-- **Cambio**: Día de por medio, o dejar en piso
-
-### Kits de Cocina
-- **Ollas**: 3 tamaños (grande, mediana, pequeña)
-- **Sartenes**: 2 (grande antiadherente, pequeña normal)
-- **Cubiertos**: Servicio para 4 personas
-- **Vasos/Tazas**: 4 de cada uno
-- **Platos**: 4 soperos, 4 llanos, 4 postre
+---
 
 ## Baño {#bano}
 
-### Ducha
-**Q: ¿Cómo funciona el sistema de agua caliente?**
+### Sistema de Ducha
+**Q: ¿Cómo funciona la ducha del apartamento?**
 **A:**
-- **Tipo**: Calentador eléctrico de paso
-- **Control**: 2 llaves
-  - Izquierda (roja): Caliente
-  - Derecha (azul): Fría
-- **Ajuste**: Mezclar ambas para temperatura ideal
-- **Calentamiento**: Instantáneo (no requiere esperar)
-- **Presión**: Buena, estable
-- **Cortina**: Mantener dentro de bañera
+- **Sistema**: Ducha moderna
+- **Controles**:
+  - Llave izquierda: Agua caliente
+  - Llave derecha: Agua fría
+  - Control central: On/Off principal
+- **Temperatura**: Agua caliente instantánea
+- **Presión**: Excelente
 
-### Productos
-- **Shampoo**: Dispensador pared ducha
-- **Jabón líquido**: Dispensador junto a shampoo
-- **Jabón manos**: Dispensador en lavamanos
-- **Papel higiénico**: Rollos extra bajo lavamanos
+### Amenities
+- **Shampoo/Acondicionador**: Dispensadores en ducha
+- **Jabón líquido**: Dispensador de manos y cuerpo
+- **Toallas**: Juego completo (grandes, medianas, manos, piso)
+- **Papel higiénico**: Extra disponible
+
+---
+
+## Utensilios y Artículos {#utensilios-articulos}
+
+### Centro de Planchado
+- **Ubicación**: Closet o área designada
+- **Incluye**: Plancha a vapor + tabla de planchar
+- **Uso**: Llenar tanque, ajustar temperatura según tela
+- **Seguridad**: Apagado automático
+
+### Kit de Baño
+- **Secador de pelo**: Gaveta del baño
+- **Espejo**: Sobre lavamanos
+- **Balanza**: Bajo lavamanos (si disponible)
+
+### Toallas
+- **Juego completo**: Toallas grandes, medianas, manos, piso
+- **Ubicación extra**: Estante closet baño
+- **Cambio**: Dejar en piso si quieres cambio
+
+---
 
 ## Limpieza {#limpieza}
 
-### Equipo de Limpieza
-- **Escoba**: Closet pasillo
-- **Trapeador**: Mismo closet
-- **Recogedor**: Colgado en gancho
-- **Productos**: Bajo fregadero cocina
-  - Desinfectante multiusos
-  - Limpiavidrios
-  - Jabón para platos
-- **Bolsas basura**: Gaveta cocina inferior
+### Servicio de Limpieza
+- **Limpieza**: Servicio disponible
+- **Horario**: Consultar en recepción
+- **Cartel "No Molestar"**: Colgar en puerta si prefieres privacidad
 
-### Basura
-- **Bote cocina**: Con tapa, cambiar diario
-- **Bote baño**: Pequeño para papeles
-- **Disposición**: Bajar a contenedor planta baja antes 9pm
+### Lavandería
+- **Servicio**: Disponible en edificio (planta baja)
+- **Costo**: $15.000 COP carga completa
+- **Horario**: 7am-8pm
+- **Detergente**: Incluido
+
+---
 
 ## Emergencias {#emergencias}
 
 ### Contactos
-- **Recepción**: +57 318 812 3456
+- **Recepción**: +57 318 812 3456 (WhatsApp 24/7)
 - **Emergencias**: 123
-- **Clínica**: +57 8 512 3030
+- **Médico**: 125
 
 ### Equipos
-- **Extintor**: Pared cocina, verificar vigencia
-- **Botiquín**: Baño, gabinete espejo
-- **Linterna**: Gaveta mesa noche
+- **Extintor**: Cocina
+- **Detector de humo**: Techo sala/dormitorio
+- **Botiquín**: Baño
+
+---
+
+## Recomendaciones Importantes {#recomendaciones}
+
+### Cuidado del Alojamiento
+**Q: ¿Qué debo tener en cuenta durante mi estadía?**
+**A:**
+
+**Llegada**:
+- Llega con el celular cargado
+- Puedes imprimir estas instrucciones o enviarlas a tu acompañante
+
+**Playa y Arena**:
+- Usa la trampa de arena frente a las escaleras para quitarte la arena al regresar
+- No subas con los pies mojados - sécate bien antes de salir de la trampa
+- No uses las toallas del alojamiento para la playa
+
+**Limpieza**:
+- Deposita tu basura en la caseta metálica frente al edificio (a la izquierda)
+- Mantén el orden en el apartamento
+
+**Energía**:
+- Apaga el aire acondicionado cuando salgas
+- Ayúdanos a cuidar el medio ambiente
+
+**Seguridad**:
+- No dejes la puerta del apartamento abierta
+- Todas las puertas tienen cerradura electrónica
+- Cuida la lencería del alojamiento
+
+---
+
+## Información Adicional {#info-adicional}
+
+### Guía Completa en Línea
+**Q: ¿Dónde encuentro más información?**
+**A:**
+
+Tenemos una guía completa en línea con información detallada sobre:
+- Amenidades del apartamento
+- Servicios del edificio
+- Recomendaciones locales
+- Y mucho más
+
+**Acceso**:
+- Link: https://simmerdown.house/instrucciones/apartamento-summertime/
+- Clave: `2814`
+- Idiomas disponibles: Español, Inglés, Portugués
+
+**Versión offline**: Este documento es una versión básica útil si no tienes conexión a internet.
+
+### Contacto
+**Q: ¿Cómo puedo contactar a recepción?**
+**A:**
+- **WhatsApp**: +57 318 812 3456
+- **Email**: recepcion@simmerdown.house
+- **Horario**: 24/7 para emergencias
+
+---
 
 ## Tips Específicos Summertime {#tips-especificos}
 
-### Características Destacadas
-- **Ubicación**: Primer piso, acceso fácil sin escaleras
-- **Balcón privado**: Espacio exterior exclusivo
-- **Ventilación**: Excelente circulación aire natural
-- **Compacto**: Perfecto para parejas, eficiente
+### Características del Apartamento
+- **Tipo**: Apartamento completo con cocina equipada
+- **Ubicación**: Segundo piso del edificio
+- **Capacidad**: Ideal para parejas o familias pequeñas
+- **Privacidad**: Espacio independiente y privado
 
 ### Recomendaciones
-- **Estufa gas**: Más rápida para cocinar que eléctrica
-- **Balcón**: Ideal para desayunar o cenar al aire libre
-- **Ventilación natural**: Días frescos, abrir ventanas y apagar AC
-- **Parlante**: Llevar a balcón para música ambiente
+- **Cocina**: Cocina completa para preparar comidas
+- **Streaming**: Smart TV con acceso a servicios de entretenimiento
+- **Comodidades**: Apartamento completo con todas las amenidades
+- **Ventilación**: Buena circulación de aire
 
-### Optimización
-- **Temperatura**: AC en 24°C de noche es suficiente
-- **Luz natural**: Excelente durante el día, cortinas livianas
-- **Privacidad**: Balcón con vista hacia jardín (tranquilo)
+### Servicios Adicionales
+- **Desayuno**: Área común planta baja (7-10am) - adicional
+- **Cocina compartida**: Planta baja, uso libre (además de tu cocina privada)
+- **Lavandería**: Autoservicio ($15.000 COP/carga)
+- **Zona TV**: Sala común con TV grande
+
+---
+
+## Resumen Rápido {#resumen}
+
+### Datos Esenciales
+
+**Ubicación**:
+- 📍 Sarie Bay, después del Super Todo Express
+- 🗺️ https://maps.app.goo.gl/WnmKPncxLc8Dx4Qo9
+
+**Claves**:
+- 🏢 Edificio: `C8712` (presiona fuerte la C)
+- 🏠 Summertime: `2814`
+
+**WiFi**:
+- 📶 Red: `SUMMER_SHINE`
+- 🔐 Contraseña: `seeyousoon`
+
+**Horarios**:
+- ⏰ Check-in: 15:00
+- ⏰ Check-out: 12:00
+
+**Links Importantes**:
+- 📝 Self check-in: https://simmerdown.house/self-check-in/
+- 📱 Guía completa: https://simmerdown.house/instrucciones/apartamento-summertime/ (clave: 2814)
 
 ---
 
 **Última actualización**: Enero 2025
-**Versión**: 1.0
+**Versión**: 2.0 (Real)
 **Contacto**: recepcion@simmerdown.house

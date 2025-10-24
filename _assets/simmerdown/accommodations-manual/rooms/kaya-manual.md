@@ -13,7 +13,7 @@ document:
   language: "es"
   status: "active"
   tags: ["manual", "kaya", "habitacion", "instrucciones", "operativo", "room"]
-  keywords: ["aire_acondicionado", "wifi", "plancha", "caja_fuerte", "netflix", "balcon"]
+  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay"]
 unit_reference:
   unit_name: "Kaya"
   unit_type: "room"
@@ -23,217 +23,216 @@ tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
 
 # Manual Operativo - Habitación Kaya
 
-## Aire Acondicionado {#aire-acondicionado}
+¡Bienvenid@ a Simmer Down Guest House – Habitación Kaya!
 
-**Q: ¿Cómo funciona la climatización de Kaya?**
+Gracias por elegirnos. En este manual encontrarás toda la información necesaria para tu llegada y estadía.
+
+---
+
+## Información de Llegada {#llegada}
+
+### Tarjeta de Turismo Obligatoria
+**Q: ¿Necesito algún documento especial para entrar a San Andrés?**
 **A:**
-- **Sistema**: Split inverter 12,000 BTU (eficiente)
-- **Control**: Remoto touch con pantalla LCD
-- **Encendido**: Touch en botón power
-- **Temp óptima**: 22-23°C
-- **Características**:
-  - Modo TURBO (enfriamiento rápido 10 min)
-  - Modo QUIET (silencioso para dormir)
-  - Auto-clean (limpieza interna post-uso)
-  - i-Feel (sensor en control ajusta según posición)
-- **Ubicación**: Pared lateral, dirección ajustable
+- **Requisito**: Todas las personas mayores de 7 años deben pagar la tarjeta de turismo
+- **Dónde**: Se adquiere en el aeropuerto de origen
+- **Costo**: $137.000 COP
+- **Dirección a registrar**: Barrio Sarie Bay, posada Simmer Down
 
-**Exclusivo Kaya**: Modo QUIET es el más silencioso del edificio
-
-## Mini-Cocina {#mini-cocina}
-
-### Corner Café
-**Q: ¿Qué facilidades de preparación tengo?**
+### Ubicación del Alojamiento
+**Q: ¿Dónde está ubicado Simmer Down?**
 **A:**
-- **Mini-refrigerador**: Debajo del mesón
-  - 4 pies cúbicos
-  - Freezer compartido
-  - Bandeja hielo incluida
-- **Cafetera italiana (moka)**: Clásica de 3 tazas
-  - Agua en base hasta válvula
-  - Café molido en filtro
-  - Calentar en infiernillo eléctrico
-  - Sonido burbujeo = listo (5 min)
-  - Café artesanal en lata metálica
+- **Barrio**: Sarie Bay, San Andrés
+- **Referencia principal**: 150 metros después del supermercado Super Todo Express
+- **Edificio**: Primer edificio de la calle
+- **Características distintivas**:
+  - Puerta enrollable color morado
+  - Dos letreros con el nombre "Simmer Down"
+  - Varias puertas de aluminio color natural
+- **Nombre anterior**: Edificio Gallo de Oro (residencia de la Sra. María Said)
 
-### Infiernillo Eléctrico
-- **Hornilla única**: 1000W
-- **Encendido**: Girar dial nivel 1-5
-- **Usos**: Cafetera, hervir agua, calentar comida
-- **Precaución**: Hornilla permanece caliente 10 min después
+**Link de ubicación**: https://maps.app.goo.gl/WnmKPncxLc8Dx4Qo9
 
-### Hervidor
-- **Capacidad**: 1.2L
-- **Rápido**: 2 minutos agua hirviendo
-- **Té gourmet**: Variedad en caja de madera
-
-## Entretenimiento {#entretenimiento}
-
-### TV Smart
-- **Marca**: Sony 35" Android TV
-- **Netflix**: Botón directo en control
-- **YouTube**: Pre-instalado
-- **Chromecast**: Integrado
-- **Voice control**: Presionar micrófono en control
-- **Posición**: Brazo articulado (ajustar ángulo)
-
-### Balcón con Vista
-**Q: ¿Qué tiene el balcón de Kaya?**
+### Instrucciones para Llegar Caminando
+**Q: ¿Cómo llego caminando desde el aeropuerto?**
 **A:**
-- **Mobiliario**: 2 sillas + mesa pequeña
-- **Vista**: Calle peatonal (gente watching)
-- **Luz**: Farol exterior (switch junto a puerta balcón)
-- **Privacidad**: Baranda con paneles
-- **Ideal**: Café matutino o cervezas al atardecer
 
-## Conectividad {#conectividad}
+**Ruta estándar:**
+1. Dirígete al barrio Sarie Bay (pregunta su ubicación al salir del aeropuerto)
+2. Entra al barrio girando en el único semáforo, frente al restaurante El Pescadero (Fisherman's Place)
+3. En la segunda cuadra, gira a la derecha
+4. Camina dos cuadras y gira a la izquierda justo después del supermercado Super Todo Express
+5. Simmer Down es el primer edificio de esa calle
 
-### WiFi de Alta Calidad
-- **Red**: `SimmerDown-Kaya`
-- **Contraseña**: `Kaya!Pass2024`
-- **Velocidad**: 60 Mbps
-- **Señal**: Excelente en habitación + balcón
-- **Dispositivos**: Hasta 6 conectados
-- **Gaming**: Latencia baja (ideal si juegas online)
+**Ruta alternativa (más agradable):**
+1. Sal del aeropuerto caminando hacia el norte hasta la playa
+2. Pasa por la FAC, luego entre el restaurante The Islander y el hotel Decameron Isleño
+3. Al llegar a la playa, gira a la izquierda
+4. Pasa el letrero "I ❤️ San Andrés"
+5. Desde ahí, sigue las instrucciones de la ruta estándar
 
-## Seguridad {#seguridad}
+**Pro tip**: Lleva agua y sombrero si haces este recorrido durante el día.
 
-### Caja Fuerte
-- **Ubicación**: Closet, nivel medio (fácil acceso)
-- **Tamaño**: Estándar (documentos, electrónicos)
-- **Código maestro**: `3333`
-- **Configurar personal**:
-  - Abrir con 3333
-  - Presionar `*` 2 veces
-  - Ingresar TU código (4 dígitos)
-  - Presionar `#`
-  - Luz verde confirma
-- **Uso**: Tu código + `#` para abrir
-
-### Puerta y Ventanas
-- **Puerta**: Llave + cerrojo interno
-- **Balcón**: Cerradura con seguro
-- **Ventana**: Seguros laterales giratorios
-
-## Baño Privado {#bano}
-
-### Ducha con Presión Alta
-**Q: ¿Cómo es el sistema de ducha?**
+### Instrucciones para Llegar en Taxi
+**Q: ¿Qué le digo al taxista?**
 **A:**
-- **Tipo**: Ducha fija de alta presión
-- **Agua caliente**: Calentador eléctrico 220V
-- **Controles**:
-  - Llave única mezcladora
-  - Girar izquierda = caliente
-  - Girar derecha = fría
-- **Temperatura**: Estable, ajustar al inicio
-- **Presión**: Fuerte (mejor presión del piso)
 
-### Amenities
-- **Shampoo/Acondicionador**: Separados (mejor calidad)
-- **Gel de ducha**: Aroma coco
-- **Jabón manos**: Antibacterial
-- **Toallas**: 2 grandes + 1 mano + 1 piso
-- **Bata de baño**: Colgada en gancho (opcional usar)
+**Instrucción principal**:
+"Llévame a la posada Simmer Down en Sarie Bay, doblando a la izquierda justo después del supermercado Super Todo Express."
 
-## Utensilios {#utensilios}
+**Si no reconoce el lugar**:
+"Es el edificio que antes se llamaba Edificio Gallo de Oro, donde vivía la Sra. María Said."
 
-### En Habitación
-- **Secador pelo**: Profesional 1800W (gaveta)
-- **Espejo zoom**: Pared con brazo extensible
-- **Perchas**: 10 unidades + 3 con ganchos
-- **Canasta**: Para ropa sucia
+---
 
-### Solicitar Recepción
-- **Plancha**: Área común planta baja
-- **Ventilador**: Disponible si quieres circulación extra
-- **Adaptador**: Si traes plug extranjero
+## Acceso y Claves {#acceso}
 
-## Limpieza {#limpieza}
+### Claves de Ingreso
+**Q: ¿Qué claves necesito para entrar?**
+**A:**
+- **Edificio**: `C8712`
+  - ⚠️ Presiona fuerte la letra C si es necesario
+- **Apartamento Simmer Highs**: `1397`
+- **Habitación Kaya**: `1397`
 
-### Housekeeping
-- **Frecuencia**: Diaria
-- **Horario**: 10am-2pm
-- **Servicio**:
-  - Cama tendida
-  - Toallas frescas
-  - Basura vaciada
-  - Productos repuestos
-  - Baño desinfectado
-- **Privacidad**: Colgar cartel si no quieres servicio
+### Ubicación de la Habitación
+**Q: ¿Cómo llego a mi habitación una vez dentro del edificio?**
+**A:**
+1. Al entrar, sube hasta el último piso
+2. Entra por la primera puerta a la derecha
+3. Busca la puerta al final del pasillo marcada como **Kaya**
 
-### Mantener Orden
-- **Basura**: Bote junto a escritorio
-- **Reciclaje**: Bolsa en closet (llevar a contenedor pasillo)
-- **Manchas**: Reportar inmediatamente para tratamiento
+---
 
-## Escritorio {#escritorio}
+## Check-in y Check-out {#check-in-out}
 
-### Zona de Trabajo
-- **Mesa**: Madera sólida 100cm ancho
-- **Silla**: Ergonómica ajustable
-- **Iluminación**: Lámpara LED articulada
-- **Tomas**: 3 enchufes + 2 USB
-- **Organizador**: Para cables/accesorios
+### Horarios
+**Q: ¿Cuáles son los horarios de check-in y check-out?**
+**A:**
+- **Check-in**: A partir de las 15:00
+- **Check-out**: Antes de las 12:00
 
-## Closet {#closet}
+### Auto Registro (Self Check-in)
+**Q: ¿Necesito hacer algún registro previo?**
+**A:**
 
-### Almacenamiento
-- **Barra alta**: Ropa larga (vestidos, pantalones)
-- **Barra baja**: Camisas, faldas
-- **Estantes**: 3 niveles para doblada
-- **Gavetas**: 2 pequeñas (ropa interior, accesorios)
-- **Zapatero**: Base del closet (6 pares)
+Por normas del Ministerio de Comercio y Migración Colombia, todos los alojamientos deben registrar los datos de sus huéspedes.
 
-## Emergencias {#emergencias}
+**Proceso**:
+1. Completa el formulario online antes de tu llegada
+2. Link: https://simmerdown.house/self-check-in/
+3. Es obligatorio para todos los huéspedes
 
-### Números Importantes
-- **Recepción inmediata**: +57 318 812 3456 (WhatsApp)
-- **Interno**: Marcar 0 (24/7)
-- **Emergencia nacional**: 123
-- **Ambulancia**: 125
-- **Hospital**: +57 8 512 3030
+---
 
-### Equipos Seguridad
-- **Extintor**: Pasillo, señalizado
-- **Alarma humo**: Techo habitación
-- **Botiquín**: Recepción (analgésicos, vendas)
-- **Linterna**: Gaveta mesita noche
+## Conectividad {#wifi}
 
-## Tips Kaya {#tips-especificos}
+### WiFi
+**Q: ¿Cómo me conecto al WiFi?**
+**A:**
+- **Red**: `SIMMER_DOWN`
+- **Contraseña**: `seeyousoon`
+- **Disponibilidad**: Puedes conectarte gratis desde la puerta principal del edificio
+- **Cobertura**: Excelente señal en toda la habitación
 
-### Características Únicas
-- **Balcón privado**: No todas las habitaciones tienen
-- **Presión ducha**: Superior (sistema recién renovado)
-- **Ubicación**: Segundo piso frontal (vista calle)
-- **Ventilación**: Excelente circulación cruzada
+---
 
-### Aprovechar al Máximo
-- **Desayuno en balcón**: Café moka + vista = perfecto
-- **Modo QUIET AC**: Ideal si eres sensible al ruido
-- **Ventilación natural**: Mañanas frescas, abrir balcón y ventana
-- **Chromecast**: Transmite desde tu teléfono (youtube, fotos, music)
+## Características de la Habitación {#habitacion}
 
-### Recomendaciones
-- **Café moka**: Toma práctica, vale la pena (auténtico)
-- **Balcón atardecer**: Mejor hora (6pm) con bebida
-- **Infiernillo**: No dejar desatendido cuando calienta
-- **Bata baño**: Úsala, está incluida
+### Descripción General
+La habitación Kaya está ubicada en el último piso del edificio, ofreciendo privacidad y buena ventilación. Es identificable por su nombre Kaya en misma puerta al final del pasillo.
 
-### Ideal Para
-- **Parejas**: Balcón romántico
-- **Work-cation**: Escritorio + WiFi excelente
-- **Relax**: Presión ducha + modo quiet AC = descanso total
-- **Observadores**: Vista calle peatonal es entretenida
+### Amenidades
+Para información detallada sobre las amenidades específicas de la habitación (aire acondicionado, TV, baño, etc.), puedes:
+- Consultar la guía completa en línea: https://simmerdown.house/instrucciones/habitacion-kaya/ (clave: `1397`)
+- Contactar a recepción: +57 318 812 3456 (WhatsApp)
 
-### Servicios Edificio
-- **Cocina compartida**: Planta baja, úsala para comidas
-- **Área social**: TV grande + sofás
-- **Roof-top**: Terraza superior (sunset views)
-- **Lavandería**: Monedas/$15k por carga
+---
+
+## Recomendaciones Importantes {#recomendaciones}
+
+### Cuidado del Alojamiento
+**Q: ¿Qué debo tener en cuenta durante mi estadía?**
+**A:**
+
+**Llegada**:
+- Llega con el celular cargado
+
+**Playa y Arena**:
+- Usa la trampa de arena frente a las escaleras para quitarte la arena al regresar
+- No subas con los pies mojados - sécate bien antes de salir de la trampa
+- No uses las toallas del alojamiento para la playa
+
+**Limpieza**:
+- Deposita tu basura en la caseta metálica frente al edificio (a la izquierda)
+- Mantén el orden en la habitación
+
+**Energía**:
+- Apaga el aire acondicionado cuando salgas
+- Ayúdanos a cuidar el medio ambiente
+
+**Seguridad**:
+- No dejes la puerta de tu habitación abierta
+- Todas las puertas tienen cerradura electrónica
+- Cuida la lencería del alojamiento
+
+---
+
+## Información Adicional {#info-adicional}
+
+### Guía Completa en Línea
+**Q: ¿Dónde encuentro más información?**
+**A:**
+
+Tenemos una guía completa en línea con información detallada sobre:
+- Amenidades de la habitación
+- Servicios del edificio
+- Recomendaciones locales
+- Y mucho más
+
+**Acceso**:
+- Link: https://simmerdown.house/instrucciones/habitacion-kaya/
+- Clave: `1397`
+- Idiomas disponibles: Español, Inglés, Portugués
+
+**Versión offline**: Este documento es una versión básica útil si no tienes conexión a internet.
+
+### Contacto
+**Q: ¿Cómo puedo contactar a recepción?**
+**A:**
+- **WhatsApp**: +57 318 812 3456
+- **Email**: stay@simmerdown.house
+- **Horario**: 24/7 para emergencias
+
+---
+
+## Resumen Rápido {#resumen}
+
+### Datos Esenciales
+
+**Ubicación**:
+- 📍 Sarie Bay, después del Super Todo Express
+- 🗺️ https://maps.app.goo.gl/WnmKPncxLc8Dx4Qo9
+
+**Claves**:
+- 🏢 Edificio: `C8712` (presiona fuerte la C)
+- 🏠 Apartamento Simmer Highs: `1397`
+- 🚪 Habitación Kaya: `1397`
+
+**WiFi**:
+- 📶 Red: `SIMMER_DOWN`
+- 🔐 Contraseña: `seeyousoon`
+
+**Horarios**:
+- ⏰ Check-in: 15:00
+- ⏰ Check-out: 12:00
+
+**Links Importantes**:
+- 📝 Self check-in: https://simmerdown.house/self-check-in/
+- 📱 Guía completa: https://simmerdown.house/instrucciones/habitacion-kaya/ (clave: 1397)
 
 ---
 
 **Última actualización**: Enero 2025
-**Versión**: 1.0
+**Versión**: 2.0 (Real)
 **Contacto**: recepcion@simmerdown.house

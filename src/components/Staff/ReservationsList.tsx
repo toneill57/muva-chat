@@ -26,6 +26,7 @@ import {
   AlertTriangle,
   AlertOctagon,
 } from 'lucide-react'
+import UnifiedReservationCard from '@/components/reservations/UnifiedReservationCard'
 
 // ============================================================================
 // Types
@@ -68,6 +69,17 @@ interface ReservationItem {
   booking_source: string
   external_booking_id: string | null
   booking_notes: string | null
+
+  // SIRE Compliance Fields
+  document_type?: string | null
+  document_number?: string | null
+  birth_date?: string | null
+  first_surname?: string | null
+  second_surname?: string | null
+  given_names?: string | null
+  nationality_code?: string | null
+  origin_city_code?: string | null
+  destination_city_code?: string | null
 
   created_at: string
   updated_at: string
@@ -140,6 +152,11 @@ export default function ReservationsList() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [motoPressCount, setMotoPressCount] = useState(0)
 
+  // Filter states
+  const [sourceFilter, setSourceFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [sireFilter, setSireFilter] = useState<string>('all')
+
   useEffect(() => {
     fetchReservations()
   }, [])
@@ -164,7 +181,8 @@ export default function ReservationsList() {
         return
       }
 
-      const response = await fetch('/api/reservations/list?future=true&status=active', {
+      // Fetch all active and pending reservations (default: active,pending_payment,requires_admin_action)
+      const response = await fetch('/api/reservations/list?future=true', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -176,12 +194,8 @@ export default function ReservationsList() {
           localStorage.removeItem('staff_token')
           localStorage.removeItem('staff_info')
 
-          // Extract tenant slug from hostname (e.g., "tucasamar.localhost" -> "tucasamar")
-          const hostname = window.location.hostname
-          const tenantSlug = hostname.split('.')[0]
-
-          // Redirect to tenant-specific login page
-          router.push(`/${tenantSlug}/staff/login`)
+          // Redirect to staff login (subdomain already in hostname)
+          router.push('/staff/login')
           return
         }
 
@@ -192,7 +206,40 @@ export default function ReservationsList() {
       const data: { success: boolean; data: ReservationsData } = await response.json()
 
       if (data.success) {
-        setReservations(data.data.reservations)
+        // Fetch tenant SIRE configuration for automatic fields
+        let hotelCode: string | null = null
+        let cityCode: string | null = null
+
+        try {
+          const { createClient } = await import('@supabase/supabase-js')
+          const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+          )
+
+          const { data: tenantData } = await supabase
+            .from('tenant_registry')
+            .select('features')
+            .eq('tenant_id', data.data.tenant_info.tenant_id)
+            .single()
+
+          if (tenantData?.features) {
+            hotelCode = tenantData.features.sire_hotel_code || null
+            cityCode = tenantData.features.sire_city_code || null
+          }
+        } catch (err) {
+          console.error('[ReservationsList] Failed to fetch tenant SIRE config:', err)
+          // Continue without SIRE codes - will show "No configurado" in UI
+        }
+
+        // Enrich reservations with tenant SIRE data
+        const enrichedReservations = data.data.reservations.map(res => ({
+          ...res,
+          tenant_hotel_code: hotelCode,
+          tenant_city_code: cityCode,
+        }))
+
+        setReservations(enrichedReservations)
         setTenantInfo({
           tenant_id: data.data.tenant_info.tenant_id,
           hotel_name: data.data.tenant_info.hotel_name,
@@ -205,6 +252,38 @@ export default function ReservationsList() {
       setError(err instanceof Error ? err.message : 'Failed to load reservations')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleDeleteReservation = async (reservationId: string) => {
+    try {
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        throw new Error('No hay token de autenticación')
+      }
+
+      const response = await fetch(`/api/reservations/delete`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reservation_id: reservationId }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `HTTP ${response.status}`)
+      }
+
+      // Remove reservation from state
+      setReservations(prev => prev.filter(r => r.id !== reservationId))
+
+      // Show success message
+      alert('Reserva eliminada exitosamente')
+    } catch (error) {
+      console.error('[ReservationsList] Error deleting reservation:', error)
+      throw error // Re-throw to let the card component handle the error UI
     }
   }
 
@@ -367,6 +446,7 @@ export default function ReservationsList() {
   const getBookingSourceBadge = (source: string): { label: string; color: string } => {
     const sourceMap: { [key: string]: { label: string; color: string } } = {
       'motopress': { label: 'MotoPress', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+      'mphb-airbnb': { label: 'MPHB-Airbnb', color: 'bg-orange-100 text-orange-800 border-orange-200' },
       'airbnb': { label: 'Airbnb', color: 'bg-pink-100 text-pink-800 border-pink-200' },
       'manual': { label: 'Manual', color: 'bg-gray-100 text-gray-800 border-gray-200' },
     }
@@ -374,6 +454,36 @@ export default function ReservationsList() {
   }
 
   // Extract metadata from booking_notes
+  // Filter reservations based on active filters
+  const getFilteredReservations = () => {
+    let filtered = [...reservations]
+
+    // Filter by source
+    if (sourceFilter !== 'all') {
+      filtered = filtered.filter(r => r.booking_source === sourceFilter)
+    }
+
+    // Filter by status
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(r => r.status === statusFilter)
+    }
+
+    // Filter by SIRE completeness
+    if (sireFilter !== 'all') {
+      if (sireFilter === 'complete') {
+        filtered = filtered.filter(r =>
+          r.document_number && r.first_surname && r.given_names && r.nationality_code
+        )
+      } else if (sireFilter === 'incomplete') {
+        filtered = filtered.filter(r =>
+          !r.document_number || !r.first_surname || !r.given_names || !r.nationality_code
+        )
+      }
+    }
+
+    return filtered
+  }
+
   const extractBookingMetadata = (bookingNotes: string | null): BookingMetadata => {
     if (!bookingNotes) {
       return { roomName: null, airbnbUrl: null }
@@ -427,7 +537,7 @@ export default function ReservationsList() {
 
   const handleDeleteAllReservations = () => {
     // Count MotoPress + Airbnb reservations (all that will be deleted)
-    const externalReservations = reservations.filter(r => ['motopress', 'airbnb'].includes(r.booking_source))
+    const externalReservations = reservations.filter(r => ['motopress', 'mphb-airbnb', 'airbnb'].includes(r.booking_source))
     setMotoPressCount(externalReservations.length)
 
     if (externalReservations.length === 0) {
@@ -587,6 +697,57 @@ export default function ReservationsList() {
                 )}
                 <span className="text-sm font-medium">Borrar Todas</span>
               </button>
+            </div>
+
+            {/* Filters Row */}
+            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-gray-700">Filtros:</span>
+              </div>
+
+              {/* Source Filter */}
+              <select
+                value={sourceFilter}
+                onChange={(e) => setSourceFilter(e.target.value)}
+                className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">Todas las fuentes</option>
+                <option value="motopress">Solo MotoPress (directas)</option>
+                <option value="mphb-airbnb">Solo MPHB-Airbnb</option>
+                <option value="airbnb">Solo Airbnb (ICS)</option>
+              </select>
+
+              {/* Status Filter */}
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">Todos los estados</option>
+                <option value="active">Confirmadas</option>
+                <option value="pending_payment">Pago pendiente</option>
+                <option value="requires_admin_action">Requiere acción</option>
+                <option value="cancelled">Canceladas</option>
+              </select>
+
+              {/* SIRE Filter */}
+              <select
+                value={sireFilter}
+                onChange={(e) => setSireFilter(e.target.value)}
+                className="px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">Todos (SIRE)</option>
+                <option value="complete">Con datos SIRE</option>
+                <option value="incomplete">Sin datos SIRE</option>
+              </select>
+
+              {/* Results counter */}
+              <div className="ml-auto flex items-center space-x-1 text-sm text-gray-600">
+                <span className="font-medium">{getFilteredReservations().length}</span>
+                <span>de</span>
+                <span className="font-medium">{reservations.length}</span>
+                <span>reservas</span>
+              </div>
             </div>
           </div>
         </div>
@@ -955,312 +1116,13 @@ export default function ReservationsList() {
 
               {/* Reservations Cards - 2-column grid on desktop */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {groupReservations(reservations).map((group) => {
-                  // Use first reservation for common data
-                  const firstReservation = group[0]
-                  const cardKey = firstReservation.external_booking_id || firstReservation.id
-                  const daysUntil = getDaysUntil(firstReservation.check_in_date)
-                  const urgencyColor = getUrgencyColor(daysUntil)
-                  const urgencyLabel = getUrgencyLabel(daysUntil)
-                  const sourceBadge = getBookingSourceBadge(firstReservation.booking_source)
-                  const isNew = isNewReservation(firstReservation.created_at)
-                  const isExpanded = expandedCards.has(cardKey)
-
-                  // Extract metadata from booking_notes
-                  const metadata = extractBookingMetadata(firstReservation.booking_notes)
-
-                  // Multi-unit booking indicators
-                  const isMultiUnit = group.length > 1
-                  const totalPrice = group.reduce((sum, r) => sum + (r.total_price || 0), 0)
-                  const totalAdults = group.reduce((sum, r) => sum + (r.adults || 0), 0)
-                  const totalChildren = group.reduce((sum, r) => sum + (r.children || 0), 0)
-
-                  return (
-                    <div
-                      key={cardKey}
-                      className={`bg-white rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow ${
-                        isNew ? 'border-green-300 ring-2 ring-green-100' : 'border-slate-200'
-                      }`}
-                    >
-                      {/* New Badge */}
-                      {isNew && (
-                        <div className="mb-3">
-                          <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full border border-green-200">
-                            <BadgeCheck className="w-3 h-3 mr-1" />
-                            Nueva (últimas 24h)
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Header: Guest Name + Badges */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <User className="w-5 h-5 text-blue-600" />
-                            <h3 className="text-lg font-semibold text-slate-900">
-                              {firstReservation.guest_name}
-                            </h3>
-                            {isMultiUnit && (
-                              <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full border border-purple-200">
-                                {group.length} unidades
-                              </span>
-                            )}
-                          </div>
-
-                          {firstReservation.reservation_code && (
-                            <p className="text-sm text-slate-600 ml-8">
-                              Código: <span className="font-mono font-medium">{firstReservation.reservation_code}</span>
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="flex flex-col items-end space-y-2">
-                          <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${urgencyColor}`}>
-                            {urgencyLabel}
-                          </div>
-                          <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${sourceBadge.color}`}>
-                            {sourceBadge.label}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Accommodation Units - Multiple rooms support */}
-                      {firstReservation.reservation_accommodations && firstReservation.reservation_accommodations.length > 0 && (
-                        <div className="mb-4 pb-4 border-b border-slate-200">
-                          <div className="flex items-start space-x-3">
-                            <Home className={`w-5 h-5 mt-0.5 ${
-                              firstReservation.reservation_accommodations.length === 1
-                                ? 'text-emerald-600'
-                                : 'text-purple-600'
-                            }`} />
-                            <div className="flex-1">
-                              {firstReservation.reservation_accommodations.length === 1 ? (
-                                // Single accommodation - destacado
-                                <>
-                                  <p className="text-sm font-semibold text-emerald-900">
-                                    {firstReservation.reservation_accommodations[0].accommodation_unit?.name || 'Alojamiento sin nombre'}
-                                  </p>
-                                  <p className="text-xs text-slate-500">Alojamiento</p>
-                                </>
-                              ) : (
-                                // Multiple accommodations - lista compacta
-                                <>
-                                  <p className="text-sm font-semibold text-purple-900 mb-1">
-                                    {firstReservation.reservation_accommodations.map(acc =>
-                                      acc.accommodation_unit?.name || 'Sin nombre'
-                                    ).join(', ')}
-                                  </p>
-                                  <p className="text-xs text-slate-500">
-                                    {firstReservation.reservation_accommodations.length} habitaciones
-                                  </p>
-                                </>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Room Name from MotoPress (if no accommodations in junction table) */}
-                      {(!firstReservation.reservation_accommodations || firstReservation.reservation_accommodations.length === 0) && metadata.roomName && (
-                        <div className="mb-4 pb-4 border-b border-slate-200">
-                          <div className="flex items-start space-x-3">
-                            <Home className="w-5 h-5 text-blue-600 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-semibold text-blue-900">
-                                {metadata.roomName}
-                              </p>
-                              <p className="text-xs text-slate-500">Nombre de la habitación (MotoPress)</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Main Info Grid */}
-                      <div className="grid grid-cols-1 gap-3 mb-4">
-                        {/* Check-in/out dates */}
-                        <div className="flex items-start space-x-3">
-                          <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-700">
-                              {formatDate(firstReservation.check_in_date)} - {formatDate(firstReservation.check_out_date)}
-                            </p>
-                            <p className="text-xs text-slate-500">
-                              {Math.ceil(
-                                (new Date(firstReservation.check_out_date).getTime() -
-                                  new Date(firstReservation.check_in_date).getTime()) /
-                                  (1000 * 60 * 60 * 24)
-                              )}{' '}
-                              noches • {firstReservation.check_in_time} - {firstReservation.check_out_time}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Email */}
-                        {firstReservation.guest_email && (
-                          <div className="flex items-start space-x-3">
-                            <Mail className="w-5 h-5 text-slate-400 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-medium text-slate-700 break-all">
-                                {firstReservation.guest_email}
-                              </p>
-                              <p className="text-xs text-slate-500">Email</p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Phone */}
-                        <div className="flex items-start space-x-3">
-                          <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-700">
-                              {firstReservation.phone_full || `***-${firstReservation.phone_last_4}`}
-                            </p>
-                            <p className="text-xs text-slate-500">Teléfono</p>
-                          </div>
-                        </div>
-
-                        {/* Guest Capacity */}
-                        <div className="flex items-start space-x-3">
-                          <Users className="w-5 h-5 text-slate-400 mt-0.5" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-700">
-                              {totalAdults} adulto{totalAdults !== 1 ? 's' : ''}
-                              {totalChildren > 0 && `, ${totalChildren} niño${totalChildren !== 1 ? 's' : ''}`}
-                            </p>
-                            <p className="text-xs text-slate-500">Huéspedes totales</p>
-                          </div>
-                        </div>
-
-                        {/* Price */}
-                        {totalPrice > 0 && (
-                          <div className="flex items-start space-x-3">
-                            <DollarSign className="w-5 h-5 text-slate-400 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-medium text-slate-700">
-                                {formatPrice(totalPrice, firstReservation.currency)}
-                              </p>
-                              <p className="text-xs text-slate-500">
-                                Precio total{isMultiUnit && ` (${group.length} unidades)`}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Airbnb URL */}
-                      {metadata.airbnbUrl && (
-                        <div className="mb-4">
-                          <a
-                            href={metadata.airbnbUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center space-x-2 px-3 py-2 bg-pink-50 hover:bg-pink-100 text-pink-700 rounded-lg transition-colors text-sm font-medium"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                            <span>Ver en Airbnb</span>
-                          </a>
-                        </div>
-                      )}
-
-                      {/* Expandable Additional Details */}
-                      {(firstReservation.guest_country || firstReservation.external_booking_id || isMultiUnit || firstReservation.booking_notes) && (
-                        <div className="mt-4 pt-4 border-t border-slate-200">
-                          <button
-                            onClick={() => toggleCardExpansion(cardKey)}
-                            className="flex items-center justify-between w-full text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
-                            aria-expanded={isExpanded}
-                          >
-                            <span>Detalles adicionales</span>
-                            <span className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
-                              ▼
-                            </span>
-                          </button>
-
-                          {isExpanded && (
-                            <div className="mt-3 space-y-3">
-                              {/* Country */}
-                              {firstReservation.guest_country && (
-                                <div className="flex items-start space-x-3">
-                                  <Globe className="w-4 h-4 text-slate-400 mt-0.5" />
-                                  <div>
-                                    <p className="text-sm font-medium text-slate-700">
-                                      {firstReservation.guest_country}
-                                    </p>
-                                    <p className="text-xs text-slate-500">País</p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* External Booking ID */}
-                              {firstReservation.external_booking_id && (
-                                <div className="flex items-start space-x-3">
-                                  <BadgeCheck className="w-4 h-4 text-slate-400 mt-0.5" />
-                                  <div>
-                                    <p className="text-xs font-mono text-slate-700 break-all">
-                                      {firstReservation.external_booking_id}
-                                    </p>
-                                    <p className="text-xs text-slate-500">ID de reserva externa</p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Accommodations Details - Always show if multiple rooms */}
-                              {firstReservation.reservation_accommodations && firstReservation.reservation_accommodations.length > 1 && (
-                                <div className="pt-2 border-t border-slate-100">
-                                  <div className="flex items-start space-x-3 mb-2">
-                                    <Home className="w-4 h-4 text-purple-600 mt-0.5" />
-                                    <p className="text-sm font-medium text-slate-700">
-                                      Habitaciones ({firstReservation.reservation_accommodations.length}):
-                                    </p>
-                                  </div>
-                                  <div className="grid grid-cols-1 gap-2 ml-7">
-                                    {firstReservation.reservation_accommodations.map((acc, idx) => (
-                                      <div
-                                        key={acc.id}
-                                        className="bg-slate-50 rounded-lg p-3 border border-slate-200"
-                                      >
-                                        <div className="flex justify-between items-start mb-1">
-                                          <p className="text-sm font-medium text-slate-900">
-                                            {acc.accommodation_unit?.name || `Habitación ${idx + 1}`}
-                                          </p>
-                                          {acc.room_rate && (
-                                            <p className="text-xs font-semibold text-emerald-700">
-                                              {formatPrice(acc.room_rate, firstReservation.currency)}
-                                            </p>
-                                          )}
-                                        </div>
-                                        {acc.motopress_type_id && (
-                                          <p className="text-xs text-slate-500">
-                                            MotoPress ID: {acc.motopress_type_id}
-                                          </p>
-                                        )}
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Booking Notes */}
-                              {firstReservation.booking_notes && (
-                                <div className="pt-2 border-t border-slate-100">
-                                  <div className="flex items-start space-x-3">
-                                    <StickyNote className="w-4 h-4 text-amber-500 mt-0.5" />
-                                    <div className="flex-1">
-                                      <p className="text-xs font-medium text-slate-600 mb-1">Notas completas:</p>
-                                      <p className="text-xs text-slate-700 whitespace-pre-wrap break-words">
-                                        {firstReservation.booking_notes}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+                {getFilteredReservations().map((reservation) => (
+                  <UnifiedReservationCard
+                    key={reservation.id}
+                    reservation={reservation}
+                    onDelete={handleDeleteReservation}
+                  />
+                ))}
               </div>
             </div>
           )}
