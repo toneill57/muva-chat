@@ -16,6 +16,103 @@ sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 
 ---
 
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** ⏸️ Blocked - Awaiting FASE 2 completion
+**Priority:** 🟢 DEFERRED (FASE 6)
+**Your Role:** Monitoring & health checks specialist
+
+### Quick Context
+
+**Problem:** Guest chat necesita monitoreo continuo para prevenir regresiones futuras
+**Your Mission:** Implementar health checks automáticos + alertas proactivas (FASE 6)
+**Why Later:** Primero fix el bug (FASE 2), luego testing (FASE 3), THEN monitoring
+
+### Your Responsibilities
+
+**FASE 6 (Monitoring Continuo)** - 3-4h estimadas **← YOUR MAIN FOCUS:**
+- Task 6.1: Crear health endpoint `/api/health/guest-chat`
+- Task 6.2: Crear cron job script con alertas Slack
+- Task 6.3: Crear post-deploy verification script
+- Task 6.4: Configurar cron job en VPS servidor
+- **Deliverable:** Sistema auto-diagnóstico que alerta cuando algo falla
+
+**FASE 3 (Colaboración Minor)** - 30min estimada:
+- Proveer health check patterns para tests E2E
+- Review test infrastructure setup
+
+### Project Documentation
+
+**Read WHEN FASE 6 starts:**
+- `docs/chat-core-stabilization/chat-core-prompt-workflow.md` - Prompts FASE 6 (Tasks 6.1-6.4)
+- `docs/chat-core-stabilization/plan.md` - Full context FASE 6
+- `scripts/validate-tenant-health.ts` - Existing health check (reference)
+
+### Your Health Endpoint Design
+
+**4 Critical Checks:**
+1. **Chunks exist:** `SELECT COUNT(*) FROM accommodation_units_manual_chunks` > 200
+2. **Embeddings correct:** `octet_length(embedding_balanced) > 6000`
+3. **Mapping works:** `map_hotel_to_public_accommodation_id()` returns valid UUID
+4. **Search functional:** `match_unit_manual_chunks()` returns >0 results
+
+**Response Format:**
+```json
+{
+  "status": "healthy" | "degraded" | "error",
+  "checks": {
+    "chunks_exist": true,
+    "embeddings_correct": true,
+    "mapping_works": true,
+    "search_functional": true
+  },
+  "timestamp": "2025-10-24T..."
+}
+```
+
+**HTTP Status Codes:**
+- 200 → healthy
+- 503 → degraded (some checks failed)
+- 500 → error (endpoint itself failed)
+
+### Cron Job Requirements
+
+**Schedule:** Daily at 9 AM
+**Action:**
+- curl health endpoint
+- If NOT 200 → Send Slack alert
+- Log results to file
+
+**Slack Webhook Message:**
+```json
+{
+  "text": "🚨 Guest Chat Health Check FAILED",
+  "attachments": [{
+    "color": "danger",
+    "text": "Status code: 503\nCheck: https://muva.chat/api/health/guest-chat"
+  }]
+}
+```
+
+### Success Criteria (FASE 6)
+
+- ✅ Health endpoint returns 200 when system healthy
+- ✅ Health endpoint returns 503 when degraded
+- ✅ Cron job ejecuta diariamente sin errores
+- ✅ Slack alert llega cuando health check falla (testeado)
+- ✅ Post-deploy verification script funcional
+
+### Dependencies
+
+**BLOCKED BY:**
+- @agent-backend-developer completing FASE 2 (Fix)
+- @agent-backend-developer completing FASE 3 (E2E tests)
+- @agent-backend-developer completing FASE 4 (Consolidation)
+
+**COLLABORATES WITH:** @agent-database-agent (SQL queries for health checks)
+
+---
+
 ## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
 **Reference:** `.claude/TEST_FIRST_POLICY.md` (complete policy documentation)

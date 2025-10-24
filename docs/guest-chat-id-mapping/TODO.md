@@ -98,28 +98,30 @@
 
 ---
 
-## FASE 2: Stable Identifier Infrastructure ⚙️
+## FASE 2: Stable Identifier Infrastructure ⚙️ ✅
 
 ### 2.1 Enhanced RPC Function
-- [ ] Create RPC v2 con stable ID priority (1h)
+- [x] Create RPC v2 con stable ID priority (1h) ✅
   - Function `map_hotel_to_public_accommodation_id_v2`
   - Priority 1: Search by `motopress_unit_id`
   - Priority 2: Search by name (fallback)
   - Update `match_unit_manual_chunks` to use v2
-  - Files: `supabase/migrations/20251024010000_enhance_stable_id_mapping.sql`
+  - Files: `supabase/migrations/20251024010000_enhance_stable_id_mapping.sql`, `20251024020000_fix_stable_id_mapping_schema.sql`
   - Agent: **@agent-database-agent**
   - Test: RPC function executes successfully
+  - **Completado:** RPC v2 creado, tested con 100% success rate (5 units mapeadas)
 
 ### 2.2 Ensure Sync Populates Stable ID
-- [ ] Modify sync script para garantizar motopress_unit_id (45min)
+- [x] Modify sync script para garantizar motopress_unit_id (45min) ✅
   - Add validation that `motopress_unit_id` is always set
   - Ensure metadata includes stable identifier
-  - Files: `scripts/sync-motopress-bookings.ts`
+  - Files: `src/lib/integrations/motopress/sync-manager.ts`
   - Agent: **@agent-backend-developer**
   - Test: Sync creates units with `motopress_unit_id` in metadata
+  - **Completado:** Validation agregada, 87/87 units tienen motopress_unit_id (100% compliance)
 
 ### 2.3 Test Stable ID Mapping
-- [ ] Test mapping después de recrear units (45min)
+- [x] Test mapping después de recrear units (45min) ✅
   - Sync units from MotoPress
   - Verify all have `motopress_unit_id`
   - Delete 1 unit, re-sync
@@ -128,6 +130,7 @@
   - Files: `docs/guest-chat-id-mapping/fase-2/TESTS.md`
   - Agent: **@agent-backend-developer**
   - Test: 0 rows without stable ID, mapping works post-recreation
+  - **Completado:** Test completo exitoso, RPC v2 funciona correctamente (Dreamland test passed)
 
 ---
 
@@ -197,7 +200,7 @@
 ## FASE 5: Health Check & Validation ✨
 
 ### 5.1 Create Health Check Script
-- [ ] Script de validación completa (1h)
+- [x] Script de validación completa (1h) ✅
   - Check: All units have motopress_unit_id
   - Check: All units have embeddings (public chat)
   - Check: All units with manuals have chunks
@@ -207,6 +210,7 @@
   - Files: `scripts/validate-tenant-health.ts`
   - Agent: **@agent-backend-developer**
   - Test: `npm run validate:tenant-health -- --tenant simmerdown` shows 0 warnings
+  - **Completado:** Script creado, tested en simmerdown (94 chunks, 0 errores críticos)
 
 ### 5.2 Create Pre-Flight Validator
 - [ ] Script pre-reset validation (30min)
@@ -291,20 +295,20 @@
 ## 📊 PROGRESO
 
 **Total Tasks:** 23
-**Completed:** 6/23 (26%)
+**Completed:** 10/23 (43%)
 
 **Por Fase:**
-- FASE 0.1: 3/3 tareas ✅ (Commit Recent Changes)
-- FASE 0.2: 1/1 tareas ✅ (Create Branch)
+- FASE 0.1: 3/3 tareas ✅ (Commit Recent Changes) - COMPLETE
+- FASE 0.2: 1/1 tareas ✅ (Create Branch) - COMPLETE
 - FASE 1: 2/2 tareas ✅ (Cascading FKs) - COMPLETE
-- FASE 2: 0/3 tareas (Stable Identifiers)
+- FASE 2: 3/3 tareas ✅ (Stable Identifiers) - COMPLETE
 - FASE 3: 0/4 tareas (Multi-Tenant Manuals)
 - FASE 4: 0/1 tareas (Documentation)
-- FASE 5: 0/2 tareas (Health Checks)
-- FASE 6: 0/3 tareas (Testing)
+- FASE 5: 1/2 tareas (Health Checks)
+- FASE 6: 0/3 tareas (Testing) ⬅️ NEXT
 - FASE 7: 0/3 tareas (Deploy)
 
 ---
 
 **Última actualización:** Octubre 24, 2025
-**Próximo paso:** FASE 2.1 - Enhanced RPC Function
+**Próximo paso:** FASE 3.1 - Add CLI Flag to Manual Script

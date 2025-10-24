@@ -55,13 +55,9 @@ export async function POST(request: NextRequest) {
       accommodationText = 'Te confirmaré tu alojamiento pronto.'
     } else if (accommodationUnits.length === 1) {
       const unit = accommodationUnits[0]
-      const unitNumber = unit.unit_number ? ` #${unit.unit_number}` : ''
-      accommodationText = `Estarás hospedándote en **${unit.name}${unitNumber}**`
+      accommodationText = `Estarás hospedándote en **${unit.name}**`
     } else {
-      const unitNames = accommodationUnits.map(u => {
-        const number = u.unit_number ? ` #${u.unit_number}` : ''
-        return `${u.name}${number}`
-      }).join(', ')
+      const unitNames = accommodationUnits.map(u => u.name).join(', ')
       accommodationText = `Estarás hospedándote en **${accommodationUnits.length} alojamientos**: ${unitNames}`
     }
 

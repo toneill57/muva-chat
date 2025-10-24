@@ -154,7 +154,7 @@ function parseBedConfiguration(bedConfig: string): Array<{type: string, count: n
 /**
  * Extract all data from markdown v3.0 file
  */
-function extractAccommodationData(filePath: string): AccommodationData | null {
+async function extractAccommodationData(filePath: string): Promise<AccommodationData | null> {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
     const { data: frontmatter, content: markdown } = matter(content);
@@ -215,7 +215,7 @@ function extractAccommodationData(filePath: string): AccommodationData | null {
       ? specialFeatures
       : (uniqueFeaturesFromMarkdown ? uniqueFeaturesFromMarkdown.split(',').map(s => s.trim()) : []);
 
-    const metadata = {
+    const metadata: Record<string, any> = {
       name: name,
       size_m2: frontmatter.accommodation?.size_m2 || 0,
       capacity: frontmatter.accommodation?.capacity || 0,
@@ -235,6 +235,24 @@ function extractAccommodationData(filePath: string): AccommodationData | null {
       uploaded_at: new Date().toISOString(),
       file_path: filePath,
     };
+
+    // 🆔 AUTO-POPULATE motopress_unit_id from hotels.accommodation_units
+    // Query the stable ID using tenant_id and unit name
+    const { data: hotelUnit, error: hotelUnitError } = await supabase
+      .from('accommodation_units')
+      .select('metadata')
+      .eq('tenant_id', tenantId)
+      .eq('name', name)
+      .single();
+
+    if (hotelUnitError && hotelUnitError.code !== 'PGRST116') {
+      console.warn(`   ⚠️  Error querying hotels.accommodation_units for ${name}:`, hotelUnitError.message);
+    } else if (hotelUnit?.metadata?.motopress_unit_id) {
+      metadata.motopress_unit_id = hotelUnit.metadata.motopress_unit_id.toString();
+      console.log(`   🆔 Found stable ID: ${metadata.motopress_unit_id}`);
+    } else {
+      console.warn(`   ⚠️  No motopress_unit_id found for ${name} - unit won't have stable identifier`);
+    }
 
     const isActive = frontmatter.accommodation?.status === 'active';
     const isBookable = true;
@@ -430,7 +448,7 @@ async function processTenant(tenantName: string, files: string[]): Promise<Proce
   console.log('━'.repeat(50));
 
   for (const file of files) {
-    const data = extractAccommodationData(file);
+    const data = await extractAccommodationData(file);
     if (!data) continue;
 
     if (!stats.tenantId) stats.tenantId = data.tenantId;

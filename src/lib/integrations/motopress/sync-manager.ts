@@ -596,10 +596,15 @@ export class MotoPresSyncManager {
         // ✅ NEW: Save to accommodation_units_public (NOT hotels.accommodation_units)
         const chunkName = `${unit.name} - ${chunk.sectionTitle}`
 
+        // ✅ CRITICAL VALIDATION: Ensure motopress_unit_id is ALWAYS populated (FASE 2.2)
+        if (!unit.motopress_unit_id) {
+          throw new Error(`Unit ${unit.name} missing motopress_unit_id - this is REQUIRED for stable ID mapping`)
+        }
+
         const chunkRecord = {
           tenant_id: tenantId,
           name: chunkName,
-          unit_number: unit.motopress_unit_id?.toString() || `unit-${i + 1}`,  // ✅ FIX: Use motopress_unit_id as display number
+          unit_number: unit.motopress_unit_id.toString(),  // ✅ FIX: Use motopress_unit_id as display number (always string)
           unit_type: unit.unit_type || 'accommodation',
           description: chunk.content,
           short_description: unit.short_description || '',
@@ -612,7 +617,7 @@ export class MotoPresSyncManager {
             original_accommodation: unit.name,
             chunk_index: i + 1,
             total_chunks: chunks.length,
-            motopress_unit_id: unit.motopress_unit_id,
+            motopress_unit_id: unit.motopress_unit_id.toString(),  // ✅ CRITICAL: Always string in metadata (FASE 2.2)
             source_type: 'motopress_json',
             synced_at: new Date().toISOString(),
             // ✅ FIX: Campos necesarios para que las cards funcionen correctamente
