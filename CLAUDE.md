@@ -12,6 +12,8 @@ Guidance for Claude Code when working with this repository.
 - Premium SIRE compliance (Colombian tourism regulatory reporting)
 - Stack: Next.js 15, TypeScript, Supabase, Claude AI
 
+**Current Projects:** Ver `snapshots/general-snapshot.md` → CURRENT PROJECT
+
 ---
 
 ## 🚨 REGLAS CRÍTICAS
@@ -34,7 +36,7 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 **Único caso:** Decisiones de producto/negocio o cuando NO tengo acceso.
 
 ### 4. Git Workflow - SIEMPRE `dev`
-**TODO el trabajo en rama `dev` - NUNCA sugerir merge a `main`**
+**TODO el trabajo en rama `dev` (current: GuestChatDev) - NUNCA sugerir merge a `main`**
 
 - ✅ SIEMPRE commits/push a `dev`
 - ❌ NUNCA `git merge dev → main`
@@ -93,16 +95,23 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 ```
 ❌ NO usar `npm run dev` directo (falta .env.local)
 
-### Infrastructure
-- ❌ NO crear `vercel.json` (migrado a VPS Oct 2025)
-- ✅ Usar PM2 + Git deployment
+**Note:** ❌ NO crear `vercel.json` (migrado a VPS Oct 2025)
 
 ---
 
-## 🤖 MCP Servers
+## 🤖 Specialized Agents
 
-**Active:** 2 servers (supabase, knowledge-graph)
-**Disabled:** context7, memory-keeper (Oct 2025 - token optimization)
+Agentes leen automáticamente `snapshots/{nombre}.md`
+
+- `@agent-database-agent` - Schema, migrations, RPC, RLS
+- `@agent-backend-developer` - APIs, business logic, SIRE
+- `@agent-ux-interface` - React components, WCAG
+- `@agent-deploy-agent` - CI/CD, VPS deployment
+- `@agent-embeddings-generator` - Vector search, Matryoshka
+
+---
+
+## 🛠️ Key Development Patterns
 
 ### MCP-FIRST POLICY
 
@@ -121,23 +130,7 @@ mcp__supabase__list_tables({
 })
 ```
 
-📚 **Policy:** `docs/infrastructure/MCP_USAGE_POLICY.md`
-
----
-
-## 🤖 Specialized Agents
-
-Agentes leen automáticamente `snapshots/{nombre}.md`
-
-- `@agent-database-agent` - Schema, migrations, RPC, RLS
-- `@agent-backend-developer` - APIs, business logic, SIRE
-- `@agent-ux-interface` - React components, WCAG
-- `@agent-deploy-agent` - CI/CD, VPS deployment
-- `@agent-embeddings-generator` - Vector search, Matryoshka
-
----
-
-## 🛠️ Key Development Patterns
+📚 **Full policy:** `docs/infrastructure/MCP_USAGE_POLICY.md`
 
 ### Database Operations
 
@@ -184,4 +177,4 @@ npx tsx scripts/execute-ddl-via-api.ts migration.sql
 
 ---
 
-**Last Updated:** October 23, 2025
+**Last Updated:** October 24, 2025

@@ -3,8 +3,8 @@ title: "API Endpoints Mapper - MUVA Chat API Inventory"
 description: "Complete inventory of all REST API endpoints with authentication, performance, and security analysis"
 category: api-architecture
 status: PRODUCTION_READY
-version: "1.0"
-last_updated: "2025-10-08"
+version: "1.1"
+last_updated: "2025-10-24"
 audited_by: "api-endpoints-mapper"
 tags: [api, rest, authentication, security, performance, endpoints]
 keywords: ["guest_portal", "staff_portal", "compliance", "motopress", "matryoshka", "jwt"]
@@ -12,10 +12,58 @@ keywords: ["guest_portal", "staff_portal", "compliance", "motopress", "matryoshk
 
 # API Endpoints Mapper - MUVA Chat API Inventory
 
-**Last Updated:** October 8, 2025
+**Last Updated:** October 24, 2025
 **Total Endpoints:** 47 routes in 42 files
 **Total LOC:** ~8,236 lines of TypeScript
 **Status:** Production Ready (muva.chat)
+
+---
+
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** ⏸️ Standby - Monitoring for API-related issues
+**Priority:** 🟢 LOW (No API changes expected)
+**Your Role:** Document any new endpoints created during fix
+
+### Quick Context
+
+**Problem:** Guest chat NO responde WiFi/Policies
+**Your Involvement:** Minimal - Monitor for new APIs if needed
+**Current Phase:** FASE 1 (SQL Diagnosis) - Backend-focused
+
+### Your Responsibilities (CONDITIONAL)
+
+**IF FASE 2-4 creates new endpoints:**
+- Document new endpoint specifications
+- Update API inventory with auth requirements
+- Verify performance targets (<3s for chat APIs)
+- Update authentication matrix
+
+**IF FASE 6 creates monitoring endpoints:**
+- Document health check endpoint: `/api/health/guest-chat`
+- Document metrics endpoint: `/api/metrics/embeddings`
+- Add CRON secret authentication requirements
+
+### Expected New Endpoints (Potential)
+
+```
+POST /api/health/guest-chat
+- Auth: CRON secret or Admin JWT
+- Purpose: Automated health checks (4 SQL queries)
+- Performance: <500ms
+- Returns: { chunks: boolean, embeddings: boolean, mapping: boolean, search: boolean }
+
+GET /api/metrics/embeddings
+- Auth: Admin JWT
+- Purpose: Embedding quality metrics
+- Performance: <1s
+- Returns: { total: number, model: string, dimensions: object }
+```
+
+### Dependencies
+
+**TRIGGERED BY:** @agent-backend-developer or @agent-infrastructure-monitor (IF new APIs needed)
+**BLOCKED UNTIL:** FASE 2 complete
 
 ---
 
