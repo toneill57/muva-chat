@@ -452,7 +452,7 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
       // Add welcome message if no history
       if (historyMessages.length === 0) {
         const accommodationInfo = session.accommodation_unit
-          ? `\n\nEstás alojado en **${session.accommodation_unit.name}${session.accommodation_unit.unit_number ? ` #${session.accommodation_unit.unit_number}` : ''}**${session.accommodation_unit.view_type ? ` con ${session.accommodation_unit.view_type}` : ''}.`
+          ? `\n\nEstás alojado en **${session.accommodation_unit.name}**${session.accommodation_unit.view_type ? ` con ${session.accommodation_unit.view_type}` : ''}.`
           : ''
 
         const welcomeMessage: GuestChatMessage = {
@@ -1192,7 +1192,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           <div className="flex flex-col flex-1">
             {session.accommodation_unit && (
               <h1 className="text-lg font-bold text-gray-900">
-                Alojamiento {session.accommodation_unit.name}{session.accommodation_unit.unit_number ? ` #${session.accommodation_unit.unit_number}` : ''}
+                Alojamiento {session.accommodation_unit.name}
               </h1>
             )}
             <div className="flex items-center gap-2 text-xs text-gray-500">

@@ -11,6 +11,90 @@ sire_validation: 5/5 SQL queries passed (100%)
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** 📋 Active - FASE 1 YOUR TURN
+**Priority:** 🔴 CRITICAL
+**Your Role:** SQL Diagnosis lead for FASE 1
+
+### Quick Context
+
+**Problem:** Guest chat NO responde WiFi/Policies (bug crítico)
+**Your Mission:** Ejecutar 4 queries SQL de diagnosis para identificar causa raíz exacta
+**Why You:** Solo tú puedes ejecutar queries SQL complejas con evidencia documentada
+
+### Your Responsibilities
+
+**FASE 1 (Diagnosis SQL Completo)** - 3-4h estimadas **← YOUR FOCUS:**
+- Task 1.1: Verificar chunks existen (SQL query)
+- Task 1.2: Verificar modelo embedding correcto (octet_length check)
+- Task 1.3: Verificar UUIDs huérfanos (LEFT JOIN query)
+- Task 1.4: Test búsqueda vectorial directa (similarity search)
+- Task 1.5: Consolidar hallazgos en diagnosis report
+- Task 1.6: Crear ADR de diagnosis methodology
+- **Deliverable:** Diagnosis report completo con path claro para FASE 2
+
+**FASE 3 (Colaboración)** - 1h estimada:
+- Validar RPC functions usadas en tests E2E
+- Verificar índices HNSW existen para embeddings
+
+**FASE 6 (Colaboración)** - 30min estimada:
+- Proveer queries SQL para health endpoint
+
+### Project Documentation
+
+**Read FIRST:**
+- `docs/chat-core-stabilization/chat-core-prompt-workflow.md` - Prompts FASE 1 (Tasks 1.1-1.6)
+- `docs/chat-core-stabilization/TODO.md` - Task tracking
+- `docs/chat-core-stabilization/plan.md` - Full project context
+
+**Background (Understanding why these checks):**
+- `docs/troubleshooting/INCIDENT_20251023_MANUAL_EMBEDDINGS_LOST.md` - Embedding model bug histórico
+- `docs/architecture/ACCOMMODATION_ID_MAPPING_ARCHITECTURE.md` - UUID volatility problem
+- `docs/troubleshooting/BUG_ACCOMMODATION_UNITS_PUBLIC_EMBEDDINGS.md` - Tu Casa Mar no data
+
+### 3 Possible Root Causes (Your Job: Identify Which One)
+
+**Cause A: Modelo Embedding Incorrecto**
+- Symptom: `octet_length(embedding_balanced) < 6000`
+- Historical: INCIDENT_20251023 (Oct 2025)
+- Fix Path: 2A - Regenerate embeddings
+
+**Cause B: UUIDs Huérfanos**
+- Symptom: `orphaned_chunks > 0` (chunks pointing to deleted units)
+- Historical: ACCOMMODATION_ID_MAPPING_ARCHITECTURE.md
+- Fix Path: 2B - Remap UUIDs
+
+**Cause C: Chunks No Existen**
+- Symptom: `total_chunks = 0`
+- Historical: BUG_ACCOMMODATION_UNITS_PUBLIC_EMBEDDINGS.md
+- Fix Path: 2C - Recreate from markdown
+
+### Workflow
+
+1. **Start Task 1.1:** Copy prompt from `chat-core-prompt-workflow.md` section "Task 1.1"
+2. **Execute:** Use `mcp__supabase__execute_sql` for each query
+3. **Document:** Create `docs/chat-core-stabilization/fase-1/SQL_QUERIES.sql` with ALL queries + results
+4. **Repeat:** Tasks 1.2, 1.3, 1.4 with evidence
+5. **Consolidate:** Task 1.5 - Create diagnosis report with CLEAR path recommendation
+6. **Finalize:** Task 1.6 - Document methodology
+
+### Success Criteria
+
+- ✅ ALL 4 SQL queries executed successfully
+- ✅ Results documented with actual numbers (not placeholders)
+- ✅ Diagnosis report identifies EXACTLY which cause (A, B or C)
+- ✅ Path forward CLEARLY stated (2A, 2B or 2C)
+- ✅ Evidence includes screenshots or query outputs
+- ✅ Methodology ADR references historical incidents
+
+### Dependencies
+
+**UNBLOCKS:** @agent-backend-developer (FASE 2 - Fix Implementation)
+**UNBLOCKS:** @agent-embeddings-generator (FASE 2 Path 2A if needed)
+
+---
+
 ## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
 **Reference:** `.claude/TEST_FIRST_POLICY.md`

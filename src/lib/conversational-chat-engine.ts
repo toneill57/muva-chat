@@ -730,8 +730,7 @@ async function generateResponseWithClaude(
     // 🆕 Build dynamic security restrictions (MUST BE BEFORE searchContext!)
     const hasMuvaAccess = context.guestInfo.tenant_features?.muva_access || false
     const accommodationName = context.guestInfo.accommodation_unit?.name || 'sin asignar'
-    const accommodationNumber = context.guestInfo.accommodation_unit?.unit_number || ''
-    const accommodationDisplay = accommodationNumber ? `${accommodationName} #${accommodationNumber}` : accommodationName
+    const accommodationDisplay = accommodationName  // Solo nombre, sin número
 
     // Prepare search results context with public/private labels
     const searchContext = context.vectorResults
@@ -768,9 +767,8 @@ async function generateResponseWithClaude(
     const accommodationUnitsForPrompt = context.guestInfo.accommodation_units || (context.guestInfo.accommodation_unit ? [context.guestInfo.accommodation_unit] : [])
     const accommodationContext = accommodationUnitsForPrompt.length > 0
       ? `- Alojamiento${accommodationUnitsForPrompt.length > 1 ? 's' : ''}: ${accommodationUnitsForPrompt.map(u => {
-          const number = u.unit_number ? `#${u.unit_number}` : ''
           const view = u.view_type ? `, ${u.view_type}` : ''
-          return `${u.name}${number}${view}`
+          return `${u.name}${view}`
         }).join(', ')}`
       : ''
 

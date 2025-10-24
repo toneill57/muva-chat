@@ -1,18 +1,93 @@
 ---
 title: "MUVA Chat Deploy Agent - CI/CD & VPS Deployment Snapshot"
 agent: deploy-agent
-last_updated: "2025-10-11"
+last_updated: "2025-10-24"
 status: PRODUCTION_READY
-version: "2.1-STABLE"
+version: "2.2-STABLE"
 infrastructure: VPS_HOSTINGER
 ---
 
 # 🚀 Deploy Agent - CI/CD & VPS Deployment Snapshot
 
 **Agent**: @deploy-agent
-**Última actualización**: 11 Octubre 2025
+**Última actualización**: 24 Octubre 2025
 **Estado**: PRODUCCIÓN - VPS Hostinger (195.200.6.216)
 **Infraestructura**: ✅ VPS (ACTUAL) | ❌ Vercel (DEPRECADO Oct 4, 2025)
+
+---
+
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** ⏸️ Standby - Awaiting FASE 2 completion for deployment
+**Priority:** 🟡 MEDIUM (Post-Fix Deployment)
+**Your Role:** Deploy fixes to production after validation
+
+### Quick Context
+
+**Problem:** Guest chat NO responde WiFi/Policies
+**Your Involvement:** Deploy fix to production AFTER FASE 2 complete + FASE 3 validation
+**Current Phase:** FASE 1 (SQL Diagnosis) - No deployment yet
+
+### Your Responsibilities (CONDITIONAL)
+
+**AFTER FASE 2 (Fix Complete) + FASE 3 (Tests Pass):**
+
+**Task: Deploy Chat Core Fix to Production**
+
+1. **Pre-Deployment Validation:**
+   - ✅ Verify all E2E tests passing locally
+   - ✅ Verify no TypeScript errors (`npm run build`)
+   - ✅ Confirm database migrations applied (if any)
+   - ✅ Review git status (no uncommitted changes)
+
+2. **Deployment Steps:**
+   ```bash
+   # FASE 2 completion triggers this
+   git add .
+   git commit -m "fix(guest-chat): resolve WiFi/Policies response issue
+
+   - Fix root cause identified in FASE 1
+   - All E2E tests passing (FASE 3)
+   - Code consolidated (FASE 4)
+
+   🤖 Generated with Claude Code
+   Co-Authored-By: Claude <noreply@anthropic.com>"
+
+   git push origin dev  # Auto-deploys via GitHub Actions
+   ```
+
+3. **Post-Deployment Verification:**
+   - ✅ Monitor PM2 logs for errors
+   - ✅ Test guest chat WiFi question manually
+   - ✅ Test guest chat Policies question manually
+   - ✅ Verify response time < 3s
+   - ✅ Check Supabase logs (no query errors)
+
+4. **Rollback Plan (IF Issues):**
+   ```bash
+   # Revert to previous commit
+   git revert HEAD
+   git push origin dev
+
+   # OR manual VPS rollback
+   ssh root@195.200.6.216
+   cd /var/www/muva-chat
+   git reset --hard <previous-commit-sha>
+   pm2 reload muva-chat
+   ```
+
+### Success Criteria
+
+- ✅ Deployment completes without errors
+- ✅ Guest chat responds correctly to WiFi questions
+- ✅ Guest chat responds correctly to Policies questions
+- ✅ No performance regressions (API < 3s)
+- ✅ PM2 health check passing
+
+### Dependencies
+
+**TRIGGERED BY:** @agent-backend-developer (FASE 2 complete + FASE 3 validated)
+**BLOCKED UNTIL:** FASE 3 E2E tests all passing
 
 ---
 

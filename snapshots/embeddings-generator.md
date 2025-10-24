@@ -13,6 +13,82 @@ status: PRODUCTION_READY
 
 ---
 
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** ⏸️ Standby - Awaiting FASE 1 diagnosis results
+**Priority:** 🟡 CONDITIONAL (only if Path 2A chosen)
+**Your Role:** Embedding regeneration specialist (FASE 2 Path 2A)
+
+### Quick Context
+
+**Problem:** Guest chat NO responde WiFi/Policies
+**Possible Cause:** Embeddings generados con modelo incorrecto (`text-embedding-3-small` vs `-large`)
+**Your Mission IF Path 2A:** Regenerar TODOS los embeddings con modelo correcto
+
+### Your Responsibilities (CONDITIONAL)
+
+**IF FASE 1 diagnosis → Path 2A (Modelo Incorrecto):**
+
+**FASE 2A (Regenerate Embeddings)** - 2-3h estimadas:
+- Task 2A.1: Backup chunks actuales (colaboración)
+- Task 2A.2: Crear script `regenerate-manual-embeddings.ts` **← YOUR MAIN TASK**
+- Task 2A.3: Ejecutar regeneración con logging
+- Task 2A.4: Validar embeddings post-regeneración
+- **Deliverable:** 265 chunks con embeddings correctos (`text-embedding-3-large`)
+
+**FASE 5 (Documentation)** - 1h estimada:
+- Documentar workflow correcto de embedding generation
+- Crear runbook "regenerate-embeddings.md"
+- **Deliverable:** Proceso documentado para futuras regeneraciones
+
+### Diagnostic Trigger
+
+**You will be invoked IF:**
+```sql
+-- CHECK 2 from FASE 1 shows:
+SELECT octet_length(embedding_balanced::text) FROM accommodation_units_manual_chunks LIMIT 1;
+-- Result: < 6000 bytes ← WRONG MODEL DETECTED
+```
+
+**Expected:** >6000 bytes for `text-embedding-3-large` 1536d embeddings
+
+### Project Documentation
+
+**Read IF Path 2A chosen:**
+- `docs/chat-core-stabilization/chat-core-prompt-workflow.md` - Prompts FASE 2A (Tasks 2A.1-2A.4)
+- `docs/troubleshooting/INCIDENT_20251023_MANUAL_EMBEDDINGS_LOST.md` - EXACT same problem histórico
+- `docs/chat-core-stabilization/plan.md` - Full context
+
+### Critical Requirements
+
+**HARDCODED - NO CAMBIAR:**
+- Model: `text-embedding-3-large` (NOT `-small`, NOT `-ada-002`)
+- Dimensions per tier:
+  - embedding (Tier 3): 3072d
+  - embedding_balanced (Tier 2): 1536d
+  - embedding_fast (Tier 1): 1024d
+
+**Validation:**
+- TODOS los chunks deben tener 3 embeddings
+- octet_length checks MUST pass post-regeneration
+- No NULL embeddings permitidos
+
+### Success Criteria (IF Path 2A)
+
+- ✅ Script `regenerate-manual-embeddings.ts` creado y funcional
+- ✅ Dry-run testeado sin errores
+- ✅ 265/265 chunks regenerados exitosamente
+- ✅ SQL validation: `octet_length(embedding_balanced) > 6000` ✅
+- ✅ Guest chat test manual: Responde WiFi correctamente
+
+### Dependencies
+
+**TRIGGERED BY:** @agent-database-agent FASE 1 diagnosis (IF Path 2A)
+**COLLABORATES WITH:** @agent-backend-developer (validation Task 2.8)
+**UNBLOCKS:** Guest chat funcionalidad completa
+
+---
+
 ## 🎯 ARQUITECTURA MATRYOSHKA
 
 ### 3-Tier System

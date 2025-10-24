@@ -19,6 +19,80 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
+## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+
+**Status:** 📋 Active - FASE 1 Ready to Execute
+**Priority:** 🔴 CRITICAL
+**Your Role:** Principal developer for FASES 2, 3, 4, 5
+
+### Quick Context
+
+**Problem:** Guest chat NO responde WiFi/Policies (bug crítico actual)
+**Root Cause:** Desconocido - requiere diagnosis (modelo embedding? UUIDs huérfanos? chunks missing?)
+**Goal:** Fix inmediato + Testing automatizado + Código consolidado + Docs definitivas
+
+### Your Responsibilities
+
+**FASE 2 (Fix Inmediato)** - 4-6h estimadas:
+- Ejecutar fix basado en diagnosis FASE 1 (Path 2A, 2B o 2C)
+- Validar guest chat 100% funcional
+- **Deliverable:** Guest chat responde WiFi/Policies/Tourism correctamente
+
+**FASE 3 (E2E Testing)** - 6-8h estimadas:
+- Setup Playwright
+- Crear 6+ tests E2E (WiFi, Policies, Tourism, Multi-room, etc.)
+- **Deliverable:** Suite automatizada ejecutando en <5min
+
+**FASE 4 (Code Consolidation)** - 6-8h estimadas:
+- Refactor `conversational-chat-engine.ts`
+- Centralizar embedding generation
+- Consolidar RPCs duplicadas
+- **Deliverable:** -30% código duplicado, tests siguen pasando
+
+**FASE 5 (Documentation)** - 4-6h estimadas:
+- Crear 4 ADRs (Architecture Decision Records)
+- Crear 2 Runbooks operacionales
+- Actualizar troubleshooting docs
+- **Deliverable:** Docs que previenen incidentes futuros
+
+### Project Documentation
+
+**Read FIRST before starting work:**
+- `docs/chat-core-stabilization/plan.md` - Plan completo del proyecto
+- `docs/chat-core-stabilization/TODO.md` - Tareas específicas por fase
+- `docs/chat-core-stabilization/chat-core-prompt-workflow.md` - Prompts copy-paste
+
+**Context Documents (Background):**
+- `docs/troubleshooting/INCIDENT_20251023_MANUAL_EMBEDDINGS_LOST.md` - Modelo embedding incorrecto
+- `docs/troubleshooting/BUG_ACCOMMODATION_UNITS_PUBLIC_EMBEDDINGS.md` - Tu Casa Mar sin datos
+- `docs/architecture/ACCOMMODATION_ID_MAPPING_ARCHITECTURE.md` - UUIDs volátiles
+- `docs/troubleshooting/ACCOMMODATION_RECREATION_SAFE_PROCESS.md` - Proceso seguro
+
+### Workflow
+
+1. **Start any task:** Read prompt from `chat-core-prompt-workflow.md`
+2. **Execute:** Follow prompt exactly, use MCP tools
+3. **Document:** Update TODO.md, create evidence in `/fase-X/` directories
+4. **Validate:** Run all validation steps from workflow
+5. **Report:** Update task status, show evidence
+
+### Success Criteria
+
+- ✅ Guest chat responde WiFi 100% (manual test + E2E)
+- ✅ Guest chat responde Policies 100% (manual test + E2E)
+- ✅ Guest chat responde Tourism 100% (manual test + E2E)
+- ✅ 6+ tests E2E automatizados
+- ✅ Código consolidado (-30% duplicación)
+- ✅ 4 ADRs + 2 Runbooks documentados
+
+### Dependencies
+
+**BLOCKED BY:** @agent-database-agent completing FASE 1 (Diagnosis)
+**COLLABORATES WITH:** @agent-embeddings-generator (FASE 2 if Path 2A)
+**UNBLOCKS:** @agent-infrastructure-monitor (FASE 6 - Monitoring)
+
+---
+
 ## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
 
 **Reference:** `.claude/TEST_FIRST_POLICY.md`
