@@ -87,3 +87,10 @@ VPS-ENV-PRODUCTION.txt
 
 # Playwright MCP screenshots and cache
 .playwright-mcp/
+
+# Backup files
+*.backup*
+
+# WhatsApp docs (WIP)
+*whatsapp*.md
+TODO WHATSAPP.md
