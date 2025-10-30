@@ -35,11 +35,12 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 
 **Único caso:** Decisiones de producto/negocio o cuando NO tengo acceso.
 
-### 4. Git Workflow - SIEMPRE `dev`
-**TODO el trabajo en rama `dev` (current: GuestChatDev) - NUNCA sugerir merge a `main`**
+### 4. Git Workflow - SIEMPRE `staging`
+**TODO el trabajo en rama `staging` - Branch `dev` CONGELADA temporalmente**
 
-- ✅ SIEMPRE commits/push a `dev`
-- ❌ NUNCA `git merge dev → main`
+- ✅ SIEMPRE commits/push a `staging`
+- ⚠️ Branch `dev` está congelada (no deployea actualmente)
+- ❌ NUNCA `git merge staging → main`
 - ❌ NUNCA mencionar deploy sin autorización explícita
 
 **🚨 COMMITS Y PUSH - REQUIEREN AUTORIZACIÓN EXPLÍCITA:**
@@ -48,6 +49,10 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 - ✅ SOLO commitear cuando el usuario explícitamente diga: "commitea", "haz commit", "push", etc.
 - ✅ Puedo PREPARAR el mensaje de commit, pero NO ejecutarlo
 - ✅ Puedo usar `git status`, `git diff`, `git log` sin permiso
+
+**CI/CD Setup:**
+- `staging` → GitHub Actions → VPS staging (/var/www/muva-chat-staging)
+- `dev` → NO deployea (workflow desactivado temporalmente)
 
 ### 5. Verificar `git status` Antes de 404s
 **Archivos sin commitear = causa #1 de diferencias local vs producción**
@@ -62,7 +67,7 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 - ✅ Buscar TODOS los archivos que usan la interface
 - ✅ Identificar TODOS los accesos a campos (`object.field`)
 - ✅ Agregar TODOS los campos faltantes A LA VEZ
-- ✅ `npm run build` local ANTES de commit
+- ✅ `pnpm run build` local ANTES de commit
 - ❌ NUNCA commits iterativos por cada campo faltante
 
 📚 **Guía:** `docs/troubleshooting/TYPESCRIPT_INTERFACE_COMPLETENESS.md`
@@ -93,7 +98,7 @@ Aplica a: scripts, bash, leer archivos, APIs, testing
 ```bash
 ./scripts/dev-with-keys.sh
 ```
-❌ NO usar `npm run dev` directo (falta .env.local)
+❌ NO usar `pnpm run dev` directo (falta .env.local)
 
 **Note:** ❌ NO crear `vercel.json` (migrado a VPS Oct 2025)
 
@@ -117,7 +122,7 @@ Agentes leen automáticamente `snapshots/{nombre}.md`
 
 | Operación | ❌ NUNCA | ✅ SIEMPRE |
 |-----------|----------|------------|
-| SQL queries | `npx tsx -e` | `mcp__supabase__execute_sql` |
+| SQL queries | `pnpm dlx tsx -e` | `mcp__supabase__execute_sql` |
 | DB schema | bash + describe | `mcp__supabase__list_tables` |
 | Project memory | Inline docs | `mcp__knowledge-graph__aim_search_nodes` |
 | Framework docs | WebFetch | WebSearch + docs URLs |
@@ -142,7 +147,7 @@ mcp__supabase__list_tables({
 **DDL (CREATE/ALTER/DROP):**
 ```bash
 set -a && source .env.local && set +a && \
-npx tsx scripts/execute-ddl-via-api.ts migration.sql
+pnpm dlx tsx scripts/execute-ddl-via-api.ts migration.sql
 ```
 ❌ MCP tools NO funcionan para DDL
 
@@ -174,7 +179,24 @@ npx tsx scripts/execute-ddl-via-api.ts migration.sql
 - **SIRE Codes:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 - **Workflows:** `docs/workflows/ACCOMMODATION_SYNC_UNIVERSAL.md`
 - **Agent Snapshots:** `snapshots/{agent-name}.md`
+- **pnpm Migration:** `project-stabilization/PNPM_MIGRATION_COMPLETE.md`
 
 ---
 
-**Last Updated:** October 24, 2025
+## 🔄 Package Manager (pnpm)
+
+**Current:** pnpm v10.20.0 (migrated from npm Oct 30, 2025)
+
+**Key Commands:**
+- `pnpm install` - Install dependencies
+- `pnpm install --frozen-lockfile` - CI/CD installs (replaces `npm ci`)
+- `pnpm dlx tsx` - Run TypeScript scripts (replaces `npx tsx`)
+- `pnpm run X` - Run package.json scripts
+
+**Migration:** Zero deprecation warnings, zero peer dependency conflicts, 90%+ faster cached installs.
+
+📚 **Full details:** `project-stabilization/PNPM_MIGRATION_COMPLETE.md`
+
+---
+
+**Last Updated:** October 30, 2025

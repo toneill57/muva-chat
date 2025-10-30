@@ -43,7 +43,7 @@
    ```bash
    git clone <repository-url>
    cd MUVA
-   npm install
+   pnpm install
    ```
 
 2. **Environment configuration:**
@@ -59,7 +59,7 @@
 
 4. **Start development server:**
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 5. **Access the application:**
@@ -214,7 +214,7 @@ export function Component({ prop }: ComponentProps) {
 ### Setup
 ```bash
 # Run all tests
-npm test
+pnpm test
 
 # Watch mode
 npm run test:watch
@@ -280,10 +280,10 @@ describe('Component', () => {
 npm run validate-env
 
 # Run linting
-npm run lint
+pnpm run lint
 
 # Build application
-npm run build
+pnpm run build
 
 # Run tests
 npm run test:ci
@@ -363,7 +363,7 @@ rm -rf .next
 
 # Reinstall dependencies
 rm -rf node_modules package-lock.json
-npm install
+pnpm install
 
 # Check TypeScript errors
 npx tsc --noEmit

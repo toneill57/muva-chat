@@ -9,7 +9,7 @@
 
 ### VPS Requirements
 - Node.js 18+ instalado
-- PM2 instalado globalmente (`npm install -g pm2`)
+- PM2 instalado globalmente (`pnpm install -g pm2`)
 - Git configurado con acceso al repositorio
 - Puerto 3000 disponible para Next.js
 
@@ -33,7 +33,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 git status
 
 # Asegurar que tests pasen
-npm run build
+pnpm run build
 
 # Commit cambios
 git add .
@@ -60,13 +60,13 @@ cp -r .next .next.backup.$(date +%Y%m%d_%H%M%S)
 git pull origin main
 
 # Instalar dependencias (si hubo cambios en package.json)
-npm install
+pnpm install
 ```
 
 #### Build de Producción
 ```bash
 # Build optimizado para producción
-npm run build
+pnpm run build
 
 # Verificar éxito del build
 echo $?  # Debe retornar 0
@@ -155,7 +155,7 @@ git log --oneline -10  # Identificar commit estable
 git checkout <commit-hash>
 
 # Rebuild
-npm run build
+pnpm run build
 
 # Restart
 pm2 restart muva-chat
@@ -168,7 +168,7 @@ pm2 logs muva-chat --lines 50
 ```bash
 # Si hubo migraciones de DB, revertir con:
 set -a && source .env.local && set +a
-npx tsx scripts/execute-ddl-via-api.ts migrations/rollback/YYYYMMDD_rollback.sql
+pnpm dlx tsx scripts/execute-ddl-via-api.ts migrations/rollback/YYYYMMDD_rollback.sql
 ```
 
 ---
@@ -176,13 +176,13 @@ npx tsx scripts/execute-ddl-via-api.ts migrations/rollback/YYYYMMDD_rollback.sql
 ## Troubleshooting
 
 ### Error: Build Failed
-**Síntoma**: `npm run build` falla
+**Síntoma**: `pnpm run build` falla
 **Solución**:
 ```bash
 # Limpiar cache
 rm -rf .next node_modules
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 ### Error: PM2 Process Crashed
@@ -248,12 +248,12 @@ sudo tail -f /var/log/nginx/error.log
 ## Checklist de Deployment
 
 - [ ] Pre-requisitos verificados (DNS, SSL, env vars)
-- [ ] Build local exitoso (`npm run build`)
+- [ ] Build local exitoso (`pnpm run build`)
 - [ ] Git push completado
 - [ ] SSH a VPS exitoso
 - [ ] Git pull completado
-- [ ] `npm install` ejecutado (si necesario)
-- [ ] `npm run build` exitoso en VPS
+- [ ] `pnpm install` ejecutado (si necesario)
+- [ ] `pnpm run build` exitoso en VPS
 - [ ] PM2 restart completado
 - [ ] Health checks exitosos (3/3 endpoints)
 - [ ] Wildcard DNS resuelve correctamente

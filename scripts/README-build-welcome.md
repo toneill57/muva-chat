@@ -10,13 +10,13 @@ Pre-renderizar el welcome message a HTML estático en **build-time** para lograr
 
 ### Automático (durante build)
 ```bash
-npm run build
+pnpm run build
 # Ejecuta prebuild automáticamente → Genera welcome-message-static.ts
 ```
 
 ### Manual (durante desarrollo)
 ```bash
-npm run prebuild
+pnpm run prebuild
 # o
 npx tsx scripts/build-welcome-message.ts
 ```
@@ -37,7 +37,7 @@ Tu mensaje aquí...
 
 ### 2. Regenerar HTML
 ```bash
-npm run prebuild
+pnpm run prebuild
 ```
 
 ### 3. Verificar Output
@@ -109,7 +109,7 @@ components: {
 ## Testing
 
 ### Visual Test
-1. Ejecutar dev server: `npm run dev`
+1. Ejecutar dev server: `pnpm run dev`
 2. Abrir: `http://localhost:3000/chat-mobile`
 3. Verificar welcome message:
    - ✅ Bold text correctamente estilizado
@@ -189,10 +189,10 @@ TBT: ~200ms ✅ (-50%)
 ### GitHub Actions
 ```yaml
 - name: Install dependencies
-  run: npm ci
+  run: pnpm install --frozen-lockfile
 
 - name: Build application
-  run: npm run build # Includes prebuild automatically
+  run: pnpm run build # Includes prebuild automatically
 ```
 
 **Nota:** `prebuild` se ejecuta ANTES de `build` (npm script convention).
@@ -200,7 +200,7 @@ TBT: ~200ms ✅ (-50%)
 ### Vercel/Netlify
 ```json
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "pnpm run build",
   "framework": "nextjs"
 }
 ```
@@ -226,13 +226,13 @@ Funciona automáticamente ✅
 
 ### Editar Mensaje
 1. Modificar `WELCOME_MESSAGE` en `scripts/build-welcome-message.ts`
-2. Ejecutar `npm run prebuild`
+2. Ejecutar `pnpm run prebuild`
 3. Commit ambos archivos (script + generated)
 
 ### Cambiar Estilos
 1. Modificar `components` en `scripts/build-welcome-message.ts` (líneas 50-78)
 2. **IMPORTANTE:** Actualizar TAMBIÉN en `ChatMobile.tsx` (líneas 404-408)
-3. Ejecutar `npm run prebuild`
+3. Ejecutar `pnpm run prebuild`
 4. Visual test para verificar consistencia
 
 ### Agregar Nuevos Mensajes Estáticos

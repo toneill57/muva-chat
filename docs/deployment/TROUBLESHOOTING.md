@@ -9,7 +9,7 @@ Guía de solución de problemas comunes en deployment y operación del VPS.
 ### 1. Build Fails en GitHub Actions
 
 **Síntoma**:
-- ❌ GitHub Actions workflow falla en step `npm run build`
+- ❌ GitHub Actions workflow falla en step `pnpm run build`
 - Error log muestra: `Build failed` o `Type error` o `Module not found`
 - Badge en README muestra "failing"
 
@@ -27,8 +27,8 @@ gh run list --workflow=deploy.yml --limit 5
 gh run view <run-id> --log
 
 # 2. Reproducir build localmente
-npm ci
-npm run build
+pnpm install --frozen-lockfile
+pnpm run build
 
 # 3. Si hay errores TypeScript, corregir código
 npm run type-check
@@ -40,7 +40,7 @@ gh secret list
 cat .github/workflows/deploy.yml | grep node-version
 
 # 6. Si faltan dependencias, agregarlas
-npm install <missing-package> --save
+pnpm install <missing-package> --save
 git add package.json package-lock.json
 git commit -m "fix: add missing dependency"
 git push origin dev
@@ -50,7 +50,7 @@ gh run rerun <run-id>
 ```
 
 **Prevención**:
-- Siempre ejecutar `npm run build` localmente antes de push
+- Siempre ejecutar `pnpm run build` localmente antes de push
 - Usar `npm run type-check` en pre-commit hook
 - Mantener versiones de Node.js sincronizadas (local, GitHub Actions, VPS)
 
@@ -152,7 +152,7 @@ pm2 restart muva-chat --update-env
 # 5d. Si código crasheando, rollback
 cd /var/www/muva-chat
 git reset --hard HEAD~1
-npm run build
+pnpm run build
 pm2 reload muva-chat
 
 # 6. Verificar app corriendo
@@ -322,7 +322,7 @@ ls -la /var/www/muva-chat/.next/server/pages/api/
 
 # 6. Si falta, rebuild
 cd /var/www/muva-chat
-npm run build
+pnpm run build
 pm2 reload muva-chat
 
 # 7. Verificar conexión a Supabase
@@ -410,7 +410,7 @@ cat next.config.js | grep headers -A 10
 
 # 9. Rollback si código con bugs
 git reset --hard HEAD~1
-npm run build
+pnpm run build
 pm2 reload muva-chat
 
 # 10. Fix y re-deploy
@@ -460,7 +460,7 @@ sudo tail -f /var/log/nginx/access.log | tee -a /tmp/debug.log &
 ### Rollback de Emergencia (1 comando)
 
 ```bash
-ssh root@muva.chat "cd /var/www/muva-chat && git reset --hard HEAD~1 && npm ci && npm run build && pm2 reload muva-chat"
+ssh root@muva.chat "cd /var/www/muva-chat && git reset --hard HEAD~1 && pnpm install --frozen-lockfile && pnpm run build && pm2 reload muva-chat"
 ```
 
 ---

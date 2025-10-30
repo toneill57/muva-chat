@@ -248,13 +248,13 @@ GUEST_TOKEN_EXPIRY=7d
 
 ```bash
 # Run all guest-auth tests
-npm test -- src/lib/__tests__/guest-auth.test.ts
+pnpm test -- src/lib/__tests__/guest-auth.test.ts
 
 # Watch mode
-npm test -- src/lib/__tests__/guest-auth.test.ts --watch
+pnpm test -- src/lib/__tests__/guest-auth.test.ts --watch
 
 # Coverage
-npm test -- src/lib/__tests__/guest-auth.test.ts --coverage
+pnpm test -- src/lib/__tests__/guest-auth.test.ts --coverage
 ```
 
 **Test Coverage:**
@@ -274,7 +274,7 @@ npm test -- src/lib/__tests__/guest-auth.test.ts --coverage
 
 ```bash
 # Start dev server
-npm run dev
+pnpm run dev
 
 # Run manual tests (in another terminal)
 node scripts/test-guest-auth.js

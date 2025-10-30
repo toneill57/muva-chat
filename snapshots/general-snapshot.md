@@ -479,7 +479,7 @@ MUVA Chat/
 # Clone and install
 git clone <repo>
 cd MUVA Chat
-npm install
+pnpm install
 
 # Environment setup
 cp .env.example .env.local
@@ -489,7 +489,7 @@ cp .env.example .env.local
 ./scripts/dev-with-keys.sh
 
 # Build for production
-npm run build --turbopack
+pnpm run build
 
 # Deploy to production
 git push origin dev  # Auto-deploys via GitHub Actions
@@ -497,11 +497,11 @@ git push origin dev  # Auto-deploys via GitHub Actions
 
 ### Development Scripts
 
-- `npm run dev` - Start development server (use `./scripts/dev-with-keys.sh` instead)
-- `npm run build` - Build for production
-- `npm run lint` - Lint code
-- `npm test` - Run unit tests (Jest)
-- `npm run test:e2e` - Run E2E tests (Playwright)
+- `pnpm run dev` - Start development server (use `./scripts/dev-with-keys.sh` instead)
+- `pnpm run build` - Build for production
+- `pnpm run lint` - Lint code
+- `pnpm test` - Run unit tests (Jest)
+- `pnpm run test:e2e` - Run E2E tests (Playwright)
 
 ---
 

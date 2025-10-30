@@ -76,7 +76,7 @@ Permissions:
 
 ### 1. Start Dev Server
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### 2. Navigate to Login
@@ -248,7 +248,7 @@ Authorization: Bearer <token>
 ## 📞 Support
 
 **Issues?**
-- Check server logs: `npm run dev` output
+- Check server logs: `pnpm run dev` output
 - Check browser console: F12 → Console
 - Check database: `SELECT * FROM staff_users WHERE username = 'admin_ceo'`
 - Review: `STAFF_CHAT_TESTING_CHECKLIST.md`

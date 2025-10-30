@@ -71,7 +71,7 @@ Ensure you have:
 source .env.local
 
 # Verify database access
-npx tsx -e "
+pnpm dlx tsx -e "
 import { createClient } from '@supabase/supabase-js'
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -209,7 +209,7 @@ Recreate units from MotoPress API:
 
 ```bash
 # Run sync script for tenant
-npx tsx scripts/sync-accommodations-to-public.ts --tenant=simmerdown
+pnpm dlx tsx scripts/sync-accommodations-to-public.ts --tenant=simmerdown
 ```
 
 **Expected output**:
@@ -350,7 +350,7 @@ ORDER BY aup.name;
 
 ```bash
 # Sync ICS feeds for all configured units (FASE 5 - To be implemented)
-# npm run sync:ics-feeds -- --tenant=simmerdown
+# pnpm run sync:ics-feeds -- --tenant=simmerdown
 
 # For now, ICS syncing happens automatically via scheduled jobs
 # Or manually trigger via UI: Settings → Integrations → ICS Feeds → "Sync Now"
@@ -374,7 +374,7 @@ ORDER BY aup.name;
 
 ```bash
 # Sync MotoPress reservations
-npm run sync:motopress:bookings
+pnpm run sync:motopress:bookings
 ```
 
 **Expected output**:
@@ -472,7 +472,7 @@ Found 9 manual files
 
 ```bash
 # Run automated health check (FASE 5 - To be implemented)
-# npm run validate:tenant-health -- --tenant=simmerdown
+# pnpm run validate:tenant-health -- --tenant=simmerdown
 
 # For now, use manual validation queries below
 ```
@@ -696,7 +696,7 @@ WHERE aup.unit_id IS NULL;
 
 ```bash
 # Run smart remap script
-npm run remap:manual-ids b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf
+pnpm run remap:manual-ids b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf
 ```
 
 **Note**: With CASCADE FKs (FASE 1), this should never happen. If it does, check FK constraints are active.
@@ -716,7 +716,7 @@ WHERE tenant_id = 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'
 
 ```bash
 # Re-run sync with --force-metadata flag (if supported)
-npx tsx scripts/sync-accommodations-to-public.ts --tenant=simmerdown --force-metadata
+pnpm dlx tsx scripts/sync-accommodations-to-public.ts --tenant=simmerdown --force-metadata
 ```
 
 Or manually update:

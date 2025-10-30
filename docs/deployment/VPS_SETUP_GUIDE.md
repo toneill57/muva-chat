@@ -68,7 +68,7 @@ npm --version   # Should show 10.x.x
 
 ```bash
 # Install PM2 process manager
-sudo npm install -g pm2
+sudo pnpm install -g pm2
 
 # Verify installation
 pm2 --version
@@ -128,13 +128,13 @@ git checkout main
 
 ```bash
 # Install production dependencies
-npm ci --production=false
+pnpm install --frozen-lockfile --production=false
 
 # Verify installation
 npm list --depth=0
 ```
 
-⚠️ **Important:** Use `npm ci` instead of `npm install` for reproducible builds.
+⚠️ **Important:** Use `pnpm install --frozen-lockfile` instead of `pnpm install` for reproducible builds.
 
 ### 2.3 Configurar Variables de Entorno
 
@@ -175,7 +175,7 @@ chmod 600 .env.local
 
 ```bash
 # Build Next.js application
-npm run build
+pnpm run build
 
 # Verify build output
 ls -la .next/
@@ -636,8 +636,8 @@ pm2 reload muva-chat
 # Update application from Git
 cd /home/deploy/innpilot
 git pull origin main
-npm ci
-npm run build
+pnpm install --frozen-lockfile
+pnpm run build
 pm2 reload muva-chat
 ```
 
@@ -661,8 +661,8 @@ sudo certbot certificates
 cd /home/deploy/innpilot
 git log --oneline -5  # Find previous stable commit
 git checkout <commit-hash>
-npm ci
-npm run build
+pnpm install --frozen-lockfile
+pnpm run build
 pm2 restart muva-chat
 ```
 

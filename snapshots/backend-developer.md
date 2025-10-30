@@ -99,7 +99,7 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 **When invoked as @agent-backend-developer:**
 1. Execute ALL tests before reporting completion
-2. Show tool outputs (npm run type-check, test results, API responses)
+2. Show tool outputs (pnpm run type-check, test results, API responses)
 3. Request user approval before marking [x]
 4. Document evidence with actual output
 
@@ -143,7 +143,7 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 - ✅ Accommodation Isolation - Verifies no ID overlap
 - ✅ Policy Isolation - Verifies tenant-specific filtering
 
-**Usage:** `npx tsx scripts/test-tenant-isolation.ts`
+**Usage:** `pnpm dlx tsx scripts/test-tenant-isolation.ts`
 
 ### Behavioral Verification
 
@@ -965,8 +965,8 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 # - Exports API keys from .env.local
 # - Graceful shutdown (Ctrl+C cleanup)
 
-# ❌ NUNCA usar npm run dev directo (falla si .env.local no existe)
-npm run dev  # Anthropic/OpenAI API calls fail sin keys
+# ❌ NUNCA usar pnpm run dev directo (falla si .env.local no existe)
+pnpm run dev  # Anthropic/OpenAI API calls fail sin keys
 ```
 
 ### Security Gaps Identificados
@@ -1044,7 +1044,7 @@ src/app/api/guest/chat/__tests__/route.integration.test.ts
 
 **End-to-End Test (task 3.2):**
 ```bash
-npx tsx scripts/test-compliance-flow.ts
+pnpm dlx tsx scripts/test-compliance-flow.ts
 ```
 
 **8 Pasos Validados:**
@@ -1061,7 +1061,7 @@ npx tsx scripts/test-compliance-flow.ts
 
 **Sync Script (task 2.5):**
 ```bash
-npx tsx scripts/sync-compliance-to-reservations.ts --dry-run
+pnpm dlx tsx scripts/sync-compliance-to-reservations.ts --dry-run
 ```
 
 **Funcionalidad:**
@@ -1242,8 +1242,8 @@ npx tsx scripts/sync-compliance-to-reservations.ts --dry-run
 
 ### Antes de Commit
 
-- [ ] ✅ `npm run type-check` → 0 errores
-- [ ] ✅ Tests unitarios passing (`npm test`)
+- [ ] ✅ `pnpm run type-check` → 0 errores
+- [ ] ✅ Tests unitarios passing (`pnpm test`)
 - [ ] ✅ No secrets expuestos en código (verificar con grep)
 - [ ] ✅ Logging apropiado agregado (info, warn, error levels)
 - [ ] ✅ Documentación inline actualizada (JSDoc comments)

@@ -381,8 +381,8 @@ class ICSParser {
 
 ```bash
 # Installation
-npm install node-ical@^0.18.0
-npm install --save-dev @types/node
+pnpm install node-ical@^0.18.0
+pnpm install --save-dev @types/node
 ```
 
 ```typescript

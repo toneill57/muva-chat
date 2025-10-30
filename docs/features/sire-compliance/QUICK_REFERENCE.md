@@ -186,7 +186,7 @@ pg_dump -h HOST -U postgres -d innpilot > backup_$(date +%Y%m%d).sql
 ### 2. Deploy Code
 ```bash
 git pull origin main
-npm install
+pnpm install
 pm2 restart muva-chat
 ```
 
@@ -314,13 +314,13 @@ set -a && source .env.local && set +a
 psql -f scripts/validate-sire-compliance-data.sql
 
 # E2E test
-npx tsx scripts/test-compliance-flow.ts
+pnpm dlx tsx scripts/test-compliance-flow.ts
 
 # API tests
-npx tsx scripts/test-api-endpoints-complete.ts
+pnpm dlx tsx scripts/test-api-endpoints-complete.ts
 
 # Performance
-npx tsx scripts/performance-testing.ts
+pnpm dlx tsx scripts/performance-testing.ts
 ```
 
 ---

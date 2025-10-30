@@ -182,7 +182,7 @@ Tenant ID: b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf
 **Archivo**: `test-reservations-api.ts`
 
 ```bash
-npx tsx test-reservations-api.ts
+pnpm dlx tsx test-reservations-api.ts
 ```
 
 **Resultado último test (Oct 2, 2025)**:
