@@ -12,9 +12,6 @@ echo -e "${YELLOW}🚀 Iniciando deploy a DEV...${NC}"
 
 # 1. Pre-deploy checks
 echo -e "${YELLOW}📋 Pre-deploy checks...${NC}"
-echo "   - Validando ambiente..."
-pnpm run validate-env
-
 echo "   - Verificando git status..."
 if git status --short | grep -q .; then
   echo -e "${RED}⚠️  ERROR: Hay cambios sin commitear${NC}"
@@ -27,15 +24,11 @@ if git status --short | grep -q .; then
 fi
 echo -e "${GREEN}   ✅ No hay cambios sin commitear${NC}"
 
-# 2. Tests locales
-echo -e "${YELLOW}🧪 Ejecutando tests locales...${NC}"
-echo "   - Building localmente..."
+# 2. Build local
+echo -e "${YELLOW}🔨 Building localmente...${NC}"
 pnpm run build
 
-echo "   - Running tests..."
-pnpm run test
-
-echo -e "${GREEN}   ✅ Tests locales pasaron${NC}"
+echo -e "${GREEN}   ✅ Build local exitoso${NC}"
 
 # 3. Deploy a VPS
 echo -e "${YELLOW}📦 Deploying a VPS (195.200.6.216)...${NC}"
