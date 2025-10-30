@@ -342,7 +342,7 @@ export class ICSyncManager {
   /**
    * Get the correct accommodation_unit_id for guest chat
    * For Airbnb reservations, we need the ID from accommodation_units_public (for embeddings)
-   * For other sources, we use the hotels.accommodation_units ID
+   * For other sources, we use the ID from hotels schema (hotels.accommodation_units)
    */
   private async getAccommodationUnitIdForGuest(
     hotelUnitId: string,
@@ -357,7 +357,8 @@ export class ICSyncManager {
     // For Airbnb, we need to find the corresponding accommodation_units_public ID
     // First, get the name from hotels.accommodation_units
     const { data: hotelUnit, error: hotelError } = await this.supabase
-      .from('hotels.accommodation_units')
+      .schema('hotels')
+      .from('accommodation_units')
       .select('name')
       .eq('id', hotelUnitId)
       .eq('tenant_id', tenantId)
