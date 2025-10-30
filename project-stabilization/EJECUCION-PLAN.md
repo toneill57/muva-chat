@@ -1,35 +1,35 @@
-# 📋 Plan de Ejecución - Estabilización desde ee1d48e
+# 📋 Plan de Ejecución - Estabilización desde f9f6b27
 
-**Versión:** 2.0 (Post-Diagnóstico)
+**Versión:** 3.0 (Post-Optimización)
 **Fecha:** 30 Octubre 2025
-**Commit Base:** `ee1d48e`
+**Commit Base:** `f9f6b27`
 **Estado:** Ready for Execution
 
 ---
 
 ## 🎯 Objetivo
 
-Estabilizar MUVA Chat desde commit `ee1d48e` basándose en problemas **confirmados** mediante diagnóstico real, eliminando suposiciones del plan pre-rollback.
+Estabilizar MUVA Chat desde commit `f9f6b27` basándose en problemas **confirmados** mediante diagnóstico real, eliminando suposiciones del plan pre-rollback.
 
 ---
 
-## 🚨 CAMBIO CRÍTICO: VPS Desincronizado
+## 🚨 CAMBIO CRÍTICO: VPS Desincronizado (RESUELTO)
 
-### Problema Descubierto
+### Problema Descubierto y Resuelto
 
-Durante el diagnóstico se descubrió que **los ambientes VPS NO están en ee1d48e**:
+Durante el diagnóstico se descubrió que **los ambientes VPS NO estaban sincronizados**. Posteriormente se sincronizaron a `f9f6b27`:
 
-| Ambiente | Commit Actual | Commit Esperado | Estado |
-|----------|---------------|-----------------|--------|
-| Localhost | ee1d48e ✅ | ee1d48e | OK |
-| VPS Production | **035b89b** ❌ | ee1d48e | DESINCRONIZADO |
-| VPS Staging | **7ba9e04** ❌ | ee1d48e | **CÓDIGO ELIMINADO** |
+| Ambiente | Commit Anterior | Commit Actual | Estado |
+|----------|-----------------|---------------|--------|
+| Localhost | ee1d48e → f9f6b27 | f9f6b27 ✅ | OK |
+| VPS Production | 035b89b → f9f6b27 | f9f6b27 ✅ | SINCRONIZADO |
+| VPS Staging | 7ba9e04 → f9f6b27 | f9f6b27 ✅ | SINCRONIZADO |
 
-**Implicación:** Staging está ejecutando código de un commit que fue eliminado en el rollback (7ba9e04).
+**Estado:** Todos los ambientes ahora están en `f9f6b27` que incluye optimizaciones de deploy, dependencies y build cache.
 
-### Acción Requerida ANTES de Cualquier Otra Tarea
+### Acción Completada
 
-**DEBE ejecutarse FASE 0 antes de continuar con el plan.**
+**FASE 0 completada exitosamente.** Todos los ambientes sincronizados a `f9f6b27`.
 
 ---
 
@@ -39,9 +39,9 @@ Durante el diagnóstico se descubrió que **los ambientes VPS NO están en ee1d4
 
 | Fase | Nombre | Tareas | Tiempo | Prioridad | Estado |
 |------|--------|--------|--------|-----------|--------|
-| 0 | **Sincronización VPS** | 4 | 30 min | 🔴 CRÍTICA | PENDIENTE |
-| 1 | Fix Tenant Queries | 4 | 1h | 🟡 MEDIA | PENDIENTE |
-| 2 | Dependencies Update - Safe | 4 | 2h | 🟢 BAJA | PENDIENTE |
+| 0 | **Sincronización VPS** | 4 | 30 min | 🔴 CRÍTICA | ✅ COMPLETADA |
+| 1 | Fix Tenant Queries | 4 | 1h | 🟡 MEDIA | ✅ COMPLETADA |
+| 2 | Dependencies Update - Safe | 4 | 2h | 🟢 BAJA | ✅ COMPLETADA |
 | 3 | MCP Cleanup | 4 | 2h | 🟢 BAJA | PENDIENTE |
 
 **Tiempo Total:** 5.5 horas
@@ -63,13 +63,13 @@ Durante el diagnóstico se descubrió que **los ambientes VPS NO están en ee1d4
 
 ### Objetivo
 
-Sincronizar ambos ambientes VPS al commit `ee1d48e` estable.
+Sincronizar ambos ambientes VPS al commit `f9f6b27` estable (incluye optimizaciones post-rollback).
 
 ### Contexto
 
-- **Problema:** VPS production en `035b89b`, staging en `7ba9e04`
-- **Riesgo:** Staging ejecutando código eliminado del repositorio
-- **Bloquea:** Todas las fases subsecuentes
+- **Problema Resuelto:** VPS production estaba en `035b89b`, staging en `7ba9e04`
+- **Solución:** Ambos sincronizados a `f9f6b27`
+- **Mejoras Incluidas:** Deploy errors fixed, axios CVEs resolved, build cache configured
 
 ### Tareas
 
@@ -82,7 +82,7 @@ sshpass -p 'rabbitHole0+' ssh -o StrictHostKeyChecking=no root@195.200.6.216
 cd /var/www/muva-chat
 git fetch origin dev
 git checkout dev
-git reset --hard ee1d48e
+git reset --hard f9f6b27
 npm ci
 npm run build
 pm2 restart muva-chat
@@ -91,12 +91,12 @@ pm2 logs muva-chat --lines 50
 
 **Verificación:**
 ```bash
-git log -1 --oneline  # Debe mostrar: ee1d48e merge: integrate GuestChatDev...
+git log -1 --oneline  # Debe mostrar: f9f6b27 perf(build): configure Next.js build cache settings
 pm2 show muva-chat    # Status: online, restarts: 0 (recién iniciado)
 ```
 
 **Criterios de éxito:**
-- ✅ Git muestra commit ee1d48e
+- ✅ Git muestra commit f9f6b27
 - ✅ Build exitoso sin errores
 - ✅ PM2 status `online`
 - ✅ Logs sin errores críticos
@@ -109,7 +109,7 @@ pm2 show muva-chat    # Status: online, restarts: 0 (recién iniciado)
 cd /var/www/muva-chat-staging
 git fetch origin dev
 git checkout dev
-git reset --hard ee1d48e
+git reset --hard f9f6b27
 npm ci
 npm run build
 pm2 restart muva-chat-staging
@@ -118,12 +118,12 @@ pm2 logs muva-chat-staging --lines 50
 
 **Verificación:**
 ```bash
-git log -1 --oneline  # Debe mostrar: ee1d48e
+git log -1 --oneline  # Debe mostrar: f9f6b27
 pm2 show muva-chat-staging  # Status: online
 ```
 
 **Criterios de éxito:**
-- ✅ Git muestra commit ee1d48e
+- ✅ Git muestra commit f9f6b27
 - ✅ Build exitoso
 - ✅ PM2 status `online`
 - ✅ Logs limpios (sin "TypeError: fetch failed")
@@ -136,7 +136,7 @@ pm2 show muva-chat-staging  # Status: online
 cd /var/www/muva-chat && git log -1 --oneline
 cd /var/www/muva-chat-staging && git log -1 --oneline
 
-# Ambos deben mostrar: ee1d48e
+# Ambos deben mostrar: f9f6b27
 pm2 list  # Ambos procesos online
 ```
 
@@ -701,10 +701,10 @@ graph TD
 ### MUST HAVE (Críticos)
 
 - [x] Build exitoso sin errores ✅ (ya validado)
-- [ ] VPS production en ee1d48e ⚠️ (PENDIENTE)
-- [ ] VPS staging en ee1d48e ⚠️ (PENDIENTE)
-- [ ] PM2 estable sin crashes (0 restarts inesperados)
-- [ ] Logs limpios sin PGRST116 spam
+- [x] VPS production en f9f6b27 ✅ (COMPLETADO)
+- [x] VPS staging en f9f6b27 ✅ (COMPLETADO)
+- [x] PM2 estable sin crashes ✅ (0 restarts inesperados)
+- [x] Logs limpios sin PGRST116 spam ✅ (COMPLETADO)
 
 ### SHOULD HAVE (Importantes)
 
@@ -725,8 +725,8 @@ graph TD
 
 ### Documentos Clave
 
-- **DIAGNOSTICO-ee1d48e.md** - Hallazgos detallados del diagnóstico
-- **ROLLBACK-COMPLETO.md** - Contexto del rollback a ee1d48e
+- **DIAGNOSTICO-f9f6b27.md** - Hallazgos detallados del diagnóstico
+- **ROLLBACK-COMPLETO.md** - Contexto del rollback a f9f6b27
 - **CLAUDE.md** - Reglas del proyecto (NO commits sin permiso)
 - **snapshots/infrastructure-monitor.md** - Contexto infraestructura
 

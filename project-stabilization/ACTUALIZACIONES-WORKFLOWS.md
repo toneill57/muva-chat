@@ -1,7 +1,7 @@
 # 📝 Actualizaciones de Workflows - Integración Diagnóstico Real
 
 **Fecha:** 30 Octubre 2025
-**Propósito:** Integrar hallazgos de `DIAGNOSTICO-ee1d48e.md` en workflows existentes
+**Propósito:** Integrar hallazgos de `DIAGNOSTICO-f9f6b27.md` en workflows existentes
 **Estado:** workflow-part-1.md ✅ COMPLETADO | Resto: PENDIENTE
 
 ---
@@ -16,7 +16,7 @@
 
 ### Resultado:
 - FASE 0 completa con comandos para sincronizar VPS
-- Referencias a DIAGNOSTICO-ee1d48e.md y EJECUCION-PLAN.md
+- Referencias a DIAGNOSTICO-f9f6b27.md y EJECUCION-PLAN.md
 - Problemas críticos actualizados con severidades reales
 
 ---
@@ -35,13 +35,12 @@
 
 ⚠️ **ACTUALIZACIÓN SEGÚN DIAGNÓSTICO REAL:**
 
-Según `DIAGNOSTICO-ee1d48e.md`, las dependencias se dividen en:
-- **Grupo 1 (Safe - 23 paquetes):** Minor/Patch updates → EJECUTAR en este workflow
-- **Grupo 2 (Medium Risk - ~8 paquetes):** API changes posibles → POSTPONED
-- **Grupo 3 (Breaking Changes - 12 paquetes):** LangChain 1.0, OpenAI 6.x → POSTPONED
+Según `DIAGNOSTICO-f9f6b27.md`, las dependencias se dividen en:
+- **Grupo 1 (Safe - 23 paquetes):** Minor/Patch updates → ✅ COMPLETADO (Commit a2e3bd4)
+- **Grupo 2 (Medium Risk - ~8 paquetes):** API changes posibles → Requiere testing extensivo
+- **Grupo 3 (Breaking Changes - 12 paquetes):** LangChain 1.0, OpenAI 6.x → Requiere migración de código
 
-**DECISIÓN:** Solo ejecutar Grupo 1 (Safe Updates) en esta iteración del proyecto.
-Grupos 2 y 3 requieren testing exhaustivo y se ejecutarán en proyecto dedicado futuro.
+**ESTADO:** Grupo 1 completado. Grupos 2 y 3 pendientes, requieren testing exhaustivo pero se ejecutan en este workflow.
 
 Ver `EJECUCION-PLAN.md` FASE 2 para lista exacta de 23 paquetes safe.
 
@@ -89,7 +88,7 @@ Paquetes a actualizar:
 22. tailwindcss: 4.1.13 → 4.1.16
 23. typescript: 5.9.2 → 5.9.3
 
-**Fuente:** `DIAGNOSTICO-ee1d48e.md` - Sección "Dependencies Status - Safe Updates"
+**Fuente:** `DIAGNOSTICO-f9f6b27.md` - Sección "Dependencies Status - Safe Updates"
 ```
 
 #### 3. Marcar Prompts 3.2 y 3.3 como POSTPONED
@@ -98,19 +97,15 @@ Paquetes a actualizar:
 
 **Agregar al inicio de Prompt 3.2:**
 ```markdown
-### Prompt 3.2: [POSTPONED] Actualizar Dependencias Grupo 2 (Medium Risk)
+### Prompt 3.2: Actualizar Dependencias Grupo 2 (Medium Risk)
 
-⚠️ **POSTPONED:** Según diagnóstico real, Grupo 2 (Medium Risk) requiere testing exhaustivo de features afectadas (Auth flows, Forms, Supabase SSR). Se postpone para proyecto dedicado futuro.
+⚠️ **IMPORTANTE:** Grupo 2 (Medium Risk) requiere testing exhaustivo de features afectadas (Auth flows, Forms, Supabase SSR).
 
-**Razón de Postponement:**
+**Consideraciones:**
 - Cambios de API requieren testing manual extensivo
 - Riesgo de regresiones en features críticas
-- Tiempo estimado: 2-3 horas solo para testing
-- Mejor ejecutar en ciclo dedicado con tiempo para troubleshooting
-
-Ver `DIAGNOSTICO-ee1d48e.md` - Sección "FASES POSTPONED" para detalles.
-
-**El contenido a continuación se mantiene como REFERENCIA para ejecución futura:**
+- Tiempo estimado: 2-3 horas (incluyendo testing)
+- Proceder con precaución y validar cada cambio
 
 ---
 
@@ -119,13 +114,13 @@ Ver `DIAGNOSTICO-ee1d48e.md` - Sección "FASES POSTPONED" para detalles.
 
 **Agregar al inicio de Prompt 3.3:**
 ```markdown
-### Prompt 3.3: [POSTPONED] Actualizar Dependencias Grupo 3 (Breaking Changes)
+### Prompt 3.3: Actualizar Dependencias Grupo 3 (Breaking Changes)
 
-⚠️ **POSTPONED:** Según diagnóstico real, Grupo 3 (Breaking Changes) incluye:
+⚠️ **IMPORTANTE:** Grupo 3 (Breaking Changes) incluye:
 - LangChain 0.3.x → 1.0.x (4 packages)
 - OpenAI SDK 5.x → 6.x
 
-Estos requieren migración de código significativa + testing exhaustivo de AI features (chat, embeddings). Se postpone para proyecto dedicado futuro.
+Estos requieren migración de código significativa + testing exhaustivo de AI features (chat, embeddings).
 
 **Razón de Postponement:**
 - Breaking changes confirmados en APIs críticas
@@ -134,7 +129,7 @@ Estos requieren migración de código significativa + testing exhaustivo de AI f
 - Alto riesgo de romper funcionalidad core del negocio
 - Mejor ejecutar cuando tengamos tiempo para troubleshooting extensivo
 
-Ver `DIAGNOSTICO-ee1d48e.md` - Sección "FASES POSTPONED - LangChain/OpenAI Update"
+Ver `DIAGNOSTICO-f9f6b27.md` - Sección "FASES POSTPONED - LangChain/OpenAI Update"
 
 **El contenido a continuación se mantiene como REFERENCIA para ejecución futura:**
 
@@ -202,7 +197,7 @@ Ver `DIAGNOSTICO-ee1d48e.md` - Sección "FASES POSTPONED - LangChain/OpenAI Upda
 
 ✅ **HALLAZGO DEL DIAGNÓSTICO:** Build está LIMPIO (0 warnings críticos)
 
-Según `DIAGNOSTICO-ee1d48e.md` - Sección "Build Status":
+Según `DIAGNOSTICO-f9f6b27.md` - Sección "Build Status":
 - Compile time: 5.1s ✅ (excelente)
 - Total warnings: 0 ✅ (solo 1 warning esperado de edge runtime)
 - TypeScript errors: 0 ✅
@@ -232,7 +227,7 @@ TAREA: Documentar baseline de build limpio y capturar métricas actuales
 
 CONTEXTO:
 - Proyecto: Project Stabilization 2025 - FASE 5
-- Ver: project-stabilization/DIAGNOSTICO-ee1d48e.md (sección "Build Status")
+- Ver: project-stabilization/DIAGNOSTICO-f9f6b27.md (sección "Build Status")
 - Hallazgo Real: Build LIMPIO (0 warnings, 0 errors)
 - Objetivo: Documentar estado actual como baseline
 
@@ -242,23 +237,23 @@ ESPECIFICACIONES:
 
 1. Build y capturar output:
    ```bash
-   npm run build 2>&1 | tee project-stabilization/docs/fase-5/build-baseline-ee1d48e.txt
+   npm run build 2>&1 | tee project-stabilization/docs/fase-5/build-baseline-f9f6b27.txt
    ```
 
 2. Verificar que build está limpio:
    ```bash
-   grep -i "warning" project-stabilization/docs/fase-5/build-baseline-ee1d48e.txt
-   grep -i "error" project-stabilization/docs/fase-5/build-baseline-ee1d48e.txt
+   grep -i "warning" project-stabilization/docs/fase-5/build-baseline-f9f6b27.txt
+   grep -i "error" project-stabilization/docs/fase-5/build-baseline-f9f6b27.txt
    ```
    Expected: Solo warning de "edge runtime disables static generation" (esperado, no crítico)
 
 3. Capturar métricas:
    ```bash
    # Compile time
-   grep "Compiled in" project-stabilization/docs/fase-5/build-baseline-ee1d48e.txt
+   grep "Compiled in" project-stabilization/docs/fase-5/build-baseline-f9f6b27.txt
 
    # Bundle sizes
-   grep -A 50 "Route (app)" project-stabilization/docs/fase-5/build-baseline-ee1d48e.txt
+   grep -A 50 "Route (app)" project-stabilization/docs/fase-5/build-baseline-f9f6b27.txt
    ```
 
 4. Documentar baseline:
@@ -299,10 +294,10 @@ SIGUIENTE: Prompt 5.2 (Performance Baseline + Optimizaciones PREVENTIVAS)
 
 **Agregar:**
 ```markdown
-**ACTUALIZACIÓN:** 30 Octubre 2025 - Integrado con hallazgos de DIAGNOSTICO-ee1d48e.md
+**ACTUALIZACIÓN:** 30 Octubre 2025 - Integrado con hallazgos de DIAGNOSTICO-f9f6b27.md
 **Cambios Principales:**
 - ✅ Agregada FASE 0 (VPS Synchronization) - 4 tareas
-- ⚠️ FASE 3 Grupo 2-3 marcado como POSTPONED
+- ✅ FASE 3 incluye todos los grupos (Safe, Medium Risk, Breaking Changes)
 - ✅ FASE 5 actualizada (build ya limpio, solo documentar baseline)
 - Total tareas actualizadas: 40 → 44 tareas
 - Estimación actualizada: 13-18h → 12-16h (reducción por postponements)
@@ -317,10 +312,10 @@ SIGUIENTE: Prompt 5.2 (Performance Baseline + Optimizaciones PREVENTIVAS)
 ## FASE 0: VPS Synchronization 🔴 (CRÍTICO - NUEVO)
 
 ### 0.1 Sincronizar VPS Production
-- [ ] Sincronizar VPS production a commit ee1d48e (estimate: 15min)
+- [x] Sincronizar VPS production a commit f9f6b27 (estimate: 15min) ✅
   - Conectar a VPS via SSH
   - Verificar commit actual (035b89b - incorrecto)
-  - git fetch + git reset --hard ee1d48e
+  - git fetch + git reset --hard f9f6b27
   - npm ci + npm run build
   - pm2 restart muva-chat
   - Verificar status: online, 0 errors
@@ -329,10 +324,10 @@ SIGUIENTE: Prompt 5.2 (Performance Baseline + Optimizaciones PREVENTIVAS)
   - Test: `git log -1`, `pm2 show muva-chat` (online)
 
 ### 0.2 Sincronizar VPS Staging
-- [ ] Sincronizar VPS staging a commit ee1d48e (estimate: 15min)
+- [x] Sincronizar VPS staging a commit f9f6b27 (estimate: 15min) ✅
   - Mismo VPS, directorio /var/www/muva-chat-staging
   - Verificar commit actual (7ba9e04 - CÓDIGO ELIMINADO)
-  - git fetch + git reset --hard ee1d48e
+  - git fetch + git reset --hard f9f6b27
   - npm ci + npm run build
   - pm2 restart muva-chat-staging
   - Verificar status: online, 0 errors
@@ -341,7 +336,7 @@ SIGUIENTE: Prompt 5.2 (Performance Baseline + Optimizaciones PREVENTIVAS)
   - Test: `git log -1`, `pm2 show muva-chat-staging` (online)
 
 ### 0.3 Verificación Sincronización
-- [ ] Verificar ambos VPS en ee1d48e (estimate: 10min)
+- [x] Verificar ambos VPS en f9f6b27 (estimate: 10min) ✅
   - Verificar commits en ambos directorios
   - Verificar ambos procesos PM2 online
   - Test URLs (production, staging)
@@ -371,14 +366,16 @@ SIGUIENTE: Prompt 5.2 (Performance Baseline + Optimizaciones PREVENTIVAS)
 
 **Antes de línea 184 (GRUPO 2), agregar:**
 ```markdown
-### GRUPO 2: Medium Risk Updates ⚠️ [POSTPONED]
+### GRUPO 2: Medium Risk Updates ⚠️
 
-⚠️ **POSTPONED:** Según DIAGNOSTICO-ee1d48e.md, Grupo 2 requiere testing extensivo. Ver EJECUCION-PLAN.md para razones de postponement.
+**NOTA:** Requiere testing extensivo de features afectadas (Auth, Forms, Supabase SSR). Proceder con cuidado.
 ```
 
 **Antes de línea 209 (GRUPO 3), agregar:**
 ```markdown
-### GRUPO 3: Breaking Changes 🔴 [POSTPONED]
+### GRUPO 3: Breaking Changes 🔴
+
+**NOTA:** Breaking changes en LangChain y OpenAI SDK requieren testing exhaustivo de AI features. Proceder con precaución.
 
 ⚠️ **POSTPONED:** Breaking changes en LangChain y OpenAI SDK requieren proyecto dedicado. Ver DIAGNOSTICO-ee1d48e.md sección "FASES POSTPONED".
 ```
@@ -425,7 +422,7 @@ SIGUIENTE: Prompt 5.2 (Performance Baseline + Optimizaciones PREVENTIVAS)
 ### Cambios en plan-part-2.md:
 
 1. **Agregar FASE 0 completa** (antes de FASE 1)
-2. **En FASE 3:** Marcar Grupo 2 y 3 como [POSTPONED]
+2. **En FASE 3:** Incluir todos los grupos (Safe ✅, Medium Risk, Breaking Changes)
 3. **Actualizar criterios de éxito** basados en hallazgos reales
 
 ### Cambios en plan-part-3.md:

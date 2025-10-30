@@ -4,7 +4,7 @@
 **Proyecto:** MUVA Platform Stabilization
 **Prompts Coverage:** Contexto inicial + FASE 0 (VPS Sync) + FASE 1 (4 prompts)
 
-**NOTA IMPORTANTE:** Este workflow ha sido actualizado con hallazgos REALES del diagnóstico desde commit `ee1d48e`. Ver `DIAGNOSTICO-ee1d48e.md` para detalles completos.
+**NOTA IMPORTANTE:** Este workflow ha sido actualizado con hallazgos REALES del diagnóstico desde commit `f9f6b27`. Ver `DIAGNOSTICO-f9f6b27.md` para detalles completos.
 
 ---
 
@@ -21,52 +21,53 @@ CONTEXTO:
 - Proyecto: MUVA Platform Stabilization
 - Objetivo: Estabilizar infraestructura antes de continuar con nuevas features
 - Duración Estimada: 15-20 horas
-- 7 Fases: VPS Sync (NUEVA), Critical, Branches, Dependencies, MCP, Warnings, Docs
-- Diagnóstico Real: project-stabilization/DIAGNOSTICO-ee1d48e.md
+- 7 Fases: VPS Sync (COMPLETADA), Critical (COMPLETADA), Branches (COMPLETADA), Dependencies (Grupo 1 COMPLETADO), MCP, Warnings, Docs
+- Diagnóstico Real: project-stabilization/DIAGNOSTICO-f9f6b27.md
 - Plan Ajustado: project-stabilization/EJECUCION-PLAN.md
+- Base Commit: f9f6b27 (incluye deploy optimizations, dependency fixes, build cache)
 
 ESPECIFICACIONES:
 1. Leer los siguientes archivos en orden:
    - project-stabilization/README.md
-   - project-stabilization/DIAGNOSTICO-ee1d48e.md (HALLAZGOS REALES)
+   - project-stabilization/DIAGNOSTICO-f9f6b27.md (HALLAZGOS REALES)
    - project-stabilization/EJECUCION-PLAN.md (PLAN AJUSTADO)
    - project-stabilization/plan-part-2.md (Fases 2-3)
    - project-stabilization/plan-part-3.md (Fases 4-6)
    - project-stabilization/TODO.md
 
-2. Familiarizarte con los problemas críticos CONFIRMADOS:
-   - 🔴 CRÍTICO: VPS desincronizado (production: 035b89b, staging: 7ba9e04 - código eliminado)
-   - 🟡 MEDIO: PM2 con 18 restarts (production), 30 restarts (staging) - no crashes activos
-   - 🟡 MEDIO: Tenant queries PGRST116 (logs contaminados, no bug funcional)
-   - 🟡 MEDIO: 35 dependencias desactualizadas (12 con breaking changes)
-   - 🟢 BAJO: 3 snapshots MCP grandes (>30KB)
+2. Familiarizarte con los problemas críticos RESUELTOS:
+   - ✅ COMPLETADO: 23 dependencias actualizadas (commit a2e3bd4)
+   - ✅ COMPLETADO: Deploy errors fixed (nginx SSL, axios CVEs)
+   - ✅ COMPLETADO: Build cache configured (f9f6b27)
+   - 🟢 PENDIENTE: 3 snapshots MCP grandes (>30KB)
 
 3. Comprender la estrategia:
-   - 7 fases secuenciales (FASE 0 es CRÍTICA y bloquea todas las demás)
+   - 7 fases secuenciales (3 primeras COMPLETADAS)
    - Validación después de cada fase
    - NO commitear sin autorización
-   - Dependencies: Solo Grupo 1 (Safe Updates) - Grupos 2-3 POSTPONED
+   - Dependencies: Grupo 1 ✅ COMPLETADO - Grupos 2-3 PENDIENTES
 
 4. Reportar comprensión del proyecto con:
-   - Resumen de problemas críticos CONFIRMADOS
-   - Hallazgo crítico: VPS desincronizado
-   - Fases a ejecutar (7 fases)
+   - Resumen de problemas críticos RESUELTOS y PENDIENTES
+   - Estado actual: f9f6b27 (todos los ambientes sincronizados)
+   - Fases completadas (0, 1, 2, 3 Grupo 1)
+   - Fases pendientes (3 Grupos 2-3, 4-6)
    - Agentes involucrados
-   - Siguiente paso (FASE 0 - Sincronización VPS)
+   - Siguiente paso (FASE 4 - MCP Optimization)
 
 TEST:
 - Lectura completa de archivos de planificación
-- Comprensión de DIAGNOSTICO-ee1d48e.md (hallazgos reales)
-- Comprensión de que FASE 0 bloquea todo lo demás
+- Comprensión de DIAGNOSTICO-f9f6b27.md (hallazgos reales)
+- Comprensión de estado actual (3 fases completadas)
 
-SIGUIENTE: Prompt 0.1 (Sincronización VPS - CRÍTICO)
+SIGUIENTE: FASE 4 (MCP Optimization) - Ver workflow-part-3.md
 ```
 
 ---
 
 ## FASE 0: VPS Synchronization 🔴 (CRÍTICO)
 
-**HALLAZGO NUEVO:** Durante el diagnóstico se descubrió que los ambientes VPS NO están en commit `ee1d48e`. Production está en `035b89b` (commit anterior) y Staging está en `7ba9e04` (commit que fue eliminado en el rollback). **Esta fase BLOQUEA todas las demás.**
+**HALLAZGO RESUELTO:** Durante el diagnóstico se descubrió que los ambientes VPS NO estaban sincronizados. Production estaba en `035b89b` y Staging en `7ba9e04`. **Esta fase fue completada exitosamente** - todos los ambientes ahora en `f9f6b27`.
 
 ---
 
@@ -77,15 +78,15 @@ SIGUIENTE: Prompt 0.1 (Sincronización VPS - CRÍTICO)
 **COPY-PASTE DESDE AQUÍ:**
 
 ```
-TAREA: Sincronizar ambos ambientes VPS al commit ee1d48e (estado post-rollback)
+TAREA: Sincronizar ambos ambientes VPS al commit f9f6b27 (estado actual optimizado)
 
 CONTEXTO:
-- Proyecto: Project Stabilization 2025 - FASE 0 (CRÍTICA)
+- Proyecto: Project Stabilization 2025 - FASE 0 (✅ COMPLETADA)
 - Ver: project-stabilization/EJECUCION-PLAN.md (FASE 0)
-- Ver: project-stabilization/DIAGNOSTICO-ee1d48e.md (sección "HALLAZGO CRÍTICO")
-- Problema: VPS production en 035b89b, staging en 7ba9e04 (código eliminado)
+- Ver: project-stabilization/DIAGNOSTICO-f9f6b27.md (sección "HALLAZGO CRÍTICO")
+- Estado: Todos los ambientes sincronizados a f9f6b27
 - VPS: 195.200.6.216
-- Commit Target: ee1d48e
+- Commit Base: f9f6b27
 
 ESPECIFICACIONES:
 
@@ -104,11 +105,11 @@ ESPECIFICACIONES:
    ```bash
    git fetch origin dev
    git checkout dev
-   git reset --hard ee1d48e
+   git reset --hard f9f6b27
 
    # Verificar
    git log -1 --oneline
-   # Debe mostrar: ee1d48e merge: integrate GuestChatDev...
+   # Debe mostrar: f9f6b27 perf(build): configure Next.js build cache settings
    ```
 
 3. Rebuild y restart:
@@ -141,11 +142,11 @@ ESPECIFICACIONES:
    ```bash
    git fetch origin dev
    git checkout dev
-   git reset --hard ee1d48e
+   git reset --hard f9f6b27
 
    # Verificar
    git log -1 --oneline
-   # Debe mostrar: ee1d48e
+   # Debe mostrar: f9f6b27
    ```
 
 3. Rebuild y restart:
@@ -164,7 +165,7 @@ ESPECIFICACIONES:
    ```bash
    cd /var/www/muva-chat && git log -1 --oneline
    cd /var/www/muva-chat-staging && git log -1 --oneline
-   # Ambos deben mostrar: ee1d48e
+   # Ambos deben mostrar: f9f6b27
    ```
 
 2. Verificar ambos procesos online:
@@ -207,31 +208,31 @@ ESPECIFICACIONES:
    - Errores encontrados (si hay)
    - Tiempo de downtime (si hubo)
 
-**CRITERIOS DE ÉXITO FASE 0:**
-- ✅ VPS production en commit ee1d48e
-- ✅ VPS staging en commit ee1d48e
+**CRITERIOS DE ÉXITO FASE 0:** ✅ TODOS COMPLETADOS
+- ✅ VPS production en commit f9f6b27
+- ✅ VPS staging en commit f9f6b27
 - ✅ Ambos procesos PM2 online
 - ✅ 0 restarts en primeros 15 minutos
 - ✅ Build exitoso en ambos
 - ✅ URLs respondiendo correctamente
 - ✅ Logs sin errores críticos
 
-TEST:
-- git log -1 en ambos directorios (ee1d48e)
+TEST: ✅ COMPLETADO
+- git log -1 en ambos directorios (f9f6b27)
 - pm2 list (ambos online, 0 restarts)
 - curl a URLs (200 OK)
 - Documentación VPS_SYNC_RESULTS.md creada
 
-SIGUIENTE: Prompt 1.1 (Diagnóstico PM2)
+SIGUIENTE: Prompt 1.1 (Diagnóstico PM2) ✅ YA COMPLETADO
 
-⚠️ IMPORTANTE: Si FASE 0 falla, DETENER y troubleshoot antes de continuar con FASE 1.
+✅ FASE 0 COMPLETADA EXITOSAMENTE
 ```
 
 ---
 
 ## FASE 1: Critical Diagnostics 🔥
 
-**NOTA FASE 1:** Según diagnóstico real (DIAGNOSTICO-ee1d48e.md), los problemas PM2 NO son tan severos como se pensaba. PM2 está estable sin crashes activos. Esta fase es principalmente para documentar el baseline y entender patrones de restart históricos.
+**NOTA FASE 1:** ✅ COMPLETADA. Según diagnóstico real (DIAGNOSTICO-f9f6b27.md), PM2 está estable sin crashes activos. Se documentó baseline y se completaron optimizaciones.
 
 ---
 
@@ -242,24 +243,24 @@ SIGUIENTE: Prompt 1.1 (Diagnóstico PM2)
 **COPY-PASTE DESDE AQUÍ:**
 
 ```
-TAREA: Documentar baseline PM2 y analizar patrones de restarts históricos
+TAREA: Documentar baseline PM2 y analizar patrones de restarts históricos (✅ COMPLETADO)
 
 CONTEXTO:
-- Proyecto: Project Stabilization 2025 - FASE 1
+- Proyecto: Project Stabilization 2025 - FASE 1 (✅ COMPLETADA)
 - Ver: project-stabilization/plan-part-2.md (FASE 1)
-- Ver: project-stabilization/DIAGNOSTICO-ee1d48e.md (sección "PM2 Status")
-- Hallazgo Real: PM2 con 18 restarts (production), 30 restarts (staging) - NO hay crashes activos
+- Ver: project-stabilization/DIAGNOSTICO-f9f6b27.md (sección "PM2 Status")
+- Resultado: PM2 estable, 0 crashes activos
 - VPS: 195.200.6.216
-- Commit: ee1d48e (post-FASE 0 sync)
+- Commit: f9f6b27 (post-optimizaciones)
 
 ESPECIFICACIONES:
 
-**⚠️ IMPORTANTE:** Diagnóstico real ya realizado - ver DIAGNOSTICO-ee1d48e.md. Esta tarea es para:
-- Documentar baseline POST-FASE 0 sync
-- Comparar con diagnóstico pre-sync
-- Identificar si sync mejoró estabilidad
+**✅ COMPLETADO:** Diagnóstico real ya realizado - ver DIAGNOSTICO-f9f6b27.md. Esta tarea completó:
+- Baseline POST-FASE 0 documentado
+- Comparación con diagnóstico pre-sync realizada
+- Estabilidad confirmada mejorada
 
-1. Conectar a VPS y extraer información ACTUAL (post-sync ee1d48e):
+1. Conectar a VPS y extraer información ACTUAL (post-sync f9f6b27):
    ```bash
    ssh root@195.200.6.216
 
@@ -273,7 +274,7 @@ ESPECIFICACIONES:
    pm2 logs muva-chat-staging --lines 200 --nostream
    ```
 
-2. Comparar con diagnóstico pre-sync (DIAGNOSTICO-ee1d48e.md):
+2. Comparar con diagnóstico pre-sync (DIAGNOSTICO-f9f6b27.md):
    - Restarts antes del sync: 18 (prod), 30 (staging)
    - Restarts actuales: ¿incrementaron?
    - Errores PGRST116: ¿siguen presentes? (esperado: SÍ, hasta FASE 1.2)

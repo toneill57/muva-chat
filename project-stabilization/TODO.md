@@ -2,8 +2,9 @@
 
 **Fecha:** 30 Octubre 2025
 **Estado:** 🚀 En Progreso
-**Progreso:** 29/44 tareas completadas (66%)
+**Progreso:** 29/52 tareas completadas (56%)
 **Último update:** FASE 3 COMPLETADA AL 100% ✅ - Breaking Changes (LangChain 1.0 + OpenAI SDK 6.x) + Deployed to Production (Commit 1c4b0f5)
+**NUEVA FASE:** FASE 3.5 agregada - Migración npm → pnpm (8 tareas, 4-6h)
 
 **ACTUALIZACIÓN:** 30 Octubre 2025 - Integrado con hallazgos de DIAGNOSTICO-f9f6b27.md
 **Cambios Principales:**
@@ -330,6 +331,110 @@
 
 ---
 
+## FASE 3.5: npm → pnpm Migration 📦🚀
+
+**Timing Estratégico:** Entre FASE 3 (dependencies updated) y FASE 4 (MCP optimization)
+**Justificación:** Resolver --legacy-peer-deps blocker + infrastructure change en clean break point
+**Documentación:** `project-stabilization/plan-part-2.5-pnpm.md`
+
+### 3.5.1 Setup Local
+- [ ] Instalar pnpm globalmente y configurar (estimate: 30min)
+  - Instalar pnpm@latest con npm
+  - Crear/actualizar .npmrc con configuración pnpm
+  - Backup package-lock.json
+  - Remover node_modules y package-lock.json
+  - Ejecutar `pnpm install`
+  - Verificar pnpm-lock.yaml creado
+  - Verificar node_modules structure (.pnpm/store + symlinks)
+  - Files: `.npmrc`, `pnpm-lock.yaml`, `node_modules/`
+  - Agent: **@agent-backend-developer**
+  - Test: `pnpm --version`, `ls -la node_modules/.pnpm/`
+
+### 3.5.2 Update Scripts
+- [ ] Actualizar todos los scripts npm → pnpm (estimate: 15min)
+  - Actualizar package.json scripts (npm run → pnpm run)
+  - Mantener npx tsx (compatible con pnpm)
+  - Buscar y actualizar scripts en /scripts/ directory
+  - Actualizar deploy-staging.sh (npm ci → pnpm install --frozen-lockfile)
+  - Actualizar deploy-dev.sh (npm ci → pnpm install --frozen-lockfile)
+  - Actualizar dev-with-keys.sh si usa npm
+  - Files: `package.json`, `scripts/*.sh`
+  - Agent: **@agent-backend-developer**
+  - Test: `grep -r "npm install" scripts/`, verificar todos actualizados
+
+### 3.5.3 Local Testing
+- [ ] Testing exhaustivo local con pnpm (estimate: 1h)
+  - Build test: `pnpm run build` (verificar 80/80 pages)
+  - Dev test: `pnpm run dev` (verificar hot reload)
+  - Unit tests: `pnpm run test` (target: ≥161/208)
+  - E2E AI features: LangChain chunking, OpenAI embeddings, chat, vector search
+  - Performance benchmark: comparar npm vs pnpm install time
+  - Disk space comparison: du -sh node_modules/
+  - Files: N/A (testing)
+  - Agent: **@agent-backend-developer**
+  - Test: All tests passing, no new failures
+
+### 3.5.4 VPS Setup
+- [ ] Instalar pnpm en VPS (estimate: 30min)
+  - SSH a VPS (195.200.6.216)
+  - Instalar pnpm globalmente: `npm install -g pnpm@latest`
+  - Verificar instalación: `pnpm --version`
+  - Configurar PATH si necesario
+  - Test básico en /tmp
+  - Files: VPS system
+  - Agent: **@agent-deploy-agent**
+  - Test: `ssh root@195.200.6.216 "pnpm --version"`
+
+### 3.5.5 Deploy Staging
+- [ ] Deploy a staging con pnpm (estimate: 1h)
+  - Commit cambios: pnpm-lock.yaml, .npmrc, package.json, scripts/
+  - Push to origin dev
+  - Backup node_modules en staging (node_modules.npm-backup)
+  - Ejecutar ./scripts/deploy-staging.sh
+  - Validar PM2 status (online, 0 restarts)
+  - Check logs (sin errores)
+  - Smoke test: https://simmerdown.staging.muva.chat
+  - Test AI features en staging
+  - Files: VPS /var/www/muva-chat-staging
+  - Agent: **@agent-deploy-agent**
+  - Test: PM2 online, AI features functional
+
+### 3.5.6 Monitor Staging
+- [ ] Monitoreo staging 30 minutos (estimate: 30min)
+  - Watch PM2 metrics (memory, CPU, restarts)
+  - Check logs continuously
+  - Performance comparison (staging vs production)
+  - Verificar no warnings de peer dependencies
+  - Verificar memory usage estable (~200-300MB)
+  - Files: N/A (monitoring)
+  - Agent: **@agent-infrastructure-monitor**
+  - Test: 0 restarts, no errors, performance OK
+
+### 3.5.7 Deploy Production
+- [ ] Deploy a production con pnpm (estimate: 1h)
+  - Pre-deploy checklist (staging OK 30+ min, no restarts, tests OK)
+  - Backup node_modules en production
+  - Ejecutar ./scripts/deploy-dev.sh
+  - Immediate validation (PM2, logs, URL)
+  - Test all critical features (staff login, chat, AI, dashboard, SIRE)
+  - Files: VPS /var/www/muva-chat
+  - Agent: **@agent-deploy-agent**
+  - Test: Production stable, all features working
+
+### 3.5.8 Post-Deploy Monitoring & Documentation
+- [ ] Monitoreo production + docs (estimate: 1h)
+  - First 15 minutes CRITICAL monitoring (watch for crashes)
+  - Test all critical features manually
+  - Performance metrics comparison
+  - Measure benefits: install time, disk space, peer deps
+  - Update documentation: CLAUDE.md (remove --legacy-peer-deps mentions)
+  - Commit migration results
+  - Files: `CLAUDE.md`, migration results doc
+  - Agent: **@agent-infrastructure-monitor**
+  - Test: Production stable 1h, 0 restarts, all features OK
+
+---
+
 ## FASE 4: MCP Optimization 🤖
 
 ### 4.1 Análisis de Snapshots Actuales
@@ -517,8 +622,8 @@
 
 ## RESUMEN DE TAREAS
 
-**Total:** 44 tareas (40 originales + 4 FASE 0)
-**Estimación Total:** 12-16 horas (reducción por postponements de Grupo 2-3)
+**Total:** 52 tareas (44 originales + 8 FASE 3.5)
+**Estimación Total:** 19-24 horas (incluye 4-6h migración pnpm)
 
 ### Por Fase
 - FASE 0 (VPS Sync): 4 tareas, 1h ✅ COMPLETADA
@@ -528,6 +633,7 @@
   - Grupo 1 (Safe) ✅ COMPLETADO (Commit a2e3bd4)
   - Grupo 2 (Medium Risk) ✅ COMPLETADO (Commit 818dbcc)
   - Grupo 3 (Breaking) ✅ COMPLETADO (Commit 1c4b0f5) - DEPLOYED
+- **FASE 3.5 (npm → pnpm): 8 tareas, 4-6h ⏳ EN PROGRESO** ← NEW
 - FASE 4 (MCP): 5 tareas, 1-2h ⏳ PENDIENTE
 - FASE 5 (Warnings): 3 tareas, 1h (solo baseline) ⏳ PENDIENTE
 - FASE 6 (Docs): 5 tareas, 1-2h ⏳ PENDIENTE
