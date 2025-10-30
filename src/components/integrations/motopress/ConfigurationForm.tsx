@@ -215,7 +215,7 @@ export function ConfigurationForm({ tenantId, onConfigured, onCancel }: Configur
               </>
             ) : (
               <>
-                ⚠️ NO TOKEN IN LOCALSTORAGE - Please login again at <a href="/login" className="underline">/login</a>
+                ⚠️ NO TOKEN IN LOCALSTORAGE - Please login again at <a href="/login-legacy" className="underline">/login-legacy</a>
               </>
             )}
           </AlertDescription>

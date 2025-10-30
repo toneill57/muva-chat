@@ -131,7 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setActiveClient(null)
-          router.push('/login')
+          router.push('/login-legacy')
         }
 
         setLoading(false)
@@ -188,7 +188,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
     console.log('🛡️ ProtectedRoute effect - Loading:', loading, 'User:', !!user)
     if (!loading && !user) {
       console.log('🔄 Redirecting to login - no user')
-      router.push('/login')
+      router.push('/login-legacy')
     } else if (!loading && user) {
       console.log('✅ User authenticated, allowing access to protected route')
     }
