@@ -52,6 +52,8 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         // Rewrite subdomain requests to /[tenant] path
         // Example: simmerdown.localhost:3000/dashboard -> localhost:3000/simmerdown/dashboard
+        // Supports: subdomain.localhost, subdomain.muva.chat, subdomain.staging.muva.chat
+        // Excludes: www, staging (environment indicators)
         // IMPORTANT: Exclude Next.js internal routes (_next/*, api/*, favicon.ico, etc.)
         // ALSO EXCLUDE guest-chat (handled by direct route)
         {
@@ -59,7 +61,7 @@ const nextConfig: NextConfig = {
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|staging\\.muva\\.chat|muva\\.chat)(?:\\:\\d+)?',
+              value: '(?<subdomain>(?!www|staging)[^.]+)\\.(?:localhost|(?:staging\\.)?muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain/:path*',
@@ -70,7 +72,7 @@ const nextConfig: NextConfig = {
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|staging\\.muva\\.chat|muva\\.chat)(?:\\:\\d+)?',
+              value: '(?<subdomain>(?!www|staging)[^.]+)\\.(?:localhost|(?:staging\\.)?muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain',
