@@ -40,7 +40,7 @@ const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
  * Resolves subdomain to tenant_id for multi-tenant routing
  *
  * This function is specifically designed for subdomain-based tenant resolution
- * (e.g., simmerdown.innpilot.io → tenant_id)
+ * (e.g., simmerdown.muva.chat → tenant_id)
  *
  * @param subdomain - The subdomain slug (e.g., "simmerdown")
  * @returns The tenant_id (UUID) for database filtering
