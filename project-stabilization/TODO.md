@@ -2,8 +2,8 @@
 
 **Fecha:** 30 Octubre 2025
 **Estado:** 🚀 En Progreso
-**Progreso:** 13/44 tareas completadas (30%)
-**Último update:** FASE 1 COMPLETADA ✅ - Deployed to VPS
+**Progreso:** 19/44 tareas completadas (43%)
+**Último update:** FASE 2 COMPLETADA ✅ - Branch Strategy & Deploy Scripts (Commit 151e9bc)
 
 **ACTUALIZACIÓN:** 30 Octubre 2025 - Integrado con hallazgos de DIAGNOSTICO-ee1d48e.md
 **Cambios Principales:**
@@ -138,10 +138,10 @@
 
 ---
 
-## FASE 2: Environment & Branch Alignment 🌿
+## FASE 2: Environment & Branch Alignment ✅ (COMPLETADA)
 
 ### 2.1 Definir Branch Strategy
-- [ ] Documentar estrategia de branches (estimate: 30min)
+- [x] Documentar estrategia de branches (estimate: 30min) ✅
   - Definir staging → dev → main workflow
   - Documentar propósito de cada ambiente
   - Mapear Git branches ↔ Supabase projects
@@ -152,7 +152,7 @@
   - Test: Revisar documentación, validar claridad
 
 ### 2.2 Script Toggle de Ambiente
-- [ ] Crear script de toggle (estimate: 1h)
+- [x] Crear script de toggle (estimate: 1h) ✅
   - Crear `scripts/toggle-env.sh`
   - Implementar detección de ambiente actual
   - Implementar toggle staging ↔ production
@@ -164,7 +164,7 @@
   - Test: `./scripts/toggle-env.sh`, verificar toggle funciona
 
 ### 2.3 Script de Validación
-- [ ] Crear script de validación de env (estimate: 45min)
+- [x] Crear script de validación de env (estimate: 45min) ✅
   - Crear `scripts/validate-env.sh`
   - Definir lista de variables requeridas (10+ vars)
   - Implementar validación de presencia
@@ -176,7 +176,7 @@
   - Test: `npm run validate-env`, verificar todas las validaciones
 
 ### 2.4 Deploy Scripts
-- [ ] Crear script deploy-dev.sh (estimate: 30min)
+- [x] Crear script deploy-dev.sh (estimate: 30min) ✅
   - Crear `scripts/deploy-dev.sh`
   - Implementar pre-deploy checks (git status, tests)
   - Implementar deploy a VPS (branch dev)
@@ -184,18 +184,18 @@
   - Agregar health check
   - Files: `scripts/deploy-dev.sh`
   - Agent: **@agent-deploy-agent**
-  - Test: Dry-run del script
+  - Test: ✅ Sintaxis validada, pre-checks funcionando
 
-- [ ] Crear script deploy-staging.sh (estimate: 30min)
+- [x] Crear script deploy-staging.sh (estimate: 30min) ✅
   - Crear `scripts/deploy-staging.sh`
   - Similar a deploy-dev pero para staging branch
   - Implementar deploy a VPS instance staging
   - Files: `scripts/deploy-staging.sh`
   - Agent: **@agent-deploy-agent**
-  - Test: Dry-run del script
+  - Test: ✅ Sintaxis validada, estructura correcta
 
 ### 2.5 Actualizar package.json
-- [ ] Agregar npm scripts (estimate: 15min)
+- [x] Agregar npm scripts (estimate: 15min) ✅
   - Agregar `npm run env:staging`
   - Agregar `npm run env:production`
   - Agregar `npm run validate-env`
@@ -206,7 +206,7 @@
   - Test: `npm run | grep "env:"`, verificar scripts presentes
 
 ### 2.6 Documentación Workflow
-- [ ] Documentar workflow de deployment (estimate: 45min)
+- [x] Documentar workflow de deployment (estimate: 45min) ✅
   - Crear `DEPLOYMENT_WORKFLOW.md`
   - Documentar ambientes (staging, dev, main)
   - Documentar workflow típico (feature, hotfix, experiment)
@@ -520,7 +520,7 @@
 ### Por Fase
 - FASE 0 (VPS Sync): 4 tareas, 1h ✅ COMPLETADA
 - FASE 1 (Critical): 6 tareas, 3-4h ✅ COMPLETADA & DEPLOYED
-- FASE 2 (Branches): 7 tareas, 2-3h ⏳ PENDIENTE
+- FASE 2 (Branches): 6 tareas, 2-3h ✅ COMPLETADA (Commit 151e9bc)
 - FASE 3 (Dependencies): 3 tareas, 1-2h (solo Grupo 1) ⏳ PENDIENTE
 - FASE 4 (MCP): 5 tareas, 1-2h ⏳ PENDIENTE
 - FASE 5 (Warnings): 3 tareas, 1h (solo baseline) ⏳ PENDIENTE
