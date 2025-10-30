@@ -53,10 +53,14 @@ jobs:
 
       - name: Deploy to VPS Staging
         uses: appleboy/ssh-action@v1.0.0
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
             set -e  # Exit immediately on any error
 
@@ -98,10 +102,25 @@ jobs:
             fi
             echo "✅ package.json found"
 
-            # Copy staging environment file
+            # Create staging environment file from GitHub Secrets
             echo ""
-            echo "Copying .env.staging to .env.local..."
-            cp .env.staging .env.local
+            echo "Creating .env.local from GitHub Secrets..."
+            cat > .env.local << 'ENVEOF'
+# Supabase - staging-clean-final branch
+NEXT_PUBLIC_SUPABASE_URL=https://qlvkgniqcoisbnwwjfte.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE
+
+# AI APIs
+OPENAI_API_KEY=${OPENAI_API_KEY}
+ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+# JWT
+JWT_SECRET_KEY=bLAHopfaNXAkiPUyums3RfnqwIYPPnkwKHUlTI+pFJtOXP+L8KvKRRfnbHUbOEzX0DM6/aFSxY17gLrDjjQf0A==
+
+# Node Environment
+NODE_ENV=production
+ENVEOF
             echo "✅ Environment configured for staging"
 
             # Install dependencies
