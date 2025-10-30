@@ -125,7 +125,7 @@ const CalendarEventSchema = z.object({
   organizer: z.string().optional(),
   attendees: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
-  customFields: z.record(z.any()).optional()
+  customFields: z.record(z.string(), z.any()).optional()
 })
 
 // ============================================================================
