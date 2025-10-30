@@ -27,7 +27,7 @@
     "monitor": "node scripts/system-monitor.js",
     "populate-embeddings": "node scripts/populate-embeddings.js",
     "pre-deploy": "pnpm run validate-env && pnpm run lint && pnpm run build",
-    "prebuild": "NPM_CONFIG_LOGLEVEL=error npx tsx scripts/build-welcome-message.ts",
+    "prebuild": "pnpm dlx tsx scripts/build-welcome-message.ts",
     "remap:manual-ids": "tsx scripts/smart-remap-manual-ids.ts",
     "setup-pgvector": "node scripts/setup-vector-function.js",
     "start": "next start",
