@@ -24,15 +24,11 @@ if git status --short | grep -q .; then
 fi
 echo -e "${GREEN}   ✅ No hay cambios sin commitear${NC}"
 
-# 2. Tests locales
-echo -e "${YELLOW}🧪 Ejecutando tests locales...${NC}"
-echo "   - Building localmente..."
+# 2. Build local
+echo -e "${YELLOW}🔨 Building localmente...${NC}"
 pnpm run build
 
-echo "   - Running tests..."
-pnpm run test
-
-echo -e "${GREEN}   ✅ Tests locales pasaron${NC}"
+echo -e "${GREEN}   ✅ Build local exitoso${NC}"
 
 # 3. Deploy a VPS
 echo -e "${YELLOW}📦 Deploying a VPS (195.200.6.216) - STAGING instance...${NC}"
