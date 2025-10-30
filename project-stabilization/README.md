@@ -123,7 +123,7 @@ Cada fase genera documentación en `docs/fase-{N}/`:
   - ✅ Build exitoso, tests pasando
   - ✅ Smoke test completo
   - ✅ Commit a2e3bd4 pushed
-  - ⚠️ Grupos 2-3 POSTPONED (breaking changes)
+  - Grupo 1 ✅ COMPLETADO - Grupos 2-3 PENDIENTES
 - [ ] FASE 4: MCP Optimization (1-2h)
 - [ ] FASE 5: Build Baseline Documentation (1h) ⚠️ Build ya limpio
 - [ ] FASE 6: Documentation (1-2h)

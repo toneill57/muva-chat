@@ -13,7 +13,7 @@ echo -e "${YELLOW}🚀 Iniciando deploy a STAGING...${NC}"
 # 1. Pre-deploy checks
 echo -e "${YELLOW}📋 Pre-deploy checks...${NC}"
 echo "   - Validando ambiente..."
-npm run validate-env
+pnpm run validate-env
 
 echo "   - Verificando git status..."
 if git status --short | grep -q .; then
@@ -30,10 +30,10 @@ echo -e "${GREEN}   ✅ No hay cambios sin commitear${NC}"
 # 2. Tests locales
 echo -e "${YELLOW}🧪 Ejecutando tests locales...${NC}"
 echo "   - Building localmente..."
-npm run build
+pnpm run build
 
 echo "   - Running tests..."
-npm run test
+pnpm run test
 
 echo -e "${GREEN}   ✅ Tests locales pasaron${NC}"
 
@@ -59,11 +59,11 @@ sshpass -p 'rabbitHole0+' ssh -o StrictHostKeyChecking=no root@195.200.6.216 << 
   echo "   - Copiando .env.staging a .env.local..."
   cp .env.staging .env.local
 
-  echo "   - Installing dependencies (npm ci)..."
-  npm ci
+  echo "   - Installing dependencies (pnpm install --frozen-lockfile)..."
+  pnpm install --frozen-lockfile
 
   echo "   - Building application..."
-  npm run build
+  pnpm run build
 
   echo "   - Restarting PM2 process..."
   pm2 restart muva-chat-staging

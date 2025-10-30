@@ -3,25 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "description": "Multi-tenant chat platform with SIRE compliance for tourism businesses",
+  "overrides": {
+    "axios": "^1.8.0",
+    "inflight": "npm:lru-cache@^11.0.0",
+    "test-exclude": "^7.0.1"
+  },
   "scripts": {
     "benchmark-detailed": "node scripts/detailed-benchmark.js",
     "build": "next build --turbopack",
     "clean": "rm -rf .next node_modules/.cache data/temp logs/*.log && echo '✅ Cache limpiado'",
-    "clean:deep": "npm run clean && rm -rf node_modules && echo '✅ Reinstalando dependencias...' && npm install",
+    "clean:deep": "pnpm run clean && rm -rf node_modules && echo '✅ Reinstalando dependencias...' && pnpm install",
     "clear-database": "node scripts/clear-database.js",
     "deploy:dev": "./scripts/deploy-dev.sh",
     "deploy:staging": "./scripts/deploy-staging.sh",
-    "dev": "npm run kill-port && next dev --turbopack",
-    "dev:force": "npm run kill-all && next dev --turbopack",
+    "dev": "pnpm run kill-port && next dev --turbopack",
+    "dev:force": "pnpm run kill-all && next dev --turbopack",
     "ensure-server": "node scripts/ensure-server.js",
     "env:production": "./scripts/toggle-env.sh",
     "env:staging": "./scripts/toggle-env.sh",
-    "kill-all": "pkill -f 'next dev' 2>/dev/null || true && pkill -f 'node.*next' 2>/dev/null || true && npm run kill-port",
+    "kill-all": "pkill -f 'next dev' 2>/dev/null || true && pkill -f 'node.*next' 2>/dev/null || true && pnpm run kill-port",
     "kill-port": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
     "lint": "eslint",
     "monitor": "node scripts/system-monitor.js",
     "populate-embeddings": "node scripts/populate-embeddings.js",
-    "pre-deploy": "npm run validate-env && npm run lint && npm run build",
+    "pre-deploy": "pnpm run validate-env && pnpm run lint && pnpm run build",
     "prebuild": "npx tsx scripts/build-welcome-message.ts",
     "remap:manual-ids": "tsx scripts/smart-remap-manual-ids.ts",
     "setup-pgvector": "node scripts/setup-vector-function.js",
@@ -82,6 +87,7 @@
     "leaflet": "^1.9.4",
     "lru-cache": "^11.0.2",
     "lucide-react": "^0.548.0",
+    "moment": "^2.30.1",
     "next": "15.5.3",
     "node-ical": "^0.22.1",
     "openai": "^6.7.0",
@@ -101,7 +107,8 @@
     "tailwind-merge": "^3.3.1",
     "tiktoken": "^1.0.22",
     "uuid": "^13.0.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -122,10 +129,5 @@
     "tailwindcss": "^4.1.16",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "axios": "^1.8.0",
-    "inflight": "npm:lru-cache@^11.0.0",
-    "test-exclude": "^7.0.1"
   }
 }

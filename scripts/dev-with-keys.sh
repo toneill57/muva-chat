@@ -117,7 +117,7 @@ fi
 # Start Development Server
 # ============================================================================
 echo ""
-echo -e "${GREEN}🚀 Starting InnPilot development server...${NC}"
+echo -e "${GREEN}🚀 Starting MUVA.CHAT development server...${NC}"
 echo -e "${BLUE}   Port: $PORT${NC}"
 echo -e "${BLUE}   Press Ctrl+C to stop${NC}"
 echo ""
@@ -125,7 +125,7 @@ echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # Start the server and capture its PID
-npm run dev &
+pnpm run dev &
 SERVER_PID=$!
 
 # Wait for the server process

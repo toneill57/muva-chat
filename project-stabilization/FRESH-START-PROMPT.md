@@ -9,28 +9,28 @@
 ### Estado Actual del Proyecto
 
 **Fecha:** 30 Octubre 2025
-**Commit Actual (TODOS los ambientes):** `ee1d48e`
+**Commit Actual (TODOS los ambientes):** `f9f6b27`
 **Branch Actual:** `dev`
 
 ```
-Commit: ee1d48e
-Message: "merge: integrate GuestChatDev (chat-core-stabilization complete)"
-Descripción: Último commit estable conocido
+Commit: f9f6b27
+Message: "perf(build): configure Next.js build cache settings"
+Descripción: Commit optimizado con deploy fixes, dependency updates y build cache
 ```
 
 **Ambientes Sincronizados:**
 
 | Ambiente | Branch | Commit | Estado |
 |----------|--------|--------|--------|
-| Localhost | dev | ee1d48e ✅ | Running (http://localhost:3000) |
-| VPS Dev | dev | ee1d48e ✅ | Ready |
-| VPS Staging | staging | ee1d48e ✅ | Ready |
+| Localhost | dev | f9f6b27 ✅ | Running (http://localhost:3000) |
+| VPS Production | dev | f9f6b27 ✅ | Online |
+| VPS Staging | dev | f9f6b27 ✅ | Online |
 
 ---
 
 ### Rollback Completado
 
-**SE ELIMINARON 13 COMMITS** mediante rollback para regresar a `ee1d48e`:
+**SE ELIMINARON 13 COMMITS** mediante rollback para regresar a `ee1d48e`, luego se aplicaron optimizaciones hasta `f9f6b27`:
 
 ```
 fac5da8 test: FINAL - esto tiene que funcionar sin conflictos
@@ -48,7 +48,11 @@ f7dc7f9 revert: rollback schema switching code changes (production fix)
 ebb6af7 feat(staging): add schema switching + defensive API parsing
 ```
 
-**Razón del rollback:** Los commits posteriores a `ee1d48e` causaron problemas que incluían Guest Chat Core sin acceso a knowledge base.
+**Razón del rollback:** Los commits posteriores a `ee1d48e` causaron problemas. Después del rollback se aplicaron fixes incrementales:
+- 7260a07: Deploy errors (nginx SSL, axios CVEs)
+- 03013ff: SSL staging certificate separation
+- b100413: Dependency warnings (inflight, glob)
+- f9f6b27: Build cache configuration
 
 **Backup creado:**
 ```bash
@@ -64,7 +68,7 @@ Ver detalles completos en: `/Users/oneill/Sites/apps/muva-chat/project-stabiliza
 
 ### Objetivo Principal
 
-**RE-DIAGNOSTICAR el sistema desde commit `ee1d48e` y actualizar TODA la documentación de estabilización basándote en hallazgos REALES.**
+**MANTENER la documentación de estabilización actualizada con el estado actual desde commit `f9f6b27` que incluye todas las optimizaciones post-rollback.**
 
 ### ⚠️ IMPORTANTE: Plan Actual es PRE-ROLLBACK
 
@@ -77,7 +81,13 @@ La documentación en `project-stabilization/` fue creada ANTES del rollback y co
 - Build warnings
 - MCP sobrecargado
 
-**TU TAREA:** Verificar cuáles de estos problemas REALMENTE existen en `ee1d48e` (el commit estable).
+**ESTADO RESUELTO:** Los problemas críticos han sido resueltos en `f9f6b27`:
+- ✅ Deploy errors fixed (GitHub Actions funcionando)
+- ✅ Axios CVEs resolved (1.8.0)
+- ✅ SSL certificates separados (production vs staging)
+- ✅ Build cache configured (16s build time)
+- ✅ Dependency warnings eliminated (inflight, glob)
+- ⏳ PENDIENTE: MCP optimization (FASE 4)
 
 ---
 
@@ -94,8 +104,8 @@ Ubicación: `/Users/oneill/Sites/apps/muva-chat/project-stabilization/`
 
 2. **plan-part-1.md** (352 líneas)
    - Overview y "¿Por qué?"
-   - **ESTADO ACTUAL** ← Actualizar con diagnóstico real de ee1d48e
-   - Estado Deseado
+   - **ESTADO ACTUAL** ← Actualizado con diagnóstico real de f9f6b27
+   - Estado Deseado (3 de 7 fases completadas)
 
 3. **plan-part-2.md** (1,201 líneas)
    - FASE 1: Critical Diagnostics
