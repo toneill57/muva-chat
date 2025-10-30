@@ -597,7 +597,7 @@ export default function SignupPage() {
         {/* Footer */}
         <p className="text-center text-gray-600 mt-6">
           ¿Ya tienes cuenta?{' '}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login-legacy" className="text-blue-600 hover:underline">
             Inicia sesión
           </a>
         </p>
