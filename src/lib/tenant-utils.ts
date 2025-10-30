@@ -40,13 +40,18 @@ export function getSubdomain(hostname: string): string | null {
     return parts.length > 1 ? parts[0] : null;
   }
 
-  // Production: subdomain.muva.chat
+  // Production: subdomain.muva.chat OR subdomain.staging.muva.chat
   if (host.endsWith('.muva.chat')) {
     const parts = host.split('.');
-    // subdomain.muva.chat → ["subdomain", "muva", "chat"]
-    if (parts.length === 3) {
-      // Treat "www" as no subdomain
-      return parts[0] === 'www' ? null : parts[0];
+    // subdomain.muva.chat → ["subdomain", "muva", "chat"] (3 parts)
+    // subdomain.staging.muva.chat → ["subdomain", "staging", "muva", "chat"] (4 parts)
+    if (parts.length >= 3) {
+      const subdomain = parts[0];
+      // Treat "www" and "staging" as no subdomain (they're environment indicators)
+      if (subdomain === 'www' || subdomain === 'staging') {
+        return null;
+      }
+      return subdomain;
     }
   }
 
