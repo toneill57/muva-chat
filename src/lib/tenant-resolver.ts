@@ -67,10 +67,15 @@ export async function resolveSubdomainToTenantId(subdomain: string): Promise<str
       .select('tenant_id, tenant_type, is_active')
       .eq('slug', subdomain)
       .eq('is_active', true)
-      .single()
+      .maybeSingle()
 
-    if (error || !data) {
-      console.warn(`⚠️ Subdomain ${subdomain} not found in registry:`, error?.message)
+    if (error) {
+      console.error(`❌ Error querying subdomain ${subdomain}:`, error.message)
+      throw new Error(`Database error while resolving subdomain ${subdomain}`)
+    }
+
+    if (!data) {
+      console.info(`ℹ️ Subdomain ${subdomain} not found in registry (expected for invalid subdomains)`)
       throw new Error(`Subdomain ${subdomain} not found or inactive`)
     }
 
@@ -125,7 +130,7 @@ export async function resolveTenantSchemaName(tenantUuid: string | null | undefi
         .select('tenant_id, tenant_type, is_active')
         .eq('tenant_id', tenantUuid)
         .eq('is_active', true)
-        .single()
+        .maybeSingle()
       data = result.data
       error = result.error
     } else {
@@ -135,13 +140,18 @@ export async function resolveTenantSchemaName(tenantUuid: string | null | undefi
         .select('tenant_id, tenant_type, is_active')
         .eq('slug', tenantUuid)
         .eq('is_active', true)
-        .single()
+        .maybeSingle()
       data = result.data
       error = result.error
     }
 
-    if (error || !data) {
-      console.warn(`⚠️ Tenant ${tenantUuid} not found in registry:`, error?.message)
+    if (error) {
+      console.error(`❌ Error querying tenant ${tenantUuid}:`, error.message)
+      throw new Error(`Database error while resolving tenant ${tenantUuid}`)
+    }
+
+    if (!data) {
+      console.info(`ℹ️ Tenant ${tenantUuid} not found in registry (expected for invalid tenants)`)
       throw new Error(`Tenant ${tenantUuid} not found or inactive`)
     }
 
@@ -183,10 +193,15 @@ export async function getTenantInfo(tenantUuid: string): Promise<{
       .select('schema_name, tenant_type, nombre_comercial, razon_social, is_active')
       .eq('tenant_id', tenantUuid)
       .eq('is_active', true)
-      .single()
+      .maybeSingle()
 
-    if (error || !data) {
-      console.warn(`⚠️ Tenant info not found for ${tenantUuid}:`, error?.message)
+    if (error) {
+      console.error(`❌ Error querying tenant info for ${tenantUuid}:`, error.message)
+      return null
+    }
+
+    if (!data) {
+      console.info(`ℹ️ Tenant info not found for ${tenantUuid} (expected for invalid tenants)`)
       return null
     }
 

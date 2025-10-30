@@ -163,7 +163,7 @@ export async function getTenantBySubdomain(
       .from('tenant_registry')
       .select('*')
       .eq('subdomain', subdomain)
-      .single();
+      .maybeSingle();
 
     if (error) {
       // Log error but don't throw - return null for graceful handling
@@ -171,7 +171,13 @@ export async function getTenantBySubdomain(
       return null;
     }
 
-    console.log('[getTenantBySubdomain] ✅ Query successful, data:', data ? `tenant_id=${data.tenant_id}, name=${data.business_name || data.nombre_comercial}` : 'null');
+    // .maybeSingle() returns null when no rows found (not an error)
+    if (!data) {
+      console.log(`[getTenantBySubdomain] ℹ️  No tenant found for subdomain: ${subdomain}`);
+      return null;
+    }
+
+    console.log('[getTenantBySubdomain] ✅ Query successful, data:', `tenant_id=${data.tenant_id}, name=${data.business_name || data.nombre_comercial}`);
     return data as Tenant;
   } catch (error) {
     console.error('[getTenantBySubdomain] ❌ Unexpected error:', error);
