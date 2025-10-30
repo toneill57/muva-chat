@@ -47,7 +47,7 @@ sshpass -p 'rabbitHole0+' ssh -o StrictHostKeyChecking=no root@195.200.6.216 << 
   git checkout dev
 
   echo "   - Pulling latest changes..."
-  git pull origin dev
+  git pull --ff-only origin dev
 
   echo "   - Installing dependencies (pnpm install --frozen-lockfile)..."
   pnpm install --frozen-lockfile
