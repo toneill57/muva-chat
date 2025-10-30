@@ -51,7 +51,13 @@
       "glob@7.2.3": "^11.0.0",
       "inflight": "npm:lru-cache@^11.0.0",
       "formdata-node@4.4.1": "^6.0.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "puppeteer",
+      "sharp",
+      "unrs-resolver"
+    ]
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
