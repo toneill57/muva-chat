@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Build cache configuration for faster rebuilds
+  cacheMaxMemorySize: 50, // 50MB cache (default is 50MB)
+
   eslint: {
     // Ignore ESLint errors during production build
     ignoreDuringBuilds: true,
