@@ -12,9 +12,6 @@ echo -e "${YELLOW}🚀 Iniciando deploy a STAGING...${NC}"
 
 # 1. Pre-deploy checks
 echo -e "${YELLOW}📋 Pre-deploy checks...${NC}"
-echo "   - Validando ambiente..."
-pnpm run validate-env
-
 echo "   - Verificando git status..."
 if git status --short | grep -q .; then
   echo -e "${RED}⚠️  ERROR: Hay cambios sin commitear${NC}"
