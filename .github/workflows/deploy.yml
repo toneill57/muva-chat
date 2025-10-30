@@ -17,13 +17,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: npm run build
+        run: pnpm run build
         env:
           NODE_ENV: production
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -117,7 +134,7 @@ jobs:
             # Install dependencies
             echo ""
             echo "Installing dependencies..."
-            npm ci --legacy-peer-deps
+            pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
             # Clean build cache and old directories
@@ -130,7 +147,7 @@ jobs:
             # Build application
             echo ""
             echo "Building application..."
-            npm run build
+            pnpm run build
             echo "✅ Build completed"
 
             # Update Nginx configuration
@@ -210,10 +227,10 @@ jobs:
             echo "Rolled back to: $(git log -1 --oneline)"
 
             # Reinstall dependencies (in case package.json changed)
-            npm ci --legacy-peer-deps
+            pnpm install --frozen-lockfile
 
             # Rebuild
-            npm run build
+            pnpm run build
 
             # Reload PM2
             pm2 reload docs/deployment/ecosystem.config.cjs --update-env
