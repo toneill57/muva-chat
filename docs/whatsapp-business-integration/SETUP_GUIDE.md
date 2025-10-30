@@ -210,7 +210,7 @@ https://simmerdown.muva.chat/api/webhooks/whatsapp
 5. Click en **"Verificar y guardar"**
 
 **Si la verificación falla:**
-- ✅ Verifica que el servidor esté corriendo (`npm run dev` o PM2)
+- ✅ Verifica que el servidor esté corriendo (`pnpm run dev` o PM2)
 - ✅ Verifica que el token en `.env.local` coincida
 - ✅ Revisa logs del servidor: `pm2 logs muva-chat`
 
@@ -279,7 +279,7 @@ TEST123
 
 ```bash
 # Development
-Ver consola donde está corriendo npm run dev
+Ver consola donde está corriendo pnpm run dev
 
 # Production
 pm2 logs muva-chat
@@ -312,7 +312,7 @@ testSendMessage();
 **Ejecutar:**
 
 ```bash
-set -a && source .env.local && set +a && npx tsx scripts/test-whatsapp.ts
+set -a && source .env.local && set +a && pnpm dlx tsx scripts/test-whatsapp.ts
 ```
 
 **Resultado esperado:**

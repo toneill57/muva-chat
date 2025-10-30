@@ -144,7 +144,7 @@ ORDER BY tablename, cmd;
 
 ```bash
 # Run E2E tests to verify no regressions
-npm run test:e2e -- staff-chat.spec.ts
+pnpm run test:e2e -- staff-chat.spec.ts
 
 # Test staff chat (uses staff_conversations + staff_messages)
 # Should still work correctly
@@ -277,7 +277,7 @@ LIMIT 10;
 
 ```bash
 # Test that vector search still works
-npm run test:e2e -- guest-chat-messaging.spec.ts
+pnpm run test:e2e -- guest-chat-messaging.spec.ts
 
 # Verify:
 # - Guest chat responses still relevant
@@ -330,7 +330,7 @@ See detailed guide: [`POSTGRES_UPGRADE_GUIDE.md`](./POSTGRES_UPGRADE_GUIDE.md)
 **Quick Steps:**
 
 1. **Create backup** (Supabase Dashboard → Database → Backups)
-2. **Run pre-tests** (`npm test && npm run test:e2e`)
+2. **Run pre-tests** (`pnpm test && pnpm run test:e2e`)
 3. **Upgrade** (Supabase Dashboard → Settings → Infrastructure → Upgrade)
 4. **Wait** (~5-10 minutes)
 5. **Verify** (Check version, run health checks, monitor logs)
@@ -398,8 +398,8 @@ SELECT version();
 
 ```bash
 # Run all tests
-npm test
-npm run test:e2e
+pnpm test
+pnpm run test:e2e
 
 # Expected: All pass ✅
 ```

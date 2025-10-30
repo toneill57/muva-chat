@@ -58,18 +58,18 @@ ls -lh innpilot-backup-2025-10-06.dump
 
 ```bash
 # Unit tests
-npm test
+pnpm test
 
 # E2E tests (critical paths)
-npm run test:e2e -- guest-login.spec.ts
-npm run test:e2e -- guest-chat-messaging.spec.ts
-npm run test:e2e -- staff-chat.spec.ts
+ppnpm run test:e2e -- guest-login.spec.ts
+ppnpm run test:e2e -- guest-chat-messaging.spec.ts
+ppnpm run test:e2e -- staff-chat.spec.ts
 
 # Type check
-npm run type-check
+pnpm run type-check
 
 # Build (ensure no errors)
-npm run build
+pnpm run build
 ```
 
 **All tests must pass** ✅ before proceeding.
@@ -159,10 +159,10 @@ SELECT version();
 
 ```bash
 # Install Supabase CLI (if not installed)
-npm install -g supabase
+pnpm add -g supabase
 
 # Or update to latest
-npm update -g supabase
+pnpm update -g supabase
 
 # Verify version
 supabase --version
@@ -262,7 +262,7 @@ supabase db advisors --type security
 
 ```bash
 # Run full test suite
-npm run test:e2e
+ppnpm run test:e2e
 
 # Test specific critical paths:
 # 1. Guest login + chat

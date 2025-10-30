@@ -341,7 +341,7 @@ pm2 monit                      # Real-time monitoring
 │ 1. Checkout code        → actions/checkout@v4  │
 │ 2. Setup Node.js 20     → actions/setup-node@v4│
 │ 3. Install dependencies → npm ci --legacy-peer  │
-│ 4. Build application    → npm run build        │
+│ 4. Build application    → pnpm run build        │
 │ 5. Deploy to VPS        → SSH + git pull       │
 │ 6. Reload PM2           → pm2 reload           │
 │ 7. Health check         → curl /api/health     │
@@ -377,8 +377,8 @@ fi
 ```bash
 cd ${{ secrets.VPS_APP_PATH }}
 git reset --hard HEAD~1
-npm ci --legacy-peer-deps
-npm run build
+pnpm install --frozen-lockfile
+pnpm run build
 pm2 reload ecosystem.config.cjs --update-env
 ```
 
@@ -663,9 +663,9 @@ Claude Code should automatically invoke `@agent-infrastructure-monitor` when:
 
 **Available Scripts:**
 ```bash
-npm run monitor             # System monitor (scripts/system-monitor.js)
-npm run test-performance    # Performance tests
-npm run benchmark-detailed  # Detailed benchmarks
+pnpm run monitor             # System monitor (scripts/system-monitor.js)
+pnpm run test-performance    # Performance tests
+pnpm run benchmark-detailed  # Detailed benchmarks
 ```
 
 **Development Server Script:**

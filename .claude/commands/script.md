@@ -172,13 +172,13 @@ Después de completar todas las tasks:
 **Después de cada TASK:**
 ```bash
 # Build check (si aplica)
-npm run build
+pnpm run build
 
 # Linter check (si aplica)
-npm run lint
+pnpm run lint
 
 # Test suite (si aplica)
-npm test
+pnpm test
 
 # Grep verification (para cleanups)
 grep -ri "{pattern}" . --exclude-dir=node_modules

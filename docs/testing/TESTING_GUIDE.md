@@ -325,13 +325,13 @@ ORDER BY gr.check_in_date DESC;
 
 ```bash
 # Guest authentication tests (25 tests)
-npm test -- src/lib/__tests__/guest-auth.test.ts
+pnpm test -- src/lib/__tests__/guest-auth.test.ts
 
 # Chat engine tests (12 tests)
-npm test -- src/lib/__tests__/conversational-chat-engine.test.ts
+pnpm test -- src/lib/__tests__/conversational-chat-engine.test.ts
 
 # Todos los tests juntos
-npm test -- src/lib/__tests__/
+pnpm test -- src/lib/__tests__/
 ```
 
 **Expected output:**

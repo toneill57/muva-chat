@@ -36,7 +36,7 @@ infrastructure: VPS_HOSTINGER
 
 1. **Pre-Deployment Validation:**
    - ✅ Verify all E2E tests passing locally
-   - ✅ Verify no TypeScript errors (`npm run build`)
+   - ✅ Verify no TypeScript errors (`pnpm run build`)
    - ✅ Confirm database migrations applied (if any)
    - ✅ Review git status (no uncommitted changes)
 
@@ -204,11 +204,11 @@ jobs:
 
       # 3. Install dependencies (exact versions)
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: ppnpm install --frozen-lockfile
 
       # 4. Build Next.js app with production env
       - name: Build application
-        run: npm run build
+        run: pnpm run build
         env:
           NODE_ENV: production
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -228,8 +228,8 @@ jobs:
           script: |
             cd ${{ secrets.VPS_APP_PATH }}
             git pull origin dev
-            npm ci --legacy-peer-deps
-            npm run build
+            ppnpm install --frozen-lockfile
+            pnpm run build
             pm2 reload docs/deployment/ecosystem.config.cjs --update-env
 
       # 6. Wait for deployment to stabilize
@@ -257,8 +257,8 @@ jobs:
           script: |
             cd ${{ secrets.VPS_APP_PATH }}
             git reset --hard HEAD~1
-            npm ci --legacy-peer-deps
-            npm run build
+            ppnpm install --frozen-lockfile
+            pnpm run build
             pm2 reload docs/deployment/ecosystem.config.cjs --update-env
             echo "Rolled back to previous version"
 
@@ -277,7 +277,7 @@ jobs:
 | Setup Node.js | ~10s | Install Node 20.x + cache restore |
 | Install deps | ~60s | `npm ci` (cached) |
 | Build | ~90s | Next.js production build |
-| Deploy to VPS | ~20s | SSH + git pull + npm install + PM2 reload |
+| Deploy to VPS | ~20s | SSH + git pull + pnpm install + PM2 reload |
 | Wait | ~10s | Let PM2 stabilize |
 | Health check | ~5s | Verify /api/health returns 200 |
 | **TOTAL** | **~3min** | **Commit → Production** |
@@ -493,10 +493,10 @@ cd /var/www/muva-chat
 git pull origin dev
 
 # 4. Install dependencies (exact versions)
-npm ci --legacy-peer-deps
+ppnpm install --frozen-lockfile
 
 # 5. Build application
-npm run build
+pnpm run build
 
 # 6. Reload PM2 (zero-downtime)
 pm2 reload docs/deployment/ecosystem.config.cjs --update-env
@@ -544,8 +544,8 @@ git reset --hard <commit-hash>
 # Example: git reset --hard HEAD~1 (1 commit back)
 
 # 5. Rebuild
-npm ci --legacy-peer-deps
-npm run build
+ppnpm install --frozen-lockfile
+pnpm run build
 
 # 6. Reload PM2
 pm2 reload muva-chat --update-env
@@ -620,9 +620,9 @@ deploy:    Deployment/infrastructure changes
 ```bash
 # .husky/pre-commit (example)
 #!/bin/sh
-npm run lint
-npm run type-check
-npm run test
+pnpm run lint
+pnpm run type-check
+pnpm run test
 ```
 
 ---
@@ -732,11 +732,11 @@ gh run list --workflow=deploy.yml --limit 5
 gh run view <run-id> --log
 
 # Reproduce locally
-npm ci --legacy-peer-deps
-npm run build
+ppnpm install --frozen-lockfile
+pnpm run build
 
 # Fix TypeScript errors
-npm run type-check
+pnpm run type-check
 ```
 
 **2. SSH Connection Timeout**
@@ -806,13 +806,13 @@ pm2 logs muva-chat --lines 100
 ls -la /var/www/muva-chat/.next/server/pages/api/
 
 # Rebuild if needed
-npm run build
+pnpm run build
 pm2 reload muva-chat
 ```
 
 **Emergency Rollback (1 comando):**
 ```bash
-ssh root@195.200.6.216 "cd /var/www/muva-chat && git reset --hard HEAD~1 && npm ci --legacy-peer-deps && npm run build && pm2 reload muva-chat"
+ssh root@195.200.6.216 "cd /var/www/muva-chat && git reset --hard HEAD~1 && ppnpm install --frozen-lockfile && pnpm run build && pm2 reload muva-chat"
 ```
 
 **Documentación completa:** `docs/deployment/TROUBLESHOOTING.md` (480 líneas)

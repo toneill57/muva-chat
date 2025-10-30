@@ -334,7 +334,7 @@ psql -h YOUR_DB_HOST -U postgres -d innpilot -f MIGRATION_FILE.sql
 # On VPS
 cd /var/www/muva-chat
 git pull origin main
-npm install
+pnpm install
 pm2 restart muva-chat
 ```
 

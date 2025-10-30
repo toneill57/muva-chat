@@ -101,7 +101,7 @@ Before onboarding a new tenant manually, ensure you have:
 2. **Run seeding script:**
    ```bash
    set -a && source .env.local && set +a
-   npx tsx scripts/seed-test-tenants.ts
+   pnpm dlx tsx scripts/seed-test-tenants.ts
    ```
 
 ### Option C: Using SQL (Advanced)
@@ -187,7 +187,7 @@ For large document sets (>10 files):
 ```bash
 # Run bulk upload script
 set -a && source .env.local && set +a
-npx tsx scripts/process-tenant-docs.ts \
+pnpm dlx tsx scripts/process-tenant-docs.ts \
   --tenant-id="<UUID>" \
   --directory="/path/to/docs" \
   --recursive
@@ -230,10 +230,10 @@ Run the tenant isolation test suite:
 
 ```bash
 # Test tenant chat isolation
-npm run test:tenant-isolation
+pnpm run test:tenant-isolation
 
 # Test knowledge base filtering
-npm run test:knowledge-base
+pnpm run test:knowledge-base
 ```
 
 ### Manual Testing

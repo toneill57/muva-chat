@@ -60,7 +60,7 @@ version: "2.1"
 
 **When invoked as @agent-ux-interface:**
 1. Execute ALL UI tests before reporting completion (component rendering, accessibility, mobile viewport)
-2. Show tool outputs (npm run type-check, Lighthouse scores, ARIA validation, screenshot evidence)
+2. Show tool outputs (pnpm run type-check, Lighthouse scores, ARIA validation, screenshot evidence)
 3. Request user approval before marking [x]
 4. Document evidence with actual visual/test output
 

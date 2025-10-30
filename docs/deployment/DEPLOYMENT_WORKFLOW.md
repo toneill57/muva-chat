@@ -22,7 +22,7 @@ Developer → GitHub (push to dev) → GitHub Actions → VPS Build & Deploy →
 |-------------------------|---------|--------------------------------------|
 | GitHub Actions Trigger  | ~10s    | Detecta push, inicia workflow        |
 | Dependency Install      | ~60s    | `npm ci` en VPS                      |
-| Build Process           | ~90s    | `npm run build` (Next.js)            |
+| Build Process           | ~90s    | `pnpm run build` (Next.js)            |
 | Deploy & Restart        | ~20s    | PM2 reload zero-downtime             |
 | Health Checks           | ~10s    | Verificación de endpoints            |
 | **TOTAL**               | **~3m** | **< 5min deployment completo** ✅    |
@@ -45,7 +45,7 @@ Developer → GitHub (push to dev) → GitHub Actions → VPS Build & Deploy →
    - ✅ SSH a VPS
    - ✅ `git pull origin dev`
    - ✅ `npm ci` (instala deps exactas)
-   - ✅ `npm run build`
+   - ✅ `pnpm run build`
    - ✅ `pm2 reload muva-chat --update-env`
    - ✅ Health check a https://muva.chat/api/health
 
@@ -103,7 +103,7 @@ ssh root@muva.chat "pm2 logs muva-chat --lines 100"
 
 5. **Build Application**:
    ```bash
-   npm run build
+   pnpm run build
    ```
 
 6. **Restart PM2**:
@@ -138,7 +138,7 @@ echo "🚀 Starting manual deployment..."
 cd /var/www/muva-chat
 git pull origin dev
 npm ci
-npm run build
+pnpm run build
 pm2 reload muva-chat --update-env
 
 echo "✅ Deployment complete. Running health check..."
@@ -183,7 +183,7 @@ pm2 status muva-chat
 3. **Rebuild & Restart**:
    ```bash
    npm ci
-   npm run build
+   pnpm run build
    pm2 reload muva-chat --update-env
    ```
 
@@ -201,7 +201,7 @@ Si un `npm update` causa problemas:
 # Restaurar package-lock.json anterior
 git checkout HEAD~1 package-lock.json
 npm ci
-npm run build
+pnpm run build
 pm2 reload muva-chat --update-env
 ```
 
@@ -304,7 +304,7 @@ pm2 register
 | 502 Bad Gateway                | `pm2 status` → app stopped               | `pm2 restart muva-chat`                      |
 | 504 Gateway Timeout            | App lenta/colgada                        | `pm2 logs muva-chat` → identificar bottleneck|
 | High Memory Usage              | `pm2 monit` → > 80% RAM                  | `pm2 reload muva-chat` (zero-downtime)       |
-| Build Failures                 | `npm run build` error                    | Ver logs, fix code, re-deploy               |
+| Build Failures                 | `pnpm run build` error                    | Ver logs, fix code, re-deploy               |
 | SSL Certificate Error          | Certbot renewal failed                   | `sudo certbot renew --dry-run`              |
 
 ---

@@ -52,7 +52,7 @@ MUVA Chat es una plataforma multi-tenant que combina chat inteligente para negoc
 ```bash
 git clone <repo-url>
 cd InnPilot  # Project folder name unchanged for git compatibility
-npm install
+pnpm install
 ```
 
 ### 2. Configurar variables de entorno
@@ -71,7 +71,7 @@ CLAUDE_MAX_TOKENS=800
 ### 3. Ejecutar en desarrollo
 
 ```bash
-npm run dev
+pnpm run dev
 
 # Process tourism and business documents into embeddings
 node scripts/populate-embeddings.js

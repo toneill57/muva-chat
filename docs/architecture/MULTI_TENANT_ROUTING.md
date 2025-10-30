@@ -360,7 +360,7 @@ sudo nano /etc/hosts
 2. **Start Dev Server:**
 ```bash
 ./scripts/dev-with-keys.sh
-# DO NOT use `npm run dev` directly
+# DO NOT use `pnpm run dev` directly
 ```
 
 3. **Access:**

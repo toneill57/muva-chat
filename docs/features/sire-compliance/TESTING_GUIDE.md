@@ -7,7 +7,7 @@ Visual guide for testing the updated compliance UI components.
 ## Test Environment Setup
 
 ### Prerequisites:
-- Development server running (`npm run dev`)
+- Development server running (`pnpm run dev`)
 - Database with SIRE catalog data populated
 - Test guest reservation with conversation_id
 
@@ -557,7 +557,7 @@ updated_at: <recent timestamp>
 ### Lighthouse Audit
 
 **Run Audit:**
-1. Build production version: `npm run build && npm start`
+1. Build production version: `pnpm run build && pnpm start`
 2. Open http://localhost:3000 in Chrome
 3. DevTools → Lighthouse → Mobile → Analyze
 

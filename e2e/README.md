@@ -17,8 +17,8 @@ This test suite validates the complete guest chat experience from login to conve
 ### 1. Install Dependencies
 
 ```bash
-npm install
-npx playwright install
+pnpm install
+pnpm dlx playwright install
 ```
 
 ### 2. Setup Test Data
@@ -26,7 +26,7 @@ npx playwright install
 Before running tests, create a test reservation in the database:
 
 ```bash
-npm run test:e2e:setup
+pnpm run test:e2e:setup
 ```
 
 This creates a test user with credentials:
@@ -38,23 +38,23 @@ This creates a test user with credentials:
 
 ```bash
 # Run all E2E tests
-npm run test:e2e
+pnpm run test:e2e
 
 # Run tests in UI mode (interactive)
-npm run test:e2e:ui
+pnpm run test:e2e:ui
 
 # Run specific test file
-npm run test:e2e -- guest-login.spec.ts
+pnpm run test:e2e -- guest-login.spec.ts
 
 # Run tests in headed mode (see browser)
-npm run test:e2e:headed
+pnpm run test:e2e:headed
 
 # Run tests on specific browser
-npm run test:e2e -- --project=chromium
-npm run test:e2e -- --project=mobile-chrome
+pnpm run test:e2e -- --project=chromium
+pnpm run test:e2e -- --project=mobile-chrome
 
 # Generate HTML report
-npm run test:e2e:report
+pnpm run test:e2e:report
 ```
 
 ## Test Structure
@@ -199,12 +199,12 @@ jobs:
         with:
           node-version: '18'
       - run: npm ci
-      - run: npx playwright install --with-deps
-      - run: npm run test:e2e:setup
+      - run: pnpm dlx playwright install --with-deps
+      - run: pnpm run test:e2e:setup
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-      - run: npm run test:e2e
+      - run: pnpm run test:e2e
         env:
           CI: true
       - uses: actions/upload-artifact@v3
@@ -220,7 +220,7 @@ jobs:
 
 Run the setup script:
 ```bash
-npm run test:e2e:setup
+pnpm run test:e2e:setup
 ```
 
 ### Server Not Starting
@@ -241,7 +241,7 @@ timeout: 60000, // 60 seconds
 
 Reinstall browsers:
 ```bash
-npx playwright install --force
+pnpm dlx playwright install --force
 ```
 
 ### Mobile Tests Failing
@@ -278,19 +278,19 @@ Tests will fail if these targets aren't met.
 
 ```bash
 # Step through tests
-npx playwright test --debug
+pnpm dlx playwright test --debug
 
 # Use Playwright Inspector
-PWDEBUG=1 npm run test:e2e
+PWDEBUG=1 pnpm run test:e2e
 
 # Generate trace
-npx playwright test --trace on
+pnpm dlx playwright test --trace on
 ```
 
 ### View Test Report
 
 ```bash
-npx playwright show-report
+pnpm dlx playwright show-report
 ```
 
 ### Take Screenshot During Test
