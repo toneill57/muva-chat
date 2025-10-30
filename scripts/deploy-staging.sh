@@ -47,7 +47,7 @@ sshpass -p 'rabbitHole0+' ssh -o StrictHostKeyChecking=no root@195.200.6.216 << 
   git checkout staging
 
   echo "   - Pulling latest changes..."
-  git pull origin staging
+  git pull --ff-only origin staging
 
   echo "   - Copiando .env.staging a .env.local..."
   cp .env.staging .env.local

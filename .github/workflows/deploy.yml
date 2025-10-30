@@ -102,7 +102,7 @@ jobs:
             # Pull latest changes
             echo ""
             echo "Pulling latest changes from dev branch..."
-            git pull origin dev
+            git pull --ff-only origin dev
 
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"
