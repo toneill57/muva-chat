@@ -105,22 +105,22 @@ jobs:
             # Create staging environment file from GitHub Secrets
             echo ""
             echo "Creating .env.local from GitHub Secrets..."
-            cat > .env.local <<EOF
-            # Supabase - staging-clean-final branch
-            NEXT_PUBLIC_SUPABASE_URL=https://qlvkgniqcoisbnwwjfte.supabase.co
-            NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE
-            SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE
-
-            # AI APIs
-            OPENAI_API_KEY=\${OPENAI_API_KEY}
-            ANTHROPIC_API_KEY=\${ANTHROPIC_API_KEY}
-
-            # JWT
-            JWT_SECRET_KEY=bLAHopfaNXAkiPUyums3RfnqwIYPPnkwKHUlTI+pFJtOXP+L8KvKRRfnbHUbOEzX0DM6/aFSxY17gLrDjjQf0A==
-
-            # Node Environment
-            NODE_ENV=production
-            EOF
+            {
+              echo "# Supabase - staging-clean-final branch"
+              echo "NEXT_PUBLIC_SUPABASE_URL=https://qlvkgniqcoisbnwwjfte.supabase.co"
+              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE"
+              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE"
+              echo ""
+              echo "# AI APIs"
+              echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"
+              echo "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}"
+              echo ""
+              echo "# JWT"
+              echo "JWT_SECRET_KEY=bLAHopfaNXAkiPUyums3RfnqwIYPPnkwKHUlTI+pFJtOXP+L8KvKRRfnbHUbOEzX0DM6/aFSxY17gLrDjjQf0A=="
+              echo ""
+              echo "# Node Environment"
+              echo "NODE_ENV=production"
+            } > .env.local
             echo "✅ Environment configured for staging"
 
             # Install dependencies
