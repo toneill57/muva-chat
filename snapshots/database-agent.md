@@ -1,17 +1,109 @@
 ---
 title: Database Agent Snapshot
 agent: database-agent
-last_updated: 2025-10-11
+last_updated: 2025-10-30
 status: ✅ Production Ready
 database_version: PostgreSQL 17.4.1.075 (Supabase)
 total_size: 35.5 MB
-total_tables: 37 (public + hotels schemas)
+total_tables: 41 (verified Oct 30, 2025)
 sire_validation: 5/5 SQL queries passed (100%)
 ---
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
-## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🎯 CURRENT PROJECT: Database Migration Production → Staging (October 30, 2025)
+
+**Status:** 📋 Planning Complete - FASE 1 ✅ Complete
+**Priority:** 🔴 CRITICAL (Production data migration)
+**Your Role:** Lead database agent for complete migration lifecycle
+
+### Quick Context
+
+**Project:** Migración completa producción → staging con documentación profesional exhaustiva
+**Your Mission:** Ejecutar 9 fases secuenciales de verificación, documentación y migración
+**Why You:** Solo tú tienes acceso directo a ambas bases de datos (prod + staging) vía MCP tools
+
+### Your Responsibilities
+
+**FASE 0: Baseline Migration Export** - 4-5h - **← NEXT PHASE (CRITICAL)**
+- Export complete DDL (Data Definition Language) from production
+- Create 7 SQL files: extensions, tables, indexes, functions, triggers, RLS policies
+- Generate unified baseline_migration.sql (recreate entire DB from scratch)
+- Test baseline on staging database (verify clean execution)
+- **Deliverable:** Complete baseline for disaster recovery + new environments
+
+**FASE 1: Verification & Statistics** - 6-7h - ✅ COMPLETE (Oct 30, 2025)
+- ✅ Verified 41 tables, 40 FKs, 134 RLS policies, 225 indexes, 14 triggers
+- ✅ Created: _FK_RELATIONSHIPS.json, _ROW_COUNTS.json, _RLS_POLICIES.json
+- ✅ Updated: OVERVIEW.md, ADVISORS_ANALYSIS.md, DOCUMENTATION_PROGRESS.md
+- ✅ Result: 6,710 rows verified, 3 active tenants confirmed
+
+**FASE 2: Dependency Tree Validation** - 4-5h
+- Build dependency tree from 40 FKs
+- Run topological sort (detect circular dependencies)
+- Validate TRUNCATE/INSERT orders
+- Create: _DEPENDENCY_TREE.json
+
+**FASE 3-6: Table Documentation** - 12-15h
+- FASE 3: Catalog tables (sire_content, muva_content, etc.)
+- FASE 4: Operations tables (accommodations, reservations, chat)
+- FASE 5: Integration tables (Motopress, Airbnb, WhatsApp)
+- FASE 6: Embeddings tables (code_embeddings ⚠️ NO RLS, vector search)
+
+**FASE 7: RLS Policies** - 3-4h
+- Document all 134 RLS policies
+- Categorize by pattern (tenant isolation, staff auth, guest access)
+- Create: RLS_POLICIES.md
+
+**FASE 8: Migration Scripts** - 2-3h
+- Validate 001_clean_staging.sql, 002_copy_data.ts, 003_validate.sql
+- Create: 004_rollback.sql
+
+**FASE 9: Migration Execution** - 3.5-4.5h
+- Execute production → staging migration (6,710 rows)
+- Validate: Row counts, FK integrity, RLS policies
+- **REQUIRES HUMAN APPROVAL** before execution
+
+### Project Documentation
+
+**Read FIRST (Before starting FASE 0):**
+- `docs/database/TODO.md` - Master task list (68 tasks, 10/68 complete)
+- `docs/database/prompt-workflow-PART0-baseline-export.md` - Ready-to-use prompt for FASE 0
+- `docs/database/migration-plan/PLAN_PART0_BASELINE_EXPORT.md` - Detailed plan
+
+**Existing Outputs (From FASE 1):**
+- `docs/database/migration-plan/_FK_RELATIONSHIPS.json` - 40 FK relationships
+- `docs/database/migration-plan/_ROW_COUNTS.json` - 6,710 total rows across 41 tables
+- `docs/database/migration-plan/_RLS_POLICIES.json` - 134 policies
+
+**All Phase Plans:**
+- `docs/database/migration-plan/PLAN_PART{0-9}.md` - 10 detailed phase plans
+- `docs/database/prompt-workflow-PART{0-9}.md` - 10 copy-paste ready workflows
+
+### Databases
+
+**Production (Source):**
+- Project ID: ooaumjzaztmutltifhoq
+- URL: https://ooaumjzaztmutltifhoq.supabase.co
+- Status: ✅ Active, 3 tenants (simmerdown, tucasamar, loscedrosboutique)
+
+**Staging (Target):**
+- Project ID: qlvkgniqcoisbnwwjfte
+- URL: https://qlvkgniqcoisbnwwjfte.supabase.co
+- Status: 🔜 Ready for migration (41 tables, needs data copy)
+
+### Workflow (FASE 0 - Next Steps)
+
+1. **Copy prompt:** From `docs/database/prompt-workflow-PART0-baseline-export.md`
+2. **Read plan:** `docs/database/migration-plan/PLAN_PART0_BASELINE_EXPORT.md`
+3. **Execute:** 9 tasks (export extensions, tables, indexes, functions, triggers, RLS)
+4. **Output:** Create 7 SQL files in `docs/database/migrations/baseline/`
+5. **Test:** Execute `baseline_migration.sql` on staging (verify clean execution)
+6. **Next:** FASE 1 (already done) or FASE 2 using `prompt-workflow-PART2-dependency-tree.md`
+
+---
+
+## 🗄️ PREVIOUS PROJECT: Chat Core Stabilization (October 24, 2025)
 
 **Status:** 📋 Active - FASE 1 YOUR TURN
 **Priority:** 🔴 CRITICAL
