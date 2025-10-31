@@ -63,17 +63,8 @@ export function getSubdomainFromClient(): string | null {
   }
 
   // subdomain.muva.chat → "subdomain"
-  // www.subdomain.muva.chat → "subdomain"
   if (hostname.endsWith('.muva.chat')) {
     const parts = hostname.split('.')
-
-    // www.subdomain.muva.chat (4 parts)
-    if (parts.length === 4 && parts[0] === 'www') {
-      const subdomain = parts[1]
-      return isValidSubdomainClient(subdomain) ? subdomain : null
-    }
-
-    // subdomain.muva.chat (3 parts)
     if (parts.length === 3) {
       const subdomain = parts[0]
       // Treat "www" as no subdomain

@@ -34,12 +34,8 @@ export function AdminHeader() {
     localStorage.removeItem('staff_token');
     localStorage.removeItem('staff_info');
 
-    // Detect which system we're in and redirect to appropriate login
-    const currentPath = window.location.pathname;
-    const isLegacyDashboard = currentPath.includes('/dashboard-legacy');
-
-    // Legacy dashboard → legacy login, Multi-tenant dashboard → multi-tenant login
-    window.location.href = isLegacyDashboard ? '/login-legacy' : '/login';
+    // Redirect to login page (use window.location to preserve subdomain)
+    window.location.href = '/login';
   };
 
   return (
