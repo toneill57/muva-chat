@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   // Build cache configuration for faster rebuilds
   cacheMaxMemorySize: 50, // 50MB cache (default is 50MB)
 
+  // Allow dev server to handle requests from subdomain origins
+  allowedDevOrigins: [
+    // Match localhost subdomains (e.g., simmerdown.localhost, simmerdown.staging.localhost)
+    /^https?:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.localhost(?::\d+)?$/,
+  ],
+
   eslint: {
     // Ignore ESLint errors during production build
     ignoreDuringBuilds: true,
@@ -49,31 +55,22 @@ const nextConfig: NextConfig = {
   // Subdomain routing rewrites
   async rewrites() {
     return {
-      beforeFiles: [
-        // Rewrite subdomain requests to /[tenant] path
-        // Example: simmerdown.localhost:3000/dashboard -> localhost:3000/simmerdown/dashboard
-        // IMPORTANT: Exclude Next.js internal routes (_next/*, api/*, favicon.ico, etc.)
-        // ALSO EXCLUDE guest-chat (handled by direct route)
+      beforeFiles: [],
+      afterFiles: [
+        // Rewrite subdomain + path to /[tenant]/path
+        // Example: simmerdown.localhost:3000/login -> localhost:3000/simmerdown/login
+        // Example: simmerdown.staging.localhost:3000/login -> localhost:3000/simmerdown/login
+        // Using afterFiles ensures Next.js internal routes (_next/*) are handled first
         {
-          source: '/:path((?!_next|api|favicon.ico|guest-chat|.*\\..*).*)',
+          source: '/:path*',
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|muva\\.chat)(?:\\:\\d+)?',
+              // Match: subdomain.localhost OR subdomain.staging.localhost OR subdomain.muva.chat OR subdomain.staging.muva.chat
+              value: '(?<subdomain>[^.]+)\\.(?:staging\\.)?(?:localhost|muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain/:path*',
-        },
-        // Handle root path with subdomain
-        {
-          source: '/',
-          has: [
-            {
-              type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|muva\\.chat)(?:\\:\\d+)?',
-            },
-          ],
-          destination: '/:subdomain',
         },
       ],
     };

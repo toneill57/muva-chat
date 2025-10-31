@@ -71,6 +71,8 @@ export function middleware(request: NextRequest) {
 
   // Force log to ensure middleware is executing
   console.log('[middleware] === MIDDLEWARE EXECUTING ===', pathname)
+  console.log('[middleware] Full URL:', request.url)
+  console.log('[middleware] nextUrl.href:', request.nextUrl.href)
 
   // 🌐 SUBDOMAIN DETECTION (for multi-tenant routing)
   // Extract subdomain from Nginx header (production) or hostname (local dev)
@@ -156,7 +158,7 @@ export const config = {
   matcher: [
     // Match all API routes
     '/api/(.*)',
-    // Match all routes except static files
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // Match all routes except Next.js internals and static files
+    '/((?!_next|api|favicon.ico|.*\\..*).*)',
   ],
 }

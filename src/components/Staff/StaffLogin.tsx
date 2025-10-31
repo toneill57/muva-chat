@@ -211,8 +211,8 @@ export default function StaffLogin() {
       console.log('✅ Token saved for tenant:', loginData.staff_info.staff_id);
 
       // Redirect to dashboard (maintain current subdomain)
-      // Use window.location to preserve subdomain in URL
-      window.location.href = '/dashboard';
+      // Use router.push to navigate within the current subdomain context
+      router.push('/dashboard');
 
     } catch (err) {
       console.error('Login error:', err);

@@ -35,7 +35,7 @@ export function AdminHeader() {
     localStorage.removeItem('staff_info');
 
     // Redirect to login page (use window.location to preserve subdomain)
-    window.location.href = '/login-legacy';
+    window.location.href = '/login';
   };
 
   return (
