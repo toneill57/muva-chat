@@ -31,9 +31,9 @@ export default function LoginPage() {
     try {
       console.log('📞 Calling signIn function...')
       await signIn(email, password)
-      console.log('✅ Login successful, redirecting to dashboard...')
+      console.log('✅ Login successful, redirecting to dashboard-legacy...')
       // Use replace instead of push to prevent going back to login
-      router.replace('/dashboard')
+      router.replace('/dashboard-legacy')
     } catch (err) {
       console.error('❌ Login error:', err)
       setError(err instanceof Error ? err.message : 'Error al iniciar sesión')
