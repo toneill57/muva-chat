@@ -18,6 +18,19 @@ Guidance for Claude Code when working with this repository.
 
 ## 🚨 REGLAS CRÍTICAS
 
+### 0. PRIORIZAR Sugerencias del Usuario
+**Cuando el usuario sugiere una causa o dirección específica, INVESTIGARLA PRIMERO completamente antes de proponer alternativas.**
+
+- ✅ Tomar la sugerencia del usuario como punto de partida
+- ✅ Usar herramientas disponibles (SSH, logs, MCP) para verificar inmediatamente
+- ✅ Si encuentro evidencia contraria, presentarla y PREGUNTAR antes de cambiar dirección
+- ❌ NUNCA ignorar o posponer sugerencias del usuario por mis propias teorías
+- ❌ NUNCA asumir que "probablemente no es eso" sin verificar primero
+
+**Razón:** El usuario tiene contexto del sistema real que yo no tengo. Sus intuiciones son data valiosa.
+
+**Ejemplo:** Usuario dice "puede ser autenticación" → Ir DIRECTO a logs/env/database ANTES de teorizar sobre otros problemas.
+
 ### 1. NO Modificar Performance Targets
 - ❌ Cambiar umbrales para que tests pasen artificialmente
 - ✅ Investigar causa REAL del problema
