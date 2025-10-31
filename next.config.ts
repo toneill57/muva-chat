@@ -4,12 +4,6 @@ const nextConfig: NextConfig = {
   // Build cache configuration for faster rebuilds
   cacheMaxMemorySize: 50, // 50MB cache (default is 50MB)
 
-  // Allow dev server to handle requests from subdomain origins
-  allowedDevOrigins: [
-    // Match localhost subdomains (e.g., simmerdown.localhost, simmerdown.staging.localhost)
-    /^https?:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.localhost(?::\d+)?$/,
-  ],
-
   eslint: {
     // Ignore ESLint errors during production build
     ignoreDuringBuilds: true,
