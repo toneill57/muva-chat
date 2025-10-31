@@ -59,7 +59,7 @@ const nextConfig: NextConfig = {
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|staging\\.muva\\.chat|muva\\.chat)(?:\\:\\d+)?',
+              value: '(?<subdomain>[^.]+)\\.(localhost|muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain/:path*',
@@ -70,7 +70,7 @@ const nextConfig: NextConfig = {
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>[^.]+)\\.(localhost|staging\\.muva\\.chat|muva\\.chat)(?:\\:\\d+)?',
+              value: '(?<subdomain>[^.]+)\\.(localhost|muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain',
