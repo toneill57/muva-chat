@@ -34,8 +34,8 @@ export function AdminHeader() {
     localStorage.removeItem('staff_token');
     localStorage.removeItem('staff_info');
 
-    // Redirect to login page (use window.location to preserve subdomain)
-    window.location.href = '/login';
+    // Redirect to legacy login page (use window.location to preserve subdomain)
+    window.location.href = '/login-legacy';
   };
 
   return (
