@@ -1,0 +1,247 @@
+{
+  "total_fks": 40,
+  "verified_date": "2025-10-30",
+  "discrepancy": "Claimed 49, actual 40 - investigation needed",
+  "relationships": [
+    {
+      "table": "accommodation_units",
+      "column": "hotel_id",
+      "references_table": "hotels",
+      "references_column": "id"
+    },
+    {
+      "table": "accommodation_units",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "accommodation_units_manual",
+      "column": "unit_id",
+      "references_table": "accommodation_units_public",
+      "references_column": "unit_id"
+    },
+    {
+      "table": "accommodation_units_manual_chunks",
+      "column": "manual_id",
+      "references_table": "accommodation_units_manual",
+      "references_column": "unit_id"
+    },
+    {
+      "table": "accommodation_units_manual_chunks",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "accommodation_units_public",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "airbnb_motopress_comparison",
+      "column": "accommodation_unit_id",
+      "references_table": "accommodation_units_public",
+      "references_column": "unit_id"
+    },
+    {
+      "table": "airbnb_motopress_comparison",
+      "column": "ics_event_id",
+      "references_table": "calendar_events",
+      "references_column": "id"
+    },
+    {
+      "table": "airbnb_motopress_comparison",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "calendar_event_conflicts",
+      "column": "event_1_id",
+      "references_table": "calendar_events",
+      "references_column": "id"
+    },
+    {
+      "table": "calendar_event_conflicts",
+      "column": "event_2_id",
+      "references_table": "calendar_events",
+      "references_column": "id"
+    },
+    {
+      "table": "calendar_event_conflicts",
+      "column": "winning_event_id",
+      "references_table": "calendar_events",
+      "references_column": "id"
+    },
+    {
+      "table": "calendar_events",
+      "column": "merged_into_id",
+      "references_table": "calendar_events",
+      "references_column": "id"
+    },
+    {
+      "table": "calendar_events",
+      "column": "parent_event_id",
+      "references_table": "calendar_events",
+      "references_column": "id"
+    },
+    {
+      "table": "calendar_sync_logs",
+      "column": "feed_config_id",
+      "references_table": "ics_feed_configurations",
+      "references_column": "id"
+    },
+    {
+      "table": "chat_conversations",
+      "column": "reservation_id",
+      "references_table": "guest_reservations",
+      "references_column": "id"
+    },
+    {
+      "table": "chat_messages",
+      "column": "conversation_id",
+      "references_table": "guest_conversations",
+      "references_column": "id"
+    },
+    {
+      "table": "compliance_submissions",
+      "column": "guest_id",
+      "references_table": "guest_reservations",
+      "references_column": "id"
+    },
+    {
+      "table": "conversation_attachments",
+      "column": "conversation_id",
+      "references_table": "guest_conversations",
+      "references_column": "id"
+    },
+    {
+      "table": "conversation_memory",
+      "column": "session_id",
+      "references_table": "prospective_sessions",
+      "references_column": "session_id"
+    },
+    {
+      "table": "conversation_memory",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "guest_conversations",
+      "column": "guest_id",
+      "references_table": "guest_reservations",
+      "references_column": "id"
+    },
+    {
+      "table": "hotel_operations",
+      "column": "created_by",
+      "references_table": "staff_users",
+      "references_column": "staff_id"
+    },
+    {
+      "table": "hotel_operations",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "hotels",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "integration_configs",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "job_logs",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "policies",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "prospective_sessions",
+      "column": "converted_to_reservation_id",
+      "references_table": "guest_reservations",
+      "references_column": "id"
+    },
+    {
+      "table": "prospective_sessions",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "reservation_accommodations",
+      "column": "reservation_id",
+      "references_table": "guest_reservations",
+      "references_column": "id"
+    },
+    {
+      "table": "staff_conversations",
+      "column": "staff_id",
+      "references_table": "staff_users",
+      "references_column": "staff_id"
+    },
+    {
+      "table": "staff_messages",
+      "column": "conversation_id",
+      "references_table": "staff_conversations",
+      "references_column": "conversation_id"
+    },
+    {
+      "table": "staff_users",
+      "column": "created_by",
+      "references_table": "staff_users",
+      "references_column": "staff_id"
+    },
+    {
+      "table": "staff_users",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "sync_history",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "tenant_compliance_credentials",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "tenant_knowledge_embeddings",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "tenant_muva_content",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    },
+    {
+      "table": "user_tenant_permissions",
+      "column": "tenant_id",
+      "references_table": "tenant_registry",
+      "references_column": "tenant_id"
+    }
+  ]
+}
