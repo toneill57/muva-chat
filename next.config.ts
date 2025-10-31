@@ -56,23 +56,65 @@ const nextConfig: NextConfig = {
         // Excludes: www, staging (environment indicators)
         // IMPORTANT: Exclude Next.js internal routes (_next/*, api/*, favicon.ico, etc.)
         // ALSO EXCLUDE guest-chat (handled by direct route)
+        // Match: subdomain.staging.muva.chat (third-level)
         {
           source: '/:path((?!_next|api|favicon.ico|guest-chat|.*\\..*).*)',
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>(?!www|staging)[^.]+)\\.(?:localhost|(?:staging\\.)?muva\\.chat)(?:\\:\\d+)?',
+              value: '(?<subdomain>[^.]+)\\.staging\\.muva\\.chat(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain/:path*',
         },
-        // Handle root path with subdomain
         {
           source: '/',
           has: [
             {
               type: 'host',
-              value: '(?<subdomain>(?!www|staging)[^.]+)\\.(?:localhost|(?:staging\\.)?muva\\.chat)(?:\\:\\d+)?',
+              value: '(?<subdomain>[^.]+)\\.staging\\.muva\\.chat(?:\\:\\d+)?',
+            },
+          ],
+          destination: '/:subdomain',
+        },
+        // Match: subdomain.muva.chat (second-level, excluding www)
+        {
+          source: '/:path((?!_next|api|favicon.ico|guest-chat|.*\\..*).*)',
+          has: [
+            {
+              type: 'host',
+              value: '(?<subdomain>(?!www)[^.]+)\\.muva\\.chat(?:\\:\\d+)?',
+            },
+          ],
+          destination: '/:subdomain/:path*',
+        },
+        {
+          source: '/',
+          has: [
+            {
+              type: 'host',
+              value: '(?<subdomain>(?!www)[^.]+)\\.muva\\.chat(?:\\:\\d+)?',
+            },
+          ],
+          destination: '/:subdomain',
+        },
+        // Match: subdomain.localhost (local dev)
+        {
+          source: '/:path((?!_next|api|favicon.ico|guest-chat|.*\\..*).*)',
+          has: [
+            {
+              type: 'host',
+              value: '(?<subdomain>[^.]+)\\.localhost(?:\\:\\d+)?',
+            },
+          ],
+          destination: '/:subdomain/:path*',
+        },
+        {
+          source: '/',
+          has: [
+            {
+              type: 'host',
+              value: '(?<subdomain>[^.]+)\\.localhost(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain',
