@@ -54,14 +54,16 @@ const nextConfig: NextConfig = {
         // Rewrite subdomain + path to /[tenant]/path
         // Example: simmerdown.localhost:3000/login -> localhost:3000/simmerdown/login
         // Example: simmerdown.staging.localhost:3000/login -> localhost:3000/simmerdown/login
+        // Example: simmerdown.dev.muva.chat/login -> muva.chat/simmerdown/login
         // Using afterFiles ensures Next.js internal routes (_next/*) are handled first
         {
           source: '/:path*',
           has: [
             {
               type: 'host',
-              // Match: subdomain.localhost OR subdomain.staging.localhost OR subdomain.muva.chat OR subdomain.staging.muva.chat
-              value: '(?<subdomain>[^.]+)\\.(?:staging\\.)?(?:localhost|muva\\.chat)(?:\\:\\d+)?',
+              // Match: subdomain.localhost OR subdomain.{anything}.localhost OR subdomain.muva.chat OR subdomain.{anything}.muva.chat
+              // The {anything} part (staging, dev, test, exe, etc.) is ignored - only subdomain is captured
+              value: '(?<subdomain>[^.]+)\\.(?:[^.]+\\.)?(?:localhost|muva\\.chat)(?:\\:\\d+)?',
             },
           ],
           destination: '/:subdomain/:path*',
