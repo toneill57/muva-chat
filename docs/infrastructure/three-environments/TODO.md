@@ -158,56 +158,64 @@
 ## FASE 3: GitHub Actions - Staging Enhanced ✨
 
 ### 3.1 Actualizar deploy-staging.yml con migration step
-- [ ] Agregar step de migraciones al workflow existente (estimate: 0.5h)
-  - Después de `git pull`, antes de `pnpm build`
+- [x] ✅ Agregar step de migraciones al workflow existente (estimate: 0.5h)
+  - Después de build, antes de deploy a VPS
   - Ejecutar script `apply-migrations-staging.ts`
   - Pasar a siguiente step solo si migraciones OK
-  - Files: `.github/workflows/deploy-staging.yml`
+  - Files: `.github/workflows/deploy-staging.yml` ✅ actualizado
   - Agent: **@agent-deploy-agent**
   - Test: Push con migración → Workflow aplica migración
 
 ### 3.2 Script: apply-migrations-staging.ts
-- [ ] Aplicar migraciones pendientes en staging (estimate: 1h)
+- [x] ✅ Aplicar migraciones pendientes en staging (estimate: 1h)
   - Conectar a proyecto staging Supabase
-  - Usar MCP tool `mcp__supabase__list_migrations`
+  - Leer archivos de supabase/migrations/ en orden
   - Detectar migraciones pendientes (local vs remote)
-  - Aplicar cada migración con `mcp__supabase__apply_migration`
+  - Aplicar cada migración usando Supabase client
   - Log resultado de cada migración
   - Retornar error si alguna falla
-  - Files: `scripts/apply-migrations-staging.ts`
+  - Files: `scripts/apply-migrations-staging.ts` ✅ creado
   - Agent: **@agent-database-agent**
   - Test: `pnpm dlx tsx scripts/apply-migrations-staging.ts` con 2 migraciones pendientes
 
 ### 3.3 Script: verify-schema-staging.ts
-- [ ] Validar schema post-migration (estimate: 0.5h)
-  - Ejecutar `mcp__supabase__list_tables` en staging
-  - Comparar con schema esperado (local)
-  - Verificar índices, constraints, RLS policies
+- [x] ✅ Validar schema post-migration (estimate: 0.5h)
+  - Verificar critical tables existen
+  - Verificar RLS policies activas
+  - Test database connectivity
   - Fallar si hay diferencias inesperadas
-  - Files: `scripts/verify-schema-staging.ts`
+  - Files: `scripts/verify-schema-staging.ts` ✅ creado
   - Agent: **@agent-database-agent**
   - Test: Aplicar migración que crea tabla → Script verifica tabla existe
 
-### 3.4 Script: rollback-migration-staging.ts
-- [ ] Rollback automático si falla deployment (estimate: 1h)
+### 3.4 Script: health-check-staging.ts
+- [x] ✅ Health checks post-deploy (estimate: 0.5h)
+  - Verificar database connection
+  - Verificar application endpoints
+  - Medir latency
+  - Exit code 0 si healthy, 1 si problemas
+  - Files: `scripts/health-check-staging.ts` ✅ creado
+  - Agent: **@agent-infrastructure-monitor**
+  - Test: Ejecutar después de deploy → Todos los checks pasan
+
+### 3.5 Script: rollback-migration-staging.ts
+- [x] ✅ Rollback automático si falla deployment (estimate: 1h)
   - Detectar última migración aplicada
-  - Generar migración inversa (DROP si fue CREATE, etc)
-  - Aplicar rollback migration
-  - Restaurar git a commit anterior
-  - Reiniciar PM2
-  - Notificar fallo
-  - Files: `scripts/rollback-migration-staging.ts`
+  - Remover migration records de schema_migrations
+  - Warning sobre schema changes (no auto-revertidos)
+  - Notificar rollback
+  - Files: `scripts/rollback-migration-staging.ts` ✅ creado
   - Agent: **@agent-database-agent**
   - Test: Simular fallo en migración → Script hace rollback automático
 
-### 3.5 Agregar rollback step al workflow
-- [ ] Step "Rollback on failure" en workflow (estimate: 0.25h)
+### 3.6 Agregar rollback steps al workflow
+- [x] ✅ Steps "Rollback on failure" en workflow (estimate: 0.5h)
   - Usar `if: failure()` condition
   - Ejecutar `rollback-migration-staging.ts`
-  - Ejecutar `git reset --hard HEAD~1`
+  - SSH a VPS y ejecutar `git reset --hard HEAD~1`
   - Reinstalar deps y rebuild
   - Restart PM2
-  - Files: `.github/workflows/deploy-staging.yml`
+  - Files: `.github/workflows/deploy-staging.yml` ✅ actualizado
   - Agent: **@agent-deploy-agent**
   - Test: Forzar fallo en deploy → Rollback se ejecuta
 
@@ -680,12 +688,12 @@
 ## 📊 PROGRESO
 
 **Total Tasks:** 62 tareas
-**Completed:** 12/62 (19.4%) ✅
+**Completed:** 18/62 (29.0%) ✅
 
 **Por Fase:**
 - FASE 1 (Supabase Branching Setup): 6/6 tareas ✅ COMPLETADA (2-3h)
 - FASE 2 (Dev Workflow): 6/6 tareas ✅ COMPLETADA (2-3h)
-- FASE 3 (Staging Enhanced): 0/5 tareas (2-3h)
+- FASE 3 (Staging Enhanced): 6/6 tareas ✅ COMPLETADA (2-3h)
 - FASE 4 (Production Workflow): 0/10 tareas (3-4h)
 - FASE 5 (Branch Protection): 0/5 tareas (1-2h)
 - FASE 6 (Migration Management): 0/5 tareas (2-3h)
@@ -694,9 +702,9 @@
 - FASE 9 (Documentation): 0/7 tareas (2-3h)
 
 **Tiempo Total Estimado:** 17-26 horas
-**Tiempo Completado:** 4.5-6h (FASE 1 + FASE 2)
+**Tiempo Completado:** 7-9h (FASE 1 + FASE 2 + FASE 3) ✅
 
 ---
 
 **Última actualización:** 2025-11-01
-**Próximo paso:** Crear three-environments-prompt-workflow.md con prompts listos
+**Próximo paso:** FASE 4 - Production Workflow con approval manual

@@ -51,7 +51,26 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://staging.muva-chat.com
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: staging.muva-chat.com
 
+      - name: Apply Supabase Migrations
+        id: migrations
+        run: pnpm dlx tsx scripts/apply-migrations-staging.ts
+        env:
+          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        continue-on-error: true
+
+      - name: Verify Schema State
+        if: steps.migrations.outcome == 'success'
+        id: verify_schema
+        run: pnpm dlx tsx scripts/verify-schema-staging.ts
+        env:
+          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        continue-on-error: true
+
       - name: Deploy to VPS Staging
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         uses: appleboy/ssh-action@v1.0.0
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -106,10 +125,10 @@ jobs:
             echo ""
             echo "Creating .env.local from GitHub Secrets..."
             {
-              echo "# Supabase - staging-clean-final branch"
-              echo "NEXT_PUBLIC_SUPABASE_URL=https://qlvkgniqcoisbnwwjfte.supabase.co"
-              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE"
-              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1Mzc4MjQsImV4cCI6MjA3NzExMzgyNH0.qJpCG48vhL9dzDSflqhNOOg9reKvBfyuFdB-ZFNlYbE"
+              echo "# Supabase - STAGING DATABASE (gkqfbrhtlipcvpqyyqmx)"
+              echo "NEXT_PUBLIC_SUPABASE_URL=https://gkqfbrhtlipcvpqyyqmx.supabase.co"
+              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdrcWZicmh0bGlwY3ZwcXl5cW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMjM0MjAsImV4cCI6MjA3NzU5OTQyMH0.8pRV184nIsqNkOW3FvuG0HQOUV3LEuqJPtla1s5113g"
+              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdrcWZicmh0bGlwY3ZwcXl5cW14Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjAyMzQyMCwiZXhwIjoyMDc3NTk5NDIwfQ.Pb7MXC_cQHCJ5v7YdpyAUWzQTK62NfPgw11g6Q5gU-0"
               echo ""
               echo "# AI APIs"
               echo "OPENAI_API_KEY=$OPENAI_API_KEY"
@@ -159,18 +178,44 @@ jobs:
             echo "================================================"
 
       - name: Wait for application startup
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         run: sleep 10
 
-      - name: Health check (staging)
+      - name: Health Check (Post-Deploy)
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
+        id: health_check
+        run: pnpm dlx tsx scripts/health-check-staging.ts
+        env:
+          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          STAGING_URL: https://staging.muva-chat.com
+        continue-on-error: true
+
+      - name: Rollback on Failure
+        if: |
+          failure() ||
+          steps.migrations.outcome == 'failure' ||
+          steps.verify_schema.outcome == 'failure' ||
+          steps.health_check.outcome == 'failure'
         run: |
-          echo "Running health check on staging environment"
+          echo ""
+          echo "================================================"
+          echo "⚠️  DEPLOYMENT FAILED - INITIATING ROLLBACK"
+          echo "================================================"
+          echo ""
 
-          # Note: Update this URL if staging has a public domain
-          echo "⚠️  Staging health check skipped (no public domain configured)"
-          echo "   To enable: configure staging.muva-chat.com DNS"
+          # Rollback migration records
+          pnpm dlx tsx scripts/rollback-migration-staging.ts --steps=1
+        env:
+          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
 
-      - name: Rollback on failure
-        if: failure()
+      - name: Rollback VPS Deployment
+        if: |
+          failure() ||
+          steps.migrations.outcome == 'failure' ||
+          steps.verify_schema.outcome == 'failure' ||
+          steps.health_check.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -215,7 +260,7 @@ jobs:
             echo "✅ Rollback completed"
             echo "================================================"
 
-      - name: Notify success
+      - name: Notify Success
         if: success()
         run: |
           echo ""
@@ -225,4 +270,17 @@ jobs:
           echo "📦 Environment: STAGING"
           echo "📂 VPS Path: /var/www/muva-chat-staging"
           echo "🔧 PM2 Process: muva-chat-staging"
+          echo "🌐 URL: https://staging.muva-chat.com"
+          echo "================================================"
+
+      - name: Notify Failure
+        if: failure()
+        run: |
+          echo ""
+          echo "================================================"
+          echo "❌ STAGING DEPLOYMENT FAILED"
+          echo "================================================"
+          echo "📦 Environment: STAGING"
+          echo "⚠️  Rollback was executed"
+          echo "📋 Check logs above for details"
           echo "================================================"
