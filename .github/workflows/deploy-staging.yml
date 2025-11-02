@@ -51,12 +51,16 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://staging.muva-chat.com
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: staging.muva-chat.com
 
+      - name: Install PostgreSQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
       - name: Apply Supabase Migrations
         id: migrations
-        run: pnpm dlx tsx scripts/apply-migrations-staging.ts
+        run: pnpm dlx tsx scripts/apply-migrations-staging-v2.ts
         env:
           SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
         continue-on-error: true
 
@@ -135,7 +139,7 @@ jobs:
               echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
               echo ""
               echo "# JWT"
-              echo "JWT_SECRET_KEY=bLAHopfaNXAkiPUyums3RfnqwIYPPnkwKHUlTI+pFJtOXP+L8KvKRRfnbHUbOEzX0DM6/aFSxY17gLrDjjQf0A=="
+              echo "JWT_SECRET_KEY=rfC9VQZtZ+m6LJuM4y/dB2kEmRchrm7HeB54kSL2PTf8HiBbZIFo7hjoP32M1xlZ9QootswlIwiUZrDLoNLLkQ=="
               echo ""
               echo "# Node Environment"
               echo "NODE_ENV=production"
