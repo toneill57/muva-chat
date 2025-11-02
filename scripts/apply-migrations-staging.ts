@@ -23,7 +23,7 @@ import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
 
 // Environment validation
-const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'vwrlqvcmzucquxkngqvx';
+const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'rvjmwwvkhglcuqwcznph';
 const STAGING_URL = `https://${STAGING_PROJECT_ID}.supabase.co`;
 const STAGING_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;

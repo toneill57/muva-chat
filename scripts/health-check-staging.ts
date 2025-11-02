@@ -23,7 +23,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Environment configuration
 const STAGING_APP_URL = process.env.STAGING_URL || 'http://localhost:3001';
-const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'vwrlqvcmzucquxkngqvx';
+const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'rvjmwwvkhglcuqwcznph';
 const STAGING_DB_URL = `https://${STAGING_PROJECT_ID}.supabase.co`;
 const STAGING_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
