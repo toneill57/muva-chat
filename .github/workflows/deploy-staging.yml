@@ -51,39 +51,31 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://staging.muva.chat
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: staging.muva.chat
 
-      - name: Install PostgreSQL Client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+      - name: Check Pending Migrations
+        id: check_migrations
+        run: pnpm dlx tsx scripts/check-pending-migrations.ts
+        env:
+          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Apply Supabase Migrations
         id: migrations
-        run: |
-          echo "================================================"
-          echo "⚠️  MIGRATIONS SKIPPED - Apply manually via Dashboard"
-          echo "================================================"
-          echo ""
-          echo "Staging project does not have database pooling enabled."
-          echo "Apply migrations manually:"
-          echo "  1. Go to https://supabase.com/dashboard/project/rvjmwwvkhglcuqwcznph"
-          echo "  2. SQL Editor → Run migration SQL"
-          echo "  3. Or use MCP tool: mcp__supabase__execute_sql"
-          echo ""
-          echo "Skipping migration step to allow deployment to continue."
-          echo ""
-          exit 0
-
-      - name: Verify Schema State
-        if: steps.migrations.outcome == 'success'
-        id: verify_schema
-        run: pnpm dlx tsx scripts/verify-schema-staging.ts
+        if: steps.check_migrations.outcome == 'failure'
+        run: pnpm dlx tsx scripts/apply-migrations-staging-v4.ts
         env:
           SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
-        continue-on-error: true
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Verify Schema State
+        if: steps.migrations.outcome == 'success' || steps.check_migrations.outcome == 'success'
+        id: verify_schema
+        run: pnpm dlx tsx scripts/verify-schema-staging-v2.ts
+        env:
+          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy to VPS Staging
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped' || steps.verify_schema.outcome == 'failure'
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         uses: appleboy/ssh-action@v1.0.0
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -191,7 +183,7 @@ jobs:
             echo "================================================"
 
       - name: Health Check (Post-Deploy via SSH)
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped' || steps.verify_schema.outcome == 'failure'
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         id: health_check
         uses: appleboy/ssh-action@v1.0.0
         env:
@@ -217,6 +209,7 @@ jobs:
         if: |
           failure() ||
           steps.migrations.outcome == 'failure' ||
+          steps.verify_schema.outcome == 'failure' ||
           steps.health_check.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.0
         with:
