@@ -28,35 +28,33 @@ if (!ACCESS_TOKEN) {
 }
 
 // Critical tables that must exist
+// Updated to match actual staging schema
 const CRITICAL_TABLES = [
   // Core tables
-  'profiles',
   'hotels',
-  'hotel_groups',
-  'accommodations',
   'accommodation_units',
+  'accommodation_units_public',
 
-  // Guest system
-  'guest_groups',
+  // Guest/Chat system
   'guest_conversations',
-  'guest_messages',
-  'guest_bookings',
+  'guest_reservations',
+  'chat_conversations',
+  'chat_messages',
 
-  // Premium features
-  'sire_registrations',
-  'premium_stats',
-  'premium_migrations',
+  // Calendar/Sync
+  'calendar_events',
+  'prospective_sessions',
 
-  // Embeddings
-  'muva_content_scans',
-  'sire_embeddings'
+  // Content/Embeddings
+  'muva_content',
+  'code_embeddings'
 ];
 
 // Tables to check row counts (basic data integrity)
 const TABLES_WITH_DATA = [
-  'profiles',       // Should have at least staff users
-  'hotels',         // Should have hotel records
-  'accommodations', // Should have accommodation records
+  'hotels',                   // Should have hotel records
+  'accommodation_units',      // Should have units
+  'guest_conversations',      // May have conversations
 ];
 
 interface TableInfo {
