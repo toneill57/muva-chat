@@ -213,25 +213,6 @@ jobs:
             STAGING_URL="http://localhost:3001" pnpm dlx tsx scripts/health-check-staging.ts
         continue-on-error: true
 
-      - name: Rollback on Failure
-        if: |
-          failure() ||
-          steps.migrations.outcome == 'failure' ||
-          steps.verify_schema.outcome == 'failure' ||
-          steps.health_check.outcome == 'failure'
-        run: |
-          echo ""
-          echo "================================================"
-          echo "⚠️  DEPLOYMENT FAILED - INITIATING ROLLBACK"
-          echo "================================================"
-          echo ""
-
-          # Rollback migration records (using v2 - psql direct)
-          pnpm dlx tsx scripts/rollback-migration-staging-v2.ts --steps=1
-        env:
-          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
-
       - name: Rollback VPS Deployment
         if: |
           failure() ||
