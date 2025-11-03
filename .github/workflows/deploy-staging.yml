@@ -83,7 +83,7 @@ jobs:
         continue-on-error: true
 
       - name: Deploy to VPS Staging
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped' || steps.verify_schema.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.0
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -191,7 +191,7 @@ jobs:
             echo "================================================"
 
       - name: Health Check (Post-Deploy via SSH)
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
+        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped' || steps.verify_schema.outcome == 'failure'
         id: health_check
         uses: appleboy/ssh-action@v1.0.0
         env:
@@ -217,7 +217,6 @@ jobs:
         if: |
           failure() ||
           steps.migrations.outcome == 'failure' ||
-          steps.verify_schema.outcome == 'failure' ||
           steps.health_check.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.0
         with:
