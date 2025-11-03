@@ -1,0 +1,163 @@
+# CODEOWNERS - MUVA Chat
+# This file defines who must review changes to specific parts of the codebase
+# when branch protection rules require CODEOWNERS review (mainly for main branch)
+#
+# Format: <pattern> @github-username @github-team
+# Later entries override earlier ones
+#
+# Replace placeholder usernames with actual GitHub usernames:
+# - @lead-dev → Your lead developer's GitHub username
+# - @devops-lead → Your DevOps team lead's GitHub username
+# - @db-admin → Your database administrator's GitHub username
+# - @security-team → Your security team or lead's GitHub username
+# - @frontend-lead → Your frontend team lead's GitHub username
+# - @muva-team → Your team's GitHub organization/team name
+
+# Default owners for everything
+# These users will be requested for review on all changes unless overridden below
+* @lead-dev
+
+# GitHub Actions workflows and CI/CD configuration
+# Critical infrastructure that affects deployments
+/.github/workflows/ @devops-lead @lead-dev
+/.github/actions/ @devops-lead
+/.github/CODEOWNERS @lead-dev
+
+# Database migrations and schema changes
+# Requires database admin review to prevent breaking changes
+/supabase/migrations/ @db-admin @lead-dev
+/supabase/functions/ @db-admin @backend-lead
+/supabase/seed.sql @db-admin
+
+# Database sync and migration scripts
+# Critical scripts that modify production data
+/scripts/sync-*.ts @db-admin @devops-lead
+/scripts/apply-migrations-*.ts @db-admin @devops-lead
+/scripts/rollback-*.ts @db-admin @devops-lead
+/scripts/backup-*.ts @db-admin @devops-lead
+/scripts/*-production*.ts @lead-dev @devops-lead
+
+# Environment configuration
+# Security-sensitive configuration files
+/.env.template @security-team @lead-dev
+/.env.production @security-team @devops-lead
+/docs/infrastructure/three-environments/ @devops-lead
+
+# Security-sensitive code
+# Authentication and authorization logic
+/src/lib/auth/ @security-team @backend-lead
+/src/middleware*auth*.ts @security-team
+/src/app/api/auth/ @security-team @backend-lead
+/src/lib/security/ @security-team
+
+# SIRE compliance code
+# Colombian regulatory compliance - critical for legal requirements
+/src/lib/sire/ @backend-lead @lead-dev
+/src/app/api/sire/ @backend-lead @lead-dev
+
+# Core business logic
+# Multi-tenant architecture and core features
+/src/lib/tenant/ @backend-lead @lead-dev
+/src/lib/hotel/ @backend-lead
+/src/lib/chat/ @backend-lead @frontend-lead
+/src/lib/whatsapp/ @backend-lead
+
+# Frontend components and pages
+# User-facing changes that affect UX
+/src/components/ @frontend-lead
+/src/app/(routes)/ @frontend-lead
+/src/styles/ @frontend-lead
+
+# API endpoints
+# All API routes require backend review
+/src/app/api/ @backend-lead
+
+# Documentation
+# Technical documentation can be reviewed by any team member
+/docs/ @muva-team
+/README.md @lead-dev
+/CLAUDE.md @lead-dev
+
+# Package dependencies
+# Changes to dependencies require security review
+/package.json @security-team @lead-dev
+/pnpm-lock.yaml @security-team @lead-dev
+/yarn.lock @security-team @lead-dev
+/package-lock.json @security-team @lead-dev
+
+# Docker and deployment configuration
+# Infrastructure changes require DevOps review
+/Dockerfile @devops-lead
+/docker-compose*.yml @devops-lead
+/.dockerignore @devops-lead
+/nginx.conf @devops-lead
+
+# Testing configuration
+# Test setup and configuration
+/jest.config.* @frontend-lead @backend-lead
+/playwright.config.* @frontend-lead
+/cypress.config.* @frontend-lead
+/**/*.test.ts @muva-team
+/**/*.spec.ts @muva-team
+
+# Build configuration
+# Build process changes affect deployments
+/next.config.js @devops-lead @lead-dev
+/tsconfig*.json @lead-dev
+/.eslintrc* @frontend-lead
+/.prettierrc* @frontend-lead
+/postcss.config.js @frontend-lead
+/tailwind.config.* @frontend-lead
+
+# Critical scripts
+# Deployment and maintenance scripts
+/scripts/dev-with-keys.sh @devops-lead
+/scripts/deploy-*.sh @devops-lead @lead-dev
+/scripts/health-check-*.ts @devops-lead
+/scripts/validate-*.ts @devops-lead
+
+# Monitoring and logging
+/src/lib/monitoring/ @devops-lead
+/src/lib/analytics/ @frontend-lead @backend-lead
+
+# Emergency hotfix exception
+# For critical production issues, only one review required
+# Add more specific patterns as needed
+/hotfix/ @lead-dev
+
+# Third-party integrations
+/src/lib/openai/ @backend-lead
+/src/lib/stripe/ @backend-lead @security-team
+/src/lib/twilio/ @backend-lead
+
+# ============================================
+# Team Assignment Guide (Update with real usernames):
+# ============================================
+#
+# Required: Replace ALL placeholder usernames above with actual GitHub usernames
+#
+# Roles to assign:
+# - @lead-dev: Principal developer/architect with overall responsibility
+# - @devops-lead: Infrastructure and deployment specialist
+# - @db-admin: Database administrator or senior backend developer
+# - @security-team: Security-focused developer or team
+# - @backend-lead: Senior backend developer
+# - @frontend-lead: Senior frontend developer
+# - @muva-team: GitHub team containing all developers
+#
+# If you don't have separate people for each role, you can:
+# 1. Assign the same person to multiple roles
+# 2. Use GitHub teams instead of individual usernames
+# 3. Simplify to just 2-3 key reviewers
+#
+# Example with real usernames:
+# * @johndoe
+# /.github/workflows/ @johndoe @janedoe
+# /supabase/migrations/ @johndoe
+#
+# Example with GitHub teams:
+# * @muva-org/developers
+# /.github/workflows/ @muva-org/devops
+# /supabase/migrations/ @muva-org/backend
+#
+# ============================================
