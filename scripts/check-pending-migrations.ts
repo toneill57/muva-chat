@@ -65,7 +65,9 @@ async function executeQuery(query: string): Promise<any> {
     }
 
     const data = await response.json();
-    return data.result || [];
+    // Management API can return data in different formats
+    // Try multiple possible response structures
+    return data.result || data.data || data || [];
   } catch (error) {
     console.error('❌ Query execution error:', error);
     throw error;
