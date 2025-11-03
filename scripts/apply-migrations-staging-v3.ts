@@ -1,44 +1,35 @@
 #!/usr/bin/env tsx
 /**
- * Apply Supabase Migrations to Staging Environment (v2 - usando psql)
+ * Apply Supabase Migrations to Staging Environment (v3 - usando REST API)
  *
  * FASE 3: Enhanced Staging Workflow
  *
  * Purpose:
  * - Apply pending migrations from supabase/migrations/ to staging database
- * - Uses PSQL directly to execute DDL statements
+ * - Uses Supabase REST API (no requiere database pooling)
  * - Exit with code 0 on success, 1 on failure
  *
  * Usage:
- *   pnpm dlx tsx scripts/apply-migrations-staging-v2.ts
+ *   pnpm dlx tsx scripts/apply-migrations-staging-v3.ts
  *
  * Environment Variables Required:
  *   SUPABASE_STAGING_PROJECT_ID - Staging project ref (rvjmwwvkhglcuqwcznph)
- *   SUPABASE_SERVICE_ROLE_KEY - Service role key (for connection string auth)
+ *   SUPABASE_SERVICE_ROLE_KEY - Service role key (for API authentication)
  */
 
 import { readdir, readFile } from 'fs/promises';
 import { join } from 'path';
-import { execSync } from 'child_process';
 
 // Environment validation
 const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'rvjmwwvkhglcuqwcznph';
-const STAGING_DB_PASSWORD = process.env.SUPABASE_STAGING_DB_PASSWORD;
+const STAGING_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!STAGING_DB_PASSWORD) {
-  console.error('❌ Error: SUPABASE_STAGING_DB_PASSWORD environment variable not set');
-  console.error('');
-  console.error('How to get the DB password:');
-  console.error('1. Go to Supabase Dashboard: https://supabase.com/dashboard/project/rvjmwwvkhglcuqwcznph');
-  console.error('2. Settings → Database → Connection string');
-  console.error('3. Copy the password from the connection string');
-  console.error('4. Add it to GitHub Secrets as SUPABASE_STAGING_DB_PASSWORD');
-  console.error('');
+if (!STAGING_SERVICE_KEY) {
+  console.error('❌ Error: SUPABASE_SERVICE_ROLE_KEY environment variable not set');
   process.exit(1);
 }
 
-// Supabase connection string (using transaction pooler port 6543 for DDL operations)
-const CONNECTION_STRING = `postgresql://postgres.${STAGING_PROJECT_ID}:${STAGING_DB_PASSWORD}@aws-0-us-east-1.pooler.supabase.com:6543/postgres`;
+const SUPABASE_URL = `https://${STAGING_PROJECT_ID}.supabase.co`;
 
 interface Migration {
   filename: string;
@@ -48,13 +39,77 @@ interface Migration {
   sql: string;
 }
 
+/**
+ * Execute SQL via Supabase REST API
+ */
+async function executeSql(sql: string): Promise<any> {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': STAGING_SERVICE_KEY,
+      'Authorization': `Bearer ${STAGING_SERVICE_KEY}`,
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify({ sql_query: sql })
+  });
+
+  if (!response.ok) {
+    // Fallback: try direct query endpoint
+    const directResponse = await fetch(`${SUPABASE_URL}/rest/v1/?sql=${encodeURIComponent(sql)}`, {
+      method: 'GET',
+      headers: {
+        'apikey': STAGING_SERVICE_KEY,
+        'Authorization': `Bearer ${STAGING_SERVICE_KEY}`,
+      }
+    });
+
+    if (!directResponse.ok) {
+      throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+    }
+
+    return directResponse.json();
+  }
+
+  return response.json();
+}
+
+/**
+ * Get applied migrations from database
+ */
+async function getAppliedMigrations(): Promise<string[]> {
+  try {
+    const sql = `SELECT version FROM supabase_migrations.schema_migrations ORDER BY version`;
+    const result = await executeSql(sql);
+    return Array.isArray(result) ? result.map((r: any) => r.version) : [];
+  } catch (error) {
+    console.log('⚠️  Warning: Could not check applied migrations');
+    return [];
+  }
+}
+
+/**
+ * Record migration as applied
+ */
+async function recordMigration(timestamp: string, name: string): Promise<void> {
+  const sql = `INSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('${timestamp}', '${name}')`;
+  await executeSql(sql);
+}
+
+/**
+ * Apply migration SQL
+ */
+async function applyMigration(sql: string): Promise<void> {
+  await executeSql(sql);
+}
+
 async function main() {
   console.log('');
   console.log('================================================');
-  console.log('🔄 Apply Migrations to Staging (v2 - psql)');
+  console.log('🔄 Apply Migrations to Staging (v3 - REST API)');
   console.log('================================================');
   console.log(`📦 Staging Project: ${STAGING_PROJECT_ID}`);
-  console.log(`🌐 Staging URL: https://${STAGING_PROJECT_ID}.supabase.co`);
+  console.log(`🌐 Staging URL: ${SUPABASE_URL}`);
   console.log('');
 
   // Step 1: Read local migration files
@@ -104,18 +159,7 @@ async function main() {
   // Step 2: Check applied migrations
   console.log('📊 Step 2: Checking applied migrations in database...');
 
-  let appliedMigrations: string[] = [];
-  try {
-    const result = execSync(
-      `psql "${CONNECTION_STRING}" -t -c "SELECT version FROM supabase_migrations.schema_migrations ORDER BY version"`,
-      { encoding: 'utf-8' }
-    );
-    appliedMigrations = result.trim().split('\n').map(v => v.trim()).filter(Boolean);
-  } catch (error) {
-    console.log('⚠️  Warning: Could not check applied migrations (table may not exist)');
-    console.log('   Assuming no migrations applied yet');
-  }
-
+  const appliedMigrations = await getAppliedMigrations();
   console.log(`✅ Found ${appliedMigrations.length} applied migrations`);
   console.log('');
 
@@ -151,18 +195,12 @@ async function main() {
     console.log(`Applying: ${migration.filename}...`);
 
     try {
-      // Execute migration using psql
-      execSync(
-        `psql "${CONNECTION_STRING}" -f "${migration.path}"`,
-        { stdio: 'pipe', encoding: 'utf-8' }
-      );
+      // Apply migration
+      await applyMigration(migration.sql);
 
-      // Record migration as applied (if table exists)
+      // Record migration as applied
       try {
-        execSync(
-          `psql "${CONNECTION_STRING}" -c "INSERT INTO supabase_migrations.schema_migrations (version, name) VALUES ('${migration.timestamp}', '${migration.name}')"`,
-          { stdio: 'pipe', encoding: 'utf-8' }
-        );
+        await recordMigration(migration.timestamp, migration.name);
       } catch (recordError) {
         console.log(`⚠️  Warning: Migration applied but not recorded in schema_migrations`);
       }
