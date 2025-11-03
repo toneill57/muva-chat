@@ -1,13 +1,16 @@
-name: Deploy to VPS Staging
+name: Deploy to VPS Production
 
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://muva.chat
 
     steps:
       - name: Checkout code
@@ -43,38 +46,48 @@ jobs:
         run: pnpm run build
         env:
           NODE_ENV: production
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY_PRODUCTION }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PRODUCTION }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          NEXT_PUBLIC_APP_URL: https://staging.muva.chat
-          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: staging.muva.chat
+          NEXT_PUBLIC_APP_URL: https://muva.chat
+          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
 
       - name: Install PostgreSQL Client
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
+      - name: Backup Production Database
+        id: backup
+        run: pnpm dlx tsx scripts/backup-production-db.ts
+        env:
+          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.SUPABASE_PRODUCTION_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.SUPABASE_DB_PASSWORD_PRODUCTION }}
+          GITHUB_SHA: ${{ github.sha }}
+        continue-on-error: false
+
+      - name: Upload Backup to Artifacts
+        if: steps.backup.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-backup-${{ github.sha }}
+          path: backups/production-*.sql.gz
+          retention-days: 30
+
       - name: Apply Supabase Migrations
         id: migrations
-        run: pnpm dlx tsx scripts/apply-migrations-staging-v2.ts
+        run: pnpm dlx tsx scripts/apply-migrations-production.ts
         env:
-          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
+          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.SUPABASE_PRODUCTION_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PRODUCTION }}
+          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.SUPABASE_DB_PASSWORD_PRODUCTION }}
         continue-on-error: true
 
-      - name: Verify Schema State
-        if: steps.migrations.outcome == 'success'
-        id: verify_schema
-        run: pnpm dlx tsx scripts/verify-schema-staging.ts
-        env:
-          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
-        continue-on-error: true
-
-      - name: Deploy to VPS Staging
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
+      - name: Deploy to VPS Production
+        if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
+        id: deploy
         uses: appleboy/ssh-action@v1.0.0
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -88,11 +101,11 @@ jobs:
             set -e  # Exit immediately on any error
 
             echo "================================================"
-            echo "🚀 MUVA Chat STAGING Deployment - Starting"
+            echo "🚀 MUVA Chat PRODUCTION Deployment - Starting"
             echo "================================================"
 
-            # Change to staging directory
-            cd /var/www/muva-chat-staging
+            # Change to production directory
+            cd /var/www/muva-chat
             echo "✅ Current directory: $(pwd)"
 
             # Validate it's a git repository
@@ -108,10 +121,10 @@ jobs:
             echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
             echo "Current commit: $(git log -1 --oneline)"
 
-            # Pull latest changes from staging branch
+            # Pull latest changes from main branch
             echo ""
-            echo "Pulling latest changes from staging branch..."
-            git pull --ff-only origin staging
+            echo "Pulling latest changes from main branch..."
+            git pull --ff-only origin main
 
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"
@@ -125,26 +138,26 @@ jobs:
             fi
             echo "✅ package.json found"
 
-            # Create staging environment file from GitHub Secrets
+            # Create production environment file from GitHub Secrets
             echo ""
             echo "Creating .env.local from GitHub Secrets..."
             {
-              echo "# Supabase - STAGING DATABASE (rvjmwwvkhglcuqwcznph)"
-              echo "NEXT_PUBLIC_SUPABASE_URL=https://rvjmwwvkhglcuqwcznph.supabase.co"
-              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2am13d3ZraGdsY3Vxd2N6bnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwNDAxNzcsImV4cCI6MjA3NzYxNjE3N30.wCWbqzEfbGxrQK-dkWgNZbzHuaCHmQZBJk_JXLxbJUw"
-              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2am13d3ZraGdsY3Vxd2N6bnBoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjA0MDE3NywiZXhwIjoyMDc3NjE2MTc3fQ.yOfeLkNPD-dM_IB954XtelUv-d237vfa39UdUB1WTlA"
+              echo "# Supabase - PRODUCTION DATABASE (ooaumjzaztmutltifhoq)"
+              echo "NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co"
+              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk"
+              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc"
               echo ""
               echo "# AI APIs"
               echo "OPENAI_API_KEY=$OPENAI_API_KEY"
               echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
               echo ""
-              echo "# JWT"
-              echo "JWT_SECRET_KEY=rfC9VQZtZ+m6LJuM4y/dB2kEmRchrm7HeB54kSL2PTf8HiBbZIFo7hjoP32M1xlZ9QootswlIwiUZrDLoNLLkQ=="
+              echo "# JWT (PRODUCTION SPECIFIC)"
+              echo "JWT_SECRET_KEY=LGqZ/SgchZzT8Oee99uPP5FljEewJFC+2pUSEzEAc6firJoKk2JBxWNicAf7Hm6aZ25pTZDQE7nWaSfC/Ndidg=="
               echo ""
               echo "# Node Environment"
               echo "NODE_ENV=production"
             } > .env.local
-            echo "✅ Environment configured for staging"
+            echo "✅ Environment configured for production"
 
             # Install dependencies
             echo ""
@@ -166,68 +179,60 @@ jobs:
 
             # Reload PM2 process
             echo ""
-            echo "Reloading PM2 process (muva-chat-staging)..."
-            pm2 restart muva-chat-staging
+            echo "Reloading PM2 process (muva-chat)..."
+            pm2 restart muva-chat
             pm2 save
             echo "✅ PM2 reloaded"
 
             # Show PM2 status
             echo ""
             echo "PM2 Status:"
-            pm2 status muva-chat-staging
+            pm2 status muva-chat
 
             echo ""
             echo "================================================"
-            echo "✅ STAGING Deployment completed successfully"
+            echo "✅ PRODUCTION Deployment completed successfully"
             echo "================================================"
 
-      - name: Health Check (Post-Deploy via SSH)
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
+      - name: Wait for application startup
+        if: steps.deploy.outcome == 'success'
+        run: sleep 30
+
+      - name: Health Check (Post-Deploy)
+        if: steps.deploy.outcome == 'success'
         id: health_check
-        uses: appleboy/ssh-action@v1.0.0
+        run: pnpm dlx tsx scripts/verify-production-health.ts
         env:
-          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          envs: SUPABASE_STAGING_PROJECT_ID,SUPABASE_SERVICE_ROLE_KEY
-          script: |
-            set -e
-            cd /var/www/muva-chat-staging
-
-            echo "Waiting 10 seconds for application startup..."
-            sleep 10
-
-            echo "Running health check on localhost:3001..."
-            STAGING_URL="http://localhost:3001" pnpm dlx tsx scripts/health-check-staging.ts
+          PRODUCTION_URL: https://muva.chat
+          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.SUPABASE_PRODUCTION_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PRODUCTION }}
         continue-on-error: true
 
       - name: Rollback on Failure
         if: |
           failure() ||
           steps.migrations.outcome == 'failure' ||
-          steps.verify_schema.outcome == 'failure' ||
+          steps.deploy.outcome == 'failure' ||
           steps.health_check.outcome == 'failure'
         run: |
           echo ""
           echo "================================================"
-          echo "⚠️  DEPLOYMENT FAILED - INITIATING ROLLBACK"
+          echo "⚠️  PRODUCTION DEPLOYMENT FAILED - INITIATING ROLLBACK"
           echo "================================================"
           echo ""
 
-          # Rollback migration records (using v2 - psql direct)
-          pnpm dlx tsx scripts/rollback-migration-staging-v2.ts --steps=1
+          # Rollback migration records (using production script)
+          pnpm dlx tsx scripts/rollback-production.ts --steps=1
         env:
-          SUPABASE_STAGING_PROJECT_ID: ${{ secrets.SUPABASE_STAGING_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_STAGING_SERVICE_ROLE_KEY }}
+          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.SUPABASE_PRODUCTION_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PRODUCTION }}
+          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.SUPABASE_DB_PASSWORD_PRODUCTION }}
 
       - name: Rollback VPS Deployment
         if: |
           failure() ||
           steps.migrations.outcome == 'failure' ||
-          steps.verify_schema.outcome == 'failure' ||
+          steps.deploy.outcome == 'failure' ||
           steps.health_check.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -241,7 +246,7 @@ jobs:
             echo "🔄 ROLLBACK - Reverting to previous version"
             echo "================================================"
 
-            cd /var/www/muva-chat-staging
+            cd /var/www/muva-chat
 
             # Show current commit
             echo "Failed commit: $(git log -1 --oneline)"
@@ -258,32 +263,47 @@ jobs:
             pnpm run build
 
             # Reload PM2
-            pm2 restart muva-chat-staging
+            pm2 restart muva-chat
             pm2 save
 
             # Wait and verify
-            sleep 5
+            sleep 10
 
             echo ""
             echo "PM2 Status after rollback:"
-            pm2 status muva-chat-staging
+            pm2 status muva-chat
 
             echo ""
             echo "================================================"
             echo "✅ Rollback completed"
             echo "================================================"
 
+      - name: Restore Database from Backup (Manual Trigger Only)
+        if: failure() && github.event_name == 'workflow_dispatch'
+        run: |
+          echo ""
+          echo "================================================"
+          echo "💾 Restoring database from backup"
+          echo "================================================"
+          echo ""
+          pnpm dlx tsx scripts/rollback-production.ts --restore-db
+        env:
+          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.SUPABASE_PRODUCTION_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY_PRODUCTION }}
+          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.SUPABASE_DB_PASSWORD_PRODUCTION }}
+
       - name: Notify Success
         if: success()
         run: |
           echo ""
           echo "================================================"
-          echo "🎉 STAGING DEPLOYMENT SUCCESSFUL"
+          echo "🎉 PRODUCTION DEPLOYMENT SUCCESSFUL"
           echo "================================================"
-          echo "📦 Environment: STAGING"
-          echo "📂 VPS Path: /var/www/muva-chat-staging"
-          echo "🔧 PM2 Process: muva-chat-staging"
-          echo "🌐 URL: https://staging.muva.chat"
+          echo "📦 Environment: PRODUCTION"
+          echo "📂 VPS Path: /var/www/muva-chat"
+          echo "🔧 PM2 Process: muva-chat"
+          echo "🌐 URL: https://muva.chat"
+          echo "💾 Backup: Available in artifacts"
           echo "================================================"
 
       - name: Notify Failure
@@ -291,9 +311,12 @@ jobs:
         run: |
           echo ""
           echo "================================================"
-          echo "❌ STAGING DEPLOYMENT FAILED"
+          echo "❌ PRODUCTION DEPLOYMENT FAILED"
           echo "================================================"
-          echo "📦 Environment: STAGING"
+          echo "📦 Environment: PRODUCTION"
           echo "⚠️  Rollback was executed"
+          echo "💾 Database backup available in artifacts"
           echo "📋 Check logs above for details"
+          echo ""
+          echo "🚨 CRITICAL: Manual review required"
           echo "================================================"
