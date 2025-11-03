@@ -1,22 +1,84 @@
 ---
 title: "MUVA Chat Deploy Agent - CI/CD & VPS Deployment Snapshot"
 agent: deploy-agent
-last_updated: "2025-10-24"
+last_updated: "2025-11-02"
 status: PRODUCTION_READY
-version: "2.2-STABLE"
+version: "2.3-FASE3-COMPLETE"
 infrastructure: VPS_HOSTINGER
 ---
 
 # 🚀 Deploy Agent - CI/CD & VPS Deployment Snapshot
 
 **Agent**: @deploy-agent
-**Última actualización**: 24 Octubre 2025
+**Última actualización**: 2 Noviembre 2025 (FASE 3 Completada)
 **Estado**: PRODUCCIÓN - VPS Hostinger (195.200.6.216)
 **Infraestructura**: ✅ VPS (ACTUAL) | ❌ Vercel (DEPRECADO Oct 4, 2025)
+**Nuevo**: ✅ Three Environments CI/CD - FASE 3 Enhanced Staging Workflow
 
 ---
 
-## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🎯 CURRENT PROJECT: Three Environments CI/CD (November 2, 2025)
+
+**Status:** ✅ FASE 3 COMPLETADA - Staging Workflow Enhanced
+**Priority:** 🔴 HIGH - Infrastructure Foundation
+**Your Role:** Primary agent for CI/CD pipelines and deployment automation
+
+### Project Overview
+
+Implementar sistema de tres ambientes (dev → staging → production) con despliegue automático, sincronización de Supabase Branching, y branch protection rules.
+
+### ✅ COMPLETED PHASES
+
+**FASE 1** (database-agent): Supabase Branching Setup - COMPLETADO
+**FASE 2** (deploy-agent): Dev Branch Validation - COMPLETADO
+**FASE 3** (deploy-agent): **Enhanced Staging Workflow - COMPLETADO ✅**
+
+### FASE 3 - Completion Summary (Nov 2, 2025)
+
+**Commits:** 5 (4709e34 → dc8fdb9)
+**Scripts Created:** 4 TypeScript scripts (770 lines total)
+**Issues Resolved:** 6 critical deployment bugs
+**Deployment Success:** 100% after fixes
+
+**Deliverables:**
+- ✅ `scripts/apply-migrations-staging-v2.ts` - psql-based migrations
+- ✅ `scripts/rollback-migration-staging-v2.ts` - psql-based rollback
+- ✅ `scripts/verify-schema-staging.ts` - Schema health checks
+- ✅ `scripts/health-check-staging.ts` - Post-deploy verification
+- ✅ Updated `.github/workflows/deploy-staging.yml` - 8-step automated workflow
+- ✅ `docs/infrastructure/three-environments/FASE3_COMPLETION_SUMMARY.md` - Full documentation
+
+**Key Technical Achievement:**
+Direct psql execution for DDL migrations (Supabase client cannot execute DDL)
+
+**Staging Environment Status:**
+- Project ID: `rvjmwwvkhglcuqwcznph`
+- Migraciones aplicadas: 2 (core_schema + auth_rls_fix)
+- VPS: https://staging.muva-chat.com (HTTP 200 ✅)
+- PM2: Online, restart count 209
+
+### PENDING PHASES
+
+**My Responsibility (Primary Agent):**
+- FASE 4: Workflow production con approval manual y safety checks
+- FASE 5: Documentar branch protection rules (GitHub repo settings)
+- FASE 7: Environment variables management y GitHub Secrets
+- FASE 8: Notificaciones de deploy (Slack/Discord)
+- FASE 9: Documentación completa para el equipo
+
+**Planning Files:**
+- `docs/infrastructure/three-environments/plan.md` - Complete architecture (650 lines)
+- `docs/infrastructure/three-environments/TODO.md` - 62 tasks across 9 phases
+- `docs/infrastructure/three-environments/FASE3_COMPLETION_SUMMARY.md` - FASE 3 closure (280 lines)
+
+**Next Steps:**
+1. FASE 4: Production deployment workflow with manual approval gates
+2. FASE 5: Branch protection rules documentation
+3. FASE 7-9: Environment management + notifications + docs
+
+---
+
+## 🎯 PREVIOUS PROJECT: Chat Core Stabilization (October 24, 2025)
 
 **Status:** ⏸️ Standby - Awaiting FASE 2 completion for deployment
 **Priority:** 🟡 MEDIUM (Post-Fix Deployment)

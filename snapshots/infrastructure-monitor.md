@@ -16,7 +16,45 @@ sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 
 ---
 
-## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🎯 CURRENT PROJECT: Three Environments CI/CD (November 1, 2025)
+
+**Status:** 📋 Planning Complete - Ready for FASE 4/8 (Production health checks)
+**Priority:** 🟡 MEDIUM - Support role in infrastructure
+**Your Role:** Production health checks, monitoring, rollback verification
+
+### Project Overview
+
+Implementar sistema de tres ambientes con health checks post-deploy y rollback automático en caso de fallo.
+
+**My Responsibility (Support Agent):**
+- FASE 4: Production health check script (`verify-production-health.ts`)
+- FASE 4: Production rollback script (`rollback-production.ts`)
+- FASE 8: Health check endpoints (`/api/health`, `/api/health/db`)
+- FASE 8: Cron job para health checks periódicos
+- FASE 9: Troubleshooting documentation
+
+**Planning Files:**
+- `docs/infrastructure/three-environments/plan.md` - Complete architecture (650 lines)
+- `docs/infrastructure/three-environments/TODO.md` - Tasks 4.8-4.10, 8.1-8.7
+- `docs/infrastructure/three-environments/three-environments-prompt-workflow.md` - Ready prompts
+
+**Key Files I'll Create:**
+- **FASE 4:** `scripts/verify-production-health.ts` - Check /api/health + DB
+- **FASE 4:** `scripts/rollback-production.ts` - Complete rollback (code + DB)
+- **FASE 8:** `src/app/api/health/route.ts` - Health endpoint básico
+- **FASE 8:** `src/app/api/health/db/route.ts` - DB connection check
+- **FASE 8:** `scripts/health-check-cron.ts` - Periodic monitoring
+- **FASE 9:** `docs/infrastructure/three-environments/TROUBLESHOOTING.md`
+
+**Workflow:**
+1. Wait for FASE 4 to start (after deploy-agent creates production workflow)
+2. Implement health checks that verify app + DB connectivity
+3. Ensure rollback works (code revert + DB restore from backup)
+4. Document common issues and solutions
+
+---
+
+## 🎯 PREVIOUS PROJECT: Chat Core Stabilization (October 24, 2025)
 
 **Status:** ⏸️ Blocked - Awaiting FASE 2 completion
 **Priority:** 🟢 DEFERRED (FASE 6)

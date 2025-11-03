@@ -1,0 +1,475 @@
+{
+  "generated_at": "2025-11-01T16:43:21.612Z",
+  "source_project": "ooaumjzaztmutltifhoq",
+  "total_fk_constraints": 46,
+  "total_tables": 41,
+  "root_tables_count": 9,
+  "max_dependency_depth": 5,
+  "self_referencing_tables_count": 3,
+  "relationships": [
+    {
+      "table": "accommodation_units",
+      "column": "hotel_id",
+      "foreign_table": "hotels",
+      "foreign_column": "id",
+      "constraint_name": "accommodation_units_hotel_id_fkey",
+      "depth": 2
+    },
+    {
+      "table": "accommodation_units",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "accommodation_units_tenant_id_fkey",
+      "depth": 2
+    },
+    {
+      "table": "accommodation_units_manual",
+      "column": "unit_id",
+      "foreign_table": "accommodation_units_public",
+      "foreign_column": "unit_id",
+      "constraint_name": "accommodation_units_manual_unit_id_fkey",
+      "depth": 2
+    },
+    {
+      "table": "accommodation_units_manual_chunks",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units",
+      "foreign_column": "id",
+      "constraint_name": "accommodation_units_manual_chunks_accommodation_unit_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "accommodation_units_manual_chunks",
+      "column": "manual_id",
+      "foreign_table": "accommodation_units_manual",
+      "foreign_column": "unit_id",
+      "constraint_name": "accommodation_units_manual_chunks_manual_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "accommodation_units_manual_chunks",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "accommodation_units_manual_chunks_tenant_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "accommodation_units_public",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "accommodation_units_public_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "airbnb_motopress_comparison",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units_public",
+      "foreign_column": "unit_id",
+      "constraint_name": "airbnb_motopress_comparison_accommodation_unit_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "airbnb_motopress_comparison",
+      "column": "ics_event_id",
+      "foreign_table": "calendar_events",
+      "foreign_column": "id",
+      "constraint_name": "airbnb_motopress_comparison_ics_event_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "airbnb_motopress_comparison",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "airbnb_motopress_comparison_tenant_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "airbnb_mphb_imported_reservations",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units",
+      "foreign_column": "id",
+      "constraint_name": "airbnb_mphb_imported_reservations_accommodation_unit_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "calendar_event_conflicts",
+      "column": "event_1_id",
+      "foreign_table": "calendar_events",
+      "foreign_column": "id",
+      "constraint_name": "calendar_event_conflicts_event_1_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "calendar_event_conflicts",
+      "column": "event_2_id",
+      "foreign_table": "calendar_events",
+      "foreign_column": "id",
+      "constraint_name": "calendar_event_conflicts_event_2_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "calendar_event_conflicts",
+      "column": "winning_event_id",
+      "foreign_table": "calendar_events",
+      "foreign_column": "id",
+      "constraint_name": "calendar_event_conflicts_winning_event_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "calendar_events",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units",
+      "foreign_column": "id",
+      "constraint_name": "calendar_events_accommodation_unit_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "calendar_events",
+      "column": "merged_into_id",
+      "foreign_table": "calendar_events",
+      "foreign_column": "id",
+      "constraint_name": "calendar_events_merged_into_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "calendar_events",
+      "column": "parent_event_id",
+      "foreign_table": "calendar_events",
+      "foreign_column": "id",
+      "constraint_name": "calendar_events_parent_event_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "calendar_sync_logs",
+      "column": "feed_config_id",
+      "foreign_table": "ics_feed_configurations",
+      "foreign_column": "id",
+      "constraint_name": "calendar_sync_logs_feed_config_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "chat_conversations",
+      "column": "reservation_id",
+      "foreign_table": "guest_reservations",
+      "foreign_column": "id",
+      "constraint_name": "chat_conversations_reservation_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "chat_messages",
+      "column": "conversation_id",
+      "foreign_table": "guest_conversations",
+      "foreign_column": "id",
+      "constraint_name": "chat_messages_conversation_id_fkey",
+      "depth": 5
+    },
+    {
+      "table": "compliance_submissions",
+      "column": "guest_id",
+      "foreign_table": "guest_reservations",
+      "foreign_column": "id",
+      "constraint_name": "compliance_submissions_guest_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "conversation_attachments",
+      "column": "conversation_id",
+      "foreign_table": "guest_conversations",
+      "foreign_column": "id",
+      "constraint_name": "conversation_attachments_conversation_id_fkey",
+      "depth": 5
+    },
+    {
+      "table": "conversation_memory",
+      "column": "session_id",
+      "foreign_table": "prospective_sessions",
+      "foreign_column": "session_id",
+      "constraint_name": "conversation_memory_session_id_fkey",
+      "depth": 5
+    },
+    {
+      "table": "conversation_memory",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "conversation_memory_tenant_id_fkey",
+      "depth": 5
+    },
+    {
+      "table": "guest_conversations",
+      "column": "guest_id",
+      "foreign_table": "guest_reservations",
+      "foreign_column": "id",
+      "constraint_name": "guest_conversations_guest_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "guest_reservations",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units",
+      "foreign_column": "id",
+      "constraint_name": "guest_reservations_accommodation_unit_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "hotel_operations",
+      "column": "created_by",
+      "foreign_table": "staff_users",
+      "foreign_column": "staff_id",
+      "constraint_name": "hotel_operations_created_by_fkey",
+      "depth": 2
+    },
+    {
+      "table": "hotel_operations",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "hotel_operations_tenant_id_fkey",
+      "depth": 2
+    },
+    {
+      "table": "hotels",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "hotels_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "ics_feed_configurations",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units",
+      "foreign_column": "id",
+      "constraint_name": "ics_feed_configurations_accommodation_unit_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "integration_configs",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "integration_configs_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "job_logs",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "job_logs_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "policies",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "policies_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "prospective_sessions",
+      "column": "converted_to_reservation_id",
+      "foreign_table": "guest_reservations",
+      "foreign_column": "id",
+      "constraint_name": "prospective_sessions_converted_to_reservation_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "prospective_sessions",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "prospective_sessions_tenant_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "reservation_accommodations",
+      "column": "accommodation_unit_id",
+      "foreign_table": "accommodation_units",
+      "foreign_column": "id",
+      "constraint_name": "reservation_accommodations_accommodation_unit_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "reservation_accommodations",
+      "column": "reservation_id",
+      "foreign_table": "guest_reservations",
+      "foreign_column": "id",
+      "constraint_name": "reservation_accommodations_reservation_id_fkey",
+      "depth": 4
+    },
+    {
+      "table": "staff_conversations",
+      "column": "staff_id",
+      "foreign_table": "staff_users",
+      "foreign_column": "staff_id",
+      "constraint_name": "staff_conversations_staff_id_fkey",
+      "depth": 2
+    },
+    {
+      "table": "staff_messages",
+      "column": "conversation_id",
+      "foreign_table": "staff_conversations",
+      "foreign_column": "conversation_id",
+      "constraint_name": "staff_messages_conversation_id_fkey",
+      "depth": 3
+    },
+    {
+      "table": "staff_users",
+      "column": "created_by",
+      "foreign_table": "staff_users",
+      "foreign_column": "staff_id",
+      "constraint_name": "staff_users_created_by_fkey",
+      "depth": 1
+    },
+    {
+      "table": "staff_users",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "staff_users_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "sync_history",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "sync_history_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "tenant_compliance_credentials",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "tenant_compliance_credentials_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "tenant_knowledge_embeddings",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "tenant_knowledge_embeddings_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "tenant_muva_content",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "tenant_muva_content_tenant_id_fkey",
+      "depth": 1
+    },
+    {
+      "table": "user_tenant_permissions",
+      "column": "tenant_id",
+      "foreign_table": "tenant_registry",
+      "foreign_column": "tenant_id",
+      "constraint_name": "user_tenant_permissions_tenant_id_fkey",
+      "depth": 1
+    }
+  ],
+  "root_tables": [
+    "code_embeddings",
+    "muva_content",
+    "property_relationships",
+    "sire_cities",
+    "sire_content",
+    "sire_countries",
+    "sire_document_types",
+    "sire_export_logs",
+    "tenant_registry"
+  ],
+  "tables_by_depth": {
+    "0": [
+      "code_embeddings",
+      "muva_content",
+      "property_relationships",
+      "sire_cities",
+      "sire_content",
+      "sire_countries",
+      "sire_document_types",
+      "sire_export_logs",
+      "tenant_registry"
+    ],
+    "1": [
+      "hotels",
+      "accommodation_units_public",
+      "staff_users",
+      "integration_configs",
+      "job_logs",
+      "policies",
+      "sync_history",
+      "tenant_compliance_credentials",
+      "tenant_knowledge_embeddings",
+      "tenant_muva_content",
+      "user_tenant_permissions"
+    ],
+    "2": [
+      "accommodation_units",
+      "accommodation_units_manual",
+      "hotel_operations",
+      "staff_conversations"
+    ],
+    "3": [
+      "accommodation_units_manual_chunks",
+      "calendar_events",
+      "airbnb_mphb_imported_reservations",
+      "ics_feed_configurations",
+      "guest_reservations",
+      "staff_messages"
+    ],
+    "4": [
+      "airbnb_motopress_comparison",
+      "calendar_event_conflicts",
+      "calendar_sync_logs",
+      "chat_conversations",
+      "guest_conversations",
+      "compliance_submissions",
+      "prospective_sessions",
+      "reservation_accommodations"
+    ],
+    "5": [
+      "chat_messages",
+      "conversation_attachments",
+      "conversation_memory"
+    ]
+  },
+  "self_referencing_tables": [
+    {
+      "table": "calendar_events",
+      "column": "merged_into_id",
+      "foreign_column": "id",
+      "constraint_name": "calendar_events_merged_into_id_fkey",
+      "strategy": "Two-pass load: NULL first, then referencing rows"
+    },
+    {
+      "table": "calendar_events",
+      "column": "parent_event_id",
+      "foreign_column": "id",
+      "constraint_name": "calendar_events_parent_event_id_fkey",
+      "strategy": "Two-pass load: NULL first, then referencing rows"
+    },
+    {
+      "table": "staff_users",
+      "column": "created_by",
+      "foreign_column": "staff_id",
+      "constraint_name": "staff_users_created_by_fkey",
+      "strategy": "Two-pass load: NULL first, then referencing rows"
+    }
+  ],
+  "notes": [
+    "46 FK relationships mapped",
+    "9 root tables (depth 0)",
+    "3 self-referencing tables require two-pass strategy",
+    "Maximum dependency depth is 5 levels",
+    "All tables in public schema"
+  ]
+}

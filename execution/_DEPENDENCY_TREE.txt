@@ -1,0 +1,260 @@
+===============================================================
+  FOREIGN KEY DEPENDENCY TREE
+===============================================================
+  Generated: 2025-11-01T16:43:21.612Z
+  Source: Production (ooaumjzaztmutltifhoq)
+  Total FK Constraints: 46
+  Total Tables: 41
+  Root Tables: 9
+  Max Depth: 5
+===============================================================
+
+
+---------------------------------------------------------------
+  DEPTH 0: 9 tables
+  (Root tables - no dependencies)
+---------------------------------------------------------------
+
+├── code_embeddings
+│
+├── muva_content
+│
+├── property_relationships
+│
+├── sire_cities
+│
+├── sire_content
+│
+├── sire_countries
+│
+├── sire_document_types
+│
+├── sire_export_logs
+│
+└── tenant_registry
+        Referenced by: accommodation_units, accommodation_units_manual_chunks, accommodation_units_public, airbnb_motopress_comparison, conversation_memory, hotel_operations, hotels, integration_configs, job_logs, policies, prospective_sessions, staff_users, sync_history, tenant_compliance_credentials, tenant_knowledge_embeddings, tenant_muva_content, user_tenant_permissions
+
+---------------------------------------------------------------
+  DEPTH 1: 11 tables
+---------------------------------------------------------------
+
+├── accommodation_units_public
+│   └── tenant_id -> tenant_registry.tenant_id
+│       Referenced by: accommodation_units_manual, airbnb_motopress_comparison
+│
+├── hotels
+│   └── tenant_id -> tenant_registry.tenant_id
+│       Referenced by: accommodation_units
+│
+├── integration_configs
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── job_logs
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── policies
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── staff_users
+│   ├── created_by -> staff_users.staff_id (self-reference)
+│   └── tenant_id -> tenant_registry.tenant_id
+│       Referenced by: hotel_operations, staff_conversations, staff_users
+│
+├── sync_history
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── tenant_compliance_credentials
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── tenant_knowledge_embeddings
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── tenant_muva_content
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+└── user_tenant_permissions
+    └── tenant_id -> tenant_registry.tenant_id
+
+---------------------------------------------------------------
+  DEPTH 2: 4 tables
+---------------------------------------------------------------
+
+├── accommodation_units
+│   ├── hotel_id -> hotels.id
+│   └── tenant_id -> tenant_registry.tenant_id
+│       Referenced by: accommodation_units_manual_chunks, airbnb_mphb_imported_reservations, calendar_events, guest_reservations, ics_feed_configurations, reservation_accommodations
+│
+├── accommodation_units_manual
+│   └── unit_id -> accommodation_units_public.unit_id
+│       Referenced by: accommodation_units_manual_chunks
+│
+├── hotel_operations
+│   ├── created_by -> staff_users.staff_id
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+└── staff_conversations
+    └── staff_id -> staff_users.staff_id
+        Referenced by: staff_messages
+
+---------------------------------------------------------------
+  DEPTH 3: 6 tables
+---------------------------------------------------------------
+
+├── accommodation_units_manual_chunks
+│   ├── accommodation_unit_id -> accommodation_units.id
+│   ├── manual_id -> accommodation_units_manual.unit_id
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── airbnb_mphb_imported_reservations
+│   └── accommodation_unit_id -> accommodation_units.id
+│
+├── calendar_events
+│   ├── accommodation_unit_id -> accommodation_units.id
+│   ├── merged_into_id -> calendar_events.id (self-reference)
+│   └── parent_event_id -> calendar_events.id (self-reference)
+│       Referenced by: airbnb_motopress_comparison, calendar_event_conflicts, calendar_events
+│
+├── guest_reservations
+│   └── accommodation_unit_id -> accommodation_units.id
+│       Referenced by: chat_conversations, compliance_submissions, guest_conversations, prospective_sessions, reservation_accommodations
+│
+├── ics_feed_configurations
+│   └── accommodation_unit_id -> accommodation_units.id
+│       Referenced by: calendar_sync_logs
+│
+└── staff_messages
+    └── conversation_id -> staff_conversations.conversation_id
+
+---------------------------------------------------------------
+  DEPTH 4: 8 tables
+---------------------------------------------------------------
+
+├── airbnb_motopress_comparison
+│   ├── accommodation_unit_id -> accommodation_units_public.unit_id
+│   ├── ics_event_id -> calendar_events.id
+│   └── tenant_id -> tenant_registry.tenant_id
+│
+├── calendar_event_conflicts
+│   ├── event_1_id -> calendar_events.id
+│   ├── event_2_id -> calendar_events.id
+│   └── winning_event_id -> calendar_events.id
+│
+├── calendar_sync_logs
+│   └── feed_config_id -> ics_feed_configurations.id
+│
+├── chat_conversations
+│   └── reservation_id -> guest_reservations.id
+│
+├── compliance_submissions
+│   └── guest_id -> guest_reservations.id
+│
+├── guest_conversations
+│   └── guest_id -> guest_reservations.id
+│       Referenced by: chat_messages, conversation_attachments
+│
+├── prospective_sessions
+│   ├── converted_to_reservation_id -> guest_reservations.id
+│   └── tenant_id -> tenant_registry.tenant_id
+│       Referenced by: conversation_memory
+│
+└── reservation_accommodations
+    ├── accommodation_unit_id -> accommodation_units.id
+    └── reservation_id -> guest_reservations.id
+
+---------------------------------------------------------------
+  DEPTH 5: 3 tables
+---------------------------------------------------------------
+
+├── chat_messages
+│   └── conversation_id -> guest_conversations.id
+│
+├── conversation_attachments
+│   └── conversation_id -> guest_conversations.id
+│
+└── conversation_memory
+    ├── session_id -> prospective_sessions.session_id
+    └── tenant_id -> tenant_registry.tenant_id
+
+===============================================================
+  SELF-REFERENCING TABLES (3)
+===============================================================
+
+├── calendar_events
+│   └── merged_into_id -> id
+│       Strategy: Two-pass load: NULL first, then referencing rows
+│
+├── calendar_events
+│   └── parent_event_id -> id
+│       Strategy: Two-pass load: NULL first, then referencing rows
+│
+└── staff_users
+    └── created_by -> staff_id
+        Strategy: Two-pass load: NULL first, then referencing rows
+
+===============================================================
+  MIGRATION ORDER SUMMARY
+===============================================================
+
+Phase 1 (Depth 0): 9 tables
+  - code_embeddings
+  - muva_content
+  - property_relationships
+  - sire_cities
+  - sire_content
+  - sire_countries
+  - sire_document_types
+  - sire_export_logs
+  - tenant_registry
+
+Phase 2 (Depth 1): 11 tables
+  - accommodation_units_public
+  - hotels
+  - integration_configs
+  - job_logs
+  - policies
+  - staff_users (two-pass required)
+  - sync_history
+  - tenant_compliance_credentials
+  - tenant_knowledge_embeddings
+  - tenant_muva_content
+  - user_tenant_permissions
+
+Phase 3 (Depth 2): 4 tables
+  - accommodation_units
+  - accommodation_units_manual
+  - hotel_operations
+  - staff_conversations
+
+Phase 4 (Depth 3): 6 tables
+  - accommodation_units_manual_chunks
+  - airbnb_mphb_imported_reservations
+  - calendar_events (two-pass required)
+  - guest_reservations
+  - ics_feed_configurations
+  - staff_messages
+
+Phase 5 (Depth 4): 8 tables
+  - airbnb_motopress_comparison
+  - calendar_event_conflicts
+  - calendar_sync_logs
+  - chat_conversations
+  - compliance_submissions
+  - guest_conversations
+  - prospective_sessions
+  - reservation_accommodations
+
+Phase 6 (Depth 5): 3 tables
+  - chat_messages
+  - conversation_attachments
+  - conversation_memory
+
+===============================================================
+  NOTES
+===============================================================
+
+  - 46 FK relationships mapped
+  - 9 root tables (depth 0)
+  - 3 self-referencing tables require two-pass strategy
+  - Maximum dependency depth is 5 levels
+  - All tables in public schema
+
