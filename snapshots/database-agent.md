@@ -1,1135 +1,453 @@
 ---
 title: Database Agent Snapshot
 agent: database-agent
-last_updated: 2025-10-30
+last_updated: 2025-11-01
 status: ✅ Production Ready
-database_version: PostgreSQL 17.4.1.075 (Supabase)
-total_size: 35.5 MB
-total_tables: 41 (verified Oct 30, 2025)
+database_version: PostgreSQL 17.6 on aarch64-unknown-linux-gnu
+project_id: ooaumjzaztmutltifhoq
+branches: 2 (dev, staging-v21)
+total_tables: 50 (41 public + 9 hotels)
+total_records: 6,641 (dev branch)
 sire_validation: 5/5 SQL queries passed (100%)
 ---
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
-## 🎯 CURRENT PROJECT: Database Migration Production → Staging (October 30, 2025)
+## 🎯 CURRENT PROJECT: Supabase Branching Analysis Complete (November 1, 2025)
 
-**Status:** 📋 Planning Complete - FASE 1 ✅ Complete
-**Priority:** 🔴 CRITICAL (Production data migration)
-**Your Role:** Lead database agent for complete migration lifecycle
+**Status:** ✅ Analysis Complete - Action Items Identified
+**Priority:** 🔴 CRITICAL - Branch Architecture Issues Detected
+**Your Role:** Database maintenance and branching architecture
 
-### Quick Context
+### Project Overview
 
-**Project:** Migración completa producción → staging con documentación profesional exhaustiva
-**Your Mission:** Ejecutar 9 fases secuenciales de verificación, documentación y migración
-**Why You:** Solo tú tienes acceso directo a ambas bases de datos (prod + staging) vía MCP tools
+Análisis exhaustivo de arquitectura de branching Supabase completado. Detectados 4 problemas críticos que requieren atención.
 
-### Your Responsibilities
+**My Analysis Delivered:**
+- Complete branching architecture report (1,200+ lines)
+- 2 branches analyzed (dev, staging-v21)
+- Security comparison (0 vs 17 issues)
+- Function comparison (90 vs 204 functions)
+- Data status (6,641 vs 0 records)
+- Migration status verification
 
-**FASE 0: Baseline Migration Export** - 4-5h - **← NEXT PHASE (CRITICAL)**
-- Export complete DDL (Data Definition Language) from production
-- Create 7 SQL files: extensions, tables, indexes, functions, triggers, RLS policies
-- Generate unified baseline_migration.sql (recreate entire DB from scratch)
-- Test baseline on staging database (verify clean execution)
-- **Deliverable:** Complete baseline for disaster recovery + new environments
-
-**FASE 1: Verification & Statistics** - 6-7h - ✅ COMPLETE (Oct 30, 2025)
-- ✅ Verified 41 tables, 40 FKs, 134 RLS policies, 225 indexes, 14 triggers
-- ✅ Created: _FK_RELATIONSHIPS.json, _ROW_COUNTS.json, _RLS_POLICIES.json
-- ✅ Updated: OVERVIEW.md, ADVISORS_ANALYSIS.md, DOCUMENTATION_PROGRESS.md
-- ✅ Result: 6,710 rows verified, 3 active tenants confirmed
-
-**FASE 2: Dependency Tree Validation** - 4-5h
-- Build dependency tree from 40 FKs
-- Run topological sort (detect circular dependencies)
-- Validate TRUNCATE/INSERT orders
-- Create: _DEPENDENCY_TREE.json
-
-**FASE 3-6: Table Documentation** - 12-15h
-- FASE 3: Catalog tables (sire_content, muva_content, etc.)
-- FASE 4: Operations tables (accommodations, reservations, chat)
-- FASE 5: Integration tables (Motopress, Airbnb, WhatsApp)
-- FASE 6: Embeddings tables (code_embeddings ⚠️ NO RLS, vector search)
-
-**FASE 7: RLS Policies** - 3-4h
-- Document all 134 RLS policies
-- Categorize by pattern (tenant isolation, staff auth, guest access)
-- Create: RLS_POLICIES.md
-
-**FASE 8: Migration Scripts** - 2-3h
-- Validate 001_clean_staging.sql, 002_copy_data.ts, 003_validate.sql
-- Create: 004_rollback.sql
-
-**FASE 9: Migration Execution** - 3.5-4.5h
-- Execute production → staging migration (6,710 rows)
-- Validate: Row counts, FK integrity, RLS policies
-- **REQUIRES HUMAN APPROVAL** before execution
-
-### Project Documentation
-
-**Read FIRST (Before starting FASE 0):**
-- `docs/database/TODO.md` - Master task list (68 tasks, 10/68 complete)
-- `docs/database/prompt-workflow-PART0-baseline-export.md` - Ready-to-use prompt for FASE 0
-- `docs/database/migration-plan/PLAN_PART0_BASELINE_EXPORT.md` - Detailed plan
-
-**Existing Outputs (From FASE 1):**
-- `docs/database/migration-plan/_FK_RELATIONSHIPS.json` - 40 FK relationships
-- `docs/database/migration-plan/_ROW_COUNTS.json` - 6,710 total rows across 41 tables
-- `docs/database/migration-plan/_RLS_POLICIES.json` - 134 policies
-
-**All Phase Plans:**
-- `docs/database/migration-plan/PLAN_PART{0-9}.md` - 10 detailed phase plans
-- `docs/database/prompt-workflow-PART{0-9}.md` - 10 copy-paste ready workflows
-
-### Databases
-
-**Production (Source):**
-- Project ID: ooaumjzaztmutltifhoq
-- URL: https://ooaumjzaztmutltifhoq.supabase.co
-- Status: ✅ Active, 3 tenants (simmerdown, tucasamar, loscedrosboutique)
-
-**Staging (Target):**
-- Project ID: qlvkgniqcoisbnwwjfte
-- URL: https://qlvkgniqcoisbnwwjfte.supabase.co
-- Status: 🔜 Ready for migration (41 tables, needs data copy)
-
-### Workflow (FASE 0 - Next Steps)
-
-1. **Copy prompt:** From `docs/database/prompt-workflow-PART0-baseline-export.md`
-2. **Read plan:** `docs/database/migration-plan/PLAN_PART0_BASELINE_EXPORT.md`
-3. **Execute:** 9 tasks (export extensions, tables, indexes, functions, triggers, RLS)
-4. **Output:** Create 7 SQL files in `docs/database/migrations/baseline/`
-5. **Test:** Execute `baseline_migration.sql` on staging (verify clean execution)
-6. **Next:** FASE 1 (already done) or FASE 2 using `prompt-workflow-PART2-dependency-tree.md`
+**Key Documents Created:**
+- `docs/database/SUPABASE_BRANCHING_ANALYSIS_COMPLETE.md` - Full analysis report
+- `docs/database/BRANCHING_SUMMARY.md` - Quick reference guide
 
 ---
 
-## 🗄️ PREVIOUS PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🏗️ Supabase Branching Architecture
 
-**Status:** 📋 Active - FASE 1 YOUR TURN
-**Priority:** 🔴 CRITICAL
-**Your Role:** SQL Diagnosis lead for FASE 1
-
-### Quick Context
-
-**Problem:** Guest chat NO responde WiFi/Policies (bug crítico)
-**Your Mission:** Ejecutar 4 queries SQL de diagnosis para identificar causa raíz exacta
-**Why You:** Solo tú puedes ejecutar queries SQL complejas con evidencia documentada
-
-### Your Responsibilities
-
-**FASE 1 (Diagnosis SQL Completo)** - 3-4h estimadas **← YOUR FOCUS:**
-- Task 1.1: Verificar chunks existen (SQL query)
-- Task 1.2: Verificar modelo embedding correcto (octet_length check)
-- Task 1.3: Verificar UUIDs huérfanos (LEFT JOIN query)
-- Task 1.4: Test búsqueda vectorial directa (similarity search)
-- Task 1.5: Consolidar hallazgos en diagnosis report
-- Task 1.6: Crear ADR de diagnosis methodology
-- **Deliverable:** Diagnosis report completo con path claro para FASE 2
-
-**FASE 3 (Colaboración)** - 1h estimada:
-- Validar RPC functions usadas en tests E2E
-- Verificar índices HNSW existen para embeddings
-
-**FASE 6 (Colaboración)** - 30min estimada:
-- Proveer queries SQL para health endpoint
-
-### Project Documentation
-
-**Read FIRST:**
-- `docs/chat-core-stabilization/chat-core-prompt-workflow.md` - Prompts FASE 1 (Tasks 1.1-1.6)
-- `docs/chat-core-stabilization/TODO.md` - Task tracking
-- `docs/chat-core-stabilization/plan.md` - Full project context
-
-**Background (Understanding why these checks):**
-- `docs/troubleshooting/INCIDENT_20251023_MANUAL_EMBEDDINGS_LOST.md` - Embedding model bug histórico
-- `docs/architecture/ACCOMMODATION_ID_MAPPING_ARCHITECTURE.md` - UUID volatility problem
-- `docs/troubleshooting/BUG_ACCOMMODATION_UNITS_PUBLIC_EMBEDDINGS.md` - Tu Casa Mar no data
-
-### 3 Possible Root Causes (Your Job: Identify Which One)
-
-**Cause A: Modelo Embedding Incorrecto**
-- Symptom: `octet_length(embedding_balanced) < 6000`
-- Historical: INCIDENT_20251023 (Oct 2025)
-- Fix Path: 2A - Regenerate embeddings
-
-**Cause B: UUIDs Huérfanos**
-- Symptom: `orphaned_chunks > 0` (chunks pointing to deleted units)
-- Historical: ACCOMMODATION_ID_MAPPING_ARCHITECTURE.md
-- Fix Path: 2B - Remap UUIDs
-
-**Cause C: Chunks No Existen**
-- Symptom: `total_chunks = 0`
-- Historical: BUG_ACCOMMODATION_UNITS_PUBLIC_EMBEDDINGS.md
-- Fix Path: 2C - Recreate from markdown
-
-### Workflow
-
-1. **Start Task 1.1:** Copy prompt from `chat-core-prompt-workflow.md` section "Task 1.1"
-2. **Execute:** Use `mcp__supabase__execute_sql` for each query
-3. **Document:** Create `docs/chat-core-stabilization/fase-1/SQL_QUERIES.sql` with ALL queries + results
-4. **Repeat:** Tasks 1.2, 1.3, 1.4 with evidence
-5. **Consolidate:** Task 1.5 - Create diagnosis report with CLEAR path recommendation
-6. **Finalize:** Task 1.6 - Document methodology
-
-### Success Criteria
-
-- ✅ ALL 4 SQL queries executed successfully
-- ✅ Results documented with actual numbers (not placeholders)
-- ✅ Diagnosis report identifies EXACTLY which cause (A, B or C)
-- ✅ Path forward CLEARLY stated (2A, 2B or 2C)
-- ✅ Evidence includes screenshots or query outputs
-- ✅ Methodology ADR references historical incidents
-
-### Dependencies
-
-**UNBLOCKS:** @agent-backend-developer (FASE 2 - Fix Implementation)
-**UNBLOCKS:** @agent-embeddings-generator (FASE 2 Path 2A if needed)
-
----
-
-## 🚨 TEST-FIRST EXECUTION POLICY (MANDATORY)
-
-**Reference:** `.claude/TEST_FIRST_POLICY.md`
-
-**When invoked as @agent-database-agent:**
-1. Execute ALL SQL validation queries before reporting completion
-2. Show migration results, query outputs, index verification
-3. Request user approval before marking [x]
-4. Document evidence with actual SQL results
-
-**PROHIBIDO:** Report ✅ without showing EXECUTE/VERIFY evidence
-**If test fails:** Report SQL error immediately, propose fix, await approval
-
----
-
-## 📊 Executive Summary
-
-**Database Status:** Healthy with minor security advisories
-**Schema Evolution:** Multi-tenant with vector embeddings (Matryoshka 3-tier)
-**Active Extensions:** 4 critical (vector, pgcrypto, uuid-ossp, pg_stat_statements)
-**Migration Status:** 281 migrations applied (Oct 2025)
-**SIRE Compliance Status:** ✅ 92% Complete (9 fields added, 5/5 validations passed, 3 RPC functions created)
-
----
-
-## 🏗️ Schema Architecture
-
-### Schema Overview
+### Current State (2025-11-01)
 
 ```
-PostgreSQL Database (Supabase)
-├── public/ (28 tables)
-│   ├── Content Tables (3)
-│   │   ├── sire_content (8 rows, 392 KB)
-│   │   ├── muva_content (742 rows, 21 MB) ← Largest table
-│   │   └── accommodation_units_manual_chunks (38 rows, 6.5 MB)
-│   │
-│   ├── Semantic Code Search (1) - NEW Oct 9, 2025
-│   │   └── code_embeddings (4,333 rows, 1536d vectors)
-│   │
-│   ├── Multi-Tenant Core (4)
-│   │   ├── tenant_registry (2 tenants, 136 KB)
-│   │   ├── user_tenant_permissions (1 row, RLS enabled)
-│   │   ├── hotels (1 row, 160 KB)
-│   │   └── accommodation_units (10 rows, 216 KB)
-│   │
-│   ├── Guest Management (5)
-│   │   ├── guest_reservations (144 rows, 312 KB)
-│   │   ├── guest_conversations (23 rows, 160 KB)
-│   │   ├── chat_conversations (5 rows, 136 KB)
-│   │   ├── chat_messages (52 rows, 384 KB)
-│   │   └── conversation_memory (10 rows, 232 KB)
-│   │
-│   ├── Compliance & SIRE (3)
-│   │   ├── compliance_submissions (0 rows)
-│   │   ├── tenant_compliance_credentials (0 rows)
-│   │   └── conversation_attachments (0 rows)
-│   │
-│   ├── Staff Operations (4)
-│   │   ├── staff_users (3 rows)
-│   │   ├── staff_conversations (31 rows)
-│   │   ├── staff_messages (38 rows, 160 KB)
-│   │   └── hotel_operations (10 rows, 1.7 MB)
-│   │
-│   ├── Integrations (2)
-│   │   ├── integration_configs (1 row)
-│   │   └── sync_history (30 rows)
-│   │
-│   └── Prospective/Marketing (2)
-│       ├── prospective_sessions (187 rows, 808 KB)
-│       └── accommodation_units_public (14 rows, 368 KB)
+Proyecto Supabase: ooaumjzaztmutltifhoq
+├── Branch "dev" (DEFAULT)
+│   ├── Status: MIGRATIONS_FAILED ⚠️
+│   ├── Project Ref: ooaumjzaztmutltifhoq
+│   ├── URL: https://ooaumjzaztmutltifhoq.supabase.co
+│   ├── Datos: 6,641 registros ✅
+│   ├── Funciones: 90 ✅
+│   ├── Security: 0 issues ✅
+│   └── Git: rama "dev" (CONGELADA)
 │
-└── hotels/ (10 tables) - Tenant-specific data
-    ├── client_info (0 rows)
-    ├── properties (0 rows)
-    ├── accommodation_units (8 rows, 1.5 MB)
-    ├── accommodation_types (0 rows)
-    ├── policies (9 rows, 344 KB)
-    ├── guest_information (0 rows, 1.6 MB)
-    ├── unit_amenities (0 rows)
-    ├── pricing_rules (0 rows)
-    └── content (0 rows, 1.2 MB)
+└── Branch "staging-v21" (NUEVO)
+    ├── Status: FUNCTIONS_DEPLOYED ✅
+    ├── Project Ref: rmrflrttpobzlffhctjt
+    ├── URL: https://rmrflrttpobzlffhctjt.supabase.co
+    ├── Datos: 0 registros ❌
+    ├── Funciones: 204 ✅
+    ├── Security: 17 issues ⚠️
+    └── Git: rama "staging" (ACTIVA)
 ```
+
+### Critical Finding
+
+**NO existe "proyecto base" separado.** El project_id `ooaumjzaztmutltifhoq` es SIMULTÁNEAMENTE el proyecto padre Y el branch "dev" (DEFAULT). Esto es comportamiento NORMAL de Supabase Branching.
 
 ---
 
-## 🔧 PostgreSQL Extensions
+## 🚨 PROBLEMAS DETECTADOS
 
-### Active Extensions (4/70 available)
+### Problema 1: MIGRATIONS_FAILED en dev ⚠️
 
-| Extension | Schema | Version | Purpose |
-|-----------|--------|---------|---------|
-| **vector** | public | 0.8.0 | pgvector - HNSW & IVFFlat indexes for embeddings |
-| **pgcrypto** | extensions | 1.3 | Credential encryption (SIRE, MotoPress) |
-| **uuid-ossp** | extensions | 1.1 | UUID generation for PKs |
-| **pg_stat_statements** | extensions | 1.11 | Query performance monitoring |
+**Síntomas:**
+- Status: `MIGRATIONS_FAILED`
+- Última actualización: 2025-10-31 19:08:51 UTC
+- Funcionalidad NO afectada (90 funciones operativas)
 
-**Note:** `supabase_vault` and `pg_graphql` also installed but managed by Supabase.
-
----
-
-## 🛠️ Supabase MCP Tools (29 tools)
-
-### Direct Database Access via MCP
-
-**MCP Server:** `supabase` (connected ✅)
-**Token Benefit:** 98%+ reduction vs reading schema files directly
-**Use Case:** Development, debugging, ad-hoc queries (NOT for regular application code)
-
-**Key Tools Available:**
-
-| Tool | Purpose | When to Use |
-|------|---------|-------------|
-| `list_tables(schemas)` | Schema inspection | Avoid 15k token schema dumps |
-| `execute_sql(query)` | Ad-hoc queries | Development/debugging only |
-| `apply_migration(name, query)` | DDL operations | Create migrations |
-| `get_logs(service)` | Last 24h logs | Debug api, postgres, auth, storage |
-| `list_migrations()` | Migration status | Track applied migrations |
-| `list_extensions()` | Extension inventory | Verify pgvector, pgcrypto installed |
-| `get_advisors(type)` | Security/performance | Check RLS, index usage |
-| `generate_typescript_types()` | Type generation | Update database.types.ts |
-
-**Database Operations Tools (14):**
-- `list_organizations()` - Org membership
-- `list_projects()` - Project discovery
-- `get_project(id)` - Project details
-- `create_project()` - New project setup
-- `pause_project()` - Pause database
-- `restore_project()` - Resume database
-- `create_branch()` - Dev branch creation
-- `list_branches()` - Branch status
-- `delete_branch()` - Cleanup branches
-- `merge_branch()` - Production deployment
-- `reset_branch()` - Rollback changes
-- `rebase_branch()` - Sync with production
-- `get_project_url()` - API endpoint
-- `get_anon_key()` - Public API key
-
-**Edge Functions Tools (3):**
-- `list_edge_functions()` - Function inventory
-- `get_edge_function(slug)` - Function source
-- `deploy_edge_function()` - Deploy/update function
-
-**🚨 UPDATED OCT 16, 2025 - MCP-FIRST POLICY:**
-
-**CRITICAL Query Hierarchy (Enforced):**
-```
-1. MCP Supabase (PRIMARY)        ← mcp__supabase__execute_sql for ALL SQL queries
-2. RPC Functions (SECONDARY)     ← get_accommodation_unit_by_id(), when available
-3. Supabase Client tsx (AVOID)   ← Only for complex multi-operation logic (3x cost)
-```
-
-**Token Economics:**
-- MCP execute_sql: ~150 tokens (70% savings vs tsx)
-- RPC functions: ~345 tokens (98% savings vs inline SQL)
-- tsx inline SQL: ~17,700 tokens (AVOID)
-
-**Policy Reference:** `docs/infrastructure/MCP_USAGE_POLICY.md`
-
-**Example Usage:**
-```typescript
-// ✅ PREFERRED - Use MCP for ad-hoc queries (150 tokens)
-mcp__supabase__execute_sql({
-  project_id: 'ooaumjzaztmutltifhoq',
-  query: 'SELECT COUNT(*) FROM guest_reservations WHERE tenant_id = $1'
-})
-
-// ✅ ALTERNATIVE - Use RPC function when available (345 tokens)
-const { data } = await supabase
-  .rpc('get_accommodation_unit_by_id', {
-    p_unit_id: unit_id,
-    p_tenant_id: tenant_id
-  })
-
-// ❌ AVOID - Direct SQL in code (17,700 tokens, 3x cost)
-const { data } = await supabase
-  .from('accommodation_units')
-  .select('*, amenities(*), policies(*)')
-  .eq('id', unit_id)
-```
-
-### DDL Execution Methods (Oct 2025 Discovery)
-
-**🚨 CRITICAL:** MCP Supabase tools **DO NOT WORK** for DDL operations.
-
-**❌ Methods That FAIL:**
-- `mcp__supabase__apply_migration()` - Permission denied error
-- `mcp__supabase__execute_sql()` for DDL - Permission denied error
-- `execute_sql()` RPC - **SILENTLY FAILS** (returns success but doesn't execute DDL)
-- Manual user execution - Violates autonomy principle (user must NOT execute SQL manually)
-
-**✅ CORRECT METHOD - Supabase Management API:**
-
+**Solución:**
 ```bash
-# Direct curl example
-curl -X POST "https://api.supabase.com/v1/projects/ooaumjzaztmutltifhoq/database/query" \
-  -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{"query":"CREATE OR REPLACE FUNCTION..."}'
+supabase migration repair --project-ref ooaumjzaztmutltifhoq
 ```
 
-**✅ Use Helper Script (Recommended):**
+### Problema 2: staging-v21 VACÍO ❌
 
+**Síntomas:**
+- 0 registros en TODAS las tablas
+- No se puede probar funcionalidad
+- Auth fallará (no hay tenant_registry)
+
+**Solución (Opción A - Recrear):**
 ```bash
-# Execute any SQL migration file
-set -a && source .env.local && set +a && \
-npx tsx scripts/execute-ddl-via-api.ts supabase/migrations/20251009000100_migration.sql
+supabase branches delete staging-v21 --project-ref ooaumjzaztmutltifhoq
+supabase branches create staging-v21 \
+  --project-ref ooaumjzaztmutltifhoq \
+  --with-data=true \
+  --git-branch=staging
 ```
 
-**Why Management API?**
-- ✅ Only method that works programmatically for DDL
-- ✅ Maintains Claude Code autonomy (no user intervention)
-- ✅ Returns proper success/error responses
-- ✅ Supports CREATE FUNCTION, ALTER TABLE, CREATE INDEX, etc.
+**Solución (Opción B - Copiar datos):**
+```bash
+pg_dump -h db.ooaumjzaztmutltifhoq.supabase.co \
+  --data-only --no-owner --no-acl \
+  -t 'public.*' -t 'hotels.*' > staging_seed.sql
+psql -h db.rmrflrttpobzlffhctjt.supabase.co < staging_seed.sql
+```
 
-**Requirements:**
-- `SUPABASE_ACCESS_TOKEN` in `.env.local` (Management API token, NOT service_role key)
-- Project ID: `ooaumjzaztmutltifhoq`
+### Problema 3: Security Warnings en staging-v21 ⚠️
 
-**Testing Discovery (Oct 9, 2025):**
-- Test: Created `test_ddl_execution()` function via Management API → ✅ Success
-- Test: Same function via `execute_sql()` RPC → ❌ Silent failure (function not created)
-- Test: Fixed `get_sire_guest_data()` function via Management API → ✅ Success
-- Conclusion: Management API is the ONLY reliable DDL execution method
+**Síntomas:**
+- 17 warnings de seguridad (vs 0 en dev)
+- Extension `vector` en schema `public` (debería estar en `extensions`)
+- 15 funciones sin `search_path` fijo
+- Tabla `code_embeddings` sin RLS
 
-### Extension Security Advisory
+**Solución:**
+Aplicar fixes de seguridad documentados en:
+- `docs/database/COMPLETE_REMEDIATION_REPORT_2025-11-01.md`
 
-⚠️ **WARN**: `vector` extension installed in `public` schema (should be in dedicated schema for security)
-- Impact: Low (Supabase managed)
-- Remediation: https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public
+### Problema 4: Diferencia de 114 Funciones 🤔
 
----
+**Síntomas:**
+- dev: 90 funciones
+- staging-v21: 204 funciones
+- Causa desconocida
 
----
-
-## 🔍 Vector Search Infrastructure
-
-### Semantic Code Search (pgvector)
-
-**code_embeddings** (4,333 rows)
-- **Purpose**: Semantic code search for AI-powered development
-- **Storage**: PostgreSQL + pgvector extension 0.8.0
-- **Embedding Model**: OpenAI text-embedding-3-small (1536 dimensions)
-- **Index Type**: HNSW (m=16, ef_construction=64) for cosine similarity
-- **Performance**: 542ms average search latency (target: <2s) - 73% faster than target
-- **Migration**: Zilliz Cloud → Supabase pgvector (Oct 9, 2025)
-- **Data Quality**: 692 source files (excludes build artifacts)
-
-**Schema**:
+**Investigación Requerida:**
 ```sql
-CREATE TABLE code_embeddings (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  file_path text NOT NULL,
-  chunk_index integer NOT NULL,
-  content text NOT NULL,
-  embedding vector(1536) NOT NULL,
-  created_at timestamptz DEFAULT now(),
-  UNIQUE(file_path, chunk_index)
-);
-
-CREATE INDEX code_embeddings_vector_idx ON code_embeddings 
-USING hnsw (embedding vector_cosine_ops)
-WITH (m = 16, ef_construction = 64);
-```
-
-**RPC Function**:
-- `search_code_embeddings(query_embedding vector(1536), match_threshold float, match_count int)`
-  - Returns: Top-K most similar code chunks
-  - Similarity: Cosine distance (1 - cosine_distance)
-  - Default threshold: 0.7
-  - Performance: Optimized with HNSW index
-
-**Migration Details**:
-- Date: October 9, 2025
-- Strategy: Fresh embeddings generation (NOT Zilliz export)
-- Reason: Zilliz export incomplete (90.6%) + included 218 build artifacts
-- Cost Savings: $240-600/year (eliminated Zilliz Cloud subscription)
-- Documentation: `docs/projects/zilliz-to-pgvector/MIGRATION_SUMMARY.md`
-
----
-
-## 🧬 Matryoshka Embeddings System
-
-### 3-Tier Architecture
-
-**Philosophy:** Flexible dimension truncation for speed/accuracy tradeoff
-
-| Tier | Dimensions | Use Case | Index Type | Tables Using |
-|------|-----------|----------|------------|--------------|
-| **Tier 1 (Fast)** | 1024d | Ultra-fast searches | HNSW | muva_content, accommodation_units_manual_chunks, conversation_memory, accommodation_units_public |
-| **Tier 2 (Balanced)** | 1536d | Balanced performance | HNSW | sire_content, hotels.guest_information, hotels.content, accommodation_units_manual_chunks, hotel_operations |
-| **Tier 3 (Full)** | 3072d | Maximum precision | No index (>2000d limit) | accommodation_units_manual_chunks (primary), hotels.accommodation_units |
-
-**Embedding Model:** OpenAI text-embedding-3-large
-**Index Algorithm:** HNSW (Hierarchical Navigable Small World) for dimensions ≤2000
-**Index Parameters:** `m=16, ef_construction=64` (standard Supabase config)
-
-### Vector Indexes Inventory
-
-**Total Vector Indexes:** 19 HNSW indexes across schemas
-
-**Public Schema (10):**
-- `idx_muva_content_embedding_fast` (1024d)
-- `idx_sire_content_embedding_balanced` (1536d)
-- `idx_manual_chunks_embedding_fast` (1024d)
-- `idx_manual_chunks_embedding_balanced` (1536d)
-- `idx_conversation_memory_embedding_fast` (1024d)
-- `idx_accommodation_public_embedding_fast_hnsw` (1024d)
-- `idx_accommodation_manual_embedding_balanced_hnsw` (1536d)
-- `idx_hotel_operations_embedding_balanced` (IVFFlat - legacy)
-- `idx_hotel_operations_embedding_balanced_hnsw` (1536d)
-- `idx_hotels_embedding_fast` (1024d)
-- `idx_hotels_embedding_balanced` (1536d)
-
-**Hotels Schema (9):**
-- `idx_hotels_accommodation_units_embedding_fast` (1024d)
-- `idx_hotels_accommodation_units_embedding_balanced` (1536d)
-- `idx_content_embedding_balanced` (1536d)
-- `idx_guest_information_embedding_balanced` (1536d)
-- `idx_policies_embedding_fast` (1024d)
-
-**Note:** 3072d embeddings (Tier 3) have NO indexes due to HNSW 2000d limit - uses sequential scan for max precision searches.
-
----
-
-## 🔐 Security Layer
-
-### Row Level Security (RLS) Status
-
-**RLS Enabled Tables:** 31/37 tables
-
-**Multi-Tenant Isolation (hotels schema - 7 tables):**
-```sql
--- Pattern: All hotels.* tables enforce tenant_id filtering
--- Policy: tenant_id = current_setting('app.current_tenant_id')
--- Roles: anon, authenticated
-```
-
-Tables with RLS:
-- ✅ hotels.client_info
-- ✅ hotels.properties
-- ✅ hotels.accommodation_units (RLS disabled - controlled via public wrapper)
-- ✅ hotels.policies
-- ✅ hotels.guest_information
-- ✅ hotels.unit_amenities
-- ✅ hotels.pricing_rules
-- ✅ hotels.content
-
-**Public Schema RLS (24 tables):**
-- ✅ sire_content (public read, service_role modify)
-- ✅ muva_content (public read, service_role modify)
-- ✅ tenant_registry (service_role only CRUD, users read via permissions)
-- ✅ user_tenant_permissions (tenant admins manage, users view own)
-- ✅ guest_reservations (staff view tenant-filtered)
-- ✅ guest_conversations (guests own, staff view tenant)
-- ✅ chat_messages (linked to conversations)
-- ✅ accommodation_units (tenant-filtered, service_role bypass)
-- ✅ accommodation_units_manual (guests view their unit)
-- ✅ accommodation_units_manual_chunks (tenant-filtered)
-- ✅ accommodation_units_public (public read for active/bookable)
-- ✅ prospective_sessions (public active, staff view tenant)
-- ✅ conversation_memory (users view own session)
-- ✅ conversation_attachments (guests CRUD own)
-- ✅ compliance_submissions (guests own, staff view/update tenant)
-- ✅ tenant_compliance_credentials (admins only)
-- ✅ staff_users (self + admin view)
-- ✅ staff_conversations (tenant-filtered)
-- ✅ staff_messages (via conversation tenant)
-- ✅ hotel_operations (role-based access: all_staff, admin_only, ceo_only)
-- ✅ hotels (tenant isolation via user_tenant_permissions)
-- ✅ integration_configs (tenant-filtered)
-- ✅ sync_history (tenant-filtered)
-
-**Tables WITHOUT RLS (0):**
-- None (all tables secured)
-
-### Security Advisories (5 warnings)
-
-**🔴 ERROR (1):**
-1. **Security Definer View:** `public.guest_chat_performance_monitor` 
-   - Risk: View enforces creator's permissions, not querying user
-   - Impact: Medium (monitoring view, limited exposure)
-   - Remediation: https://supabase.com/docs/guides/database/database-linter?lint=0010_security_definer_view
-
-**⚠️ WARN (4):**
-1. **Extension in Public Schema:** `vector` extension in public schema
-2. **Auth Leaked Password Protection:** Disabled (HaveIBeenPwned integration)
-3. **Insufficient MFA Options:** Too few MFA methods enabled
-4. **Vulnerable Postgres Version:** 17.4.1.075 has security patches available
-   - Recommended: Upgrade to latest minor version
-   - Remediation: https://supabase.com/docs/guides/platform/upgrading
-
----
-
-## 🚀 RPC Functions Inventory
-
-### Total Functions: 40+ RPC functions
-
-**Category Breakdown:**
-
-**1. Vector Search Functions (15):**
-- `match_sire_documents()` - SIRE compliance docs (3072d)
-- `match_muva_documents()` - Tourism content (1024d fast)
-- `match_muva_documents_public()` - Public chat tourism (1024d)
-- `match_hotels_documents()` - Multi-tenant hotel search (tier routing)
-- `match_conversation_memory()` - Compressed conversation search (1024d)
-- `match_accommodation_units_fast()` - Fast unit search (1024d)
-- `match_accommodation_units_balanced()` - Balanced unit search (1536d)
-- `match_accommodations_public()` - Public marketing chat
-- `match_guest_accommodations()` - Guest portal (dual tier)
-- `match_guest_information_balanced()` - Guest info (1536d)
-- `match_hotel_operations_balanced()` - Staff operations (1536d, role-filtered)
-- `match_policies()` - Hotel policies (1536d)
-- `match_policies_public()` - Public policies (1024d)
-- `match_unit_manual_chunks()` - Manual chunks (1536d)
-- `match_optimized_documents()` - Universal search with tier routing
-
-**2. Data Retrieval RPCs (12) - October 2025 Optimization:**
-
-**Guest Conversations (3):**
-- `get_guest_conversation_metadata(conversation_id)` - Replaces 11 queries (99.4% reduction)
-- `get_inactive_conversations(tenant_id, days_inactive)` - Archiving helper (92.5% reduction)
-- `get_archived_conversations_to_delete(tenant_id, days_archived)` - Cleanup helper (82.0% reduction)
-
-**Chat Messages (1):**
-- `get_conversation_messages(conversation_id, limit, offset)` - Pagination (97.9% reduction)
-
-**Integrations (1):**
-- `get_active_integration(tenant_id, integration_type)` - Config lookup (98.4% reduction)
-
-**Reservations (1):**
-- `get_reservations_by_external_id(external_booking_id, tenant_id)` - Multi-unit bookings (98.0% reduction)
-
-**Accommodation Units (6):**
-- `get_accommodation_unit_by_id(unit_id, tenant_id)` - Schema bypass helper
-- `get_accommodation_unit_by_motopress_id(tenant_id, motopress_unit_id)` - MotoPress sync
-- `get_accommodation_unit_by_name(unit_name, tenant_id)` - ILIKE search
-- `get_accommodation_units_by_ids(unit_ids[])` - Batch retrieval
-- `get_accommodation_units_needing_type_id(tenant_id)` - Script helper (92.5% reduction)
-- `get_accommodation_tenant_id(unit_id)` - Tenant lookup
-
-**3. Utility Functions (5):**
-- `get_tenant_schema(tenant_nit)` - Schema name lookup
-- `get_full_document(source_file, table_name)` - Aggregate chunks
-- `execute_sql(query)` - Dynamic SQL (EMERGENCY USE ONLY)
-- Helper functions for UUID generation
-
-**Performance Impact:** RPC functions reduce token consumption by 90-98% compared to inline SQL (measured Oct 2025: 17,700→345 tokens = 98.1% reduction).
-
-**Documentation:** See `docs/architecture/DATABASE_QUERY_PATTERNS.md` for usage hierarchy.
-
----
-
-## 📈 Migration History
-
-### Migration Statistics
-
-**Total Migrations:** 272 migrations applied
-**Latest Migration:** `20251006081115_fix_execute_sql_for_ddl.sql` (Oct 6, 2025)
-**Migration Span:** Jan 2025 → Oct 2025
-
-**Recent Major Migrations (Oct 2025):**
-
-**Oct 9, 2025 - Semantic Code Search (pgvector):**
-- `20251009120000_create_code_embeddings_table.sql` - pgvector table with HNSW index
-- `20251009120001_add_search_code_embeddings_function.sql` - RPC search function
-- Migrated from Zilliz Cloud to Supabase pgvector
-- 4,333 embeddings (692 source files, 1536d)
-- Cost savings: $240-600/year
-
-**Oct 6, 2025 - Security Hardening:**
-- `20251006010000_enable_rls_security_fix.sql` - Fixed RLS bypass vulnerabilities
-- `20251006010100_add_execute_sql_helper.sql` - Added controlled SQL execution
-- `20251006192000_fix_security_definer_view.sql` - Fixed view permissions
-- `20251006192100_fix_function_search_path.sql` - Fixed search_path for functions
-
-**Oct 5, 2025 - Guest Portal Features:**
-- `20251005010000_add_guest_conversations.sql` - Multi-conversation support
-- `20251005010100_add_compliance_submissions.sql` - SIRE tracking
-- `20251005010200_add_tenant_compliance_credentials.sql` - Encrypted credentials
-- `20251005010300_add_conversation_attachments.sql` - Image/doc uploads
-- `20251005010400_add_conversation_intelligence.sql` - Compressed history
-
-**Oct 1-3, 2025 - RPC Optimization:**
-- Multiple `create_rpc_*_functions.sql` - Token reduction helpers
-- `get_guest_conversation_metadata`, `get_inactive_conversations`, etc.
-- Measured: 90-98% token reduction vs inline queries
-
-**Sep 2025 - Matryoshka Embeddings:**
-- `20250923113238_add_matryoshka_embedding_columns_tier1.sql` - 1024d fast
-- `20250923113244_add_matryoshka_embedding_columns_tier2.sql` - 1536d balanced
-- `20250923113457_create_optimized_search_functions.sql` - Tier routing
-- `20250923113531_create_matryoshka_vector_indexes_fixed.sql` - HNSW indexes
-
-**Migration File Pattern:**
-```
-supabase/migrations/YYYYMMDDHHMMSS_descriptive_name.sql
+-- Listar funciones SOLO en staging-v21
+SELECT proname FROM pg_proc p
+JOIN pg_namespace n ON p.pronamespace = n.oid
+WHERE n.nspname IN ('public', 'hotels') AND p.prokind = 'f';
 ```
 
 ---
 
-## 💾 Storage & Performance
+## 📊 COMPARACIÓN dev vs staging-v21
 
-### Database Size Analysis
-
-**Total Database Size:** ~35.5 MB (Oct 2025)
-
-**Top 10 Tables by Size:**
-
-| Table | Total Size | Table Size | Indexes Size | Rows |
-|-------|-----------|------------|--------------|------|
-| muva_content | 21 MB | 1.3 MB | 20 MB | 742 |
-| accommodation_units_manual_chunks | 6.5 MB | 40 KB | 6.5 MB | 38 |
-| hotel_operations | 1.7 MB | 16 KB | 1.7 MB | 10 |
-| hotels.guest_information | 1.6 MB | 144 KB | 1.4 MB | 0 |
-| hotels.accommodation_units | 1.5 MB | 56 KB | 1.4 MB | 8 |
-| hotels.content | 1.2 MB | 0 bytes | 1.2 MB | 0 |
-| prospective_sessions | 808 KB | 232 KB | 576 KB | 187 |
-| accommodation_units_manual | 616 KB | 48 KB | 568 KB | 1 |
-| sire_content | 392 KB | 16 KB | 376 KB | 8 |
-| chat_messages | 384 KB | 64 KB | 320 KB | 52 |
-
-**Observations:**
-- Vector indexes are 90-95% of total table size (expected for HNSW)
-- `muva_content` largest table (tourism data) with 742 POIs
-- Manual chunks heavily indexed (3 tiers: 1024d, 1536d, 3072d)
-- Empty tables have index overhead (hotels.content, hotels.guest_information)
-
-### Performance Baselines
-
-**Expected Query Times:**
-- Vector search (4 results): < 100ms
-- RPC function calls: < 50ms
-- Simple CRUD: < 10ms
-- Complex joins: < 200ms
-
-**Index Usage:**
-- Vector searches: HNSW index scan (fast)
-- Text searches: GIN index on tsvector (Spanish config)
-- Foreign keys: B-tree indexes (automatic)
+| Métrica | dev | staging-v21 | Diferencia |
+|---------|-----|-------------|------------|
+| **Status** | MIGRATIONS_FAILED | FUNCTIONS_DEPLOYED | staging mejor |
+| **Tablas** | 50 | 50 | ✅ Idéntico |
+| **Registros** | 6,641 | 0 | dev tiene TODOS |
+| **Funciones** | 90 | 204 | +114 en staging |
+| **Security Issues** | 0 | 17 | dev optimizado |
+| **Vector Extension** | extensions | public | dev correcto |
+| **PostgreSQL** | 17.6 | 17.6 | ✅ Idéntico |
 
 ---
 
-## 🧠 Knowledge Graph - Compliance Entity Relationships (FASE 8)
+## ✅ ACCIONES INMEDIATAS
 
-### Compliance Flow Mapping
+### CRÍTICO (Hacer HOY)
 
-**Knowledge Graph Status:** ✅ 23 entities, 30 relations, 57+ observations
+- [ ] Investigar MIGRATIONS_FAILED en dev
+- [ ] Decidir: ¿Poblar o recrear staging-v21?
 
-**Compliance Pipeline Entities:**
+### IMPORTANTE (Esta Semana)
 
-| Entity | Type | Key Observations |
-|--------|------|------------------|
-| **guests** | database_table | Initiates chat sessions, receives notifications |
-| **chat_sessions** | database_table | Conversational data collection, powered by Claude API |
-| **compliance_submissions** | database_table | Stores extracted SIRE data, validates before submission |
-| **guest_reservations** | database_table | Final destination for SIRE fields (pending FASE 10-12) |
-| **sire_field_mappers** | compliance | Transforms chat → SIRE format, validates data types |
-| **sire_codigos_oficiales** | compliance | 249 countries + 1,122 cities, enables code validation |
-| **sire_report_submission** | compliance | External API integration for government submission |
-| **anthropic_claude_api** | ai_service | Natural language understanding, data extraction |
+- [ ] Resolver 17 security warnings en staging-v21
+- [ ] Documentar función de cada branch en CLAUDE.md
+- [ ] Investigar 114 funciones extra
 
-**Compliance Flow Relations:**
+### SEGUIMIENTO (2 Semanas)
 
-```
-guests → initiates → chat_sessions
-chat_sessions → powered_by → anthropic_claude_api
-chat_sessions → extracts_to → compliance_submissions
-compliance_submissions → populates → guest_reservations
-compliance_submissions → validates_with → sire_field_mappers
-sire_field_mappers → uses → sire_codigos_oficiales
-compliance_submissions → submits_via → sire_report_submission
-```
-
-**Query Example:**
-```typescript
-// Use Knowledge Graph MCP to understand compliance flow without reading files
-mcp__knowledge-graph__aim_search_nodes({
-  query: "compliance",
-  // Returns: Complete guest → SIRE government pipeline
-})
-```
-
-**Documentation:** `.claude-memory/memory.jsonl` (expandable graph)
+- [ ] Implementar seeding script automatizado
+- [ ] Normalizar estado de ambos branches
+- [ ] Planear arquitectura 3-tier (dev → staging → prod)
 
 ---
 
-## 🎉 SIRE Compliance Extension - 92% Complete (Oct 9, 2025)
+## 📋 MAPEO GIT ↔ SUPABASE
 
-### Implementation Status: ✅ PRODUCTION READY
+| Git Branch | Supabase Branch | Project Ref | Datos | Status |
+|------------|-----------------|-------------|-------|--------|
+| dev (congelada) | dev (DEFAULT) | ooaumjzaztmutltifhoq | ✅ 6,641 | MIGRATIONS_FAILED |
+| staging (activa) | staging-v21 | rmrflrttpobzlffhctjt | ❌ 0 | FUNCTIONS_DEPLOYED |
+| main | - | - | - | NO EXISTS |
 
-**Completion:** 92% (21/24 tests passing, 5/5 SQL validations)
+---
 
-**Database Schema Changes (FASE 10 - ✅ COMPLETE):**
+## 🗄️ Database Schema (Current State - dev branch)
 
-```sql
--- 9 SIRE Fields Added to guest_reservations
+### Schemas
+- **public**: 41 tables (6,641 registros totales)
+- **hotels**: 9 tables (0 registros - vacías)
 
--- Identity Fields (3)
-document_type VARCHAR(2)              -- '3'=Pasaporte, '5'=Cédula, '10'=PEP, '46'=Permiso
-document_number VARCHAR(50)           -- Alphanumeric (no strict length - allows flexibility)
-birth_date DATE                       -- YYYY-MM-DD format
+### Top 15 Tables by Record Count
 
--- Name Fields (3) - Separated for SIRE compliance
-first_surname VARCHAR(100)            -- UPPERCASE, with accents (GARCÍA)
-second_surname VARCHAR(100)           -- UPPERCASE, optional (can be NULL)
-given_names VARCHAR(200)              -- UPPERCASE, with accents (MARÍA JOSÉ)
+| # | Schema | Table | Records |
+|---|--------|-------|---------|
+| 1 | public | code_embeddings | 4,333 |
+| 2 | public | muva_content | 742 |
+| 3 | public | prospective_sessions | 412 |
+| 4 | public | chat_messages | 324 |
+| 5 | public | accommodation_units_manual_chunks | 219 |
+| 6 | public | accommodation_units_public | 151 |
+| 7 | public | guest_conversations | 113 |
+| 8 | public | guest_reservations | 104 |
+| 9 | public | reservation_accommodations | 93 |
+| 10 | public | sync_history | 85 |
+| 11 | public | calendar_events | 74 |
+| 12 | public | staff_messages | 59 |
+| 13 | public | sire_countries | 45 |
+| 14 | public | staff_conversations | 44 |
+| 15 | public | sire_cities | 42 |
 
--- Location Codes (3) - SIRE/DIVIPOLA codes
-nationality_code VARCHAR(3)           -- 1-3 digits SIRE code (USA=249, NOT ISO 840)
-origin_city_code VARCHAR(10)          -- DIVIPOLA city code (Bogotá=11001)
-destination_city_code VARCHAR(10)     -- DIVIPOLA city code (Medellín=5001)
+### Functions (dev branch)
+
+**Total:** 90 funciones
+
+**Vector Search Functions (31):**
+- `match_hotels_documents`
+- `match_sire_documents`
+- `match_muva_documents`
+- `match_conversation_memory`
+- `match_accommodation_units_balanced`
+- `match_policies`
+- ... (26 more)
+
+**RPC Optimized Functions (October 2025):**
+- `get_guest_conversation_metadata` (98.4% token reduction)
+- `get_inactive_conversations` (92.5% token reduction)
+- `get_conversation_messages` (97.9% token reduction)
+- `get_active_integration` (98.4% token reduction)
+- `get_reservations_by_external_id` (98.0% token reduction)
+
+### Extensions
+
+**Installed (dev branch):**
+- vector (v0.8.0) - Schema: `extensions` ✅
+- pg_stat_statements (v1.11)
+- uuid-ossp (v1.1)
+- pgcrypto (v1.3)
+- pg_net (v0.19.5)
+- pg_graphql (v1.5.11)
+- supabase_vault (v0.3.1)
+- plpgsql (v1.0)
+
+**Installed (staging-v21):**
+- vector (v0.8.0) - Schema: `public` ⚠️ (INCORRECTO)
+- ... (resto idéntico)
+
+### Vector Indexes (Both Branches - Identical)
+
+**Top 10:**
+- `accommodation_units_public_embedding_idx` (HNSW, m=16, ef=64)
+- `code_embeddings_embedding_idx` (HNSW, m=16, ef=64)
+- `idx_accommodation_manual_embedding_balanced_hnsw` (HNSW)
+- `idx_content_embedding_balanced` (HNSW, m=16, ef=64)
+- `idx_conversation_memory_embedding_fast` (HNSW, m=16, ef=64)
+- `idx_guest_information_embedding_balanced` (HNSW, m=16, ef=64)
+- `idx_hotel_operations_embedding_balanced` (IVFFLAT, lists=100)
+- `idx_hotel_operations_embedding_balanced_hnsw` (HNSW)
+- `idx_hotels_accommodation_units_embedding_balanced` (HNSW)
+- ... (más)
+
+### Migrations Applied
+
+**Both Branches:**
+```
+1. 20250101000000 - create_core_schema
+2. 20251101063746 - fix_auth_rls_initplan_batch1
 ```
 
-**Constraints Created:**
-```sql
--- ✅ Document type validation
-CHECK (document_type IN ('3', '5', '10', '46'))
+### RLS Policies
 
--- ✅ Nationality code validation (1-3 digit SIRE codes)
-CHECK (nationality_code ~ '^[0-9]{1,3}$')
-```
+**dev branch:**
+- Top table: guest_reservations (5 policies)
+- Total policies: ~100+ across all tables
 
-**Indexes Created:**
-```sql
--- ✅ Document lookup index
-CREATE INDEX idx_guest_reservations_document
-  ON guest_reservations (document_type, document_number);
+**staging-v21:**
+- Top table: guest_conversations (13 policies)
+- Total policies: ~100+ (MÁS que dev)
 
--- ✅ Nationality filtering index
-CREATE INDEX idx_guest_reservations_nationality
-  ON guest_reservations (nationality_code);
-```
+---
 
-**RPC Functions Created (FASE 11):**
-```sql
--- ✅ Get SIRE guest data for export (TXT format)
-get_sire_guest_data(p_reservation_id UUID, p_tenant_id UUID)
-  → Returns: 13-field SIRE record (tab-delimited ready)
+## 🔒 Security Status
 
--- ✅ Get SIRE statistics (completeness metrics)
-get_sire_statistics(p_tenant_id UUID, p_date_from DATE, p_date_to DATE)
-  → Returns: total, complete, incomplete, percentage
+### dev branch (ooaumjzaztmutltifhoq)
+- ✅ **0 security warnings**
+- ✅ **0 security errors**
+- Status: **CLEAN** (optimizado octubre 2025)
 
--- ✅ Validate SIRE data completeness
-validate_sire_completeness(p_reservation_id UUID)
-  → Returns: boolean (all 9 required fields populated)
-```
+### staging-v21 (rmrflrttpobzlffhctjt)
+- ⚠️ **17 security warnings/errors**
 
-**Migration Files Applied (9 total):**
-1. `20251007000000_add_sire_fields_to_guest_reservations.sql` - Add 9 fields
-2. `20251009000000_create_sire_catalogs.sql` - SIRE country/city catalogs
-3. `20251009000001_add_remaining_sire_fields.sql` - Ensure all fields present
-4. `20251009000002_add_sire_codes_to_countries.sql` - SIRE code mappings
-5. `20251009000003_rename_location_fields_to_city.sql` - Rename origin/destination
-6. `20251009000004_fix_security_definer_view.sql` - Security fix
-7. `20251009000100_create_sire_rpc_functions.sql` - RPC functions
-8. `20251009000101_add_sire_rls_policies.sql` - RLS policies
-9. `20251009000102_fix_get_sire_guest_data.sql` - Fix RPC function logic
+**Desglose:**
+- 1 ERROR: `security_definer_view` (guest_chat_performance_monitor)
+- 15 WARN: `function_search_path_mutable`
+- 1 ERROR: `rls_disabled_in_public` (code_embeddings)
+- 1 WARN: `extension_in_public` (vector)
 
-**Validation Results (FASE 12 - ✅ 5/5 PASSED):**
+---
 
-**Test 1: Schema Validation** ✅ PASS
-- All 9 SIRE fields present in guest_reservations
-- Correct data types (VARCHAR, DATE)
-- Nullable constraints as expected
+## 📦 Recent Completed Work
 
-**Test 2: Constraints Validation** ✅ PASS
-- document_type CHECK constraint working
-- nationality_code CHECK constraint working
-- Both constraints reject invalid values
+### November 1, 2025 - Supabase Branching Analysis
 
-**Test 3: Indexes Validation** ✅ PASS
-- idx_guest_reservations_document created (btree)
-- idx_guest_reservations_nationality created (btree)
-- Both indexes active and healthy
+**Deliverables:**
+1. Complete architecture analysis (2 branches)
+2. Security comparison (0 vs 17 issues)
+3. Function comparison (90 vs 204 functions)
+4. Data status verification (6,641 vs 0 records)
+5. Migration status check (both at same version)
+6. Problem identification (4 critical issues)
+7. Action plan with priorities
+8. Quick reference guide
 
-**Test 4: RPC Functions Validation** ✅ PASS
-- get_sire_guest_data() exists and executable
-- get_sire_statistics() exists and executable
-- validate_sire_completeness() exists and executable
+**Time Invested:** ~2 hours
+**Documentation Generated:** 2 files (1,200+ lines total)
 
-**Test 5: Performance Validation** ✅ PASS
-- get_sire_statistics() executes in 189ms (threshold: 500ms)
-- Index usage confirmed via EXPLAIN ANALYZE
+### October 2025 - Database Optimization Complete
 
-**Validation Script:** `scripts/validate-sire-compliance-data.sql`
+**Achievements:**
+- ✅ 100% security warnings eliminated (dev branch)
+- ✅ RLS policies consolidated and optimized
+- ✅ Function search_path fixed
+- ✅ Auth RLS InitPlan optimization applied
+- ✅ Vector extension moved to correct schema
+- ✅ Missing FK indexes added (Phase 3)
+- ✅ 5 RPC functions deployed (98%+ token savings)
 
 **Documentation:**
-- `docs/features/sire-compliance/FASE_12_FINAL_VALIDATION_REPORT.md` (400+ lines)
-- `docs/features/sire-compliance/DATABASE_SCHEMA_CLARIFICATION.md` (9 SIRE fields)
-- `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md` (CRITICAL - SIRE vs ISO codes)
-- `scripts/rollback-sire-fields-migration.sql` (emergency rollback)
+- `docs/database/COMPLETE_REMEDIATION_REPORT_2025-11-01.md`
+- `docs/database/SECURITY_FINAL_STATUS_2025-11-01.md`
+- `docs/database/PHASE3_FK_INDEXES_COMPLETE.md`
+- `docs/architecture/DATABASE_QUERY_PATTERNS.md`
 
 ---
 
-## 🔑 Key Architectural Decisions
+## 🔧 Key Tools & Commands
 
-### 1. Multi-Tenant Isolation Strategy
+### Supabase CLI
 
-**Approach:** Row Level Security (RLS) policies + tenant_id filtering
+```bash
+# List branches
+supabase branches list --project-ref ooaumjzaztmutltifhoq
 
-**Implementation:**
-```sql
--- Pattern used across all tenant-specific tables
-CREATE POLICY "tenant_isolation_policy" ON table_name
-  FOR ALL USING (
-    tenant_id = current_setting('app.current_tenant_id', true)::uuid
-    OR auth.role() = 'service_role'
-  );
+# Get branch details
+supabase branches get dev --project-ref ooaumjzaztmutltifhoq
+supabase branches get staging-v21 --project-ref ooaumjzaztmutltifhoq
+
+# Create branch WITH data
+supabase branches create <name> \
+  --project-ref ooaumjzaztmutltifhoq \
+  --with-data=true \
+  --git-branch=<git-branch>
+
+# Delete branch
+supabase branches delete <name> --project-ref ooaumjzaztmutltifhoq
+
+# Migration management
+supabase migration list --project-ref <project-ref>
+supabase migration repair --project-ref <project-ref>
+
+# Security advisors
+supabase advisors --project-ref <project-ref> --type=security
+supabase advisors --project-ref <project-ref> --type=performance
 ```
 
-**Bypass:** Service role for migrations and admin operations
+### MCP Tools (Preferred)
 
-**Tables Enforcing:** 31/37 tables with RLS enabled
+```typescript
+// Execute SQL queries
+mcp__supabase__execute_sql({
+  project_id: "ooaumjzaztmutltifhoq",
+  query: "SELECT COUNT(*) FROM chat_messages"
+})
 
-### 2. Vector Search Optimization
+// List tables
+mcp__supabase__list_tables({
+  project_id: "ooaumjzaztmutltifhoq",
+  schemas: ["public", "hotels"]
+})
 
-**Matryoshka Embeddings:** 3-tier system for speed/accuracy tradeoff
+// List migrations
+mcp__supabase__list_migrations({
+  project_id: "ooaumjzaztmutltifhoq"
+})
 
-**Tier Selection Logic:**
-- **Fast queries** (chat, tourism): 1024d with HNSW index (~3x faster)
-- **Balanced queries** (policies, manuals): 1536d with HNSW index
-- **Precision queries** (compliance, full docs): 3072d no index (max accuracy)
+// Get security advisors
+mcp__supabase__get_advisors({
+  project_id: "ooaumjzaztmutltifhoq",
+  type: "security"
+})
 
-**Measured Impact:** 3x speed improvement (Tier 1 vs Tier 3) with <2% accuracy loss
-
-### 3. Database Query Hierarchy (Updated Oct 16, 2025 - MCP-FIRST)
-
-**🚨 Token Optimization Policy (Enforced):**
-
-1. **MCP Supabase (PRIMARY)** - 70% token reduction over tsx
-   - `mcp__supabase__execute_sql()` for ALL SQL queries
-   - Direct database access without code scaffolding
-   - Fastest option for ad-hoc queries
-
-2. **RPC Functions (SECONDARY)** - 98% token reduction vs inline SQL
-   - Example: `get_guest_conversation_metadata()` replaces 11 queries
-   - Type-safe, pre-compiled, cached query plans
-   - Use when available for complex operations
-
-3. **Supabase Client tsx (AVOID)** - 3x more tokens than MCP
-   - Only for complex multi-operation logic
-   - Never in scheduled scripts or API endpoints
-
-**Policy Reference:** `docs/infrastructure/MCP_USAGE_POLICY.md`
-**Documentation:** `docs/architecture/DATABASE_QUERY_PATTERNS.md`
-
-### 4. Embedding Generation Strategy
-
-**Provider:** OpenAI text-embedding-3-large
-**Dimensions:** 3072 (full precision)
-**Truncation:** Dynamic to 1024d or 1536d via Matryoshka
-**Storage:** All 3 tiers stored for flexibility
-
-**Use Cases:**
-- Premium chat: 1024d truncated for real-time search
-- Compliance: 3072d full precision for legal accuracy
-- Policies: 1536d balanced for guest queries
-
----
-
-## 🐛 Known Issues & Limitations
-
-### 1. HNSW Index Dimension Limit
-
-**Issue:** HNSW indexes support max 2000 dimensions
-**Impact:** 3072d embeddings (Tier 3) use sequential scan
-**Workaround:** Store 3072d but search using 1536d index when speed matters
-**Status:** Acceptable (precision use cases tolerate slower queries)
-
-### 2. Security Definer View
-
-**Issue:** `guest_chat_performance_monitor` uses SECURITY DEFINER
-**Risk:** View enforces creator permissions, not querying user
-**Impact:** Medium (monitoring view, limited data exposure)
-**Remediation:** Redefine view without SECURITY DEFINER or use RLS policies
-
-### 3. Vector Extension in Public Schema
-
-**Issue:** `vector` extension installed in public schema
-**Best Practice:** Dedicated schema (e.g., `extensions`)
-**Impact:** Low (Supabase managed, minimal security risk)
-**Status:** Defer to Supabase platform updates
-
-### 4. Empty Tables with Index Overhead
-
-**Tables:** hotels.content, hotels.guest_information, hotels.client_info, hotels.properties
-**Issue:** Vector indexes created but 0 rows
-**Overhead:** ~1-2 MB per table in index storage
-**Impact:** Minimal (future data will use indexes)
-**Action:** Monitor if tables remain unused after 6 months
-
----
-
-## 📋 Maintenance Checklist
-
-### Daily (Automated)
-
-- [ ] Monitor query performance via `pg_stat_statements`
-- [ ] Check for long-running queries (> 5 seconds)
-- [ ] Verify RLS policies enforcing (zero unauthorized access)
-
-### Weekly (Manual)
-
-- [ ] Review top 20 tables by size (ensure expected growth)
-- [ ] Check vector index usage (EXPLAIN ANALYZE on search queries)
-- [ ] Validate embedding coverage (≥95% of records with embeddings)
-
-### Monthly (Maintenance Window)
-
-- [ ] VACUUM ANALYZE on large tables (muva_content, guest_reservations)
-- [ ] Review and archive old prospective_sessions (>7 days expired)
-- [ ] Update statistics on vector columns
-- [ ] Review security advisories (Supabase dashboard)
-
-### Quarterly (Schema Evolution)
-
-- [ ] Audit unused indexes (idx_scan = 0 after 3 months → consider DROP)
-- [ ] Review RPC function usage (identify optimization opportunities)
-- [ ] Plan migration consolidation (squash old migrations if needed)
-- [ ] Postgres version upgrade (apply security patches)
-
----
-
-## 🚨 Emergency Procedures
-
-### Vector Index Corruption
-
-**Symptoms:** Search returns no results or incorrect results
-
-**Diagnostic:**
-```sql
-SELECT indexname, indexdef
-FROM pg_indexes
-WHERE tablename = 'affected_table' AND indexdef LIKE '%vector%';
-```
-
-**Fix:**
-```sql
--- Recreate affected index
-DROP INDEX IF EXISTS idx_table_embedding_tier;
-CREATE INDEX idx_table_embedding_tier
-  ON schema.table USING hnsw (embedding_tier vector_cosine_ops)
-  WITH (m=16, ef_construction=64);
-
--- Refresh statistics
-ANALYZE schema.table;
-```
-
-### RLS Policy Bypass Detected
-
-**Symptoms:** Unauthorized cross-tenant data access
-
-**Immediate Action:**
-```sql
--- Verify policies are enabled
-SELECT schemaname, tablename, policyname, roles, cmd
-FROM pg_policies
-WHERE schemaname IN ('public', 'hotels')
-  AND tablename = 'affected_table';
-
--- If missing, recreate policy
-CREATE POLICY "tenant_isolation" ON affected_table
-  FOR ALL USING (tenant_id = current_setting('app.current_tenant_id')::uuid);
-```
-
-### Performance Degradation
-
-**Symptoms:** Queries taking >500ms (baseline <100ms)
-
-**Diagnostic:**
-```sql
--- Check for missing ANALYZE
-SELECT schemaname, tablename, last_analyze, last_autoanalyze
-FROM pg_stat_user_tables
-WHERE schemaname IN ('public', 'hotels')
-ORDER BY last_analyze NULLS FIRST;
-
--- Identify slow queries
-SELECT query, mean_exec_time, calls
-FROM pg_stat_statements
-WHERE mean_exec_time > 500
-ORDER BY mean_exec_time DESC
-LIMIT 10;
-```
-
-**Fix:**
-```sql
--- Update statistics
-ANALYZE schema.table;
-
--- Consider adding index if query pattern identified
+// List extensions
+mcp__supabase__list_extensions({
+  project_id: "ooaumjzaztmutltifhoq"
+})
 ```
 
 ---
 
-## 📞 Coordination
+## 📚 Key Documentation
 
-### Works With
+### Architecture
+- `docs/architecture/DATABASE_QUERY_PATTERNS.md` - RPC functions usage
+- `docs/database/SUPABASE_BRANCHING_ANALYSIS_COMPLETE.md` - Full analysis
+- `docs/database/BRANCHING_SUMMARY.md` - Quick reference
 
-**@backend-developer** - Schema requirements, API queries, TypeScript types
-**@infrastructure-monitor** - Production database health, backup strategy
-**@ux-interface** - Data display needs, query optimization for UI
+### Security & Performance
+- `docs/database/COMPLETE_REMEDIATION_REPORT_2025-11-01.md`
+- `docs/database/SECURITY_FINAL_STATUS_2025-11-01.md`
+- `docs/database/PHASE3_FK_INDEXES_COMPLETE.md`
 
-### Escalation
-
-**Database corruption or data loss:** Immediate human intervention
-**Cross-tenant data breach:** Security team + human review
-**Migration failures:** Rollback + review before retry
-
----
-
-## 📚 Reference Documentation
-
-**Internal Docs:**
-- `docs/architecture/DATABASE_QUERY_PATTERNS.md` - RPC hierarchy and usage
-- `docs/features/sire-compliance/FASE_3.1_ESPECIFICACIONES_CORREGIDAS.md` - SIRE field specs
-- `docs/features/sire-compliance/CODIGOS_OFICIALES.md` - Country/city code catalogs
-- `plan.md` - SIRE extension planning (FASE 10-12)
-- `TODO.md` - Database migration tasks
-
-**External Resources:**
-- Supabase RLS Guide: https://supabase.com/docs/guides/auth/row-level-security
-- pgvector Documentation: https://github.com/pgvector/pgvector
-- HNSW Index Tuning: https://github.com/pgvector/pgvector#hnsw
-- Supabase Security Linter: https://supabase.com/docs/guides/database/database-linter
+### Operations
+- `CLAUDE.md` - Database section with MCP-FIRST policy
+- Agent snapshot: `snapshots/database-agent.md` (this file)
 
 ---
 
-## 📊 SIRE Compliance Metrics (Oct 9, 2025)
+## 🎯 Next Steps
 
-**Database Readiness:** ✅ 100% (all schema changes applied and validated)
-**SQL Validation:** ✅ 5/5 queries passing (100%)
-**RPC Functions:** ✅ 3/3 created and tested
-**Performance:** ✅ All queries within thresholds (189ms avg)
-**Production Status:** ✅ Ready for deployment (92% overall confidence)
+### Immediate (Today)
 
-**Pending Actions:**
-- Manual staff endpoint testing (15-30 min) - non-database task
-- Production deployment verification
-- Post-launch monitoring
+1. **User Decision Required:** ¿Poblar staging-v21 o recrearlo con datos?
+2. **Investigate:** MIGRATIONS_FAILED status en dev
+3. **Document:** Actualizar CLAUDE.md con branch mapping
 
-**Next Review:** Post-production deployment (November 2025)
+### Short Term (This Week)
 
-**Timestamp:** 2025-10-09 14:30 UTC
+4. **Fix:** 17 security warnings en staging-v21
+5. **Investigate:** 114 extra functions en staging-v21
+6. **Implement:** Seeding script para staging branches
+
+### Medium Term (2 Weeks)
+
+7. **Normalize:** Ambos branches a estado idéntico
+8. **Plan:** Arquitectura 3-tier (dev → staging → prod)
+9. **Automate:** Branch creation con datos
+
+---
+
+## 🤝 Coordination
+
+**Primary Agents:**
+- `@agent-database-agent` (me) - Database operations, migrations, branching
+- `@agent-deploy-agent` - CI/CD, VPS deployment, environment config
+- `@agent-backend-developer` - API endpoints, business logic
+
+**Key Handoffs:**
+- Database Agent → Deploy Agent: Branch URLs para .env files
+- Deploy Agent → Database Agent: Migration failures en deployment
+- Backend → Database: New RPC functions needed
+
+---
+
+**Last Updated:** 2025-11-01 21:30 UTC  
+**Next Review:** After user decision on staging-v21 data  
+**Owner:** Database Agent (@agent-database-agent)
