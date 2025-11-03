@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
-  title: InnPilot API
+  title: MuvaChat API
   description: |
-    InnPilot API para gestión SIRE (Sistema de Información y Registro de Extranjeros) de Colombia.
+    MuvaChat API para gestión SIRE (Sistema de Información y Registro de Extranjeros) de Colombia.
 
     Esta API proporciona endpoints para:
     - Chat asistente especializado en SIRE
@@ -19,8 +19,8 @@ info:
     All endpoints return standard HTTP status codes with JSON error responses.
   version: 0.1.0
   contact:
-    name: InnPilot Support
-    email: support@innpilot.com
+    name: MuvaChat Support
+    email: support@muva.chat
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT

@@ -1,7 +1,7 @@
 /**
  * Analytics Tracking Library
  *
- * Centralized analytics tracking for InnPilot Public Chat.
+ * Centralized analytics tracking for MuvaChat Public Chat.
  * Uses Plausible Analytics for privacy-friendly, lightweight tracking.
  *
  * @see https://plausible.io/docs/custom-event-goals

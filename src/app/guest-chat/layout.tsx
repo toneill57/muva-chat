@@ -8,7 +8,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Chat de Invitado | InnPilot',
+  title: 'Chat de Invitado | MuvaChat',
   description: 'Asistente conversacional para huéspedes. Obtén información sobre tu estancia, actividades turísticas y más.',
   robots: {
     index: false,
