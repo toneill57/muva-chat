@@ -24,10 +24,10 @@ import { execSync } from 'child_process';
 
 // Environment validation
 const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'rvjmwwvkhglcuqwcznph';
-const STAGING_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const STAGING_DB_PASSWORD = process.env.SUPABASE_STAGING_DB_PASSWORD;
 
-if (!STAGING_SERVICE_KEY) {
-  console.error('❌ Error: SUPABASE_SERVICE_ROLE_KEY environment variable not set');
+if (!STAGING_DB_PASSWORD) {
+  console.error('❌ Error: SUPABASE_STAGING_DB_PASSWORD environment variable not set');
   process.exit(1);
 }
 
@@ -44,8 +44,8 @@ for (const arg of args) {
   }
 }
 
-// Supabase connection string
-const CONNECTION_STRING = `postgresql://postgres.${STAGING_PROJECT_ID}:${STAGING_SERVICE_KEY}@aws-0-us-east-1.pooler.supabase.com:5432/postgres`;
+// Supabase connection string (using transaction pooler port 6543 for migrations)
+const CONNECTION_STRING = `postgresql://postgres.${STAGING_PROJECT_ID}:${STAGING_DB_PASSWORD}@aws-0-us-east-1.pooler.supabase.com:6543/postgres`;
 
 interface AppliedMigration {
   version: string;
