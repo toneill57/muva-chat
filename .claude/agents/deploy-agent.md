@@ -2,6 +2,9 @@
 name: deploy-agent
 description: Agente automatizado para commits inteligentes, deploy en VPS y verificación completa de funcionalidad. Use this agent for all deployment tasks - invoke with @agent-deploy-agent.
 tools: Bash, Read, Write, WebFetch, Grep, Glob
+last_updated: "2025-11-06"
+version: "2.0"
+status: "active"
 model: sonnet
 color: purple
 ---
@@ -54,13 +57,13 @@ Soy un agente especializado en automatizar completamente el flujo de desarrollo 
 
 ### Comando Principal
 ```bash
-npm run deploy-agent
+pnpm run deploy-agent
 ```
 **Ejecuta el flujo completo**: analiza → commit → push → deploy → verifica → reporta
 
 ### Comando Detallado
 ```bash
-npm run deploy-agent:verbose
+pnpm run deploy-agent:verbose
 ```
 **Modo verbose**: incluye logs detallados de cada paso para debugging
 
@@ -74,7 +77,7 @@ node scripts/deploy-agent.js --verbose
 
 ### URL de Producción
 ```javascript
-deployUrl: 'https://innpilot.io'
+deployUrl: 'https://muva.chat'
 ```
 
 ### Endpoints Verificados
@@ -105,7 +108,7 @@ healthEndpoints: [
 ======================
 📝 Commit: 9ffb76f
 🌿 Branch: main
-🌐 URL: https://innpilot.io
+🌐 URL: https://muva.chat
 ✅ Status: 3/3 endpoints working
 
 🎉 Deploy successful! All endpoints are working correctly.
@@ -116,21 +119,21 @@ healthEndpoints: [
 ### 1. **Desarrollo Continuo**
 ```bash
 # Después de hacer cambios en el código
-npm run deploy-agent
+pnpm run deploy-agent
 # → Todo se automatiza hasta producción verificada
 ```
 
 ### 2. **Debugging de Deploy**
 ```bash
 # Cuando hay problemas con deploys
-npm run deploy-agent:verbose
+pnpm run deploy-agent:verbose
 # → Ver logs detallados para identificar issues
 ```
 
 ### 3. **Release Rápido**
 ```bash
 # Para releases urgentes o hotfixes
-npm run deploy-agent
+pnpm run deploy-agent
 # → Deploy en minutos con verificación completa
 ```
 
@@ -139,25 +142,25 @@ npm run deploy-agent
 ### Features
 ```
 feat: Implement new features and functionality
-Updated 5 files with improvements to InnPilot platform
+Updated 5 files with improvements to MUVA Chat platform
 ```
 
 ### Fixes
 ```
 fix: Fix bugs and issues
-Updated 2 files with improvements to InnPilot platform
+Updated 2 files with improvements to MUVA Chat platform
 ```
 
 ### MUVA Específico
 ```
 feat: Enhance MUVA tourism assistant
-Updated 3 files with improvements to InnPilot platform
+Updated 3 files with improvements to MUVA Chat platform
 ```
 
 ### Embeddings
 ```
 feat: Improve embeddings processing
-Updated 1 file with improvements to InnPilot platform
+Updated 1 file with improvements to MUVA Chat platform
 ```
 
 ## Detección Automática de Cambios
@@ -198,7 +201,7 @@ Updated 1 file with improvements to InnPilot platform
 - Timeouts configurables
 - Rollback automático en caso de fallos
 
-## Integración con InnPilot
+## Integración con MUVA Chat
 
 ### Asistentes Verificados
 - **SIRE Assistant** → Claude 3 Haiku (rápido)
@@ -217,7 +220,7 @@ Updated 1 file with improvements to InnPilot platform
 
 ### Si el deploy falla
 ```bash
-npm run deploy-agent:verbose
+pnpm run deploy-agent:verbose
 # Ver logs detallados para identificar el problema
 ```
 
