@@ -5,7 +5,7 @@ category: specialized-snapshot
 agent: backend-developer
 status: PRODUCTION
 version: "2.2-STABLE"
-last_updated: "2025-10-11"
+last_updated: "2025-11-06"
 audit_date: "2025-10-09"
 sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 ---
