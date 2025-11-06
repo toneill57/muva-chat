@@ -538,6 +538,45 @@
   - Agent: **@agent-deploy-agent**
   - Test: Developer nuevo configura secretos siguiendo guía
 
+### 7.6 Migrar a SSH Key Authentication (Security Enhancement)
+- [x] ✅ Migración completa de password a SSH keys (estimate: 2h | actual: 1.5h | completed: 2025-11-06)
+  - **Keys Generated:** ✅
+    - Ed25519 staging key: `~/.ssh/muva-deployment/staging_key`
+    - Ed25519 production key: `~/.ssh/muva-deployment/production_key`
+    - Separate keys for defense in depth
+  - **VPS Configuration:** ✅
+    - Public keys added to `~/.ssh/authorized_keys`
+    - `/etc/ssh/sshd_config`: `PasswordAuthentication no`
+    - SSH service restarted successfully
+  - **GitHub Secrets:** ✅
+    - `STAGING_VPS_SSH_KEY` configured (Ed25519 private key)
+    - `PROD_VPS_SSH_KEY` configured (Ed25519 private key - different)
+  - **Workflows Updated:** ✅
+    - `deploy-staging.yml`: 3 occurrences (deploy, health check, rollback)
+    - `deploy-production.yml`: 2 occurrences (deploy, rollback)
+    - Changed from `password:` to `key:` parameter
+  - **Documentation:** ✅
+    - GITHUB_SECRETS_SETUP.md updated with migration section
+    - SSH key rotation process documented
+    - Security improvements table included
+  - **Testing:** ✅
+    - Local SSH connection verified with both keys
+    - Deployment to staging successful (Run #19124341949)
+    - Site functioning: https://simmerdown.staging.muva.chat
+  - **Security Benefits:**
+    - 🔐 Brute-force attacks: impossible
+    - 🔐 Credential interception: impossible
+    - 🔐 Environment separation: separate keys
+    - 🔐 Instant revocation: remove public key
+    - 🔐 Password auth disabled on VPS
+  - Files:
+    - `.github/workflows/deploy-staging.yml` ✅
+    - `.github/workflows/deploy-production.yml` ✅
+    - `docs/.../GITHUB_SECRETS_SETUP.md` ✅ (85 new lines)
+  - Commit: `0ad9876` ✅
+  - Agent: **@agent-deploy-agent**
+  - Test: ✅ Deployment exitoso con SSH key authentication
+
 ---
 
 ## FASE 8: Monitoring & Alerting 📊
@@ -706,8 +745,8 @@
 
 ## 📊 PROGRESO
 
-**Total Tasks:** 62 tareas
-**Completed:** 50/62 (80.6%) ✅
+**Total Tasks:** 63 tareas
+**Completed:** 51/63 (81.0%) ✅
 
 **Por Fase:**
 - FASE 1 (Supabase Branching Setup): 6/6 tareas ✅ COMPLETADA (2-3h)
@@ -716,12 +755,12 @@
 - FASE 4 (Production Workflow): 7/7 tareas ✅ COMPLETADA (3-4h)
 - FASE 5 (Branch Protection): 5/5 tareas ✅ COMPLETADA (1-2h)
 - FASE 6 (Migration Management): 5/5 tareas ✅ COMPLETADA (2-3h | actual: 4.5h)
-- FASE 7 (Environment Variables): 5/5 tareas ✅ COMPLETADA (1-2h | actual: 2h)
+- FASE 7 (Environment Variables + Security): 6/6 tareas ✅ COMPLETADA (1-2h | actual: 3.5h)
 - FASE 8 (Monitoring): 0/7 tareas (2-3h)
 - FASE 9 (Documentation): 0/7 tareas (2-3h)
 
-**Tiempo Total Estimado:** 17-26 horas
-**Tiempo Completado:** 16.5-21.5h (FASE 1-6) ✅
+**Tiempo Total Estimado:** 19-28 horas
+**Tiempo Completado:** 18-23h (FASE 1-7) ✅
 
 **Archivos FASE 5:**
 - Docs: BRANCH_PROTECTION_GUIDE.md (600 líneas)
@@ -740,17 +779,30 @@
   - validate-env-vars.ts (516 líneas) - Validación completa de variables ✅
   - rotate-secrets.ts (367 líneas) - Skeleton para rotación automatizada ✅
   - setup-github-secrets.sh (132 líneas) - Configuración automatizada de secretos ✅
-- Docs: 2 guías (832 líneas)
+- Docs: 2 guías (917 líneas)
   - SECRETS_GUIDE.md (607 líneas) - Inventario y gestión completa ✅
-  - GITHUB_SECRETS_SETUP.md (225 líneas) - Setup paso a paso ✅
-- Workflows: 3 archivos actualizados con prefijos consistentes
+  - GITHUB_SECRETS_SETUP.md (310 líneas) - Setup paso a paso + SSH migration ✅
+- Workflows: 3 archivos actualizados (2 veces)
   - validate-dev.yml (DEV_* prefijos) ✅
-  - deploy-staging.yml (STAGING_* prefijos) ✅
-  - deploy-production.yml (PROD_* prefijos) ✅
-- GitHub Secrets: 24 secretos configurados (31 total incluyendo legacy) ✅
-- Total: 1,847+ líneas implementadas ✅
+  - deploy-staging.yml (STAGING_* → password → SSH key) ✅
+  - deploy-production.yml (PROD_* → password → SSH key) ✅
+- GitHub Secrets: 26 secretos configurados (33 total incluyendo legacy) ✅
+  - Original: 24 secrets (passwords)
+  - Added: STAGING_VPS_SSH_KEY, PROD_VPS_SSH_KEY
+- Security Infrastructure:
+  - SSH Keys: 2 Ed25519 key pairs generated ✅
+  - VPS: Password authentication disabled ✅
+  - Public keys: Added to `~/.ssh/authorized_keys` ✅
+- Total: 1,932+ líneas implementadas ✅
+
+**FASE 7 Security Enhancement:**
+- ✅ Password authentication → SSH key authentication
+- ✅ Separate keys for staging and production
+- ✅ VPS hardened (PasswordAuthentication no)
+- ✅ Deployment tested and verified
+- ✅ Documentation updated with migration process
 
 ---
 
-**Última actualización:** 2025-11-05
+**Última actualización:** 2025-11-06 (SSH Key Migration)
 **Próximo paso:** FASE 8 - Monitoring & Alerting
