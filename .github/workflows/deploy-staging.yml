@@ -94,10 +94,10 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
-          # STAGING VPS CREDENTIALS - Use STAGING_* prefixed secrets
+          # STAGING VPS CREDENTIALS - Use SSH Key Authentication
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
-          password: ${{ secrets.STAGING_VPS_PASSWORD }}
+          key: ${{ secrets.STAGING_VPS_SSH_KEY }}
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
             set -e  # Exit immediately on any error
@@ -206,7 +206,7 @@ jobs:
         with:
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
-          password: ${{ secrets.STAGING_VPS_PASSWORD }}
+          key: ${{ secrets.STAGING_VPS_SSH_KEY }}
           envs: SUPABASE_STAGING_PROJECT_ID,SUPABASE_SERVICE_ROLE_KEY
           script: |
             set -e
@@ -229,7 +229,7 @@ jobs:
         with:
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
-          password: ${{ secrets.STAGING_VPS_PASSWORD }}
+          key: ${{ secrets.STAGING_VPS_SSH_KEY }}
           script: |
             set -e
 

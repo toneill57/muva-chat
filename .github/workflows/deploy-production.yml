@@ -96,10 +96,10 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
-          # PRODUCTION VPS CREDENTIALS - Use PROD_* prefixed secrets
+          # PRODUCTION VPS CREDENTIALS - Use SSH Key Authentication
           host: ${{ secrets.PROD_VPS_HOST }}
           username: ${{ secrets.PROD_VPS_USER }}
-          password: ${{ secrets.PROD_VPS_PASSWORD }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
             set -e  # Exit immediately on any error
@@ -242,7 +242,7 @@ jobs:
         with:
           host: ${{ secrets.PROD_VPS_HOST }}
           username: ${{ secrets.PROD_VPS_USER }}
-          password: ${{ secrets.PROD_VPS_PASSWORD }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
           script: |
             set -e
 
