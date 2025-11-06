@@ -99,7 +99,7 @@ jobs:
           # PRODUCTION VPS CREDENTIALS - Use PROD_* prefixed secrets
           host: ${{ secrets.PROD_VPS_HOST }}
           username: ${{ secrets.PROD_VPS_USER }}
-          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          password: ${{ secrets.PROD_VPS_PASSWORD }}
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
             set -e  # Exit immediately on any error
@@ -242,7 +242,7 @@ jobs:
         with:
           host: ${{ secrets.PROD_VPS_HOST }}
           username: ${{ secrets.PROD_VPS_USER }}
-          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          password: ${{ secrets.PROD_VPS_PASSWORD }}
           script: |
             set -e
 

@@ -97,7 +97,7 @@ jobs:
           # STAGING VPS CREDENTIALS - Use STAGING_* prefixed secrets
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
-          key: ${{ secrets.STAGING_VPS_SSH_KEY }}
+          password: ${{ secrets.STAGING_VPS_PASSWORD }}
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
             set -e  # Exit immediately on any error
@@ -206,7 +206,7 @@ jobs:
         with:
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
-          key: ${{ secrets.STAGING_VPS_SSH_KEY }}
+          password: ${{ secrets.STAGING_VPS_PASSWORD }}
           envs: SUPABASE_STAGING_PROJECT_ID,SUPABASE_SERVICE_ROLE_KEY
           script: |
             set -e
@@ -229,7 +229,7 @@ jobs:
         with:
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
-          key: ${{ secrets.STAGING_VPS_SSH_KEY }}
+          password: ${{ secrets.STAGING_VPS_PASSWORD }}
           script: |
             set -e
 
