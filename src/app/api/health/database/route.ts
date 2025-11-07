@@ -123,7 +123,7 @@ async function checkRPCSearchPath(funcConfig: FunctionConfig): Promise<HealthChe
         AND p.proname = $1;
     `;
 
-    const { data, error } = await supabase.rpc('exec_sql', {
+    let { data, error } = await supabase.rpc('exec_sql', {
       sql: query.replace('$1', `'${funcConfig.name}'`),
     });
 
