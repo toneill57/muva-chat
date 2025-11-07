@@ -274,4 +274,7 @@ BEGIN
 END $$;
 
 -- Migration complete
-RAISE NOTICE 'Guest Chat Stable ID Fixes migration completed successfully';
+DO $$
+BEGIN
+  RAISE NOTICE 'Guest Chat Stable ID Fixes migration completed successfully';
+END $$;
