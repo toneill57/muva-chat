@@ -65,6 +65,26 @@ Layouts ya protegen rutas - NO agregar validaciones adicionales
 - DESPUÉS de deploy: Verificar health endpoints
 - X NUNCA deployear si staging está DOWN
 
+### 9. RPC Functions Validation (CRÍTICO - Guest Chat)
+**Problema recurrente:** Funciones RPC pierden `search_path` → Operador pgvector `<=>` inaccesible → Guest chat NO responde sobre alojamientos
+
+**SIEMPRE validar ANTES de deploy:**
+```bash
+pnpm run validate:rpc -- --env=staging
+```
+
+**Si falla → Auto-fix:**
+```bash
+pnpm run validate:rpc:fix -- --env=staging
+```
+
+**CI/CD:** GitHub Actions automáticamente valida + auto-repara antes de build
+**Monitoring:** Cron job ejecuta validación cada hora en VPS
+**Tests:** `pnpm run test:rpc` falla si funciones incorrectas
+
+Ver: `docs/guest-chat-debug/PREVENTION_SYSTEM.md` (sistema completo de 4 capas)
+Ver: `docs/monitoring/AUTOMATED_MONITORING_SETUP.md` (setup de cron + alertas)
+
 ---
 
 ## Development Setup
@@ -75,6 +95,21 @@ Layouts ya protegen rutas - NO agregar validaciones adicionales
 ```
 X NO usar `pnpm run dev` directo (falta .env.local)
 X NO crear `vercel.json` (migrado a VPS Oct 2025)
+
+### SSH Access to VPS
+
+**Staging VPS:**
+```bash
+ssh -i ~/.ssh/muva_deploy root@195.200.6.216
+```
+
+**Production VPS:** (when needed)
+```bash
+ssh -i ~/.ssh/muva_deploy root@195.200.6.216
+```
+
+**CRITICAL:** ALWAYS use `-i ~/.ssh/muva_deploy` flag (keys from FASE 7)
+X NUNCA: `ssh root@195.200.6.216` (will fail with "Permission denied")
 
 ---
 
@@ -164,8 +199,36 @@ Ver: `docs/infrastructure/three-environments/QUICK_REFERENCE.md` (1 página)
 - `pnpm dlx tsx` - Run TypeScript scripts
 - `pnpm run X` - Run package.json scripts
 
+**Validation Commands:**
+- `pnpm run validate:rpc` - Validate RPC functions search_path
+- `pnpm run validate:rpc:fix` - Auto-fix RPC functions
+- `pnpm run test:rpc` - Run RPC function tests
+- `pnpm dlx tsx scripts/pre-deploy-check.sh [env]` - Full pre-deploy validation
+
 Ref: `project-stabilization/PNPM_MIGRATION_COMPLETE.md`
 
 ---
 
-**Last Updated:** November 6, 2025 (Post-FASE 9 Completion)
+## Guest Chat Prevention System
+
+**Sistema de 4 Capas** para prevenir rotura de guest chat por funciones RPC incorrectas:
+
+1. **CLI Validation** - `pnpm run validate:rpc` (desarrollo)
+2. **Health Endpoint** - `GET /api/health/database` (runtime)
+3. **Monitoring Dashboard** - Visual status de todos los ambientes
+4. **Automated Tests** - `pnpm run test:rpc` (CI/CD gate)
+
+**Workflow antes de deploy:**
+```bash
+./scripts/pre-deploy-check.sh staging  # Valida TODO
+./scripts/deploy-staging.sh            # Deploy si pasa ✅
+```
+
+**Documentación completa:**
+- `docs/guest-chat-debug/README.md` - Guía rápida
+- `docs/guest-chat-debug/PREVENTION_SYSTEM.md` - Sistema completo
+- `docs/monitoring/AUTOMATED_MONITORING_SETUP.md` - Cron + alertas
+
+---
+
+**Last Updated:** November 6, 2025 (Post-Prevention System)

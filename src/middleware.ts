@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSubdomain, isValidSubdomain } from '@/lib/tenant-utils'
+import { createTimingContext, addTimingHeaders } from '@/lib/performance-logger'
 
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 100 // 100 requests per minute for MotoPress sync
@@ -69,6 +70,9 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // 📊 Start performance timing
+  const timing = createTimingContext()
+
   // Force log to ensure middleware is executing
   console.log('[middleware] === MIDDLEWARE EXECUTING ===', pathname)
   console.log('[middleware] Full URL:', request.url)
@@ -99,7 +103,16 @@ export function middleware(request: NextRequest) {
     const clientId = getClientId(request)
 
     if (isRateLimited(clientId, pathname)) {
-      return NextResponse.json(
+      // Complete timing before returning
+      const { duration } = timing.complete({
+        method: request.method,
+        path: pathname,
+        status: 429,
+        userAgent: request.headers.get('user-agent') || undefined,
+        ip: clientId,
+      })
+
+      const response = NextResponse.json(
         {
           error: 'Rate limit exceeded',
           message: 'Too many requests. Please try again later.',
@@ -115,6 +128,9 @@ export function middleware(request: NextRequest) {
           }
         }
       )
+
+      addTimingHeaders(response, duration)
+      return response
     }
 
     // Add rate limit headers to successful responses
@@ -130,6 +146,16 @@ export function middleware(request: NextRequest) {
       response.headers.set('X-RateLimit-Remaining', Math.max(0, MAX_REQUESTS_PER_WINDOW - clientInfo.count).toString())
       response.headers.set('X-RateLimit-Reset', Math.ceil(clientInfo.resetTime / 1000).toString())
     }
+
+    // Complete timing and add headers
+    const { duration } = timing.complete({
+      method: request.method,
+      path: pathname,
+      status: 200,
+      userAgent: request.headers.get('user-agent') || undefined,
+      ip: clientId,
+    })
+    addTimingHeaders(response, duration)
 
     return addSecurityHeaders(response)
   }
@@ -149,6 +175,16 @@ export function middleware(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
   }
+
+  // Complete timing and add headers
+  const { duration } = timing.complete({
+    method: request.method,
+    path: pathname,
+    status: 200,
+    userAgent: request.headers.get('user-agent') || undefined,
+    ip: getClientId(request),
+  })
+  addTimingHeaders(response, duration)
 
   // Add security headers to all responses
   return addSecurityHeaders(response)

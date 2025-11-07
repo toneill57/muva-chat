@@ -165,6 +165,7 @@ Sistema de sincronización 100% confiable que garantice que staging sea una rép
 - Migración de datos (DML) en orden correcto
 - Reactivación de constraints y triggers
 - Log detallado de operaciones
+- **NUEVO:** Validación RPC functions pre y post sync
 
 **Archivos a crear/modificar:**
 - `scripts/sync-dev-to-staging.ts`
@@ -173,11 +174,27 @@ Sistema de sincronización 100% confiable que garantice que staging sea una rép
 - `logs/sync-{timestamp}.log`
 - `docs/database-sync/fase-4/SYNC_EXECUTION.md`
 
+**CRÍTICO - RPC Functions Protection:**
+1. **ANTES de sync-schema.ts:**
+   - Ejecutar: `pnpm run validate:rpc -- --env=staging`
+   - Si falla: `pnpm run validate:rpc:fix -- --env=staging`
+   - Backup de funciones RPC existentes
+2. **Durante sync-schema.ts:**
+   - EXCLUIR funciones RPC de recreación
+   - Preservar search_path existente
+3. **DESPUÉS de sync-data.ts:**
+   - Re-validar: `pnpm run validate:rpc -- --env=staging`
+   - Verificar operador `<=>` funciona
+
+**Razón:** Evitar "operator does not exist" que rompe guest chat (Nov 6, 2025 incident)
+
 **Testing:**
 - Verificar cada tabla sincronizada
 - Validar conteos de registros
 - Confirmar foreign keys funcionando
 - Test de queries complejas
+- **NUEVO:** RPC functions mantienen 'extensions' en search_path
+- **NUEVO:** Guest chat responde preguntas sobre alojamientos
 
 ---
 
@@ -189,6 +206,7 @@ Sistema de sincronización 100% confiable que garantice que staging sea una rép
 - Comparación tabla por tabla
 - Verificación de relaciones
 - Test de funcionalidades críticas
+- **NUEVO:** Validación RPC functions post-sync
 - Reporte de validación
 
 **Archivos a crear/modificar:**
@@ -202,6 +220,12 @@ Sistema de sincronización 100% confiable que garantice que staging sea una rép
 - Verificar login funciona en staging
 - Validar queries de negocio críticas
 - Test de permisos RLS
+- **NUEVO (CRÍTICO):** Validación final RPC functions:
+  - `pnpm run validate:rpc -- --env=staging`
+  - `curl https://simmerdown.staging.muva.chat/api/health/database`
+  - Test funcional: Guest chat responde sobre alojamientos
+  - Verificar: Funciones tienen 'extensions' en search_path
+  - Verificar: Operador `<=>` accesible para vector search
 
 ---
 
@@ -357,14 +381,26 @@ Sistema de sincronización 100% confiable que garantice que staging sea una rép
 7. `hotels.accommodation_units`
 8. `hotels.policies`
 
+### Funciones RPC Críticas (NO RECREAR - PRESERVAR search_path)
+1. `match_unit_manual_chunks` - Guest chat accommodation search
+2. `match_muva_documents` - Tourism content search
+3. `match_sire_documents` - SIRE compliance search
+4. `match_unit_operational_chunks` - Operational data search
+5. `match_embeddings` - Generic vector search
+
+**CRÍTICO:** Estas funciones DEBEN tener 'extensions' en search_path para acceder al operador `<=>` de pgvector. Si se pierden durante sync, el guest chat DEJA DE FUNCIONAR.
+
 ### Validaciones Obligatorias
 - Count de registros por tabla
 - Foreign keys integrity
 - RLS policies activas
 - Login funcional en subdominios
 - Queries de negocio críticas
+- **NUEVO (CRÍTICO):** RPC functions con search_path correcto
+- **NUEVO (CRÍTICO):** Guest chat responde sobre alojamientos
 
 ---
 
-**Última actualización:** November 6, 2025
-**Próximo paso:** Actualizar TODO.md con tareas específicas
+**Última actualización:** November 7, 2025
+**Cambios recientes:** Añadidas salvaguardas RPC functions en FASE 4 y FASE 5
+**Próximo paso:** Actualizar TODO.md con tareas específicas de validación RPC

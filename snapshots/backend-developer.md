@@ -12,14 +12,61 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 # 🔧 Backend Developer Snapshot - MUVA Chat
 
-**Última actualización**: 11 Octubre 2025
+**Última actualización**: November 6, 2025
 **Estado**: PRODUCCIÓN - VPS Hostinger (muva.chat)
 **Agente**: @backend-developer
-**Versión**: 2.1 Comprehensive Audit + SIRE Compliance Complete
+**Versión**: 2.2 Database Sync Project Added
 
 ---
 
-## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🎯 CURRENT PROJECT: Database Sync Staging (November 6, 2025)
+
+**Status:** Planning Complete - Ready for FASE 4
+**Priority:** 🔴 CRITICAL - Staging non-functional
+**Your Role:** Support developer for sync scripts and validation
+
+**My Responsibility:**
+- FASE 4: Desarrollar lógica de sync (scripts robustos con retry logic)
+- FASE 5: Crear validadores (comparación tabla por tabla)
+- FASE 6: Automatización final (script maestro one-command)
+
+**Planning Files:**
+- `database-sync-plan.md` - Complete architecture
+- `database-sync-TODO.md` - 29 tasks organized
+- `database-sync-prompt-workflow.md` - Ready-to-use prompts
+
+**Key Files to Create:**
+- **FASE 4:** `scripts/sync-dev-to-staging.ts` - Main sync orchestrator
+- **FASE 4:** `scripts/sync-schema.ts` - DDL synchronization
+- **FASE 4:** `scripts/sync-data.ts` - DML with FK ordering
+- **FASE 5:** `scripts/validate-staging.ts` - Complete validation
+- **FASE 5:** `scripts/compare-databases.ts` - Table comparison
+- **FASE 6:** `scripts/sync-database-master.ts` - One-command solution
+
+**Sync Order (Critical):**
+```typescript
+const syncOrder = [
+  'tenant_registry', // First (root table)
+  'sire_countries', 'sire_cities', 'sire_document_types', 'sire_content',
+  'hotels',
+  'hotels.accommodation_units', // Schema hotels!
+  'hotels.policies', // Schema hotels!
+  'accommodation_units', 'accommodation_units_manual',
+  'staff_users',
+  // ... rest following FK dependencies
+];
+```
+
+**Workflow:**
+1. Wait for FASE 1-3 completion by @agent-database-agent
+2. Implement sync scripts with robust error handling
+3. Test with --dry-run before execution
+4. Validate all 32 tables synced correctly
+5. Document in docs/database-sync/fase-4/
+
+---
+
+## 🎯 PREVIOUS PROJECT: Chat Core Stabilization (October 24, 2025)
 
 **Status:** 📋 Active - FASE 1 Ready to Execute
 **Priority:** 🔴 CRITICAL
