@@ -114,7 +114,7 @@ async function validateFunctions(): Promise<ValidationResult[]> {
     FROM pg_proc p
     JOIN pg_namespace n ON p.pronamespace = n.oid
     WHERE n.nspname = 'public'
-      AND p.proname = ANY(${functionNamesArray});
+      AND p.proname = ANY(${functionNamesArray})
   `;
 
   const { data, error } = await supabase.rpc('execute_sql', {
@@ -125,6 +125,8 @@ async function validateFunctions(): Promise<ValidationResult[]> {
     console.error('❌ Error querying functions:', error.message);
     process.exit(2);
   }
+
+  console.log('DEBUG - Raw data from execute_sql:', JSON.stringify(data, null, 2));
 
   const results: ValidationResult[] = [];
   const functionsMap = new Map<string, FunctionInfo>();
@@ -138,6 +140,8 @@ async function validateFunctions(): Promise<ValidationResult[]> {
       });
     }
   }
+
+  console.log('DEBUG - Parsed functionsMap size:', functionsMap.size);
 
   // Validate each function
   for (const funcConfig of CRITICAL_FUNCTIONS) {
