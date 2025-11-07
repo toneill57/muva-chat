@@ -196,7 +196,7 @@ async function fixFunctions(): Promise<void> {
     process.cwd(),
     'supabase',
     'migrations',
-    '20251103171933_fix_vector_search_path.sql'
+    '20251103174416_fix_vector_search_path.sql'
   );
 
   let migrationSQL: string;
