@@ -34,31 +34,21 @@ COMMENT ON INDEX public.idx_integration_configs_tenant_type_active IS
 -- ============================================================================
 -- 3. Calendar Events - Sync Feed Foreign Key
 -- ============================================================================
--- Used by: ICS sync manager for batch inserts
--- Query pattern: Foreign key lookups during insert
--- Frequency: Medium (sync operations)
--- Impact: Faster batch inserts
+-- SKIPPED: sync_feed_id column does not exist in calendar_events table
+-- TODO: Add this index when sync_feed_id column is added to schema
 
-CREATE INDEX IF NOT EXISTS idx_calendar_events_sync_feed
-ON public.calendar_events(sync_feed_id)
-WHERE sync_feed_id IS NOT NULL;
-
-COMMENT ON INDEX public.idx_calendar_events_sync_feed IS
-'Optimizes calendar event lookups by sync feed';
+-- CREATE INDEX IF NOT EXISTS idx_calendar_events_sync_feed
+-- ON public.calendar_events(sync_feed_id)
+-- WHERE sync_feed_id IS NOT NULL;
 
 -- ============================================================================
 -- 4. Calendar Event Changes - Event ID
 -- ============================================================================
--- Used by: ICS sync to track event modifications
--- Query pattern: WHERE calendar_event_id = X
--- Frequency: Medium
--- Impact: Faster change tracking
+-- SKIPPED: calendar_event_changes table does not exist
+-- TODO: Add this index when calendar_event_changes table is added to schema
 
-CREATE INDEX IF NOT EXISTS idx_calendar_event_changes_event_id
-ON public.calendar_event_changes(calendar_event_id);
-
-COMMENT ON INDEX public.idx_calendar_event_changes_event_id IS
-'Optimizes event change lookups';
+-- CREATE INDEX IF NOT EXISTS idx_calendar_event_changes_event_id
+-- ON public.calendar_event_changes(calendar_event_id);
 
 -- ============================================================================
 -- 5. Accommodation Units - Hotel ID (for JOINs)
@@ -129,7 +119,7 @@ COMMENT ON INDEX hotels.idx_accommodation_units_tenant_status IS
 -- ============================================================================
 -- DROP INDEX IF EXISTS hotels.idx_accommodation_units_tenant_motopress;
 -- DROP INDEX IF EXISTS public.idx_integration_configs_tenant_type_active;
--- DROP INDEX IF EXISTS public.idx_calendar_events_sync_feed;
--- DROP INDEX IF EXISTS public.idx_calendar_event_changes_event_id;
+-- DROP INDEX IF EXISTS public.idx_calendar_events_sync_feed; -- Not created (column doesn't exist)
+-- DROP INDEX IF EXISTS public.idx_calendar_event_changes_event_id; -- Not created (table doesn't exist)
 -- DROP INDEX IF EXISTS hotels.idx_accommodation_units_hotel_id;
 -- DROP INDEX IF EXISTS hotels.idx_accommodation_units_tenant_status;
