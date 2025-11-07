@@ -1,7 +1,7 @@
 ---
 title: "MUVA Chat Embeddings Generator - Snapshot Especializado"
 agent: embeddings-generator
-last_updated: "2025-10-06T16:00:00"
+last_updated: "2025-11-06"
 status: PRODUCTION_READY
 ---
 

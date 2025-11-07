@@ -4,7 +4,7 @@ description: "Complete inventory of all REST API endpoints with authentication, 
 category: api-architecture
 status: PRODUCTION_READY
 version: "1.1"
-last_updated: "2025-10-24"
+last_updated: "2025-11-06"
 audited_by: "api-endpoints-mapper"
 tags: [api, rest, authentication, security, performance, endpoints]
 keywords: ["guest_portal", "staff_portal", "compliance", "motopress", "matryoshka", "jwt"]

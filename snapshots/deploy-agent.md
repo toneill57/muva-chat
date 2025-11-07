@@ -155,7 +155,7 @@ Direct psql execution for DDL migrations (Supabase client cannot execute DDL)
 
 ## 🔧 RECENT FIX: Automated Deployment Issue (Oct 11, 2025)
 
-**Problem:** Deployment workflow failing after project rebranding (InnPilot → MUVA Chat)
+**Problem:** Deployment workflow failing after project rebranding (MUVA Chat → MUVA Chat)
 
 **Root Causes:**
 1. ❌ `VPS_HOST` configured as `muva.chat` (DNS) instead of `195.200.6.216` (IP)

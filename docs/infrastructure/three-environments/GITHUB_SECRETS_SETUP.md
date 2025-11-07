@@ -90,9 +90,11 @@ If you prefer manual configuration or need to troubleshoot:
 |-------------|-------|-------|
 | `STAGING_VPS_HOST` | `195.200.6.216` | VPS IP address |
 | `STAGING_VPS_USER` | `root` | SSH username |
-| `STAGING_VPS_PASSWORD` | `rabbitHole0+` | SSH password |
+| `STAGING_VPS_SSH_KEY` | `[Ed25519 private key]` | SSH private key (Ed25519) |
 
-⚠️ **Note:** Currently using password authentication. Consider switching to SSH keys for better security.
+✅ **Security:** Using SSH key authentication. Password authentication disabled on VPS.
+🔑 **Key Type:** Ed25519 (modern, secure)
+📁 **Public key location:** VPS `~/.ssh/authorized_keys`
 
 ---
 
@@ -113,9 +115,11 @@ If you prefer manual configuration or need to troubleshoot:
 |-------------|-------|-------|
 | `PROD_VPS_HOST` | `195.200.6.216` | Same VPS as staging |
 | `PROD_VPS_USER` | `root` | SSH username |
-| `PROD_VPS_PASSWORD` | `rabbitHole0+` | SSH password |
+| `PROD_VPS_SSH_KEY` | `[Ed25519 private key]` | SSH private key (Ed25519) - **DIFFERENT from staging** |
 
-⚠️ **Note:** Production uses same VPS but different directory (`/var/www/muva-chat` vs `/var/www/muva-chat-staging`)
+✅ **Security:** Separate SSH key for production (defense in depth)
+🔑 **Key Type:** Ed25519 (modern, secure)
+📁 **Deployment:** Production uses same VPS but different directory (`/var/www/muva-chat` vs `/var/www/muva-chat-staging`)
 
 ---
 
@@ -125,9 +129,9 @@ These secrets are used across **all environments**:
 
 | Secret Name | Value | Notes |
 |-------------|-------|-------|
-| `ANTHROPIC_API_KEY` | `sk-ant-api03-xxx...xxx` (get from console.anthropic.com) | Claude AI API key |
-| `OPENAI_API_KEY` | `sk-proj-xxx...xxx` (get from platform.openai.com) | OpenAI API key (embeddings) |
-| `SUPABASE_ACCESS_TOKEN` | `sbp_xxx...xxx` (get from supabase.com/dashboard) | Supabase Management API |
+| `ANTHROPIC_API_KEY` | `sk-ant-api03-xxx...xxx (get from console.anthropic.com)` | Claude AI API key |
+| `OPENAI_API_KEY` | `sk-proj-xxx...xxx (get from platform.openai.com)` | OpenAI API key (embeddings) |
+| `SUPABASE_ACCESS_TOKEN` | `sbp_xxx...xxx (get from supabase.com/dashboard)` | Supabase Management API |
 
 ---
 
@@ -270,6 +274,75 @@ After configuring secrets:
 
 ---
 
+## SSH Key Authentication Migration
+
+**Status:** ✅ COMPLETED (2025-11-06)
+
+We migrated from password authentication to SSH key authentication for enhanced security.
+
+### What Changed
+
+**Before:**
+```yaml
+# Workflows used password
+password: ${{ secrets.STAGING_VPS_PASSWORD }}
+```
+
+**After:**
+```yaml
+# Workflows now use SSH keys
+key: ${{ secrets.STAGING_VPS_SSH_KEY }}
+```
+
+### Security Improvements
+
+| Feature | Password Auth | SSH Key Auth |
+|---------|---------------|--------------|
+| Brute-force protection | ⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Credential interception | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Environment separation | ⭐ | ⭐⭐⭐⭐⭐ |
+| Revocation capability | ⭐⭐ | ⭐⭐⭐⭐⭐ |
+| Auditability | ⭐⭐ | ⭐⭐⭐⭐ |
+
+### Implementation Details
+
+**Keys Generated:**
+- **Algorithm:** Ed25519 (modern, secure)
+- **Staging Key:** Separate key for staging deployments
+- **Production Key:** Separate key for production deployments
+- **Location:** VPS `~/.ssh/authorized_keys`
+
+**VPS Configuration:**
+```bash
+# /etc/ssh/sshd_config
+PasswordAuthentication no
+PubkeyAuthentication yes
+```
+
+**GitHub Secrets:**
+- `STAGING_VPS_SSH_KEY` - Ed25519 private key for staging
+- `PROD_VPS_SSH_KEY` - Ed25519 private key for production (different key)
+
+### Benefits Achieved
+
+✅ **Defense in Depth:** Separate keys per environment
+✅ **No Password Exposure:** Private keys never transmitted
+✅ **Instant Revocation:** Remove public key from VPS to revoke access
+✅ **VPS Hardening:** Password authentication completely disabled
+✅ **Audit Trail:** Each key identifies its purpose
+
+### Key Rotation Process
+
+When keys need rotation (quarterly recommended):
+
+1. Generate new SSH key pair
+2. Add new public key to VPS `authorized_keys`
+3. Update GitHub Secret with new private key
+4. Test deployment
+5. Remove old public key from VPS
+
+---
+
 ## Related Documentation
 
 - [SECRETS_GUIDE.md](./SECRETS_GUIDE.md) - Complete secrets inventory and management
@@ -285,5 +358,5 @@ After configuring secrets:
 
 ---
 
-**Last Updated:** 2025-11-05
+**Last Updated:** 2025-11-06 (SSH Key Migration)
 **Maintainer:** DevOps Team

@@ -1,6 +1,9 @@
 ---
 name: ux-interface
 description: Agente especializado en UI/UX que gestiona autónomamente modificaciones de interfaz, animaciones, estilos y componentes visuales. Use this agent for all frontend/UI tasks - invoke with @agent-ux-interface.
+last_updated: "2025-11-06"
+version: "2.0"
+status: "active"
 model: sonnet
 tools: Bash, Read, Write, Edit, MultiEdit, Glob, Grep, WebFetch
 color: green
@@ -9,7 +12,7 @@ color: green
 # UX-Interface Agent 🎨
 
 ## Purpose
-I'm a specialized UI/UX agent that autonomously manages all interface modifications, animations, styles, and visual components for the InnPilot ecosystem. My function is to allow developers to focus on business logic while I handle all visual and user experience aspects.
+I'm a specialized UI/UX agent that autonomously manages all interface modifications, animations, styles, and visual components for the MUVA Chat ecosystem. My function is to allow developers to focus on business logic while I handle all visual and user experience aspects.
 
 ## Core Responsibilities
 
@@ -288,7 +291,7 @@ useEffect(() => {
 # 3. Verify: Touch targets, safe areas, responsive layout
 
 # Lighthouse audit
-npm run build && npm start
+pnpm run build && npm start
 # DevTools → Lighthouse → Mobile → Analyze
 # Target: All scores ≥ 90
 
