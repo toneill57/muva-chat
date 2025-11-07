@@ -98,6 +98,19 @@ interface DatabaseMetrics {
   error?: string;
 }
 
+interface RPCFunctionsMetrics {
+  status: 'healthy' | 'degraded' | 'error' | 'unknown';
+  latency: number;
+  criticalCount?: number;
+  invalidCount?: number;
+  error?: string;
+  details?: Array<{
+    function: string;
+    status: string;
+    critical: boolean;
+  }>;
+}
+
 interface DeploymentInfo {
   lastDeployment?: string;
   commitSha?: string;
@@ -110,6 +123,7 @@ interface EnvironmentStatus {
   displayName: string;
   health: HealthStatus;
   database: DatabaseMetrics;
+  rpcFunctions: RPCFunctionsMetrics;
   deployment: DeploymentInfo;
   overall: 'UP' | 'DEGRADED' | 'DOWN' | 'UNKNOWN';
 }
@@ -175,6 +189,68 @@ async function checkDatabase(config: EnvironmentConfig): Promise<DatabaseMetrics
   }
 }
 
+async function checkRPCFunctions(config: EnvironmentConfig): Promise<RPCFunctionsMetrics> {
+  const startTime = Date.now();
+
+  try {
+    // Check RPC functions via database health endpoint
+    const curlCommand = `curl -s -m 5 "${config.url}/api/health/database" || echo '{"error":"not_available"}'`;
+    const response = execSync(curlCommand, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'ignore'] });
+    const latency = Date.now() - startTime;
+
+    const data = JSON.parse(response);
+
+    if (data.error) {
+      return {
+        status: 'unknown',
+        latency,
+        error: data.error,
+      };
+    }
+
+    // Parse checks to get function status
+    const checks = data.checks || [];
+    const funcChecks = checks.filter((c: any) => c.name.startsWith('rpc_search_path_'));
+
+    const criticalInvalid = funcChecks.filter(
+      (c: any) => c.status !== 'healthy' && c.metadata?.critical === true
+    ).length;
+
+    const totalInvalid = funcChecks.filter((c: any) => c.status !== 'healthy').length;
+
+    // Extract function details for display
+    const details = funcChecks.map((c: any) => ({
+      function: c.metadata?.function || c.name.replace('rpc_search_path_', ''),
+      status: c.status,
+      critical: c.metadata?.critical || false,
+    }));
+
+    // Determine overall RPC status
+    let status: 'healthy' | 'degraded' | 'error' | 'unknown' = 'healthy';
+    if (criticalInvalid > 0) {
+      status = 'error';
+    } else if (totalInvalid > 0) {
+      status = 'degraded';
+    } else if (data.status !== 'healthy') {
+      status = 'degraded';
+    }
+
+    return {
+      status,
+      latency,
+      criticalCount: criticalInvalid,
+      invalidCount: totalInvalid,
+      details,
+    };
+  } catch (error: any) {
+    return {
+      status: 'unknown',
+      latency: Date.now() - startTime,
+      error: error.message || 'Connection failed',
+    };
+  }
+}
+
 function getDeploymentInfo(config: EnvironmentConfig): DeploymentInfo {
   try {
     // Try to read git info from local .git directory
@@ -214,20 +290,21 @@ function getDeploymentInfo(config: EnvironmentConfig): DeploymentInfo {
 async function getEnvironmentStatus(config: EnvironmentConfig): Promise<EnvironmentStatus> {
   console.log(`📊 Checking ${config.displayName}...`);
 
-  const [health, database, deployment] = await Promise.all([
+  const [health, database, rpcFunctions, deployment] = await Promise.all([
     checkHealth(config),
     checkDatabase(config),
+    checkRPCFunctions(config),
     Promise.resolve(getDeploymentInfo(config)),
   ]);
 
   // Determine overall status
   let overall: 'UP' | 'DEGRADED' | 'DOWN' | 'UNKNOWN' = 'UNKNOWN';
 
-  if (health.status === 'healthy' && database.status === 'healthy') {
+  if (health.status === 'healthy' && database.status === 'healthy' && rpcFunctions.status === 'healthy') {
     overall = 'UP';
-  } else if (health.status === 'degraded' || (health.status === 'healthy' && database.status !== 'healthy')) {
+  } else if (health.status === 'degraded' || database.status !== 'healthy' || rpcFunctions.status === 'degraded') {
     overall = 'DEGRADED';
-  } else if (health.status === 'error') {
+  } else if (health.status === 'error' || rpcFunctions.status === 'error') {
     overall = 'DOWN';
   }
 
@@ -236,6 +313,7 @@ async function getEnvironmentStatus(config: EnvironmentConfig): Promise<Environm
     displayName: config.displayName,
     health,
     database,
+    rpcFunctions,
     deployment,
     overall,
   };
@@ -327,6 +405,36 @@ function displayDashboard(statuses: EnvironmentStatus[]) {
 
     if (status.database.error) {
       console.log(`│    Error: ${status.database.error.substring(0, 48).padEnd(51)} │`);
+    }
+
+    // RPC Functions Status
+    console.log('│                                                                 │');
+    const rpcEmoji = status.rpcFunctions.status === 'healthy' ? '✅' : status.rpcFunctions.status === 'degraded' ? '⚠️' : '🔴';
+    console.log(`│ ${rpcEmoji} RPC Functions: ${status.rpcFunctions.status.padEnd(43)} │`);
+    console.log(`│    Latency: ${formatResponseTime(status.rpcFunctions.latency).padEnd(49)} │`);
+
+    if (status.rpcFunctions.criticalCount !== undefined && status.rpcFunctions.criticalCount > 0) {
+      console.log(`│    🔴 Critical invalid: ${status.rpcFunctions.criticalCount.toString().padEnd(37)} │`);
+    }
+
+    if (status.rpcFunctions.invalidCount !== undefined && status.rpcFunctions.invalidCount > 0) {
+      console.log(`│    ⚠️  Total invalid: ${status.rpcFunctions.invalidCount.toString().padEnd(39)} │`);
+    }
+
+    if (status.rpcFunctions.error) {
+      console.log(`│    Error: ${status.rpcFunctions.error.substring(0, 48).padEnd(51)} │`);
+    }
+
+    if (status.rpcFunctions.details && status.rpcFunctions.details.length > 0) {
+      const invalidFuncs = status.rpcFunctions.details.filter(d => d.status !== 'healthy');
+      if (invalidFuncs.length > 0) {
+        console.log(`│    Invalid functions:${''.padEnd(42)} │`);
+        invalidFuncs.forEach(func => {
+          const criticalBadge = func.critical ? '🔴' : '⚠️';
+          const funcName = func.function.substring(0, 30);
+          console.log(`│      ${criticalBadge} ${funcName.padEnd(52)} │`);
+        });
+      }
     }
 
     // Deployment Info

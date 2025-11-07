@@ -1,7 +1,15 @@
 #!/usr/bin/env tsx
 /**
- * Copy all data from DEV branch to STAGING branch
- * Using Supabase MCP tools with batch processing
+ * Copy ALL data from DEV (Production) to STAGING
+ *
+ * ⚠️ WARNING: This script DELETES all data in staging tables before copying!
+ *
+ * This is a COMPLETE database synchronization that copies 29 tables with real data.
+ * Previously only copied 10 tables, causing missing staff users, SIRE data, and more.
+ *
+ * Updated: 2025-11-06 to include all missing tables (staff_users, SIRE catalogs, etc.)
+ *
+ * Usage: pnpm dlx tsx scripts/copy-dev-to-staging.ts
  */
 
 import { createClient } from '@supabase/supabase-js';
@@ -15,17 +23,55 @@ const STAGING_URL = 'https://rvjmwwvkhglcuqwcznph.supabase.co';
 const STAGING_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2am13d3ZraGdsY3Vxd2N6bnBoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjA0MDE3NywiZXhwIjoyMDc3NjE2MTc3fQ.yOfeLkNPD-dM_IB954XtelUv-d237vfa39UdUB1WTlA';
 
 // Tables to copy in order (respecting dependencies)
+// Updated 2025-11-06: Added 19 missing tables (was 10, now 29)
 const TABLES = [
-  'code_embeddings',
-  'muva_content',
-  'prospective_sessions',
-  'chat_messages',
-  'accommodation_units_manual_chunks',
-  'accommodation_units_public',
-  'guest_conversations',
-  'guest_reservations',
-  'reservation_accommodations',
-  'sync_history',
+  // ===== Core Tenant/Hotel Data =====
+  'tenants',                          // Core: Tenant definitions
+  'hotels',                           // Core: Hotel information
+  'accommodation_units',              // Core: Accommodation unit details
+  'integration_configs',              // Core: Integration settings
+
+  // ===== SIRE Compliance (Colombian Regulatory) =====
+  'sire_countries',                   // SIRE: Country codes (45 rows)
+  'sire_cities',                      // SIRE: City codes (42 rows)
+  'sire_document_types',              // SIRE: Document type codes (4 rows)
+
+  // ===== Staff System =====
+  'staff_users',                      // 🔴 CRITICAL: Was missing! (4 users)
+  'staff_conversations',              // Staff-guest conversations (45 rows)
+  'staff_messages',                   // Staff messages (60 rows)
+
+  // ===== Permissions =====
+  'user_tenant_permissions',          // User permissions (1 row)
+
+  // ===== Operations =====
+  'hotel_operations',                 // Operational records (10 rows)
+  'job_logs',                         // Background job logs (39 rows)
+  'sync_history',                     // Sync operation history (85 rows)
+
+  // ===== Reservations =====
+  'guest_reservations',               // Guest reservation data
+  'reservation_accommodations',       // Reservation-accommodation links (93 rows)
+
+  // ===== Communication & AI =====
+  'guest_conversations',              // Guest conversations (113 rows)
+  'chat_messages',                    // Chat messages (328 rows)
+  'conversation_memory',              // AI conversation context (10 rows)
+  'conversation_context',             // Extended conversation context
+
+  // ===== Calendar =====
+  'calendar_events',                  // Calendar events (ICS sync)
+  'calendar_event_changes',           // Event change tracking
+
+  // ===== Content & Embeddings =====
+  'muva_content',                     // Tourism content
+  'code_embeddings',                  // Code embeddings
+  'accommodation_units_manual_chunks',// Manual content chunks
+  'accommodation_units_public',       // Public accommodation data
+  'matryoshka_embeddings',            // Matryoshka vector embeddings
+
+  // ===== Analytics =====
+  'prospective_sessions',             // Prospective guest sessions (411 rows)
 ];
 
 const BATCH_SIZE = 100;

@@ -1,7 +1,7 @@
 ---
 title: Database Agent Snapshot
 agent: database-agent
-last_updated: 2025-11-01
+last_updated: 2025-11-06
 status: ✅ Production Ready
 database_version: PostgreSQL 17.6 on aarch64-unknown-linux-gnu
 project_id: ooaumjzaztmutltifhoq
@@ -13,7 +13,49 @@ sire_validation: 5/5 SQL queries passed (100%)
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
-## 🎯 CURRENT PROJECT: Supabase Branching Analysis Complete (November 1, 2025)
+## 🎯 CURRENT PROJECT: Database Sync Staging (November 6, 2025)
+
+**Status:** Planning Complete - Ready for FASE 1
+**Priority:** 🔴 CRITICAL - Staging database non-functional
+
+**My Responsibility:**
+- FASE 1: Análisis exhaustivo de dev database (detectar 32+ tablas)
+- FASE 2: Crear backups completos con pg_dump
+- FASE 3: Preparar staging environment (snapshot + limpieza)
+- FASE 4: Ejecutar migraciones DDL
+
+**Planning Files:**
+- `database-sync-plan.md` - Complete architecture (200+ lines)
+- `database-sync-TODO.md` - Tasks by phase (29 tasks total)
+- `database-sync-prompt-workflow.md` - Ready prompts (300+ lines)
+
+**Key Files:**
+- **Create:** `scripts/analyze-dev-database.ts` - Database analysis tool (FASE 1)
+- **Create:** `scripts/backup-dev-complete.ts` - Backup automation (FASE 2)
+- **Create:** `scripts/prepare-staging.ts` - Staging preparation (FASE 3)
+- **Reference:** `scripts/copy-dev-to-staging.ts` - Current INCOMPLETE script
+
+**Critical Tables to Verify (8 missing):**
+1. tenant_registry (NOT "tenants")
+2. accommodation_units_manual
+3. chat_conversations
+4. ics_feed_configurations
+5. property_relationships
+6. sire_content
+7. hotels.accommodation_units (schema hotels!)
+8. hotels.policies (schema hotels!)
+
+**Workflow:**
+1. Read database-sync-plan.md → database-sync-TODO.md → workflow.md
+2. Find next `[ ]` task in TODO.md for FASE 1
+3. Use corresponding prompt from workflow.md
+4. Focus on MCP tools: mcp__supabase__list_tables, mcp__supabase__execute_sql
+5. Test with project_id: "ooaumjzaztmutltifhoq"
+6. Document in docs/database-sync/fase-1/
+
+---
+
+## 🎯 PREVIOUS PROJECT: Supabase Branching Analysis Complete (November 1, 2025)
 
 **Status:** ✅ Analysis Complete - Action Items Identified
 **Priority:** 🔴 CRITICAL - Branch Architecture Issues Detected

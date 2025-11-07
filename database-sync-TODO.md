@@ -126,16 +126,26 @@
 
 ## FASE 4: Sincronización Completa 🎨
 
-### 4.1 Script de sincronización de schema
+### 4.1 **CRÍTICO:** Validar RPC Functions PRE-SYNC
+- [ ] Validar y proteger funciones RPC ANTES de schema sync (estimate: 0.25h)
+  - Ejecutar: `pnpm run validate:rpc -- --env=staging`
+  - Si falla: `pnpm run validate:rpc:fix -- --env=staging`
+  - Backup de funciones RPC existentes con search_path
+  - Agent: **@agent-backend-developer**
+  - Test: Todas las funciones tienen 'extensions' en search_path
+  - **Razón:** Evitar "operator does not exist" (Nov 6, 2025 incident)
+
+### 4.2 Script de sincronización de schema
 - [ ] Crear script para DDL sync (estimate: 1h)
   - Detectar diferencias de schema
   - Generar ALTER statements
+  - **EXCLUIR funciones RPC de recreación**
   - Manejo de errores robusto
   - Files: `scripts/sync-schema.ts`
   - Agent: **@agent-backend-developer**
   - Test: pnpm dlx tsx scripts/sync-schema.ts --validate
 
-### 4.2 Script de sincronización de datos
+### 4.3 Script de sincronización de datos
 - [ ] Crear script para DML sync (estimate: 1h)
   - Orden correcto por FK dependencies
   - Batch inserts para performance
@@ -144,21 +154,30 @@
   - Agent: **@agent-backend-developer**
   - Test: pnpm dlx tsx scripts/sync-data.ts --validate
 
-### 4.3 Ejecutar sync de schema
+### 4.4 Ejecutar sync de schema
 - [ ] Aplicar cambios DDL en staging (estimate: 0.5h)
   - Crear tablas faltantes
   - Actualizar estructura
+  - **NO recrear funciones RPC**
   - Files: `logs/sync-schema-{timestamp}.log`
   - Agent: **@agent-database-agent**
   - Test: Comparar schemas dev vs staging
 
-### 4.4 Ejecutar sync de datos
+### 4.5 Ejecutar sync de datos
 - [ ] Copiar todos los datos a staging (estimate: 0.5h)
   - Ejecutar en orden de dependencias
   - Verificar cada tabla
   - Files: `logs/sync-data-{timestamp}.log`
   - Agent: **@agent-backend-developer**
   - Test: Comparar row counts
+
+### 4.6 **CRÍTICO:** Re-validar RPC Functions POST-SYNC
+- [ ] Verificar funciones RPC después de sync (estimate: 0.25h)
+  - Re-ejecutar: `pnpm run validate:rpc -- --env=staging`
+  - Verificar operador `<=>` accesible
+  - Test funcional: Guest chat responde sobre alojamientos
+  - Agent: **@agent-backend-developer**
+  - Test: curl https://simmerdown.staging.muva.chat/api/health/database
 
 ---
 
@@ -188,7 +207,17 @@
   - Agent: **@agent-infrastructure-monitor**
   - Test: curl -I https://simmerdown.staging.muva.chat/login
 
-### 5.4 Health check completo
+### 5.4 **CRÍTICO:** Validación Final RPC Functions
+- [ ] Verificar funciones RPC en estado final (estimate: 0.25h)
+  - Ejecutar: `pnpm run validate:rpc -- --env=staging`
+  - Verificar: curl https://simmerdown.staging.muva.chat/api/health/database
+  - Test funcional: Guest chat responde sobre alojamientos
+  - Verificar: Funciones tienen 'extensions' en search_path
+  - Verificar: Operador `<=>` accesible para vector search
+  - Agent: **@agent-backend-developer**
+  - Test: Todas las 5 funciones críticas pasan validación
+
+### 5.5 Health check completo
 - [ ] Ejecutar todos los health checks (estimate: 0.5h)
   - API endpoints
   - Database queries
@@ -197,10 +226,11 @@
   - Agent: **@agent-infrastructure-monitor**
   - Test: pnpm dlx tsx scripts/health-check-staging.ts
 
-### 5.5 Documentar validación
+### 5.6 Documentar validación
 - [ ] Crear reporte de validación (estimate: 0.25h)
   - Resultados de cada test
   - Discrepancias si las hay
+  - Reporte de RPC functions
   - Files: `docs/database-sync/fase-5/VALIDATION_REPORT.md`
   - Agent: **@agent-infrastructure-monitor**
   - Test: Documento completo
@@ -238,15 +268,15 @@
 
 ## 📊 PROGRESO
 
-**Total Tasks:** 29
-**Completed:** 0/29 (0%)
+**Total Tasks:** 32 (actualizado: +3 tareas RPC)
+**Completed:** 0/32 (0%)
 
 **Por Fase:**
 - FASE 1: 0/5 tareas (Análisis)
 - FASE 2: 0/5 tareas (Backup)
 - FASE 3: 0/3 tareas (Preparación)
-- FASE 4: 0/4 tareas (Sincronización)
-- FASE 5: 0/5 tareas (Validación)
+- FASE 4: 0/6 tareas (Sincronización + RPC)
+- FASE 5: 0/6 tareas (Validación + RPC)
 - FASE 6: 0/3 tareas (Automatización)
 
 ---
@@ -265,6 +295,21 @@
 
 ---
 
+## 🔴 FUNCIONES RPC CRÍTICAS (PRESERVAR search_path)
+
+**NO RECREAR - PRESERVAR EXISTENTES:**
+1. ✅ `match_unit_manual_chunks` - Guest chat accommodation search
+2. ✅ `match_muva_documents` - Tourism content search
+3. ✅ `match_sire_documents` - SIRE compliance search
+4. ✅ `match_unit_operational_chunks` - Operational data search
+5. ✅ `match_embeddings` - Generic vector search
+
+**CRÍTICO:** Estas funciones DEBEN tener 'extensions' en search_path para acceder al operador `<=>` de pgvector. Si se pierden durante sync, el guest chat DEJA DE FUNCIONAR.
+
+**Validación:** `pnpm run validate:rpc -- --env=staging`
+
+---
+
 ## ⚠️ VALIDACIONES OBLIGATORIAS
 
 Antes de marcar FASE 5 completa:
@@ -274,7 +319,11 @@ Antes de marcar FASE 5 completa:
 - [ ] RLS policies activas
 - [ ] No hay tablas huérfanas
 - [ ] Schemas public y hotels sincronizados
+- [ ] **NUEVO (CRÍTICO):** RPC functions con search_path correcto
+- [ ] **NUEVO (CRÍTICO):** Guest chat responde sobre alojamientos
+- [ ] **NUEVO (CRÍTICO):** Health endpoint funciona (/api/health/database)
 
 ---
 
-**Última actualización:** November 6, 2025
+**Última actualización:** November 7, 2025
+**Cambios recientes:** Añadidas 3 tareas de validación RPC (FASE 4.1, 4.6, 5.4)

@@ -1,0 +1,85 @@
+# MUVA Chat - Automated RPC Functions Monitoring
+#
+# This crontab configuration sets up automated monitoring of RPC functions
+# to prevent the recurring "operator does not exist" error with pgvector.
+#
+# Installation:
+#   1. Copy this file: cp scripts/crontab.example /tmp/muva-crontab
+#   2. Edit paths to match your system: vi /tmp/muva-crontab
+#   3. Install: crontab /tmp/muva-crontab
+#   4. Verify: crontab -l
+#
+# Remove:
+#   crontab -r  # CAUTION: Removes ALL cron jobs
+#
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+# Set these at the top of your crontab or in /etc/environment
+
+# Path to project
+MUVA_PROJECT_DIR=/var/www/muva-chat
+
+# Alert method: "slack", "email", or "log" (default)
+ALERT_METHOD=slack
+
+# Slack webhook URL (if using Slack alerts)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+# Email address (if using email alerts)
+EMAIL_TO=alerts@your-domain.com
+
+# ============================================================================
+# MONITORING JOBS
+# ============================================================================
+
+# Monitor Production RPC Functions - Every hour
+# Checks that critical RPC functions have correct search_path
+0 * * * * cd /var/www/muva-chat && ./scripts/monitor-rpc-functions.sh production >> /var/log/muva-rpc-monitor.log 2>&1
+
+# Monitor Staging RPC Functions - Every 2 hours (offset by 30 minutes)
+30 */2 * * * cd /var/www/muva-chat && ./scripts/monitor-rpc-functions.sh staging >> /var/log/muva-rpc-monitor.log 2>&1
+
+# ============================================================================
+# MAINTENANCE JOBS (Optional)
+# ============================================================================
+
+# Full monitoring dashboard - Daily at 8am COT (13:00 UTC)
+0 13 * * * cd /var/www/muva-chat && pnpm dlx tsx scripts/monitoring-dashboard.ts >> /var/log/muva-dashboard.log 2>&1
+
+# Database health check - Every 6 hours
+0 */6 * * * curl -sf https://simmerdown.muva.chat/api/health/database || echo "Database health check failed" >> /var/log/muva-health.log
+
+# Log rotation - Weekly on Sunday at 3am
+0 3 * * 0 find /var/log/muva-*.log -mtime +30 -delete
+
+# ============================================================================
+# CRON SCHEDULE SYNTAX
+# ============================================================================
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12)
+# |  |  |  |  .---- day of week (0 - 7) (Sunday=0 or 7)
+# |  |  |  |  |
+# *  *  *  *  *  command to execute
+#
+# Examples:
+#   0 * * * *       - Every hour at :00
+#   */5 * * * *     - Every 5 minutes
+#   0 */2 * * *     - Every 2 hours
+#   30 8 * * *      - Every day at 8:30am
+#   0 0 * * 0       - Every Sunday at midnight
+#   0 9-17 * * 1-5  - Every hour 9am-5pm, Monday-Friday
+#
+# ============================================================================
+# TESTING
+# ============================================================================
+# To test the monitoring script manually:
+#   cd /var/www/muva-chat
+#   ./scripts/monitor-rpc-functions.sh production
+#
+# To test with Slack alerts:
+#   ALERT_METHOD=slack SLACK_WEBHOOK_URL=https://... ./scripts/monitor-rpc-functions.sh production
+#
+# ============================================================================

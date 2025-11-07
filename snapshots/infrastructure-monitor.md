@@ -3,20 +3,63 @@ title: "MUVA Chat - Infrastructure Monitor Snapshot"
 agent: infrastructure-monitor
 last_updated: "2025-11-06"
 status: PRODUCTION
-version: "2.2-STABLE"
+version: "2.3-STABLE"
 sire_performance: 3/3 benchmarks passed (280ms, 174ms, 189ms)
 ---
 
 # 🖥️ MUVA Chat - Infrastructure Monitor Snapshot
 
-**Last Updated:** October 9, 2025
+**Last Updated:** November 6, 2025
 **Status:** PRODUCTION STABLE - VPS Hostinger
 **Domain:** muva.chat
 **Monitoring Focus:** Performance, availability, error detection, deployment automation
 
 ---
 
-## 🎯 CURRENT PROJECT: Three Environments CI/CD (November 6, 2025)
+## 🎯 CURRENT PROJECT: Database Sync Staging Validation (November 6, 2025)
+
+**Status:** Planning Complete - Ready for FASE 5
+**Priority:** 🔴 CRITICAL - Staging validation required
+**Your Role:** Validation and health checks
+
+**My Responsibility:**
+- FASE 5: Validar health de staging post-sync
+- FASE 5: Verificar login funcional (simmerdown.staging.muva.chat)
+- FASE 6: Setup monitoring continuo
+
+**Planning Files:**
+- `database-sync-plan.md` - Complete architecture
+- `database-sync-TODO.md` - 29 tasks total
+- `database-sync-prompt-workflow.md` - Validation prompts
+
+**Key Files to Create:**
+- **FASE 5:** `scripts/health-check-staging.ts` - Complete health validation
+- **FASE 5:** `docs/database-sync/fase-5/VALIDATION_REPORT.md` - Results documentation
+
+**Critical Validations:**
+```bash
+# Must pass ALL:
+curl -I https://simmerdown.staging.muva.chat/login  # 200 OK
+pnpm dlx tsx scripts/health-check-staging.ts       # All green
+```
+
+**Success Criteria:**
+- ✅ Login page loads without errors
+- ✅ All 32 tables with identical counts
+- ✅ Foreign keys without violations
+- ✅ RLS policies active
+- ✅ No errors in logs
+
+**Workflow:**
+1. Wait for FASE 1-4 completion
+2. Execute comprehensive health checks
+3. Test functional login on staging
+4. Monitor logs for errors
+5. Document validation results
+
+---
+
+## 🎯 PREVIOUS PROJECT: Three Environments CI/CD (November 6, 2025)
 
 **Status:** ✅ 100% COMPLETE - All 9 phases deployed (FASES 1-9)
 **Priority:** ✅ COMPLETED - Monitoring & documentation in place

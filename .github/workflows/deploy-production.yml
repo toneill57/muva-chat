@@ -42,6 +42,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate RPC Functions (Pre-Deploy Gate)
+        id: validate_rpc
+        run: pnpm run validate:rpc -- --env=production
+        env:
+          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+        continue-on-error: false
+
+      - name: Auto-Fix RPC Functions (If Validation Failed)
+        if: failure() && steps.validate_rpc.outcome == 'failure'
+        run: |
+          echo "⚠️  RPC validation failed - attempting auto-fix..."
+          pnpm run validate:rpc:fix -- --env=production
+        env:
+          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Re-validate RPC Functions (After Auto-Fix)
+        if: steps.validate_rpc.outcome == 'failure'
+        run: pnpm run validate:rpc -- --env=production
+        env:
+          PROD_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          PROD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
+
       - name: Build application
         run: pnpm run build
         env:
