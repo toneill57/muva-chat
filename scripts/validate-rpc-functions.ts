@@ -104,6 +104,9 @@ async function validateFunctions(): Promise<ValidationResult[]> {
   console.log('='.repeat(80));
 
   // Query to get function search_path
+  const functionNames = CRITICAL_FUNCTIONS.map(f => f.name);
+  const functionNamesArray = `ARRAY[${functionNames.map(name => `'${name}'`).join(', ')}]`;
+
   const query = `
     SELECT
       p.proname,
@@ -111,14 +114,11 @@ async function validateFunctions(): Promise<ValidationResult[]> {
     FROM pg_proc p
     JOIN pg_namespace n ON p.pronamespace = n.oid
     WHERE n.nspname = 'public'
-      AND p.proname = ANY($1);
+      AND p.proname = ANY(${functionNamesArray});
   `;
-
-  const functionNames = CRITICAL_FUNCTIONS.map(f => f.name);
 
   const { data, error } = await supabase.rpc('execute_sql', {
     query,
-    params: [functionNames],
   });
 
   if (error) {
