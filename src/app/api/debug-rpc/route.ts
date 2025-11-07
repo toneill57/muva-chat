@@ -14,7 +14,7 @@ export async function GET() {
     FROM pg_proc p
     JOIN pg_namespace n ON p.pronamespace = n.oid
     WHERE n.nspname = 'public'
-      AND p.proname = 'match_unit_manual_chunks';
+      AND p.proname = 'match_unit_manual_chunks'
   `;
 
   const { data, error } = await supabase.rpc('execute_sql', {
