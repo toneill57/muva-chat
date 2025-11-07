@@ -94,7 +94,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
-          # STAGING VPS CREDENTIALS - Use STAGING_* prefixed secrets
+          # STAGING VPS CREDENTIALS - Use SSH Key Authentication
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
           key: ${{ secrets.STAGING_VPS_SSH_KEY }}

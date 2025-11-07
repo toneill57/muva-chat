@@ -3,13 +3,17 @@
 # ===================================================================
 # GitHub Secrets Configuration Script
 # ===================================================================
-# This script helps you configure all required GitHub Secrets
+# This script template helps you configure GitHub Secrets
 # for the three-environment CI/CD setup.
+#
+# IMPORTANT: This script contains TEMPLATE values only.
+# You must replace all placeholders with your actual secret values.
 #
 # Usage:
 #   1. Install GitHub CLI: brew install gh
 #   2. Login to GitHub: gh auth login
-#   3. Run this script: ./scripts/setup-github-secrets.sh
+#   3. Edit this script with your actual values
+#   4. Run: ./scripts/setup-github-secrets.sh
 # ===================================================================
 
 set -e
@@ -65,184 +69,97 @@ fi
 REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 print_info "Repository: $REPO"
 
-# ===================================================================
-# DEVELOPMENT ENVIRONMENT SECRETS
-# ===================================================================
-
-print_header "📦 DEVELOPMENT ENVIRONMENT SECRETS"
-
-echo "Setting up Development (dev) environment secrets..."
-echo ""
-
-# DEV_SUPABASE_URL
-gh secret set DEV_SUPABASE_URL \
-    --body "https://ooaumjzaztmutltifhoq.supabase.co" \
-    && print_success "DEV_SUPABASE_URL set"
-
-# DEV_SUPABASE_ANON_KEY
-gh secret set DEV_SUPABASE_ANON_KEY \
-    --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk" \
-    && print_success "DEV_SUPABASE_ANON_KEY set"
-
-# DEV_SUPABASE_SERVICE_ROLE_KEY
-gh secret set DEV_SUPABASE_SERVICE_ROLE_KEY \
-    --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc" \
-    && print_success "DEV_SUPABASE_SERVICE_ROLE_KEY set"
-
-# DEV_SUPABASE_PROJECT_ID
-gh secret set DEV_SUPABASE_PROJECT_ID \
-    --body "ooaumjzaztmutltifhoq" \
-    && print_success "DEV_SUPABASE_PROJECT_ID set"
-
-# ===================================================================
-# STAGING ENVIRONMENT SECRETS
-# ===================================================================
-
-print_header "🚀 STAGING ENVIRONMENT SECRETS"
-
-echo "Setting up Staging environment secrets..."
-echo ""
-
-# STAGING_SUPABASE_URL
-gh secret set STAGING_SUPABASE_URL \
-    --body "https://rvjmwwvkhglcuqwcznph.supabase.co" \
-    && print_success "STAGING_SUPABASE_URL set"
-
-# STAGING_SUPABASE_ANON_KEY
-gh secret set STAGING_SUPABASE_ANON_KEY \
-    --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2am13d3ZraGdsY3Vxd2N6bnBoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwNDAxNzcsImV4cCI6MjA3NzYxNjE3N30.HygM917avxMH3hb4gdEEK7xbt26bUx9jky1dbH_6CdA" \
-    && print_success "STAGING_SUPABASE_ANON_KEY set"
-
-# STAGING_SUPABASE_SERVICE_ROLE_KEY
-gh secret set STAGING_SUPABASE_SERVICE_ROLE_KEY \
-    --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2am13d3ZraGdsY3Vxd2N6bnBoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjA0MDE3NywiZXhwIjoyMDc3NjE2MTc3fQ.yOfeLkNPD-dM_IB954XtelUv-d237vfa39UdUB1WTlA" \
-    && print_success "STAGING_SUPABASE_SERVICE_ROLE_KEY set"
-
-# STAGING_SUPABASE_PROJECT_ID
-gh secret set STAGING_SUPABASE_PROJECT_ID \
-    --body "rvjmwwvkhglcuqwcznph" \
-    && print_success "STAGING_SUPABASE_PROJECT_ID set"
-
-# STAGING_SUPABASE_DB_PASSWORD
-gh secret set STAGING_SUPABASE_DB_PASSWORD \
-    --body "3hZMdp62TmM6RycK" \
-    && print_success "STAGING_SUPABASE_DB_PASSWORD set"
-
-# STAGING VPS CREDENTIALS
-print_info "Setting up Staging VPS credentials..."
-
-# STAGING_VPS_HOST
-gh secret set STAGING_VPS_HOST \
-    --body "195.200.6.216" \
-    && print_success "STAGING_VPS_HOST set"
-
-# STAGING_VPS_USER
-gh secret set STAGING_VPS_USER \
-    --body "root" \
-    && print_success "STAGING_VPS_USER set"
-
-# STAGING_VPS_PASSWORD (from context)
-gh secret set STAGING_VPS_PASSWORD \
-    --body "rabbitHole0+" \
-    && print_success "STAGING_VPS_PASSWORD set"
-
-# ===================================================================
-# PRODUCTION ENVIRONMENT SECRETS
-# ===================================================================
-
-print_header "🏭 PRODUCTION ENVIRONMENT SECRETS"
-
-echo "Setting up Production environment secrets..."
-echo ""
-
-# PROD_SUPABASE_URL
-gh secret set PROD_SUPABASE_URL \
-    --body "https://ooaumjzaztmutltifhoq.supabase.co" \
-    && print_success "PROD_SUPABASE_URL set"
-
-# PROD_SUPABASE_ANON_KEY
-gh secret set PROD_SUPABASE_ANON_KEY \
-    --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk" \
-    && print_success "PROD_SUPABASE_ANON_KEY set"
-
-# PROD_SUPABASE_SERVICE_ROLE_KEY
-gh secret set PROD_SUPABASE_SERVICE_ROLE_KEY \
-    --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc" \
-    && print_success "PROD_SUPABASE_SERVICE_ROLE_KEY set"
-
-# PROD_SUPABASE_PROJECT_ID
-gh secret set PROD_SUPABASE_PROJECT_ID \
-    --body "ooaumjzaztmutltifhoq" \
-    && print_success "PROD_SUPABASE_PROJECT_ID set"
-
-# PROD VPS CREDENTIALS
-print_info "Setting up Production VPS credentials..."
-print_warning "Using same VPS as staging (different paths)"
-
-# PROD_VPS_HOST
-gh secret set PROD_VPS_HOST \
-    --body "195.200.6.216" \
-    && print_success "PROD_VPS_HOST set"
-
-# PROD_VPS_USER
-gh secret set PROD_VPS_USER \
-    --body "root" \
-    && print_success "PROD_VPS_USER set"
-
-# PROD_VPS_PASSWORD
-gh secret set PROD_VPS_PASSWORD \
-    --body "rabbitHole0+" \
-    && print_success "PROD_VPS_PASSWORD set"
-
-# ===================================================================
-# SHARED SECRETS
-# ===================================================================
-
-print_header "🔑 SHARED SECRETS (All Environments)"
-
-echo "Setting up shared secrets..."
-echo ""
-
-# ANTHROPIC_API_KEY
-# IMPORTANT: Replace with your actual API key from console.anthropic.com
-print_warning "ANTHROPIC_API_KEY: Replace placeholder with your actual key"
-echo "Get your key from: https://console.anthropic.com/settings/keys"
-
-# OPENAI_API_KEY
-# IMPORTANT: Replace with your actual API key from platform.openai.com
-print_warning "OPENAI_API_KEY: Replace placeholder with your actual key"
-echo "Get your key from: https://platform.openai.com/api-keys"
-
-# SUPABASE_ACCESS_TOKEN
-# IMPORTANT: Replace with your actual token from supabase.com/dashboard
-print_warning "SUPABASE_ACCESS_TOKEN: Replace placeholder with your actual token"
-echo "Get your token from: https://supabase.com/dashboard/account/tokens"
-
-# ===================================================================
-# VERIFICATION
-# ===================================================================
-
-print_header "🔍 VERIFICATION"
-
-echo "Listing all configured secrets..."
-echo ""
-
-gh secret list
+print_header "⚠️  IMPORTANT: TEMPLATE ONLY"
 
 echo ""
-print_success "All secrets configured successfully!"
+print_warning "This script contains TEMPLATE values only!"
+echo ""
+echo "Before running, you must:"
+echo "  1. Replace ALL placeholder values with your actual secrets"
+echo "  2. Get secrets from:"
+echo "     - Supabase: https://supabase.com/dashboard"
+echo "     - Anthropic: https://console.anthropic.com/settings/keys"
+echo "     - OpenAI: https://platform.openai.com/api-keys"
+echo ""
+echo "Secrets to configure:"
+echo "  - Development (4 secrets): DEV_SUPABASE_*"
+echo "  - Staging (8 secrets): STAGING_SUPABASE_*, STAGING_VPS_*"
+echo "  - Production (7 secrets): PROD_SUPABASE_*, PROD_VPS_*"
+echo "  - Shared (3 secrets): ANTHROPIC_API_KEY, OPENAI_API_KEY, SUPABASE_ACCESS_TOKEN"
+echo ""
+print_info "See docs/infrastructure/three-environments/GITHUB_SECRETS_SETUP.md for detailed instructions"
 echo ""
 
-print_info "Next steps:"
-echo "  1. Verify secrets in GitHub: https://github.com/$REPO/settings/secrets/actions"
-echo "  2. Test workflows by pushing to dev/staging/main branches"
-echo "  3. Monitor GitHub Actions logs for any secret-related issues"
-echo ""
+# Uncomment and fill in the sections below with your actual values
 
-print_warning "SECURITY REMINDERS:"
-echo "  - Never log secret values in workflows"
-echo "  - Rotate keys quarterly (use scripts/rotate-secrets.ts)"
-echo "  - Review access to GitHub Secrets regularly"
-echo ""
+# # ===================================================================
+# # DEVELOPMENT ENVIRONMENT SECRETS
+# # ===================================================================
+#
+# print_header "📦 DEVELOPMENT ENVIRONMENT SECRETS"
+#
+# gh secret set DEV_SUPABASE_URL --body "YOUR_DEV_SUPABASE_URL"
+# gh secret set DEV_SUPABASE_ANON_KEY --body "YOUR_DEV_ANON_KEY"
+# gh secret set DEV_SUPABASE_SERVICE_ROLE_KEY --body "YOUR_DEV_SERVICE_ROLE_KEY"
+# gh secret set DEV_SUPABASE_PROJECT_ID --body "YOUR_DEV_PROJECT_ID"
 
-print_success "Setup complete! 🎉"
+# # ===================================================================
+# # STAGING ENVIRONMENT SECRETS
+# # ===================================================================
+#
+# print_header "🚀 STAGING ENVIRONMENT SECRETS"
+#
+# gh secret set STAGING_SUPABASE_URL --body "YOUR_STAGING_SUPABASE_URL"
+# gh secret set STAGING_SUPABASE_ANON_KEY --body "YOUR_STAGING_ANON_KEY"
+# gh secret set STAGING_SUPABASE_SERVICE_ROLE_KEY --body "YOUR_STAGING_SERVICE_ROLE_KEY"
+# gh secret set STAGING_SUPABASE_PROJECT_ID --body "YOUR_STAGING_PROJECT_ID"
+# gh secret set STAGING_SUPABASE_DB_PASSWORD --body "YOUR_STAGING_DB_PASSWORD"
+# gh secret set STAGING_VPS_HOST --body "YOUR_STAGING_VPS_HOST"
+# gh secret set STAGING_VPS_USER --body "YOUR_STAGING_VPS_USER"
+# gh secret set STAGING_VPS_PASSWORD --body "YOUR_STAGING_VPS_PASSWORD"
+
+# # ===================================================================
+# # PRODUCTION ENVIRONMENT SECRETS
+# # ===================================================================
+#
+# print_header "🏭 PRODUCTION ENVIRONMENT SECRETS"
+#
+# gh secret set PROD_SUPABASE_URL --body "YOUR_PROD_SUPABASE_URL"
+# gh secret set PROD_SUPABASE_ANON_KEY --body "YOUR_PROD_ANON_KEY"
+# gh secret set PROD_SUPABASE_SERVICE_ROLE_KEY --body "YOUR_PROD_SERVICE_ROLE_KEY"
+# gh secret set PROD_SUPABASE_PROJECT_ID --body "YOUR_PROD_PROJECT_ID"
+# gh secret set PROD_VPS_HOST --body "YOUR_PROD_VPS_HOST"
+# gh secret set PROD_VPS_USER --body "YOUR_PROD_VPS_USER"
+# gh secret set PROD_VPS_PASSWORD --body "YOUR_PROD_VPS_PASSWORD"
+
+# # ===================================================================
+# # SHARED SECRETS
+# # ===================================================================
+#
+# print_header "🔑 SHARED SECRETS (All Environments)"
+#
+# gh secret set ANTHROPIC_API_KEY --body "YOUR_ANTHROPIC_API_KEY"
+# gh secret set OPENAI_API_KEY --body "YOUR_OPENAI_API_KEY"
+# gh secret set SUPABASE_ACCESS_TOKEN --body "YOUR_SUPABASE_ACCESS_TOKEN"
+
+# # ===================================================================
+# # VERIFICATION
+# # ===================================================================
+#
+# print_header "🔍 VERIFICATION"
+#
+# echo "Listing all configured secrets..."
+# echo ""
+#
+# gh secret list
+#
+# echo ""
+# print_success "All secrets configured successfully!"
+# print_info "Next steps:"
+# echo "  1. Verify secrets in GitHub: https://github.com/$REPO/settings/secrets/actions"
+# echo "  2. Test workflows by pushing to dev/staging/main branches"
+
+print_warning "Script template loaded. Edit with your actual values before running."
+echo ""
+print_info "For automatic setup with your values already configured,"
+print_info "see the documented setup instructions in GITHUB_SECRETS_SETUP.md"

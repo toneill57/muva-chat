@@ -50,7 +50,7 @@ Proyecto Supabase: ooaumjzaztmutltifhoq
 │   ├── Datos: 6,641 registros ✅
 │   ├── Funciones: 90 ✅
 │   ├── Security: 0 issues ✅
-│   └── Git: rama "dev" (CONGELADA)
+│   └── Git: Three Environments (dev/staging/main active)
 │
 └── Branch "staging-v21" (NUEVO)
     ├── Status: FUNCTIONS_DEPLOYED ✅
@@ -172,11 +172,11 @@ WHERE n.nspname IN ('public', 'hotels') AND p.prokind = 'f';
 
 ## 📋 MAPEO GIT ↔ SUPABASE
 
-| Git Branch | Supabase Branch | Project Ref | Datos | Status |
-|------------|-----------------|-------------|-------|--------|
-| dev (congelada) | dev (DEFAULT) | ooaumjzaztmutltifhoq | ✅ 6,641 | MIGRATIONS_FAILED |
-| staging (activa) | staging-v21 | rmrflrttpobzlffhctjt | ❌ 0 | FUNCTIONS_DEPLOYED |
-| main | - | - | - | NO EXISTS |
+| Git Branch | Infrastructure | Project Ref | Auto-Deploy | Status |
+|------------|----------------|-------------|-------------|--------|
+| dev | Supabase branch | rvjmwwvkhglcuqwcznph | ✅ Yes | ACTIVE |
+| staging | VPS + Supabase | ztfslsrkemlfjqpzksir | ✅ Yes | ACTIVE |
+| main | VPS + Supabase | ooaumjzaztmutltifhoq | ⚠️ Manual | ACTIVE |
 
 ---
 
