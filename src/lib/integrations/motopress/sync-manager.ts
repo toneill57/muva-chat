@@ -25,6 +25,14 @@ interface IntegrationConfig {
 export class MotoPresSyncManager {
   private supabase = createServerClient()
 
+  /**
+   * Safely stringify JSON for SQL string literals
+   * Escapes single quotes: ' → ''
+   */
+  private sqlSafeJsonStringify(obj: any): string {
+    return JSON.stringify(obj).replace(/'/g, "''")
+  }
+
   async getIntegrationConfig(tenantId: string): Promise<IntegrationConfig | null> {
     const { data, error } = await this.supabase
       .from('integration_configs')
@@ -255,20 +263,23 @@ export class MotoPresSyncManager {
 
           if (existing) {
             // Update existing using SQL (hotels schema)
+            console.log(`[sync] 🔄 UPDATE: "${unit.name}" (id=${existing.id}, type_id=${unit.motopress_type_id})`)
+
             const updateSql = `
               UPDATE hotels.accommodation_units
               SET
                 name = '${unit.name?.replace(/'/g, "''")}',
                 description = '${unit.description?.replace(/'/g, "''") || ''}',
                 short_description = '${unit.short_description?.replace(/'/g, "''") || ''}',
-                capacity = '${JSON.stringify(unit.capacity)}'::jsonb,
-                bed_configuration = '${JSON.stringify(unit.bed_configuration)}'::jsonb,
+                capacity = '${this.sqlSafeJsonStringify(unit.capacity)}'::jsonb,
+                bed_configuration = '${this.sqlSafeJsonStringify(unit.bed_configuration)}'::jsonb,
                 view_type = '${unit.view_type || ''}',
-                tourism_features = '${JSON.stringify(unit.tourism_features)}'::jsonb,
-                unique_features = '${JSON.stringify(unit.unique_features)}'::jsonb,
-                images = '${JSON.stringify(unit.images)}'::jsonb,
+                tourism_features = '${this.sqlSafeJsonStringify(unit.tourism_features)}'::jsonb,
+                unique_features = '${this.sqlSafeJsonStringify(unit.unique_features)}'::jsonb,
+                images = '${this.sqlSafeJsonStringify(unit.images)}'::jsonb,
                 accommodation_mphb_type = '${unit.accommodation_mphb_type || ''}',
-                pricing = '${JSON.stringify(unit.pricing || {})}'::jsonb,
+                motopress_type_id = ${unit.motopress_type_id || 'NULL'},
+                pricing = '${this.sqlSafeJsonStringify(unit.pricing || {})}'::jsonb,
                 status = '${unit.status}',
                 updated_at = NOW()
               WHERE id = '${existing.id}'
@@ -277,6 +288,8 @@ export class MotoPresSyncManager {
             const { error: updateError } = await this.supabase.rpc('exec_sql', { sql: updateSql })
 
             if (updateError) {
+              console.error(`[sync] ❌ UPDATE FAILED for "${unit.name}":`, updateError.message)
+              console.error(`[sync] SQL preview: ${updateSql.substring(0, 300)}...`)
               errors.push(`Failed to update ${unit.name}: ${updateError.message}`)
             } else {
               updated++
@@ -298,10 +311,12 @@ export class MotoPresSyncManager {
             }
           } else {
             // Create new using SQL (hotels schema) with deterministic UUID
+            console.log(`[sync] 📝 INSERT: "${unit.name}" (type_id=${unit.motopress_type_id}, unit_id=${unit.motopress_unit_id})`)
+
             const insertSql = `
               INSERT INTO hotels.accommodation_units (
                 id,
-                hotel_id, tenant_id, motopress_unit_id, name, description, short_description,
+                hotel_id, tenant_id, motopress_unit_id, motopress_type_id, name, description, short_description,
                 capacity, bed_configuration, view_type, tourism_features, unique_features,
                 images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
               ) VALUES (
@@ -309,17 +324,18 @@ export class MotoPresSyncManager {
                 '${unit.hotel_id}',
                 '${unit.tenant_id}',
                 ${unit.motopress_unit_id},
+                ${unit.motopress_type_id || 'NULL'},
                 '${unit.name?.replace(/'/g, "''")}',
                 '${unit.description?.replace(/'/g, "''") || ''}',
                 '${unit.short_description?.replace(/'/g, "''") || ''}',
-                '${JSON.stringify(unit.capacity)}'::jsonb,
-                '${JSON.stringify(unit.bed_configuration)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.capacity)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.bed_configuration)}'::jsonb,
                 '${unit.view_type || ''}',
-                '${JSON.stringify(unit.tourism_features)}'::jsonb,
-                '${JSON.stringify(unit.unique_features)}'::jsonb,
-                '${JSON.stringify(unit.images)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.tourism_features)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.unique_features)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.images)}'::jsonb,
                 '${unit.accommodation_mphb_type || ''}',
-                '${JSON.stringify(unit.pricing || {})}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.pricing || {})}'::jsonb,
                 '${unit.status}',
                 ${unit.is_featured || false},
                 ${unit.display_order || 1},
@@ -331,6 +347,8 @@ export class MotoPresSyncManager {
             const { error: insertError } = await this.supabase.rpc('exec_sql', { sql: insertSql })
 
             if (insertError) {
+              console.error(`[sync] ❌ INSERT FAILED for "${unit.name}":`, insertError.message)
+              console.error(`[sync] SQL preview: ${insertSql.substring(0, 300)}...`)
               errors.push(`Failed to create ${unit.name}: ${insertError.message}`)
             } else {
               created++
@@ -858,20 +876,23 @@ export class MotoPresSyncManager {
 
           if (existing) {
             // Update existing using SQL (hotels schema)
+            console.log(`[sync] 🔄 UPDATE: "${unit.name}" (id=${existing.id}, type_id=${unit.motopress_type_id})`)
+
             const updateSql = `
               UPDATE hotels.accommodation_units
               SET
                 name = '${unit.name?.replace(/'/g, "''")}',
                 description = '${unit.description?.replace(/'/g, "''") || ''}',
                 short_description = '${unit.short_description?.replace(/'/g, "''") || ''}',
-                capacity = '${JSON.stringify(unit.capacity)}'::jsonb,
-                bed_configuration = '${JSON.stringify(unit.bed_configuration)}'::jsonb,
+                capacity = '${this.sqlSafeJsonStringify(unit.capacity)}'::jsonb,
+                bed_configuration = '${this.sqlSafeJsonStringify(unit.bed_configuration)}'::jsonb,
                 view_type = '${unit.view_type || ''}',
-                tourism_features = '${JSON.stringify(unit.tourism_features)}'::jsonb,
-                unique_features = '${JSON.stringify(unit.unique_features)}'::jsonb,
-                images = '${JSON.stringify(unit.images)}'::jsonb,
+                tourism_features = '${this.sqlSafeJsonStringify(unit.tourism_features)}'::jsonb,
+                unique_features = '${this.sqlSafeJsonStringify(unit.unique_features)}'::jsonb,
+                images = '${this.sqlSafeJsonStringify(unit.images)}'::jsonb,
                 accommodation_mphb_type = '${unit.accommodation_mphb_type || ''}',
-                pricing = '${JSON.stringify(unit.pricing || {})}'::jsonb,
+                motopress_type_id = ${unit.motopress_type_id || 'NULL'},
+                pricing = '${this.sqlSafeJsonStringify(unit.pricing || {})}'::jsonb,
                 status = '${unit.status}',
                 updated_at = NOW()
               WHERE id = '${existing.id}'
@@ -880,6 +901,8 @@ export class MotoPresSyncManager {
             const { error: updateError } = await this.supabase.rpc('exec_sql', { sql: updateSql })
 
             if (updateError) {
+              console.error(`[sync] ❌ UPDATE FAILED for "${unit.name}":`, updateError.message)
+              console.error(`[sync] SQL preview: ${updateSql.substring(0, 300)}...`)
               errors.push(`Failed to update ${unit.name}: ${updateError.message}`)
             } else {
               updated++
@@ -901,10 +924,12 @@ export class MotoPresSyncManager {
             }
           } else {
             // Create new using SQL (hotels schema) with deterministic UUID
+            console.log(`[sync] 📝 INSERT: "${unit.name}" (type_id=${unit.motopress_type_id}, unit_id=${unit.motopress_unit_id})`)
+
             const insertSql = `
               INSERT INTO hotels.accommodation_units (
                 id,
-                hotel_id, tenant_id, motopress_unit_id, name, description, short_description,
+                hotel_id, tenant_id, motopress_unit_id, motopress_type_id, name, description, short_description,
                 capacity, bed_configuration, view_type, tourism_features, unique_features,
                 images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
               ) VALUES (
@@ -912,17 +937,18 @@ export class MotoPresSyncManager {
                 '${unit.hotel_id}',
                 '${unit.tenant_id}',
                 ${unit.motopress_unit_id},
+                ${unit.motopress_type_id || 'NULL'},
                 '${unit.name?.replace(/'/g, "''")}',
                 '${unit.description?.replace(/'/g, "''") || ''}',
                 '${unit.short_description?.replace(/'/g, "''") || ''}',
-                '${JSON.stringify(unit.capacity)}'::jsonb,
-                '${JSON.stringify(unit.bed_configuration)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.capacity)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.bed_configuration)}'::jsonb,
                 '${unit.view_type || ''}',
-                '${JSON.stringify(unit.tourism_features)}'::jsonb,
-                '${JSON.stringify(unit.unique_features)}'::jsonb,
-                '${JSON.stringify(unit.images)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.tourism_features)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.unique_features)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.images)}'::jsonb,
                 '${unit.accommodation_mphb_type || ''}',
-                '${JSON.stringify(unit.pricing || {})}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.pricing || {})}'::jsonb,
                 '${unit.status}',
                 ${unit.is_featured || false},
                 ${unit.display_order || 1},
@@ -934,6 +960,8 @@ export class MotoPresSyncManager {
             const { error: insertError } = await this.supabase.rpc('exec_sql', { sql: insertSql })
 
             if (insertError) {
+              console.error(`[sync] ❌ INSERT FAILED for "${unit.name}":`, insertError.message)
+              console.error(`[sync] SQL preview: ${insertSql.substring(0, 300)}...`)
               errors.push(`Failed to create ${unit.name}: ${insertError.message}`)
             } else {
               created++

@@ -13,7 +13,14 @@ import { Suspense } from 'react'
 function SuccessContent() {
   const searchParams = useSearchParams()
   const subdomain = searchParams.get('subdomain') || 'tu-hotel'
-  const dashboardUrl = `https://${subdomain}.muva.chat/dashboard`
+
+  // Detect current environment and build correct dashboard URL
+  const isLocalhost = typeof window !== 'undefined' && window.location.hostname.includes('localhost')
+  const currentPort = typeof window !== 'undefined' ? window.location.port : ''
+
+  const dashboardUrl = isLocalhost
+    ? `http://${subdomain}.localhost:${currentPort}/dashboard`
+    : `https://${subdomain}.muva.chat/dashboard`
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 py-12 px-4">
