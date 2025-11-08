@@ -1049,4 +1049,294 @@ export class MotoPresSyncManager {
       }
     }
   }
+
+  /**
+   * Sync accommodations with progress callbacks for real-time UI updates
+   */
+  async syncAccommodationsWithProgress(
+    tenantId: string,
+    forceEmbeddings: boolean = false,
+    onProgress: (current: number, total: number, message: string) => void
+  ): Promise<SyncResult> {
+    const startTime = Date.now()
+    let created = 0
+    let updated = 0
+    let embeddingsGenerated = 0
+    let embeddingsFailed = 0
+    let embeddingsSkipped = 0
+    const errors: string[] = []
+
+    try {
+      onProgress(0, 0, 'Verificando configuración...')
+
+      // Get integration configuration
+      const config = await this.getIntegrationConfig(tenantId)
+      if (!config) {
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: ['No active MotoPress integration configuration found'],
+          totalProcessed: 0,
+          message: 'Integration not configured'
+        }
+      }
+
+      // Decrypt credentials
+      const credentials = await this.decrypt(config.config_data)
+
+      // Initialize MotoPress client
+      const client = new MotoPresClient({
+        apiKey: credentials.consumer_key || credentials.api_key || '',
+        consumerSecret: credentials.consumer_secret,
+        siteUrl: credentials.site_url
+      })
+
+      onProgress(0, 0, 'Conectando a MotoPress...')
+
+      // Test connection first
+      const connectionTest = await client.testConnection()
+      if (!connectionTest.success) {
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: [`Connection test failed: ${connectionTest.message}`],
+          totalProcessed: 0,
+          message: 'Connection test failed'
+        }
+      }
+
+      onProgress(0, 0, 'Obteniendo alojamientos...')
+
+      // Fetch all accommodations from MotoPress
+      const response = await client.getAllAccommodations()
+
+      if (response.error || !response.data) {
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: [response.error || 'Failed to fetch accommodations'],
+          totalProcessed: 0,
+          message: 'Failed to fetch data from MotoPress'
+        }
+      }
+
+      const motoPresAccommodations = response.data
+      onProgress(0, motoPresAccommodations.length, `${motoPresAccommodations.length} alojamientos encontrados`)
+
+      // Fetch rates with retry
+      onProgress(0, motoPresAccommodations.length, 'Obteniendo precios...')
+      let ratesResponse = await client.getAllRates()
+      let retryCount = 0
+      const MAX_RETRIES = 3
+
+      while ((ratesResponse.error || !ratesResponse.data) && retryCount < MAX_RETRIES) {
+        retryCount++
+        onProgress(0, motoPresAccommodations.length, `Reintentando precios (${retryCount}/${MAX_RETRIES})...`)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        ratesResponse = await client.getAllRates()
+      }
+
+      if (ratesResponse.error || !ratesResponse.data) {
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: [`Failed to fetch pricing after ${MAX_RETRIES} retries`],
+          totalProcessed: 0,
+          message: 'Pricing fetch failed'
+        }
+      }
+
+      const motoPresRates = ratesResponse.data
+
+      // Map rates to pricing
+      const pricingMap = new Map()
+      if (motoPresRates.length > 0) {
+        const pricingData = MotoPresDataMapper.mapRatesToPricing(motoPresRates)
+        pricingData.forEach(pricing => {
+          pricingMap.set(pricing.accommodation_type_id, pricing)
+        })
+      }
+
+      // Get hotel_id
+      const { data: hotel, error: hotelError } = await this.supabase
+        .from('hotels')
+        .select('id')
+        .eq('tenant_id', tenantId)
+        .single()
+
+      if (hotelError || !hotel) {
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: [`No hotel found for tenant`],
+          totalProcessed: 0,
+          message: 'Hotel lookup failed'
+        }
+      }
+
+      const hotelId = hotel.id
+
+      // Map to accommodation units
+      const accommodationUnits = MotoPresDataMapper.mapBulkAccommodations(
+        motoPresAccommodations,
+        tenantId
+      )
+
+      // Add hotel_id and pricing
+      accommodationUnits.forEach(unit => {
+        unit.hotel_id = hotelId
+        const pricing = pricingMap.get(unit.motopress_type_id)
+        unit.pricing = pricing ? {
+          base_price: pricing.base_price,
+          base_price_low_season: pricing.base_price_low_season,
+          base_price_high_season: pricing.base_price_high_season,
+          currency: pricing.currency,
+          price_per_person_low: pricing.price_per_person_low,
+          price_per_person_high: pricing.price_per_person_high,
+          minimum_stay: pricing.minimum_stay,
+          base_adults: pricing.base_adults,
+          base_children: pricing.base_children,
+          season_id: pricing.season_id,
+          priority: pricing.priority,
+          price_variations: pricing.price_variations
+        } : {}
+      })
+
+      const totalUnits = accommodationUnits.length
+
+      // Process each accommodation unit with progress
+      let processedCount = 0
+      for (const unit of accommodationUnits) {
+        try {
+          processedCount++
+          onProgress(processedCount, totalUnits, `Procesando ${unit.name}...`)
+
+          // Check if exists
+          const { data: existingResult, error: selectError } = await this.supabase.rpc('exec_sql', {
+            sql: `
+              SELECT id FROM hotels.accommodation_units
+              WHERE tenant_id = '${tenantId}'
+              AND motopress_unit_id = ${unit.motopress_unit_id}
+              LIMIT 1
+            `
+          })
+
+          if (selectError) {
+            errors.push(`Failed to check existing ${unit.name}: ${selectError.message}`)
+            continue
+          }
+
+          const existing = existingResult?.data?.[0]
+
+          if (existing) {
+            // Update existing
+            const updateSql = `
+              UPDATE hotels.accommodation_units
+              SET
+                name = '${unit.name?.replace(/'/g, "''")}',
+                description = '${unit.description?.replace(/'/g, "''") || ''}',
+                short_description = '${unit.short_description?.replace(/'/g, "''") || ''}',
+                capacity = '${this.sqlSafeJsonStringify(unit.capacity)}'::jsonb,
+                bed_configuration = '${this.sqlSafeJsonStringify(unit.bed_configuration)}'::jsonb,
+                view_type = '${unit.view_type || ''}',
+                tourism_features = '${this.sqlSafeJsonStringify(unit.tourism_features)}'::jsonb,
+                unique_features = '${this.sqlSafeJsonStringify(unit.unique_features)}'::jsonb,
+                images = '${this.sqlSafeJsonStringify(unit.images)}'::jsonb,
+                accommodation_mphb_type = '${unit.accommodation_mphb_type || ''}',
+                motopress_type_id = ${unit.motopress_type_id || 'NULL'},
+                pricing = '${this.sqlSafeJsonStringify(unit.pricing || {})}'::jsonb,
+                status = '${unit.status}',
+                updated_at = NOW()
+              WHERE id = '${existing.id}'
+            `
+
+            const { error: updateError } = await this.supabase.rpc('exec_sql', { sql: updateSql })
+
+            if (updateError) {
+              errors.push(`Failed to update ${unit.name}: ${updateError.message}`)
+            } else {
+              updated++
+            }
+          } else {
+            // Insert new
+            const insertSql = `
+              INSERT INTO hotels.accommodation_units (
+                id,
+                hotel_id, tenant_id, motopress_unit_id, motopress_type_id, name, description, short_description,
+                capacity, bed_configuration, view_type, tourism_features, unique_features,
+                images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
+              ) VALUES (
+                hotels.generate_deterministic_uuid('${unit.tenant_id}', ${unit.motopress_unit_id}),
+                '${unit.hotel_id}',
+                '${unit.tenant_id}',
+                ${unit.motopress_unit_id},
+                ${unit.motopress_type_id || 'NULL'},
+                '${unit.name?.replace(/'/g, "''")}',
+                '${unit.description?.replace(/'/g, "''") || ''}',
+                '${unit.short_description?.replace(/'/g, "''") || ''}',
+                '${this.sqlSafeJsonStringify(unit.capacity)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.bed_configuration)}'::jsonb,
+                '${unit.view_type || ''}',
+                '${this.sqlSafeJsonStringify(unit.tourism_features)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.unique_features)}'::jsonb,
+                '${this.sqlSafeJsonStringify(unit.images)}'::jsonb,
+                '${unit.accommodation_mphb_type || ''}',
+                '${this.sqlSafeJsonStringify(unit.pricing || {})}'::jsonb,
+                '${unit.status}',
+                ${unit.is_featured || false},
+                ${unit.display_order || 1},
+                NOW(),
+                NOW()
+              )
+            `
+
+            const { error: insertError } = await this.supabase.rpc('exec_sql', { sql: insertSql })
+
+            if (insertError) {
+              errors.push(`Failed to create ${unit.name}: ${insertError.message}`)
+            } else {
+              created++
+            }
+          }
+        } catch (err: any) {
+          errors.push(`Error processing ${unit.name}: ${err.message}`)
+        }
+      }
+
+      onProgress(totalUnits, totalUnits, '✅ Sincronización completada')
+
+      const duration = ((Date.now() - startTime) / 1000).toFixed(1)
+      const message = `Sync completed in ${duration}s: ${created} created, ${updated} updated`
+
+      return {
+        success: true,
+        created,
+        updated,
+        errors,
+        totalProcessed: created + updated,
+        message,
+        embeddings_generated: embeddingsGenerated,
+        embeddings_failed: embeddingsFailed,
+        embeddings_skipped: embeddingsSkipped
+      }
+    } catch (error: any) {
+      console.error('Sync failed with error:', error)
+      return {
+        success: false,
+        created,
+        updated,
+        errors: [error.message],
+        totalProcessed: created + updated,
+        message: 'Sync failed with error',
+        embeddings_generated: embeddingsGenerated,
+        embeddings_failed: embeddingsFailed,
+        embeddings_skipped: embeddingsSkipped
+      }
+    }
+  }
 }

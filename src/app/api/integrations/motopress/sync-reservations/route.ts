@@ -54,6 +54,27 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
 
     console.log('[sync-reservations] Starting sync for tenant:', tenant_id)
 
+    // 1.5. Verify that accommodations are synced first (PRE-SYNC VALIDATION)
+    const { data: accommodations, error: accommodationsError } = await supabase
+      .from('accommodation_units_public')
+      .select('unit_id')
+      .eq('tenant_id', tenant_id)
+      .ilike('name', '% - Overview')
+      .limit(1)
+
+    if (accommodationsError || !accommodations || accommodations.length === 0) {
+      console.error('[sync-reservations] ⚠️ No accommodations found - cannot sync reservations')
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Please sync accommodations FIRST before syncing reservations. Go to Accommodations → Integrations → MotoPress and sync your accommodations.'
+        },
+        { status: 400 }
+      )
+    }
+
+    console.log('[sync-reservations] ✅ Accommodations are synced - proceeding with reservation sync')
+
     // 2. Retrieve MotoPress credentials from integration_configs
     const { data: config, error: configError } = await supabase
       .from('integration_configs')
