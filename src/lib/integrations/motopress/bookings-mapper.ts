@@ -538,38 +538,9 @@ export class MotoPresBookingsMapper {
           accommodationUnitId = unit.id
           console.log(`[mapper]     ✅ MATCH: Unit "${unit.name}" (id=${unit.id})`)
         } else {
-          // NO MATCH: Create accommodation automatically from MotoPress data
-          console.log(`[mapper]     ⚠️ NO MATCH: No unit found for motopress_type_id=${motopressTypeId}`)
-
-          // Extract accommodation name from _embedded data
-          let accommodationName = `Alojamiento ${motopressTypeId}` // Fallback
-
-          if (booking._embedded?.accommodation_types) {
-            const matchingType = booking._embedded.accommodation_types.find(
-              (type: any) => type.id === motopressTypeId
-            )
-            if (matchingType?.title) {
-              accommodationName = matchingType.title
-            }
-          }
-
-          console.log(`[mapper]     🔨 AUTO-CREATE: Creating "${accommodationName}" with motopress_type_id=${motopressTypeId}`)
-
-          // Use RPC function to create accommodation unit (cross-schema insert)
-          const { data: newUnit, error: insertError } = await supabase
-            .rpc('create_accommodation_unit', {
-              p_tenant_id: tenantId,
-              p_name: accommodationName,
-              p_motopress_type_id: motopressTypeId,
-              p_status: 'active'
-            })
-
-          if (insertError) {
-            console.error(`[mapper]     ❌ Failed to auto-create accommodation:`, insertError)
-          } else if (newUnit && Array.isArray(newUnit) && newUnit.length > 0) {
-            accommodationUnitId = newUnit[0].id
-            console.log(`[mapper]     ✅ CREATED: "${newUnit[0].name}" (id=${newUnit[0].id})`)
-          }
+          // NO MATCH: Leave NULL - trigger will auto-link based on motopress_type_id
+          console.log(`[mapper]     ⚠️ NO MATCH: No unit found for motopress_type_id=${motopressTypeId} - will be auto-linked by trigger`)
+          accommodationUnitId = null
         }
       }
 
