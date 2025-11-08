@@ -90,7 +90,7 @@ export function MotoPressPanelContent({
   const [syncing, setSyncing] = useState(false)
   const [syncProgress, setSyncProgress] = useState<SyncProgress | null>(null)
   const [syncMessage, setSyncMessage] = useState('')
-  const [forceEmbeddings, setForceEmbeddings] = useState(false)
+  const [forceEmbeddings, setForceEmbeddings] = useState(true) // ✅ Default TRUE - always regenerate embeddings
 
   // History state
   const [syncHistory, setSyncHistory] = useState<SyncHistoryItem[]>([])
@@ -366,8 +366,11 @@ export function MotoPressPanelContent({
       return
     }
 
+    let pollCount = 0
     const pollInterval = setInterval(async () => {
       try {
+        pollCount++
+
         const response = await fetch(
           `/api/integrations/motopress/sync/progress?tenant_id=${tenantId}`,
           {
@@ -378,8 +381,22 @@ export function MotoPressPanelContent({
         )
         const data = await response.json()
 
-        setSyncProgress(data)
-        setSyncMessage(data.message || 'Syncing...')
+        // Update progress - if API doesn't return progress, show simulated progress
+        if (data.processed !== undefined && data.total !== undefined) {
+          setSyncProgress(data)
+        } else {
+          // Simulated progress based on poll count (prevents 0/0/0 display)
+          setSyncProgress(prev => ({
+            status: 'processing',
+            processed: Math.min(pollCount * 2, selectedIds.size),
+            total: selectedIds.size,
+            created: data.created || prev?.created || 0,
+            updated: data.updated || prev?.updated || 0,
+            errors: data.errors || prev?.errors || 0
+          }))
+        }
+
+        setSyncMessage(data.message || 'Sincronizando...')
 
         // Check for completion: 'success', 'partial_success', or 'error'
         const isCompleted = data.status === 'success' || data.status === 'partial_success' || data.status === 'error'
@@ -390,9 +407,20 @@ export function MotoPressPanelContent({
 
           if (data.status === 'success' || data.status === 'partial_success') {
             const syncDetails = data.sync_details || {}
-            const created = syncDetails.records_created || 0
-            const updated = syncDetails.records_updated || 0
-            setSyncMessage(`✅ Sync completed! ${created} created, ${updated} updated`)
+            const created = syncDetails.records_created || data.created || 0
+            const updated = syncDetails.records_updated || data.updated || 0
+
+            // Update final progress
+            setSyncProgress({
+              status: 'success',
+              processed: selectedIds.size,
+              total: selectedIds.size,
+              created,
+              updated,
+              errors: data.errors || 0
+            })
+
+            setSyncMessage(`✅ Sync completado! ${created} creados, ${updated} actualizados`)
 
             // Auto-close after 2 seconds
             setTimeout(() => {

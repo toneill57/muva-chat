@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import { getTenantBySubdomain, getSubdomain } from '@/lib/tenant-utils'
 import TenantChatPage from '@/components/Tenant/TenantChatPage'
+import DatabaseWipeButton from '@/components/admin/DatabaseWipeButton'
 import { notFound } from 'next/navigation'
 
 // Force dynamic rendering (required for headers())
@@ -36,6 +37,9 @@ export default async function HomePage() {
               <li><a href="http://hotel-boutique.localhost:3000" className="text-teal-600 hover:underline">http://hotel-boutique.localhost:3000</a></li>
             </ul>
           </div>
+
+          {/* Database Wipe Button (Staging Only) */}
+          <DatabaseWipeButton />
         </div>
       </div>
     )

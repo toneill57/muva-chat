@@ -227,6 +227,8 @@ export async function GET(request: NextRequest) {
       let created = 0
       let updated = 0
       let errors = 0
+      const totalReservations = mappedReservations.length
+      let processed = 0
 
       for (const reservation of mappedReservations) {
         const originalBooking = bookingsMap.get(reservation.external_booking_id)
@@ -234,6 +236,7 @@ export async function GET(request: NextRequest) {
         if (!originalBooking) {
           console.error(`[sync-all] Cannot find original booking for external_booking_id=${reservation.external_booking_id}`)
           errors++
+          processed++
           continue
         }
 
@@ -302,6 +305,20 @@ export async function GET(request: NextRequest) {
         } catch (err) {
           console.error(`[sync-all] Error processing booking ${reservation.external_booking_id}:`, err)
           errors++
+        }
+
+        // Update progress counter
+        processed++
+
+        // Send progress update every 10 reservations or on last one
+        if (processed % 10 === 0 || processed === totalReservations) {
+          const percentage = Math.round((processed / totalReservations) * 100)
+          await sendEvent({
+            type: 'progress',
+            current: processed,
+            total: totalReservations,
+            message: `Guardando reservas... ${processed}/${totalReservations} (${percentage}%)`
+          })
         }
       }
 

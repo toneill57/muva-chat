@@ -434,9 +434,13 @@ export class MotoPresBookingsMapper {
     let statusExcluded = 0
     let icsExcluded = 0
 
-    // Calculate date range: today to 2 years in future
+    // Calculate date range: 2 months ago to 2 years in future
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Start of today
+
+    const twoMonthsAgo = new Date(today)
+    twoMonthsAgo.setMonth(today.getMonth() - 2)
+
     const twoYearsFromNow = new Date()
     twoYearsFromNow.setFullYear(today.getFullYear() + 2)
 
@@ -445,32 +449,32 @@ export class MotoPresBookingsMapper {
         // Log every booking we process
         console.log(`[mapper] 🔍 Processing booking ${booking.id}: status=${booking.status}, imported=${booking.imported}, check_in=${booking.check_in_date}`)
 
-        // 🆕 SEPARATE ICS IMPORTS: Skip Airbnb ICS imports (handle separately)
-        if (booking.imported === true) {
-          icsExcluded++
-          icsImports.push(booking)
-          console.log(`[mapper] 📥 ICS import (Airbnb): MP-${booking.id} - Will save to comparison table`)
-          continue
-        }
-
-        // Skip only cancelled and abandoned bookings (import all other statuses)
+        // Skip only cancelled and abandoned bookings (import all other statuses INCLUDING ICS)
         if (booking.status === 'cancelled' || booking.status === 'abandoned') {
           statusExcluded++
           console.log(`[mapper] ⏩ Skip booking ${booking.id}: status=${booking.status}`)
           continue
         }
 
-        // Skip past reservations and reservations beyond 2 years
+        // Skip reservations older than 2 months and reservations beyond 2 years (APPLIES TO BOTH direct + ICS)
         const checkInDate = new Date(booking.check_in_date)
-        console.log(`[mapper] 📅 Date check for booking ${booking.id}: checkInDate=${checkInDate.toISOString()}, today=${today.toISOString()}, twoYears=${twoYearsFromNow.toISOString()}`)
+        console.log(`[mapper] 📅 Date check for booking ${booking.id}: checkInDate=${checkInDate.toISOString()}, twoMonthsAgo=${twoMonthsAgo.toISOString()}, twoYears=${twoYearsFromNow.toISOString()}`)
 
-        if (checkInDate < today || checkInDate > twoYearsFromNow) {
+        if (checkInDate < twoMonthsAgo || checkInDate > twoYearsFromNow) {
           pastExcluded++
-          console.log(`[mapper] ⏩ Skip booking ${booking.id}: check_in=${booking.check_in_date} (${checkInDate < today ? 'past' : 'too far future'})`)
+
+          // Track ICS imports separately for stats
+          if (booking.imported === true) {
+            icsExcluded++
+          }
+
+          console.log(`[mapper] ⏩ Skip booking ${booking.id}: check_in=${booking.check_in_date} (${checkInDate < twoMonthsAgo ? 'older than 2 months' : 'too far future'})`)
           continue
         }
 
-        console.log(`[mapper] ✅ Mapping direct MotoPress booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}`)
+        // Process ALL future reservations (direct MotoPress + ICS imports from Airbnb)
+        const bookingType = booking.imported === true ? 'ICS import (Airbnb)' : 'direct MotoPress'
+        console.log(`[mapper] ✅ Mapping ${bookingType} booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}`)
         const reservation = await this.mapToGuestReservationWithEmbed(booking, tenantId, supabase)
         mapped.push(reservation)
         console.log(`[mapper] ✅ Mapped successfully: ${reservation.guest_name}`)
@@ -482,7 +486,7 @@ export class MotoPresBookingsMapper {
 
     return {
       reservations: mapped,
-      icsImports,
+      icsImports: [], // Now processed together with direct bookings
       pastExcluded,
       statusExcluded,
       icsExcluded

@@ -139,8 +139,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
     // Build query
     const supabase = createServerClient()
 
-    // Get current date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0]
+    // Get current date and 2 months ago in YYYY-MM-DD format
+    const today = new Date()
+    const twoMonthsAgo = new Date(today)
+    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
+    const twoMonthsAgoStr = twoMonthsAgo.toISOString().split('T')[0]
 
     // Query reservations with accommodation units from hotels schema
     let query = supabase
@@ -182,9 +185,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
       .in('status', statusFilter)
       .in('booking_source', ['motopress', 'airbnb']) // Show MotoPress + Airbnb reservations
 
-    // Filter future reservations only
+    // Filter reservations from 2 months ago onwards (not just future)
     if (futureOnly) {
-      query = query.gte('check_in_date', today)
+      query = query.gte('check_in_date', twoMonthsAgoStr)
     }
 
     // Order by check-in date (nearest first)
