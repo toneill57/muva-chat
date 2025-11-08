@@ -18,24 +18,62 @@ Guidance for Claude Code when working with this repository.
 
 ## REGLAS CRÍTICAS
 
-### 0. PRIORIZAR Sugerencias del Usuario
+### 0. AMBIENTE DE DESARROLLO - STAGING FIRST (CRÍTICO)
+
+**SIEMPRE trabajar en STAGING primero. NUNCA en producción.**
+
+**Development Environment (localhost):**
+- Puerto 3001: `http://simmerdown.localhost:3001` → Conectado a **STAGING**
+- Puerto 3000: `http://simmerdown.localhost:3000` → Conectado a **PRODUCTION** (solo lectura)
+
+**Supabase Project IDs:**
+- 🟢 **STAGING:** `hoaiwcueleiemeplrurv` ← **USAR ESTE para desarrollo**
+- 🔴 **PRODUCTION:** `ooaumjzaztmutltifhoq` ← **SOLO lectura/comparación**
+
+**REGLAS:**
+1. ✅ **SIEMPRE** leer/escribir de STAGING (`hoaiwcueleiemeplrurv`) durante desarrollo
+2. ✅ **SIEMPRE** usar `localhost:3001` para testing
+3. ❌ **NUNCA** escribir en producción sin autorización explícita
+4. ✅ **Solo leer** de producción si necesitas comparar datos
+5. ✅ **Migrations** siempre se aplican a staging primero
+
+**Comandos correctos:**
+```typescript
+// ✅ CORRECTO - Leer de staging
+mcp__supabase__execute_sql({
+  project_id: "hoaiwcueleiemeplrurv",  // STAGING
+  query: "SELECT ..."
+})
+
+// ❌ INCORRECTO - No leer de producción durante desarrollo
+mcp__supabase__execute_sql({
+  project_id: "ooaumjzaztmutltifhoq",  // PRODUCTION
+  query: "SELECT ..."
+})
+```
+
+**Si te confundes:** El usuario corre `pnpm run dev:staging` → Está en staging → Usa `hoaiwcueleiemeplrurv`
+
+---
+
+### 1. PRIORIZAR Sugerencias del Usuario
 Cuando el usuario sugiere una causa, INVESTIGARLA PRIMERO antes de proponer alternativas.
 
 - Usar herramientas (SSH, logs, MCP) para verificar inmediatamente
 - X NUNCA ignorar sugerencias del usuario por teorías propias
 - **Razón:** Usuario tiene contexto del sistema real
 
-### 1. NO Modificar Performance Targets
+### 2. NO Modificar Performance Targets
 - X Cambiar umbrales para que tests pasen artificialmente
 - Investigar causa REAL, pedir aprobación antes de cambiar
 
-### 2. NO Work-arounds Facilistas
+### 3. NO Work-arounds Facilistas
 Investigar causa → Informar problema real → Proponer solución
 
-### 3. Autonomía de Ejecución
+### 4. Autonomía de Ejecución
 NUNCA pedir al usuario hacer tareas que yo puedo hacer (scripts, bash, APIs, testing)
 
-### 4. Git Workflow - Three Environments
+### 5. Git Workflow - Three Environments
 **Workflow:** `dev` (auto) → `staging` (auto) → `main` (manual approval)
 
 **COMMITS/PUSH - REQUIEREN AUTORIZACIÓN EXPLÍCITA**
@@ -45,27 +83,27 @@ NUNCA pedir al usuario hacer tareas que yo puedo hacer (scripts, bash, APIs, tes
 
 Ver: `snapshots/general-snapshot.md` → Three Environments section
 
-### 5. Verificar `git status` Antes de 404s
+### 6. Verificar `git status` Antes de 404s
 Archivos sin commitear = causa #1 de diferencias local vs producción
 
-### 6. TypeScript Interface Changes
+### 7. TypeScript Interface Changes
 - Buscar TODOS los archivos que usan la interface
 - Agregar TODOS los campos A LA VEZ
 - `pnpm run build` local ANTES de commit
 - X NUNCA commits iterativos por campo
 
-### 7. Autenticación - NO Duplicar Validaciones
+### 8. Autenticación - NO Duplicar Validaciones
 Layouts ya protegen rutas - NO agregar validaciones adicionales
 - `/dashboard/layout.tsx` → Protege `/dashboard/*`
 - `/accommodations/layout.tsx` → Protege `/accommodations/*`
 - X NUNCA duplicar validaciones (causa logout inesperado)
 
-### 8. Monitoring First
+### 9. Monitoring First
 - ANTES de deploy: `pnpm dlx tsx scripts/monitoring-dashboard.ts`
 - DESPUÉS de deploy: Verificar health endpoints
 - X NUNCA deployear si staging está DOWN
 
-### 9. RPC Functions Validation (CRÍTICO - Guest Chat)
+### 10. RPC Functions Validation (CRÍTICO - Guest Chat)
 **Problema recurrente:** Funciones RPC pierden `search_path` → Operador pgvector `<=>` inaccesible → Guest chat NO responde sobre alojamientos
 
 **SIEMPRE validar ANTES de deploy:**
