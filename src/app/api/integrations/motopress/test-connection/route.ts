@@ -79,14 +79,47 @@ export async function POST(request: Request) {
 
   } catch (error) {
     console.error('Error in test-connection endpoint:', error)
-    return NextResponse.json(
-      {
+
+    // Determine error type
+    const errorMessage = error instanceof Error ? error.message : String(error)
+
+    // Not configured (shouldn't happen if page logic is correct, but handle it)
+    if (errorMessage.includes('No configuration')) {
+      return NextResponse.json({
         connected: false,
-        error: 'Internal server error',
-        message: 'Failed to test connection'
-      },
-      { status: 500 }
-    )
+        error_code: 'not_configured',
+        error: 'MotoPress no está configurado',
+        message: 'Por favor configura tus credenciales primero'
+      }, { status: 404 })
+    }
+
+    // Network/fetch errors
+    if (errorMessage.includes('fetch') || errorMessage.includes('network')) {
+      return NextResponse.json({
+        connected: false,
+        error_code: 'network_error',
+        error: 'Error de red',
+        message: 'No se pudo conectar al sitio de MotoPress'
+      }, { status: 503 })
+    }
+
+    // Timeout errors
+    if (errorMessage.includes('timeout') || errorMessage.includes('ETIMEDOUT')) {
+      return NextResponse.json({
+        connected: false,
+        error_code: 'timeout',
+        error: 'Tiempo agotado',
+        message: 'El sitio no respondió en 10 segundos'
+      }, { status: 504 })
+    }
+
+    // Generic server error (last resort)
+    return NextResponse.json({
+      connected: false,
+      error_code: 'server_error',
+      error: 'Error del servidor',
+      message: 'Ocurrió un error inesperado. Intenta nuevamente.'
+    }, { status: 500 })
   }
 }
 
@@ -113,11 +146,26 @@ async function testMotoPresConnection(consumerKey: string, consumerSecret: strin
       const errorText = await response.text()
       console.error('MotoPress API error:', response.status, errorText)
 
+      let errorCode = 'api_error'
+      let errorMsg = 'Error en la API de MotoPress'
+      let details = `Verifica tus credenciales y la URL del sitio`
+
+      if (response.status === 401 || response.status === 403) {
+        errorCode = 'invalid_credentials'
+        errorMsg = 'Credenciales incorrectas'
+        details = 'Verifica tu Consumer Key y Consumer Secret'
+      } else if (response.status === 404) {
+        errorCode = 'site_not_found'
+        errorMsg = 'Sitio no encontrado'
+        details = 'La URL del sitio o el endpoint no existe'
+      }
+
       return {
         connected: false,
-        error: `HTTP ${response.status}`,
-        message: 'Failed to connect to MotoPress API',
-        details: errorText.substring(0, 200)
+        error_code: errorCode,
+        error: errorMsg,
+        message: `HTTP ${response.status}`,
+        details: details
       }
     }
 
@@ -148,23 +196,26 @@ async function testMotoPresConnection(consumerKey: string, consumerSecret: strin
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       return {
         connected: false,
-        error: 'Network error',
-        message: 'Failed to reach MotoPress site'
+        error_code: 'network_error',
+        error: 'Error de red',
+        message: 'No se pudo conectar al sitio de MotoPress'
       }
     }
 
     if (error.name === 'AbortError') {
       return {
         connected: false,
-        error: 'Timeout',
-        message: 'Connection timeout after 10 seconds'
+        error_code: 'timeout',
+        error: 'Tiempo agotado',
+        message: 'El sitio no respondió en 10 segundos'
       }
     }
 
     return {
       connected: false,
-      error: error.name || 'Unknown error',
-      message: error.message || 'Failed to test connection'
+      error_code: 'server_error',
+      error: error.name || 'Error desconocido',
+      message: error.message || 'Ocurrió un error inesperado'
     }
   }
 }

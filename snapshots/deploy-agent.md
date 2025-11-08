@@ -980,6 +980,44 @@ Watch Live: gh run watch
 
 ---
 
-**Última Revisión:** 8 Octubre 2025
-**Próxima Actualización:** Cuando se implementen mejoras críticas (backup, staging)
+## 💻 LOCAL DEVELOPMENT SETUP
+
+### Dual Environment Development ⭐ RECOMMENDED
+
+**Run production and staging environments simultaneously:**
+
+```bash
+# Terminal 1: Production (port 3000)
+pnpm run dev:production
+
+# Terminal 2: Staging (port 3001)
+pnpm run dev:staging
+```
+
+**Architecture:**
+- **Production**: `hoaiwcueleiemeplrurv.supabase.co` → Port 3000
+- **Staging**: `ooaumjzaztmutltifhoq.supabase.co` → Port 3001
+- Isolated databases, simultaneous execution
+
+**Key Benefits:**
+- ✅ Compare environments side-by-side
+- ✅ Test staging changes without touching production
+- ✅ Zero risk of environment confusion
+
+**Utility Commands:**
+```bash
+pnpm run kill-all           # Kill both environments
+pnpm run kill-port          # Kill production (3000)
+pnpm run kill-port:staging  # Kill staging (3001)
+```
+
+**Documentation:** `QUICK_START_DUAL_ENV.md` | `docs/development/DUAL_ENVIRONMENT_SETUP.md`
+
+### ⚠️ DEPRECATED: toggle-env.sh
+
+Old environment toggle system is **obsolete**. Use dual environment instead.
+
+---
+
+**Última Revisión:** November 7, 2025 (Dual Environment Added)
 **Mantenido por:** Deploy Agent (@deploy-agent)

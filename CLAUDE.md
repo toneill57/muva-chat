@@ -89,10 +89,29 @@ Ver: `docs/monitoring/AUTOMATED_MONITORING_SETUP.md` (setup de cron + alertas)
 
 ## Development Setup
 
-### Dev Script (MANDATORY)
+### Dual Environment (RECOMMENDED)
+Run production and staging **simultaneously** for safe development:
+
 ```bash
-./scripts/dev-with-keys.sh
+# Terminal 1: Production (port 3000)
+pnpm run dev:production
+
+# Terminal 2: Staging (port 3001)
+pnpm run dev:staging
 ```
+
+**Benefits:**
+- ✅ Compare environments side-by-side
+- ✅ Test changes in staging without risk
+- ✅ Zero chance of mixing environments (different ports)
+
+**Documentation:** `QUICK_START_DUAL_ENV.md`
+
+### Alternative: Single Environment
+```bash
+./scripts/dev-with-keys.sh  # Port 3000 with .env.local
+```
+
 X NO usar `pnpm run dev` directo (falta .env.local)
 X NO crear `vercel.json` (migrado a VPS Oct 2025)
 

@@ -69,6 +69,8 @@ interface AccommodationUnit {
     seasonal_rules: number
     hourly_rules: number
     base_price_range: number[]
+    base_price_low_season?: number
+    base_price_high_season?: number
     price_per_person?: number
   }
   amenities_summary: {
@@ -361,7 +363,7 @@ export function AccommodationUnitsGrid() {
           {/* Badges informativos */}
           <div className="flex gap-2 mt-2 flex-wrap">
             <Badge variant="outline" className="text-xs">
-              #{unit.unit_number}
+              #{unit.room_type_id || unit.unit_number}
             </Badge>
             <Badge variant="outline" className="text-xs">
               {unit.accommodation_type || 'Standard'}
@@ -428,12 +430,14 @@ export function AccommodationUnitsGrid() {
               color="gray"
             />
 
-            {/* Fila 3: Ubicación & Detalles */}
+            {/* Fila 3: Precios Estacionales & Amenidades */}
             <InfoCard
-              icon={MapPin}
-              label="Ubicación"
-              value={unit.location_area || 'N/A'}
-              color="blue"
+              icon={DollarSign}
+              label="Temp. Alta"
+              value={unit.pricing_summary?.base_price_high_season
+                ? `$${unit.pricing_summary.base_price_high_season.toLocaleString('es-CO')}`
+                : 'N/A'}
+              color="purple"
             />
             <InfoCard
               icon={Star}
@@ -443,8 +447,10 @@ export function AccommodationUnitsGrid() {
             />
             <InfoCard
               icon={DollarSign}
-              label="Precio"
-              value={formatPrice(unit.pricing_summary?.base_price_range || 0)}
+              label="Temp. Baja"
+              value={unit.pricing_summary?.base_price_low_season
+                ? `$${unit.pricing_summary.base_price_low_season.toLocaleString('es-CO')}`
+                : formatPrice(unit.pricing_summary?.base_price_range || 0)}
               color="green"
               subtitle={unit.pricing_summary?.price_per_person ? `$${unit.pricing_summary.price_per_person.toLocaleString()}/persona` : undefined}
             />

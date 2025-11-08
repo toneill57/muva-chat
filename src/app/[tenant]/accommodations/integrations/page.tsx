@@ -17,12 +17,61 @@ import { SyncMotoPress } from '@/components/Accommodations/SyncMotoPress'
 import { MotoPressPanelDialog } from '@/components/integrations/motopress/MotoPressPanelDialog'
 import { AirbnbConfigPanel } from '@/components/integrations/airbnb/AirbnbConfigPanel'
 
+// Helper to map error codes to user-friendly messages
+function getErrorDisplay(error?: string, errorCode?: string) {
+  // No error
+  if (!error && !errorCode) return null
+
+  // Map error codes to Spanish messages with action hints
+  const ERROR_MESSAGES: Record<string, { title: string, message: string, action: string }> = {
+    'not_configured': {
+      title: 'No Configurado',
+      message: 'MotoPress no está configurado aún',
+      action: 'Haz clic en "Configurar Integración" para comenzar'
+    },
+    'invalid_credentials': {
+      title: 'Credenciales Incorrectas',
+      message: 'No se pudo autenticar con MotoPress',
+      action: 'Verifica tu Consumer Key y Consumer Secret'
+    },
+    'site_not_found': {
+      title: 'Sitio No Encontrado',
+      message: 'No se encontró el sitio de MotoPress',
+      action: 'Verifica que la URL sea correcta'
+    },
+    'network_error': {
+      title: 'Error de Conexión',
+      message: 'No se pudo conectar al sitio',
+      action: 'Verifica tu conexión a internet y que el sitio esté accesible'
+    },
+    'timeout': {
+      title: 'Tiempo Agotado',
+      message: 'El sitio no respondió a tiempo',
+      action: 'Intenta nuevamente. Si el problema persiste, verifica que el sitio esté funcionando'
+    },
+    'server_error': {
+      title: 'Error del Servidor',
+      message: 'Ocurrió un error inesperado',
+      action: 'Intenta nuevamente en unos momentos'
+    }
+  }
+
+  const errorInfo = ERROR_MESSAGES[errorCode || ''] || {
+    title: 'Error de Conexión',
+    message: error || 'Error desconocido',
+    action: 'Intenta nuevamente o contacta soporte'
+  }
+
+  return errorInfo
+}
+
 interface IntegrationStatus {
   connected: boolean
   last_sync?: string
   accommodations_count?: number
   is_active: boolean
   error?: string
+  error_code?: string
 }
 
 export default function IntegrationsPage() {
@@ -69,8 +118,14 @@ export default function IntegrationsPage() {
       })
       const configData = await configResponse.json()
 
+      // If not configured, don't attempt to test connection
       if (!configData.exists) {
-        setStatus({ connected: false, is_active: false })
+        setStatus({
+          connected: false,
+          is_active: false,
+          error_code: 'not_configured',
+          error: 'No configurado'
+        })
         return
       }
 
@@ -90,7 +145,8 @@ export default function IntegrationsPage() {
         accommodations_count: testData.accommodations_count,
         last_sync: configData.config?.last_sync_at,
         is_active: configData.config?.is_active || false,
-        error: testData.error
+        error: testData.error,
+        error_code: testData.error_code
       })
     } catch (error) {
       console.error('Failed to check integration status:', error)
@@ -284,11 +340,45 @@ export default function IntegrationsPage() {
 
           {/* Error Message */}
           {status?.error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-medium text-red-900">Error de Conexión</p>
-                <p className="text-sm text-red-700 mt-1">{status.error}</p>
+            <div className={`border rounded-lg p-4 flex items-start gap-3 ${
+              status.error_code === 'not_configured'
+                ? 'bg-amber-50 border-amber-200'
+                : 'bg-red-50 border-red-200'
+            }`}>
+              <AlertCircle className={`h-5 w-5 flex-shrink-0 ${
+                status.error_code === 'not_configured'
+                  ? 'text-amber-600'
+                  : 'text-red-600'
+              }`} />
+              <div className="flex-1">
+                {(() => {
+                  const errorInfo = getErrorDisplay(status.error, status.error_code)
+                  return (
+                    <>
+                      <p className={`text-sm font-medium ${
+                        status.error_code === 'not_configured'
+                          ? 'text-amber-900'
+                          : 'text-red-900'
+                      }`}>
+                        {errorInfo?.title}
+                      </p>
+                      <p className={`text-sm mt-1 ${
+                        status.error_code === 'not_configured'
+                          ? 'text-amber-700'
+                          : 'text-red-700'
+                      }`}>
+                        {errorInfo?.message}
+                      </p>
+                      <p className={`text-xs mt-2 ${
+                        status.error_code === 'not_configured'
+                          ? 'text-amber-600'
+                          : 'text-red-600'
+                      }`}>
+                        {errorInfo?.action}
+                      </p>
+                    </>
+                  )
+                })()}
               </div>
             </div>
           )}

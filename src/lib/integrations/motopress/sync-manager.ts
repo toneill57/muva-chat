@@ -191,7 +191,7 @@ export class MotoPresSyncManager {
         unit.hotel_id = hotelId
 
         // Add pricing data as JSONB object if available
-        const pricing = pricingMap.get(unit.motopress_unit_id)
+        const pricing = pricingMap.get(unit.motopress_type_id)
         if (pricing) {
           unit.pricing = {
             base_price: pricing.base_price,
@@ -210,7 +210,7 @@ export class MotoPresSyncManager {
           console.log(`💰 Added pricing to ${unit.name}: $${pricing.base_price} COP (Low: $${pricing.base_price_low_season}, High: $${pricing.base_price_high_season})`)
         } else {
           unit.pricing = {}
-          console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_unit_id}`)
+          console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_type_id}`)
         }
       })
 
