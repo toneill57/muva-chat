@@ -21,7 +21,7 @@
 import { readdir } from 'fs/promises';
 import { join } from 'path';
 
-const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'rvjmwwvkhglcuqwcznph';
+const STAGING_PROJECT_ID = process.env.SUPABASE_STAGING_PROJECT_ID || 'hoaiwcueleiemeplrurv';
 const ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
 
 if (!ACCESS_TOKEN) {
