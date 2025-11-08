@@ -139,7 +139,7 @@ async function testMotoPresConnection(consumerKey: string, consumerSecret: strin
         'Content-Type': 'application/json',
         'User-Agent': 'curl/8.7.1'
       },
-      signal: AbortSignal.timeout(10000)
+      signal: AbortSignal.timeout(30000) // 30s timeout (same as MotoPress client)
     })
 
     if (!response.ok) {

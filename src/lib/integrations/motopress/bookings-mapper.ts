@@ -526,36 +526,34 @@ export class MotoPresBookingsMapper {
 
       console.log(`[mapper]   - Processing accommodation: type_id=${motopressTypeId}, instance_id=${motopressInstanceId}, rate=${roomRate}`)
 
-      // Find matching accommodation_unit_id
+      // Lookup accommodation_unit_id in TypeScript (no trigger needed)
       let accommodationUnitId: string | null = null
 
       if (motopressTypeId) {
-        const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
-          p_tenant_id: tenantId,
-          p_motopress_type_id: motopressTypeId  // Fixed: use correct parameter name
-        })
+        const { data: matchingUnits } = await supabase
+          .from('accommodation_units_public')
+          .select('unit_id, name')
+          .eq('tenant_id', tenantId)
+          .ilike('name', '% - Overview')
+          .eq('metadata->>motopress_room_type_id', motopressTypeId.toString())
+          .limit(1)
 
-        if (error) {
-          console.log(`[mapper]     ❌ RPC error for accommodation ${motopressTypeId}:`, error)
-        } else if (units && units.length > 0) {
-          const unit = units[0]
-          accommodationUnitId = unit.id
-          console.log(`[mapper]     ✅ MATCH: Unit "${unit.name}" (id=${unit.id})`)
+        if (matchingUnits && matchingUnits.length > 0) {
+          accommodationUnitId = matchingUnits[0].unit_id
+          console.log(`[mapper]     ✅ Found unit: ${matchingUnits[0].name} (${accommodationUnitId})`)
         } else {
-          // NO MATCH: Leave NULL - trigger will auto-link based on motopress_type_id
-          console.log(`[mapper]     ⚠️ NO MATCH: No unit found for motopress_type_id=${motopressTypeId} - will be auto-linked by trigger`)
-          accommodationUnitId = null
+          console.log(`[mapper]     ⚠️ No unit found for motopress_type_id=${motopressTypeId} (will insert with NULL)`)
         }
       }
 
-      // Add to batch insert (accommodation_unit_id should always have a value now due to auto-creation)
       accommodationsToInsert.push({
         reservation_id: reservationId,
-        accommodation_unit_id: accommodationUnitId,
+        accommodation_unit_id: accommodationUnitId, // NULL if not found (FK allows NULL)
         motopress_accommodation_id: motopressInstanceId,
         motopress_type_id: motopressTypeId,
         room_rate: roomRate
       })
+      console.log(`[mapper]     ➕ Added to batch insert`)
     }
 
     // Batch insert all accommodations
@@ -570,6 +568,8 @@ export class MotoPresBookingsMapper {
       }
 
       console.log(`[mapper] ✅ Saved ${accommodationsToInsert.length} accommodation(s) to reservation_accommodations`)
+    } else {
+      console.warn(`[mapper] ⚠️ No accommodations to insert - booking has no reserved_accommodations`)
     }
 
     return accommodationsToInsert.length

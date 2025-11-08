@@ -30,29 +30,26 @@ BEGIN
 END;
 $function$;
 
--- Update FK constraint to point to accommodation_units_public
+-- Drop old FK constraint (if exists)
 ALTER TABLE reservation_accommodations
   DROP CONSTRAINT IF EXISTS reservation_accommodations_accommodation_unit_id_fkey;
 
+-- Clean up invalid unit_ids (set to NULL if they don't exist in accommodation_units_public)
+-- This allows re-sync to properly link them
+UPDATE reservation_accommodations ra
+SET accommodation_unit_id = NULL
+WHERE accommodation_unit_id IS NOT NULL
+  AND NOT EXISTS (
+    SELECT 1 FROM public.accommodation_units_public aup
+    WHERE aup.unit_id = ra.accommodation_unit_id
+  );
+
+-- Create FK constraint pointing to accommodation_units_public
 ALTER TABLE reservation_accommodations
   ADD CONSTRAINT reservation_accommodations_accommodation_unit_id_fkey
   FOREIGN KEY (accommodation_unit_id)
   REFERENCES public.accommodation_units_public(unit_id)
   ON DELETE SET NULL;
-
--- Link existing reservations to their accommodations
-UPDATE reservation_accommodations ra
-SET accommodation_unit_id = (
-  SELECT aup.unit_id
-  FROM public.accommodation_units_public aup
-  INNER JOIN guest_reservations r ON r.tenant_id::text = aup.tenant_id::text
-  WHERE ra.reservation_id = r.id
-    AND (aup.metadata->>'motopress_room_type_id')::int = ra.motopress_type_id
-    AND aup.name LIKE '% - Overview'
-  LIMIT 1
-)
-WHERE ra.accommodation_unit_id IS NULL
-  AND ra.motopress_type_id IS NOT NULL;
 
 -- Comment
 COMMENT ON FUNCTION public.get_accommodation_units_by_ids(uuid[]) IS

@@ -237,11 +237,13 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
     // Get unique accommodation_unit_ids for cross-schema lookup
     const allAccommodations = Array.from(reservationAccommodationsMap.values()).flat()
+    console.log('[reservations-list] DEBUG allAccommodations sample:', allAccommodations.slice(0, 3))
     const accommodationUnitIds = [...new Set(
       allAccommodations
         .map((acc: any) => acc.accommodation_unit_id)
         .filter(Boolean)
     )]
+    console.log('[reservations-list] DEBUG unique accommodationUnitIds count:', accommodationUnitIds.length)
 
     const accommodationUnitsMap = new Map<string, any>()
 
@@ -250,7 +252,10 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
       const { data: unitsData, error: unitsError } = await supabase.rpc(
         'get_accommodation_units_by_ids',
-        { p_unit_ids: accommodationUnitIds }
+        {
+          p_unit_ids: accommodationUnitIds,
+          p_tenant_id: staffSession.tenant_id  // Multi-tenant security
+        }
       )
 
       if (unitsError) {
@@ -292,6 +297,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
       // Get accommodations for this reservation from junction table
       const reservationAccommodations = (reservationAccommodationsMap.get(res.id) || []).map((acc: any) => ({
         id: acc.id,
+        accommodation_unit_id: acc.accommodation_unit_id,
         motopress_accommodation_id: acc.motopress_accommodation_id,
         motopress_type_id: acc.motopress_type_id,
         room_rate: acc.room_rate,
