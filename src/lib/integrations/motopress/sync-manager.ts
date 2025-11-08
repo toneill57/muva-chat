@@ -137,17 +137,36 @@ export class MotoPresSyncManager {
       const motoPresAccommodations = response.data
       console.log(`Retrieved ${motoPresAccommodations.length} accommodations from MotoPress`)
 
-      // Fetch all rates (pricing) from MotoPress in bulk
+      // Fetch all rates (pricing) from MotoPress in bulk WITH RETRY
       console.log('Fetching rates (pricing) from MotoPress...')
-      const ratesResponse = await client.getAllRates()
+      let ratesResponse = await client.getAllRates()
+      let retryCount = 0
+      const MAX_RETRIES = 3
 
-      if (ratesResponse.error || !ratesResponse.data) {
-        console.warn('⚠️ Failed to fetch rates:', ratesResponse.error)
-        // Continue without pricing data
+      // CRITICAL: Retry if rates fetch fails - pricing is REQUIRED for complete sync
+      while ((ratesResponse.error || !ratesResponse.data) && retryCount < MAX_RETRIES) {
+        retryCount++
+        console.warn(`⚠️ Failed to fetch rates (attempt ${retryCount}/${MAX_RETRIES}):`, ratesResponse.error)
+        console.log(`🔄 Retrying in 2 seconds...`)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        ratesResponse = await client.getAllRates()
       }
 
-      const motoPresRates = ratesResponse.data || []
-      console.log(`Retrieved ${motoPresRates.length} rates from MotoPress`)
+      // If still failed after retries, ABORT sync - don't insert incomplete data
+      if (ratesResponse.error || !ratesResponse.data) {
+        console.error('❌ CRITICAL: Failed to fetch rates after 3 retries - ABORTING sync')
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: [`CRITICAL: Failed to fetch pricing data after ${MAX_RETRIES} retries. Sync aborted to prevent incomplete data.`],
+          totalProcessed: 0,
+          message: 'Pricing fetch failed - sync aborted'
+        }
+      }
+
+      const motoPresRates = ratesResponse.data
+      console.log(`✅ Retrieved ${motoPresRates.length} rates from MotoPress`)
 
       // Map rates to pricing by accommodation_type_id
       const pricingMap = new Map()
