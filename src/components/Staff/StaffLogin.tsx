@@ -6,27 +6,7 @@ import { Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import type { StaffLoginResponse, Tenant } from './types';
 import { getSubdomainFromClient } from '@/lib/subdomain-detector';
 
-// Test accounts data (only for development)
-const TEST_ACCOUNTS = [
-  {
-    username: 'admin_ceo',
-    password: 'Staff2024!',
-    tenant_id: 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf',
-    role: 'ceo',
-  },
-  {
-    username: 'admin_simmer',
-    password: 'Staff2024!',
-    tenant_id: 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf',
-    role: 'admin',
-  },
-  {
-    username: 'housekeeping_maria',
-    password: 'Staff2024!',
-    tenant_id: 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf',
-    role: 'housekeeper',
-  },
-];
+// Test accounts removed for production
 
 export default function StaffLogin() {
   const router = useRouter();
@@ -43,11 +23,30 @@ export default function StaffLogin() {
   const [error, setError] = useState<string | null>(null);
   const [detectedSubdomain, setDetectedSubdomain] = useState<string | null>(null);
   const [autoSelectedTenant, setAutoSelectedTenant] = useState<Tenant | null>(null);
+  const [usernameOnlyMode, setUsernameOnlyMode] = useState(false);
 
   // Auto-detect subdomain and fetch appropriate tenant data
   useEffect(() => {
     const subdomain = getSubdomainFromClient();
     setDetectedSubdomain(subdomain);
+
+    if (!subdomain) {
+      // No subdomain = username-only mode
+      setUsernameOnlyMode(true);
+      setLoadingTenants(false);
+
+      // Check if username is in URL params (redirect from username-only)
+      const params = new URLSearchParams(window.location.search);
+      const usernameParam = params.get('username');
+      if (usernameParam) {
+        setFormData(prev => ({ ...prev, username: usernameParam }));
+      }
+
+      return; // Skip tenant fetching in username-only mode
+    }
+
+    // Has subdomain - full login mode
+    setUsernameOnlyMode(false);
 
     // Clean up tokens from other tenants if switching subdomains
     const existingToken = localStorage.getItem('staff_token');
@@ -77,13 +76,8 @@ export default function StaffLogin() {
       }
     }
 
-    if (subdomain) {
-      // If subdomain detected, fetch specific tenant
-      fetchTenantBySubdomain(subdomain);
-    } else {
-      // No subdomain, fetch all tenants (legacy behavior)
-      fetchTenants();
-    }
+    // Fetch specific tenant for subdomain
+    fetchTenantBySubdomain(subdomain);
   }, []);
 
   const fetchTenantBySubdomain = async (subdomain: string) => {
@@ -210,13 +204,64 @@ export default function StaffLogin() {
 
       console.log('✅ Token saved for tenant:', loginData.staff_info.staff_id);
 
-      // Redirect to dashboard (maintain current subdomain)
-      // Use router.push to navigate within the current subdomain context
-      router.push('/dashboard');
+      // Redirect logic: Check if we need to switch to subdomain
+      if (!detectedSubdomain && loginData.tenant_slug) {
+        // No subdomain detected, need to redirect to tenant subdomain
+        const currentPort = window.location.port;
+        const protocol = window.location.protocol;
+        const newUrl = `${protocol}//${loginData.tenant_slug}.localhost${currentPort ? ':' + currentPort : ''}/dashboard`;
+
+        console.log('🔄 Redirecting to tenant subdomain:', newUrl);
+        window.location.href = newUrl; // Full page redirect
+      } else {
+        // Already on correct subdomain, use router
+        router.push('/dashboard');
+      }
 
     } catch (err) {
       console.error('Login error:', err);
       setError('Network error. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUsernameSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.username.trim()) {
+      setError('Please enter your username');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/staff/resolve-tenant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: formData.username.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || 'Username not found');
+        return;
+      }
+
+      // Redirect to tenant subdomain with username
+      const currentPort = window.location.port;
+      const protocol = window.location.protocol;
+      const newUrl = `${protocol}//${data.tenant_slug}.localhost${currentPort ? ':' + currentPort : ''}/login?username=${encodeURIComponent(formData.username)}`;
+
+      console.log('🔄 Redirecting to tenant subdomain:', newUrl);
+      window.location.href = newUrl;
+
+    } catch (err) {
+      console.error('Username resolution error:', err);
+      setError('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -232,19 +277,6 @@ export default function StaffLogin() {
     }));
   };
 
-  // Quick fill test account
-  const fillTestAccount = (account: typeof TEST_ACCOUNTS[0]) => {
-    setFormData({
-      tenant_id: account.tenant_id,
-      username: account.username,
-      password: account.password,
-      remember_me: false,
-    });
-    setError(null);
-  };
-
-  // Always show test credentials (needed for production testing)
-  const isDevelopment = true;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
@@ -256,7 +288,11 @@ export default function StaffLogin() {
               <Lock className="h-8 w-8 text-blue-900" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900">Staff Login Portal</h1>
-            <p className="text-sm text-slate-500 mt-1">Access your staff dashboard</p>
+            <p className="text-sm text-slate-500 mt-1">
+              {usernameOnlyMode
+                ? 'Enter your username to continue'
+                : 'Access your staff dashboard'}
+            </p>
           </div>
 
           {/* Subdomain Context Banner */}
@@ -287,8 +323,8 @@ export default function StaffLogin() {
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Username */}
+          <form onSubmit={usernameOnlyMode ? handleUsernameSubmit : handleSubmit} className="space-y-6">
+            {/* Username - ALWAYS shown */}
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-slate-700 mb-2">
                 Username
@@ -300,61 +336,66 @@ export default function StaffLogin() {
                 value={formData.username}
                 onChange={handleInputChange}
                 disabled={loading}
-                className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-50 disabled:text-slate-500"
                 placeholder="Enter your username"
                 required
+                autoFocus
               />
             </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
+            {/* Password - Only show when NOT in username-only mode */}
+            {!usernameOnlyMode && (
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    disabled={loading}
+                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-50 disabled:text-slate-500 pr-12"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                    disabled={loading}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Remember Me - Only show when NOT in username-only mode */}
+            {!usernameOnlyMode && (
+              <div className="flex items-center">
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  value={formData.password}
+                  type="checkbox"
+                  id="remember_me"
+                  name="remember_me"
+                  checked={formData.remember_me}
                   onChange={handleInputChange}
                   disabled={loading}
-                  className="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed pr-12"
-                  placeholder="Enter your password"
-                  required
+                  className="h-4 w-4 text-blue-900 border-slate-300 rounded focus:ring-blue-500"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                  disabled={loading}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
+                <label htmlFor="remember_me" className="ml-2 text-sm text-slate-700">
+                  Remember me for 7 days
+                </label>
               </div>
-            </div>
+            )}
 
-            {/* Remember Me */}
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember_me"
-                name="remember_me"
-                checked={formData.remember_me}
-                onChange={handleInputChange}
-                disabled={loading}
-                className="h-4 w-4 text-blue-900 border-slate-300 rounded focus:ring-blue-500"
-              />
-              <label htmlFor="remember_me" className="ml-2 text-sm text-slate-700">
-                Remember me for 7 days
-              </label>
-            </div>
-
-            {/* Submit Button */}
+            {/* Submit Button - Dynamic text */}
             <button
               type="submit"
               disabled={loading || loadingTenants}
@@ -363,10 +404,10 @@ export default function StaffLogin() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  Signing in...
+                  {usernameOnlyMode ? 'Finding your account...' : 'Signing in...'}
                 </span>
               ) : (
-                'Sign In'
+                usernameOnlyMode ? 'Continue' : 'Sign In'
               )}
             </button>
           </form>
@@ -377,32 +418,6 @@ export default function StaffLogin() {
               Forgot password? Contact your administrator
             </p>
           </div>
-
-          {/* Test Credentials (Discrete) */}
-          {isDevelopment && (
-            <div className="mt-6 pt-6 border-t border-slate-200">
-              <p className="text-xs text-slate-400 text-center mb-3">Test Credentials</p>
-              <div className="space-y-2">
-                {TEST_ACCOUNTS.map((account) => (
-                  <button
-                    key={account.username}
-                    type="button"
-                    onClick={() => fillTestAccount(account)}
-                    className="w-full text-left px-3 py-2 bg-slate-50 hover:bg-slate-100 rounded text-xs transition-colors border border-slate-200"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-mono font-medium text-slate-700">{account.username}</span>
-                        <span className="mx-2 text-slate-400">/</span>
-                        <span className="font-mono text-slate-600">{account.password}</span>
-                      </div>
-                      <span className="text-slate-500 text-[10px] uppercase">{account.role}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

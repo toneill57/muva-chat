@@ -666,6 +666,42 @@ git push origin dev  # Auto-deploys via GitHub Actions
 - `pnpm test` - Run unit tests (Jest)
 - `ppnpm run test:e2e` - Run E2E tests (Playwright)
 
+### Local Development: Dual Environment Setup ⭐ NEW
+
+**Run production and staging simultaneously** for safe development:
+
+```bash
+# Terminal 1: Production (port 3000)
+pnpm run dev:production
+
+# Terminal 2: Staging (port 3001)
+pnpm run dev:staging
+```
+
+**Architecture:**
+- Production → `hoaiwcueleiemeplrurv.supabase.co` (port 3000)
+- Staging → `ooaumjzaztmutltifhoq.supabase.co` (port 3001)
+- Both environments run **simultaneously** with isolated databases
+
+**Benefits:**
+- ✅ Compare environments **side-by-side** in browser
+- ✅ Test changes in staging **without risk** to production
+- ✅ **Zero chance** of mixing environments (different ports)
+- ✅ Hot reload works independently in each terminal
+
+**Documentation:**
+- Quick Start: `QUICK_START_DUAL_ENV.md`
+- Complete Guide: `docs/development/DUAL_ENVIRONMENT_SETUP.md`
+
+**Utility Commands:**
+```bash
+pnpm run kill-all           # Kill both environments
+pnpm run kill-port          # Kill production (3000)
+pnpm run kill-port:staging  # Kill staging (3001)
+```
+
+**⚠️ DEPRECATED:** Old `toggle-env.sh` system (single .env.local toggle) is obsolete. Use dual environment instead.
+
 ---
 
 ## 📊 Recent Activity

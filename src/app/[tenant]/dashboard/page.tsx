@@ -2,23 +2,108 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTenant } from '@/contexts/TenantContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookOpen, Users, MessageSquare, TrendingUp, Trash2 } from 'lucide-react';
+import { BookOpen, Users, MessageSquare, TrendingUp, Trash2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+interface DashboardStats {
+  documents: number;
+  total_conversations: number;
+  active_users: number;
+  growth_percentage: number;
+  growth_direction: 'up' | 'down';
+}
 
 export default function AdminDashboardPage() {
   const { tenant } = useTenant();
   const [isClearing, setIsClearing] = useState(false);
   const [clearResult, setClearResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  // TODO (Task 4D.5): Replace with real data from analytics
-  const stats = [
-    { label: 'Documents', value: '12', icon: BookOpen, color: 'text-blue-600' },
-    { label: 'Chat Sessions', value: '248', icon: MessageSquare, color: 'text-green-600' },
-    { label: 'Active Users', value: '45', icon: Users, color: 'text-purple-600' },
-    { label: 'Growth', value: '+12%', icon: TrendingUp, color: 'text-orange-600' },
+  // Real-time dashboard statistics
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loadingStats, setLoadingStats] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
+
+  // Fetch real statistics
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoadingStats(true);
+        setStatsError(null);
+
+        // Get staff token from localStorage
+        const token = localStorage.getItem('staff_token');
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
+        const response = await fetch('/api/analytics/dashboard-stats', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch statistics');
+        }
+
+        const data = await response.json();
+        setStats(data.stats);
+      } catch (error: any) {
+        console.error('[dashboard] Error fetching stats:', error);
+        setStatsError(error.message);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  // Prepare stats display data
+  const statsDisplay: Array<{
+    label: string;
+    value: string;
+    icon: any;
+    color: string;
+    loading: boolean;
+    subtitle?: string;
+  }> = [
+    {
+      label: 'Documents',
+      value: stats?.documents?.toString() || '0',
+      icon: BookOpen,
+      color: 'text-blue-600',
+      loading: loadingStats
+    },
+    {
+      label: 'Chat Sessions',
+      value: stats?.total_conversations?.toString() || '0',
+      icon: MessageSquare,
+      color: 'text-green-600',
+      loading: loadingStats
+    },
+    {
+      label: 'Active Users',
+      value: stats?.active_users?.toString() || '0',
+      icon: Users,
+      color: 'text-purple-600',
+      loading: loadingStats,
+      subtitle: 'last 7 days'
+    },
+    {
+      label: 'Growth',
+      value: stats?.growth_percentage !== undefined
+        ? `${stats.growth_percentage >= 0 ? '+' : ''}${stats.growth_percentage}%`
+        : '0%',
+      icon: TrendingUp,
+      color: stats?.growth_percentage && stats.growth_percentage < 0 ? 'text-red-600' : 'text-orange-600',
+      loading: loadingStats,
+      subtitle: 'vs previous week'
+    },
   ];
 
   const handleClearConversations = async () => {
@@ -69,9 +154,20 @@ export default function AdminDashboardPage() {
         </p>
       </div>
 
+      {/* Stats error banner */}
+      {statsError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-red-800">Failed to load statistics</p>
+            <p className="text-xs text-red-600 mt-1">{statsError}</p>
+          </div>
+        </div>
+      )}
+
       {/* Stats grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => {
+        {statsDisplay.map((stat) => {
           const Icon = stat.icon;
           return (
             <Card key={stat.label}>
@@ -82,7 +178,16 @@ export default function AdminDashboardPage() {
                 <Icon className={`w-5 h-5 ${stat.color}`} />
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                {stat.loading ? (
+                  <div className="h-8 bg-gray-200 rounded animate-pulse" />
+                ) : (
+                  <>
+                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                    {stat.subtitle && (
+                      <p className="text-xs text-gray-500 mt-1">{stat.subtitle}</p>
+                    )}
+                  </>
+                )}
               </CardContent>
             </Card>
           );

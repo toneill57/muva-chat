@@ -163,6 +163,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
                 chunk.pricing.base_price,
                 chunk.pricing.base_price
               ] : [0, 0],
+              base_price_low_season: chunk.pricing?.base_price_low_season || chunk.pricing?.base_price || 0,
+              base_price_high_season: chunk.pricing?.base_price_high_season || chunk.pricing?.base_price || 0,
               // NEW: Price per person calculation
               price_per_person: chunk.pricing?.base_price && (typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null)
                 ? Math.round(chunk.pricing.base_price / (chunk.metadata.capacity.total || 1))
@@ -302,6 +304,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
               chunk.pricing.base_price,
               chunk.pricing.base_price
             ] : [0, 0],
+            base_price_low_season: chunk.pricing?.base_price_low_season || chunk.pricing?.base_price || 0,
+            base_price_high_season: chunk.pricing?.base_price_high_season || chunk.pricing?.base_price || 0,
             price_per_person: chunk.pricing?.base_price && (typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null)
               ? Math.round(chunk.pricing.base_price / (chunk.metadata.capacity.total || 1))
               : (chunk.pricing?.base_price && chunk.metadata?.capacity)

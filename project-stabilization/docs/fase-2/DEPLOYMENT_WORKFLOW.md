@@ -2,6 +2,13 @@
 
 **Post-Stabilization 2025**
 
+> **⚠️ DEPRECATED DOCUMENT**
+> Este documento usa el sistema `toggle-env.sh` obsoleto.
+> **Ver nuevo sistema:** `QUICK_START_DUAL_ENV.md` y `docs/development/DUAL_ENVIRONMENT_SETUP.md`
+> **Nuevo workflow:** `pnpm run dev:production` y `pnpm run dev:staging` (simultáneos)
+
+---
+
 ## Ambientes
 
 ### STAGING
