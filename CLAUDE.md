@@ -14,58 +14,37 @@ Guidance for Claude Code when working with this repository.
 
 **Current Projects:** Ver `snapshots/general-snapshot.md` → CURRENT PROJECT
 
+**Chat Routes:**
+- `/with-me` - Public chat (anonymous, pre-booking)
+- `/my-stay` - Guest portal (authenticated: check-in date + phone last 4 digits)
+
 ---
 
 ## REGLAS CRÍTICAS
 
-### 0. AMBIENTE DE DESARROLLO - STAGING FIRST (CRÍTICO)
+### 0. AMBIENTE DE DESARROLLO - STAGING FIRST
 
 **SIEMPRE trabajar en STAGING primero. NUNCA en producción.**
 
-**Development Environment (localhost):**
-- Puerto 3001: `http://simmerdown.localhost:3001` → Conectado a **STAGING**
-- Puerto 3000: `http://simmerdown.localhost:3000` → Conectado a **PRODUCTION** (solo lectura)
+**Environment Setup:**
+- `localhost:3001` → **STAGING** (`hoaiwcueleiemeplrurv`)
+- `localhost:3000` → **PRODUCTION** (`ooaumjzaztmutltifhoq`) - solo lectura
 
-**Supabase Project IDs:**
-- 🟢 **STAGING:** `hoaiwcueleiemeplrurv` ← **USAR ESTE para desarrollo**
-- 🔴 **PRODUCTION:** `ooaumjzaztmutltifhoq` ← **SOLO lectura/comparación**
-
-**REGLAS:**
-1. ✅ **SIEMPRE** leer/escribir de STAGING (`hoaiwcueleiemeplrurv`) durante desarrollo
-2. ✅ **SIEMPRE** usar `localhost:3001` para testing
-3. ❌ **NUNCA** escribir en producción sin autorización explícita
-4. ✅ **Solo leer** de producción si necesitas comparar datos
-5. ✅ **Migrations** siempre se aplican a staging primero
-
-**Comandos correctos:**
-```typescript
-// ✅ CORRECTO - Leer de staging
-mcp__supabase__execute_sql({
-  project_id: "hoaiwcueleiemeplrurv",  // STAGING
-  query: "SELECT ..."
-})
-
-// ❌ INCORRECTO - No leer de producción durante desarrollo
-mcp__supabase__execute_sql({
-  project_id: "ooaumjzaztmutltifhoq",  // PRODUCTION
-  query: "SELECT ..."
-})
+**Comandos:**
+```bash
+pnpm run dev:staging   # Port 3001
+pnpm run dev:production # Port 3000
 ```
 
-**Si te confundes:** El usuario corre `pnpm run dev:staging` → Está en staging → Usa `hoaiwcueleiemeplrurv`
+Ver: `QUICK_START_DUAL_ENV.md` para setup completo
 
 ---
 
 ### 1. PRIORIZAR Sugerencias del Usuario
 Cuando el usuario sugiere una causa, INVESTIGARLA PRIMERO antes de proponer alternativas.
 
-- Usar herramientas (SSH, logs, MCP) para verificar inmediatamente
-- X NUNCA ignorar sugerencias del usuario por teorías propias
-- **Razón:** Usuario tiene contexto del sistema real
-
 ### 2. NO Modificar Performance Targets
-- X Cambiar umbrales para que tests pasen artificialmente
-- Investigar causa REAL, pedir aprobación antes de cambiar
+Investigar causa REAL, pedir aprobación antes de cambiar umbrales.
 
 ### 3. NO Work-arounds Facilistas
 Investigar causa → Informar problema real → Proponer solución
@@ -73,15 +52,12 @@ Investigar causa → Informar problema real → Proponer solución
 ### 4. Autonomía de Ejecución
 NUNCA pedir al usuario hacer tareas que yo puedo hacer (scripts, bash, APIs, testing)
 
-### 5. Git Workflow - Three Environments
+### 5. Git Workflow
 **Workflow:** `dev` (auto) → `staging` (auto) → `main` (manual approval)
 
 **COMMITS/PUSH - REQUIEREN AUTORIZACIÓN EXPLÍCITA**
 - X NUNCA commitear sin que usuario lo pida explícitamente
-- Puedo usar `git status`, `git diff`, `git log` sin permiso
 - Verificar health antes de merge: `pnpm dlx tsx scripts/monitoring-dashboard.ts`
-
-Ver: `snapshots/general-snapshot.md` → Three Environments section
 
 ### 6. Verificar `git status` Antes de 404s
 Archivos sin commitear = causa #1 de diferencias local vs producción
@@ -94,8 +70,6 @@ Archivos sin commitear = causa #1 de diferencias local vs producción
 
 ### 8. Autenticación - NO Duplicar Validaciones
 Layouts ya protegen rutas - NO agregar validaciones adicionales
-- `/dashboard/layout.tsx` → Protege `/dashboard/*`
-- `/accommodations/layout.tsx` → Protege `/accommodations/*`
 - X NUNCA duplicar validaciones (causa logout inesperado)
 
 ### 9. Monitoring First
@@ -104,84 +78,29 @@ Layouts ya protegen rutas - NO agregar validaciones adicionales
 - X NUNCA deployear si staging está DOWN
 
 ### 10. RPC Functions Validation (CRÍTICO - Guest Chat)
-**Problema recurrente:** Funciones RPC pierden `search_path` → Operador pgvector `<=>` inaccesible → Guest chat NO responde sobre alojamientos
+**Problema:** Funciones RPC pierden `search_path` → Guest chat NO responde sobre alojamientos
 
-**SIEMPRE validar ANTES de deploy:**
+**Validar antes de deploy:**
 ```bash
 pnpm run validate:rpc -- --env=staging
+pnpm run validate:rpc:fix -- --env=staging  # Auto-fix si falla
 ```
 
-**Si falla → Auto-fix:**
-```bash
-pnpm run validate:rpc:fix -- --env=staging
-```
-
-**CI/CD:** GitHub Actions automáticamente valida + auto-repara antes de build
-**Monitoring:** Cron job ejecuta validación cada hora en VPS
-**Tests:** `pnpm run test:rpc` falla si funciones incorrectas
-
-Ver: `docs/guest-chat-debug/PREVENTION_SYSTEM.md` (sistema completo de 4 capas)
-Ver: `docs/monitoring/AUTOMATED_MONITORING_SETUP.md` (setup de cron + alertas)
+Ver: `docs/guest-chat-debug/PREVENTION_SYSTEM.md`
 
 ---
 
 ## Development Setup
 
-### Dual Environment (RECOMMENDED)
-Run production and staging **simultaneously** for safe development:
-
+### SSH Access to VPS
 ```bash
-# Terminal 1: Production (port 3000)
-pnpm run dev:production
-
-# Terminal 2: Staging (port 3001)
-pnpm run dev:staging
+ssh -i ~/.ssh/muva_deploy root@195.200.6.216
 ```
 
-**Benefits:**
-- ✅ Compare environments side-by-side
-- ✅ Test changes in staging without risk
-- ✅ Zero chance of mixing environments (different ports)
-
-**Documentation:** `QUICK_START_DUAL_ENV.md`
-
-### Alternative: Single Environment
-```bash
-./scripts/dev-with-keys.sh  # Port 3000 with .env.local
-```
+**CRITICAL:** ALWAYS use `-i ~/.ssh/muva_deploy` flag
 
 X NO usar `pnpm run dev` directo (falta .env.local)
 X NO crear `vercel.json` (migrado a VPS Oct 2025)
-
-### SSH Access to VPS
-
-**Staging VPS:**
-```bash
-ssh -i ~/.ssh/muva_deploy root@195.200.6.216
-```
-
-**Production VPS:** (when needed)
-```bash
-ssh -i ~/.ssh/muva_deploy root@195.200.6.216
-```
-
-**CRITICAL:** ALWAYS use `-i ~/.ssh/muva_deploy` flag (keys from FASE 7)
-X NUNCA: `ssh root@195.200.6.216` (will fail with "Permission denied")
-
----
-
-## Specialized Agents
-
-Agentes leen automáticamente `snapshots/{nombre}.md`
-
-- `@agent-api-endpoints-mapper` - API route analysis and documentation
-- `@agent-backend-developer` - APIs, business logic, SIRE
-- `@agent-database-agent` - Schema, migrations, RPC, RLS
-- `@agent-deploy-agent` - CI/CD, VPS deployment
-- `@agent-documentation-template-applier` - Documentation templates and formatting
-- `@agent-embeddings-generator` - Vector search, Matryoshka
-- `@agent-infrastructure-monitor` - Monitoring, alerting, metrics, error detection
-- `@agent-ux-interface` - React components, WCAG
 
 ---
 
@@ -189,19 +108,12 @@ Agentes leen automáticamente `snapshots/{nombre}.md`
 
 ### MCP-FIRST POLICY
 
-| Operación | X NUNCA | SIEMPRE |
+| Operación | X NUNCA | ✅ SIEMPRE |
 |-----------|---------|---------|
 | SQL queries | `pnpm dlx tsx -e` | `mcp__supabase__execute_sql` |
 | DB schema | bash + describe | `mcp__supabase__list_tables` |
-| Project memory | Inline docs | `mcp__knowledge-graph__aim_search_nodes` |
 
-**MCP Supabase Workaround:**
-```typescript
-mcp__supabase__list_tables({
-  project_id: "ooaumjzaztmutltifhoq",
-  schemas: ["public"] // REQUIRED
-})
-```
+**Note:** `mcp__supabase__list_tables` requires `schemas: ["public"]` parameter
 
 Ref: `docs/infrastructure/MCP_USAGE_POLICY.md`
 
@@ -228,8 +140,6 @@ Ref: `docs/troubleshooting/SUPABASE_INTERACTION_GUIDE.md`
 - X NUNCA truncar chunks (`.substring()`)
 - Performance: 81% token reduction
 
-Ref: `docs/workflows/ACCOMMODATION_SYNC_UNIVERSAL.md`
-
 ### SIRE Compliance
 - USAR: `src/lib/sire/sire-catalogs.ts` (USA=249, NOT 840)
 - X NUNCA ISO 3166-1 → 100% RECHAZADO
@@ -240,52 +150,22 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ## Documentation
 
-Ver: `snapshots/general-snapshot.md` (estado completo del proyecto)
-Ver: `docs/infrastructure/three-environments/README.md` (16 docs)
-Ver: `docs/infrastructure/three-environments/QUICK_REFERENCE.md` (1 página)
+- `snapshots/general-snapshot.md` - Estado completo del proyecto
+- `docs/infrastructure/three-environments/README.md` - Arquitectura de 3 ambientes
+- `docs/infrastructure/three-environments/QUICK_REFERENCE.md` - Referencia rápida (1 página)
 
 ---
 
-## Package Manager (pnpm)
+## Validation Commands
 
-**Current:** pnpm v10.20.0 (migrated from npm Oct 30, 2025)
-
-**Key Commands:**
-- `pnpm install` - Install dependencies
-- `pnpm install --frozen-lockfile` - CI/CD installs
-- `pnpm dlx tsx` - Run TypeScript scripts
-- `pnpm run X` - Run package.json scripts
-
-**Validation Commands:**
-- `pnpm run validate:rpc` - Validate RPC functions search_path
-- `pnpm run validate:rpc:fix` - Auto-fix RPC functions
-- `pnpm run test:rpc` - Run RPC function tests
-- `pnpm dlx tsx scripts/pre-deploy-check.sh [env]` - Full pre-deploy validation
-
-Ref: `project-stabilization/PNPM_MIGRATION_COMPLETE.md`
-
----
-
-## Guest Chat Prevention System
-
-**Sistema de 4 Capas** para prevenir rotura de guest chat por funciones RPC incorrectas:
-
-1. **CLI Validation** - `pnpm run validate:rpc` (desarrollo)
-2. **Health Endpoint** - `GET /api/health/database` (runtime)
-3. **Monitoring Dashboard** - Visual status de todos los ambientes
-4. **Automated Tests** - `pnpm run test:rpc` (CI/CD gate)
-
-**Workflow antes de deploy:**
+**Pre-deploy checks:**
 ```bash
-./scripts/pre-deploy-check.sh staging  # Valida TODO
-./scripts/deploy-staging.sh            # Deploy si pasa ✅
+pnpm run validate:rpc          # Validate RPC functions
+pnpm run validate:rpc:fix      # Auto-fix RPC functions
+pnpm run test:rpc              # Run RPC tests
+./scripts/pre-deploy-check.sh staging  # Full validation
 ```
 
-**Documentación completa:**
-- `docs/guest-chat-debug/README.md` - Guía rápida
-- `docs/guest-chat-debug/PREVENTION_SYSTEM.md` - Sistema completo
-- `docs/monitoring/AUTOMATED_MONITORING_SETUP.md` - Cron + alertas
-
 ---
 
-**Last Updated:** November 6, 2025 (Post-Prevention System)
+**Last Updated:** November 8, 2025

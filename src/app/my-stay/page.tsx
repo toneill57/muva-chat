@@ -10,17 +10,19 @@ import { AlertCircle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 /**
- * Guest Chat Page Component (Subdomain-based Multi-tenant)
+ * My Stay Page Component (Subdomain-based Multi-tenant)
  *
- * New architecture: Uses subdomain for tenant resolution
- * URL: simmerdown.muva.chat/guest-chat
+ * Authenticated guest portal for hotel guests with active reservations.
+ * URL: simmerdown.muva.chat/my-stay
+ *
+ * Authentication: Check-in date + last 4 digits of phone number
  *
  * Tenant resolution flow:
  * 1. Middleware detects subdomain → sets x-tenant-subdomain header
  * 2. Client reads tenant_subdomain cookie (set by middleware)
  * 3. Resolves tenant_id from tenant slug via API
  */
-export default function GuestChatPage() {
+export default function MyStayPage() {
   const [tenantId, setTenantId] = useState<string | null>(null)
   const [tenant, setTenant] = useState<Tenant | null>(null)
   const [session, setSession] = useState<GuestSession | null>(null)
@@ -43,7 +45,7 @@ export default function GuestChatPage() {
           throw new Error('No se detectó subdominio. Accede desde tu URL de hotel (ej: simmerdown.muva.chat)')
         }
 
-        console.log(`[GuestChatPage] Subdomain detected: ${subdomain}`)
+        console.log(`[MyStayPage] Subdomain detected: ${subdomain}`)
 
         // Resolve tenant_id from slug
         const response = await fetch('/api/tenant/resolve', {
@@ -58,7 +60,7 @@ export default function GuestChatPage() {
         }
 
         const { tenant_id, tenant_name, tenant_slug, logo_url } = await response.json()
-        console.log(`[GuestChatPage] Resolved tenant_id: ${tenant_id}`)
+        console.log(`[MyStayPage] Resolved tenant_id: ${tenant_id}`)
         setTenantId(tenant_id)
         setTenant({
           tenant_id,
@@ -70,7 +72,7 @@ export default function GuestChatPage() {
           updated_at: '',
         })
       } catch (err: any) {
-        console.error('[GuestChatPage] Failed to resolve tenant from subdomain:', err)
+        console.error('[MyStayPage] Failed to resolve tenant from subdomain:', err)
         setError(err.message || 'Error al identificar el hotel. Verifica la URL.')
         setLoading(false)
       }

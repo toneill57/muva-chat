@@ -235,7 +235,7 @@ test.describe('Guest Chat Messaging', () => {
     await expect(page.locator(selectors.login.submitButton)).toBeVisible()
 
     // Should not have access to chat
-    await page.goto('/guest-chat/test-hotel')
+    await page.goto('/my-stay/test-hotel')
     await expect(page.locator(selectors.login.submitButton)).toBeVisible()
   })
 
