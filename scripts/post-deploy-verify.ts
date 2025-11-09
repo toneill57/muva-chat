@@ -61,7 +61,7 @@ async function checkHealthEndpoint(): Promise<VerificationResult> {
   const start = Date.now();
 
   try {
-    const response = await fetch('https://simmerdown.house/api/health/guest-chat');
+    const response = await fetch('https://simmerdown.house/api/health/my-stay');
     const data = await response.json();
 
     const passed = data.status === 'healthy';
@@ -115,7 +115,7 @@ async function runSmokeTest(): Promise<VerificationResult> {
 
   try {
     // Run single critical test
-    await execAsync('npx playwright test tests/e2e/guest-chat-manuals.spec.ts -g "WiFi password"');
+    await execAsync('npx playwright test tests/e2e/my-stay-manuals.spec.ts -g "WiFi password"');
 
     return {
       step: 'E2E Smoke Test',

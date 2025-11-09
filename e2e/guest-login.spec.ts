@@ -10,7 +10,7 @@ import { selectors, testReservation, timeouts } from './fixtures/test-data'
 test.describe('Guest Login', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to guest chat login (using test tenant)
-    await page.goto('/guest-chat/test-hotel')
+    await page.goto('/my-stay/test-hotel')
 
     // Wait for page to load
     await expect(page.locator('text=Bienvenido')).toBeVisible()
@@ -105,7 +105,7 @@ test.describe('Guest Login', () => {
     await expect(page.locator(selectors.login.loadingIndicator)).toBeVisible()
 
     // Should redirect to chat interface
-    await page.waitForURL(/\/guest-chat/, { timeout: timeouts.login })
+    await page.waitForURL(/\/my-stay/, { timeout: timeouts.login })
 
     // Verify we're on chat page
     await expect(page.locator(selectors.chat.messageInput)).toBeVisible({
@@ -143,7 +143,7 @@ test.describe('Guest Login', () => {
     await expect(page.locator(selectors.login.submitButton)).toBeVisible()
 
     // Verify URL didn't change (stayed on login)
-    expect(page.url()).toContain('/guest-chat/test-hotel')
+    expect(page.url()).toContain('/my-stay/test-hotel')
   })
 
   test('should handle network errors gracefully', async ({ page }) => {
@@ -214,7 +214,7 @@ test.describe('Guest Login', () => {
     await page.keyboard.press('Enter')
 
     // Should redirect to chat
-    await page.waitForURL(/\/guest-chat/, { timeout: timeouts.login })
+    await page.waitForURL(/\/my-stay/, { timeout: timeouts.login })
 
     // Verify we're in the chat interface
     await expect(page.locator(selectors.header.guestName)).toBeVisible()
