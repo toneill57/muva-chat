@@ -13,45 +13,42 @@ sire_validation: 5/5 SQL queries passed (100%)
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
-## 🎯 CURRENT PROJECT: Database Sync Staging (November 6, 2025)
+## 🎯 CURRENT PROJECT: Sistema de Manuales de Alojamiento (November 9, 2025)
 
-**Status:** Planning Complete - Ready for FASE 1
-**Priority:** 🔴 CRITICAL - Staging database non-functional
+**Status:** Planning Complete - Ready for FASE 2
 
 **My Responsibility:**
-- FASE 1: Análisis exhaustivo de dev database (detectar 32+ tablas)
-- FASE 2: Crear backups completos con pg_dump
-- FASE 3: Preparar staging environment (snapshot + limpieza)
-- FASE 4: Ejecutar migraciones DDL
+- FASE 2: Crear migrations de RLS policies (multi-tenant isolation)
+- FASE 2: Crear migrations de índices optimizados
+- FASE 2: Validar RLS policies funcionando (multi-tenant test)
+- FASE 2: Validar performance de índices con EXPLAIN ANALYZE
 
 **Planning Files:**
-- `database-sync-plan.md` - Complete architecture (200+ lines)
-- `database-sync-TODO.md` - Tasks by phase (29 tasks total)
-- `database-sync-prompt-workflow.md` - Ready prompts (300+ lines)
+- `docs/accommodation-manuals/plan.md` - Complete architecture (202 lines)
+- `docs/accommodation-manuals/TODO.md` - Tasks by phase (421 lines, 37 tasks)
+- `docs/accommodation-manuals/accommodation-manuals-prompt-workflow.md` - Ready prompts
 
 **Key Files:**
-- **Create:** `scripts/analyze-dev-database.ts` - Database analysis tool (FASE 1)
-- **Create:** `scripts/backup-dev-complete.ts` - Backup automation (FASE 2)
-- **Create:** `scripts/prepare-staging.ts` - Staging preparation (FASE 3)
-- **Reference:** `scripts/copy-dev-to-staging.ts` - Current INCOMPLETE script
+- **Create:** `supabase/migrations/YYYYMMDDHHMMSS_accommodation_manuals_rls.sql` - RLS policies
+- **Create:** `supabase/migrations/YYYYMMDDHHMMSS_accommodation_manuals_indexes.sql` - Índices
+- **Reference:** Tablas existentes `accommodation_manuals`, `accommodation_units_manual_chunks`
 
-**Critical Tables to Verify (8 missing):**
-1. tenant_registry (NOT "tenants")
-2. accommodation_units_manual
-3. chat_conversations
-4. ics_feed_configurations
-5. property_relationships
-6. sire_content
-7. hotels.accommodation_units (schema hotels!)
-8. hotels.policies (schema hotels!)
+**RLS Policies to Create:**
+- `accommodation_manuals`: SELECT, INSERT, UPDATE, DELETE (tenant_id filter)
+- `accommodation_units_manual_chunks`: SELECT, INSERT, DELETE (tenant_id filter)
+
+**Índices to Create:**
+- `idx_accommodation_manuals_unit_tenant` - Listado de manuales por unit
+- `idx_manual_chunks_unit_tenant` - Búsqueda en guest chat
+- `idx_manual_chunks_manual_index` - Ordenamiento para visualización
 
 **Workflow:**
-1. Read database-sync-plan.md → database-sync-TODO.md → workflow.md
-2. Find next `[ ]` task in TODO.md for FASE 1
-3. Use corresponding prompt from workflow.md
-4. Focus on MCP tools: mcp__supabase__list_tables, mcp__supabase__execute_sql
-5. Test with project_id: "ooaumjzaztmutltifhoq"
-6. Document in docs/database-sync/fase-1/
+1. Read plan.md → TODO.md → accommodation-manuals-prompt-workflow.md
+2. Find next `[ ]` task in TODO.md for FASE 2 (tasks 2.1-2.5)
+3. Use corresponding prompt from workflow.md (Prompts 2.1-2.5)
+4. Apply migrations with `execute-ddl-via-api.ts`
+5. Validate with MCP tools (project_id: `hoaiwcueleiemeplrurv` for staging)
+6. Document in docs/accommodation-manuals/fase-2/
 
 ---
 

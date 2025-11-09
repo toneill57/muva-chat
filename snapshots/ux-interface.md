@@ -15,37 +15,40 @@ version: "2.1"
 
 ---
 
-## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🎯 CURRENT PROJECT: Sistema de Manuales de Alojamiento (November 9, 2025)
 
-**Status:** ⏸️ Standby - Awaiting FASE 3 E2E Testing
-**Priority:** 🟢 DEFERRED (FASE 3)
-**Your Role:** Support E2E testing validation (IF needed)
+**Status:** Planning Complete - Ready for FASE 3
 
-### Quick Context
+**My Responsibility:**
+- FASE 3: Crear componente `AccommodationManualsSection` con drag & drop
+- FASE 3: Crear componente `ManualContentModal` con visualización de chunks
+- FASE 3: Modificar `AccommodationUnitsGrid` (reemplazar Stats Summary líneas 545-560)
+- FASE 5: Optimizaciones UI (lazy loading, cache, rate limiting)
 
-**Problem:** Guest chat NO responde WiFi/Policies
-**Your Involvement:** Conditional - Only if UI/UX issues discovered during testing
-**Current Phase:** FASE 1 (SQL Diagnosis) - Backend-focused
+**Planning Files:**
+- `docs/accommodation-manuals/plan.md` - Complete architecture (202 lines)
+- `docs/accommodation-manuals/TODO.md` - Tasks by phase (421 lines, 37 tasks)
+- `docs/accommodation-manuals/accommodation-manuals-prompt-workflow.md` - Ready prompts
 
-### Your Responsibilities (CONDITIONAL)
+**Key Files:**
+- **Create:** `src/components/Accommodation/AccommodationManualsSection.tsx` - Drag & drop UI
+- **Create:** `src/components/Accommodation/ManualContentModal.tsx` - Modal con accordion
+- **Modify:** `src/components/Accommodation/AccommodationUnitsGrid.tsx` (líneas 545-560)
+- **Reference:** `react-dropzone` library, `@headlessui/react` for modal
 
-**IF FASE 3 E2E Testing discovers UI/UX issues:**
-- Validate component rendering in test scenarios
-- Verify accessibility (ARIA labels, keyboard navigation)
-- Check mobile viewport rendering
-- Ensure visual regression tests pass
+**UI States to Implement:**
+1. Empty state: Dropzone vacía con instrucciones
+2. Uploading state: Progress bar animado
+3. List state: Manuales con acciones (Ver, Eliminar)
+4. Modal state: Chunks en accordion con markdown rendering
 
-**IF FASE 4 Code Consolidation affects UI:**
-- Review refactored components for UX consistency
-- Validate no visual regressions introduced
-- Test responsive behavior after consolidation
-
-### Success Criteria (IF Involved)
-
-- ✅ All E2E tests pass with visual validation
-- ✅ No ARIA/accessibility regressions
-- ✅ Mobile viewport tests pass
-- ✅ Lighthouse scores maintained (>90)
+**Workflow:**
+1. Read plan.md → TODO.md → accommodation-manuals-prompt-workflow.md
+2. Find next `[ ]` task in TODO.md for FASE 3 (tasks 3.1-3.5)
+3. Use corresponding prompt from workflow.md (Prompts 3.1-3.5)
+4. Implement components with Tailwind CSS
+5. Test visually in `http://localhost:3001/accommodations/units`
+6. Document in docs/accommodation-manuals/fase-3/
 
 ### Dependencies
 
