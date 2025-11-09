@@ -19,29 +19,35 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
-## 🎯 CURRENT PROJECT: Database Sync Staging (November 6, 2025)
+## 🎯 CURRENT PROJECT: Sistema de Manuales de Alojamiento (November 9, 2025)
 
-**Status:** Planning Complete - Ready for FASE 4
-**Priority:** 🔴 CRITICAL - Staging non-functional
-**Your Role:** Support developer for sync scripts and validation
+**Status:** Planning Complete - Ready for FASE 0
 
 **My Responsibility:**
-- FASE 4: Desarrollar lógica de sync (scripts robustos con retry logic)
-- FASE 5: Crear validadores (comparación tabla por tabla)
-- FASE 6: Automatización final (script maestro one-command)
+- FASE 0: Análisis de conflicto de rutas (resolver 404), diseño de chunking strategy
+- FASE 1: Implementar API endpoints (POST upload, GET list, DELETE, GET chunks)
+- FASE 1: Crear biblioteca `src/lib/manual-processing.ts` con chunking de markdown
+- FASE 4: Tests end-to-end (upload completo, guest chat integration, multi-tenant)
 
 **Planning Files:**
-- `database-sync-plan.md` - Complete architecture
-- `database-sync-TODO.md` - 29 tasks organized
-- `database-sync-prompt-workflow.md` - Ready-to-use prompts
+- `docs/accommodation-manuals/plan.md` - Complete architecture (202 lines)
+- `docs/accommodation-manuals/TODO.md` - Tasks by phase (421 lines, 37 tasks)
+- `docs/accommodation-manuals/accommodation-manuals-prompt-workflow.md` - Ready prompts
 
-**Key Files to Create:**
-- **FASE 4:** `scripts/sync-dev-to-staging.ts` - Main sync orchestrator
-- **FASE 4:** `scripts/sync-schema.ts` - DDL synchronization
-- **FASE 4:** `scripts/sync-data.ts` - DML with FK ordering
-- **FASE 5:** `scripts/validate-staging.ts` - Complete validation
-- **FASE 5:** `scripts/compare-databases.ts` - Table comparison
-- **FASE 6:** `scripts/sync-database-master.ts` - One-command solution
+**Key Files:**
+- **Create:** `src/lib/manual-processing.ts` - Markdown chunking (FASE 1)
+- **Create:** `src/app/api/accommodation-manuals/[unitId]/route.ts` - POST, GET (FASE 1)
+- **Create:** `src/app/api/accommodation-manuals/[unitId]/[manualId]/route.ts` - DELETE (FASE 1)
+- **Create:** `src/app/api/accommodation-manuals/[manualId]/chunks/route.ts` - GET chunks (FASE 1)
+- **Reference:** `scripts/regenerate-manual-embeddings.ts` - Lógica de embeddings existente
+
+**Workflow:**
+1. Read plan.md → TODO.md → accommodation-manuals-prompt-workflow.md
+2. Find next `[ ]` task in TODO.md
+3. Use corresponding prompt from workflow.md
+4. Implement following plan.md specs
+5. Test per TODO.md commands
+6. Document in docs/accommodation-manuals/fase-{N}/
 
 **Sync Order (Critical):**
 ```typescript
