@@ -3,6 +3,14 @@
 
 set -e
 
+echo "🧹 Killing any existing processes on port 3001..."
+lsof -ti:3001 | xargs kill -9 2>/dev/null || true
+pkill -f "next dev.*3001" 2>/dev/null || true
+pkill -f "node.*next.*3001" 2>/dev/null || true
+sleep 1
+echo "✅ Port 3001 cleared"
+echo ""
+
 echo "🚀 Starting development server with STAGING environment..."
 echo "   Port: 3001"
 echo "   Database: hoaiwcueleiemeplrurv (staging)"

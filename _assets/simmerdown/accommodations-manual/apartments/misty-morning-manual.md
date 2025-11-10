@@ -1,26 +1,3 @@
----
-version: "2.0"
-type: "guest_manual"
-destination:
-  schema: "hotels"
-  table: "guest_information"
-document:
-  title: "Manual Operativo - Apartamento Misty Morning"
-  description: "Guía operativa completa para huéspedes del Apartamento Misty Morning"
-  category: "manual"
-  subcategory: "accommodation_operations"
-  access_level: "guest_only"
-  language: "es"
-  status: "active"
-  tags: ["manual", "misty_morning", "apartamento", "instrucciones", "operativo"]
-  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay"]
-unit_reference:
-  unit_name: "Misty Morning"
-  unit_type: "apartment"
-  unit_id: "misty-morning-apt"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
----
-
 # Manual Operativo - Apartamento Misty Morning
 
 ¡Bienvenid@ a Simmer Down Guest House – Apartamento Misty Morning!
@@ -97,7 +74,7 @@ Gracias por elegirnos. En este manual encontrarás toda la información necesari
 ### Ubicación del Apartamento
 **Q: ¿Cómo llego al apartamento una vez dentro del edificio?**
 **A:**
-1. Al entrar al edificio, sube un piso
+1. Al entrar al edificio, sube un piso, el apoartamento queda en el segundo piso del edificio
 2. Sigue las indicaciones hacia el apartamento **Misty Morning**
 
 ---
@@ -374,7 +351,7 @@ Tenemos una guía completa en línea con información detallada sobre:
 
 ### Características del Apartamento
 - **Tipo**: Apartamento completo con cocina equipada
-- **Ubicación**: Primer piso del edificio
+- **Ubicación**: Segundo piso del edificio
 - **Capacidad**: Ideal para familias o grupos pequeños
 - **Privacidad**: Espacio independiente y privado
 
