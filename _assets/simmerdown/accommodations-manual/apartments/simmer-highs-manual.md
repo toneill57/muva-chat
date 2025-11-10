@@ -1,26 +1,3 @@
----
-version: "2.0"
-type: "guest_manual"
-destination:
-  schema: "hotels"
-  table: "guest_information"
-document:
-  title: "Manual Operativo - Apartamento Simmer Highs"
-  description: "Guía operativa completa para huéspedes del Apartamento Simmer Highs - Capacidad 8 personas"
-  category: "manual"
-  subcategory: "accommodation_operations"
-  access_level: "guest_only"
-  language: "es"
-  status: "active"
-  tags: ["manual", "simmer_highs", "apartamento", "4_habitaciones", "grupos", "check_in_autonomo", "sarie_bay"]
-  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay", "4_habitaciones"]
-unit_reference:
-  unit_name: "Simmer Highs"
-  unit_type: "apartment"
-  unit_id: "simmer-highs-apt"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
----
-
 # Manual Operativo - Apartamento Simmer Highs
 
 ¡Bienvenid@ a Simmer Down Guest House – Apartamento Simmer Highs!

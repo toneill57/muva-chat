@@ -27,6 +27,9 @@ import {
   Baby,
   Maximize
 } from "lucide-react"
+import { AccommodationManualsSection } from './AccommodationManualsSection'
+import { ManualAnalytics } from './ManualAnalytics'
+import { ManualContentModal } from './ManualContentModal'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,6 +46,7 @@ import { useToast } from "@/hooks/use-toast"
 
 interface AccommodationUnit {
   id: string
+  original_unit_id?: string // ID from hotels.accommodation_units (for manuals FK)
   name: string
   unit_number: string
   description: string
@@ -112,6 +116,8 @@ export function AccommodationUnitsGrid() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [confirmationText, setConfirmationText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
+  const [manualModalId, setManualModalId] = useState<string | null>(null)
+  const [manualModalUnitId, setManualModalUnitId] = useState<string | null>(null)
 
   useEffect(() => {
     if (tenant?.tenant_id) {
@@ -541,23 +547,18 @@ export function AccommodationUnitsGrid() {
             </div>
           </div>
 
-          {/* Stats Summary */}
-          <div className="border-t pt-3">
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div>
-                <p className="text-sm font-medium text-gray-900">{unit.photo_count || 0}</p>
-                <p className="text-xs text-gray-500">Photos</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900">{unit.chunks_count || 0}</p>
-                <p className="text-xs text-gray-500">Chunks</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900">{unit.amenities_summary.total}</p>
-                <p className="text-xs text-gray-500">Amenities</p>
-              </div>
-            </div>
-          </div>
+          {/* Manuals Section */}
+          <AccommodationManualsSection
+            unitId={unit.original_unit_id || unit.id}
+            tenantId={tenant?.tenant_id || ''}
+            onViewContent={(manualId) => {
+              setManualModalId(manualId)
+              setManualModalUnitId(unit.original_unit_id || unit.id)
+            }}
+          />
+
+          {/* Analytics Section */}
+          <ManualAnalytics unitId={unit.original_unit_id || unit.id} />
 
           {/* Enhanced Action Button */}
           <Button
@@ -785,6 +786,19 @@ export function AccommodationUnitsGrid() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Manual Content Modal */}
+      {manualModalId && manualModalUnitId && (
+        <ManualContentModal
+          manualId={manualModalId}
+          unitId={manualModalUnitId}
+          tenantId={tenant?.tenant_id || ''}
+          onClose={() => {
+            setManualModalId(null)
+            setManualModalUnitId(null)
+          }}
+        />
+      )}
     </div>
   )
 }

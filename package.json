@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
+    "@headlessui/react": "^2.2.9",
     "@langchain/community": "^1.0.0",
     "@langchain/core": "^1.0.2",
     "@langchain/openai": "^1.0.0",
@@ -122,6 +123,7 @@
     "react-pdf": "^10.2.0",
     "recharts": "^3.3.0",
     "remark-gfm": "^4.0.1",
+    "swr": "^2.3.6",
     "tailwind-merge": "^3.3.1",
     "tiktoken": "^1.0.22",
     "uuid": "^13.0.0",
