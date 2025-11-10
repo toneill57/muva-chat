@@ -259,12 +259,14 @@ console.log(data)
 
 **Objetivo:** Implementar componentes React para gestión visual de manuales
 
+**Estado:** 20% completado (AccommodationManualsSection creado, NO integrado)
+
 **Entregables:**
-- Componente `AccommodationManualsSection` con drag & drop
-- Componente `ManualContentModal` con visualización
-- Integración en `AccommodationUnitsGrid`
-- Estados de carga y error
-- Confirmaciones de acciones destructivas
+- ✅ Componente `AccommodationManualsSection` con drag & drop (COMPLETADO)
+- ⏸️ Componente `ManualContentModal` con visualización (PENDIENTE)
+- ⏸️ Integración en `AccommodationUnitsGrid` (PENDIENTE)
+- ✅ Estados de carga y error (implementados en Section)
+- ✅ Confirmaciones de acciones destructivas (Delete confirmation en Section)
 
 **Archivos a crear:**
 - `src/components/Accommodation/AccommodationManualsSection.tsx`

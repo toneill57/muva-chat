@@ -3,6 +3,14 @@
 
 set -e
 
+echo "🧹 Killing any existing processes on port 3000..."
+lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+pkill -f "next dev" 2>/dev/null || true
+pkill -f "node.*next" 2>/dev/null || true
+sleep 1
+echo "✅ Port 3000 cleared"
+echo ""
+
 echo "🚀 Starting development server with PRODUCTION environment..."
 echo "   Port: 3000"
 echo "   Database: ooaumjzaztmutltifhoq (production)"
