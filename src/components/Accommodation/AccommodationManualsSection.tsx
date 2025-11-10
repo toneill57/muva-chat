@@ -604,7 +604,7 @@ export function AccommodationManualsSection({
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => onViewContent(manual.id)}
-                  className="p-2 text-blue-600 hover:text-blue-700 transition-colors rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  className="p-2 text-blue-600 hover:text-blue-700 transition-colors rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer"
                   title="View content"
                   aria-label="View manual content"
                 >
@@ -612,7 +612,7 @@ export function AccommodationManualsSection({
                 </button>
                 <button
                   onClick={() => handleDelete(manual.id, manual.filename)}
-                  className="p-2 text-red-600 hover:text-red-700 transition-colors rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                  className="p-2 text-red-600 hover:text-red-700 transition-colors rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 cursor-pointer"
                   title="Delete manual"
                   aria-label={`Delete ${manual.filename}`}
                 >
