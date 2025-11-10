@@ -119,15 +119,24 @@ export function ManualContentModal({ manualId, unitId, tenantId, onClose }: Manu
                   <Disclosure key={chunk.id}>
                     {({ open }) => (
                       <>
-                        <Disclosure.Button className="flex w-full items-start justify-between rounded-lg bg-gray-100 px-4 py-3 text-left hover:bg-gray-200 gap-3">
+                        <Disclosure.Button className="flex w-full items-start justify-between rounded-lg bg-gray-100 px-4 py-3 text-left hover:bg-gray-200 gap-3 cursor-pointer">
                           <div className="flex-1 min-w-0">
                             <div className="font-medium text-gray-900">
                               {chunk.section_title || `Chunk ${index + 1}`}
                             </div>
                             {!open && (
                               <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                                {chunk.chunk_content.substring(0, 100).trim()}
-                                {chunk.chunk_content.length > 100 ? '...' : ''}
+                                {chunk.chunk_content
+                                  .replace(/#{1,6}\s+/g, '') // Remove markdown headers
+                                  .replace(/\*\*(.+?)\*\*/g, '$1') // Remove bold
+                                  .replace(/\*(.+?)\*/g, '$1') // Remove italic
+                                  .replace(/`(.+?)`/g, '$1') // Remove code
+                                  .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Remove links, keep text
+                                  .replace(/^[-*+]\s+/gm, '') // Remove list markers
+                                  .replace(/^\d+\.\s+/gm, '') // Remove numbered list markers
+                                  .substring(0, 120)
+                                  .trim()}
+                                {chunk.chunk_content.length > 120 ? '...' : ''}
                               </p>
                             )}
                           </div>
