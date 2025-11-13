@@ -746,6 +746,72 @@ export class MotoPresSyncManager {
         unit.hotel_id = hotelId
       })
 
+      // Fetch all rates (pricing) from MotoPress in bulk WITH RETRY
+      console.log('Fetching rates (pricing) from MotoPress...')
+      let ratesResponse = await client.getAllRates()
+      let retryCount = 0
+      const MAX_RETRIES = 3
+
+      // CRITICAL: Retry if rates fetch fails - pricing is REQUIRED for complete sync
+      while ((ratesResponse.error || !ratesResponse.data) && retryCount < MAX_RETRIES) {
+        retryCount++
+        console.warn(`⚠️ Failed to fetch rates (attempt ${retryCount}/${MAX_RETRIES}):`, ratesResponse.error)
+        console.log(`🔄 Retrying in 2 seconds...`)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        ratesResponse = await client.getAllRates()
+      }
+
+      // If still failed after retries, ABORT sync - don't insert incomplete data
+      if (ratesResponse.error || !ratesResponse.data) {
+        console.error('❌ CRITICAL: Failed to fetch rates after 3 retries - ABORTING sync')
+        return {
+          success: false,
+          created: 0,
+          updated: 0,
+          errors: [`CRITICAL: Failed to fetch pricing data after ${MAX_RETRIES} retries. Sync aborted to prevent incomplete data.`],
+          totalProcessed: 0,
+          message: 'Pricing fetch failed - sync aborted'
+        }
+      }
+
+      const motoPresRates = ratesResponse.data
+      console.log(`✅ Retrieved ${motoPresRates.length} rates from MotoPress`)
+
+      // Map rates to pricing by accommodation_type_id
+      const pricingMap = new Map()
+      if (motoPresRates.length > 0) {
+        const pricingData = MotoPresDataMapper.mapRatesToPricing(motoPresRates)
+        pricingData.forEach(pricing => {
+          pricingMap.set(pricing.accommodation_type_id, pricing)
+        })
+        console.log(`📊 Mapped pricing for ${pricingMap.size} accommodations`)
+      }
+
+      // Add pricing data to all units
+      accommodationUnits.forEach(unit => {
+        const pricing = pricingMap.get(unit.motopress_unit_id)
+        if (pricing) {
+          unit.pricing = {
+            base_price: pricing.base_price,
+            base_price_low_season: pricing.base_price_low_season,
+            base_price_high_season: pricing.base_price_high_season,
+            currency: pricing.currency,
+            price_per_person_low: pricing.price_per_person_low,
+            price_per_person_high: pricing.price_per_person_high,
+            minimum_stay: pricing.minimum_stay,
+            base_adults: pricing.base_adults,
+            base_children: pricing.base_children,
+            season_id: pricing.season_id,
+            priority: pricing.priority,
+            price_variations: pricing.price_variations
+          }
+          console.log(`💰 Added pricing to ${unit.name}: $${pricing.base_price} COP (Low: $${pricing.base_price_low_season}, High: $${pricing.base_price_high_season})`)
+        } else {
+          unit.pricing = {}
+          console.warn(`⚠️ No pricing found for accommodation_type_id ${unit.motopress_unit_id}`)
+        }
+      })
+
       // Process each accommodation unit
       for (const unit of accommodationUnits) {
         try {
