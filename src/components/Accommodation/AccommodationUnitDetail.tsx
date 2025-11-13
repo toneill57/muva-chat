@@ -17,7 +17,9 @@ import {
   ChevronUp,
   Zap,
   Shield,
-  Layers
+  Layers,
+  Sparkles,
+  Check
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -45,7 +47,12 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
   // Format price helper
   const formatPrice = (price?: number) => {
     if (!price) return 'N/A'
-    return `$${price.toLocaleString('es-CO')}`
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price)
   }
 
   return (
@@ -188,10 +195,10 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
           <CardTitle>Detalles de la Unidad</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-8">
-            {/* Fila 1: Capacidad + Especificaciones */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Capacity Details */}
+          <div className="space-y-6">
+            {/* Grid de 3 columnas: Capacidad + Especificaciones + Amenities */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Columna 1: Capacidad */}
               <div className="space-y-3">
                 <h4 className="font-medium text-sm text-muted-foreground">Capacidad</h4>
                 <div className="space-y-2">
@@ -219,7 +226,7 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
                 </div>
               </div>
 
-              {/* Room Details */}
+              {/* Columna 2: Especificaciones */}
               <div className="space-y-3">
                 <h4 className="font-medium text-sm text-muted-foreground">Especificaciones</h4>
                 <div className="space-y-2">
@@ -246,58 +253,72 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
                   </div>
                 </div>
               </div>
+
+              {/* Columna 3: Amenities */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-sm text-muted-foreground flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  Amenities
+                </h4>
+                {unit.unit_amenities && unit.unit_amenities.length > 0 ? (
+                  <div className="space-y-2">
+                    {unit.unit_amenities.slice(0, 5).map((amenity: any, idx: number) => (
+                      <div key={amenity.id || idx} className="flex items-center gap-2">
+                        <Check className="h-3.5 w-3.5 text-green-600 flex-shrink-0" />
+                        <span className="text-sm text-gray-700 truncate">
+                          {amenity.amenity_name || amenity.name || 'Amenity'}
+                        </span>
+                      </div>
+                    ))}
+                    {unit.unit_amenities.length > 5 && (
+                      <div className="text-xs text-gray-500 mt-2">
+                        +{unit.unit_amenities.length - 5} más
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No especificadas</p>
+                )}
+              </div>
             </div>
 
-            {/* Fila 2: Precios + Ubicación */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Pricing Details */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-sm text-muted-foreground">Precios</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-green-600" />
-                      <span className="text-sm">Temporada Baja</span>
-                    </div>
-                    <span className="font-medium">
-                      {formatPrice(unit.pricing_summary?.base_price_low_season)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-purple-600" />
-                      <span className="text-sm">Temporada Alta</span>
-                    </div>
-                    <span className="font-medium">
-                      {formatPrice(unit.pricing_summary?.base_price_high_season)}
-                    </span>
-                  </div>
-                  {unit.pricing_summary?.price_per_person && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm">Por persona</span>
-                      </div>
-                      <span className="font-medium">
-                        {formatPrice(unit.pricing_summary.price_per_person)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
+            {/* Separador visual */}
+            <Separator />
 
-              {/* Location */}
-              {unit.location_area && (
-                <div className="space-y-3">
-                  <h4 className="font-medium text-sm text-muted-foreground">Ubicación</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Home className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm">{unit.location_area}</span>
-                    </div>
+            {/* Precios - Full width section destacada */}
+            <div className="space-y-3">
+              <h4 className="font-medium text-sm text-muted-foreground">Precios</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-100">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-green-600" />
+                    <span className="text-sm font-medium">Temporada Baja</span>
                   </div>
+                  <span className="font-bold text-green-700">
+                    {formatPrice(unit.pricing_summary?.base_price_low_season)}
+                  </span>
                 </div>
-              )}
+                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg border border-purple-100">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-purple-600" />
+                    <span className="text-sm font-medium">Temporada Alta</span>
+                  </div>
+                  <span className="font-bold text-purple-700">
+                    {formatPrice(unit.pricing_summary?.base_price_high_season)}
+                  </span>
+                </div>
+                {unit.pricing_summary?.price_per_person && (
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="h-5 w-5 text-blue-600" />
+                      <span className="text-sm font-medium">Por persona</span>
+                    </div>
+                    <span className="font-bold text-blue-700">
+                      {formatPrice(unit.pricing_summary.price_per_person)}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
@@ -378,10 +399,10 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {unit.unit_amenities.map((amenity, idx) => (
-                <div key={idx} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
-                  <Star className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <span className="text-sm truncate" title={amenity.amenity_name}>
-                    {amenity.amenity_name}
+                <div key={amenity.id || idx} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                  <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-700" title={amenity.amenity_name || amenity.name}>
+                    {amenity.amenity_name || amenity.name || 'Amenity'}
                   </span>
                 </div>
               ))}
@@ -389,63 +410,6 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
           </CardContent>
         </Card>
       )}
-
-      <Separator className="my-8" />
-
-      {/* Technical Info (Collapsible) */}
-      <Collapsible open={showTechnicalInfo} onOpenChange={setShowTechnicalInfo} className="mb-8">
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4" />
-              <span>Información Técnica</span>
-            </div>
-            {showTechnicalInfo ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <Card>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                  <p className="text-xs text-muted-foreground">Unit ID</p>
-                  <p className="font-mono text-sm">{unit.id}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Unit Number</p>
-                  <p className="font-mono text-sm">{unit.unit_number}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Accommodation Type</p>
-                  <p className="text-sm">{unit.accommodation_type || 'Standard'}</p>
-                </div>
-                {unit.room_type_id && (
-                  <div>
-                    <p className="text-xs text-muted-foreground">Room Type ID</p>
-                    <p className="font-mono text-sm">{unit.room_type_id}</p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-xs text-muted-foreground">Display Order</p>
-                  <p className="text-sm">{unit.display_order || 0}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Featured</p>
-                  <p className="text-sm">{unit.is_featured ? 'Yes' : 'No'}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Bookable</p>
-                  <p className="text-sm">{unit.is_bookable ? 'Yes' : 'No'}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </CollapsibleContent>
-      </Collapsible>
 
       <Separator className="my-8" />
 
@@ -510,6 +474,59 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
           </div>
         </CardContent>
       </Card>
+
+      {/* Información Técnica - Moved to end per user request */}
+      <Collapsible open={showTechnicalInfo} onOpenChange={setShowTechnicalInfo}>
+        <CollapsibleTrigger className="w-full flex items-center justify-between gap-2 p-4 text-sm font-medium bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer group">
+          <div className="flex items-center gap-2">
+            <Layers className="h-4 w-4 text-gray-600 group-hover:text-gray-900 transition-colors" />
+            <span className="text-gray-700 group-hover:text-gray-900 transition-colors">Información Técnica</span>
+          </div>
+          <ChevronDown className={`h-4 w-4 text-gray-600 group-hover:text-gray-900 transition-all ${showTechnicalInfo ? 'rotate-180' : ''}`} />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Unit ID:</span>
+                  <p className="font-medium font-mono text-xs break-all">{unit.unit_id}</p>
+                </div>
+                {unit.unit_number && (
+                  <div>
+                    <span className="text-muted-foreground">Unit Number:</span>
+                    <p className="font-medium">{unit.unit_number}</p>
+                  </div>
+                )}
+                {unit.unit_type && (
+                  <div>
+                    <span className="text-muted-foreground">Accommodation Type:</span>
+                    <p className="font-medium">{unit.unit_type}</p>
+                  </div>
+                )}
+                {unit.metadata?.motopress_room_type_id && (
+                  <div>
+                    <span className="text-muted-foreground">Room Type ID:</span>
+                    <p className="font-medium">{unit.metadata.motopress_room_type_id}</p>
+                  </div>
+                )}
+                <div>
+                  <span className="text-muted-foreground">Display Order:</span>
+                  <p className="font-medium">{unit.display_order || 0}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Featured:</span>
+                  <p className="font-medium">{unit.is_featured ? 'Yes' : 'No'}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Bookable:</span>
+                  <p className="font-medium">{unit.is_bookable ? 'Yes' : 'No'}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   )
 }

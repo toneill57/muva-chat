@@ -139,18 +139,21 @@ export function AccommodationUnitsCompactGrid({ units, onUnitClick }: Accommodat
               {getUnitTypeIcon(unit.accommodation_type || 'room')}
             </div>
 
-            {/* Type Badge */}
+            {/* Type Badge - Enhanced with colors */}
             {unit.accommodation_type && (
-              <Badge variant="outline" className="capitalize mb-3 text-xs">
+              <Badge
+                variant="outline"
+                className={`capitalize mb-3 text-xs font-medium ${
+                  unit.accommodation_type.toLowerCase().includes('apartamento')
+                    ? 'bg-green-50 text-green-700 border-green-300'
+                    : unit.accommodation_type.toLowerCase().includes('habitación') || unit.accommodation_type.toLowerCase().includes('habitacion')
+                    ? 'bg-blue-50 text-blue-700 border-blue-300'
+                    : 'bg-gray-50 text-gray-700 border-gray-300'
+                }`}
+              >
                 {unit.accommodation_type}
               </Badge>
             )}
-
-            {/* Capacity */}
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-              <Users className="w-4 h-4 text-gray-500 flex-shrink-0" />
-              <span className="line-clamp-1">{getCapacityText(unit)}</span>
-            </div>
 
             {/* Price */}
             <div className="flex items-baseline gap-1 mb-3">

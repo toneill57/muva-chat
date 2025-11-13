@@ -4,6 +4,17 @@ const nextConfig: NextConfig = {
   // Build cache configuration for faster rebuilds
   cacheMaxMemorySize: 50, // 50MB cache (default is 50MB)
 
+  // Image optimization configuration
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'simmerdown.house',
+        pathname: '/wp-content/uploads/**',
+      },
+    ],
+  },
+
   eslint: {
     // Ignore ESLint errors during production build
     ignoreDuringBuilds: true,

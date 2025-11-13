@@ -6,6 +6,8 @@ import { TenantContext } from '@/contexts/TenantContext'
 import { AccommodationUnit } from '@/types/accommodation'
 import { AccommodationUnitDetail } from '@/components/Accommodation/AccommodationUnitDetail'
 import { ManualContentModal } from '@/components/Accommodation/ManualContentModal'
+import { Button } from '@/components/ui/button'
+import { AlertCircle, RefreshCw } from 'lucide-react'
 
 interface Props {
   params: Promise<{ tenant: string; unitId: string }>
@@ -119,13 +121,21 @@ export default function UnitDetailPage({ params }: Props) {
   if (error || !unit) {
     return (
       <div className="p-6 text-center max-w-4xl mx-auto">
-        <div className="text-red-500 mb-4 text-lg">{error || 'Unit not found'}</div>
-        <button
-          onClick={() => router.back()}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
-        >
-          Volver a la lista
-        </button>
+        <div className="flex flex-col items-center gap-4">
+          <AlertCircle className="h-12 w-12 text-red-500" />
+          <div className="text-red-500 text-lg font-medium">{error || 'Unit not found'}</div>
+          <div className="flex gap-3">
+            <Button onClick={() => router.back()} variant="outline">
+              Volver a la lista
+            </Button>
+            {error && (
+              <Button onClick={fetchUnit} variant="default">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Reintentar
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     )
   }

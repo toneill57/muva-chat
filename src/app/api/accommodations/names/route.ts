@@ -28,11 +28,12 @@ export async function GET(request: NextRequest) {
 
     const supabase = createServerClient()
 
+    // Query from accommodation_units_public (source of truth)
+    // Get any chunk per unit_id (they all have same metadata->>'original_accommodation')
     const { data: unitsData, error } = await supabase
       .from('accommodation_units_public')
       .select('unit_id, name, metadata, unit_number, unit_type')
       .in('unit_id', unitIds)
-      .ilike('name', '% - Overview')
 
     if (error) {
       console.error('[accommodations/names] Query error:', error)
@@ -42,12 +43,20 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const units = (unitsData || []).map(unit => ({
-      id: unit.unit_id,
-      name: unit.metadata?.original_accommodation || unit.name,
-      unit_number: unit.unit_number,
-      unit_type: unit.unit_type,
-    }))
+    // Deduplicate: take first chunk per unit_id
+    const seenIds = new Set<string>()
+    const units = (unitsData || [])
+      .filter(unit => {
+        if (seenIds.has(unit.unit_id)) return false
+        seenIds.add(unit.unit_id)
+        return true
+      })
+      .map(unit => ({
+        id: unit.unit_id,
+        name: unit.metadata?.original_accommodation || unit.name.replace(/ - .*$/, ''),
+        unit_number: unit.unit_number,
+        unit_type: unit.unit_type,
+      }))
 
     return NextResponse.json({ success: true, data: units })
   } catch (err) {

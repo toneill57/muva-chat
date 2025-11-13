@@ -233,6 +233,13 @@ Generate `TODO.md` organized by phases:
 ### Step 4: Create {project-name}-prompt-workflow.md
 Generate prompts file with SPECIFIC project name (e.g., `mobile-first-prompt-workflow.md`):
 
+**CRITICAL:** Each prompt MUST include:
+1. 🔽 Copy delimiters (start/end)
+2. 📊 Progress context (all previous phases)
+3. 🔍 Post-execution verification
+4. 📝 TODO.md update instructions
+5. ➡️ Next step guidance
+
 ```markdown
 # PROMPTS WORKFLOW - {Project Name}
 
@@ -273,68 +280,149 @@ Por favor, confirma que entiendes el contexto antes de continuar.
 
 ### Prompt 1.1: {Task Name}
 
-**AGENTE:** @agent-{agent-name}
+**Agente:** `@agent-{agent-name}`
 
-**COPY-PASTE DESDE AQUÍ:**
+**PREREQUISITO:** {Previous prompt or "Inicio del proyecto"}
 
-```
-TAREA: {What to do in 1 sentence}
+**Contexto:**
+{Brief context of what this prompt achieves}
 
-CONTEXTO:
-- Proyecto: {Name} (ver plan.md)
-- Base de referencia: path/to/reference.tsx
-- Objetivo: {Specific goal}
+---
 
-ESPECIFICACIONES:
-1. Crear: path/to/new-file.tsx
-2. {Spec 2}
-3. {Spec 3}
+🔽 **COPIAR DESDE AQUÍ (Prompt 1.1)**
 
-CÓDIGO ESPERADO:
-```typescript
-// Example code structure
-```
+**📊 Contexto de Progreso:**
 
-TEST:
-- {Test step 1}
-- {Test step 2}
+**Progreso General:** 0/{Total} tareas completadas (0%)
 
-SIGUIENTE: Prompt 1.2 para {next task}
-```
+FASE 1 - {Name} (Progreso: 0/{N})
+- [ ] 1.1: {Task name} ← ESTAMOS AQUÍ
+- [ ] 1.2: {Task name}
+- [ ] 1.N: {Task name}
+
+**Estado Actual:**
+- {Achievement 1 or baseline} ✓
+- Listo para {goal of this prompt}
+
+---
+
+**Tareas:**
+
+1. **{Step 1 name}** ({time estimate}):
+   {Detailed step description}
+
+   ```typescript
+   // Code example if applicable
+   ```
+
+2. **{Step 2 name}** ({time estimate}):
+   {Detailed step description}
+
+**Entregables:**
+- {Deliverable 1}
+- {Deliverable 2}
+
+**Criterios de Éxito:**
+- ✅ {Success criterion 1}
+- ✅ {Success criterion 2}
+- ✅ {Success criterion 3}
+
+**Estimado:** {total time}
+
+---
+
+**🔍 Verificación Post-Ejecución:**
+
+Una vez completadas todas las tareas anteriores, pregúntame:
+
+"¿Consideras satisfactoria la ejecución del Prompt 1.1 ({Task Name})?
+- {Criterion 1} ✓
+- {Criterion 2} ✓
+- {Criterion 3} ✓"
+
+**Si mi respuesta es "Sí" o "Aprobado":**
+
+1. **Actualizar TODO.md** - Marcar tarea 1.1 como completada:
+   ```markdown
+   ### 1.1: {Task Name}
+   - [x] {Task description from TODO.md} (estimate: {time})
+   ```
+
+2. **Informarme del progreso:**
+   "✅ Tarea 1.1 completada y marcada en TODO.md
+
+   **Progreso FASE 1:** 1/{N} tareas completadas ({X}%)
+   - [x] 1.1: {Task name} ✓
+   - [ ] 1.2: {Task name}
+   - [ ] 1.N: {Task name}
+
+   **Progreso General:** 1/{Total} tareas completadas ({X}%)
+
+   **Siguiente paso:** Prompt 1.2 - {Next task name} ({time})
+   Ver workflow.md línea {line number}"
+
+**Si mi respuesta es "No" o tengo observaciones:**
+- Preguntar qué necesita ajustarse
+- NO marcar como completado
+- Iterar hasta aprobación
+
+🔼 **COPIAR HASTA AQUÍ (Prompt 1.1)**
 
 ---
 
 ### Prompt 1.2: {Task Name}
 
-**AGENTE:** @agent-{agent-name}
+**Agente:** `@agent-{agent-name}`
 
-**COPY-PASTE DESDE AQUÍ:**
+**PREREQUISITO:** Prompt 1.1 completado
 
-```
-TAREA: {What to do in 1 sentence}
+**Contexto:**
+{Brief context of what this prompt achieves}
 
-CONTEXTO:
-- Proyecto: {Name} (ver plan.md)
-{Context}
+---
 
-ARCHIVOS:
-- Leer: path/to/reference.tsx (líneas X-Y)
-- Crear: path/to/new.tsx
+🔽 **COPIAR DESDE AQUÍ (Prompt 1.2)**
 
-ESPECIFICACIONES:
-{Detailed specs}
+**📊 Contexto de Progreso:**
 
-TEST:
-{How to validate}
+**Progreso General:** 1/{Total} tareas completadas ({X}%)
 
-SIGUIENTE: Prompt 1.3 o FASE 2
-```
+FASE 1 - {Name} (Progreso: 1/{N})
+- [x] 1.1: {Task name} ✓ COMPLETADO
+- [ ] 1.2: {Task name} ← ESTAMOS AQUÍ
+- [ ] 1.N: {Task name}
+
+**Estado Actual:**
+- {Achievement from 1.1} ✓
+- Listo para {goal of this prompt}
+
+---
+
+**Tareas:**
+
+{Follow same structure as Prompt 1.1}
+
+**Entregables:**
+- {Deliverable 1}
+
+**Criterios de Éxito:**
+- ✅ {Success criterion 1}
+
+**Estimado:** {total time}
+
+---
+
+**🔍 Verificación Post-Ejecución:**
+
+{Follow same verification pattern as Prompt 1.1}
+
+🔼 **COPIAR HASTA AQUÍ (Prompt 1.2)**
 
 ---
 
 ## FASE 2: {Name} (Xh)
 
-{Repeat structure}
+{Repeat structure - each prompt MUST have delimiters, progress context, and verification}
 
 ---
 
@@ -363,10 +451,91 @@ He completado FASE {N}. Necesito:
 **RULES for workflow prompts:**
 - Use specific project name in filename
 - Start each prompt with `@{agent-name}`
-- Self-contained prompts (TAREA, CONTEXTO, ESPECIFICACIONES, TEST, SIGUIENTE)
+- **MANDATORY:** Include 🔽 🔼 copy delimiters on EVERY prompt
+- **MANDATORY:** Include 📊 Progress context showing all completed phases
+- **MANDATORY:** Include 🔍 Post-execution verification with user approval
+- **MANDATORY:** Include TODO.md update instructions
+- **MANDATORY:** Include next step guidance with line numbers
+- Self-contained prompts (prerequisite, context, tasks, deliverables, success criteria)
 - Include file paths and line numbers
 - Copy-paste ready format
 - Include context-setting prompt for new conversations
+- Each prompt must show cumulative progress (X/Total tasks completed)
+
+### Step 4.5: Verification Pattern Template
+
+**CRITICAL:** Every prompt in workflow.md MUST include this exact verification pattern:
+
+```markdown
+---
+
+**🔍 Verificación Post-Ejecución:**
+
+Una vez completadas todas las tareas anteriores, pregúntame:
+
+"¿Consideras satisfactoria la ejecución del Prompt {X.Y} ({Task Name})?
+- {Criterion 1} ✓
+- {Criterion 2} ✓
+- {Criterion 3} ✓"
+
+**Si mi respuesta es "Sí" o "Aprobado":**
+
+1. **Actualizar TODO.md** - Marcar tarea {X.Y} como completada:
+   ```markdown
+   ### {X.Y}: {Task Name}
+   - [x] {Task description from TODO.md} (estimate: {time})
+   ```
+
+2. **[OPCIONAL - Solo si completa una FASE entera]**
+   **Actualizar TODO.md** - Actualizar contador de progreso:
+   Cambiar de:
+   ```markdown
+   **Completed:** N/{Total} ({X}%)
+   ```
+   A:
+   ```markdown
+   **Completed:** N+1/{Total} ({X+Y}%)
+   ```
+
+3. **Informarme del progreso:**
+   "✅ Tarea {X.Y} completada y marcada en TODO.md
+
+   **Progreso FASE {X}:** {M}/{N} tareas completadas ({Z}%)
+   - [x] {X.1}: {Task} ✓
+   - [x] {X.Y}: {Task} ✓
+   - [ ] {X.Z}: {Next task}
+
+   **Progreso General:** {P}/{Total} tareas completadas ({W}%)
+
+   **Siguiente paso:** [Nombre del siguiente prompt]
+   Prompt {X.Z}: {Name} ({time})
+   Ver workflow.md línea {line number}"
+
+   **[Si completa FASE entera, agregar]:**
+   "✅ FASE {X} COMPLETADA - Todas las tareas marcadas en TODO.md
+
+   **✨ Logros FASE {X}:**
+   - {Key achievement 1}
+   - {Key achievement 2}
+   - {Key achievement 3}
+
+   **Siguiente paso:** FASE {X+1} - {Next phase name}"
+
+**Si mi respuesta es "No" o tengo observaciones:**
+- Preguntar qué necesita ajustarse
+- NO marcar como completado
+- Iterar hasta aprobación
+```
+
+**Key Points:**
+- Verification MUST ask user for approval
+- TODO.md updates only happen AFTER user approval
+- Progress counters must be accurate (calculate N/Total and percentages)
+- Next step must include line number in workflow.md
+- Special celebration message when completing entire FASE
+- User can reject and iterate until satisfied
+
+---
 
 ### Step 5: Identify Required Agents
 List which specialized agents are needed:
@@ -461,27 +630,36 @@ Present in this order:
 
 1. **Summary of plan.md** (show first 50 lines + structure outline)
 2. **Summary of TODO.md** (show all FASE headers + task count)
-3. **Summary of {project}-prompt-workflow.md** (show prompt structure)
-4. **Agents to update** (list with sections to add)
-5. **SNAPSHOT.md changes** (lines removed vs added)
-6. **CLAUDE.md changes** (sections updated)
-7. **Documentation folder structure:**
+3. **Summary of {project}-prompt-workflow.md** (show prompt structure + verification pattern preview)
+4. **Verification system summary:**
+   - ✅ All {X} prompts include 🔽 🔼 delimiters
+   - ✅ All {X} prompts include 📊 progress context
+   - ✅ All {X} prompts include 🔍 post-execution verification
+   - ✅ All {X} prompts include TODO.md update instructions
+   - ✅ All {X} prompts include next step guidance
+5. **Agents to update** (list with sections to add)
+6. **SNAPSHOT.md changes** (lines removed vs added)
+7. **CLAUDE.md changes** (sections updated)
+8. **Documentation folder structure:**
    ```
    docs/{project-name}/
    ├── fase-1/
    ├── fase-2/
    └── fase-N/
    ```
-8. **Ask for approval** before creating files
+9. **Ask for approval** before creating files
 
 ### After Creating Files
 Show:
 - ✅ plan.md created (X lines)
 - ✅ TODO.md created (Y lines)
 - ✅ {project}-prompt-workflow.md created (Z lines)
+  - 🔽 🔼 Copy delimiters: {X}/{X} prompts (100%)
+  - 📊 Progress context: {X}/{X} prompts (100%)
+  - 🔍 Verification pattern: {X}/{X} prompts (100%)
 - ✅ Updated snapshots/{agent}.md (added CURRENT PROJECT section)
 - ℹ️ SNAPSHOT.md and CLAUDE.md remain unchanged (by design)
-- 🔜 Ready to execute FASE 1
+- 🔜 Ready to execute FASE 1 with systematic verification
 
 ---
 
@@ -776,4 +954,56 @@ Always create `docs/{feature}/DUAL_ENVIRONMENT_STRATEGY.md` explaining:
 **Response:** "This project seems large (>20 tasks). Consider breaking it into multiple smaller projects, each with its own plan.md. Or, let me know if you want to consolidate phases."
 
 ### If user wants to modify plan mid-execution
-**Response:** "I can update plan.md and TODO.md. Should I also regenerate workflow prompts to reflect the changes?"
+**Response:** "I can update plan.md and TODO.md. Should I also regenerate workflow prompts to reflect the changes? I'll ensure all verification patterns remain intact."
+
+---
+
+## 📋 VERIFICATION SYSTEM SUMMARY
+
+**System Name:** Post-Execution Verification & Progress Tracking
+
+**Purpose:** Ensure systematic task completion with explicit user approval and automatic progress tracking.
+
+### Core Components (MANDATORY in every prompt)
+
+1. **🔽 🔼 Copy Delimiters**
+   - Start: `🔽 **COPIAR DESDE AQUÍ (Prompt X.Y)**`
+   - End: `🔼 **COPIAR HASTA AQUÍ (Prompt X.Y)**`
+   - Purpose: Clear boundaries for copy-paste execution
+
+2. **📊 Progress Context**
+   - Show ALL previous phases (completed/in-progress/pending)
+   - Show current FASE progress (M/N tasks)
+   - Show overall progress (P/Total tasks, X%)
+   - Highlight current task with `← ESTAMOS AQUÍ`
+
+3. **🔍 Post-Execution Verification**
+   - Ask user: "¿Consideras satisfactoria la ejecución?"
+   - List all success criteria for verification
+   - If "Yes" → Update TODO.md + show progress
+   - If "No" → Ask what needs adjustment + iterate
+
+4. **📝 TODO.md Update Instructions**
+   - Exact markdown to update in TODO.md
+   - Task number and description
+   - Mark as `[x]` only after approval
+
+5. **➡️ Next Step Guidance**
+   - Name of next prompt
+   - Time estimate
+   - Line number in workflow.md
+   - Special message when FASE completes
+
+### Benefits
+
+- **Quality Control:** User approval prevents incorrect completions
+- **Visibility:** Clear progress tracking at all times
+- **Consistency:** Standardized pattern across all projects
+- **Copy-Paste Ready:** Delimiters make execution effortless
+- **Context Preservation:** Each prompt shows full history
+
+### Template Reference
+
+See **Step 4.5: Verification Pattern Template** for complete implementation.
+
+**Important:** This system is MANDATORY for ALL future projects planned with `/plan-project`.

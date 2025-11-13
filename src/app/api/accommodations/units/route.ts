@@ -116,13 +116,31 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
 
       console.log(`[Accommodations Units API] ✅ Mapped ${nameToHotelsId.size} unit names to hotels IDs:`, Array.from(nameToHotelsId.entries()).slice(0, 3))
 
+      // Get manuals count for each unit (using accommodation_unit_id from hotels.accommodation_units)
+      const unitIds = Array.from(nameToHotelsId.values()).filter(Boolean)
+      const { data: manualsData } = await supabase
+        .from('accommodation_manuals')
+        .select('accommodation_unit_id')
+        .in('accommodation_unit_id', unitIds)
+
+      // Create mapping: unit_id -> manuals_count
+      const manualsCountMap = new Map<string, number>()
+      if (manualsData) {
+        manualsData.forEach((manual: any) => {
+          const count = manualsCountMap.get(manual.accommodation_unit_id) || 0
+          manualsCountMap.set(manual.accommodation_unit_id, count + 1)
+        })
+      }
+
+      console.log(`[Accommodations Units API] ✅ Found manuals for ${manualsCountMap.size} units`)
+
       // Group chunks by original_accommodation to show only base units
       const groupedUnits = fallbackData.reduce((acc: any, chunk: any) => {
         const baseName = chunk.metadata?.original_accommodation || chunk.name
 
         if (!acc[baseName]) {
           // First chunk for this unit - use as base
-          const originalUnitId = nameToHotelsId.get(baseName) || null
+          const originalUnitId = (nameToHotelsId.get(baseName) as string | undefined) || null
 
           acc[baseName] = {
             ...chunk,
@@ -157,7 +175,16 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
               ? chunk.metadata.capacity.total || 2
               : (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0),
 
-            accommodation_type: chunk.metadata?.accommodation_mphb_type || 'Standard',
+            // Get accommodation type from categories (Apartamentos/Habitaciones)
+            accommodation_type: (() => {
+              const categories = chunk.metadata?.categories || []
+              const typeCategory = categories.find((c: any) =>
+                c.name?.toLowerCase().includes('apartamento') ||
+                c.name?.toLowerCase().includes('habitación') ||
+                c.name?.toLowerCase().includes('habitacion')
+              )
+              return typeCategory?.name || 'Alojamiento'
+            })(),
             room_type_id: chunk.metadata?.motopress_room_type_id || null,
 
             description: chunk.description || '',
@@ -198,32 +225,28 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
                   : undefined
             },
             amenities_summary: {
-              total: Array.isArray(chunk.metadata?.unit_amenities)
-                ? chunk.metadata.unit_amenities.length
-                : (typeof chunk.metadata?.unit_amenities === 'string'
-                    ? chunk.metadata.unit_amenities.split(',').length
+              total: Array.isArray(chunk.amenities)
+                ? chunk.amenities.length
+                : (Array.isArray(chunk.metadata?.unit_amenities)
+                    ? chunk.metadata.unit_amenities.length
                     : 0),
-              included: Array.isArray(chunk.metadata?.unit_amenities)
-                ? chunk.metadata.unit_amenities.length
-                : (typeof chunk.metadata?.unit_amenities === 'string'
-                    ? chunk.metadata.unit_amenities.split(',').length
+              included: Array.isArray(chunk.amenities)
+                ? chunk.amenities.length
+                : (Array.isArray(chunk.metadata?.unit_amenities)
+                    ? chunk.metadata.unit_amenities.length
                     : 0),
               premium: 0,
               featured: 0
             },
-            unit_amenities: Array.isArray(chunk.metadata?.unit_amenities)
-              ? chunk.metadata.unit_amenities.map((a: any) => {
-                  // Handle both formats: string[] (new) and {id, name}[] (old MotoPress)
-                  if (typeof a === 'string') {
-                    return { amenity_name: a.trim() }
-                  } else if (a && typeof a === 'object' && a.name) {
-                    return { amenity_name: a.name.trim() }
-                  }
-                  return { amenity_name: String(a).trim() }
-                })
-              : (typeof chunk.metadata?.unit_amenities === 'string'
-                  ? chunk.metadata.unit_amenities.split(',').map((a: string) => ({
-                      amenity_name: a.trim()
+            unit_amenities: Array.isArray(chunk.amenities)
+              ? chunk.amenities.map((a: any) => ({
+                  name: a.name || a.amenity_name || 'Amenity',
+                  id: a.id
+                }))
+              : (Array.isArray(chunk.metadata?.unit_amenities)
+                  ? chunk.metadata.unit_amenities.map((a: any) => ({
+                      name: typeof a === 'string' ? a.trim() : (a.name || a.amenity_name || 'Amenity'),
+                      id: a.id
                     }))
                   : []),
             photos: chunk.photos || [],
@@ -238,6 +261,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             highlights: chunk.metadata?.highlights || [],
             category_badge: chunk.metadata?.category_badge || chunk.metadata?.categories?.[0]?.name,
             chunks_count: 1,
+            manuals_count: originalUnitId ? (manualsCountMap.get(originalUnitId) || 0) : 0,
             all_chunks: [chunk]
           }
         } else {
@@ -284,13 +308,31 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
 
     console.log(`[Accommodations Units API] ✅ Mapped ${nameToHotelsId.size} unit names to hotels IDs`)
 
+    // Get manuals count for each unit (using accommodation_unit_id from hotels.accommodation_units)
+    const unitIds = Array.from(nameToHotelsId.values()).filter(Boolean)
+    const { data: manualsData } = await supabase
+      .from('accommodation_manuals')
+      .select('accommodation_unit_id')
+      .in('accommodation_unit_id', unitIds)
+
+    // Create mapping: unit_id -> manuals_count
+    const manualsCountMap = new Map<string, number>()
+    if (manualsData) {
+      manualsData.forEach((manual: any) => {
+        const count = manualsCountMap.get(manual.accommodation_unit_id) || 0
+        manualsCountMap.set(manual.accommodation_unit_id, count + 1)
+      })
+    }
+
+    console.log(`[Accommodations Units API] ✅ Found manuals for ${manualsCountMap.size} units`)
+
     // Apply same transformations as fallback to ensure component compatibility
     const groupedUnits = (unitsData || []).reduce((acc: any, chunk: any) => {
       const baseName = chunk.metadata?.original_accommodation || chunk.name
 
       if (!acc[baseName]) {
         // First chunk for this unit - use as base
-        const originalUnitId = nameToHotelsId.get(baseName) || null
+        const originalUnitId = (nameToHotelsId.get(baseName) as string | undefined) || null
 
         acc[baseName] = {
           ...chunk,
@@ -321,7 +363,16 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
             ? chunk.metadata.capacity.total || 2
             : (chunk.metadata?.capacity || 2) + (chunk.metadata?.children_capacity || 0),
 
-          accommodation_type: chunk.metadata?.accommodation_mphb_type || 'Standard',
+          // Get accommodation type from categories (Apartamentos/Habitaciones)
+          accommodation_type: (() => {
+            const categories = chunk.metadata?.categories || []
+            const typeCategory = categories.find((c: any) =>
+              c.name?.toLowerCase().includes('apartamento') ||
+              c.name?.toLowerCase().includes('habitación') ||
+              c.name?.toLowerCase().includes('habitacion')
+            )
+            return typeCategory?.name || 'Alojamiento'
+          })(),
           room_type_id: chunk.metadata?.motopress_room_type_id || null,
 
           description: chunk.description || '',
@@ -361,17 +412,43 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
                 : undefined
           },
           amenities_summary: {
-            total: Array.isArray(chunk.metadata?.unit_amenities)
-              ? chunk.metadata.unit_amenities.length
-              : (typeof chunk.metadata?.unit_amenities === 'string'
-                  ? chunk.metadata.unit_amenities.split(',').length
+            total: Array.isArray(chunk.amenities)
+              ? chunk.amenities.length
+              : (Array.isArray(chunk.metadata?.unit_amenities)
+                  ? chunk.metadata.unit_amenities.length
                   : 0),
-            included: Array.isArray(chunk.metadata?.unit_amenities)
-              ? chunk.metadata.unit_amenities.length
-              : (typeof chunk.metadata?.unit_amenities === 'string'
-                  ? chunk.metadata.unit_amenities.split(',').length
-                  : 0)
-          }
+            included: Array.isArray(chunk.amenities)
+              ? chunk.amenities.length
+              : (Array.isArray(chunk.metadata?.unit_amenities)
+                  ? chunk.metadata.unit_amenities.length
+                  : 0),
+            premium: 0,
+            featured: 0
+          },
+          unit_amenities: Array.isArray(chunk.amenities)
+            ? chunk.amenities.map((a: any) => ({
+                name: a.name || a.amenity_name || 'Amenity',
+                id: a.id
+              }))
+            : (Array.isArray(chunk.metadata?.unit_amenities)
+                ? chunk.metadata.unit_amenities.map((a: any) => ({
+                    name: typeof a === 'string' ? a.trim() : (a.name || a.amenity_name || 'Amenity'),
+                    id: a.id
+                  }))
+                : []),
+          photos: chunk.photos || [],
+          photo_count: chunk.photos?.length || 0,
+          pricing_rules: [],
+          services_list: chunk.metadata?.services_list || [],
+          attributes_list: chunk.metadata?.attributes_list || [],
+          tags_list: chunk.metadata?.tags_list || [],
+          featured_image_url: chunk.metadata?.featured_image_url || chunk.photos?.[0]?.url,
+          capacity_differential: chunk.metadata?.capacity_differential || 0,
+          highlights: chunk.metadata?.highlights || [],
+          category_badge: chunk.metadata?.category_badge || chunk.metadata?.categories?.[0]?.name,
+          chunks_count: 1,
+          manuals_count: originalUnitId ? (manualsCountMap.get(originalUnitId) || 0) : 0,
+          all_chunks: [chunk]
         }
       }
 
