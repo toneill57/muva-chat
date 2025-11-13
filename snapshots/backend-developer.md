@@ -19,35 +19,64 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
-## 🎯 CURRENT PROJECT: Sistema de Manuales de Alojamiento (November 9, 2025)
+## 🎯 CURRENT PROJECT: SIRE Compliance System - Chat Conversacional (November 13, 2025)
 
-**Status:** Planning Complete - Ready for FASE 0
+**Status:** Planning Refinado - Ready for FASE 0
+
+**Enfoque:** Guest chat conversacional (NO staff UI, NO emails)
 
 **My Responsibility:**
-- FASE 0: Análisis de conflicto de rutas (resolver 404), diseño de chunking strategy
-- FASE 1: Implementar API endpoints (POST upload, GET list, DELETE, GET chunks)
-- FASE 1: Crear biblioteca `src/lib/manual-processing.ts` con chunking de markdown
-- FASE 4: Tests end-to-end (upload completo, guest chat integration, multi-tenant)
+- **FASE 0:** Update bookings-mapper.ts to read hotel/city config (1h)
+- **FASE 1:** Diagnóstico completo sincronización MotoPress (6h) ← NUEVA FASE
+  - Analizar sync-manager.ts + bookings-mapper.ts
+  - Crear tabla de mapeo API → DB
+  - Documentar edge cases
+  - Deliverable: MOTOPRESS_SYNC_ANALYSIS.md
+- **FASE 3:** OCR Integration (6h)
+  - Create ocr-mapper.ts (map Claude Vision → SIRE)
+  - Tests: Colombian passport, USA passport, cédula
+- **FASE 4:** Chat Extraction (11h) ← CRÍTICO
+  - Passive extraction prompt (analyze messages, extract entities)
+  - Guided questions system (when <70% complete)
+  - Integration in GuestChatInterface.tsx
+- **FASE 5:** Name Parser + Nationality Mapper (9h)
+  - Parse Latin American names (María José García López)
+  - Map country → SIRE code (USA → "249", Colombia → "170")
+- **FASE 6:** PUT Endpoint (2h)
+  - Create /api/sire/guest-data/[reservationId] endpoint
+  - Zod validation, uppercase enforcement
+- **FASE 7:** E2E Testing (2h)
+  - Complete sire-chat-extraction.test.ts
+  - Complete sire-put-endpoint.test.ts
 
 **Planning Files:**
-- `docs/accommodation-manuals/plan.md` - Complete architecture (202 lines)
-- `docs/accommodation-manuals/TODO.md` - Tasks by phase (421 lines, 37 tasks)
-- `docs/accommodation-manuals/accommodation-manuals-prompt-workflow.md` - Ready prompts
+- `docs/sire-compliance/plan.md` - Refinado (969 lines, 36-46h)
+- `docs/sire-compliance/TODO.md` - 28 tasks (reduced from 35)
+- `docs/sire-compliance/workflow.md` - 12 prompts (NEW)
 
-**Key Files:**
-- **Create:** `src/lib/manual-processing.ts` - Markdown chunking (FASE 1)
-- **Create:** `src/app/api/accommodation-manuals/[unitId]/route.ts` - POST, GET (FASE 1)
-- **Create:** `src/app/api/accommodation-manuals/[unitId]/[manualId]/route.ts` - DELETE (FASE 1)
-- **Create:** `src/app/api/accommodation-manuals/[manualId]/chunks/route.ts` - GET chunks (FASE 1)
-- **Reference:** `scripts/regenerate-manual-embeddings.ts` - Lógica de embeddings existente
+**Key Files to Create:**
+- `src/lib/sire/ocr-mapper.ts` - OCR → SIRE mapping (FASE 3)
+- `src/lib/sire/extraction-prompt.ts` - Passive extraction (FASE 4)
+- `src/lib/sire/guided-questions.ts` - Guided mode (FASE 4)
+- `src/lib/sire/name-parser.ts` - Latin American names (FASE 5)
+- `src/lib/sire/nationality-mapper.ts` - Country → SIRE code (FASE 5)
+- `src/app/api/sire/guest-data/[reservationId]/route.ts` - PUT endpoint (FASE 6)
+
+**Key Files to Modify:**
+- `src/lib/integrations/motopress/bookings-mapper.ts` - Read config (FASE 0)
+- `src/components/GuestChatInterface.tsx` - Integrate extraction + OCR (FASE 3-4)
+
+**Key Documentation to Deliver:**
+- `docs/sire-compliance/fase-1/MOTOPRESS_SYNC_ANALYSIS.md` - Complete diagnosis
 
 **Workflow:**
-1. Read plan.md → TODO.md → accommodation-manuals-prompt-workflow.md
-2. Find next `[ ]` task in TODO.md
+1. Read plan.md → TODO.md → workflow.md
+2. Execute prompts sequentially from workflow.md
+3. Document findings in fase-N/ folders
 3. Use corresponding prompt from workflow.md
 4. Implement following plan.md specs
 5. Test per TODO.md commands
-6. Document in docs/accommodation-manuals/fase-{N}/
+6. Document in docs/sire-compliance/fase-{N}/
 
 **Sync Order (Critical):**
 ```typescript

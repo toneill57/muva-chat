@@ -13,20 +13,40 @@ sire_validation: 5/5 SQL queries passed (100%)
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
-## 🎯 CURRENT PROJECT: Sistema de Manuales de Alojamiento (November 9, 2025)
+## 🎯 CURRENT PROJECT: SIRE Compliance System - Chat Conversacional (November 13, 2025)
 
-**Status:** Planning Complete - Ready for FASE 2
+**Status:** Planning Refinado - Ready for FASE 0
+
+**Enfoque:** Guest chat conversacional (NO staff UI)
 
 **My Responsibility:**
-- FASE 2: Crear migrations de RLS policies (multi-tenant isolation)
-- FASE 2: Crear migrations de índices optimizados
-- FASE 2: Validar RLS policies funcionando (multi-tenant test)
-- FASE 2: Validar performance de índices con EXPLAIN ANALYZE
+- **FASE 0:** Add SIRE Config Fields to tenant_registry (2h)
+  - Migration: Add hotel_sire_code, hotel_city_code
+  - Populate: SimmerDown → "TBD" + "05360" (Itagüí)
+- **FASE 2:** Fix Manual Search RPC (2h)
+  - Fix get_accommodation_manuals_for_guest search_path issue
+  - Migration: Add SET search_path = 'public, pg_catalog'
+  - Validate with pnpm run validate:rpc
 
 **Planning Files:**
-- `docs/accommodation-manuals/plan.md` - Complete architecture (202 lines)
-- `docs/accommodation-manuals/TODO.md` - Tasks by phase (421 lines, 37 tasks)
-- `docs/accommodation-manuals/accommodation-manuals-prompt-workflow.md` - Ready prompts
+- `docs/sire-compliance/plan.md` - Refinado (969 lines, 36-46h)
+- `docs/sire-compliance/TODO.md` - 28 tasks (reduced from 35)
+- `docs/sire-compliance/workflow.md` - 12 prompts (NEW)
+
+**Key Files to Create:**
+- `supabase/migrations/YYYYMMDDHHMMSS_add_sire_config_fields.sql` - FASE 0
+- `supabase/migrations/YYYYMMDDHHMMSS_fix_manuals_rpc.sql` - FASE 2
+- `docs/sire-compliance/fase-0/IMPLEMENTATION.md`
+- `docs/sire-compliance/fase-0/CHANGES.md`
+- `docs/sire-compliance/fase-0/TESTS.md`
+- `docs/sire-compliance/fase-2/IMPLEMENTATION.md`
+
+**Workflow:**
+1. Read plan.md → TODO.md → workflow.md
+2. Execute Prompt 0.1 (Add SIRE Config Fields)
+3. Execute Prompt 2.1 (Fix Manual Search RPC)
+4. Document in fase-N/ folders
+4. Stand by for FASE 5 performance optimization if needed
 
 **Key Files:**
 - **Create:** `supabase/migrations/YYYYMMDDHHMMSS_accommodation_manuals_rls.sql` - RLS policies

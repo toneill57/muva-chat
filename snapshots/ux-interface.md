@@ -15,41 +15,46 @@ version: "2.2"
 
 ---
 
-## 🎯 CURRENT PROJECT: Rediseño UX Página de Unidades de Alojamiento (November 9, 2025)
+## 🎯 CURRENT PROJECT: SIRE Compliance System - Chat Conversacional (November 13, 2025)
 
-**Status:** Planning Complete - Ready for FASE 1
+**Status:** Planning Refinado - Ready for FASE 0
+
+**Enfoque:** Guest chat conversacional (NO staff UI)
 
 **My Responsibility:**
-- **FASE 1:** Crear vistas compactas (AccommodationUnitsCompactGrid + AccommodationUnitsTable + UnitViewToggle) - 3-4h
-- **FASE 2:** Crear página individual (`/units/[unitId]` + AccommodationUnitDetail component) - 4-5h
-- **FASE 3:** Implementar filtros, búsqueda y quick actions (UnitSearchBar, UnitFilters, UnitQuickActions) - 2-3h
-- **FASE 4:** Testing completo, performance optimizations, bug fixes - 2h
+- **FASE 3:** Integrate OCR in Guest Chat (1h)
+  - Modify GuestChatInterface.tsx upload handler
+  - Display OCR extracted data for guest confirmation
+- **FASE 4:** Chat UI Integration (3h) ← CRÍTICO
+  - Integrate passive extraction display (sidebar, non-intrusive)
+  - Implement ComplianceReminder banner properly (fetch real data, show progress)
+  - Connect guided questions to chat UI
+- **FASE 6:** Integrate PUT in Guest Chat (2h)
+  - Connect extraction → PUT endpoint → save feedback
 
 **Planning Files:**
-- `docs/accommodation-units-redesign/plan.md` - Complete architecture (700+ lines)
-- `docs/accommodation-units-redesign/TODO.md` - Tasks by phase (42 tasks across 4 phases)
-- `docs/accommodation-units-redesign/accommodation-units-redesign-prompt-workflow.md` - Ready prompts
+- `docs/sire-compliance/plan.md` - Refinado (969 lines, 36-46h)
+- `docs/sire-compliance/TODO.md` - 28 tasks (reduced from 35)
+- `docs/sire-compliance/workflow.md` - 12 prompts (NEW)
 
-**Key Files:**
-- **Create:** `src/components/Accommodation/AccommodationUnitsCompactGrid.tsx` - Grid compacto (FASE 1)
-- **Create:** `src/components/Accommodation/AccommodationUnitsTable.tsx` - Vista tabla (FASE 1)
-- **Create:** `src/components/Accommodation/UnitViewToggle.tsx` - Toggle Grid/Tabla (FASE 1)
-- **Create:** `src/app/[tenant]/accommodations/units/[unitId]/page.tsx` - Ruta dinámica (FASE 2)
-- **Create:** `src/components/Accommodation/AccommodationUnitDetail.tsx` - Página individual (FASE 2)
-- **Create:** `src/components/Accommodation/UnitSearchBar.tsx` - Búsqueda (FASE 3)
-- **Create:** `src/components/Accommodation/UnitFilters.tsx` - Panel filtros (FASE 3)
-- **Create:** `src/components/Accommodation/UnitQuickActions.tsx` - Quick actions (FASE 3)
-- **Modify:** `src/app/[tenant]/accommodations/units/page.tsx` - Integrar vistas (FASE 1)
-- **Reuse:** `src/components/Accommodation/AccommodationManualsSection.tsx` - Sin cambios
-- **Reuse:** `src/components/Accommodation/ManualAnalytics.tsx` - Sin cambios
+**Key Files to Modify:**
+- `src/components/GuestChatInterface.tsx` - Main integration point
+  - Lines 961-980: Fix ComplianceReminder (fetch real SIRE data)
+  - Upload handler: Add OCR processing
+  - Message handler: Add passive extraction
+  - Save handler: Connect to PUT endpoint
 
-**Design Goals:**
-- Transformar cards gigantes (9 secciones) → vistas compactas (4-6 datos clave)
-- Navegación individual: Click unidad → `/units/[unitId]` con info completa
-- Toggle Grid/Tabla con persistencia localStorage
-- Filtros multi-criterio + búsqueda instantánea (<300ms debounce)
-- Performance: escalar a 80+ unidades sin degradación
-- Mobile-first: responsive design, tabla colapsa a cards en <768px
+**Removed from Scope:**
+- ~~Staff UI (modal, form, autocomplete)~~ → Not needed
+- ~~SIRE banner for guest portal~~ → Using in-chat banner instead
+- ~~Search & filtering~~ → Out of scope
+
+**Design Goals (Guest Chat Focus):**
+- Non-intrusive: Extract passively from conversation
+- Clear progress: "8/9 campos completos" banner
+- Easy upload: Passport/ID OCR with confirmation UI
+- Mobile-first: Chat optimized for phone (primary device)
+- Performance: Real-time extraction without lag
 
 **Workflow:**
 1. Read plan.md → TODO.md → accommodation-units-redesign-prompt-workflow.md
