@@ -415,7 +415,7 @@ export class MotoPresBookingsMapper {
 
   /**
    * Batch maps multiple MotoPress bookings WITH _embedded data
-   * Separates direct reservations from ICS imports (Airbnb)
+   * Processes both direct MotoPress reservations AND ICS imports (Airbnb)
    */
   static async mapBulkBookingsWithEmbed(
     bookings: any[],
@@ -434,13 +434,9 @@ export class MotoPresBookingsMapper {
     let statusExcluded = 0
     let icsExcluded = 0
 
-    // Calculate date range: 2 months ago to 2 years in future
+    // Calculate date range: today to 2 years in future
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Start of today
-
-    const twoMonthsAgo = new Date(today)
-    twoMonthsAgo.setMonth(today.getMonth() - 2)
-
     const twoYearsFromNow = new Date()
     twoYearsFromNow.setFullYear(today.getFullYear() + 2)
 
@@ -456,19 +452,13 @@ export class MotoPresBookingsMapper {
           continue
         }
 
-        // Skip reservations older than 2 months and reservations beyond 2 years (APPLIES TO BOTH direct + ICS)
+        // Skip past reservations and reservations beyond 2 years
         const checkInDate = new Date(booking.check_in_date)
-        console.log(`[mapper] 📅 Date check for booking ${booking.id}: checkInDate=${checkInDate.toISOString()}, twoMonthsAgo=${twoMonthsAgo.toISOString()}, twoYears=${twoYearsFromNow.toISOString()}`)
+        console.log(`[mapper] 📅 Date check for booking ${booking.id}: checkInDate=${checkInDate.toISOString()}, today=${today.toISOString()}, twoYears=${twoYearsFromNow.toISOString()}`)
 
-        if (checkInDate < twoMonthsAgo || checkInDate > twoYearsFromNow) {
+        if (checkInDate < today || checkInDate > twoYearsFromNow) {
           pastExcluded++
-
-          // Track ICS imports separately for stats
-          if (booking.imported === true) {
-            icsExcluded++
-          }
-
-          console.log(`[mapper] ⏩ Skip booking ${booking.id}: check_in=${booking.check_in_date} (${checkInDate < twoMonthsAgo ? 'older than 2 months' : 'too far future'})`)
+          console.log(`[mapper] ⏩ Skip booking ${booking.id}: check_in=${booking.check_in_date} (${checkInDate < today ? 'past' : 'too far future'})`)
           continue
         }
 
@@ -526,34 +516,65 @@ export class MotoPresBookingsMapper {
 
       console.log(`[mapper]   - Processing accommodation: type_id=${motopressTypeId}, instance_id=${motopressInstanceId}, rate=${roomRate}`)
 
-      // Lookup accommodation_unit_id in TypeScript (no trigger needed)
+      // Find matching accommodation_unit_id
       let accommodationUnitId: string | null = null
 
       if (motopressTypeId) {
-        const { data: matchingUnits } = await supabase
-          .from('accommodation_units_public')
-          .select('unit_id, name')
-          .eq('tenant_id', tenantId)
-          .ilike('name', '% - Overview')
-          .eq('metadata->>motopress_room_type_id', motopressTypeId.toString())
-          .limit(1)
+        const { data: units, error } = await supabase.rpc('get_accommodation_unit_by_motopress_id', {
+          p_tenant_id: tenantId,
+          p_motopress_type_id: motopressTypeId  // Fixed: use correct parameter name
+        })
 
-        if (matchingUnits && matchingUnits.length > 0) {
-          accommodationUnitId = matchingUnits[0].unit_id
-          console.log(`[mapper]     ✅ Found unit: ${matchingUnits[0].name} (${accommodationUnitId})`)
+        if (error) {
+          console.log(`[mapper]     ❌ RPC error for accommodation ${motopressTypeId}:`, error)
+        } else if (units && units.length > 0) {
+          const unit = units[0]
+          accommodationUnitId = unit.id
+          console.log(`[mapper]     ✅ MATCH: Unit "${unit.name}" (id=${unit.id})`)
         } else {
-          console.log(`[mapper]     ⚠️ No unit found for motopress_type_id=${motopressTypeId} (will insert with NULL)`)
+          // NO MATCH: Create accommodation automatically from MotoPress data
+          console.log(`[mapper]     ⚠️ NO MATCH: No unit found for motopress_type_id=${motopressTypeId}`)
+
+          // Extract accommodation name from _embedded data
+          let accommodationName = `Alojamiento ${motopressTypeId}` // Fallback
+
+          if (booking._embedded?.accommodation_types) {
+            const matchingType = booking._embedded.accommodation_types.find(
+              (type: any) => type.id === motopressTypeId
+            )
+            if (matchingType?.title) {
+              accommodationName = matchingType.title
+            }
+          }
+
+          console.log(`[mapper]     🔨 AUTO-CREATE: Creating "${accommodationName}" with motopress_type_id=${motopressTypeId}`)
+
+          // Use RPC function to create accommodation unit (cross-schema insert)
+          const { data: newUnit, error: insertError } = await supabase
+            .rpc('create_accommodation_unit', {
+              p_tenant_id: tenantId,
+              p_name: accommodationName,
+              p_motopress_type_id: motopressTypeId,
+              p_status: 'active'
+            })
+
+          if (insertError) {
+            console.error(`[mapper]     ❌ Failed to auto-create accommodation:`, insertError)
+          } else if (newUnit && Array.isArray(newUnit) && newUnit.length > 0) {
+            accommodationUnitId = newUnit[0].id
+            console.log(`[mapper]     ✅ CREATED: "${newUnit[0].name}" (id=${newUnit[0].id})`)
+          }
         }
       }
 
+      // Add to batch insert (accommodation_unit_id should always have a value now due to auto-creation)
       accommodationsToInsert.push({
         reservation_id: reservationId,
-        accommodation_unit_id: accommodationUnitId, // NULL if not found (FK allows NULL)
+        accommodation_unit_id: accommodationUnitId,
         motopress_accommodation_id: motopressInstanceId,
         motopress_type_id: motopressTypeId,
         room_rate: roomRate
       })
-      console.log(`[mapper]     ➕ Added to batch insert`)
     }
 
     // Batch insert all accommodations
@@ -568,8 +589,6 @@ export class MotoPresBookingsMapper {
       }
 
       console.log(`[mapper] ✅ Saved ${accommodationsToInsert.length} accommodation(s) to reservation_accommodations`)
-    } else {
-      console.warn(`[mapper] ⚠️ No accommodations to insert - booking has no reserved_accommodations`)
     }
 
     return accommodationsToInsert.length

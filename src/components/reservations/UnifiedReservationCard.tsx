@@ -391,22 +391,28 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
               <h3 className="text-lg font-semibold text-slate-900">{guestDisplayName}</h3>
             </div>
 
-            {/* Código de Reserva */}
+            {/* Código de Reserva - Mejorado para Airbnb */}
             {reservationCode && (
-              <div className="ml-7 text-sm text-slate-600">
-                Código: {reservationURL ? (
-                  <a
-                    href={reservationURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-pink-600 hover:text-pink-700 font-mono font-medium"
-                  >
-                    {reservationCode}
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                ) : (
-                  <span className="font-mono font-medium">{reservationCode}</span>
-                )}
+              <div className="ml-7 mt-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-pink-50 border border-pink-200 rounded-lg">
+                  <span className="text-xs font-semibold text-pink-700">
+                    {source === 'airbnb' ? 'Código Airbnb:' : 'Código:'}
+                  </span>
+                  {reservationURL ? (
+                    <a
+                      href={reservationURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-pink-600 hover:text-pink-700 font-mono font-bold text-sm"
+                      title="Ver en Airbnb"
+                    >
+                      {reservationCode}
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  ) : (
+                    <span className="font-mono font-bold text-sm text-pink-800">{reservationCode}</span>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -506,14 +512,16 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
             </div>
           </div>
 
-          {/* Phone */}
+          {/* Phone - Mejorado para mostrar últimos 4 dígitos */}
           <div className="flex items-start gap-2">
             <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
             <div>
               <p className={`text-sm font-medium ${reservation.phone_full || phoneLast4Parsed ? 'text-slate-700' : 'text-gray-400 italic'}`}>
                 {reservation.phone_full || (phoneLast4Parsed ? `***-${phoneLast4Parsed}` : 'No disponible aún')}
               </p>
-              <p className="text-xs text-slate-500">Teléfono</p>
+              <p className="text-xs text-slate-500">
+                {phoneLast4Parsed && !reservation.phone_full ? `Teléfono (últimos 4: ${phoneLast4Parsed})` : 'Teléfono'}
+              </p>
             </div>
           </div>
 
