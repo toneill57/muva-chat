@@ -212,10 +212,10 @@ export async function GET(request: NextRequest) {
           supabase
         )
 
-      console.log(`[sync-all] Mapped ${mappedReservations.length} direct reservations, ${icsImports.length} ICS imports, excluded ${pastExcluded} past/future, ${statusExcluded} cancelled`)
+      console.log(`[sync-all] Mapped ${mappedReservations.length} reservations (includes Airbnb + MotoPress), excluded ${pastExcluded} past/future, ${statusExcluded} cancelled, ${icsExcluded} blocks`)
       await sendEvent({
         type: 'progress',
-        message: `Procesadas ${mappedReservations.length} reservas directas + ${icsImports.length} ICS (excluidas ${pastExcluded} pasadas, ${statusExcluded} canceladas). Guardando...`
+        message: `Procesadas ${mappedReservations.length} reservas (Airbnb + MotoPress directo). Excluidas: ${pastExcluded} pasadas, ${statusExcluded} canceladas, ${icsExcluded} bloques. Guardando...`
       })
 
       // Create lookup map: external_booking_id → original booking (for finding reserved_accommodations)
@@ -227,8 +227,6 @@ export async function GET(request: NextRequest) {
       let created = 0
       let updated = 0
       let errors = 0
-      const totalReservations = mappedReservations.length
-      let processed = 0
 
       for (const reservation of mappedReservations) {
         const originalBooking = bookingsMap.get(reservation.external_booking_id)
@@ -236,7 +234,6 @@ export async function GET(request: NextRequest) {
         if (!originalBooking) {
           console.error(`[sync-all] Cannot find original booking for external_booking_id=${reservation.external_booking_id}`)
           errors++
-          processed++
           continue
         }
 
@@ -306,20 +303,6 @@ export async function GET(request: NextRequest) {
           console.error(`[sync-all] Error processing booking ${reservation.external_booking_id}:`, err)
           errors++
         }
-
-        // Update progress counter
-        processed++
-
-        // Send progress update every 10 reservations or on last one
-        if (processed % 10 === 0 || processed === totalReservations) {
-          const percentage = Math.round((processed / totalReservations) * 100)
-          await sendEvent({
-            type: 'progress',
-            current: processed,
-            total: totalReservations,
-            message: `Guardando reservas... ${processed}/${totalReservations} (${percentage}%)`
-          })
-        }
       }
 
       // 5.5. Save ICS imports to comparison table (TEMPORARILY DISABLED - too slow for testing)
@@ -327,13 +310,8 @@ export async function GET(request: NextRequest) {
       let icsCreated = 0
       let icsErrors = 0
 
-      if (icsImports.length > 0) {
-        console.log(`[sync-all] 📥 Found ${icsImports.length} ICS imports (Airbnb) - SKIPPING save for now (performance)`)
-        await sendEvent({
-          type: 'progress',
-          message: `Detectadas ${icsImports.length} reservas ICS de Airbnb (no guardadas temporalmente)`
-        })
-      }
+      // ICS imports (Airbnb) are now processed together with direct MotoPress bookings
+      // No separate handling needed - they're already in mappedReservations
 
       /* COMMENTED OUT - Uncomment when ready to implement ICS sync
       if (icsImports.length > 0) {
@@ -478,7 +456,7 @@ export async function GET(request: NextRequest) {
           created,
           updated,
           errors,
-          blocksExcluded: icsCreated, // ICS imports saved to comparison table
+          blocksExcluded: icsExcluded, // Calendar blocks excluded (Airbnb mirror listings)
           pastExcluded
         }
       })
