@@ -18,7 +18,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Critical functions that MUST have 'extensions' in search_path
+// Critical functions that MUST have correct search_path
 const CRITICAL_FUNCTIONS = [
   {
     name: 'match_unit_manual_chunks',
@@ -30,6 +30,18 @@ const CRITICAL_FUNCTIONS = [
     name: 'match_muva_documents',
     requiredSchemas: ['public', 'extensions', 'pg_temp'],
     purpose: 'Tourism content search',
+    critical: true,
+  },
+  {
+    name: 'get_accommodation_unit_by_id',
+    requiredSchemas: ['public', 'hotels', 'pg_temp'],
+    purpose: 'Guest auth - fetch accommodation details (resolves chunk IDs)',
+    critical: true,
+  },
+  {
+    name: 'get_accommodation_units',
+    requiredSchemas: ['public', 'hotels', 'pg_temp'],
+    purpose: 'Guest auth - list accommodations for reservation',
     critical: true,
   },
   {

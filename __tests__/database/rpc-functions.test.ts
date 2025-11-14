@@ -14,7 +14,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Critical functions that MUST have 'extensions' in search_path
+// Critical functions that MUST have correct search_path
 const CRITICAL_FUNCTIONS = [
   {
     name: 'match_unit_manual_chunks',
@@ -25,6 +25,16 @@ const CRITICAL_FUNCTIONS = [
     name: 'match_muva_documents',
     requiredSchemas: ['public', 'extensions', 'pg_temp'],
     purpose: 'Tourism content search',
+  },
+  {
+    name: 'get_accommodation_unit_by_id',
+    requiredSchemas: ['public', 'hotels', 'pg_temp'],
+    purpose: 'Guest auth - fetch accommodation details (resolves chunk IDs)',
+  },
+  {
+    name: 'get_accommodation_units',
+    requiredSchemas: ['public', 'hotels', 'pg_temp'],
+    purpose: 'Guest auth - list accommodations for reservation',
   },
 ];
 
@@ -81,8 +91,15 @@ describe('RPC Functions - Vector Search Configuration', () => {
           expect(currentSchemas).toContain(requiredSchema);
         }
 
-        // Specifically check for 'extensions' (most critical)
-        expect(currentSchemas).toContain('extensions');
+        // Specifically check for 'extensions' if required (most critical for vector search)
+        if (funcConfig.requiredSchemas.includes('extensions')) {
+          expect(currentSchemas).toContain('extensions');
+        }
+
+        // Check for 'hotels' schema if required (critical for accommodation access)
+        if (funcConfig.requiredSchemas.includes('hotels')) {
+          expect(currentSchemas).toContain('hotels');
+        }
       }, 10000); // 10 second timeout for database queries
     }
   });
@@ -152,22 +169,111 @@ describe('RPC Functions - Vector Search Configuration', () => {
       expect(data).toBeDefined();
     }, 15000);
   });
+
+  describe('Chunk ID Resolution', () => {
+    it('should resolve chunk IDs to real unit IDs in get_accommodation_unit_by_id', async () => {
+      // Get a chunk ID from accommodation_units_public
+      const { data: chunks, error: chunksError } = await supabase
+        .from('accommodation_units_public')
+        .select('unit_id, name, metadata')
+        .not('metadata->motopress_unit_id', 'is', null)
+        .limit(1);
+
+      if (chunksError || !chunks || chunks.length === 0) {
+        console.warn('⚠️  No chunks found with motopress_unit_id - skipping chunk resolution test');
+        return;
+      }
+
+      const chunk = chunks[0];
+      const chunkId = chunk.unit_id;
+      const motopressUnitId = chunk.metadata?.motopress_unit_id;
+
+      expect(chunkId).toBeDefined();
+      expect(motopressUnitId).toBeDefined();
+
+      // Get tenant_id from environment
+      const tenantId = process.env.TENANT_ID || process.env.NEXT_PUBLIC_TENANT_ID;
+      if (!tenantId) {
+        console.warn('⚠️  No TENANT_ID found - skipping chunk resolution test');
+        return;
+      }
+
+      // Call RPC with chunk ID (should resolve to real unit)
+      const { data: result, error: rpcError } = await supabase
+        .rpc('get_accommodation_unit_by_id', {
+          p_unit_id: chunkId,
+          p_tenant_id: tenantId,
+        });
+
+      // Should not error
+      expect(rpcError).toBeNull();
+      expect(result).toBeDefined();
+      expect(result.length).toBeGreaterThan(0);
+
+      // Should return clean accommodation name (without " - Overview", " - Amenities", etc.)
+      const unitName = result[0].name;
+      expect(unitName).toBeDefined();
+      expect(unitName).not.toMatch(/\s-\s(Overview|Amenities|Features|Images|Capacity)/);
+
+      console.log(`✅ Chunk ID resolution: "${chunk.name}" → "${unitName}"`);
+    }, 15000);
+
+    it('should still work with real unit IDs (backward compatibility)', async () => {
+      // Get a real unit ID from hotels.accommodation_units
+      const { data: units, error: unitsError } = await supabase
+        .schema('hotels')
+        .from('accommodation_units')
+        .select('id, name, tenant_id')
+        .limit(1);
+
+      if (unitsError || !units || units.length === 0) {
+        console.warn('⚠️  No real units found - skipping backward compatibility test');
+        return;
+      }
+
+      const unit = units[0];
+
+      // Call RPC with real unit ID
+      const { data: result, error: rpcError } = await supabase
+        .rpc('get_accommodation_unit_by_id', {
+          p_unit_id: unit.id,
+          p_tenant_id: unit.tenant_id,
+        });
+
+      // Should work with real unit IDs
+      expect(rpcError).toBeNull();
+      expect(result).toBeDefined();
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0].id).toBe(unit.id);
+      expect(result[0].name).toBe(unit.name);
+
+      console.log(`✅ Real unit ID: "${unit.name}" → "${result[0].name}"`);
+    }, 15000);
+  });
 });
 
 describe('RPC Functions - Auto-Fix Availability', () => {
   it('should provide clear fix instructions if test fails', () => {
     const fixCommand = 'pnpm dlx tsx scripts/validate-rpc-functions.ts --fix';
-    const migrationFile = 'supabase/migrations/20251103171933_fix_vector_search_path.sql';
+    const vectorSearchMigration = 'supabase/migrations/20251103171933_fix_vector_search_path.sql';
+    const chunkResolutionMigrations = [
+      'supabase/migrations/20251113000000_fix_get_accommodation_units_search_path.sql',
+      'supabase/migrations/20251113000001_fix_get_accommodation_unit_by_id_search_path.sql',
+      'supabase/migrations/20251113000002_fix_get_accommodation_unit_by_id_chunk_resolution.sql',
+    ];
 
     expect(fixCommand).toBeDefined();
-    expect(migrationFile).toBeDefined();
+    expect(vectorSearchMigration).toBeDefined();
+    expect(chunkResolutionMigrations).toBeDefined();
 
     console.log('\n═══════════════════════════════════════════════════════════════════');
     console.log('If RPC function tests fail, run:');
     console.log(`  ${fixCommand}`);
     console.log('');
-    console.log('Or manually apply migration:');
-    console.log(`  Check: ${migrationFile}`);
+    console.log('Or manually apply migrations:');
+    console.log(`  Vector search: ${vectorSearchMigration}`);
+    console.log('  Chunk resolution:');
+    chunkResolutionMigrations.forEach(m => console.log(`    ${m}`));
     console.log('═══════════════════════════════════════════════════════════════════\n');
   });
 });
