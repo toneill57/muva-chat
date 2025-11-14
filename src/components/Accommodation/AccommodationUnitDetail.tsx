@@ -490,7 +490,7 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">Unit ID:</span>
-                  <p className="font-medium font-mono text-xs break-all">{unit.unit_id}</p>
+                  <p className="font-medium font-mono text-xs break-all">{unit.id}</p>
                 </div>
                 {unit.unit_number && (
                   <div>
@@ -498,16 +498,16 @@ export function AccommodationUnitDetail({ unit, tenantId, onViewManualContent }:
                     <p className="font-medium">{unit.unit_number}</p>
                   </div>
                 )}
-                {unit.unit_type && (
+                {unit.accommodation_type && (
                   <div>
                     <span className="text-muted-foreground">Accommodation Type:</span>
-                    <p className="font-medium">{unit.unit_type}</p>
+                    <p className="font-medium">{unit.accommodation_type}</p>
                   </div>
                 )}
-                {unit.metadata?.motopress_room_type_id && (
+                {unit.room_type_id && (
                   <div>
                     <span className="text-muted-foreground">Room Type ID:</span>
-                    <p className="font-medium">{unit.metadata.motopress_room_type_id}</p>
+                    <p className="font-medium">{unit.room_type_id}</p>
                   </div>
                 )}
                 <div>
