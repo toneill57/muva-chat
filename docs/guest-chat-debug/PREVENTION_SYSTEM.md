@@ -479,6 +479,70 @@ watch -n 30 'pnpm dlx tsx scripts/monitoring-dashboard.ts'
 
 ---
 
+## 🔍 Validaciones Adicionales
+
+### Validar Chunk ID Resolution
+
+**Problema común:** Reservas con chunk IDs (`accommodation_units_public`) pero RPC solo busca unit IDs (`hotels.accommodation_units`)
+
+**Verificación SQL:**
+```sql
+-- Test: Pasar chunk ID, debe resolver a unit real
+SELECT id, name
+FROM get_accommodation_unit_by_id(
+  p_unit_id := 'd8abb241-1586-458f-be0d-f2f9bf60fe32',  -- Chunk ID
+  p_tenant_id := '918c134b-ad61-498b-957c-8cf11fd992cf'
+);
+
+-- ✅ Esperado: Retorna unit real con nombre limpio
+-- ❌ Error: Retorna vacío []
+```
+
+**Auto-test:**
+```bash
+# Validar que RPC resuelve chunk IDs correctamente
+pnpm dlx tsx -e "
+import { createClient } from '@supabase/supabase-js';
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+// Get a chunk ID from accommodation_units_public
+const { data: chunk } = await supabase
+  .from('accommodation_units_public')
+  .select('unit_id, name, metadata')
+  .limit(1)
+  .single();
+
+if (!chunk) throw new Error('No chunks found');
+
+// Test RPC with chunk ID
+const { data: result } = await supabase
+  .rpc('get_accommodation_unit_by_id', {
+    p_unit_id: chunk.unit_id,
+    p_tenant_id: process.env.TENANT_ID
+  });
+
+if (!result || result.length === 0) {
+  console.error('❌ FAIL: RPC did not resolve chunk ID');
+  process.exit(1);
+}
+
+console.log('✅ PASS: Chunk ID resolved to:', result[0].name);
+"
+```
+
+**Fix si falla:**
+```bash
+# Aplicar migración de chunk resolution
+pnpm dlx tsx scripts/execute-ddl-via-api.ts \
+  supabase/migrations/20251113000002_fix_get_accommodation_unit_by_id_chunk_resolution.sql
+```
+
+**Referencias:**
+- [CHUNK_ID_RESOLUTION_FIX_NOV13_2025.md](./CHUNK_ID_RESOLUTION_FIX_NOV13_2025.md)
+- Migración: `20251113000002_fix_get_accommodation_unit_by_id_chunk_resolution.sql`
+
+---
+
 ## 🆘 Troubleshooting
 
 ### Problema: Validación falla con "Missing Supabase credentials"
