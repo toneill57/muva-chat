@@ -21,7 +21,7 @@
    - Problema NO era la base de datos
    - Evidencia de que funciones RPC estaban rotas
 
-3. **[FIX_APPLIED_NOV6_2025.md](./FIX_APPLIED_NOV6_2025.md)** - Fix aplicado
+3. **[FIX_APPLIED_NOV6_2025.md](./FIX_APPLIED_NOV6_2025.md)** - Fix aplicado Nov 6
    - Re-creación de funciones RPC con search_path correcto
    - Test de verificación ejecutado
    - VPS reiniciado
@@ -34,6 +34,14 @@
    - Integración con CI/CD
    - Workflow recomendado
    - Troubleshooting
+
+### Fixes Adicionales
+
+5. **[CHUNK_ID_RESOLUTION_FIX_NOV13_2025.md](./CHUNK_ID_RESOLUTION_FIX_NOV13_2025.md)** - Fix aplicado Nov 13
+   - Problema: "Loaded 0 accommodations" → My-stay header sin nombre
+   - Causa: Reservas con chunk IDs pero RPC solo busca unit IDs reales
+   - Solución: RPC ahora resuelve chunk IDs → units vía motopress_unit_id
+   - Impacto: Manual chunks funcionan, header muestra nombres limpios
 
 ---
 
@@ -238,6 +246,6 @@ Ver: [PREVENTION_SYSTEM.md - Troubleshooting](./PREVENTION_SYSTEM.md#-troublesho
 
 ---
 
-**Última actualización:** November 6, 2025
+**Última actualización:** November 13, 2025
 **Mantenedor:** @agent-backend-developer
 **Status:** ✅ Sistema de prevención activo
