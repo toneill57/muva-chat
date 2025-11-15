@@ -316,7 +316,7 @@ Tenemos una guía completa en línea con información detallada sobre:
 
 ### Características del Apartamento
 - **Tipo**: Apartamento completo con cocina equipada
-- **Ubicación**: Primer piso del edificio
+- **Ubicación**: Piso 2 del edificio
 - **Capacidad**: Ideal para parejas o familias pequeñas
 - **Privacidad**: Espacio independiente y privado
 
