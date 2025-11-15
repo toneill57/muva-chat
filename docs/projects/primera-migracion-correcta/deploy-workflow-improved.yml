@@ -1,0 +1,243 @@
+# Improved Deploy Workflow - Con Validaciones Robustas
+#
+# Este workflow incluye validaciones explícitas en cada paso
+# para detectar problemas early y proporcionar mejor feedback
+#
+# Para aplicar: Copiar contenido a .github/workflows/deploy.yml
+
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NEXT_PUBLIC_APP_URL: https://muva.chat
+          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e  # Exit immediately on any error
+
+            echo "================================================"
+            echo "🚀 MUVA Chat Deployment - Starting"
+            echo "================================================"
+
+            # Validate VPS_APP_PATH secret is set
+            if [ -z "${{ secrets.VPS_APP_PATH }}" ]; then
+              echo "❌ ERROR: VPS_APP_PATH secret is not set"
+              exit 1
+            fi
+
+            # Validate directory exists
+            if [ ! -d "${{ secrets.VPS_APP_PATH }}" ]; then
+              echo "❌ ERROR: Application directory does not exist"
+              echo "Expected: ${{ secrets.VPS_APP_PATH }}"
+              echo ""
+              echo "To fix:"
+              echo "1. SSH to VPS: ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+              echo "2. Create directory: sudo mkdir -p ${{ secrets.VPS_APP_PATH }}"
+              echo "3. Clone repo or verify setup"
+              exit 1
+            fi
+
+            # Change to application directory
+            cd ${{ secrets.VPS_APP_PATH }}
+            echo "✅ Current directory: $(pwd)"
+
+            # Validate it's a git repository
+            if [ ! -d ".git" ]; then
+              echo "❌ ERROR: Not a git repository"
+              echo "Current directory: $(pwd)"
+              exit 1
+            fi
+            echo "✅ Git repository verified"
+
+            # Show current git status before pull
+            echo ""
+            echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+            echo "Current commit: $(git log -1 --oneline)"
+
+            # Pull latest changes
+            echo ""
+            echo "Pulling latest changes from dev branch..."
+            git pull origin dev
+
+            # Show new commit
+            echo "New commit: $(git log -1 --oneline)"
+
+            # Validate package.json exists
+            if [ ! -f "package.json" ]; then
+              echo "❌ ERROR: package.json not found in $(pwd)"
+              echo "Directory contents:"
+              ls -la
+              exit 1
+            fi
+            echo "✅ package.json found"
+
+            # Validate deployment configuration files exist
+            if [ ! -f "docs/deployment/nginx-subdomain.conf" ]; then
+              echo "❌ ERROR: nginx-subdomain.conf not found"
+              echo "Expected: $(pwd)/docs/deployment/nginx-subdomain.conf"
+              exit 1
+            fi
+            echo "✅ nginx-subdomain.conf found"
+
+            if [ ! -f "docs/deployment/ecosystem.config.cjs" ]; then
+              echo "❌ ERROR: ecosystem.config.cjs not found"
+              echo "Expected: $(pwd)/docs/deployment/ecosystem.config.cjs"
+              exit 1
+            fi
+            echo "✅ ecosystem.config.cjs found"
+
+            # Install dependencies
+            echo ""
+            echo "Installing dependencies..."
+            npm ci --legacy-peer-deps
+            echo "✅ Dependencies installed"
+
+            # Build application
+            echo ""
+            echo "Building application..."
+            npm run build
+            echo "✅ Build completed"
+
+            # Update Nginx configuration
+            echo ""
+            echo "Updating Nginx configuration..."
+            sudo cp docs/deployment/nginx-subdomain.conf /etc/nginx/sites-available/muva
+
+            # Test Nginx configuration
+            if sudo nginx -t; then
+              echo "✅ Nginx configuration valid"
+              sudo systemctl reload nginx
+              echo "✅ Nginx reloaded"
+            else
+              echo "❌ ERROR: Nginx configuration test failed"
+              exit 1
+            fi
+
+            # Reload PM2 process
+            echo ""
+            echo "Reloading PM2 process..."
+            pm2 reload docs/deployment/ecosystem.config.cjs --update-env
+            echo "✅ PM2 reloaded"
+
+            # Show PM2 status
+            echo ""
+            echo "PM2 Status:"
+            pm2 status muva-chat
+
+            echo ""
+            echo "================================================"
+            echo "✅ Deployment completed successfully"
+            echo "================================================"
+
+      - name: Wait for application startup
+        run: sleep 10
+
+      - name: Health check
+        run: |
+          echo "Running health check on https://muva.chat/api/health"
+
+          response=$(curl -L -s -o /dev/null -w "%{http_code}" https://muva.chat/api/health)
+
+          if [ "$response" != "200" ]; then
+            echo "❌ Health check failed with status $response"
+            echo "This will trigger automatic rollback"
+            exit 1
+          fi
+
+          echo "✅ Health check passed: $response"
+
+          # Also test a tenant subdomain
+          tenant_response=$(curl -L -s -o /dev/null -w "%{http_code}" https://simmerdown.muva.chat/chat)
+          echo "Tenant check (simmerdown): $tenant_response"
+
+      - name: Rollback on failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "================================================"
+            echo "🔄 ROLLBACK - Reverting to previous version"
+            echo "================================================"
+
+            cd ${{ secrets.VPS_APP_PATH }}
+
+            # Show current commit
+            echo "Failed commit: $(git log -1 --oneline)"
+
+            # Reset to previous commit
+            git reset --hard HEAD~1
+
+            echo "Rolled back to: $(git log -1 --oneline)"
+
+            # Reinstall dependencies (in case package.json changed)
+            npm ci --legacy-peer-deps
+
+            # Rebuild
+            npm run build
+
+            # Reload PM2
+            pm2 reload docs/deployment/ecosystem.config.cjs --update-env
+
+            # Wait and verify
+            sleep 5
+
+            echo ""
+            echo "PM2 Status after rollback:"
+            pm2 status muva-chat
+
+            echo ""
+            echo "================================================"
+            echo "✅ Rollback completed"
+            echo "================================================"
+
+      - name: Notify success
+        if: success()
+        run: |
+          echo ""
+          echo "================================================"
+          echo "🎉 DEPLOYMENT SUCCESSFUL"
+          echo "================================================"
+          echo "🌐 Main site: https://muva.chat"
+          echo "🏨 Tenant example: https://simmerdown.muva.chat"
+          echo "💚 Health: https://muva.chat/api/health"
+          echo "================================================"
