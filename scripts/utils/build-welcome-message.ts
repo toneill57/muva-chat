@@ -109,7 +109,7 @@ export const WELCOME_MESSAGE_HTML = getWelcomeMessageHTML('Simmer Down') // Fall
 `
 
 // Write to src/lib/welcome-message-static.ts
-const outputPath = path.join(__dirname, '../src/lib/welcome-message-static.ts')
+const outputPath = path.join(__dirname, '../../src/lib/welcome-message-static.ts')
 fs.writeFileSync(outputPath, outputContent, 'utf-8')
 
 console.log('✅ Welcome message pre-rendered successfully!')
