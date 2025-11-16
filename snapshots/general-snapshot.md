@@ -248,13 +248,16 @@ MUVA Chat is a **production-ready web platform** for managing hotel operations w
 
 **Production-ready three-environment deployment system** with automated CI/CD, comprehensive monitoring, database sync solution, and complete documentation.
 
-### Environments Configuration
+### Environments Configuration (NEW - Three-Tier Model)
 
 | Environment | Branch | Infrastructure | Supabase Project | Auto-Deploy |
 |-------------|--------|----------------|------------------|-------------|
-| **Development** | `dev` | Supabase branch only | rvjmwwvkhglcuqwcznph | ✅ Auto |
-| **Staging** | `staging` | VPS + Supabase | ztfslsrkemlfjqpzksir | ✅ Auto |
-| **Production** | `main` | VPS + Supabase | ooaumjzaztmutltifhoq | ⚠️ Manual approval |
+| **Development** | `dev` | Localhost | azytxnyiizldljxrapoe | Via GitHub Actions |
+| **Testing/Staging** | `tst` | VPS staging.muva.chat | bddcvjoeoiekzfetvxoe | Via GitHub Actions |
+| **Production** | `prd` | VPS muva.chat | kprqghwdnaykxhostivv (main) | Via GitHub Actions |
+
+**Old Configuration (DEPRECATED - DO NOT USE):**
+- Rama staging (hoaiwcueleiemeplrurv) del proyecto ooaumjzaztmutltifhoq - Mantener solo como backup
 
 ### Deployment Flow
 

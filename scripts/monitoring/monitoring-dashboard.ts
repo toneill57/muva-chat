@@ -24,7 +24,7 @@
  *
  * Environment Variables:
  *   DEV_SUPABASE_PROJECT_ID       - Dev Supabase project (default: ooaumjzaztmutltifhoq)
- *   STAGING_SUPABASE_PROJECT_ID   - Staging Supabase project (default: ztfslsrkemlfjqpzksir)
+ *   STAGING_SUPABASE_PROJECT_ID   - Staging Supabase project (default: bddcvjoeoiekzfetvxoe - NEW TST)
  *   PROD_SUPABASE_PROJECT_ID      - Production Supabase project (default: ooaumjzaztmutltifhoq)
  */
 
@@ -55,7 +55,7 @@ const ENVIRONMENTS: Record<string, EnvironmentConfig> = {
     name: 'staging',
     displayName: 'Staging',
     url: process.env.STAGING_URL || 'https://simmerdown.staging.muva.chat',
-    projectId: process.env.STAGING_SUPABASE_PROJECT_ID || 'ztfslsrkemlfjqpzksir',
+    projectId: process.env.STAGING_SUPABASE_PROJECT_ID || 'bddcvjoeoiekzfetvxoe', // NEW TST environment
     vpsPath: '/var/www/muva-chat-staging',
   },
   production: {

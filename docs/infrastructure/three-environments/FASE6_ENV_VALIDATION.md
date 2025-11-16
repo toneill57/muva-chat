@@ -11,7 +11,7 @@
 |------------|-----------|--------|-------|
 | **dev** | `rvjmwwvkhglcuqwcznph` | ✅ Configured | From docs, not visible in MCP (different org?) |
 | **staging** | `ooaumjzaztmutltifhoq` | ✅ Verified | Confirmed via `mcp__supabase__list_projects` |
-| **production** | `ztfslsrkemlfjqpzksir` | ✅ Configured | From docs, production environment |
+| **production** | `[DEPRECATED-OLD-STAGING]` | ✅ Configured | From docs, production environment |
 
 **All scripts use correct Project IDs** ✅
 

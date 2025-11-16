@@ -532,7 +532,7 @@ Nov 6  ████              FASE 7 (Security enhancement)
 
 **Supabase Projects:**
 - Dev: rvjmwwvkhglcuqwcznph
-- Staging: ztfslsrkemlfjqpzksir
+- Staging: [DEPRECATED-OLD-STAGING]
 - Production: ooaumjzaztmutltifhoq
 
 ### Maintenance Schedule

@@ -13,40 +13,37 @@ sire_validation: 5/5 SQL queries passed (100%)
 
 # 🗄️ Database Agent Snapshot - MUVA Chat
 
-## 🎯 CURRENT PROJECT: SIRE Compliance System - Chat Conversacional (November 13, 2025)
+## 🎯 CURRENT PROJECT: Three-Tier Migration (November 16, 2025)
 
-**Status:** Planning Refinado - Ready for FASE 0
-
-**Enfoque:** Guest chat conversacional (NO staff UI)
+**Status:** Planning Complete - Ready for FASE 1
 
 **My Responsibility:**
-- **FASE 0:** Add SIRE Config Fields to tenant_registry (2h)
-  - Migration: Add hotel_sire_code, hotel_city_code
-  - Populate: SimmerDown → "TBD" + "05360" (Itagüí)
-- **FASE 2:** Fix Manual Search RPC (2h)
-  - Fix get_accommodation_manuals_for_guest search_path issue
-  - Migration: Add SET search_path = 'public, pg_catalog'
-  - Validate with pnpm run validate:rpc
+- **FASE 1:** Migración de Base de Datos - DEV (45 min)
+  - Aplicar 18 migrations a rama dev (azytxnyiizldljxrapoe)
+  - Migrar datos completos desde staging viejo (hoaiwcueleiemeplrurv)
+  - Validar schema, RPC functions, RLS policies
+- **FASE 2:** Replicación DB a TST y PRD (30 min)
+  - Aplicar migrations a tst (bddcvjoeoiekzfetvxoe) y prd (kprqghwdnaykxhostivv)
+  - Copiar datos a tst
+  - Validar consistency entre ambientes
 
 **Planning Files:**
-- `docs/sire-compliance/plan.md` - Refinado (969 lines, 36-46h)
-- `docs/sire-compliance/TODO.md` - 28 tasks (reduced from 35)
-- `docs/sire-compliance/workflow.md` - 12 prompts (NEW)
+- `docs/three-tier-migration/plan.md` - Complete architecture (285 lines)
+- `docs/three-tier-migration/TODO.md` - 45 tasks across 7 phases
+- `docs/three-tier-migration/three-tier-migration-prompt-workflow.md` - 7 prompts ready
 
-**Key Files to Create:**
-- `supabase/migrations/YYYYMMDDHHMMSS_add_sire_config_fields.sql` - FASE 0
-- `supabase/migrations/YYYYMMDDHHMMSS_fix_manuals_rpc.sql` - FASE 2
-- `docs/sire-compliance/fase-0/IMPLEMENTATION.md`
-- `docs/sire-compliance/fase-0/CHANGES.md`
-- `docs/sire-compliance/fase-0/TESTS.md`
-- `docs/sire-compliance/fase-2/IMPLEMENTATION.md`
+**Key Files:**
+- **Read:** `supabase/migrations/*.sql` - 18 migration files to apply
+- **Operate via MCP:** Use mcp__supabase__* tools for all DB operations
 
 **Workflow:**
 1. Read plan.md → TODO.md → workflow.md
-2. Execute Prompt 0.1 (Add SIRE Config Fields)
-3. Execute Prompt 2.1 (Fix Manual Search RPC)
-4. Document in fase-N/ folders
-4. Stand by for FASE 5 performance optimization if needed
+2. Find next `[ ]` task in TODO.md (should be 1.1)
+3. Use Prompt 1.1 from workflow.md
+4. Apply migrations using `mcp__supabase__apply_migration`
+5. Migrate data from hoaiwcueleiemeplrurv to azytxnyiizldljxrapoe
+6. Validate with `mcp__supabase__list_tables`, `mcp__supabase__get_advisors`
+7. Document results in docs/three-tier-migration/fase-1/
 
 **Key Files:**
 - **Create:** `supabase/migrations/YYYYMMDDHHMMSS_accommodation_manuals_rls.sql` - RLS policies
@@ -229,13 +226,16 @@ WHERE n.nspname IN ('public', 'hotels') AND p.prokind = 'f';
 
 ---
 
-## 📋 MAPEO GIT ↔ SUPABASE
+## 📋 MAPEO GIT ↔ SUPABASE (NEW - Three-Tier Model)
 
 | Git Branch | Infrastructure | Project Ref | Auto-Deploy | Status |
 |------------|----------------|-------------|-------------|--------|
-| dev | Supabase branch | rvjmwwvkhglcuqwcznph | ✅ Yes | ACTIVE |
-| staging | VPS + Supabase | ztfslsrkemlfjqpzksir | ✅ Yes | ACTIVE |
-| main | VPS + Supabase | ooaumjzaztmutltifhoq | ⚠️ Manual | ACTIVE |
+| dev | Localhost | azytxnyiizldljxrapoe | Via GitHub Actions | MIGRATING |
+| tst | VPS staging.muva.chat | bddcvjoeoiekzfetvxoe | Via GitHub Actions | MIGRATING |
+| prd | VPS muva.chat | kprqghwdnaykxhostivv (main) | Via GitHub Actions | MIGRATING |
+
+**Old Infrastructure (DEPRECATED - DO NOT USE):**
+- Rama staging (hoaiwcueleiemeplrurv) del proyecto ooaumjzaztmutltifhoq - Mantener solo como backup
 
 ---
 

@@ -83,7 +83,7 @@ This document describes the **Three Environments CI/CD System** implemented in O
 │  ┌──────▼─────┐      ┌───────▼──────┐     ┌────────▼──────┐  │
 │  │  Supabase  │      │   Supabase   │     │   Supabase    │  │
 │  │ Development│      │   Staging    │     │  Production   │  │
-│  │ rvjmww...  │      │ ztfslsr...   │     │ ooaumjz...    │  │
+│  │ azytxny... │      │ bddcvjoe...  │     │ kprqghw...    │  │
 │  └────────────┘      └──────────────┘     └───────────────┘  │
 │         │                     │                     │          │
 │         │                     │                     │          │
@@ -163,8 +163,8 @@ This document describes the **Three Environments CI/CD System** implemented in O
 - **Access:** Team members via Supabase organization
 
 #### Staging
-- **Project ID:** `ztfslsrkemlfjqpzksir`
-- **URL:** `https://ztfslsrkemlfjqpzksir.supabase.co`
+- **Project ID:** `[DEPRECATED-OLD-STAGING]`
+- **URL:** `https://[DEPRECATED-OLD-STAGING].supabase.co`
 - **Dashboard:** Supabase Dashboard → STAGING project
 - **Access:** Team members via Supabase organization
 

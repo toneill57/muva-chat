@@ -192,7 +192,7 @@ All scripts in `/scripts/` directory:
 | Environment | Project ID | URL |
 |-------------|------------|-----|
 | **Dev** | rvjmwwvkhglcuqwcznph | https://rvjmwwvkhglcuqwcznph.supabase.co |
-| **Staging** | ztfslsrkemlfjqpzksir | https://ztfslsrkemlfjqpzksir.supabase.co |
+| **Staging** | [DEPRECATED-OLD-STAGING] | https://[DEPRECATED-OLD-STAGING].supabase.co |
 | **Production** | ooaumjzaztmutltifhoq | https://ooaumjzaztmutltifhoq.supabase.co |
 
 ---

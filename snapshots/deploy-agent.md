@@ -17,36 +17,42 @@ infrastructure: VPS_HOSTINGER
 
 ---
 
-## 🎯 CURRENT PROJECT: Three Environments CI/CD (November 2, 2025)
+## 🎯 CURRENT PROJECT: Three-Tier Migration (November 16, 2025)
 
-**Status:** ✅ FASE 3 COMPLETADA - Staging Workflow Enhanced
-**Priority:** 🔴 HIGH - Infrastructure Foundation
-**Your Role:** Primary agent for CI/CD pipelines and deployment automation
+**Status:** Planning Complete - Ready for FASE 4, 5
 
-### Project Overview
+**My Responsibility:**
+- **FASE 4:** GitHub Actions y Secrets (30 min)
+  - Renombrar workflows: deploy-staging.yml → deploy-tst.yml
+  - Crear deploy-prd.yml, actualizar validate-dev.yml
+  - Configurar 15 GitHub Secrets (DEV_*, TST_*, PRD_*)
+- **FASE 5:** Deployment VPS (30 min)
+  - Actualizar .env.local en VPS staging → tst (bddcvjoeoiekzfetvxoe)
+  - Actualizar .env.local en VPS production → prd (kprqghwdnaykxhostivv)
+  - Restart PM2, health checks en staging.muva.chat y muva.chat
 
-Implementar sistema de tres ambientes (dev → staging → production) con despliegue automático, sincronización de Supabase Branching, y branch protection rules.
+**Planning Files:**
+- `docs/three-tier-migration/plan.md` - Complete architecture (285 lines)
+- `docs/three-tier-migration/TODO.md` - 45 tasks, my tasks are 4.1-4.7 and 5.1-5.7
+- `docs/three-tier-migration/three-tier-migration-prompt-workflow.md` - Prompts 4.1, 5.1 ready
 
-### ✅ COMPLETED PHASES
+**Key Files to Create/Modify:**
+- `.github/workflows/deploy-tst.yml` - TST deployment workflow
+- `.github/workflows/deploy-prd.yml` - PRD deployment workflow
+- `.github/workflows/validate-dev.yml` - Update project IDs
 
-**FASE 1** (database-agent): Supabase Branching Setup - COMPLETADO
-**FASE 2** (deploy-agent): Dev Branch Validation - COMPLETADO
-**FASE 3** (deploy-agent): **Enhanced Staging Workflow - COMPLETADO ✅**
+**VPS Files to Modify:**
+- `/var/www/muva-chat-staging/.env.local` - Update to tst credentials
+- `/var/www/muva-chat/.env.local` - Update to prd credentials
 
-### FASE 3 - Completion Summary (Nov 2, 2025)
-
-**Commits:** 5 (4709e34 → dc8fdb9)
-**Scripts Created:** 4 TypeScript scripts (770 lines total)
-**Issues Resolved:** 6 critical deployment bugs
-**Deployment Success:** 100% after fixes
-
-**Deliverables:**
-- ✅ `scripts/apply-migrations-staging-v2.ts` - psql-based migrations
-- ✅ `scripts/rollback-migration-staging-v2.ts` - psql-based rollback
-- ✅ `scripts/verify-schema-staging.ts` - Schema health checks
-- ✅ `scripts/health-check-staging.ts` - Post-deploy verification
-- ✅ Updated `.github/workflows/deploy-staging.yml` - 8-step automated workflow
-- ✅ `docs/infrastructure/three-environments/FASE3_COMPLETION_SUMMARY.md` - Full documentation
+**Workflow:**
+1. Wait for FASE 1, 2, 3 completion
+2. Read plan.md → TODO.md → workflow.md
+3. Use Prompt 4.1 for GitHub Actions configuration
+4. Use Prompt 5.1 for VPS deployment
+5. SSH to 195.200.6.216 for VPS updates
+6. Restart PM2: muva-staging and muva-production
+7. Validate health checks on both domains
 
 **Key Technical Achievement:**
 Direct psql execution for DDL migrations (Supabase client cannot execute DDL)

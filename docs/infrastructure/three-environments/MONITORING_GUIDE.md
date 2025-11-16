@@ -262,7 +262,7 @@ export DEV_SUPABASE_PROJECT_ID="rvjmwwvkhglcuqwcznph"
 
 # Staging
 export STAGING_URL="https://simmerdown.staging.muva.chat"
-export STAGING_SUPABASE_PROJECT_ID="ztfslsrkemlfjqpzksir"
+export STAGING_SUPABASE_PROJECT_ID="[DEPRECATED-OLD-STAGING]"
 
 # Production
 export PROD_URL="https://simmerdown.muva.chat"

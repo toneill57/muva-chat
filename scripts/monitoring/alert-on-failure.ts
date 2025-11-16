@@ -55,7 +55,7 @@ const ENVIRONMENTS: Record<string, EnvironmentConfig> = {
     name: 'staging',
     displayName: 'Staging',
     url: process.env.STAGING_URL || 'https://simmerdown.staging.muva.chat',
-    projectId: process.env.STAGING_SUPABASE_PROJECT_ID || 'ztfslsrkemlfjqpzksir',
+    projectId: process.env.STAGING_SUPABASE_PROJECT_ID || 'bddcvjoeoiekzfetvxoe', // NEW TST environment
     pm2Name: 'muva-staging',
   },
   production: {

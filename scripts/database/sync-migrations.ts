@@ -44,7 +44,7 @@ const SUPABASE_PROJECTS = {
     envKey: 'SUPABASE_SERVICE_ROLE_KEY',
   },
   production: {
-    id: 'ztfslsrkemlfjqpzksir',
+    id: 'bddcvjoeoiekzfetvxoe', // NEW TST environment
     name: 'Production',
     envKey: 'SUPABASE_SERVICE_ROLE_KEY_PRODUCTION',
   },

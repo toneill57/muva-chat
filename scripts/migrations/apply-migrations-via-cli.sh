@@ -1,20 +1,20 @@
 #!/bin/bash
 
 # Apply Data Migrations to Branch via Supabase CLI
-# Branch: migration-test-fresh (ztfslsrkemlfqjpzksir)
+# Branch: tst (bddcvjoeoiekzfetvxoe - NEW TST environment)
 
 echo "🚀 Applying data migrations to branch..."
 
 # Get branch connection string
 echo ""
 echo "📋 Step 1: Get branch database password from dashboard"
-echo "   Go to: https://supabase.com/dashboard/project/ztfslsrkemlfqjpzksir/settings/database"
+echo "   Go to: https://supabase.com/dashboard/project/bddcvjoeoiekzfetvxoe/settings/database"
 echo "   Copy the 'Database password'"
 echo ""
 read -p "Enter database password: " DB_PASSWORD
 
 # Connection string
-DB_URL="postgresql://postgres:${DB_PASSWORD}@db.ztfslsrkemlfqjpzksir.supabase.co:5432/postgres"
+DB_URL="postgresql://postgres:${DB_PASSWORD}@db.bddcvjoeoiekzfetvxoe.supabase.co:5432/postgres"
 
 echo ""
 echo "📄 Applying migrations..."

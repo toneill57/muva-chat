@@ -211,7 +211,7 @@ OPENAI_API_KEY=sk-... (shared)
 
 #### Staging (VPS: /var/www/muva-chat-staging/.env.production)
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://ztfslsrkemlfjqpzksir.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://[DEPRECATED-OLD-STAGING].supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ... (staging anon key)
 SUPABASE_SERVICE_ROLE_KEY=eyJ... (staging service role key)
 # ... same API keys

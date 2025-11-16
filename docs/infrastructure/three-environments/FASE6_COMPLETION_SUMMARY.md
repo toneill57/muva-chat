@@ -299,7 +299,7 @@ const SUPABASE_PROJECTS = {
     envKey: 'SUPABASE_SERVICE_ROLE_KEY',
   },
   production: {
-    id: 'ztfslsrkemlfjqpzksir',
+    id: '[DEPRECATED-OLD-STAGING]',
     name: 'Production',
     envKey: 'SUPABASE_SERVICE_ROLE_KEY_PRODUCTION',
   },

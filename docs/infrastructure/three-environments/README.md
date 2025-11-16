@@ -173,7 +173,7 @@ The **Three Environments CI/CD System** provides automated deployment and databa
 │       ↓ merge                                                   │
 │  ┌──────────┐        ┌─────────────────┐    ┌──────────────┐  │
 │  │ staging  │───────→│ Staging Project │───→│ VPS Staging  │  │
-│  │          │  Auto  │ ztfslsr...      │    │ staging.muva │  │
+│  │          │  Auto  │ bddcvjoe...     │    │ staging.muva │  │
 │  └──────────┘        └─────────────────┘    └──────────────┘  │
 │       │                                                         │
 │       ↓ merge + approval                                       │
@@ -243,7 +243,7 @@ The **Three Environments CI/CD System** provides automated deployment and databa
 | Environment | Application | Health Check | Database |
 |-------------|-------------|--------------|----------|
 | **Dev** | http://localhost:3000 | http://localhost:3000/api/health | rvjmwwvkhglcuqwcznph |
-| **Staging** | https://simmerdown.staging.muva.chat | https://simmerdown.staging.muva.chat/api/health | ztfslsrkemlfjqpzksir |
+| **Staging** | https://simmerdown.staging.muva.chat | https://simmerdown.staging.muva.chat/api/health | [DEPRECATED-OLD-STAGING] |
 | **Production** | https://simmerdown.muva.chat | https://simmerdown.muva.chat/api/health | ooaumjzaztmutltifhoq |
 
 ### Common Commands

@@ -19,35 +19,40 @@ sire_status: 92% Complete (10/11 E2E tests, 3/6 API tests)
 
 ---
 
-## 🎯 CURRENT PROJECT: SIRE Compliance System - Chat Conversacional (November 13, 2025)
+## 🎯 CURRENT PROJECT: Three-Tier Migration (November 16, 2025)
 
-**Status:** Planning Refinado - Ready for FASE 0
-
-**Enfoque:** Guest chat conversacional (NO staff UI, NO emails)
+**Status:** Planning Complete - Ready for FASE 3
 
 **My Responsibility:**
-- **FASE 0:** Update bookings-mapper.ts to read hotel/city config (1h)
-- **FASE 1:** Diagnóstico completo sincronización MotoPress (6h) ← NUEVA FASE
-  - Analizar sync-manager.ts + bookings-mapper.ts
-  - Crear tabla de mapeo API → DB
-  - Documentar edge cases
-  - Deliverable: MOTOPRESS_SYNC_ANALYSIS.md
-- **FASE 3:** OCR Integration (6h)
-  - Create ocr-mapper.ts (map Claude Vision → SIRE)
-  - Tests: Colombian passport, USA passport, cédula
-- **FASE 4:** Chat Extraction (11h) ← CRÍTICO
-  - Passive extraction prompt (analyze messages, extract entities)
-  - Guided questions system (when <70% complete)
-  - Integration in GuestChatInterface.tsx
-- **FASE 5:** Name Parser + Nationality Mapper (9h)
-  - Parse Latin American names (María José García López)
-  - Map country → SIRE code (USA → "249", Colombia → "170")
-- **FASE 6:** PUT Endpoint (2h)
-  - Create /api/sire/guest-data/[reservationId] endpoint
-  - Zod validation, uppercase enforcement
-- **FASE 7:** E2E Testing (2h)
-  - Complete sire-chat-extraction.test.ts
-  - Complete sire-put-endpoint.test.ts
+- **FASE 3:** Configuración Local y Scripts (20 min)
+  - Crear .env.dev, .env.tst, .env.prd con credenciales de nuevos proyectos
+  - Actualizar scripts: dev-staging.sh → dev-tst.sh
+  - Actualizar dev-production.sh → dev-prd.sh
+  - Probar localhost con .env.dev
+
+**Planning Files:**
+- `docs/three-tier-migration/plan.md` - Complete architecture (285 lines)
+- `docs/three-tier-migration/TODO.md` - 45 tasks, my tasks are 3.1-3.6
+- `docs/three-tier-migration/three-tier-migration-prompt-workflow.md` - Prompt 3.1 ready
+
+**Key Files to Create:**
+- `.env.dev` - DEV environment (azytxnyiizldljxrapoe)
+- `.env.tst` - TST environment (bddcvjoeoiekzfetvxoe)
+- `.env.prd` - PRD environment (kprqghwdnaykxhostivv)
+
+**Key Files to Modify:**
+- `scripts/deploy/dev-tst.sh` - Renamed from dev-staging.sh
+- `scripts/deploy/dev-prd.sh` - Renamed from dev-production.sh
+- `.env.local` - Update to point to .env.dev
+
+**Workflow:**
+1. Wait for FASE 1, 2 completion (database-agent)
+2. Read plan.md → TODO.md → workflow.md
+3. Use Prompt 3.1 from workflow.md
+4. Obtain keys with `mcp__supabase__get_publishable_keys`
+5. Create .env files with template from plan.md
+6. Update deployment scripts
+7. Test localhost connection
 
 **Planning Files:**
 - `docs/sire-compliance/plan.md` - Refinado (969 lines, 36-46h)

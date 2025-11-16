@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const SUPABASE_URL_STAGING = 'https://ztfslsrkemlfqjpzksir.supabase.co';
+const SUPABASE_URL_STAGING = 'https://bddcvjoeoiekzfetvxoe.supabase.co'; // NEW TST environment
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY_STAGING!;
 
 if (!SERVICE_KEY) {

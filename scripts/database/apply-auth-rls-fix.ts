@@ -25,7 +25,7 @@ try {
     `PGPASSWORD="${process.env.SUPABASE_DB_PASSWORD}" psql ` +
     `-h aws-0-us-west-1.pooler.supabase.com ` +
     `-p 6543 ` +
-    `-U postgres.ztfslsrkemlfqjpzksir ` +
+    `-U postgres.bddcvjoeoiekzfetvxoe ` + // NEW TST environment
     `-d postgres ` +
     `-f ${tmpFile}`,
     { encoding: 'utf-8', stdio: 'pipe' }

@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-const BRANCH_URL = 'https://ztfslsrkemlfqjpzksir.supabase.co';
+const BRANCH_URL = 'https://bddcvjoeoiekzfetvxoe.supabase.co'; // NEW TST environment
 const BRANCH_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0ZnNsc3JrZW1sZnFqcHprc2lyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMDM1Njg1MSwiZXhwIjoyMDQ1OTMyODUxfQ.hZBYzAr0DWd_ZWzHgY4D4b1D7iOQQc7nX4wIh7RsXrc';
 
 const supabase = createClient(BRANCH_URL, BRANCH_KEY);

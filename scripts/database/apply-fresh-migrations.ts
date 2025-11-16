@@ -1,14 +1,14 @@
 #!/usr/bin/env tsx
 /**
  * Apply All Migration Files to Fresh Supabase Branch
- * Branch ID: ztfslsrkemlfqjpzksir
+ * Branch ID: bddcvjoeoiekzfetvxoe (NEW TST environment)
  */
 
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-const PROJECT_REF = 'ztfslsrkemlfqjpzksir'
+const PROJECT_REF = 'bddcvjoeoiekzfetvxoe' // NEW TST environment
 const MIGRATIONS_DIR = '/Users/oneill/Sites/apps/muva-chat/migrations/backup-2025-10-31'
 
 // Migration files in order

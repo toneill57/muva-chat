@@ -588,7 +588,7 @@ pnpm dlx tsx scripts/detect-schema-drift.ts --source=staging --target=production
 
 📊 Comparing schemas:
    Source: Staging (ooaumjzaztmutltifhoq)
-   Target: Production (ztfslsrkemlfjqpzksir)
+   Target: Production ([DEPRECATED-OLD-STAGING])
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Schema Drift Report: Staging → Production
