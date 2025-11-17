@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     // DEBUG: Log tenant and auth info
     console.log('[delete-all] 🔍 DEBUG INFO:')
     console.log('  - Tenant ID:', tenant_id)
-    console.log('  - Staff ID:', staffInfo.id)
+    console.log('  - Staff ID:', staffInfo.staff_id)
     console.log('  - Staff Role:', staffInfo.role)
     console.log('  - Using SERVICE_ROLE_KEY:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
 
