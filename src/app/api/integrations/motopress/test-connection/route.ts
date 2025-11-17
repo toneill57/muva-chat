@@ -58,15 +58,8 @@ export async function POST(request: Request) {
       }
 
       // ✅ Decrypt credentials from database
-      console.log('[test-connection] Encrypted API key:', config.config_data.api_key?.substring(0, 20) + '...')
-      console.log('[test-connection] Encrypted secret:', config.config_data.consumer_secret?.substring(0, 20) + '...')
-
       const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
       const decryptedConsumerSecret = await decryptCredentials(config.config_data.consumer_secret)
-
-      console.log('[test-connection] Decrypted API key:', decryptedApiKey?.substring(0, 10) + '...')
-      console.log('[test-connection] Decrypted secret:', decryptedConsumerSecret?.substring(0, 10) + '...')
-
       testApiKey = decryptedApiKey
       testConsumerSecret = decryptedConsumerSecret
       testSiteUrl = config.config_data.site_url
