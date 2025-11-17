@@ -18,10 +18,10 @@ module.exports = {
     // Production Instance (muva.chat)
     // =========================================================================
     {
-      name: 'muva-chat',
+      name: 'muva-chat-prd',
       script: 'npm',
       args: 'start',
-      cwd: '/var/www/muva-chat',
+      cwd: '/var/www/muva-chat-prd',
       instances: 1,
       exec_mode: 'cluster',
 
@@ -52,13 +52,13 @@ module.exports = {
     },
 
     // =========================================================================
-    // Staging Instance (staging.muva.chat)
+    // Test Instance (staging.muva.chat)
     // =========================================================================
     {
-      name: 'muva-chat-staging',
+      name: 'muva-chat-tst',
       script: 'npm',
       args: 'start -- --port 3001',
-      cwd: '/var/www/muva-chat-staging',
+      cwd: '/var/www/muva-chat-tst',
       instances: 1,
       exec_mode: 'cluster',
 
