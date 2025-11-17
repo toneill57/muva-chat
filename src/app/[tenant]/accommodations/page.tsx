@@ -65,6 +65,7 @@ export default function AccommodationsDashboardPage() {
 
       // Fetch reservations (includes active, pending_payment, pending_admin)
       const resResponse = await fetch('/api/reservations/list?future=true', {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -96,6 +97,7 @@ export default function AccommodationsDashboardPage() {
 
       // Get total units
       const unitsResponse = await fetch(`/api/accommodations/units`, {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -107,6 +109,7 @@ export default function AccommodationsDashboardPage() {
 
       // Fetch Airbnb reservations count (all events from ICS)
       const airbnbResponse = await fetch('/api/reservations/airbnb', {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`
         }

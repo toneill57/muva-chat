@@ -97,6 +97,7 @@ export default function AccommodationUnitsPage() {
       }
 
       const response = await fetch(`/api/accommodations/units`, {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -145,6 +146,7 @@ export default function AccommodationUnitsPage() {
 
       const response = await fetch('/api/accommodation/units/delete-all', {
         method: 'POST',
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

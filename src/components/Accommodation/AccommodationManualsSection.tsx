@@ -34,6 +34,7 @@ export function AccommodationManualsSection({
   const fetcher = async (url: string) => {
     const token = localStorage.getItem('staff_token')
     const response = await fetch(url, {
+      cache: 'no-store',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -139,6 +140,7 @@ export function AccommodationManualsSection({
         const token = localStorage.getItem('staff_token')
         await fetch(`/api/accommodation-manuals/${unitId}/${existingManual.id}`, {
           method: 'DELETE',
+          cache: 'no-store',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
@@ -174,6 +176,7 @@ export function AccommodationManualsSection({
       const token = localStorage.getItem('staff_token')
       const response = await fetch(`/api/accommodation-manuals/${unitId}`, {
         method: 'POST',
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -236,6 +239,7 @@ export function AccommodationManualsSection({
       const token = localStorage.getItem('staff_token')
       const response = await fetch(`/api/accommodation-manuals/${unitId}/${manualId}`, {
         method: 'DELETE',
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -304,6 +308,7 @@ export function AccommodationManualsSection({
         try {
           const response = await fetch(`/api/accommodation-manuals/${unitId}/${manualId}`, {
             method: 'DELETE',
+            cache: 'no-store',
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'

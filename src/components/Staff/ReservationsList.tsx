@@ -184,6 +184,7 @@ export default function ReservationsList() {
 
       // Fetch all active and pending reservations (default: active,pending_payment,requires_admin_action)
       const response = await fetch('/api/reservations/list?future=true', {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -256,7 +257,9 @@ export default function ReservationsList() {
           console.log('[DEBUG] Total unit IDs found:', unitIds.size)
 
           if (unitIds.size > 0) {
-            const response = await fetch(`/api/accommodations/names?ids=${Array.from(unitIds).join(',')}`)
+            const response = await fetch(`/api/accommodations/names?ids=${Array.from(unitIds).join(',')}`, {
+              cache: 'no-store'
+            })
             const result = await response.json()
 
             if (result.success && result.data) {
@@ -308,6 +311,7 @@ export default function ReservationsList() {
 
       const response = await fetch(`/api/reservations/delete`, {
         method: 'DELETE',
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -617,6 +621,7 @@ export default function ReservationsList() {
 
       const response = await fetch('/api/integrations/motopress/delete-all-reservations', {
         method: 'DELETE',
+        cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
