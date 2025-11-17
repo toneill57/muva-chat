@@ -58,11 +58,24 @@ export async function POST(request: Request) {
       }
 
       // ✅ Decrypt credentials from database
-      const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
-      const decryptedConsumerSecret = await decryptCredentials(config.config_data.consumer_secret)
-      testApiKey = decryptedApiKey
-      testConsumerSecret = decryptedConsumerSecret
-      testSiteUrl = config.config_data.site_url
+      try {
+        const decryptedApiKey = await decryptCredentials(config.config_data.api_key)
+        const decryptedConsumerSecret = await decryptCredentials(config.config_data.consumer_secret)
+        testApiKey = decryptedApiKey
+        testConsumerSecret = decryptedConsumerSecret
+        testSiteUrl = config.config_data.site_url
+      } catch (decryptError) {
+        console.error('Failed to decrypt MotoPress credentials:', decryptError)
+        return NextResponse.json(
+          {
+            connected: false,
+            error_code: 'decryption_failed',
+            error: 'Error al desencriptar credenciales',
+            message: 'Las credenciales no pudieron ser desencriptadas. Por favor reconfigura la integración.'
+          },
+          { status: 500 }
+        )
+      }
     }
 
     if (!testApiKey || !testConsumerSecret || !testSiteUrl) {

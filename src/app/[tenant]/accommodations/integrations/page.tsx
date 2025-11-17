@@ -398,7 +398,10 @@ export default function IntegrationsPage() {
             {status?.is_active && status?.connected && (
               <SyncMotoPress
                 tenantId={tenant?.tenant_id || ''}
-                onSyncComplete={checkIntegrationStatus}
+                onSyncComplete={() => {
+                  // After successful sync, just mark as connected without re-testing
+                  setStatus(prev => prev ? { ...prev, connected: true } : null)
+                }}
               />
             )}
 
