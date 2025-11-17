@@ -50,6 +50,21 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient()
 
+    // DEBUG: Log tenant and auth info
+    console.log('[delete-all] 🔍 DEBUG INFO:')
+    console.log('  - Tenant ID:', tenant_id)
+    console.log('  - Staff ID:', staffInfo.id)
+    console.log('  - Staff Role:', staffInfo.role)
+    console.log('  - Using SERVICE_ROLE_KEY:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+
+    // Count units before delete
+    const { count: beforeCount } = await supabase
+      .from('accommodation_units_public')
+      .select('*', { count: 'exact', head: true })
+      .eq('tenant_id', tenant_id)
+
+    console.log('[delete-all] 📊 Units count BEFORE delete:', beforeCount)
+
     // Delete all accommodation units from public table
     const { data, error } = await supabase
       .from('accommodation_units_public')
@@ -58,7 +73,13 @@ export async function POST(request: NextRequest) {
       .select('unit_id')
 
     if (error) {
-      console.error('[delete-all] Error deleting accommodations:', error)
+      console.error('[delete-all] ❌ Error deleting accommodations:', error)
+      console.error('[delete-all] Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
       return NextResponse.json(
         { error: 'Failed to delete accommodations', details: error.message },
         { status: 500 }
@@ -66,6 +87,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`[delete-all] ✅ Deleted ${data?.length || 0} accommodation(s) for tenant ${tenant_id}`)
+    console.log('[delete-all] 📋 Deleted unit IDs:', data?.map(d => d.unit_id).slice(0, 5))
 
     return NextResponse.json({
       success: true,
