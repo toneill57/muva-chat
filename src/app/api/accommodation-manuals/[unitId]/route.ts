@@ -299,7 +299,8 @@ export async function POST(
         tenant_id: tenantId,
         filename: file.name,
         file_type: 'md',
-        status: 'processing'
+        status: 'processing',
+        chunk_count: 0
       })
       .select()
       .single()

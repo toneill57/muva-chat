@@ -139,6 +139,7 @@ export function AccommodationUnitsGrid() {
       }
 
       const response = await fetch(`/api/accommodations/units`, {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -175,6 +176,7 @@ export function AccommodationUnitsGrid() {
 
       const response = await fetch('/api/accommodation/units/delete-all', {
         method: 'POST',
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

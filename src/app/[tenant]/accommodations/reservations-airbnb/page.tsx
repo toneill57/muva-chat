@@ -121,6 +121,7 @@ export default function AirbnbReservationsPage() {
 
       // Fetch reservations (all events from ICS)
       const resResponse = await fetch('/api/reservations/airbnb', {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -171,6 +172,7 @@ export default function AirbnbReservationsPage() {
 
       // Fetch properties for filter
       const propsResponse = await fetch('/api/accommodations/units', {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -51,6 +51,7 @@ export default function UnitDetailPage({ params }: Props) {
 
       // Fetch all units from API (client-side fetch includes subdomain header from middleware)
       const response = await fetch(`/api/accommodations/units`, {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

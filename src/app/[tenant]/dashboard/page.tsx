@@ -40,6 +40,7 @@ export default function AdminDashboardPage() {
         }
 
         const response = await fetch('/api/analytics/dashboard-stats', {
+          cache: 'no-store',
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -117,6 +118,7 @@ export default function AdminDashboardPage() {
     try {
       const response = await fetch('/api/guest/conversations/clear-all', {
         method: 'DELETE',
+        cache: 'no-store',
       });
 
       const data = await response.json();
