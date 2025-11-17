@@ -260,54 +260,55 @@ jobs:
       #     SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
       #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
 
-      - name: Rollback VPS Deployment
-        if: |
-          failure() ||
-          steps.deploy.outcome == 'failure' ||
-          steps.health_check.outcome == 'failure'
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.PRD_VPS_HOST }}
-          username: ${{ secrets.PRD_VPS_USER }}
-          key: ${{ secrets.PRD_VPS_SSH_KEY }}
-          script: |
-            set -e
-
-            echo "================================================"
-            echo "🔄 ROLLBACK - Reverting to previous version"
-            echo "================================================"
-
-            cd /var/www/muva-chat-prd
-
-            # Show current commit
-            echo "Failed commit: $(git log -1 --oneline)"
-
-            # Reset to previous commit
-            git reset --hard HEAD~1
-
-            echo "Rolled back to: $(git log -1 --oneline)"
-
-            # Reinstall dependencies (in case package.json changed)
-            pnpm install --frozen-lockfile
-
-            # Note: .next/ directory from previous successful build is preserved by git reset
-            # No rebuild needed - VPS lacks resources for builds
-
-            # Reload PM2
-            pm2 restart muva-chat-prd
-            pm2 save
-
-            # Wait and verify
-            sleep 10
-
-            echo ""
-            echo "PM2 Status after rollback:"
-            pm2 status muva-chat-prd
-
-            echo ""
-            echo "================================================"
-            echo "✅ Rollback completed"
-            echo "================================================"
+      # TODO: Re-enable rollback after stabilizing deployments
+      # - name: Rollback VPS Deployment
+      #   if: |
+      #     failure() ||
+      #     steps.deploy.outcome == 'failure' ||
+      #     steps.health_check.outcome == 'failure'
+      #   uses: appleboy/ssh-action@v1.0.0
+      #   with:
+      #     host: ${{ secrets.PRD_VPS_HOST }}
+      #     username: ${{ secrets.PRD_VPS_USER }}
+      #     key: ${{ secrets.PRD_VPS_SSH_KEY }}
+      #     script: |
+      #       set -e
+      #
+      #       echo "================================================"
+      #       echo "🔄 ROLLBACK - Reverting to previous version"
+      #       echo "================================================"
+      #
+      #       cd /var/www/muva-chat-prd
+      #
+      #       # Show current commit
+      #       echo "Failed commit: $(git log -1 --oneline)"
+      #
+      #       # Reset to previous commit
+      #       git reset --hard HEAD~1
+      #
+      #       echo "Rolled back to: $(git log -1 --oneline)"
+      #
+      #       # Reinstall dependencies (in case package.json changed)
+      #       pnpm install --frozen-lockfile
+      #
+      #       # Note: .next/ directory from previous successful build is preserved by git reset
+      #       # No rebuild needed - VPS lacks resources for builds
+      #
+      #       # Reload PM2
+      #       pm2 restart muva-chat-prd
+      #       pm2 save
+      #
+      #       # Wait and verify
+      #       sleep 10
+      #
+      #       echo ""
+      #       echo "PM2 Status after rollback:"
+      #       pm2 status muva-chat-prd
+      #
+      #       echo ""
+      #       echo "================================================"
+      #       echo "✅ Rollback completed"
+      #       echo "================================================"
 
       # TODO: Re-enable if backup/migrations are enabled
       # - name: Restore Database from Backup (Manual Trigger Only)
