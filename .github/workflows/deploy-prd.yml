@@ -93,39 +93,40 @@ jobs:
           strip_components: 0
           overwrite: true
 
-      - name: Install PostgreSQL Client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+      # TODO: Re-enable if needed
+      # - name: Install PostgreSQL Client
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y postgresql-client
 
-      - name: Backup Production Database
-        id: backup
-        run: pnpm dlx tsx scripts/backup-prd-db.ts
-        env:
-          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
-          GITHUB_SHA: ${{ github.sha }}
-        continue-on-error: false
+      # - name: Backup Production Database
+      #   id: backup
+      #   run: pnpm dlx tsx scripts/backup-prd-db.ts
+      #   env:
+      #     SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+      #     GITHUB_SHA: ${{ github.sha }}
+      #   continue-on-error: false
 
-      - name: Upload Backup to Artifacts
-        if: steps.backup.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: prd-backup-${{ github.sha }}
-          path: backups/prd-*.sql.gz
-          retention-days: 30
+      # - name: Upload Backup to Artifacts
+      #   if: steps.backup.outcome == 'success'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: prd-backup-${{ github.sha }}
+      #     path: backups/prd-*.sql.gz
+      #     retention-days: 30
 
-      - name: Apply Supabase Migrations
-        id: migrations
-        run: pnpm dlx tsx scripts/apply-migrations-prd.ts
-        env:
-          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
-        continue-on-error: true
+      # - name: Apply Supabase Migrations
+      #   id: migrations
+      #   run: pnpm dlx tsx scripts/apply-migrations-prd.ts
+      #   env:
+      #     SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+      #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+      #   continue-on-error: true
 
       - name: Deploy to VPS Production
-        if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
+        # if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
         id: deploy
         uses: appleboy/ssh-action@v1.0.0
         env:
@@ -239,30 +240,29 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
         continue-on-error: true
 
-      - name: Rollback on Failure
-        if: |
-          failure() ||
-          steps.migrations.outcome == 'failure' ||
-          steps.deploy.outcome == 'failure' ||
-          steps.health_check.outcome == 'failure'
-        run: |
-          echo ""
-          echo "================================================"
-          echo "⚠️  PRD DEPLOYMENT FAILED - INITIATING ROLLBACK"
-          echo "================================================"
-          echo ""
-
-          # Rollback migration records (using prd script)
-          pnpm dlx tsx scripts/rollback-prd.ts --steps=1
-        env:
-          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+      # TODO: Re-enable if migrations are enabled
+      # - name: Rollback on Failure
+      #   if: |
+      #     failure() ||
+      #     steps.deploy.outcome == 'failure' ||
+      #     steps.health_check.outcome == 'failure'
+      #   run: |
+      #     echo ""
+      #     echo "================================================"
+      #     echo "⚠️  PRD DEPLOYMENT FAILED - INITIATING ROLLBACK"
+      #     echo "================================================"
+      #     echo ""
+      #
+      #     # Rollback migration records (using prd script)
+      #     pnpm dlx tsx scripts/rollback-prd.ts --steps=1
+      #   env:
+      #     SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+      #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
 
       - name: Rollback VPS Deployment
         if: |
           failure() ||
-          steps.migrations.outcome == 'failure' ||
           steps.deploy.outcome == 'failure' ||
           steps.health_check.outcome == 'failure'
         uses: appleboy/ssh-action@v1.0.0
@@ -290,8 +290,8 @@ jobs:
             # Reinstall dependencies (in case package.json changed)
             pnpm install --frozen-lockfile
 
-            # Rebuild
-            pnpm run build
+            # Note: .next/ directory from previous successful build is preserved by git reset
+            # No rebuild needed - VPS lacks resources for builds
 
             # Reload PM2
             pm2 restart muva-chat-prd
@@ -309,19 +309,20 @@ jobs:
             echo "✅ Rollback completed"
             echo "================================================"
 
-      - name: Restore Database from Backup (Manual Trigger Only)
-        if: failure() && github.event_name == 'workflow_dispatch'
-        run: |
-          echo ""
-          echo "================================================"
-          echo "💾 Restoring database from backup"
-          echo "================================================"
-          echo ""
-          pnpm dlx tsx scripts/rollback-prd.ts --restore-db
-        env:
-          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+      # TODO: Re-enable if backup/migrations are enabled
+      # - name: Restore Database from Backup (Manual Trigger Only)
+      #   if: failure() && github.event_name == 'workflow_dispatch'
+      #   run: |
+      #     echo ""
+      #     echo "================================================"
+      #     echo "💾 Restoring database from backup"
+      #     echo "================================================"
+      #     echo ""
+      #     pnpm dlx tsx scripts/rollback-prd.ts --restore-db
+      #   env:
+      #     SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+      #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
 
       - name: Notify Success
         if: success()

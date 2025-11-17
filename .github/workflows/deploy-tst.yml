@@ -278,8 +278,8 @@ jobs:
             # Reinstall dependencies (in case package.json changed)
             pnpm install --frozen-lockfile
 
-            # Rebuild
-            pnpm run build
+            # Note: .next/ directory from previous successful build is preserved by git reset
+            # No rebuild needed - VPS lacks resources for builds
 
             # Reload PM2
             pm2 restart muva-chat-tst
