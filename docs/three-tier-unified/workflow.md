@@ -30,7 +30,7 @@ ARQUITECTURA FINAL:
 - prd → muva.chat (schema sin datos)
 
 FASES PENDIENTES:
-- FASE 0: Preparación (10 min)
+- FASE 0: ✅ YA COMPLETADA Preparación (10 min)
 - FASE 1: ✅ YA COMPLETADA - Saltar a FASE 2
 - FASE 2-7: Ejecutar según workflow.md
 

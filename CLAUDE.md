@@ -18,25 +18,6 @@ Guidance for Claude Code when working with this repository.
 - `/with-me` - Public chat (anonymous, pre-booking)
 - `/my-stay` - Guest portal (authenticated: check-in date + phone last 4 digits)
 
----
-
-## REGLAS CRÍTICAS
-
-### 0. AMBIENTE DE DESARROLLO - STAGING FIRST
-
-**SIEMPRE trabajar en STAGING primero. NUNCA en producción.**
-
-**Environment Setup:**
-- `localhost:3001` → **STAGING** (`hoaiwcueleiemeplrurv`)
-- `localhost:3000` → **PRODUCTION** (`ooaumjzaztmutltifhoq`) - solo lectura
-
-**Comandos:**
-```bash
-pnpm run dev:staging   # Port 3001
-pnpm run dev:production # Port 3000
-```
-
-Ver: `QUICK_START_DUAL_ENV.md` para setup completo
 
 ---
 
@@ -151,8 +132,9 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 ## Documentation
 
 - `snapshots/general-snapshot.md` - Estado completo del proyecto
-- `docs/infrastructure/three-environments/README.md` - Arquitectura de 3 ambientes
-- `docs/infrastructure/three-environments/QUICK_REFERENCE.md` - Referencia rápida (1 página)
+- `docs/three-tier-unified/README.md` - Arquitectura three-tier (dev/tst/prd)
+- `docs/three-tier-unified/workflow.md` - Workflow de migración
+- `docs/three-tier-unified/ROLLBACK_PLAN.md` - Procedimientos de rollback
 
 ---
 
@@ -168,4 +150,4 @@ pnpm run test:rpc              # Run RPC tests
 
 ---
 
-**Last Updated:** November 8, 2025
+**Last Updated:** November 16, 2025 (Three-Tier Migration Completed)

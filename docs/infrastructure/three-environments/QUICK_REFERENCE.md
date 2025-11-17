@@ -187,13 +187,17 @@ All scripts in `/scripts/` directory:
 
 ---
 
-## Supabase Project IDs
+## Supabase Project IDs (Three-Tier)
 
-| Environment | Project ID | URL |
-|-------------|------------|-----|
-| **Dev** | rvjmwwvkhglcuqwcznph | https://rvjmwwvkhglcuqwcznph.supabase.co |
-| **Staging** | [DEPRECATED-OLD-STAGING] | https://[DEPRECATED-OLD-STAGING].supabase.co |
-| **Production** | ooaumjzaztmutltifhoq | https://ooaumjzaztmutltifhoq.supabase.co |
+| Environment | Project ID | URL | Status |
+|-------------|------------|-----|--------|
+| **Dev** | rvjmwwvkhglcuqwcznph | https://rvjmwwvkhglcuqwcznph.supabase.co | ✅ Active |
+| **Tst** | bddcvjoeoiekzfetvxoe | https://bddcvjoeoiekzfetvxoe.supabase.co | ✅ Active |
+| **Prd** | kprqghwdnaykxhostivv | https://kprqghwdnaykxhostivv.supabase.co | ✅ Active |
+
+**Legacy IDs (Pre-Nov 2025 Migration):**
+- Old Staging: `hoaiwcueleiemeplrurv` → Migrated to Tst (bddcvjoeoiekzfetvxoe)
+- Old Production: `ooaumjzaztmutltifhoq` → Migrated to Prd (kprqghwdnaykxhostivv)
 
 ---
 
@@ -238,6 +242,6 @@ alias muva-deploy-staging='git checkout staging && git merge dev && git push ori
 
 ---
 
-**Print Date:** November 5, 2025
-**Version:** 1.0.0
+**Print Date:** November 16, 2025
+**Version:** 2.0.0 (Three-Tier Migration)
 **Keep this card handy for quick reference!**

@@ -57,16 +57,24 @@ pnpm install
 
 ### 2. Configurar variables de entorno
 
-Crear `.env.local`:
+Crear `.env.local` según el ambiente:
 
+**Development (local):**
 ```env
-SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+SUPABASE_URL=https://rvjmwwvkhglcuqwcznph.supabase.co
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 OPENAI_API_KEY=sk-proj-...
 ANTHROPIC_API_KEY=sk-ant-api03-...
 CLAUDE_MODEL=claude-3-5-haiku-20241022
 CLAUDE_MAX_TOKENS=800
 ```
+
+**Three-Tier Architecture:**
+- **Dev**: `rvjmwwvkhglcuqwcznph` (localhost:3000)
+- **Tst**: `bddcvjoeoiekzfetvxoe` (staging.muva.chat)
+- **Prd**: `kprqghwdnaykxhostivv` (muva.chat)
+
+Ver archivos `.env.dev`, `.env.tst`, `.env.prd` para configuraciones completas.
 
 ### 3. Ejecutar en desarrollo
 

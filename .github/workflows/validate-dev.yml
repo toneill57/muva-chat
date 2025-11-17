@@ -48,6 +48,7 @@ jobs:
         run: pnpm run build
         env:
           # Use dev environment variables for build validation
+          # DEV Project: azytxnyiizldljxrapoe (Three-tier architecture)
           NODE_ENV: production
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.DEV_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.DEV_SUPABASE_ANON_KEY }}

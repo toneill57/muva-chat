@@ -1,0 +1,350 @@
+name: Deploy to VPS Production (PRD)
+
+on:
+  push:
+    branches:
+      - prd
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://muva.chat
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate RPC Functions (Pre-Deploy Gate)
+        id: validate_rpc
+        run: pnpm run validate:rpc -- --env=prd
+        env:
+          PRD_SUPABASE_URL: ${{ secrets.PRD_SUPABASE_URL }}
+          PRD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+        continue-on-error: false
+
+      - name: Auto-Fix RPC Functions (If Validation Failed)
+        if: failure() && steps.validate_rpc.outcome == 'failure'
+        run: |
+          echo "⚠️  RPC validation failed - attempting auto-fix..."
+          pnpm run validate:rpc:fix -- --env=prd
+        env:
+          PRD_SUPABASE_URL: ${{ secrets.PRD_SUPABASE_URL }}
+          PRD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Re-validate RPC Functions (After Auto-Fix)
+        if: steps.validate_rpc.outcome == 'failure'
+        run: pnpm run validate:rpc -- --env=prd
+        env:
+          PRD_SUPABASE_URL: ${{ secrets.PRD_SUPABASE_URL }}
+          PRD_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+
+      - name: Build application
+        run: pnpm run build
+        env:
+          NODE_ENV: production
+          # PRD ENVIRONMENT - Use PRD_* prefixed secrets
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PRD_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PRD_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+          # SHARED SECRETS - No prefix
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # PRD-SPECIFIC CONFIG
+          NEXT_PUBLIC_APP_URL: https://muva.chat
+          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
+
+      - name: Install PostgreSQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Backup Production Database
+        id: backup
+        run: pnpm dlx tsx scripts/backup-prd-db.ts
+        env:
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+          GITHUB_SHA: ${{ github.sha }}
+        continue-on-error: false
+
+      - name: Upload Backup to Artifacts
+        if: steps.backup.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: prd-backup-${{ github.sha }}
+          path: backups/prd-*.sql.gz
+          retention-days: 30
+
+      - name: Apply Supabase Migrations
+        id: migrations
+        run: pnpm dlx tsx scripts/apply-migrations-prd.ts
+        env:
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+        continue-on-error: true
+
+      - name: Deploy to VPS Production
+        if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
+        id: deploy
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        with:
+          # PRD VPS CREDENTIALS - Use SSH Key Authentication
+          host: ${{ secrets.PRD_VPS_HOST }}
+          username: ${{ secrets.PRD_VPS_USER }}
+          key: ${{ secrets.PRD_VPS_SSH_KEY }}
+          envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
+          script: |
+            set -e  # Exit immediately on any error
+
+            echo "================================================"
+            echo "🚀 MUVA Chat PRD Deployment - Starting"
+            echo "================================================"
+
+            # Change to prd directory
+            cd /var/www/muva-chat-prd
+            echo "✅ Current directory: $(pwd)"
+
+            # Validate it's a git repository
+            if [ ! -d ".git" ]; then
+              echo "❌ ERROR: Not a git repository"
+              echo "Current directory: $(pwd)"
+              exit 1
+            fi
+            echo "✅ Git repository verified"
+
+            # Show current git status before pull
+            echo ""
+            echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+            echo "Current commit: $(git log -1 --oneline)"
+
+            # Pull latest changes from prd branch
+            echo ""
+            echo "Pulling latest changes from prd branch..."
+            git pull --ff-only origin prd
+
+            # Show new commit
+            echo "New commit: $(git log -1 --oneline)"
+
+            # Validate package.json exists
+            if [ ! -f "package.json" ]; then
+              echo "❌ ERROR: package.json not found in $(pwd)"
+              echo "Directory contents:"
+              ls -la
+              exit 1
+            fi
+            echo "✅ package.json found"
+
+            # Create prd environment file from GitHub Secrets
+            echo ""
+            echo "Creating .env.local from GitHub Secrets..."
+            {
+              echo "# Supabase - PRD DATABASE (kprqghwdnaykxhostivv)"
+              echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.PRD_SUPABASE_URL }}"
+              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.PRD_SUPABASE_ANON_KEY }}"
+              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}"
+              echo ""
+              echo "# AI APIs"
+              echo "OPENAI_API_KEY=$OPENAI_API_KEY"
+              echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
+              echo ""
+              echo "# JWT"
+              echo "JWT_SECRET_KEY=${{ secrets.PRD_JWT_SECRET }}"
+              echo ""
+              echo "# Node Environment"
+              echo "NODE_ENV=production"
+            } > .env.local
+            echo "✅ Environment configured for prd"
+
+            # Install dependencies
+            echo ""
+            echo "Installing dependencies..."
+            pnpm install --frozen-lockfile
+            echo "✅ Dependencies installed"
+
+            # Clean build cache
+            echo ""
+            echo "Cleaning build cache..."
+            rm -rf .next
+            echo "✅ Build cache cleaned"
+
+            # Build application
+            echo ""
+            echo "Building application..."
+            pnpm run build
+            echo "✅ Build completed"
+
+            # Reload PM2 process
+            echo ""
+            echo "Reloading PM2 process (muva-chat-prd)..."
+            pm2 restart muva-chat-prd
+            pm2 save
+            echo "✅ PM2 reloaded"
+
+            # Show PM2 status
+            echo ""
+            echo "PM2 Status:"
+            pm2 status muva-chat-prd
+
+            echo ""
+            echo "================================================"
+            echo "✅ PRD Deployment completed successfully"
+            echo "================================================"
+
+      - name: Wait for application startup
+        if: steps.deploy.outcome == 'success'
+        run: sleep 30
+
+      - name: Health Check (Post-Deploy)
+        if: steps.deploy.outcome == 'success'
+        id: health_check
+        run: pnpm dlx tsx scripts/verify-prd-health.ts
+        env:
+          PRD_URL: https://muva.chat
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+        continue-on-error: true
+
+      - name: Rollback on Failure
+        if: |
+          failure() ||
+          steps.migrations.outcome == 'failure' ||
+          steps.deploy.outcome == 'failure' ||
+          steps.health_check.outcome == 'failure'
+        run: |
+          echo ""
+          echo "================================================"
+          echo "⚠️  PRD DEPLOYMENT FAILED - INITIATING ROLLBACK"
+          echo "================================================"
+          echo ""
+
+          # Rollback migration records (using prd script)
+          pnpm dlx tsx scripts/rollback-prd.ts --steps=1
+        env:
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+
+      - name: Rollback VPS Deployment
+        if: |
+          failure() ||
+          steps.migrations.outcome == 'failure' ||
+          steps.deploy.outcome == 'failure' ||
+          steps.health_check.outcome == 'failure'
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRD_VPS_HOST }}
+          username: ${{ secrets.PRD_VPS_USER }}
+          key: ${{ secrets.PRD_VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            echo "================================================"
+            echo "🔄 ROLLBACK - Reverting to previous version"
+            echo "================================================"
+
+            cd /var/www/muva-chat-prd
+
+            # Show current commit
+            echo "Failed commit: $(git log -1 --oneline)"
+
+            # Reset to previous commit
+            git reset --hard HEAD~1
+
+            echo "Rolled back to: $(git log -1 --oneline)"
+
+            # Reinstall dependencies (in case package.json changed)
+            pnpm install --frozen-lockfile
+
+            # Rebuild
+            pnpm run build
+
+            # Reload PM2
+            pm2 restart muva-chat-prd
+            pm2 save
+
+            # Wait and verify
+            sleep 10
+
+            echo ""
+            echo "PM2 Status after rollback:"
+            pm2 status muva-chat-prd
+
+            echo ""
+            echo "================================================"
+            echo "✅ Rollback completed"
+            echo "================================================"
+
+      - name: Restore Database from Backup (Manual Trigger Only)
+        if: failure() && github.event_name == 'workflow_dispatch'
+        run: |
+          echo ""
+          echo "================================================"
+          echo "💾 Restoring database from backup"
+          echo "================================================"
+          echo ""
+          pnpm dlx tsx scripts/rollback-prd.ts --restore-db
+        env:
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
+
+      - name: Notify Success
+        if: success()
+        run: |
+          echo ""
+          echo "================================================"
+          echo "🎉 PRD DEPLOYMENT SUCCESSFUL"
+          echo "================================================"
+          echo "📦 Environment: PRD"
+          echo "📂 VPS Path: /var/www/muva-chat-prd"
+          echo "🔧 PM2 Process: muva-chat-prd"
+          echo "🌐 URL: https://muva.chat"
+          echo "💾 Backup: Available in artifacts"
+          echo "================================================"
+
+      - name: Notify Failure
+        if: failure()
+        run: |
+          echo ""
+          echo "================================================"
+          echo "❌ PRD DEPLOYMENT FAILED"
+          echo "================================================"
+          echo "📦 Environment: PRD"
+          echo "⚠️  Rollback was executed"
+          echo "💾 Database backup available in artifacts"
+          echo "📋 Check logs above for details"
+          echo ""
+          echo "🚨 CRITICAL: Manual review required"
+          echo "================================================"
