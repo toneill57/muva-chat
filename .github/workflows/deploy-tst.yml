@@ -89,31 +89,32 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://staging.muva.chat
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: staging.muva.chat
 
-      - name: Check Pending Migrations
-        id: check_migrations
-        run: pnpm dlx tsx scripts/check-pending-migrations.ts
-        env:
-          SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      # TODO: Re-enable if needed (Supabase handles migrations automatically via GitHub integration)
+      # - name: Check Pending Migrations
+      #   id: check_migrations
+      #   run: pnpm dlx tsx scripts/check-pending-migrations.ts
+      #   env:
+      #     SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
-      - name: Apply Supabase Migrations
-        id: migrations
-        if: steps.check_migrations.outcome == 'failure'
-        run: pnpm dlx tsx scripts/apply-migrations-tst.ts
-        env:
-          SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      # - name: Apply Supabase Migrations
+      #   id: migrations
+      #   if: steps.check_migrations.outcome == 'failure'
+      #   run: pnpm dlx tsx scripts/apply-migrations-tst.ts
+      #   env:
+      #     SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
-      - name: Verify Schema State
-        if: steps.migrations.outcome == 'success' || steps.check_migrations.outcome == 'success'
-        id: verify_schema
-        run: pnpm dlx tsx scripts/verify-schema-tst.ts
-        env:
-          SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      # - name: Verify Schema State
+      #   if: steps.migrations.outcome == 'success' || steps.check_migrations.outcome == 'success'
+      #   id: verify_schema
+      #   run: pnpm dlx tsx scripts/verify-schema-tst.ts
+      #   env:
+      #     SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
+      #     SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy to VPS Test
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
+        # if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         uses: appleboy/ssh-action@v1.0.0
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
