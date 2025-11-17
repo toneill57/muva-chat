@@ -81,6 +81,17 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://muva.chat
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
 
+      - name: Upload build artifacts to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.PRD_VPS_HOST }}
+          username: ${{ secrets.PRD_VPS_USER }}
+          key: ${{ secrets.PRD_VPS_SSH_KEY }}
+          source: ".next,public,package.json,pnpm-lock.yaml"
+          target: "/var/www/muva-chat-prd/"
+          strip_components: 0
+          overwrite: true
+
       - name: Install PostgreSQL Client
         run: |
           sudo apt-get update
@@ -193,17 +204,8 @@ jobs:
             pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
-            # Clean build cache
-            echo ""
-            echo "Cleaning build cache..."
-            rm -rf .next
-            echo "✅ Build cache cleaned"
-
-            # Build application
-            echo ""
-            echo "Building application..."
-            pnpm run build
-            echo "✅ Build completed"
+            # Note: Build is done in GitHub Actions and uploaded via SCP
+            # No build step needed here - saves VPS resources
 
             # Reload PM2 process
             echo ""
