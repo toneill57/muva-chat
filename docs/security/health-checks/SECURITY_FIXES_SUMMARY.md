@@ -49,12 +49,12 @@
 **Manual Steps Required:**
 
 1. **Create Backup** (5 min)
-   - Go to [Supabase Dashboard → Backups](https://supabase.com/dashboard/project/ooaumjzaztmutltifhoq/database/backups)
+   - Go to [Supabase Dashboard → Backups](https://supabase.com/dashboard/project/iyeueszchbvlutlcmvcb/database/backups)
    - Click "Create Manual Backup"
    - Name: `pre-postgres-upgrade-2025-10-06`
 
 2. **Execute Upgrade** (10 min)
-   - Go to [Settings → Infrastructure](https://supabase.com/dashboard/project/ooaumjzaztmutltifhoq/settings/infrastructure)
+   - Go to [Settings → Infrastructure](https://supabase.com/dashboard/project/iyeueszchbvlutlcmvcb/settings/infrastructure)
    - Find "Database Version" section
    - Click "Upgrade to Latest Version"
    - Confirm and wait (~5-10 min downtime)

@@ -2,7 +2,7 @@
 
 **Fecha:** 2025-11-01
 **Proyecto:** MUVA Chat (Staging)
-**Supabase Project:** ooaumjzaztmutltifhoq
+**Supabase Project:** iyeueszchbvlutlcmvcb
 
 ---
 

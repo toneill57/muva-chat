@@ -72,7 +72,7 @@ cat supabase/migrations/20251006010000_enable_rls_security_fix.sql
 
 ```bash
 # 1. Link to production project
-supabase link --project-ref ooaumjzaztmutltifhoq
+supabase link --project-ref iyeueszchbvlutlcmvcb
 
 # 2. Push migration
 supabase db push
@@ -83,7 +83,7 @@ supabase db push
 
 **Option B: Supabase Dashboard**
 
-1. Go to [Supabase SQL Editor](https://supabase.com/dashboard/project/ooaumjzaztmutltifhoq/sql)
+1. Go to [Supabase SQL Editor](https://supabase.com/dashboard/project/iyeueszchbvlutlcmvcb/sql)
 2. Copy contents of `supabase/migrations/20251006010000_enable_rls_security_fix.sql`
 3. Paste into SQL editor
 4. Click **"Run"**
@@ -212,7 +212,7 @@ supabase db push
 
 ```bash
 # Preview what will be changed (NO actual changes)
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co \
+NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co \
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... \
 npx tsx scripts/fix-function-search-path.ts --dry-run
 
@@ -228,7 +228,7 @@ npx tsx scripts/fix-function-search-path.ts --dry-run
 
 ```bash
 # See detailed changes for first 5 functions
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co \
+NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co \
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... \
 npx tsx scripts/fix-function-search-path.ts --dry-run --verbose | head -100
 ```
@@ -239,7 +239,7 @@ Review the output to ensure changes look correct.
 
 ```bash
 # Apply changes (removes --dry-run flag)
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co \
+NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co \
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... \
 npx tsx scripts/fix-function-search-path.ts
 

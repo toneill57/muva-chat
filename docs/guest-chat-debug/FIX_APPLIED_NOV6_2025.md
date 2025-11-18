@@ -24,7 +24,7 @@ SET search_path TO 'public', 'extensions', 'pg_temp'  -- ✅ Incluye 'extensions
 
 ### Bases de Datos Actualizadas
 
-- ✅ **DEV** (ooaumjzaztmutltifhoq): Funciones re-creadas
+- ✅ **DEV** (iyeueszchbvlutlcmvcb): Funciones re-creadas
 - ✅ **STAGING** (rvjmwwvkhglcuqwcznph): Funciones re-creadas
 
 ### Test de Verificación

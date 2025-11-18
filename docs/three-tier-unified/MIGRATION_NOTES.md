@@ -37,7 +37,7 @@ Migración exitosa de arquitectura dual (staging/production) a three-tier (dev/t
 | Environment | Project ID | Status | Migration Target |
 |-------------|------------|--------|------------------|
 | Old Staging | hoaiwcueleiemeplrurv | DEPRECATED | → Tst (bddcvjoeoiekzfetvxoe) |
-| Old Production | ooaumjzaztmutltifhoq | DEPRECATED | → Prd (kprqghwdnaykxhostivv) |
+| Old Production | iyeueszchbvlutlcmvcb | DEPRECATED | → Prd (kprqghwdnaykxhostivv) |
 
 **Nota:** Los proyectos legacy se mantienen disponibles por 30 días para rollback de emergencia.
 

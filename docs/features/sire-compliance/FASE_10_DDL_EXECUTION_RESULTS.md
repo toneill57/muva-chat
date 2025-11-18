@@ -45,7 +45,7 @@ curl -X POST "https://api.supabase.com/v1/projects/{PROJECT_ID}/database/query" 
 
 **Requirements:**
 - `SUPABASE_ACCESS_TOKEN` in `.env.local` (Management API token)
-- Project ID: `ooaumjzaztmutltifhoq`
+- Project ID: `iyeueszchbvlutlcmvcb`
 
 **Success Indicators:**
 - Returns `[]` for successful DDL execution
@@ -122,7 +122,7 @@ npx tsx scripts/execute-ddl-via-api.ts path/to/migration.sql
 
 **File:** `src/types/supabase-database.ts`
 **Size:** 2,711 lines
-**Method:** `npx supabase gen types typescript --project-id ooaumjzaztmutltifhoq`
+**Method:** `npx supabase gen types typescript --project-id iyeueszchbvlutlcmvcb`
 **Status:** ✅ Successfully generated with all SIRE functions included
 
 ### Security Advisors Check

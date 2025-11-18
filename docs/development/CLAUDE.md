@@ -28,7 +28,7 @@ Guidance for Claude Code when working with this repository.
 
 **Environment Setup:**
 - `localhost:3001` → **STAGING** (`hoaiwcueleiemeplrurv`)
-- `localhost:3000` → **PRODUCTION** (`ooaumjzaztmutltifhoq`) - solo lectura
+- `localhost:3000` → **PRODUCTION** (`iyeueszchbvlutlcmvcb`) - solo lectura
 
 **Comandos:**
 ```bash

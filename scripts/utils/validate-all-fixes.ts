@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 async function validateFixes() {
-  const supabaseUrl = 'https://ooaumjzaztmutltifhoq.supabase.co';
+  const supabaseUrl = 'https://iyeueszchbvlutlcmvcb.supabase.co';
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 

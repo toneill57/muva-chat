@@ -26,7 +26,7 @@ Proyecto DEV original eliminado/desconectado → `.env.local` obsoleto → Nueva
 ### Proyectos Principales
 | Proyecto | ID | Status | Rol |
 |----------|-----|--------|-----|
-| MUVA | `ooaumjzaztmutltifhoq` | ACTIVE_HEALTHY | Proyecto antiguo (Sept 2) |
+| MUVA | `iyeueszchbvlutlcmvcb` | ACTIVE_HEALTHY | Proyecto antiguo (Sept 2) |
 | MUVA v1.0 | `kprqghwdnaykxhostivv` | ACTIVE_HEALTHY | **Proyecto MAIN actual** (Nov 16) |
 
 ### Ramas del Proyecto "MUVA v1.0"
@@ -757,7 +757,7 @@ SUPABASE_PROJECT_ID=ndbzuyzhfoggekjjhxrf  # ❌ NO EXISTE
 "Supabase Project: ndbzuyzhfoggekjjhxrf (NEW three-tier dev - recreated)"
 
 # Pero list_projects solo muestra:
-- ooaumjzaztmutltifhoq (MUVA - antiguo)
+- iyeueszchbvlutlcmvcb (MUVA - antiguo)
 - kprqghwdnaykxhostivv (MUVA v1.0 - actual)
 ```
 

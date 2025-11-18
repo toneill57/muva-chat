@@ -67,7 +67,7 @@ Value: [Password del VPS o SSH key privado]
 
 ```
 SUPABASE_URL_PRODUCTION
-Value: https://ooaumjzaztmutltifhoq.supabase.co
+Value: https://iyeueszchbvlutlcmvcb.supabase.co
 ```
 
 ```
@@ -87,7 +87,7 @@ Value: [Obtener de Supabase Dashboard → Settings → Database]
 
 ```
 SUPABASE_PRODUCTION_PROJECT_ID
-Value: ooaumjzaztmutltifhoq
+Value: iyeueszchbvlutlcmvcb
 ```
 
 #### 4.3 API Keys (Shared)

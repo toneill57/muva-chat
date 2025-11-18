@@ -4,8 +4,8 @@
  * Complete table inventory with dependencies, special cases, and copy strategy
  * Generated from production analysis: 2025-11-07
  * 
- * Production: ooaumjzaztmutltifhoq
- * Staging: hoaiwcueleiemeplrurv
+ * Production: kprqghwdnaykxhostivv
+ * Staging: bddcvjoeoiekzfetvxoe
  */
 
 export interface TableCopyConfig {

@@ -57,7 +57,7 @@ Before onboarding a new tenant manually, ensure you have:
 ### Option A: Using Supabase Dashboard (Recommended for non-technical users)
 
 1. **Navigate to Supabase Dashboard**
-   - Go to: https://supabase.com/dashboard/project/ooaumjzaztmutltifhoq
+   - Go to: https://supabase.com/dashboard/project/iyeueszchbvlutlcmvcb
    - Select: `Table Editor` → `tenant_registry`
 
 2. **Click "Insert row"**

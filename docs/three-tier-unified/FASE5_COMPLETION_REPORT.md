@@ -254,7 +254,7 @@ yamllint .github/workflows/validate-dev.yml
 |---------|-----------------|-----------|
 | Branch trigger | `main` | `prd` |
 | Secrets prefix | `PROD_*` | `PRD_*` |
-| Project ID | ooaumjzaztmutltifhoq | kprqghwdnaykxhostivv |
+| Project ID | iyeueszchbvlutlcmvcb | kprqghwdnaykxhostivv |
 | VPS path | `/var/www/muva-chat` | `/var/www/muva-chat-prd` |
 | PM2 process | `muva-chat` | `muva-chat-prd` |
 

@@ -157,7 +157,7 @@ ORDER BY gr.guest_name;
 ## Test Environment
 
 **Database:** Supabase PostgreSQL
-**Project:** `ooaumjzaztmutltifhoq`
+**Project:** `iyeueszchbvlutlcmvcb`
 **Schema:** `public`
 **Tools:** MCP Supabase Tools
 **Executor:** Claude Code (database-agent)

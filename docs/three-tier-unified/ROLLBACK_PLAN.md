@@ -38,7 +38,7 @@ curl https://muva.chat/api/health
 ssh -i ~/.ssh/muva_deploy root@195.200.6.216 'ls -lh /var/www/*/.env.local.backup'
 
 # 4. Legacy projects activos
-# Verificar en Supabase dashboard que hoaiwcueleiemeplrurv y ooaumjzaztmutltifhoq estén activos
+# Verificar en Supabase dashboard que hoaiwcueleiemeplrurv y iyeueszchbvlutlcmvcb estén activos
 ```
 
 ---
@@ -89,7 +89,7 @@ pm2 list
 
 **Expected Result:**
 - staging.muva.chat → hoaiwcueleiemeplrurv (old staging)
-- muva.chat → ooaumjzaztmutltifhoq (old production)
+- muva.chat → iyeueszchbvlutlcmvcb (old production)
 
 ---
 
@@ -164,7 +164,7 @@ SUPABASE_ANON_KEY=<old-staging-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<old-staging-service-key>
 
 # Production
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
 SUPABASE_ANON_KEY=<old-production-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<old-production-service-key>
 ```
@@ -257,7 +257,7 @@ Date: November 16, 2025
 ### Supabase Legacy Projects
 ```
 Staging: hoaiwcueleiemeplrurv (mantener 30 días)
-Production: ooaumjzaztmutltifhoq (mantener 30 días)
+Production: iyeueszchbvlutlcmvcb (mantener 30 días)
 ```
 
 **Retention Policy:**

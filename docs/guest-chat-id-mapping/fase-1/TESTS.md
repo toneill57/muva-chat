@@ -23,7 +23,7 @@ Verified that CASCADE DELETE foreign keys automatically delete related records w
 
 **Tenant:** Simmerdown  
 **Tenant ID:** `b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf`  
-**Supabase Project:** `ooaumjzaztmutltifhoq`  
+**Supabase Project:** `iyeueszchbvlutlcmvcb`  
 **Branch:** GuestChatDev
 
 ---

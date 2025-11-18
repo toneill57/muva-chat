@@ -10,7 +10,7 @@
  * 5. FREE without guest_chat → should reject login
  */
 
-const API_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ooaumjzaztmutltifhoq.supabase.co'
+const API_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://iyeueszchbvlutlcmvcb.supabase.co'
 const BASE_URL = 'http://localhost:3000'
 
 interface TestResult {

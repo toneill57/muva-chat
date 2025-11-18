@@ -61,7 +61,7 @@ Supabase Branching allows you to create isolated database environments from a pa
 │                    Supabase Branching                    │
 └─────────────────────────────────────────────────────────┘
 
-  Parent Project: ooaumjzaztmutltifhoq (DEV)
+  Parent Project: iyeueszchbvlutlcmvcb (DEV)
   └── Branch: staging (rvjmwwvkhglcuqwcznph)
 ```
 
@@ -69,9 +69,9 @@ Supabase Branching allows you to create isolated database environments from a pa
 
 | Git Branch | Supabase Branch | Project Ref | Environment |
 |------------|-----------------|-------------|-------------|
-| `dev` | `dev` (parent) | `ooaumjzaztmutltifhoq` | Development/Production |
+| `dev` | `dev` (parent) | `iyeueszchbvlutlcmvcb` | Development/Production |
 | `staging` | `staging` | `rvjmwwvkhglcuqwcznph` | Staging/Testing |
-| `main` | `dev` (parent) | `ooaumjzaztmutltifhoq` | Production |
+| `main` | `dev` (parent) | `iyeueszchbvlutlcmvcb` | Production |
 
 **Note**: In our architecture, the `dev` branch in Supabase IS our production database. This is intentional.
 
@@ -143,7 +143,7 @@ brew install supabase/tap/supabase
 supabase login
 
 # Create branch
-supabase branches create <branch-name> --project-ref ooaumjzaztmutltifhoq
+supabase branches create <branch-name> --project-ref iyeueszchbvlutlcmvcb
 ```
 
 ### Method 3: MCP Tools (Claude Code)
@@ -151,7 +151,7 @@ supabase branches create <branch-name> --project-ref ooaumjzaztmutltifhoq
 ```typescript
 // Use the MCP Supabase tools
 await mcp__supabase__create_branch({
-  project_id: "ooaumjzaztmutltifhoq",
+  project_id: "iyeueszchbvlutlcmvcb",
   name: "staging",
   confirm_cost_id: "<cost_confirmation_id>" // From mcp__supabase__confirm_cost
 });
@@ -231,7 +231,7 @@ pnpm dlx tsx scripts/copy-missing-tables.ts
 ```bash
 # ❌ FALLÓ - FATAL: Tenant or user not found
 PGPASSWORD="fhPqCduAAaBl0axt" pg_dump \
-  "postgresql://postgres.ooaumjzaztmutltifhoq@aws-0-us-east-1.pooler.supabase.com:5432/postgres" \
+  "postgresql://postgres.iyeueszchbvlutlcmvcb@aws-0-us-east-1.pooler.supabase.com:5432/postgres" \
   --data-only \
   --no-owner \
   --no-acl \
@@ -267,21 +267,21 @@ PGPASSWORD="3hZMdp62TmM6RycK" psql \
 
 ```typescript
 await mcp__supabase__list_branches({
-  project_id: "ooaumjzaztmutltifhoq"
+  project_id: "iyeueszchbvlutlcmvcb"
 });
 ```
 
 **Using Supabase CLI:**
 
 ```bash
-supabase branches list --project-ref ooaumjzaztmutltifhoq
+supabase branches list --project-ref iyeueszchbvlutlcmvcb
 ```
 
 **Expected Output:**
 
 ```
 NAME       STATUS             PROJECT_REF          CREATED_AT
-dev        ACTIVE_HEALTHY     ooaumjzaztmutltifhoq  2024-10-15
+dev        ACTIVE_HEALTHY     iyeueszchbvlutlcmvcb  2024-10-15
 staging    ACTIVE_HEALTHY     rvjmwwvkhglcuqwcznph  2025-11-01
 ```
 
@@ -316,7 +316,7 @@ await mcp__supabase__delete_branch({
 **Using Supabase CLI:**
 
 ```bash
-supabase branches delete <branch-name> --project-ref ooaumjzaztmutltifhoq
+supabase branches delete <branch-name> --project-ref iyeueszchbvlutlcmvcb
 ```
 
 **⚠️ Warning:** Deleting a branch is **irreversible**. All data will be lost.
@@ -452,7 +452,7 @@ pnpm dlx tsx scripts/copy-dev-to-staging.ts
 
 ```bash
 # Pause unused branches
-supabase branches pause feature-old --project-ref ooaumjzaztmutltifhoq
+supabase branches pause feature-old --project-ref iyeueszchbvlutlcmvcb
 
 # Delete completed feature branches
 supabase branches delete feature-completed
@@ -504,7 +504,7 @@ ls -la supabase/migrations/
 mv supabase/migrations/README.md docs/database/
 
 # Verify branch status
-supabase branches list --project-ref ooaumjzaztmutltifhoq
+supabase branches list --project-ref iyeueszchbvlutlcmvcb
 ```
 
 ### Error: "Tenant or user not found" (PostgreSQL)
@@ -522,7 +522,7 @@ pg_dump: error: connection to server failed: FATAL: Tenant or user not found
 1. **Verify you're using the correct password for the environment:**
 
    ```bash
-   # DEV password (ooaumjzaztmutltifhoq):
+   # DEV password (iyeueszchbvlutlcmvcb):
    fhPqCduAAaBl0axt
 
    # STAGING password (rvjmwwvkhglcuqwcznph):
@@ -624,10 +624,10 @@ pnpm dlx tsx scripts/copy-dev-to-staging.ts
 **.env.dev** (Production):
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
-SUPABASE_PROJECT_ID=ooaumjzaztmutltifhoq
+SUPABASE_PROJECT_ID=iyeueszchbvlutlcmvcb
 SUPABASE_DB_PASSWORD=fhPqCduAAaBl0axt
 NODE_ENV=development
 ```
@@ -659,13 +659,13 @@ pnpm dlx tsx scripts/copy-dev-to-staging.ts
 pnpm dlx tsx scripts/copy-missing-tables.ts
 
 # List all branches
-supabase branches list --project-ref ooaumjzaztmutltifhoq
+supabase branches list --project-ref iyeueszchbvlutlcmvcb
 
 # Delete branch
-supabase branches delete <name> --project-ref ooaumjzaztmutltifhoq
+supabase branches delete <name> --project-ref iyeueszchbvlutlcmvcb
 
 # Check branch status
-supabase branches get <name> --project-ref ooaumjzaztmutltifhoq
+supabase branches get <name> --project-ref iyeueszchbvlutlcmvcb
 ```
 
 ### Related Documentation

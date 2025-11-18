@@ -54,24 +54,24 @@ We use **prefixed naming** for GitHub Secrets to clearly identify which environm
 
 ### Development Environment
 
-Development environment connects to Supabase dev branch (project ref: `ooaumjzaztmutltifhoq`).
+Development environment connects to Supabase dev branch (project ref: `iyeueszchbvlutlcmvcb`).
 
 | Secret Name | Description | Where to Get It | Required | Used By |
 |-------------|-------------|-----------------|----------|---------|
 | `DEV_SUPABASE_URL` | Supabase project URL | Supabase Dashboard → Settings → API → Project URL | ✅ Yes | validate-dev.yml |
 | `DEV_SUPABASE_ANON_KEY` | Supabase anonymous key (public) | Supabase Dashboard → Settings → API → anon key | ✅ Yes | validate-dev.yml |
 | `DEV_SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (private) | Supabase Dashboard → Settings → API → service_role key | ✅ Yes | validate-dev.yml |
-| `DEV_SUPABASE_PROJECT_ID` | Supabase project reference ID | Project URL (e.g., `ooaumjzaztmutltifhoq`) | ⚠️ Optional | Migration scripts |
+| `DEV_SUPABASE_PROJECT_ID` | Supabase project reference ID | Project URL (e.g., `iyeueszchbvlutlcmvcb`) | ⚠️ Optional | Migration scripts |
 | `DEV_DATABASE_URL` | Direct PostgreSQL connection string | Supabase Dashboard → Settings → Database → Connection string | ⚠️ Optional | Direct DB access |
 | `DEV_SUPABASE_DB_PASSWORD` | Database password for pg_dump/psql | Supabase Dashboard → Settings → Database → Password | ⚠️ Optional | Backups, migrations |
 
 **Example Values (dev):**
 ```bash
-DEV_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+DEV_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
 DEV_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...
 DEV_SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...
-DEV_SUPABASE_PROJECT_ID=ooaumjzaztmutltifhoq
-DEV_DATABASE_URL=postgresql://postgres.ooaumjzaztmutltifhoq:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+DEV_SUPABASE_PROJECT_ID=iyeueszchbvlutlcmvcb
+DEV_DATABASE_URL=postgresql://postgres.iyeueszchbvlutlcmvcb:[PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres
 ```
 
 ---
@@ -107,14 +107,14 @@ STAGING_VPS_SSH_KEY=-----BEGIN OPENSSH PRIVATE KEY-----\n...
 
 ### Production Environment
 
-Production environment uses the main Supabase project (same as dev, project ref: `ooaumjzaztmutltifhoq`).
+Production environment uses the main Supabase project (same as dev, project ref: `iyeueszchbvlutlcmvcb`).
 
 | Secret Name | Description | Where to Get It | Required | Used By |
 |-------------|-------------|-----------------|----------|---------|
 | `PROD_SUPABASE_URL` | Supabase production URL | Supabase Dashboard → Main project → Settings → API | ✅ Yes | deploy-production.yml |
 | `PROD_SUPABASE_ANON_KEY` | Supabase production anon key | Supabase Dashboard → Main project → Settings → API | ✅ Yes | deploy-production.yml |
 | `PROD_SUPABASE_SERVICE_ROLE_KEY` | Supabase production service role key | Supabase Dashboard → Main project → Settings → API | ✅ Yes | deploy-production.yml |
-| `PROD_SUPABASE_PROJECT_ID` | Production project reference ID | Production URL (e.g., `ooaumjzaztmutltifhoq`) | ✅ Yes | Backups, migrations |
+| `PROD_SUPABASE_PROJECT_ID` | Production project reference ID | Production URL (e.g., `iyeueszchbvlutlcmvcb`) | ✅ Yes | Backups, migrations |
 | `PROD_DATABASE_URL` | Production PostgreSQL connection | Supabase Dashboard → Settings → Database | ⚠️ Optional | Direct DB access |
 | `PROD_SUPABASE_DB_PASSWORD` | Production database password | Supabase Dashboard → Settings → Database | ✅ Yes | Backups (pg_dump) |
 | `PROD_VPS_HOST` | Production VPS hostname/IP | VPS provider dashboard | ✅ Yes | SSH deployment |
@@ -123,10 +123,10 @@ Production environment uses the main Supabase project (same as dev, project ref:
 
 **Example Values (production):**
 ```bash
-PROD_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+PROD_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
 PROD_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...
 PROD_SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...
-PROD_SUPABASE_PROJECT_ID=ooaumjzaztmutltifhoq
+PROD_SUPABASE_PROJECT_ID=iyeueszchbvlutlcmvcb
 PROD_SUPABASE_DB_PASSWORD=your_secure_password_here
 PROD_VPS_HOST=muva.chat
 PROD_VPS_USER=ubuntu

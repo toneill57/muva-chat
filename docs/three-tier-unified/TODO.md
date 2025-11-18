@@ -334,7 +334,7 @@
 - [ ] Update project IDs y comandos (5 min)
   - Sección "Ambiente de Desarrollo"
   - Cambiar: hoaiwcueleiemeplrurv → bddcvjoeoiekzfetvxoe
-  - Cambiar: ooaumjzaztmutltifhoq → kprqghwdnaykxhostivv
+  - Cambiar: iyeueszchbvlutlcmvcb → kprqghwdnaykxhostivv
   - Actualizar comandos: `dev:staging` → `dev:tst`
   - Agent: **Planner (manual)**
   - Test: grep no muestra IDs viejos en CLAUDE.md
@@ -355,7 +355,7 @@
 
 ### 7.4 Buscar y reemplazar IDs viejos
 - [ ] Actualizar archivos de docs (5 min)
-  - `grep -r "ooaumjzaztmutltifhoq" docs/ CLAUDE.md`
+  - `grep -r "iyeueszchbvlutlcmvcb" docs/ CLAUDE.md`
   - `grep -r "hoaiwcueleiemeplrurv" docs/ CLAUDE.md`
   - Reemplazar según contexto
   - Agent: **Planner (manual)**

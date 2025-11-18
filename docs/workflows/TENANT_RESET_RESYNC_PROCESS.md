@@ -89,7 +89,7 @@ console.log(error ? '❌ DB access failed' : '✅ DB access OK')
 ```bash
 # Backup accommodation data
 pg_dump \
-  -h db.ooaumjzaztmutltifhoq.supabase.co \
+  -h db.iyeueszchbvlutlcmvcb.supabase.co \
   -U postgres \
   -d postgres \
   -t accommodation_units_public \

@@ -59,10 +59,10 @@ If you prefer manual configuration or need to troubleshoot:
 
 | Secret Name | Value | Notes |
 |-------------|-------|-------|
-| `DEV_SUPABASE_URL` | `https://ooaumjzaztmutltifhoq.supabase.co` | Dev Supabase project URL |
+| `DEV_SUPABASE_URL` | `https://iyeueszchbvlutlcmvcb.supabase.co` | Dev Supabase project URL |
 | `DEV_SUPABASE_ANON_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk` | Public anon key |
 | `DEV_SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc` | Private service role |
-| `DEV_SUPABASE_PROJECT_ID` | `ooaumjzaztmutltifhoq` | Project reference ID |
+| `DEV_SUPABASE_PROJECT_ID` | `iyeueszchbvlutlcmvcb` | Project reference ID |
 
 **How to add each secret:**
 1. Click **"New repository secret"**
@@ -104,10 +104,10 @@ If you prefer manual configuration or need to troubleshoot:
 
 | Secret Name | Value | Notes |
 |-------------|-------|-------|
-| `PROD_SUPABASE_URL` | `https://ooaumjzaztmutltifhoq.supabase.co` | Same as dev (base project) |
+| `PROD_SUPABASE_URL` | `https://iyeueszchbvlutlcmvcb.supabase.co` | Same as dev (base project) |
 | `PROD_SUPABASE_ANON_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk` | Production anon key |
 | `PROD_SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc` | Production service role |
-| `PROD_SUPABASE_PROJECT_ID` | `ooaumjzaztmutltifhoq` | Production project ID |
+| `PROD_SUPABASE_PROJECT_ID` | `iyeueszchbvlutlcmvcb` | Production project ID |
 
 #### VPS Credentials (3 secrets)
 

@@ -165,7 +165,7 @@ sudo mv innpilot muva-chat
 ## 🚀 Secrets Adicionales (Menos Probables)
 
 ### NEXT_PUBLIC_SUPABASE_URL
-**Valor esperado:** `https://ooaumjzaztmutltifhoq.supabase.co`
+**Valor esperado:** `https://iyeueszchbvlutlcmvcb.supabase.co`
 
 Debe coincidir con el valor en tu `.env.local`.
 

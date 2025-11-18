@@ -225,7 +225,7 @@ ORDER BY tenant;
 All queries executed using:
 ```typescript
 mcp__supabase__execute_sql({
-  project_id: "ooaumjzaztmutltifhoq",
+  project_id: "iyeueszchbvlutlcmvcb",
   query: "SELECT ... FROM accommodation_units_public WHERE ..."
 })
 ```

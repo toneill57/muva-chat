@@ -8,7 +8,7 @@ Run production and staging environments **simultaneously** in different terminal
 ```bash
 ./scripts/dev-production.sh
 ```
-- Database: `ooaumjzaztmutltifhoq` (production)
+- Database: `iyeueszchbvlutlcmvcb` (production)
 - URL: http://localhost:3000
 
 ### Terminal 2: Staging (Port 3001)

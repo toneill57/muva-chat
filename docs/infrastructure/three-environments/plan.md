@@ -63,7 +63,7 @@ Implementar un sistema de tres ambientes (dev, staging, production) con desplieg
 - SSH access configurado
 
 ✅ **Supabase Projects:**
-- DEV/Production: `ooaumjzaztmutltifhoq` → `muva.chat` (branch: dev)
+- DEV/Production: `iyeueszchbvlutlcmvcb` → `muva.chat` (branch: dev)
 - Staging: `rvjmwwvkhglcuqwcznph` → `staging.muva.chat` (branch: staging)
 - Supabase CLI disponible (via npx)
 
@@ -188,7 +188,7 @@ git push origin main
 
 **Archivos creados:**
 - `.env.template` - Template completo con todas las variables documentadas
-- `.env.dev` - Variables para ambiente dev (`ooaumjzaztmutltifhoq`)
+- `.env.dev` - Variables para ambiente dev (`iyeueszchbvlutlcmvcb`)
 - `.env.staging` - Variables para ambiente staging (`rvjmwwvkhglcuqwcznph`)
 - `.env.production` - Variables para ambiente production (mismo que dev)
 - `scripts/setup-supabase-branch.ts` - Script automatizado para crear branches

@@ -7,10 +7,10 @@
 
 ## Estado Actual (2 Branches)
 
-### Branch "dev" (ooaumjzaztmutltifhoq) - DEFAULT
+### Branch "dev" (iyeueszchbvlutlcmvcb) - DEFAULT
 
 ```
-URL: https://ooaumjzaztmutltifhoq.supabase.co
+URL: https://iyeueszchbvlutlcmvcb.supabase.co
 Status: MIGRATIONS_FAILED ⚠️
 Datos: 6,641 registros ✅
 Funciones: 90 ✅
@@ -39,7 +39,7 @@ Git Branch: staging (ACTIVA)
 
 **NO existe "proyecto base" separado.**
 
-`ooaumjzaztmutltifhoq` es SIMULTÁNEAMENTE:
+`iyeueszchbvlutlcmvcb` es SIMULTÁNEAMENTE:
 - El proyecto padre
 - El branch "dev" (default)
 
@@ -75,7 +75,7 @@ Esto es comportamiento NORMAL de Supabase Branching.
 
 | Git Branch | Supabase Branch | Project Ref | Datos | Status |
 |------------|-----------------|-------------|-------|--------|
-| dev (congelada) | dev (DEFAULT) | ooaumjzaztmutltifhoq | ✅ 6,641 | MIGRATIONS_FAILED |
+| dev (congelada) | dev (DEFAULT) | iyeueszchbvlutlcmvcb | ✅ 6,641 | MIGRATIONS_FAILED |
 | staging (activa) | staging-v21 | rmrflrttpobzlffhctjt | ❌ 0 | FUNCTIONS_DEPLOYED |
 | main | - | - | - | NO EXISTS |
 
@@ -106,7 +106,7 @@ Esto es comportamiento NORMAL de Supabase Branching.
 
 ```
 AHORA (Temporal):
-├── dev (ooaumjzaztmutltifhoq) → Desarrollo + datos producción
+├── dev (iyeueszchbvlutlcmvcb) → Desarrollo + datos producción
 └── staging-v21 (rmrflrttpobzlffhctjt) → Pre-prod (vacío)
 
 FUTURO (Ideal):
@@ -121,18 +121,18 @@ FUTURO (Ideal):
 
 ```bash
 # Listar branches
-supabase branches list --project-ref ooaumjzaztmutltifhoq
+supabase branches list --project-ref iyeueszchbvlutlcmvcb
 
 # Verificar migraciones
-supabase migration list --project-ref ooaumjzaztmutltifhoq
+supabase migration list --project-ref iyeueszchbvlutlcmvcb
 
 # Reparar migración fallida
-supabase migration repair --project-ref ooaumjzaztmutltifhoq
+supabase migration repair --project-ref iyeueszchbvlutlcmvcb
 
 # Recrear staging con datos
-supabase branches delete staging-v21 --project-ref ooaumjzaztmutltifhoq
+supabase branches delete staging-v21 --project-ref iyeueszchbvlutlcmvcb
 supabase branches create staging-v21 \
-  --project-ref ooaumjzaztmutltifhoq \
+  --project-ref iyeueszchbvlutlcmvcb \
   --with-data=true \
   --git-branch=staging
 

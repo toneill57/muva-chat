@@ -23,9 +23,9 @@
  *   --refresh       Auto-refresh every N seconds (--refresh=30)
  *
  * Environment Variables:
- *   DEV_SUPABASE_PROJECT_ID       - Dev Supabase project (default: ooaumjzaztmutltifhoq)
+ *   DEV_SUPABASE_PROJECT_ID       - Dev Supabase project (default: iyeueszchbvlutlcmvcb)
  *   STAGING_SUPABASE_PROJECT_ID   - Staging Supabase project (default: bddcvjoeoiekzfetvxoe - NEW TST)
- *   PROD_SUPABASE_PROJECT_ID      - Production Supabase project (default: ooaumjzaztmutltifhoq)
+ *   PROD_SUPABASE_PROJECT_ID      - Production Supabase project (default: kprqghwdnaykxhostivv)
  */
 
 import { execSync } from 'child_process';
@@ -49,7 +49,7 @@ const ENVIRONMENTS: Record<string, EnvironmentConfig> = {
     name: 'dev',
     displayName: 'Development',
     url: process.env.DEV_URL || 'http://localhost:3000',
-    projectId: process.env.DEV_SUPABASE_PROJECT_ID || 'rvjmwwvkhglcuqwcznph',
+    projectId: process.env.DEV_SUPABASE_PROJECT_ID || 'iyeueszchbvlutlcmvcb',
   },
   staging: {
     name: 'staging',
@@ -62,7 +62,7 @@ const ENVIRONMENTS: Record<string, EnvironmentConfig> = {
     name: 'production',
     displayName: 'Production',
     url: process.env.PROD_URL || 'https://simmerdown.muva.chat',
-    projectId: process.env.PROD_SUPABASE_PROJECT_ID || 'ooaumjzaztmutltifhoq',
+    projectId: process.env.PROD_SUPABASE_PROJECT_ID || 'kprqghwdnaykxhostivv',
     vpsPath: '/var/www/muva-chat',
   },
 };

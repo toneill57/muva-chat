@@ -318,7 +318,7 @@ get-library-docs({
 ```
 
 **Project Integration:**
-- **Project ID:** ooaumjzaztmutltifhoq
+- **Project ID:** iyeueszchbvlutlcmvcb
 - **Database:** PostgreSQL 17.4.1.075
 - **Extensions:** pgvector 0.8.0, pgcrypto, pg_stat_statements
 - **Schemas:** public, simmerdown, hotels, restaurants (multi-tenant)

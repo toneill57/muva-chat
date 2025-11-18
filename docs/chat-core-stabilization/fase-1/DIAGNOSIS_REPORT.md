@@ -263,7 +263,7 @@ See `docs/chat-core-stabilization/fase-1/SQL_QUERIES.sql` for complete query tex
 ### Agent Execution Details
 
 - Tool: MCP Supabase (`mcp__supabase__execute_sql`)
-- Project ID: `ooaumjzaztmutltifhoq`
+- Project ID: `iyeueszchbvlutlcmvcb`
 - Execution Time: ~5 minutes (4 queries)
 - Token Usage: ~60K tokens
 

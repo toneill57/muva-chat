@@ -1,13 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
 const prodClient = createClient(
-  'https://ooaumjzaztmutltifhoq.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc'
+  'https://kprqghwdnaykxhostivv.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY_PROD || '[NEEDS_UPDATE]'
 );
 
 const stagingClient = createClient(
-  'https://qlvkgniqcoisbnwwjfte.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsdmtnbmlxY29pc2Jud3dqZnRlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTUzNzgyNCwiZXhwIjoyMDc3MTEzODI0fQ.J51Dfz5-VokawODX4tI3Jx8Mz8-MuwWHCJnvp-7sZCI'
+  'https://bddcvjoeoiekzfetvxoe.supabase.co',
+  process.env.SUPABASE_SERVICE_ROLE_KEY_STAGING || '[NEEDS_UPDATE]'
 );
 
 async function copySireContent() {

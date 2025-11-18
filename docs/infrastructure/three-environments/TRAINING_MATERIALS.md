@@ -546,7 +546,7 @@ pnpm dlx tsx scripts/migration-status.ts --env=production
 
 ```bash
 # 1. Verify Supabase is up
-curl https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/
+curl https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/
 
 # 2. Check environment variables (on VPS)
 ssh vps

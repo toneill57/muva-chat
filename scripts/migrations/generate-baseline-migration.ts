@@ -9,7 +9,7 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 
-const PROD_PROJECT_ID = 'ooaumjzaztmutltifhoq';
+const PROD_PROJECT_ID = 'kprqghwdnaykxhostivv';
 const PROD_URL = 'https://' + PROD_PROJECT_ID + '.supabase.co';
 const PROD_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY_PROD!;
 

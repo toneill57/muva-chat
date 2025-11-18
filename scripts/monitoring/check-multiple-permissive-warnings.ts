@@ -3,7 +3,7 @@
  * Check for multiple_permissive_policies warnings after consolidation
  */
 
-const projectId = 'ooaumjzaztmutltifhoq';
+const projectId = 'iyeueszchbvlutlcmvcb';
 const url = `https://api.supabase.com/v1/projects/${projectId}/database/lint`;
 
 const token = process.env.SUPABASE_ACCESS_TOKEN;

@@ -375,7 +375,7 @@ pnpm dlx tsx scripts/detect-schema-drift.ts --source=staging --target=production
 **Result:**
 ```
 📊 Comparing schemas:
-   Source: Staging (ooaumjzaztmutltifhoq)
+   Source: Staging (iyeueszchbvlutlcmvcb)
    Target: Production ([DEPRECATED-OLD-STAGING])
 
 ❌ Error: SUPABASE_SERVICE_ROLE_KEY_PRODUCTION not set
@@ -412,7 +412,7 @@ pnpm dlx tsx scripts/sync-migrations.ts \
 | Environment | Project ID | Status |
 |------------|-----------|--------|
 | dev | `rvjmwwvkhglcuqwcznph` | ✅ Configured |
-| staging | `ooaumjzaztmutltifhoq` | ✅ Verified via MCP |
+| staging | `iyeueszchbvlutlcmvcb` | ✅ Verified via MCP |
 | production | `[DEPRECATED-OLD-STAGING]` | ✅ Configured |
 
 **All scripts use correct Project IDs** ✅

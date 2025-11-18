@@ -14,7 +14,7 @@ This guide documents common issues encountered in the MUVA system and their prov
 **Symptoms:**
 ```
 Failed to load resource: the server responded with a status of 500 ()
-GET https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/user_tenant_permissions?...
+GET https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/user_tenant_permissions?...
 ```
 
 **Root Causes:**

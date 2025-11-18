@@ -630,10 +630,10 @@ gh run download <run-id>
 
 ```bash
 # 1. Check Supabase dashboard
-open https://supabase.com/dashboard/project/ooaumjzaztmutltifhoq
+open https://supabase.com/dashboard/project/iyeueszchbvlutlcmvcb
 
 # 2. Check database connectivity
-curl https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/
+curl https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/
 
 # 3. If Supabase issue, wait for resolution
 # Check status: https://status.supabase.com/

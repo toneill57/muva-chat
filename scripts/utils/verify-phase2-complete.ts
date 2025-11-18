@@ -3,7 +3,7 @@
  * Final verification of Phase 2 completion
  */
 
-const PROJECT_ID = 'ooaumjzaztmutltifhoq';
+const PROJECT_ID = 'iyeueszchbvlutlcmvcb';
 
 async function queryDatabase(sql: string): Promise<any> {
   const accessToken = process.env.SUPABASE_ACCESS_TOKEN;

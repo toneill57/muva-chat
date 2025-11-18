@@ -48,7 +48,7 @@ gh auth login --web
 | `DEV_SUPABASE_SERVICE_ROLE_KEY` | Dev service role key (private) | ✅ Set |
 | `DEV_SUPABASE_PROJECT_ID` | Dev project reference ID | ✅ Set |
 
-**Project:** `ooaumjzaztmutltifhoq`
+**Project:** `iyeueszchbvlutlcmvcb`
 
 ---
 
@@ -82,7 +82,7 @@ gh auth login --web
 | `PROD_VPS_USER` | Production SSH username | ✅ Set |
 | `PROD_VPS_PASSWORD` | Production SSH password | ✅ Set |
 
-**Project:** `ooaumjzaztmutltifhoq` (same as dev)
+**Project:** `iyeueszchbvlutlcmvcb` (same as dev)
 **VPS:** `195.200.6.216` (root user, different path)
 
 ---

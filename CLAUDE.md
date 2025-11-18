@@ -12,7 +12,7 @@ Guidance for Claude Code when working with this repository.
 - Premium SIRE compliance (Colombian tourism regulatory reporting)
 - Stack: Next.js 15, TypeScript, Supabase, Claude AI
 
-**Current Projects:** Ver `snapshots/general-snapshot.md` → CURRENT PROJECT
+**Current Projects:** Multi-tenant tourism platform with SIRE compliance
 
 **Chat Routes:**
 - `/with-me` - Public chat (anonymous, pre-booking)
@@ -70,6 +70,16 @@ Layouts ya protegen rutas - NO agregar validaciones adicionales
 
 ### 9. RPC Functions Validation (CRÍTICO - Guest Chat)
 **Problema:** Funciones RPC pierden `search_path` → Guest chat NO responde sobre alojamientos
+
+### 10. Limpieza de Referencias Obsoletas
+**IMPORTANTE:** Si encuentras alguna referencia al proyecto anterior `ooaumjzaztmutltifhoq`,
+notifica inmediatamente al usuario para análisis y posible eliminación.
+Este ID corresponde al proyecto MUVA original pre-migración (obsoleto desde Nov 16, 2025).
+
+**Proyectos Actuales (Three-Tier):**
+- **DEV:** `iyeueszchbvlutlcmvcb` (rama dev)
+- **TST:** `bddcvjoeoiekzfetvxoe` (rama tst/staging)
+- **PRD:** `kprqghwdnaykxhostivv` (rama prd/production)
 
 ---
 
@@ -172,10 +182,10 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ## Documentation
 
-- `snapshots/general-snapshot.md` - Estado completo del proyecto
 - `docs/three-tier-unified/README.md` - Arquitectura three-tier (dev/tst/prd)
 - `docs/three-tier-unified/workflow.md` - Workflow de migración
 - `docs/three-tier-unified/ROLLBACK_PLAN.md` - Procedimientos de rollback
+- `docs/architecture/DATA_POPULATION_TIMELINE.md` - Flujo completo de población de datos
 
 
 ---

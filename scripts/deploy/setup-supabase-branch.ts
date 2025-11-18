@@ -11,13 +11,13 @@
  *
  * Environment Variables Required:
  *   SUPABASE_ACCESS_TOKEN - Get from https://supabase.com/dashboard/account/tokens
- *   SUPABASE_PROJECT_ID - Parent project ID (default: ooaumjzaztmutltifhoq)
+ *   SUPABASE_PROJECT_ID - Parent project ID (default: iyeueszchbvlutlcmvcb)
  */
 
 import { parseArgs } from 'node:util';
 
 // Configuration
-const PARENT_PROJECT_ID = process.env.SUPABASE_PROJECT_ID || 'ooaumjzaztmutltifhoq';
+const PARENT_PROJECT_ID = process.env.SUPABASE_PROJECT_ID || 'iyeueszchbvlutlcmvcb';
 const ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
 const API_BASE = 'https://api.supabase.com/v1';
 
@@ -221,7 +221,7 @@ Examples:
 
 Environment Variables Required:
   SUPABASE_ACCESS_TOKEN   Get from https://supabase.com/dashboard/account/tokens
-  SUPABASE_PROJECT_ID     Parent project ID (default: ooaumjzaztmutltifhoq)
+  SUPABASE_PROJECT_ID     Parent project ID (default: iyeueszchbvlutlcmvcb)
       `);
       process.exit(values.help ? 0 : 1);
     }

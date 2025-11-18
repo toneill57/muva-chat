@@ -628,7 +628,7 @@ FASE 7 si deseas actualizar docs"
    - Diagrama y tabla
 
 4. **Buscar IDs viejos** (5 min):
-   - `grep -r "ooaumjzaztmutltifhoq" docs/`
+   - `grep -r "iyeueszchbvlutlcmvcb" docs/`
    - Reemplazar
 
 5. **MIGRATION_NOTES.md** (2 min):

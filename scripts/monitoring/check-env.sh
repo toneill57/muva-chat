@@ -14,11 +14,11 @@ fi
 PROJECT_ID=$(grep "^SUPABASE_PROJECT_ID=" .env.local | cut -d'=' -f2)
 
 case "$PROJECT_ID" in
-  "ooaumjzaztmutltifhoq")
+  "iyeueszchbvlutlcmvcb")
     echo "✅ Active Environment: DEV / PRODUCTION"
     echo "   Branch: dev (or main for production)"
-    echo "   Project: ooaumjzaztmutltifhoq"
-    echo "   URL: https://ooaumjzaztmutltifhoq.supabase.co"
+    echo "   Project: iyeueszchbvlutlcmvcb"
+    echo "   URL: https://iyeueszchbvlutlcmvcb.supabase.co"
     echo "   Records: 6,641"
     ;;
   "rmrflrttpobzlffhctjt")
@@ -33,7 +33,7 @@ case "$PROJECT_ID" in
     echo "   Project: $PROJECT_ID"
     echo ""
     echo "Expected project IDs:"
-    echo "  - ooaumjzaztmutltifhoq (dev/production)"
+    echo "  - iyeueszchbvlutlcmvcb (dev/production)"
     echo "  - rmrflrttpobzlffhctjt (staging-v21)"
     ;;
 esac
