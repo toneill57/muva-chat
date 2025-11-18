@@ -1,10 +1,10 @@
 /**
- * Database Wipe API Endpoint (STAGING ONLY)
+ * Database Wipe API Endpoint (DEV/STAGING ONLY)
  *
  * DELETE /api/admin/wipe-database
- * Truncates all tables in staging database for testing purposes
+ * Truncates all tables for testing purposes
  *
- * CRITICAL: This endpoint ONLY works in staging environment
+ * CRITICAL: This endpoint is BLOCKED in production (NODE_ENV=production)
  */
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -20,27 +20,22 @@ interface WipeResponse {
 
 export async function DELETE(request: NextRequest): Promise<NextResponse<WipeResponse>> {
   try {
-    // CRITICAL: Only allow in staging environment
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-    const isStaging = supabaseUrl.includes('hoaiwcueleiemeplrurv')
-    const isProduction = supabaseUrl.includes('ooaumjzaztmutltifhoq')
-
-    if (!isStaging) {
-      console.error('[Wipe DB] BLOCKED: Not staging environment')
+    // CRITICAL: Only block in production environment
+    if (process.env.NODE_ENV === 'production') {
+      console.error('[Wipe DB] BLOCKED: Production environment')
       return NextResponse.json(
         {
           success: false,
-          message: isProduction
-            ? '🔒 BLOCKED: Database wipe is disabled in production for safety'
-            : '🔒 BLOCKED: Database wipe only allowed in staging environment',
-          environment: isProduction ? 'production' : 'unknown'
+          message: '🔒 BLOCKED: Database wipe is disabled in production for safety',
+          environment: 'production'
         },
         { status: 403 }
       )
     }
 
-    console.log('[Wipe DB] ⚠️  Starting database wipe in STAGING...')
+    console.log(`[Wipe DB] ⚠️  Starting database wipe in ${process.env.NODE_ENV} environment...`)
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
     const supabaseServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY
     if (!supabaseServiceRole) {
       return NextResponse.json(
@@ -168,8 +163,8 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<WipeRes
     return NextResponse.json(
       {
         success: true,
-        message: `✅ Staging database wiped successfully: ${wipedTables.length} tables cleared`,
-        environment: 'staging',
+        message: `✅ Database wiped successfully: ${wipedTables.length} tables cleared`,
+        environment: process.env.NODE_ENV || 'unknown',
         tables_wiped: wipedTables
       },
       { status: 200 }

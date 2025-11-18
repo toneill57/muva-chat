@@ -239,6 +239,8 @@ export class MotoPresSyncManager {
             const updateSql = `
               UPDATE hotels.accommodation_units
               SET
+                motopress_unit_id = ${unit.motopress_unit_id},
+                motopress_type_id = ${unit.motopress_type_id || 'NULL'},
                 name = '${unit.name?.replace(/'/g, "''")}',
                 description = '${unit.description?.replace(/'/g, "''") || ''}',
                 short_description = '${unit.short_description?.replace(/'/g, "''") || ''}',
@@ -278,11 +280,18 @@ export class MotoPresSyncManager {
               }
             }
           } else {
+            // DEBUG: Log unit data before INSERT
+            console.log(`[DEBUG INSERT] Unit data:`, {
+              name: unit.name,
+              motopress_unit_id: unit.motopress_unit_id,
+              motopress_type_id: unit.motopress_type_id
+            })
+
             // Create new using SQL (hotels schema) with deterministic UUID
             const insertSql = `
               INSERT INTO hotels.accommodation_units (
                 id,
-                hotel_id, tenant_id, motopress_unit_id, name, description, short_description,
+                hotel_id, tenant_id, motopress_unit_id, motopress_type_id, name, description, short_description,
                 capacity, bed_configuration, view_type, tourism_features, unique_features,
                 images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
               ) VALUES (
@@ -290,6 +299,7 @@ export class MotoPresSyncManager {
                 '${unit.hotel_id}',
                 '${unit.tenant_id}',
                 ${unit.motopress_unit_id},
+                ${unit.motopress_type_id || 'NULL'},
                 '${unit.name?.replace(/'/g, "''")}',
                 '${unit.description?.replace(/'/g, "''") || ''}',
                 '${unit.short_description?.replace(/'/g, "''") || ''}',
@@ -837,6 +847,8 @@ export class MotoPresSyncManager {
             const updateSql = `
               UPDATE hotels.accommodation_units
               SET
+                motopress_unit_id = ${unit.motopress_unit_id},
+                motopress_type_id = ${unit.motopress_type_id || 'NULL'},
                 name = '${unit.name?.replace(/'/g, "''")}',
                 description = '${unit.description?.replace(/'/g, "''") || ''}',
                 short_description = '${unit.short_description?.replace(/'/g, "''") || ''}',
@@ -876,11 +888,18 @@ export class MotoPresSyncManager {
               }
             }
           } else {
+            // DEBUG: Log unit data before INSERT
+            console.log(`[DEBUG INSERT] Unit data:`, {
+              name: unit.name,
+              motopress_unit_id: unit.motopress_unit_id,
+              motopress_type_id: unit.motopress_type_id
+            })
+
             // Create new using SQL (hotels schema) with deterministic UUID
             const insertSql = `
               INSERT INTO hotels.accommodation_units (
                 id,
-                hotel_id, tenant_id, motopress_unit_id, name, description, short_description,
+                hotel_id, tenant_id, motopress_unit_id, motopress_type_id, name, description, short_description,
                 capacity, bed_configuration, view_type, tourism_features, unique_features,
                 images, accommodation_mphb_type, pricing, status, is_featured, display_order, created_at, updated_at
               ) VALUES (
@@ -888,6 +907,7 @@ export class MotoPresSyncManager {
                 '${unit.hotel_id}',
                 '${unit.tenant_id}',
                 ${unit.motopress_unit_id},
+                ${unit.motopress_type_id || 'NULL'},
                 '${unit.name?.replace(/'/g, "''")}',
                 '${unit.description?.replace(/'/g, "''") || ''}',
                 '${unit.short_description?.replace(/'/g, "''") || ''}',

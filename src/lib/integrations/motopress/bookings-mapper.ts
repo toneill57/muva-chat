@@ -538,12 +538,15 @@ export class MotoPresBookingsMapper {
           // Extract accommodation name from _embedded data
           let accommodationName = `Alojamiento ${motopressTypeId}` // Fallback
 
-          if (booking._embedded?.accommodation_types) {
-            const matchingType = booking._embedded.accommodation_types.find(
+          // Note: WordPress REST API returns "accommodation_type" (singular) when using _embed=1
+          if (booking._embedded?.accommodation_type) {
+            const matchingType = booking._embedded.accommodation_type.find(
               (type: any) => type.id === motopressTypeId
             )
             if (matchingType?.title) {
+              // title is a string in accommodation_type responses
               accommodationName = matchingType.title
+              console.log(`[mapper]     ✅ FOUND NAME: "${accommodationName}" from _embedded.accommodation_type`)
             }
           }
 

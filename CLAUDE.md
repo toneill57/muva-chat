@@ -33,41 +33,27 @@ Investigar causa → Informar problema real → Proponer solución
 ### 4. Autonomía de Ejecución
 NUNCA pedir al usuario hacer tareas que yo puedo hacer (scripts, bash, APIs, testing)
 
-### 5. Git Workflow
-**Workflow:** `dev` (auto) → `staging` (auto) → `main` (manual approval)
-
 **COMMITS/PUSH - REQUIEREN AUTORIZACIÓN EXPLÍCITA**
 - X NUNCA commitear sin que usuario lo pida explícitamente
-- Verificar health antes de merge: `pnpm dlx tsx scripts/monitoring-dashboard.ts`
 
-### 6. Verificar `git status` Antes de 404s
+### 5. Verificar `git status` Antes de 404s
 Archivos sin commitear = causa #1 de diferencias local vs producción
 
-### 7. TypeScript Interface Changes
+### 6. TypeScript Interface Changes
 - Buscar TODOS los archivos que usan la interface
 - Agregar TODOS los campos A LA VEZ
 - `pnpm run build` local ANTES de commit
 - X NUNCA commits iterativos por campo
 
-### 8. Autenticación - NO Duplicar Validaciones
+### 7. Autenticación - NO Duplicar Validaciones
 Layouts ya protegen rutas - NO agregar validaciones adicionales
 - X NUNCA duplicar validaciones (causa logout inesperado)
 
-### 9. Monitoring First
-- ANTES de deploy: `pnpm dlx tsx scripts/monitoring-dashboard.ts`
+### 8. Monitoring First
 - DESPUÉS de deploy: Verificar health endpoints
-- X NUNCA deployear si staging está DOWN
 
-### 10. RPC Functions Validation (CRÍTICO - Guest Chat)
+### 9. RPC Functions Validation (CRÍTICO - Guest Chat)
 **Problema:** Funciones RPC pierden `search_path` → Guest chat NO responde sobre alojamientos
-
-**Validar antes de deploy:**
-```bash
-pnpm run validate:rpc -- --env=staging
-pnpm run validate:rpc:fix -- --env=staging  # Auto-fix si falla
-```
-
-Ver: `docs/guest-chat-debug/PREVENTION_SYSTEM.md`
 
 ---
 
@@ -78,10 +64,49 @@ Ver: `docs/guest-chat-debug/PREVENTION_SYSTEM.md`
 ssh -i ~/.ssh/muva_deploy root@195.200.6.216
 ```
 
-**CRITICAL:** ALWAYS use `-i ~/.ssh/muva_deploy` flag
+### Merge Workflow - GitHub API Only
 
-X NO usar `pnpm run dev` directo (falta .env.local)
-X NO crear `vercel.json` (migrado a VPS Oct 2025)
+**CRÍTICO:** Cuando usuario solicite merge entre ramas, USAR GitHub API (NO git local)
+
+**Ventajas:**
+- ✅ No contamina workspace local
+- ✅ Triggerea GitHub Actions automáticamente
+- ✅ Mantiene historial limpio
+- ✅ Funciona sin importar rama local actual
+
+**Proceso:**
+
+| Flujo | Comando | Notas |
+|-------|---------|-------|
+| **dev → tst** | `gh pr create --base tst --head dev --fill && gh pr merge --merge --auto` | Auto-merge (0 approvals) |
+| **tst → prd** | `gh pr create --base prd --head tst --fill` | Requiere 1 approval |
+
+**tst → prd - Pasos completos:**
+```bash
+# 1. Crear PR
+gh pr create --base prd --head tst --title "Deploy to Production" --body "
+## Changes
+- [Auto-generated from tst branch]
+
+## Checklist
+- [ ] TST deployment successful
+- [ ] Health checks passing
+- [ ] Ready for production
+
+Generated via GitHub API
+"
+
+# 2. Informar al usuario
+# "PR creado. Requiere 1 approval. URL: [mostrar URL del PR]"
+
+# 3. Tras approval del usuario:
+gh pr merge --merge
+```
+
+**X NUNCA usar:**
+- `git checkout <branch>`
+- `git merge <branch>`
+- `git push origin <branch>`
 
 ---
 
@@ -136,18 +161,10 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 - `docs/three-tier-unified/workflow.md` - Workflow de migración
 - `docs/three-tier-unified/ROLLBACK_PLAN.md` - Procedimientos de rollback
 
----
-
-## Validation Commands
-
-**Pre-deploy checks:**
-```bash
-pnpm run validate:rpc          # Validate RPC functions
-pnpm run validate:rpc:fix      # Auto-fix RPC functions
-pnpm run test:rpc              # Run RPC tests
-./scripts/pre-deploy-check.sh staging  # Full validation
-```
 
 ---
 
+- Si estuvieras accediendo a un VPS por SSH nunca modifiques código ya que se rompe el patrón de trabajar con tres ambientes
+- El ambiente tst a veces puede ser referido como staging pero debes tener en cuenta que las ramas de supabase y de github se llaman tst
+- IMPORTANTE: Cualquier solicitud de modificar la base de datos tst o producción debe ser consultada al usuario para su confirmación
 **Last Updated:** November 16, 2025 (Three-Tier Migration Completed)

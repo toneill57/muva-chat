@@ -1,6 +1,6 @@
 interface MotoPresAccommodation {
   id: number
-  title: string  // MotoPress returns plain string
+  title: string | { rendered: string }  // WordPress REST API can return both formats
   description?: string  // HTML description
   excerpt?: string  // Clean text description
   status: string
@@ -219,6 +219,9 @@ export class MotoPresClient {
     params.append('per_page', perPage.toString())
     if (dateFrom) params.append('date_from', dateFrom)
     if (dateTo) params.append('date_to', dateTo)
+
+    // Include embedded resources to get real accommodation names (WordPress REST API format)
+    params.append('_embed', '1')
 
     return this.makeRequest<any[]>(`/bookings?${params.toString()}`)
   }

@@ -1,10 +1,10 @@
 'use client'
 
 /**
- * Database Wipe Button Component (STAGING ONLY)
+ * Database Wipe Button Component (DEV ONLY)
  *
- * Provides a UI button to wipe the staging database for testing purposes
- * Only visible in staging environment
+ * Provides a UI button to wipe the dev database for testing purposes
+ * Only visible when NEXT_PUBLIC_ENABLE_DEV_FEATURES=true
  */
 
 import { useState, useEffect } from 'react'
@@ -14,12 +14,12 @@ export default function DatabaseWipeButton() {
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null)
   const [isVisible, setIsVisible] = useState(false)
 
-  // Check if we're in staging environment (client-side only)
-  // CRITICAL: Must check window.location to avoid SSR/client mismatch
+  // Check if we're in dev environment (client-side only)
+  // CRITICAL: Must check in useEffect to avoid SSR/client mismatch
   useEffect(() => {
-    // Check if we're running on localhost:3001 (staging)
-    const isLocalhost3001 = typeof window !== 'undefined' && window.location.port === '3001'
-    setIsVisible(isLocalhost3001)
+    // Only show in dev environment (NEXT_PUBLIC_ENABLE_DEV_FEATURES=true)
+    const isDevEnv = process.env.NEXT_PUBLIC_ENABLE_DEV_FEATURES === 'true'
+    setIsVisible(isDevEnv)
   }, [])
 
   // Don't show button in production or during SSR
@@ -30,7 +30,7 @@ export default function DatabaseWipeButton() {
   const handleWipeDatabase = async () => {
     // Show confirmation dialog
     const confirmed = window.confirm(
-      '⚠️ ADVERTENCIA: Esta acción borrará TODOS los datos de la base de datos de staging.\n\n' +
+      '⚠️ ADVERTENCIA: Esta acción borrará TODOS los datos de la base de datos DEV.\n\n' +
       'Esto incluye:\n' +
       '• Todos los tenants\n' +
       '• Todos los alojamientos\n' +
@@ -88,10 +88,10 @@ export default function DatabaseWipeButton() {
       <div className="space-y-4">
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <h3 className="text-sm font-semibold text-yellow-800 mb-2">
-            🔧 Herramientas de Desarrollo (Staging)
+            🔧 Herramientas de Desarrollo (DEV)
           </h3>
           <p className="text-xs text-yellow-700 mb-3">
-            Esta sección solo está disponible en el ambiente de staging
+            Esta sección solo está disponible en el ambiente DEV
           </p>
 
           <button
