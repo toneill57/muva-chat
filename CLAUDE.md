@@ -18,6 +18,22 @@ Guidance for Claude Code when working with this repository.
 - `/with-me` - Public chat (anonymous, pre-booking)
 - `/my-stay` - Guest portal (authenticated: check-in date + phone last 4 digits)
 
+---
+
+## 🔧 Current Development Environment
+
+**CRÍTICO:** Todo el desarrollo se realiza en:
+
+- **Rama Git:** `dev`
+- **Supabase Branch:** `dev` (Proyecto: MUVA 1.0)
+- **Entorno:** Local (máquina del desarrollador)
+- **Base de Datos:** Todas las consultas van DIRECTAMENTE a la rama `dev` de Supabase
+
+**Implicaciones:**
+- ✅ Usar MCP tools (`mcp__supabase__execute_sql`) para queries a rama `dev`
+- ✅ Migraciones aplican sobre rama `dev` de Supabase
+- ✅ Testing local contra rama `dev` de Supabase
+- ⚠️ **X NUNCA** queries directas a `tst` o `prd` sin autorización explícita
 
 ---
 
