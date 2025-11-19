@@ -229,7 +229,7 @@ En caso de fallo en ANY step:
 | **Health Check Depth** | 4 checks | 5 checks |
 | **Rollback** | Automatic | Automatic + Manual DB restore option |
 | **Deployment Time** | ~3-4 min | ~5-7 min (with backup) |
-| **Database** | rvjmwwvkhglcuqwcznph | ooaumjzaztmutltifhoq |
+| **Database** | rvjmwwvkhglcuqwcznph | iyeueszchbvlutlcmvcb |
 | **VPS Path** | /var/www/muva-chat-staging | /var/www/muva-chat |
 | **PM2 Process** | muva-chat-staging | muva-chat |
 | **URL** | staging.muva-chat.com | muva.chat |

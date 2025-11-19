@@ -197,7 +197,7 @@ All scripts in `/scripts/` directory:
 
 **Legacy IDs (Pre-Nov 2025 Migration):**
 - Old Staging: `hoaiwcueleiemeplrurv` → Migrated to Tst (bddcvjoeoiekzfetvxoe)
-- Old Production: `ooaumjzaztmutltifhoq` → Migrated to Prd (kprqghwdnaykxhostivv)
+- Old Production: `iyeueszchbvlutlcmvcb` → Migrated to Prd (kprqghwdnaykxhostivv)
 
 ---
 

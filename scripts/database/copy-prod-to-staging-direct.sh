@@ -5,14 +5,14 @@ echo "🚀 COPYING PRODUCTION DATA TO STAGING"
 echo "======================================"
 
 # Production (source)
-PROD_HOST="ooaumjzaztmutltifhoq.supabase.co"
-PROD_USER="postgres.ooaumjzaztmutltifhoq"
-PROD_PASS="6vZs6Z3yZIJJF+CQhP74mAklZWPzJNPbAZ24UG4AuJmkVvCg70CPO1c4c+vWkd5+FiNDDVuaFv3K8c/MYrPV6w=="
+PROD_HOST="kprqghwdnaykxhostivv.supabase.co"
+PROD_USER="postgres.kprqghwdnaykxhostivv"
+PROD_PASS="[NEEDS_UPDATE - Get from Supabase dashboard]"
 
 # Staging (target)
-STAGING_HOST="gkqfbrhtlipcvpqyyqmx.supabase.co"
-STAGING_USER="postgres.gkqfbrhtlipcvpqyyqmx"
-STAGING_PASS="mlmYAxOrTbRYLRr358MPbzXviXXG/OsydPCqS+ProQukQlj8bYx+Kaer/Ckvy54qHRVtwDsAWaveqQqXAoKV6A=="
+STAGING_HOST="bddcvjoeoiekzfetvxoe.supabase.co"
+STAGING_USER="postgres.bddcvjoeoiekzfetvxoe"
+STAGING_PASS="[NEEDS_UPDATE - Get from Supabase dashboard]"
 
 DUMP_FILE="/tmp/prod-data-$(date +%Y%m%d-%H%M%S).sql"
 

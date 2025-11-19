@@ -88,7 +88,7 @@ Migrar de la configuración actual desordenada a un modelo limpio **three-tier**
 | Ambiente | Project Ref | Estado |
 |----------|-------------|--------|
 | **staging** | hoaiwcueleiemeplrurv | **Datos completos** - Fuente |
-| **production** | ooaumjzaztmutltifhoq | En uso - Se mantiene |
+| **production** | iyeueszchbvlutlcmvcb | En uso - Se mantiene |
 
 ---
 
@@ -431,7 +431,7 @@ Actualizar documentación y validar sistema.
    - Cambiar:
      - `localhost:3001 → DEV (azytxnyiizldljxrapoe)`
      - `hoaiwcueleiemeplrurv → TST (bddcvjoeoiekzfetvxoe)`
-     - `ooaumjzaztmutltifhoq → PRD (kprqghwdnaykxhostivv)`
+     - `iyeueszchbvlutlcmvcb → PRD (kprqghwdnaykxhostivv)`
    - Actualizar comandos: `dev:staging → dev:tst`, `dev:production → dev:prd`
 
 2. **Actualizar QUICK_REFERENCE.md** (3 min)
@@ -443,7 +443,7 @@ Actualizar documentación y validar sistema.
    - Diagrama ASCII y tabla environments
 
 4. **Buscar/reemplazar IDs viejos** (5 min)
-   - `grep -r "ooaumjzaztmutltifhoq" docs/ CLAUDE.md`
+   - `grep -r "iyeueszchbvlutlcmvcb" docs/ CLAUDE.md`
    - `grep -r "hoaiwcueleiemeplrurv" docs/ CLAUDE.md`
    - Reemplazar según contexto
 
@@ -462,7 +462,7 @@ Actualizar documentación y validar sistema.
 - ✅ ROLLBACK_PLAN.md creado
 
 ### Criterios de Éxito
-- `grep -r "ooaumjzaztmutltifhoq" docs/` → 0 matches
+- `grep -r "iyeueszchbvlutlcmvcb" docs/` → 0 matches
 - CLAUDE.md refleja arquitectura three-tier
 - Testing E2E completo:
   - dev (localhost): chat funcional
@@ -517,10 +517,10 @@ Actualizar documentación y validar sistema.
 ## 🚨 NOTAS IMPORTANTES
 
 ### Estado de Producción
-⚠️ **PRD lanzará SIN DATOS inicialmente**. La migración de datos de producción desde `ooaumjzaztmutltifhoq` se hará en operación separada post-migración para minimizar downtime.
+⚠️ **PRD lanzará SIN DATOS inicialmente**. La migración de datos de producción desde `iyeueszchbvlutlcmvcb` se hará en operación separada post-migración para minimizar downtime.
 
 ### Proyecto Viejo (Backup Permanente)
-✅ Proyectos `hoaiwcueleiemeplrurv` y `ooaumjzaztmutltifhoq` se mantienen como backup permanente. NO eliminar.
+✅ Proyectos `hoaiwcueleiemeplrurv` y `iyeueszchbvlutlcmvcb` se mantienen como backup permanente. NO eliminar.
 
 ### Rollback
 ✅ Rollback completo disponible restaurando .env.local backups en VPS y apuntando a proyectos viejos.

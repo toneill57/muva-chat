@@ -191,6 +191,12 @@ export async function authenticateGuest(
         accommodationUnits.map(u => `${u.name} ${u.unit_number || ''}`).join(', '))
     }
 
+    // SIMPLE FALLBACK: If accommodation_unit_id was NULL but we have data in reservation_accommodations, use the first one
+    if (!accommodationUnit && accommodationUnits.length > 0) {
+      accommodationUnit = accommodationUnits[0]
+      console.log(`[guest-auth] Using fallback accommodation for header: ${accommodationUnit.name}`)
+    }
+
     // Build session object
     const session: GuestSession = {
       reservation_id: reservation.id,
@@ -372,6 +378,12 @@ export async function verifyGuestToken(token: string): Promise<GuestSession | nu
 
       console.log(`[guest-auth] ✅ Loaded ${accommodationUnits.length} accommodations (fallback):`,
         accommodationUnits.map(u => `${u.name} ${u.unit_number || ''}`).join(', '))
+    }
+
+    // SIMPLE FALLBACK: If accommodation_unit_id was NULL but we have data in reservation_accommodations, use the first one
+    if (!accommodationUnit && accommodationUnits.length > 0) {
+      accommodationUnit = accommodationUnits[0]
+      console.log(`[guest-auth] Using fallback accommodation for header: ${accommodationUnit.name}`)
     }
 
     // Reconstruct session with real data from database

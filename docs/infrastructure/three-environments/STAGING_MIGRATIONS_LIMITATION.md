@@ -207,7 +207,7 @@ Ver sección "Solución Implementada" arriba.
 
 ## 📊 Comparación: Staging vs Production
 
-| Aspecto | Staging (rvjmwwvkhglcuqwcznph) | Production (ooaumjzaztmutltifhoq) |
+| Aspecto | Staging (rvjmwwvkhglcuqwcznph) | Production (iyeueszchbvlutlcmvcb) |
 |---------|-------------------------------|-----------------------------------|
 | **Database Pooling** | ❌ NO habilitado | ✅ Habilitado |
 | **psql directo** | ❌ NO funciona | ✅ Funciona |

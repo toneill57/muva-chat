@@ -330,14 +330,14 @@ curl -s http://localhost:3000/api/health | jq
 # Ver campo "database" o "supabase"
 
 # 8. Test de Supabase desde VPS
-curl -H "apikey: YOUR_ANON_KEY" https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/
+curl -H "apikey: YOUR_ANON_KEY" https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/
 
 # 9. Verificar environment variables
 pm2 describe muva-chat | grep env
 # Debe tener: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 
 # 10. Configurar env vars si faltan
-pm2 set pm2:NEXT_PUBLIC_SUPABASE_URL "https://ooaumjzaztmutltifhoq.supabase.co"
+pm2 set pm2:NEXT_PUBLIC_SUPABASE_URL "https://iyeueszchbvlutlcmvcb.supabase.co"
 pm2 restart muva-chat --update-env
 ```
 

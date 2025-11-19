@@ -1,7 +1,7 @@
 # INVESTIGACIÓN: MIGRATIONS_FAILED - Causa Raíz Completa
 
 **Fecha:** 2025-11-01  
-**Branch Afectado:** dev (ooaumjzaztmutltifhoq)  
+**Branch Afectado:** dev (iyeueszchbvlutlcmvcb)  
 **Analista:** Database Agent  
 **Status:** ANÁLISIS COMPLETO
 
@@ -11,7 +11,7 @@
 
 ### Estado Actual del Branch Dev
 
-- **Branch ID:** ooaumjzaztmutltifhoq
+- **Branch ID:** iyeueszchbvlutlcmvcb
 - **Status Supabase:** `MIGRATIONS_FAILED` ⚠️
 - **Fecha del Fallo:** 2025-10-31 19:08:51 UTC
 - **Datos:** 6,641 registros (INTACTOS ✅)
@@ -259,10 +259,10 @@ newlines' ...
 **Comandos:**
 ```bash
 # Via Supabase CLI
-supabase migration repair --project-ref ooaumjzaztmutltifhoq
+supabase migration repair --project-ref iyeueszchbvlutlcmvcb
 
 # Si repair no funciona, forzar refresh
-supabase db push --project-ref ooaumjzaztmutltifhoq --dry-run
+supabase db push --project-ref iyeueszchbvlutlcmvcb --dry-run
 ```
 
 **Pros:**
@@ -288,11 +288,11 @@ supabase db push --project-ref ooaumjzaztmutltifhoq --dry-run
 **Comandos:**
 ```bash
 # Eliminar branch staging-v21 actual (vacío)
-supabase branches delete staging-v21 --project-ref ooaumjzaztmutltifhoq
+supabase branches delete staging-v21 --project-ref iyeueszchbvlutlcmvcb
 
 # Crear nuevo branch CON datos de dev
 supabase branches create staging-v2 \
-  --project-ref ooaumjzaztmutltifhoq \
+  --project-ref iyeueszchbvlutlcmvcb \
   --with-data=true \
   --git-branch=staging
 ```
@@ -450,16 +450,16 @@ supabase gen types typescript > src/lib/database.types.ts
 
 **Comando a ejecutar:**
 ```bash
-supabase migration repair --project-ref ooaumjzaztmutltifhoq
+supabase migration repair --project-ref iyeueszchbvlutlcmvcb
 ```
 
 **Validación post-fix:**
 ```bash
 # Verificar status correcto
-supabase branches list --project-ref ooaumjzaztmutltifhoq
+supabase branches list --project-ref iyeueszchbvlutlcmvcb
 
 # Confirmar migraciones
-supabase migration list --project-ref ooaumjzaztmutltifhoq
+supabase migration list --project-ref iyeueszchbvlutlcmvcb
 ```
 
 **Resultado esperado:**

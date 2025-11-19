@@ -74,9 +74,9 @@ const ENV_FILES: Record<Environment, string> = {
 
 // Supabase project refs (for validation)
 const SUPABASE_PROJECTS: Record<Environment, string> = {
-  dev: 'ooaumjzaztmutltifhoq',
-  staging: 'rvjmwwvkhglcuqwcznph',
-  production: 'ooaumjzaztmutltifhoq', // Same as dev (dev IS production)
+  dev: 'iyeueszchbvlutlcmvcb',
+  staging: 'bddcvjoeoiekzfetvxoe',
+  production: 'kprqghwdnaykxhostivv',
 };
 
 // ============================================================================

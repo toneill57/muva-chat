@@ -165,7 +165,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2am13d3Z
 ```bash
 # Esto NO funcionó para copiar datos
 PGPASSWORD="fhPqCduAAaBl0axt" pg_dump \
-  "postgresql://postgres.ooaumjzaztmutltifhoq@aws-0-us-east-1.pooler.supabase.com:5432/postgres" \
+  "postgresql://postgres.iyeueszchbvlutlcmvcb@aws-0-us-east-1.pooler.supabase.com:5432/postgres" \
   --data-only
 ```
 
@@ -212,7 +212,7 @@ SUPABASE_DB_PASSWORD=3hZMdp62TmM6RycK
 // scripts/copy-dev-to-staging.ts
 import { createClient } from '@supabase/supabase-js';
 
-const DEV_URL = 'https://ooaumjzaztmutltifhoq.supabase.co';
+const DEV_URL = 'https://iyeueszchbvlutlcmvcb.supabase.co';
 const DEV_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc';
 
 const STAGING_URL = 'https://rvjmwwvkhglcuqwcznph.supabase.co';

@@ -243,7 +243,7 @@ interface LandingPageContent {
 2. **Supabase Best Practices:**
    - ✅ Used explicit `schemas: ["public"]` in MCP verification
    - ✅ Loaded env vars correctly: `set -a && source .env.local && set +a`
-   - ✅ Used project_id from `.env.local` (ooaumjzaztmutltifhoq)
+   - ✅ Used project_id from `.env.local` (iyeueszchbvlutlcmvcb)
 
 3. **Autonomy:**
    - ✅ Executed all tasks without user intervention
@@ -386,5 +386,5 @@ if (!response.ok) {
 **Implementation Date:** 2025-10-10
 **Implementation Time:** ~30 minutes (autonomous execution)
 **Environment:** Development
-**Database:** Supabase PostgreSQL 17.4 (ooaumjzaztmutltifhoq)
+**Database:** Supabase PostgreSQL 17.4 (iyeueszchbvlutlcmvcb)
 **Implemented By:** @agent-backend-developer

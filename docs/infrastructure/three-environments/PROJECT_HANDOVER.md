@@ -169,8 +169,8 @@ This document describes the **Three Environments CI/CD System** implemented in O
 - **Access:** Team members via Supabase organization
 
 #### Production
-- **Project ID:** `ooaumjzaztmutltifhoq`
-- **URL:** `https://ooaumjzaztmutltifhoq.supabase.co`
+- **Project ID:** `iyeueszchbvlutlcmvcb`
+- **URL:** `https://iyeueszchbvlutlcmvcb.supabase.co`
 - **Dashboard:** Supabase Dashboard → PRODUCTION project
 - **Access:** Admin only
 

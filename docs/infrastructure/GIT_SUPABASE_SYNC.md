@@ -10,9 +10,9 @@
 
 | Git Branch | Supabase Branch | Project Ref | URL | Archivo .env | Records | Status |
 |------------|-----------------|-------------|-----|--------------|---------|--------|
-| dev | dev | ooaumjzaztmutltifhoq | https://ooaumjzaztmutltifhoq.supabase.co | `.env.dev` | 7,757 | ✅ Activo |
+| dev | dev | iyeueszchbvlutlcmvcb | https://iyeueszchbvlutlcmvcb.supabase.co | `.env.dev` | 7,757 | ✅ Activo |
 | staging | staging | rvjmwwvkhglcuqwcznph | https://rvjmwwvkhglcuqwcznph.supabase.co | `.env.staging` | 6,576 | ✅ Activo |
-| main | (base project) | ooaumjzaztmutltifhoq | https://ooaumjzaztmutltifhoq.supabase.co | `.env.production` | 7,757 | ✅ Producción |
+| main | (base project) | iyeueszchbvlutlcmvcb | https://iyeueszchbvlutlcmvcb.supabase.co | `.env.production` | 7,757 | ✅ Producción |
 
 ---
 
@@ -54,7 +54,7 @@ git push origin main
 # El deploy se ejecuta automáticamente:
 # - Build con credenciales production
 # - Deploy a VPS /var/www/muva-chat
-# - Conecta a https://ooaumjzaztmutltifhoq.supabase.co
+# - Conecta a https://iyeueszchbvlutlcmvcb.supabase.co
 ```
 
 ---
@@ -65,7 +65,7 @@ git push origin main
 
 ```bash
 # Dev
-curl -s https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/ \
+curl -s https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/ \
   -H "apikey: $(grep NEXT_PUBLIC_SUPABASE_ANON_KEY .env.dev | cut -d'=' -f2)" \
   -H "Content-Type: application/json"
 
@@ -75,7 +75,7 @@ curl -s https://rvjmwwvkhglcuqwcznph.supabase.co/rest/v1/ \
   -H "Content-Type: application/json"
 
 # Production
-curl -s https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/ \
+curl -s https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/ \
   -H "apikey: $(grep NEXT_PUBLIC_SUPABASE_ANON_KEY .env.production | cut -d'=' -f2)" \
   -H "Content-Type: application/json"
 ```
@@ -110,7 +110,7 @@ curl -s https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/ \
 ### Production
 
 - **Purpose:** Ambiente de producción
-- **Same Project:** Usa el mismo project_id que dev (ooaumjzaztmutltifhoq)
+- **Same Project:** Usa el mismo project_id que dev (iyeueszchbvlutlcmvcb)
 - **Diferencia:** Branch main vs branch dev
 - **CRITICAL:** Solo deployar código validado en staging
 
@@ -137,8 +137,8 @@ on:
     branches: [main]
 env:
   # Carga .env.production automáticamente
-  SUPABASE_PROJECT_ID: ooaumjzaztmutltifhoq
-  SUPABASE_URL: https://ooaumjzaztmutltifhoq.supabase.co
+  SUPABASE_PROJECT_ID: iyeueszchbvlutlcmvcb
+  SUPABASE_URL: https://iyeueszchbvlutlcmvcb.supabase.co
   # ... resto de variables de .env.production
 ```
 
@@ -194,7 +194,7 @@ cp .env.staging .env.local # Para staging testing
 grep SUPABASE_PROJECT_ID .env.local
 
 # Debe coincidir con:
-# - ooaumjzaztmutltifhoq → dev/production
+# - iyeueszchbvlutlcmvcb → dev/production
 # - rvjmwwvkhglcuqwcznph → staging
 ```
 
@@ -228,10 +228,10 @@ grep SUPABASE_PROJECT_ID .env.local
 ## Cambios Recientes
 
 ### November 1, 2025
-- ✅ Creado `.env.dev` para branch dev (ooaumjzaztmutltifhoq)
+- ✅ Creado `.env.dev` para branch dev (iyeueszchbvlutlcmvcb)
 - ✅ Creado nuevo branch staging (rvjmwwvkhglcuqwcznph) reemplazando staging-v21
 - ✅ Actualizado `.env.staging` con credenciales del nuevo branch
-- ✅ Confirmado `.env.production` para main branch (ooaumjzaztmutltifhoq)
+- ✅ Confirmado `.env.production` para main branch (iyeueszchbvlutlcmvcb)
 - ✅ Copiados 6,576 registros de dev a staging (94.6%)
 - ✅ Verificados tests de conexión: todos 200 OK
 - ✅ Documentado mapeo completo Git ↔ Supabase

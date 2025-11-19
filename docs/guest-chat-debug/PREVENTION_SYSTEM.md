@@ -82,7 +82,7 @@ pnpm run validate:rpc -- --env=production
 **Salida esperada (funciones correctas):**
 ```
 🔍 Validating RPC Functions (DEV)
-   Database: ooaumjzaztmutltifhoq
+   Database: iyeueszchbvlutlcmvcb
 ================================================================================
 
 ✅ match_unit_manual_chunks - VALID

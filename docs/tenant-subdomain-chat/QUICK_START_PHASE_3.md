@@ -116,7 +116,7 @@ Connect the subdomain header to actual tenant data from the database.
 
 ```bash
 # .env.local
-SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
 SUPABASE_ANON_KEY=eyJ...
 SUPABASE_SERVICE_ROLE_KEY=eyJ...
 ```

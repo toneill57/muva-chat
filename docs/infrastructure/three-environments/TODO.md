@@ -11,12 +11,12 @@
 ### 1.1 Crear branch Supabase para dev
 - [x] ✅ Verificar branch dev existente (estimate: 0.5h)
   - Branch dev ya existía como producción
-  - Project ref: `ooaumjzaztmutltifhoq`
-  - URL: https://ooaumjzaztmutltifhoq.supabase.co
+  - Project ref: `iyeueszchbvlutlcmvcb`
+  - URL: https://iyeueszchbvlutlcmvcb.supabase.co
   - 7,757 registros activos
   - Files: N/A
   - Agent: **@agent-database-agent**
-  - Test: ✅ `curl https://ooaumjzaztmutltifhoq.supabase.co/rest/v1/` HTTP 200
+  - Test: ✅ `curl https://iyeueszchbvlutlcmvcb.supabase.co/rest/v1/` HTTP 200
 
 ### 1.2 Configurar proyecto staging Supabase
 - [x] ✅ Crear nuevo branch staging (estimate: 0.5h)
@@ -36,7 +36,7 @@
 
 ### 1.3 Crear archivos .env por ambiente
 - [x] ✅ Crear .env.dev con variables de branch dev (estimate: 0.25h)
-  - NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+  - NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
   - NEXT_PUBLIC_SUPABASE_ANON_KEY (dev branch)
   - SUPABASE_SERVICE_ROLE_KEY (dev branch)
   - SUPABASE_DB_PASSWORD=fhPqCduAAaBl0axt
@@ -55,7 +55,7 @@
 
 - [x] ✅ Crear .env.production (estimate: 0.25h)
   - Same as dev (production IS dev branch)
-  - NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+  - NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
   - Files: `.env.production` ✅ creado
   - Agent: **@agent-deploy-agent**
   - Test: ✅ Referencias correctas

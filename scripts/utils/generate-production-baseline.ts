@@ -267,7 +267,7 @@ async function generateBaseline() {
     // Build baseline object
     const baseline: BaselineData = {
       generated_at: new Date().toISOString(),
-      source_project: 'ooaumjzaztmutltifhoq',
+      source_project: 'kprqghwdnaykxhostivv',
       total_tables: tables.length,
       total_rows: totalRows,
       total_indexes: indexes.length,

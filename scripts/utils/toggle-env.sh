@@ -21,10 +21,12 @@ detect_current_env() {
   if [ -f "$CURRENT_ENV" ]; then
     PROJECT_ID=$(grep "NEXT_PUBLIC_SUPABASE_URL" "$CURRENT_ENV" | cut -d '=' -f2 | cut -d '/' -f3 | cut -d '.' -f1)
 
-    if [ "$PROJECT_ID" = "smdhgcpojpurvgdppufo" ]; then
+    if [ "$PROJECT_ID" = "bddcvjoeoiekzfetvxoe" ]; then
       echo "staging"
-    elif [ "$PROJECT_ID" = "ooaumjzaztmutltifhoq" ]; then
+    elif [ "$PROJECT_ID" = "kprqghwdnaykxhostivv" ]; then
       echo "production"
+    elif [ "$PROJECT_ID" = "iyeueszchbvlutlcmvcb" ]; then
+      echo "dev"
     else
       echo "unknown"
     fi
@@ -49,7 +51,7 @@ toggle_env() {
     cp "$STAGING_ENV" "$CURRENT_ENV"
 
     echo -e "${GREEN}✅ Ambiente cambiado a STAGING${NC}"
-    echo "   Project: smdhgcpojpurvgdppufo"
+    echo "   Project: bddcvjoeoiekzfetvxoe"
 
   elif [ "$CURRENT" = "staging" ]; then
     echo -e "${GREEN}🔄 Cambiando a PRODUCTION...${NC}"
@@ -67,7 +69,7 @@ toggle_env() {
     fi
 
     echo -e "${GREEN}✅ Ambiente cambiado a PRODUCTION${NC}"
-    echo "   Project: ooaumjzaztmutltifhoq"
+    echo "   Project: kprqghwdnaykxhostivv"
   else
     echo -e "${RED}❌ Ambiente desconocido: $CURRENT${NC}"
     exit 1

@@ -1,7 +1,7 @@
 # ANÁLISIS COMPLETO - Supabase Branching Architecture
 
 **Fecha:** 2025-11-01  
-**Proyecto Base:** ooaumjzaztmutltifhoq  
+**Proyecto Base:** iyeueszchbvlutlcmvcb  
 **Analista:** Database Agent
 
 ---
@@ -12,7 +12,7 @@
 
 El proyecto tiene **2 branches activos** en Supabase:
 
-1. **Branch "dev" (DEFAULT)** - Project Ref: `ooaumjzaztmutltifhoq`
+1. **Branch "dev" (DEFAULT)** - Project Ref: `iyeueszchbvlutlcmvcb`
    - Status: `MIGRATIONS_FAILED` ⚠️
    - Contiene TODOS los datos de producción
    - Es el branch DEFAULT del proyecto
@@ -24,7 +24,7 @@ El proyecto tiene **2 branches activos** en Supabase:
 
 ### Hallazgo Crítico
 
-**NO existe un "proyecto base" separado.** El project_id `ooaumjzaztmutltifhoq` ES SIMULTÁNEAMENTE:
+**NO existe un "proyecto base" separado.** El project_id `iyeueszchbvlutlcmvcb` ES SIMULTÁNEAMENTE:
 - El proyecto padre (parent project)
 - El branch "dev" (default branch)
 
@@ -36,13 +36,13 @@ Esto es comportamiento NORMAL en Supabase Branching:
 
 ## DETALLE POR BRANCH
 
-### 1. Branch "dev" (ooaumjzaztmutltifhoq)
+### 1. Branch "dev" (iyeueszchbvlutlcmvcb)
 
 **Identificación:**
-- Branch ID: `ooaumjzaztmutltifhoq`
+- Branch ID: `iyeueszchbvlutlcmvcb`
 - Branch Name: `dev`
-- Project Ref: `ooaumjzaztmutltifhoq` (MISMO que project_id)
-- URL: https://ooaumjzaztmutltifhoq.supabase.co
+- Project Ref: `iyeueszchbvlutlcmvcb` (MISMO que project_id)
+- URL: https://iyeueszchbvlutlcmvcb.supabase.co
 - Status: `MIGRATIONS_FAILED` ⚠️
 - Git Branch Vinculado: `dev`
 - Region: No especificada (default)
@@ -168,7 +168,7 @@ Esto es comportamiento NORMAL en Supabase Branching:
 - ❌ Es Persistente: **No** (ephemeral branch)
 - 📅 Fecha Creación: 2025-11-01 20:40:41 UTC
 - 📅 Última Actualización: 2025-11-01 20:40:41 UTC
-- 🔗 Parent Project: `ooaumjzaztmutltifhoq`
+- 🔗 Parent Project: `iyeueszchbvlutlcmvcb`
 
 **Datos (Schema: public + hotels):**
 
@@ -272,7 +272,7 @@ Esto es comportamiento NORMAL en Supabase Branching:
 
 ## COMPARACIÓN BRANCH "dev" vs "staging-v21"
 
-| Métrica | dev (ooaumjzaztmutltifhoq) | staging-v21 (rmrflrttpobzlffhctjt) | Diferencia |
+| Métrica | dev (iyeueszchbvlutlcmvcb) | staging-v21 (rmrflrttpobzlffhctjt) | Diferencia |
 |---------|----------------------------|-------------------------------------|------------|
 | **Status** | MIGRATIONS_FAILED | FUNCTIONS_DEPLOYED | staging mejor |
 | **Total Tablas** | 50 (41 public + 9 hotels) | 50 (41 public + 9 hotels) | ✅ Idéntico |
@@ -296,7 +296,7 @@ Esto es comportamiento NORMAL en Supabase Branching:
 
 | Git Branch | Supabase Branch | Project Ref | Estado Actual | Datos |
 |------------|-----------------|-------------|---------------|-------|
-| `dev` | `dev` (DEFAULT) | `ooaumjzaztmutltifhoq` | ✅ EXISTS (MIGRATIONS_FAILED) | ✅ FULL (6,641 registros) |
+| `dev` | `dev` (DEFAULT) | `iyeueszchbvlutlcmvcb` | ✅ EXISTS (MIGRATIONS_FAILED) | ✅ FULL (6,641 registros) |
 | `staging` | `staging-v21` | `rmrflrttpobzlffhctjt` | ✅ EXISTS (FUNCTIONS_DEPLOYED) | ❌ EMPTY (0 registros) |
 | `main` | N/A | N/A | ❌ NO EXISTS | N/A |
 
@@ -304,7 +304,7 @@ Esto es comportamiento NORMAL en Supabase Branching:
 
 | Git Branch | Supabase Branch | Project Ref | Estado Deseado | Propósito |
 |------------|-----------------|-------------|----------------|-----------|
-| `dev` | `dev` (DEFAULT) | `ooaumjzaztmutltifhoq` | Development branch con datos de prueba | Desarrollo activo |
+| `dev` | `dev` (DEFAULT) | `iyeueszchbvlutlcmvcb` | Development branch con datos de prueba | Desarrollo activo |
 | `staging` | `staging` | Nuevo branch | Production-like con datos reales | Pre-producción |
 | `main` | Proyecto base | Nuevo project | Producción real | Usuarios finales |
 
@@ -315,11 +315,11 @@ Esto es comportamiento NORMAL en Supabase Branching:
 ### Arquitectura Actual (2025-11-01)
 
 ```
-Proyecto Supabase: ooaumjzaztmutltifhoq
+Proyecto Supabase: iyeueszchbvlutlcmvcb
 ├── Branch "dev" (DEFAULT)
 │   ├── Status: MIGRATIONS_FAILED ⚠️
-│   ├── Project Ref: ooaumjzaztmutltifhoq (MISMO que proyecto)
-│   ├── URL: https://ooaumjzaztmutltifhoq.supabase.co
+│   ├── Project Ref: iyeueszchbvlutlcmvcb (MISMO que proyecto)
+│   ├── URL: https://iyeueszchbvlutlcmvcb.supabase.co
 │   ├── Datos: 6,641 registros ✅
 │   ├── Funciones: 90 ✅
 │   ├── Security: 0 issues ✅
@@ -380,13 +380,13 @@ Proyecto Supabase: NUEVO (producción real)
 **Solución:**
 ```bash
 # Verificar estado de migraciones
-supabase migration list --project-ref ooaumjzaztmutltifhoq
+supabase migration list --project-ref iyeueszchbvlutlcmvcb
 
 # Si hay migraciones pendientes, repararlas
-supabase migration repair --project-ref ooaumjzaztmutltifhoq
+supabase migration repair --project-ref iyeueszchbvlutlcmvcb
 
 # Aplicar migraciones pendientes
-supabase db push --project-ref ooaumjzaztmutltifhoq
+supabase db push --project-ref iyeueszchbvlutlcmvcb
 ```
 
 ### Problema 2: Branch "staging-v21" VACÍO
@@ -409,7 +409,7 @@ supabase db push --project-ref ooaumjzaztmutltifhoq
 **Opción A: Copiar datos de dev → staging-v21**
 ```bash
 # Dump data from dev
-pg_dump -h db.ooaumjzaztmutltifhoq.supabase.co \
+pg_dump -h db.iyeueszchbvlutlcmvcb.supabase.co \
   -U postgres \
   --data-only \
   --no-owner \
@@ -427,11 +427,11 @@ psql -h db.rmrflrttpobzlffhctjt.supabase.co \
 **Opción B: Recrear branch con datos**
 ```bash
 # Eliminar branch actual
-supabase branches delete staging-v21 --project-ref ooaumjzaztmutltifhoq
+supabase branches delete staging-v21 --project-ref iyeueszchbvlutlcmvcb
 
 # Crear nuevo branch CON datos
 supabase branches create staging-v21 \
-  --project-ref ooaumjzaztmutltifhoq \
+  --project-ref iyeueszchbvlutlcmvcb \
   --with-data=true \
   --git-branch=staging
 ```
@@ -507,7 +507,7 @@ WHERE n.nspname IN ('public', 'hotels')
 
 1. **Resolver MIGRATIONS_FAILED en dev**
    ```bash
-   supabase migration repair --project-ref ooaumjzaztmutltifhoq
+   supabase migration repair --project-ref iyeueszchbvlutlcmvcb
    ```
 
 2. **Poblar staging-v21 con datos**
@@ -526,7 +526,7 @@ WHERE n.nspname IN ('public', 'hotels')
 ### Mediano Plazo (Este Mes)
 
 5. **Normalizar arquitectura de branches**
-   - Decidir: ¿Mantener `ooaumjzaztmutltifhoq` como dev o como prod?
+   - Decidir: ¿Mantener `iyeueszchbvlutlcmvcb` como dev o como prod?
    - Opción A: Migrar a nuevo proyecto para producción real
    - Opción B: Usar actual como prod, crear nuevo branch dev
 
@@ -562,7 +562,7 @@ WHERE n.nspname IN ('public', 'hotels')
 ### CRÍTICO (Hacer HOY)
 
 - [ ] **Investigar causa de MIGRATIONS_FAILED en dev**
-  - Comando: `supabase migration list --project-ref ooaumjzaztmutltifhoq`
+  - Comando: `supabase migration list --project-ref iyeueszchbvlutlcmvcb`
   - Verificar logs de última migración
   - Reparar si es posible
 
@@ -605,7 +605,7 @@ WHERE n.nspname IN ('public', 'hotels')
 
 ### Estado Actual
 
-1. **Branch "dev" (ooaumjzaztmutltifhoq)**
+1. **Branch "dev" (iyeueszchbvlutlcmvcb)**
    - ✅ Contiene TODOS los datos de producción
    - ✅ Seguridad optimizada (0 warnings)
    - ⚠️ Status MIGRATIONS_FAILED requiere atención
@@ -628,7 +628,7 @@ WHERE n.nspname IN ('public', 'hotels')
 
 ```
 AHORA:
-- dev (ooaumjzaztmutltifhoq) → Datos de producción, desarrollo activo
+- dev (iyeueszchbvlutlcmvcb) → Datos de producción, desarrollo activo
 - staging-v21 (rmrflrttpobzlffhctjt) → Pre-producción (poblar datos)
 
 FUTURO:

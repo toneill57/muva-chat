@@ -57,10 +57,12 @@ else
   # Detectar ambiente
   PROJECT_ID=$(grep "NEXT_PUBLIC_SUPABASE_URL" "$ENV_FILE" | cut -d '=' -f2 | cut -d '/' -f3 | cut -d '.' -f1)
 
-  if [ "$PROJECT_ID" = "smdhgcpojpurvgdppufo" ]; then
+  if [ "$PROJECT_ID" = "bddcvjoeoiekzfetvxoe" ]; then
     echo -e "${YELLOW}📍 Ambiente: STAGING${NC}"
-  elif [ "$PROJECT_ID" = "ooaumjzaztmutltifhoq" ]; then
+  elif [ "$PROJECT_ID" = "kprqghwdnaykxhostivv" ]; then
     echo -e "${GREEN}📍 Ambiente: PRODUCTION${NC}"
+  elif [ "$PROJECT_ID" = "iyeueszchbvlutlcmvcb" ]; then
+    echo -e "${GREEN}📍 Ambiente: DEV${NC}"
   else
     echo -e "${RED}⚠️  Ambiente: UNKNOWN (${PROJECT_ID})${NC}"
   fi

@@ -214,7 +214,7 @@ Check GitHub Actions logs for migration output:
 ```
 🔄 Apply Migrations to Staging
 ================================================
-📦 Staging Project: ooaumjzaztmutltifhoq
+📦 Staging Project: iyeueszchbvlutlcmvcb
 📂 Found 1 migration files
 📝 Found 1 pending migrations:
    - 20251105143022_add_feature_x.sql
@@ -587,7 +587,7 @@ pnpm dlx tsx scripts/detect-schema-drift.ts --source=staging --target=production
 ================================================
 
 📊 Comparing schemas:
-   Source: Staging (ooaumjzaztmutltifhoq)
+   Source: Staging (iyeueszchbvlutlcmvcb)
    Target: Production ([DEPRECATED-OLD-STAGING])
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -65,7 +65,7 @@ cat ~/.ssh/innpilot_deploy
 ### 5. SUPABASE_URL
 **Descripción:** URL de tu proyecto Supabase
 
-**Valor:** `https://ooaumjzaztmutltifhoq.supabase.co`
+**Valor:** `https://iyeueszchbvlutlcmvcb.supabase.co`
 
 **Cómo obtenerlo:**
 - Supabase Dashboard → Settings → API → Project URL

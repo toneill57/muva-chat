@@ -62,7 +62,7 @@ origin_country_code, destination_country_code
 **Solución:**
 ```bash
 # 1. Aplicar migration vía Supabase Dashboard
-psql -h db.ooaumjzaztmutltifhoq.supabase.co -U postgres -f supabase/migrations/20251009000003_rename_location_fields_to_city.sql
+psql -h db.iyeueszchbvlutlcmvcb.supabase.co -U postgres -f supabase/migrations/20251009000003_rename_location_fields_to_city.sql
 
 # 2. Verificar aplicación
 mcp__supabase__execute_sql({ query: "SELECT column_name FROM information_schema.columns WHERE table_name = 'guest_reservations' AND column_name IN ('origin_city_code', 'destination_city_code')" })
@@ -283,7 +283,7 @@ const { completedFields, progressPercentage } = await fetchSIREProgress(reservat
 
 ## 🗄️ VERIFICACIÓN DATABASE SCHEMA (MCP)
 
-### Supabase Project: ooaumjzaztmutltifhoq
+### Supabase Project: iyeueszchbvlutlcmvcb
 
 **Migrations Aplicadas:** 287 total
 
@@ -437,8 +437,8 @@ mcp__context7__resolve-library-id("Next.js")
 supabase db push
 
 # Opción 3: psql directo
-psql -h db.ooaumjzaztmutltifhoq.supabase.co \
-  -U postgres.ooaumjzaztmutltifhoq \
+psql -h db.iyeueszchbvlutlcmvcb.supabase.co \
+  -U postgres.iyeueszchbvlutlcmvcb \
   -d postgres \
   -f supabase/migrations/20251009000003_rename_location_fields_to_city.sql
 

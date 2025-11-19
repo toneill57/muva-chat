@@ -31,7 +31,7 @@ import { execSync } from 'child_process';
 
 // Environment configuration
 const PRODUCTION_URL = process.env.PRODUCTION_URL || 'https://muva.chat';
-const PRODUCTION_PROJECT_ID = process.env.SUPABASE_PRODUCTION_PROJECT_ID || 'ooaumjzaztmutltifhoq';
+const PRODUCTION_PROJECT_ID = process.env.SUPABASE_PRODUCTION_PROJECT_ID || 'kprqghwdnaykxhostivv';
 const PRODUCTION_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY_PRODUCTION;
 
 // Performance thresholds

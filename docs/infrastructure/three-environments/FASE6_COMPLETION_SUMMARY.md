@@ -294,7 +294,7 @@ const SUPABASE_PROJECTS = {
     envKey: 'SUPABASE_SERVICE_ROLE_KEY_DEV',
   },
   staging: {
-    id: 'ooaumjzaztmutltifhoq',
+    id: 'iyeueszchbvlutlcmvcb',
     name: 'Staging',
     envKey: 'SUPABASE_SERVICE_ROLE_KEY',
   },

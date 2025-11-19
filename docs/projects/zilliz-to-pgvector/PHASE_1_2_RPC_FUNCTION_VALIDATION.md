@@ -213,7 +213,7 @@ const { data, error } = await supabase.rpc('search_code_embeddings', {
 
 **Generate Types:**
 ```bash
-mcp__supabase__generate_typescript_types --project_id ooaumjzaztmutltifhoq
+mcp__supabase__generate_typescript_types --project_id iyeueszchbvlutlcmvcb
 ```
 
 ---

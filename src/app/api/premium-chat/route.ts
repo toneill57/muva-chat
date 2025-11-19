@@ -139,7 +139,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Query is required' }, { status: 400 })
     }
 
-    console.log(`[Premium Chat] Query: "${query}" for client: ${business_name}`)
+    // Get tenant from subdomain header (set by middleware)
+    const subdomain = request.headers.get('x-tenant-subdomain')
+
+    if (!subdomain) {
+      return NextResponse.json(
+        { error: 'No subdomain detected' },
+        { status: 400 }
+      )
+    }
+
+    // Get tenant_id from subdomain
+    const { data: tenantData, error: tenantError } = await supabase
+      .from('tenant_registry')
+      .select('tenant_id')
+      .eq('slug', subdomain)
+      .single()
+
+    if (tenantError || !tenantData) {
+      console.error('[Premium Chat] Tenant not found:', tenantError)
+      return NextResponse.json(
+        { error: 'Tenant not found' },
+        { status: 404 }
+      )
+    }
+
+    const tenant_id = tenantData.tenant_id
+
+    console.log(`[Premium Chat] Query: "${query}" for client: ${business_name}, tenant: ${tenant_id}`)
 
     const startTime = Date.now()
     const searchType = determineSearchType(query)
@@ -156,14 +183,12 @@ export async function POST(request: NextRequest) {
 
     // Search accommodation data if needed
     if (searchType === 'accommodation' || searchType === 'both') {
-      console.log(`[Premium Chat] Searching accommodation units...`)
-
-      // Use SimmerDown tenant ID
-      const tenant_id = 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf'
+      console.log(`[Premium Chat] Searching accommodation units for tenant: ${tenant_id}`)
 
       const { data: unitResults, error: unitError } = await supabase
         .rpc('match_accommodation_units_fast', {
           query_embedding: queryEmbeddingFast,
+          p_tenant_id: tenant_id,
           similarity_threshold: 0.1,
           match_count: 3
         })

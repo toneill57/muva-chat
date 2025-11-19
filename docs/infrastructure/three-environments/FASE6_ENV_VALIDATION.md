@@ -10,7 +10,7 @@
 | Environment | Project ID | Status | Notes |
 |------------|-----------|--------|-------|
 | **dev** | `rvjmwwvkhglcuqwcznph` | ✅ Configured | From docs, not visible in MCP (different org?) |
-| **staging** | `ooaumjzaztmutltifhoq` | ✅ Verified | Confirmed via `mcp__supabase__list_projects` |
+| **staging** | `iyeueszchbvlutlcmvcb` | ✅ Verified | Confirmed via `mcp__supabase__list_projects` |
 | **production** | `[DEPRECATED-OLD-STAGING]` | ✅ Configured | From docs, production environment |
 
 **All scripts use correct Project IDs** ✅
@@ -38,7 +38,7 @@ SUPABASE_SERVICE_ROLE_KEY_PRODUCTION=<production_service_role_key>
 
 | Variable | Status | Notes |
 |----------|--------|-------|
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ **SET** | Staging environment (ooaumjzaztmutltifhoq) |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ **SET** | Staging environment (iyeueszchbvlutlcmvcb) |
 | `SUPABASE_SERVICE_ROLE_KEY_DEV` | ⚠️ **NOT SET** | Optional - only needed for dev environment testing |
 | `SUPABASE_SERVICE_ROLE_KEY_PRODUCTION` | ⚠️ **NOT SET** | Optional - only needed for production operations |
 

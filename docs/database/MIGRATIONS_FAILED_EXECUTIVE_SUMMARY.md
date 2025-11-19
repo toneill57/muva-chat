@@ -8,7 +8,7 @@
 
 ## TL;DR - QUÉ PASÓ
 
-El branch dev (ooaumjzaztmutltifhoq) tiene status `MIGRATIONS_FAILED` desde el 31 de octubre 2025, 19:08 UTC. **PERO la base de datos está 100% funcional con todos los datos intactos.**
+El branch dev (iyeueszchbvlutlcmvcb) tiene status `MIGRATIONS_FAILED` desde el 31 de octubre 2025, 19:08 UTC. **PERO la base de datos está 100% funcional con todos los datos intactos.**
 
 ### Estado Real vs Status Reportado
 
@@ -60,10 +60,10 @@ El branch dev (ooaumjzaztmutltifhoq) tiene status `MIGRATIONS_FAILED` desde el 3
 
 ```bash
 # Comando único para corregir metadata
-supabase migration repair --project-ref ooaumjzaztmutltifhoq
+supabase migration repair --project-ref iyeueszchbvlutlcmvcb
 
 # Validar resultado
-supabase branches list --project-ref ooaumjzaztmutltifhoq
+supabase branches list --project-ref iyeueszchbvlutlcmvcb
 ```
 
 **Qué hace:**
@@ -182,7 +182,7 @@ Local → Staging → Dev → Prod
 
 ### CRÍTICO (Hacer HOY)
 
-- [ ] **Ejecutar:** `supabase migration repair --project-ref ooaumjzaztmutltifhoq`
+- [ ] **Ejecutar:** `supabase migration repair --project-ref iyeueszchbvlutlcmvcb`
 - [ ] **Validar:** Branch status cambia a ACTIVE
 - [ ] **Documentar:** Resultado en commit message
 

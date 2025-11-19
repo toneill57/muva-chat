@@ -13,13 +13,13 @@ echo ""
 
 echo "🚀 Starting development server with PRODUCTION environment..."
 echo "   Port: 3000"
-echo "   Database: ooaumjzaztmutltifhoq (production)"
+echo "   Database: kprqghwdnaykxhostivv (production)"
 echo ""
 
 # Load production environment variables
-export NEXT_PUBLIC_SUPABASE_URL="https://ooaumjzaztmutltifhoq.supabase.co"
-export NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjIxOTgyNzksImV4cCI6MjAzNzc3NDI3OX0.gtoWU5CDHna0W5ODKSk1qVH1pj0s0bgGy8G2YhC-OxI"
-export SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMjE5ODI3OSwiZXhwIjoyMDM3Nzc0Mjc5fQ.vGPP9pRx3VO_kH38cMXOG9P2uuMPALLWdDpZOCDtxrY"
+export NEXT_PUBLIC_SUPABASE_URL="https://kprqghwdnaykxhostivv.supabase.co"
+export NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwcnFnaHdkbmF5a3hob3N0aXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTc5NjksImV4cCI6MjA3ODg5Mzk2OX0.tm-EjVqO25o3kjC73rTsgNr6IJOPeqytlilHVdM_7M8"
+export SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwcnFnaHdkbmF5a3hob3N0aXZ2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzMxNzk2OSwiZXhwIjoyMDc4ODkzOTY5fQ.Ypsb1ZpV59b0zAL3JqnyArMx3ZU9OAiltOnsT0rE6MY"
 
 # Load other environment variables from .env.local (OpenAI, etc.)
 if [ -f .env.local ]; then
@@ -28,9 +28,9 @@ if [ -f .env.local ]; then
   set +a
 
   # Override Supabase vars with production values
-  export NEXT_PUBLIC_SUPABASE_URL="https://ooaumjzaztmutltifhoq.supabase.co"
-  export NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjIxOTgyNzksImV4cCI6MjAzNzc3NDI3OX0.gtoWU5CDHna0W5ODKSk1qVH1pj0s0bgGy8G2YhC-OxI"
-  export SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyMjE5ODI3OSwiZXhwIjoyMDM3Nzc0Mjc5fQ.vGPP9pRx3VO_kH38cMXOG9P2uuMPALLWdDpZOCDtxrY"
+  export NEXT_PUBLIC_SUPABASE_URL="https://kprqghwdnaykxhostivv.supabase.co"
+  export NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwcnFnaHdkbmF5a3hob3N0aXZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzMTc5NjksImV4cCI6MjA3ODg5Mzk2OX0.tm-EjVqO25o3kjC73rTsgNr6IJOPeqytlilHVdM_7M8"
+  export SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwcnFnaHdkbmF5a3hob3N0aXZ2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzMxNzk2OSwiZXhwIjoyMDc4ODkzOTY5fQ.Ypsb1ZpV59b0zAL3JqnyArMx3ZU9OAiltOnsT0rE6MY"
 fi
 
 # Run Next.js dev server on port 3000 (default)

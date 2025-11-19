@@ -244,7 +244,7 @@ The **Three Environments CI/CD System** provides automated deployment and databa
 |-------------|-------------|--------------|----------|
 | **Dev** | http://localhost:3000 | http://localhost:3000/api/health | rvjmwwvkhglcuqwcznph |
 | **Staging** | https://simmerdown.staging.muva.chat | https://simmerdown.staging.muva.chat/api/health | [DEPRECATED-OLD-STAGING] |
-| **Production** | https://simmerdown.muva.chat | https://simmerdown.muva.chat/api/health | ooaumjzaztmutltifhoq |
+| **Production** | https://simmerdown.muva.chat | https://simmerdown.muva.chat/api/health | iyeueszchbvlutlcmvcb |
 
 ### Common Commands
 

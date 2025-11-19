@@ -27,7 +27,7 @@ Supabase has released security patches for known PostgreSQL vulnerabilities. Run
 **Option A: Supabase Dashboard (RECOMMENDED)**
 
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
-2. Select project: `ooaumjzaztmutltifhoq`
+2. Select project: `iyeueszchbvlutlcmvcb`
 3. Navigate to **Database** → **Backups**
 4. Click **"Create Manual Backup"**
 5. Name: `pre-postgres-upgrade-2025-10-06`
@@ -38,7 +38,7 @@ Supabase has released security patches for known PostgreSQL vulnerabilities. Run
 ```bash
 # Export full database schema + data
 pg_dump \
-  --host=db.ooaumjzaztmutltifhoq.supabase.co \
+  --host=db.iyeueszchbvlutlcmvcb.supabase.co \
   --port=5432 \
   --username=postgres \
   --format=custom \
@@ -123,7 +123,7 @@ supabase migration show
 **Step 1: Navigate to Upgrade Page**
 
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
-2. Select project: `ooaumjzaztmutltifhoq`
+2. Select project: `iyeueszchbvlutlcmvcb`
 3. Navigate to **Project Settings** → **Infrastructure**
 4. Scroll to **Database Version** section
 
@@ -172,7 +172,7 @@ supabase --version
 
 ```bash
 # Link to production project
-supabase link --project-ref ooaumjzaztmutltifhoq
+supabase link --project-ref iyeueszchbvlutlcmvcb
 
 # Verify link
 supabase projects list
@@ -185,7 +185,7 @@ supabase projects list
 supabase db upgrade
 
 # Follow prompts:
-# - Confirm project: ooaumjzaztmutltifhoq
+# - Confirm project: iyeueszchbvlutlcmvcb
 # - Confirm upgrade: Yes
 # - Wait for completion
 ```
@@ -244,7 +244,7 @@ console.log('Supabase:', data.services.supabase.status)
 supabase db execute --sql "SELECT version();"
 
 # Or via psql
-psql -h db.ooaumjzaztmutltifhoq.supabase.co -U postgres -c "SELECT version();"
+psql -h db.iyeueszchbvlutlcmvcb.supabase.co -U postgres -c "SELECT version();"
 ```
 
 **Expected:** Version number > `17.4.1.075`
@@ -334,7 +334,7 @@ WHERE created_at > NOW() - INTERVAL '1 hour';
 ```bash
 # Restore from local backup
 pg_restore \
-  --host=db.ooaumjzaztmutltifhoq.supabase.co \
+  --host=db.iyeueszchbvlutlcmvcb.supabase.co \
   --port=5432 \
   --username=postgres \
   --dbname=postgres \
@@ -349,7 +349,7 @@ If restore fails:
 1. Go to [Supabase Support](https://supabase.com/dashboard/support)
 2. Create ticket: **"Postgres upgrade rollback request"**
 3. Include:
-   - Project ID: `ooaumjzaztmutltifhoq`
+   - Project ID: `iyeueszchbvlutlcmvcb`
    - Upgrade date/time
    - Error details
    - Request rollback to `17.4.1.075`

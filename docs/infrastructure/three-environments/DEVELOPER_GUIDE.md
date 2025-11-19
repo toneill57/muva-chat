@@ -219,7 +219,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ... (staging service role key)
 
 #### Production (VPS: /var/www/muva-chat/.env.production)
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://iyeueszchbvlutlcmvcb.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ... (production anon key)
 SUPABASE_SERVICE_ROLE_KEY=eyJ... (production service role key)
 # ... same API keys

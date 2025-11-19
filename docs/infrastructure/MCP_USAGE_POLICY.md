@@ -53,13 +53,13 @@ Si NO existe MCP → Métodos tradicionales permitidos
 ```typescript
 // ✅ CORRECTO
 mcp__supabase__list_tables({
-  project_id: "ooaumjzaztmutltifhoq",
+  project_id: "iyeueszchbvlutlcmvcb",
   schemas: ["public"]  // OBLIGATORIO para evitar permission denied
 })
 
 // ❌ INCORRECTO (causará permission denied)
 mcp__supabase__list_tables({
-  project_id: "ooaumjzaztmutltifhoq"
+  project_id: "iyeueszchbvlutlcmvcb"
   // schemas omitido → ERROR
 })
 ```

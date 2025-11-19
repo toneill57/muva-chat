@@ -150,7 +150,7 @@ const CONNECTION_STRING = `postgresql://postgres:${STAGING_SERVICE_KEY}@aws-0-us
 Mismos pasos pero para producción:
 
 1. **Obtener DB Password:**
-   - Proyecto production (`ooaumjzaztmutltifhoq`)
+   - Proyecto production (`iyeueszchbvlutlcmvcb`)
    - Settings → Database → Connection string
 
 2. **Secret name:** `SUPABASE_PRODUCTION_DB_PASSWORD`

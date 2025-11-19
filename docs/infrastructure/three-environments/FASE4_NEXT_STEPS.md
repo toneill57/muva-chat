@@ -37,8 +37,8 @@ VPS_USER = [Usuario SSH]
 VPS_SSH_KEY = [SSH private key]
 
 # Supabase Production
-SUPABASE_PRODUCTION_PROJECT_ID = ooaumjzaztmutltifhoq
-SUPABASE_URL_PRODUCTION = https://ooaumjzaztmutltifhoq.supabase.co
+SUPABASE_PRODUCTION_PROJECT_ID = iyeueszchbvlutlcmvcb
+SUPABASE_URL_PRODUCTION = https://iyeueszchbvlutlcmvcb.supabase.co
 SUPABASE_ANON_KEY_PRODUCTION = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk
 SUPABASE_SERVICE_ROLE_KEY_PRODUCTION = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc
 SUPABASE_DB_PASSWORD_PRODUCTION = [Obtener de Supabase Dashboard]
@@ -293,7 +293,7 @@ gunzip production-TIMESTAMP.sql.gz
 
 # Restaurar (DESTRUCTIVE - solo emergencias)
 PGPASSWORD="[password]" psql \
-  "postgresql://postgres.ooaumjzaztmutltifhoq:[password]@aws-0-us-west-1.pooler.supabase.com:5432/postgres" \
+  "postgresql://postgres.iyeueszchbvlutlcmvcb:[password]@aws-0-us-west-1.pooler.supabase.com:5432/postgres" \
   < production-TIMESTAMP.sql
 ```
 

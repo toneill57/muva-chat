@@ -114,7 +114,7 @@ Five common issues with diagnosis and fixes:
 
 ```bash
 pg_dump \
-  -h db.ooaumjzaztmutltifhoq.supabase.co \
+  -h db.iyeueszchbvlutlcmvcb.supabase.co \
   -U postgres \
   -d postgres \
   -t accommodation_units_public \

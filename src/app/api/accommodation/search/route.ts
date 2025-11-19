@@ -35,6 +35,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Query is required' }, { status: 400 })
     }
 
+    const supabase = getSupabaseClient()
+
+    // Get tenant from subdomain header (set by middleware)
+    const subdomain = request.headers.get('x-tenant-subdomain')
+
+    if (!subdomain) {
+      return NextResponse.json(
+        { error: 'No subdomain detected' },
+        { status: 400 }
+      )
+    }
+
+    // Get tenant_id from subdomain
+    const { data: tenantData, error: tenantError } = await supabase
+      .from('tenant_registry')
+      .select('tenant_id')
+      .eq('slug', subdomain)
+      .single()
+
+    if (tenantError || !tenantData) {
+      console.error('[Accommodation Search] Tenant not found:', tenantError)
+      return NextResponse.json(
+        { error: 'Tenant not found' },
+        { status: 404 }
+      )
+    }
+
+    const tenant_id = tenantData.tenant_id
+
     const startTime = Date.now()
 
     // Generate embeddings based on search type
@@ -55,11 +84,6 @@ export async function POST(request: NextRequest) {
     // Search accommodation units using new hotels schema function
     const tier = search_type === 'tourism' ? 1 : 2
 
-    // Use hotels schema function for accommodation units search
-    // Use correct tenant_id (not deprecated 'simmerdown')
-    const tenant_id = 'b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf' // SimmerDown UUID
-
-    const supabase = getSupabaseClient()
     const { data: unitResults, error: unitError } = await supabase
       .rpc('match_hotels_documents', {
         query_embedding: queryEmbedding,

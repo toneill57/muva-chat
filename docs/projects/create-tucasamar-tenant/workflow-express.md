@@ -947,7 +947,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 ### Database
 - Table: `tenant_registry`
-- Project ID: `ooaumjzaztmutltifhoq`
+- Project ID: `iyeueszchbvlutlcmvcb`
 - Service: Supabase
 
 ### URLs

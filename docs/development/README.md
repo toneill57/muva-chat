@@ -6,7 +6,7 @@
 
 ## Environment Setup
 - **Staging**: `localhost:3001` (hoaiwcueleiemeplrurv)
-- **Production**: `localhost:3000` (ooaumjzaztmutltifhoq) - READ ONLY
+- **Production**: `localhost:3000` (iyeueszchbvlutlcmvcb) - READ ONLY
 
 ## Commands
 ```bash
