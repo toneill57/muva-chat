@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,6 +9,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   Settings,
   Eye,
@@ -20,7 +27,8 @@ import {
   Upload,
   Clock,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Zap
 } from 'lucide-react'
 import {
   Collapsible,
@@ -55,6 +63,21 @@ interface SyncProgress {
   created: number
   updated: number
   errors: number
+}
+
+interface FullSyncProgress {
+  current: number
+  total: number
+  message: string
+}
+
+interface FullSyncStats {
+  total: number
+  created: number
+  updated: number
+  errors: number
+  accommodations?: number
+  reservations?: number
 }
 
 interface MotoPressPanelContentProps {
@@ -96,6 +119,14 @@ export function MotoPressPanelContent({
   const [syncHistory, setSyncHistory] = useState<SyncHistoryItem[]>([])
   const [loadingHistory, setLoadingHistory] = useState(false)
 
+  // Full Sync state (SSE for accommodations + reservations)
+  const [fullSyncing, setFullSyncing] = useState(false)
+  const [showFullSyncModal, setShowFullSyncModal] = useState(false)
+  const [fullSyncProgress, setFullSyncProgress] = useState<FullSyncProgress>({ current: 0, total: 0, message: '' })
+  const [fullSyncStats, setFullSyncStats] = useState<FullSyncStats | null>(null)
+  const [fullSyncError, setFullSyncError] = useState<string | null>(null)
+  const eventSourceRef = useRef<EventSource | null>(null)
+
   // Load existing configuration on mount
   useEffect(() => {
     loadExistingConfig()
@@ -108,6 +139,15 @@ export function MotoPressPanelContent({
       loadSyncHistory()
     }
   }, [historyOpen])
+
+  // Cleanup EventSource on unmount
+  useEffect(() => {
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close()
+      }
+    }
+  }, [])
 
   const loadExistingConfig = async () => {
     try {
@@ -442,6 +482,93 @@ export function MotoPressPanelContent({
     }, 2000)
   }
 
+  const handleFullSync = async () => {
+    try {
+      const token = localStorage.getItem('staff_token')
+      if (!token) {
+        setFullSyncError('No authentication token found')
+        return
+      }
+
+      setFullSyncing(true)
+      setFullSyncError(null)
+      setFullSyncStats(null)
+      setFullSyncProgress({ current: 0, total: 0, message: 'Iniciando sincronización completa...' })
+      setShowFullSyncModal(true)
+
+      // Close any existing EventSource
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close()
+      }
+
+      const eventSource = new EventSource(
+        `/api/integrations/motopress/sync-all?tenant_id=${tenantId}&token=${encodeURIComponent(token)}`
+      )
+      eventSourceRef.current = eventSource
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+
+          if (data.type === 'progress') {
+            setFullSyncProgress({
+              current: data.current || 0,
+              total: data.total || 0,
+              message: data.message || ''
+            })
+          } else if (data.type === 'complete') {
+            // Success!
+            setFullSyncStats(data.stats)
+            setFullSyncProgress({
+              current: data.stats.total || 0,
+              total: data.stats.total || 0,
+              message: 'Sincronización completada exitosamente'
+            })
+
+            eventSource.close()
+            eventSourceRef.current = null
+            setFullSyncing(false)
+
+            // Reload sync history and close modal after 3 seconds
+            loadSyncHistory()
+            setTimeout(() => {
+              setShowFullSyncModal(false)
+              onSyncComplete?.()
+            }, 3000)
+          } else if (data.type === 'error') {
+            setFullSyncError(data.message)
+            setFullSyncProgress({
+              current: 0,
+              total: 0,
+              message: `Error: ${data.message}`
+            })
+            eventSource.close()
+            eventSourceRef.current = null
+            setFullSyncing(false)
+          }
+        } catch (err) {
+          console.error('[SSE] Parse error:', err)
+        }
+      }
+
+      eventSource.onerror = (err) => {
+        console.error('[SSE] Connection error:', err)
+        setFullSyncError('Error de conexión durante la sincronización')
+        setFullSyncProgress({
+          current: 0,
+          total: 0,
+          message: 'Error de conexión'
+        })
+        eventSource.close()
+        eventSourceRef.current = null
+        setFullSyncing(false)
+      }
+    } catch (error: any) {
+      setFullSyncError(error.message || 'Error al iniciar sincronización')
+      setFullSyncing(false)
+    }
+  }
+
   const loadSyncHistory = async () => {
     try {
       setLoadingHistory(true)
@@ -717,18 +844,34 @@ export function MotoPressPanelContent({
                   </Label>
                 </div>
 
-                <Button
-                  onClick={startSync}
-                  disabled={syncing || selectedIds.size === 0}
-                  className="w-full"
-                >
-                  {syncing ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  {syncing ? 'Sincronizando...' : `Importar ${selectedIds.size} seleccionados`}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={startSync}
+                    disabled={syncing || fullSyncing || selectedIds.size === 0}
+                    className="flex-1"
+                  >
+                    {syncing ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <Upload className="w-4 h-4 mr-2" />
+                    )}
+                    {syncing ? 'Sincronizando...' : `Importar ${selectedIds.size} seleccionados`}
+                  </Button>
+
+                  <Button
+                    onClick={handleFullSync}
+                    disabled={syncing || fullSyncing}
+                    variant="default"
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                  >
+                    {fullSyncing ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <Zap className="w-4 h-4 mr-2" />
+                    )}
+                    {fullSyncing ? 'Sincronizando...' : 'Importar todo + reservas'}
+                  </Button>
+                </div>
 
                 {syncProgress && (
                   <div className="space-y-2">
@@ -838,6 +981,98 @@ export function MotoPressPanelContent({
           </CollapsibleContent>
         </Card>
       </Collapsible>
+
+      {/* Full Sync Progress Modal */}
+      <Dialog open={showFullSyncModal} onOpenChange={(open) => {
+        // Only allow closing if sync is complete or errored
+        if (!fullSyncing) {
+          setShowFullSyncModal(open)
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <RefreshCw className={`w-5 h-5 ${fullSyncing ? 'animate-spin' : ''}`} />
+              Sincronización Completa
+            </DialogTitle>
+            <DialogDescription>
+              Importando alojamientos y reservas desde MotoPress
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Progress Bar */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm text-gray-600">
+                <span>{fullSyncProgress.message}</span>
+                <span>{fullSyncProgress.current} / {fullSyncProgress.total}</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-green-600 h-2 rounded-full transition-all"
+                  style={{
+                    width: fullSyncProgress.total > 0
+                      ? `${(fullSyncProgress.current / fullSyncProgress.total) * 100}%`
+                      : '0%'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Stats */}
+            {fullSyncStats && (
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="text-center">
+                    <div className="font-semibold text-green-600 text-lg">{fullSyncStats.created}</div>
+                    <div className="text-xs text-gray-600">Creados</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-semibold text-blue-600 text-lg">{fullSyncStats.updated}</div>
+                    <div className="text-xs text-gray-600">Actualizados</div>
+                  </div>
+                  {fullSyncStats.accommodations !== undefined && (
+                    <div className="text-center">
+                      <div className="font-semibold text-purple-600 text-lg">{fullSyncStats.accommodations}</div>
+                      <div className="text-xs text-gray-600">Alojamientos</div>
+                    </div>
+                  )}
+                  {fullSyncStats.reservations !== undefined && (
+                    <div className="text-center">
+                      <div className="font-semibold text-indigo-600 text-lg">{fullSyncStats.reservations}</div>
+                      <div className="text-xs text-gray-600">Reservas</div>
+                    </div>
+                  )}
+                </div>
+                {fullSyncStats.errors > 0 && (
+                  <div className="text-center pt-2 border-t">
+                    <div className="font-semibold text-red-600 text-lg">{fullSyncStats.errors}</div>
+                    <div className="text-xs text-gray-600">Errores</div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Error Message */}
+            {fullSyncError && (
+              <Alert variant="destructive">
+                <AlertCircle className="w-4 h-4" />
+                <AlertDescription>{fullSyncError}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* Success Message */}
+            {!fullSyncing && fullSyncStats && !fullSyncError && (
+              <Alert className="bg-green-50 border-green-200">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <AlertDescription className="text-green-800">
+                  ✅ Sincronización completada exitosamente!
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
