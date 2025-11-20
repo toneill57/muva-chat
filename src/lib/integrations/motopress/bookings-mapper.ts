@@ -179,6 +179,7 @@ export class MotoPresBookingsMapper {
         console.log(`[mapper] ❌ RPC error for accommodation ${motopressTypeId}:`, error)
       } else if (units && units.length > 0) {
         const unit = units[0]
+        // Use id for guest_reservations FK (points to hotels.accommodation_units.id)
         accommodationUnitId = unit.id
         console.log(`[mapper] ✅ MATCH: Unit "${unit.name}" (motopress_type_id=${unit.motopress_type_id}) matches booking accommodation ${motopressTypeId}`)
       } else {
@@ -529,8 +530,9 @@ export class MotoPresBookingsMapper {
           console.log(`[mapper]     ❌ RPC error for accommodation ${motopressTypeId}:`, error)
         } else if (units && units.length > 0) {
           const unit = units[0]
-          accommodationUnitId = unit.id
-          console.log(`[mapper]     ✅ MATCH: Unit "${unit.name}" (id=${unit.id})`)
+          // Use public_unit_id for reservation_accommodations FK (points to accommodation_units_public.unit_id)
+          accommodationUnitId = unit.public_unit_id
+          console.log(`[mapper]     ✅ MATCH: Unit "${unit.name}" (public_unit_id=${unit.public_unit_id})`)
         } else {
           // NO MATCH: Create accommodation automatically from MotoPress data
           console.log(`[mapper]     ⚠️ NO MATCH: No unit found for motopress_type_id=${motopressTypeId}`)

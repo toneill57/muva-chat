@@ -1,5 +1,5 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 
 destination:
@@ -14,7 +14,7 @@ document:
   subcategory: surf
 
   language: es
-  version: "2.0"
+  version: "3.0"
   status: active
 
   tags: [surf, surfing, lessons, waves, beach, beginner_friendly, paddleboard, clases_surf, principiantes, water_sports, olas, el_paraiso]
