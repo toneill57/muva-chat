@@ -82,6 +82,8 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<WipeRes
 
       // Accommodation-related tables
       'accommodation_units_manual_chunks',
+      'accommodation_manual_analytics',
+      'accommodation_manuals',
       'accommodation_units_manual',
       'accommodation_units_public',
       'accommodation_units',
