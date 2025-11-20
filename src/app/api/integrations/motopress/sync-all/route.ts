@@ -19,6 +19,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
+import { MotoPresSyncManager } from '@/lib/integrations/motopress/sync-manager'
 import { MotoPresBookingsMapper } from '@/lib/integrations/motopress/bookings-mapper'
 import { getDecryptedMotoPresCredentials } from '@/lib/integrations/motopress/credentials-helper'
 import { verifyStaffToken } from '@/lib/staff-auth'
@@ -170,6 +171,35 @@ export async function GET(request: NextRequest) {
       await sendEvent({
         type: 'progress',
         message: `Connection established (${testResult.accommodationsCount} accommodations). Fetching bookings...`
+      })
+
+      // 2.5. SYNC ACCOMMODATIONS FIRST (Fix: Race condition)
+      // This prevents reservations from being inserted with accommodation_unit_id = NULL
+      // See: docs/troubleshooting/2025-11-19_MOTOPRESS_MULTI_TENANT_SYNC_FIX.md
+      await sendEvent({
+        type: 'progress',
+        message: 'Step 1/2: Syncing accommodations first...'
+      })
+
+      const syncManager = new MotoPresSyncManager()
+      const accommodationResult = await syncManager.syncAccommodations(tenant_id, false) // forceEmbeddings = false
+
+      if (!accommodationResult.success) {
+        console.error('[sync-all] ❌ Accommodations sync failed:', accommodationResult.message)
+        await sendEvent({
+          type: 'error',
+          message: `Failed to sync accommodations: ${accommodationResult.message}. Cannot proceed with reservations sync.`
+        })
+        await writer.close()
+        return
+      }
+
+      const totalAccommodations = accommodationResult.created + accommodationResult.updated
+      console.log(`[sync-all] ✅ Accommodations synced: ${accommodationResult.created} created, ${accommodationResult.updated} updated`)
+
+      await sendEvent({
+        type: 'progress',
+        message: `Step 1/2 Complete: ${totalAccommodations} accommodations synced. Now fetching reservations...`
       })
 
       // 3. Fetch ALL bookings with _embed (SLOW but complete data)

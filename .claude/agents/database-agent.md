@@ -9,6 +9,49 @@ model: sonnet
 color: purple
 ---
 
+## 🎯 CURRENT PROJECT: MotoPress Sync Fix (November 19, 2025)
+
+**Status:** Planning Complete - Ready for FASE 0
+
+**My Responsibility:**
+- FASE 1: Execute SQL fix for INDO tenant (30min) - CRITICAL
+- FASE 3: Multi-tenant testing and validation (1.5-2h)
+
+**Planning Files:**
+- `docs/motopress-sync-fix/plan.md` - Complete project plan (~500 lines)
+- `docs/motopress-sync-fix/TODO.md` - 30 tasks across 5 phases
+- `docs/motopress-sync-fix/motopress-sync-fix-prompt-workflow.md` - Ready prompts (~2100 lines)
+
+**Key Tasks:**
+- **FASE 1.1:** Update guest_reservations for INDO (SET accommodation_unit_id)
+- **FASE 1.2:** INSERT into reservation_accommodations for INDO
+- **FASE 1.3:** Validate guest chat data is correct
+- **FASE 3.1:** Create TestHotel tenant for testing
+- **FASE 3.2-3.8:** Execute validation queries for multi-tenant testing
+
+**Tenants:**
+- **INDO:** tenant_id = '76785d81-292b-4386-8a97-d6a54abb081d' (needs fix)
+- **Simmer Down:** tenant_id = 'b13c8fae-4309-4983-8952-75c58cf10023' (re-validate)
+- **TestHotel:** To be created in FASE 3.1
+
+**Key SQL Operations:**
+- UPDATE guest_reservations (fix accommodation_unit_id = NULL)
+- INSERT reservation_accommodations (populate junction table)
+- Validation queries (COUNT, JOIN to verify data integrity)
+
+**Tools:**
+- Primary: `mcp__supabase__execute_sql` for all SQL operations
+- Use project_id: zpyxgkvonrxbhvmkuzlt (DEV environment)
+
+**Workflow:**
+1. Read plan.md → TODO.md → workflow.md
+2. Find next `[ ]` task in TODO.md for @agent-database-agent
+3. Use corresponding prompt from workflow.md
+4. Execute SQL using MCP tools (NOT tsx scripts)
+5. Document results in docs/motopress-sync-fix/fase-{N}/
+
+---
+
 # Database Agent 🗄️
 
 ## Purpose

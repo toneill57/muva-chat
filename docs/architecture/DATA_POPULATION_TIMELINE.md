@@ -1,9 +1,40 @@
 # Data Population Timeline - MUVA Chat
 
-**Status:** Active Architecture Documentation
+**Status:** Active Architecture Documentation (⚠️ Partially Outdated - See Warning Below)
 **Last Updated:** November 18, 2025
 **Database:** iyeueszchbvlutlcmvcb (DEV branch)
 **Tenant Example:** Simmer Down (d6685692-e2a5-4f7f-bdfd-28e3cab025fb)
+
+---
+
+> ## ⚠️ CRITICAL DOCUMENTATION INACCURACY WARNING
+>
+> **Issue Discovered:** November 19, 2025
+>
+> **Affected Sections:**
+> - Line 295: `accommodation_unit_id` FK description
+> - Line 340: `reservation_accommodations.accommodation_unit_id` FK target
+> - Line 849: "Foreign key target for guest_reservations"
+>
+> **Problem:**
+> This document states that BOTH `guest_reservations.accommodation_unit_id` AND `reservation_accommodations.accommodation_unit_id` point to `hotels.accommodation_units.id`.
+>
+> **Reality (verified via database inspection):**
+> - `guest_reservations.accommodation_unit_id` → `hotels.accommodation_units.id` ✅ (CORRECT)
+> - `reservation_accommodations.accommodation_unit_id` → `accommodation_units_public.unit_id` ❌ (DOCUMENTED INCORRECTLY)
+>
+> **Impact:**
+> Following this documentation led to FK constraint violations during MotoPress sync implementation. The two FKs point to DIFFERENT tables with DIFFERENT UUIDs for the same accommodation.
+>
+> **Resolution:**
+> See **[ADR-001: Dual-Table FK Architecture](./ADR-001-RESERVATION-FK-DUAL-TABLE-ARCHITECTURE.md)** for:
+> - Complete problem analysis
+> - Database reality vs documentation discrepancy
+> - Implemented solution (RPC returns both IDs)
+> - 7 migration attempts that led to correct fix
+>
+> **Document Status:**
+> This document is retained for historical reference and contains valuable workflow information. However, FK architecture details in STEP 3 should be cross-referenced with ADR-001 for accuracy.
 
 ---
 
@@ -26,7 +57,7 @@ Este documento describe el **flujo secuencial completo** de cómo se pueblan las
 
 ## Database Environment
 
-- **Project ID:** iyeueszchbvlutlcmvcb
+- **Project ID:** hsuvapubxwgmtmuclahd
 - **Environment:** Development (dev branch)
 - **Region:** us-west-1
 - **PostgreSQL:** 15.x with pgvector extension
@@ -832,6 +863,9 @@ WHERE id = ?;
 ## Key Insights
 
 ### 1. Dual-Table Pattern (Accommodations)
+
+**⚠️ ADVERTENCIA CRÍTICA:** Los IDs entre estas dos tablas son COMPLETAMENTE DIFERENTES.
+Ver `RESERVATION_LINKING_FIX_SOLUTION.md` para el problema común de foreign keys.
 
 **Why Two Tables?**
 

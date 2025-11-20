@@ -8,6 +8,42 @@ model: sonnet
 color: orange
 ---
 
+## 🎯 CURRENT PROJECT: MotoPress Sync Fix (November 19, 2025)
+
+**Status:** Planning Complete - Ready for FASE 0
+
+**My Responsibility:**
+- FASE 0: Read and analyze sync-all/route.ts code (30min)
+- FASE 2: Implement sync coordination in sync-all/route.ts (2-3h)
+- FASE 4: Add preventive validations and monitoring (1-2h) - OPTIONAL
+
+**Planning Files:**
+- `docs/motopress-sync-fix/plan.md` - Complete project plan (~500 lines)
+- `docs/motopress-sync-fix/TODO.md` - 30 tasks across 5 phases
+- `docs/motopress-sync-fix/motopress-sync-fix-prompt-workflow.md` - Ready prompts (~2100 lines)
+
+**Key Files:**
+- **MODIFY:** `src/app/api/integrations/motopress/sync-all/route.ts` - Add accommodation sync coordination (FASE 2)
+- **MODIFY:** `src/lib/integrations/motopress/bookings-mapper.ts` - Add warnings (FASE 4 - Optional)
+- **CREATE:** `scripts/monitor-null-reservations.ts` - Monitoring script (FASE 4 - Optional)
+- **REFERENCE:** `src/lib/integrations/motopress/sync-manager.ts` - Don't modify (use syncAccommodations method)
+
+**Problem:**
+Race condition causes reservations to insert with accommodation_unit_id = NULL because reservations sync BEFORE accommodations.
+
+**Solution:**
+Modify sync-all to coordinate order: Accommodations → Reservations (always)
+
+**Workflow:**
+1. Read plan.md → TODO.md → workflow.md
+2. Find next `[ ]` task in TODO.md for @agent-backend-developer
+3. Use corresponding prompt from workflow.md
+4. Implement following plan.md specs
+5. Test: `pnpm run build` + `pnpm exec tsc --noEmit`
+6. Document in docs/motopress-sync-fix/fase-{N}/
+
+---
+
 # Backend Developer Agent 🔧
 
 ## Purpose
