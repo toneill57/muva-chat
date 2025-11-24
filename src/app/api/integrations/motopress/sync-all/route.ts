@@ -29,7 +29,7 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
 interface SSEMessage {
-  type: 'progress' | 'complete' | 'error'
+  type: 'progress' | 'complete' | 'error' | 'heartbeat'
   message?: string
   current?: number
   total?: number
@@ -42,6 +42,9 @@ interface SSEMessage {
     pastExcluded: number
   }
 }
+
+// Heartbeat interval to keep connection alive (30 seconds)
+const HEARTBEAT_INTERVAL_MS = 30000
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -100,6 +103,17 @@ export async function GET(request: NextRequest) {
   ;(async () => {
     const supabase = createServerClient()
 
+    // Start heartbeat to keep connection alive during long operations
+    // This prevents nginx/proxy timeouts (typically 60s)
+    const heartbeatInterval = setInterval(async () => {
+      try {
+        await sendEvent({ type: 'heartbeat', message: 'keep-alive' })
+        console.log('[sync-all] 💓 Heartbeat sent')
+      } catch (error) {
+        // Stream might be closed, ignore
+      }
+    }, HEARTBEAT_INTERVAL_MS)
+
     try {
       console.log('[sync-all] Starting complete sync for tenant:', tenant_id)
       await sendEvent({ type: 'progress', message: 'Starting sync...' })
@@ -114,6 +128,7 @@ export async function GET(request: NextRequest) {
 
       if (configError || !config) {
         console.error('[sync-all] Integration config not found:', configError)
+        clearInterval(heartbeatInterval)
         await sendEvent({
           type: 'error',
           message: 'MotoPress no configurado. Ve a /accommodations/integrations para configurar.'
@@ -123,6 +138,7 @@ export async function GET(request: NextRequest) {
       }
 
       if (!config.is_active) {
+        clearInterval(heartbeatInterval)
         await sendEvent({
           type: 'error',
           message: 'MotoPress integration is not active'
@@ -137,6 +153,7 @@ export async function GET(request: NextRequest) {
         credentials = await getDecryptedMotoPresCredentials(config.config_data)
       } catch (error: any) {
         console.error('[sync-all] Failed to get credentials:', error)
+        clearInterval(heartbeatInterval)
         await sendEvent({
           type: 'error',
           message: error.message || 'Error al obtener credenciales. Reconfigura en /accommodations/integrations'
@@ -159,6 +176,7 @@ export async function GET(request: NextRequest) {
 
       if (!testResult.success) {
         console.error('[sync-all] Connection test failed:', testResult.message)
+        clearInterval(heartbeatInterval)
         await sendEvent({
           type: 'error',
           message: `Connection failed: ${testResult.message}. Please verify credentials at /accommodations/integrations`
@@ -186,6 +204,7 @@ export async function GET(request: NextRequest) {
 
       if (!accommodationResult.success) {
         console.error('[sync-all] ❌ Accommodations sync failed:', accommodationResult.message)
+        clearInterval(heartbeatInterval)
         await sendEvent({
           type: 'error',
           message: `Failed to sync accommodations: ${accommodationResult.message}. Cannot proceed with reservations sync.`
@@ -219,6 +238,7 @@ export async function GET(request: NextRequest) {
 
       if (bookingsResponse.error) {
         console.error('[sync-all] MotoPress API error:', bookingsResponse.error)
+        clearInterval(heartbeatInterval)
         await sendEvent({
           type: 'error',
           message: `MotoPress API error: ${bookingsResponse.error}`
@@ -500,12 +520,15 @@ export async function GET(request: NextRequest) {
 
     } catch (error: any) {
       console.error('[sync-all] Unexpected error:', error)
+      clearInterval(heartbeatInterval)
       await sendEvent({
         type: 'error',
         message: error.message || 'Internal server error'
       })
     } finally {
-      // Always close writer, whether success or error
+      // Always stop heartbeat and close writer
+      clearInterval(heartbeatInterval)
+      console.log('[sync-all] 💓 Heartbeat stopped')
       try {
         await writer.close()
       } catch (closeError) {
