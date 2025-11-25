@@ -121,13 +121,17 @@ interface UnifiedReservationCardProps {
 
 function parseReservationCode(description?: string | null): string | null {
   if (!description) return null
-  const match = description.match(/details\/([A-Z0-9]+)/)
+  // Clean escaped quotes if they exist (MotoPress/Airbnb data comes with escaped quotes)
+  const cleanDesc = description.replace(/^"(.+)"$/, '$1').replace(/\\"/g, '"')
+  const match = cleanDesc.match(/details\/([A-Z0-9]+)/)
   return match ? match[1] : null
 }
 
 function parsePhoneLast4(description?: string | null): string | null {
   if (!description) return null
-  const match = description.match(/Last 4 Digits\): (\d{4})/)
+  // Clean escaped quotes if they exist (MotoPress/Airbnb data comes with escaped quotes)
+  const cleanDesc = description.replace(/^"(.+)"$/, '$1').replace(/\\"/g, '"')
+  const match = cleanDesc.match(/Last 4 Digits\): (\d{4})/)
   return match ? match[1] : null
 }
 
@@ -180,18 +184,28 @@ function getDaysUntil(dateStr: string): number {
 
 function calculateSireCompleteness(reservation: UnifiedReservation): { completed: number; total: number } {
   const sireFields = [
-    reservation.document_type,
-    reservation.document_number,
-    reservation.first_surname,
-    reservation.given_names,
-    reservation.birth_date,
-    reservation.nationality_code,
-    reservation.origin_city_code,
-    reservation.destination_city_code,
+    // Fechas (SIEMPRE existen en las reservas)
+    reservation.check_in_date,         // 1. Fecha de llegada
+    reservation.check_out_date,        // 2. Fecha de salida
+
+    // Identificación personal
+    reservation.first_surname,         // 3. Primer apellido
+    reservation.second_surname,        // 4. Segundo apellido
+    reservation.given_names,           // 5. Nombres
+    reservation.document_type,         // 6. Tipo de documento
+    reservation.document_number,       // 7. Número de documento
+    reservation.nationality_code,      // 8. Nacionalidad
+
+    // Datos adicionales
+    reservation.birth_date,            // 9. Fecha de nacimiento
+    reservation.guest_email,           // 10. Email
+    reservation.phone_full,            // 11. Teléfono completo
+    reservation.origin_city_code,      // 12. Ciudad/País de origen
+    reservation.destination_city_code, // 13. Ciudad/País de destino
   ]
 
   const completed = sireFields.filter(field => field && String(field).trim() !== '').length
-  return { completed, total: 8 }
+  return { completed, total: 13 }
 }
 
 function getUrgencyColor(daysUntil: number): string {
@@ -338,6 +352,12 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
   const urgencyLabel = getUrgencyLabel(daysUntil)
   const isNew = isNewReservation(reservation.created_at)
 
+  // Detect if this is a calendar block instead of a real reservation
+  const isCalendarBlock =
+    (!reservationCode && reservation.guest_name === 'Guest') ||
+    (!reservationCode && phoneLast4Parsed === '0000') ||
+    (reservation.event_type && ['block', 'maintenance', 'parent_block'].includes(reservation.event_type))
+
   // Guest display name
   const guestDisplayName = reservation.guest_name ||
     (reservation.given_names && reservation.first_surname
@@ -369,9 +389,11 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
   }
 
   return (
-    <div className={`rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow ${statusDisplay.bgColor} ${statusDisplay.borderColor} ${
-      isNew ? 'ring-2 ring-green-100' : ''
-    }`}>
+    <div className={`rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow ${
+      isCalendarBlock
+        ? 'bg-gray-50 border-gray-300 opacity-75'
+        : `${statusDisplay.bgColor} ${statusDisplay.borderColor}`
+    } ${isNew ? 'ring-2 ring-green-100' : ''}`}>
       <div className="p-6">
         {/* New Badge */}
         {isNew && (
@@ -388,11 +410,13 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <User className="w-5 h-5 text-blue-600" />
-              <h3 className="text-lg font-semibold text-slate-900">{guestDisplayName}</h3>
+              <h3 className={`text-lg font-semibold ${isCalendarBlock ? 'text-gray-500 italic' : 'text-slate-900'}`}>
+                {isCalendarBlock ? '🔒 Bloqueo de Sincronización' : guestDisplayName}
+              </h3>
             </div>
 
             {/* Código de Reserva - Mejorado para Airbnb */}
-            {reservationCode && (
+            {reservationCode && !isCalendarBlock && (
               <div className="ml-7 mt-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-pink-50 border border-pink-200 rounded-lg">
                   <span className="text-xs font-semibold text-pink-700">
@@ -415,10 +439,32 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
                 </div>
               </div>
             )}
+
+            {/* Calendar Block Information */}
+            {isCalendarBlock && (
+              <div className="ml-7 mt-2">
+                <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded-lg border border-gray-200">
+                  <p className="font-medium mb-1">ℹ️ Sincronización de Calendario</p>
+                  <p>Este bloqueo se genera automáticamente cuando Airbnb sincroniza:</p>
+                  <ul className="list-disc list-inside mt-1 text-gray-600">
+                    <li>Anuncios espejo (mismo alojamiento en varias listas)</li>
+                    <li>Relaciones padre-hijo entre propiedades</li>
+                    <li>Mantenimiento o bloqueos manuales</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Badges Column + Delete Button */}
           <div className="flex flex-col items-end gap-2">
+            {/* Calendar Block Badge */}
+            {isCalendarBlock && (
+              <div className="px-3 py-1 rounded-full text-xs font-semibold border bg-gray-100 text-gray-600 border-gray-300 flex items-center gap-1">
+                <span>🔒</span>
+                {reservation.event_type === 'parent_block' ? 'Bloqueo Heredado' : 'Bloqueo de Calendario'}
+              </div>
+            )}
             <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${urgencyColor}`}>
               {urgencyLabel}
             </div>
@@ -513,17 +559,19 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
           </div>
 
           {/* Phone - Mejorado para mostrar últimos 4 dígitos */}
-          <div className="flex items-start gap-2">
-            <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
-            <div>
-              <p className={`text-sm font-medium ${reservation.phone_full || phoneLast4Parsed ? 'text-slate-700' : 'text-gray-400 italic'}`}>
-                {reservation.phone_full || (phoneLast4Parsed ? `***-${phoneLast4Parsed}` : 'No disponible aún')}
-              </p>
-              <p className="text-xs text-slate-500">
-                {phoneLast4Parsed && !reservation.phone_full ? `Teléfono (últimos 4: ${phoneLast4Parsed})` : 'Teléfono'}
-              </p>
+          {!isCalendarBlock && (
+            <div className="flex items-start gap-2">
+              <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
+              <div>
+                <p className={`text-sm font-medium ${reservation.phone_full || phoneLast4Parsed ? 'text-slate-700' : 'text-gray-400 italic'}`}>
+                  {reservation.phone_full || (phoneLast4Parsed ? `***-${phoneLast4Parsed}` : 'No disponible aún')}
+                </p>
+                <p className="text-xs text-slate-500">
+                  Teléfono{phoneLast4Parsed ? ` (últimos 4: ${phoneLast4Parsed})` : ''}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Guests */}
           <div className="flex items-start gap-2">

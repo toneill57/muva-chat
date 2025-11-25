@@ -121,19 +121,28 @@ function formatRelativeTime(dateString: string): string {
 
 function calculateSireCompleteness(reservation: AirbnbReservation): { completed: number; total: number } {
   const sireFields = [
-    reservation.document_type,
-    reservation.document_number,
-    reservation.first_surname,
-    reservation.given_names,
-    reservation.birth_date,
-    reservation.nationality_code,
-    reservation.origin_city_code,
-    reservation.destination_city_code,
-    // second_surname is optional, not counted
+    // Fechas (SIEMPRE existen en las reservas)
+    reservation.start_date,            // 1. Fecha de llegada
+    reservation.end_date,              // 2. Fecha de salida
+
+    // Identificación personal
+    reservation.first_surname,         // 3. Primer apellido
+    reservation.second_surname,        // 4. Segundo apellido (cuenta aunque sea opcional)
+    reservation.given_names,           // 5. Nombres
+    reservation.document_type,         // 6. Tipo de documento
+    reservation.document_number,       // 7. Número de documento
+    reservation.nationality_code,      // 8. Nacionalidad
+
+    // Datos adicionales
+    reservation.birth_date,            // 9. Fecha de nacimiento
+    reservation.guest_email,           // 10. Email
+    reservation.guest_phone,           // 11. Teléfono
+    reservation.origin_city_code,      // 12. Ciudad/País de origen
+    reservation.destination_city_code, // 13. Ciudad/País de destino
   ]
 
   const completed = sireFields.filter(field => field && field.trim() !== '').length
-  return { completed, total: 8 } // 8 mandatory fields (segundo_apellido is optional)
+  return { completed, total: 13 } // 13 campos SIRE en total
 }
 
 function getEventTypeBadge(eventType: string) {

@@ -183,7 +183,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
       `)
       .eq('tenant_id', staffSession.tenant_id)
       .in('status', statusFilter)
-      .in('booking_source', ['motopress', 'airbnb']) // Show MotoPress + Airbnb reservations
+      .in('booking_source', ['motopress', 'mphb-airbnb', 'airbnb']) // Show MotoPress + Airbnb reservations
 
     // Filter reservations from 2 months ago onwards (not just future)
     if (futureOnly) {
