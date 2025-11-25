@@ -510,6 +510,12 @@ export function MotoPressPanelContent({
         try {
           const data = JSON.parse(event.data)
 
+          // Ignore heartbeat events (used to keep connection alive)
+          if (data.type === 'heartbeat') {
+            console.log('[SSE] 💓 Heartbeat received')
+            return
+          }
+
           if (data.type === 'progress') {
             setFullSyncProgress({
               current: data.current || 0,
