@@ -116,7 +116,9 @@ export class MotoPresBookingsMapper {
    * MotoPress stores Airbnb phone data like: "Phone Number (Last 4 Digits): 8216"
    */
   static extractPhoneFromIcal(ical: string): { full: string; last4: string } {
-    const match = ical.match(/Phone Number \(Last 4 Digits\):\s*(\d{4})/)
+    // Clean escaped quotes if they exist (MotoPress/Airbnb data comes with escaped quotes)
+    const cleanIcal = ical.replace(/^"(.+)"$/, '$1').replace(/\\"/g, '"')
+    const match = cleanIcal.match(/Phone Number \(Last 4 Digits\):\s*(\d{4})/)
     return {
       full: 'N/A', // MotoPress doesn't provide full phone number
       last4: match?.[1] || '0000'
@@ -128,7 +130,9 @@ export class MotoPresBookingsMapper {
    * Example: "Reservation URL: https://www.airbnb.com/.../HMFYJRTJ38" → "HMFYJRTJ38"
    */
   static extractReservationCode(ical: string): string | null {
-    const match = ical.match(/\/([A-Z0-9]{10,})/)
+    // Clean escaped quotes if they exist (MotoPress/Airbnb data comes with escaped quotes)
+    const cleanIcal = ical.replace(/^"(.+)"$/, '$1').replace(/\\"/g, '"')
+    const match = cleanIcal.match(/\/([A-Z0-9]{10,})/)
     return match?.[1] || null
   }
 
@@ -435,16 +439,34 @@ export class MotoPresBookingsMapper {
     let statusExcluded = 0
     let icsExcluded = 0
 
+    // DIAGNOSTIC: Track reservation codes we've seen
+    const seenReservationCodes = new Map<string, number[]>()
+
     // Calculate date range: today to 2 years in future
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Start of today
     const twoYearsFromNow = new Date()
     twoYearsFromNow.setFullYear(today.getFullYear() + 2)
 
+    console.log(`[mapper] 📊 DIAGNOSTIC: Processing ${bookings.length} total bookings`)
+
     for (const booking of bookings) {
       try {
         // Log every booking we process
         console.log(`[mapper] 🔍 Processing booking ${booking.id}: status=${booking.status}, imported=${booking.imported}, check_in=${booking.check_in_date}`)
+
+        // DIAGNOSTIC: Check for Airbnb reservation code
+        if (booking.ical_description?.includes('airbnb.com')) {
+          const codeMatch = booking.ical_description.match(/\/([A-Z0-9]{10,})/)
+          if (codeMatch) {
+            const code = codeMatch[1]
+            if (!seenReservationCodes.has(code)) {
+              seenReservationCodes.set(code, [])
+            }
+            seenReservationCodes.get(code)!.push(booking.id)
+            console.log(`[mapper] 🏷️ Airbnb reservation ${code} - Booking ID: ${booking.id}`)
+          }
+        }
 
         // Skip only cancelled and abandoned bookings (import all other statuses INCLUDING ICS)
         if (booking.status === 'cancelled' || booking.status === 'abandoned') {
@@ -473,6 +495,39 @@ export class MotoPresBookingsMapper {
         console.error(`[MotoPresBookingsMapper] Failed to map booking ${booking.id}:`, error)
         // Continue with next booking instead of failing entire batch
       }
+    }
+
+    // DIAGNOSTIC: Report duplicate reservation codes found
+    const duplicateReservations = Array.from(seenReservationCodes.entries())
+      .filter(([code, bookingIds]) => bookingIds.length > 1)
+
+    if (duplicateReservations.length > 0) {
+      console.log(`[mapper] ⚠️ DIAGNOSTIC SUMMARY - Found ${duplicateReservations.length} duplicate Airbnb reservation codes:`)
+      duplicateReservations.forEach(([code, bookingIds]) => {
+        console.log(`  - ${code}: Booking IDs [${bookingIds.join(', ')}] (${bookingIds.length} duplicates)`)
+      })
+
+      // Also check if we're creating duplicates in the mapped output
+      const mappedCodes = new Map<string, number>()
+      mapped.forEach(reservation => {
+        if (reservation.reservation_code) {
+          mappedCodes.set(reservation.reservation_code, (mappedCodes.get(reservation.reservation_code) || 0) + 1)
+        }
+      })
+
+      const mappedDuplicates = Array.from(mappedCodes.entries())
+        .filter(([code, count]) => count > 1)
+
+      if (mappedDuplicates.length > 0) {
+        console.log(`[mapper] 🚨 CRITICAL: Mapped output contains ${mappedDuplicates.length} duplicate reservation codes:`)
+        mappedDuplicates.forEach(([code, count]) => {
+          console.log(`  - ${code}: ${count} duplicates in final output`)
+        })
+      } else {
+        console.log(`[mapper] ✅ No duplicates in mapped output (deduplication worked)`)
+      }
+    } else {
+      console.log(`[mapper] ✅ DIAGNOSTIC: No duplicate Airbnb reservation codes found`)
     }
 
     return {

@@ -59,7 +59,7 @@ export async function DELETE(request: NextRequest) {
       .from('guest_reservations')
       .delete({ count: 'exact' })
       .eq('tenant_id', tenant_id)
-      .in('booking_source', ['motopress', 'airbnb'])
+      .in('booking_source', ['motopress', 'mphb-airbnb', 'airbnb'])
 
     if (error) {
       console.error('[delete-all-reservations] Database error:', error)

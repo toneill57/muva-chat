@@ -249,6 +249,45 @@ export async function GET(request: NextRequest) {
 
       const bookings = bookingsResponse.data || []
       console.log(`[sync-all] Fetched ${bookings.length} bookings from MotoPress`)
+
+      // DIAGNOSTIC: Check for duplicates in raw MotoPress data
+      const airbnbBookings = bookings.filter((b: any) =>
+        b.ical_description?.includes('airbnb.com')
+      )
+      console.log(`[sync-all] 🔍 DIAGNOSTIC: ${airbnbBookings.length} Airbnb bookings found`)
+
+      // Extract and check for duplicate reservation codes
+      const reservationCodes: Record<string, number> = {}
+      airbnbBookings.forEach((b: any) => {
+        const codeMatch = b.ical_description?.match(/\/([A-Z0-9]{10,})/)
+        if (codeMatch) {
+          const code = codeMatch[1]
+          reservationCodes[code] = (reservationCodes[code] || 0) + 1
+        }
+      })
+
+      const duplicateCodes = Object.entries(reservationCodes)
+        .filter(([code, count]) => count > 1)
+        .map(([code, count]) => `${code} (${count}x)`)
+
+      if (duplicateCodes.length > 0) {
+        console.log(`[sync-all] ⚠️ DUPLICATES IN RAW DATA: ${duplicateCodes.join(', ')}`)
+
+        // Log details of duplicates
+        duplicateCodes.forEach(dupCode => {
+          const code = dupCode.split(' ')[0]
+          const dups = airbnbBookings.filter((b: any) =>
+            b.ical_description?.includes(code)
+          )
+          console.log(`[sync-all] 📋 Duplicate ${code} details:`)
+          dups.forEach((b: any) => {
+            console.log(`  - Booking ID: ${b.id}, Status: ${b.status}, Accommodation IDs: ${b.reserved_accommodations?.map((r: any) => r.accommodation_type).join(', ')}`)
+          })
+        })
+      } else {
+        console.log(`[sync-all] ✅ No duplicates found in raw MotoPress data`)
+      }
+
       await sendEvent({
         type: 'progress',
         message: `Fetched ${bookings.length} bookings. Processing...`
@@ -278,6 +317,9 @@ export async function GET(request: NextRequest) {
       let updated = 0
       let errors = 0
 
+      // DIAGNOSTIC: Track what we're about to save
+      const reservationCodesSaving = new Set<string>()
+
       for (const reservation of mappedReservations) {
         const originalBooking = bookingsMap.get(reservation.external_booking_id)
 
@@ -285,6 +327,15 @@ export async function GET(request: NextRequest) {
           console.error(`[sync-all] Cannot find original booking for external_booking_id=${reservation.external_booking_id}`)
           errors++
           continue
+        }
+
+        // DIAGNOSTIC: Log Airbnb reservations being saved
+        if (reservation.reservation_code) {
+          if (reservationCodesSaving.has(reservation.reservation_code)) {
+            console.log(`[sync-all] 🚨 DUPLICATE SAVE ATTEMPT: ${reservation.reservation_code} (external_id: ${reservation.external_booking_id})`)
+          }
+          reservationCodesSaving.add(reservation.reservation_code)
+          console.log(`[sync-all] 💾 Saving Airbnb reservation: ${reservation.reservation_code} (external_id: ${reservation.external_booking_id})`)
         }
 
         try {
