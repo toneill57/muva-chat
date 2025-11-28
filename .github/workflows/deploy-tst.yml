@@ -160,10 +160,14 @@ jobs:
             echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
             echo "Current commit: $(git log -1 --oneline)"
 
-            # Pull latest changes from tst branch
+            # Pull latest changes from tst branch (with force reset to handle dirty working tree)
             echo ""
-            echo "Pulling latest changes from tst branch..."
-            git pull --ff-only origin tst
+            echo "Fetching origin..."
+            git fetch origin tst
+            echo "Force reset to origin/tst (discarding local changes)..."
+            git reset --hard origin/tst
+            echo "Cleaning untracked files..."
+            git clean -fd
 
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"
