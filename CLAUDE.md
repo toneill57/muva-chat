@@ -4,6 +4,45 @@ Guidance for Claude Code when working with this repository.
 
 ---
 
+## 🚨🚨🚨 DEPLOYMENT & VPS - LEER PRIMERO 🚨🚨🚨
+
+**NO HAY ACCESO SSH LOCAL AL VPS.** La clave SSH está en GitHub Secrets, NO en ~/.ssh/
+
+### Workflow de Deploy (MEMORIZAR):
+
+```bash
+# 1. Commit y push a dev
+git add . && git commit -m "mensaje" && git push origin dev
+
+# 2. Sincronizar dev → tst (force push, bypassing PR)
+gh api repos/toneill57/muva-chat/git/refs/heads/tst -X PATCH -f sha=$(git rev-parse origin/dev) -F force=true
+
+# 3. Esperar workflow TST
+gh run watch $(gh run list --workflow=deploy-tst.yml --limit=1 --json databaseId -q '.[0].databaseId') --exit-status
+
+# 4. Sincronizar tst → prd
+gh api repos/toneill57/muva-chat/git/refs/heads/prd -X PATCH -f sha=$(git rev-parse origin/dev) -F force=true
+
+# 5. Esperar workflow PRD
+gh run watch $(gh run list --workflow=deploy-prd.yml --limit=1 --json databaseId -q '.[0].databaseId') --exit-status
+
+# 6. Verificar health
+curl -s https://muva.chat/api/health | jq
+```
+
+### Si deploy falla:
+- Los workflows ya incluyen `git stash` y `git reset --hard` automáticamente
+- Si aún falla, revisar logs: `gh run view <run-id> --log-failed`
+- **NUNCA** intentar SSH manual - no funciona desde local
+
+### VPS Info (solo referencia, NO se puede acceder desde local):
+| Ambiente | Directorio | PM2 Process |
+|----------|------------|-------------|
+| TST | /var/www/muva-chat-tst | muva-chat-tst |
+| PRD | /var/www/muva-chat-prd | muva-chat-prd |
+
+---
+
 ## Project Context
 
 **MUVA Chat** - Multi-Tenant Tourism Platform
@@ -84,51 +123,6 @@ Este ID corresponde al proyecto MUVA original pre-migración (obsoleto desde Nov
 ---
 
 ## Development Setup
-
-### VPS Deployment & SSH Access
-
-**⚠️ CRÍTICO - NUNCA OLVIDAR:**
-
-| Ambiente | Host | Usuario | Directorio | PM2 Process |
-|----------|------|---------|------------|-------------|
-| **TST** | 195.200.6.216 | root | /var/www/muva-chat-tst | muva-chat-tst |
-| **PRD** | 195.200.6.216 | root | /var/www/muva-chat-prd | muva-chat-prd |
-
-**Autenticación SSH:**
-- **Método:** Solo clave pública (password NO funciona)
-- **Clave SSH:** Almacenada en GitHub Secrets (`TST_VPS_SSH_KEY`, `PRD_VPS_SSH_KEY`)
-- **Desde máquina local:** NO hay acceso directo (clave no está en ~/.ssh/)
-
-**Deploys via GitHub Actions:**
-Los workflows `.github/workflows/deploy-tst.yml` y `deploy-prd.yml` manejan:
-1. Build en GitHub Actions (no en VPS - sin recursos)
-2. Upload via SCP de `.next/`, `public/`, `package.json`, `pnpm-lock.yaml`
-3. SSH para git pull, pnpm install, pm2 restart
-
-**Si deploy falla por cambios locales en VPS:**
-Los workflows hacen `git stash --include-untracked` automáticamente antes de pull.
-
-**Re-ejecutar workflow fallido:**
-```bash
-# Ver runs recientes
-gh run list --workflow=deploy-prd.yml
-
-# Re-ejecutar el último run fallido
-gh run rerun <run-id>
-
-# O disparar nuevo push a la rama
-git commit --allow-empty -m "chore: trigger deploy" && git push origin prd
-```
-
-**Monitoreo post-deploy:**
-```bash
-# Ver logs del workflow
-gh run view <run-id> --log
-
-# Health check
-curl -s https://muva.chat/api/health | jq
-curl -s https://staging.muva.chat/api/health | jq
-```
 
 ### MUVA Tourism Content - Embeddings
 
