@@ -1,0 +1,6 @@
+{
+  "maintenanceMode": false,
+  "globalAnnouncement": "",
+  "maxFileSize": 10,
+  "defaultModel": "claude-sonnet-4-5"
+}
