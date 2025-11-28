@@ -158,7 +158,7 @@ export async function searchAccommodationsPublic(
       query_embedding_balanced: queryEmbeddingBalanced,
       p_tenant_id: tenantId,
       match_threshold: 0.2, // Lower threshold for dev marketing search
-      match_count: 10,
+      match_count: 30, // Higher count to ensure all accommodations reach model after deduplication
     })
 
     if (error) {

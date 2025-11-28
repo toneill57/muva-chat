@@ -25,6 +25,10 @@ import {
   mergeIntent,
   type TravelIntent,
 } from './dev-chat-intent'
+import {
+  getPromptForSearchMode,
+  type SearchMode,
+} from './chat-prompts'
 
 // ============================================================================
 // Configuration
@@ -194,17 +198,48 @@ async function buildMarketingSystemPrompt(
   const { createServerClient } = await import('@/lib/supabase')
   const supabase = createServerClient()
 
-  const { data: tenantData } = await supabase
+  const { data: tenantData, error: tenantError } = await supabase
     .from('tenant_registry')
-    .select('name, slug')
+    .select('slug, features')
     .eq('tenant_id', session.tenant_id)
     .single()
 
-  const hotelName = tenantData?.name || 'nuestro hotel'
+  if (tenantError) {
+    console.error('[dev-chat-engine] Error fetching tenant:', tenantError)
+  }
+
+  // Get hotel name from slug (capitalize and format)
+  const hotelName = tenantData?.slug
+    ? tenantData.slug.charAt(0).toUpperCase() + tenantData.slug.slice(1)
+    : 'nuestro hotel'
   const location = 'San Andrés, Colombia' // Default, could be made dynamic too
+
+  // Extract search mode from tenant features (hotel, agency, hybrid)
+  const searchMode: SearchMode = (tenantData?.features?.search_mode as SearchMode) || 'hotel'
+  console.log('[dev-chat-engine] Tenant:', tenantData?.slug, '| Search mode:', searchMode, '| Features:', JSON.stringify(tenantData?.features))
+
+  // Deduplicate: keep only the highest-similarity chunk per accommodation
+  // This ensures all unique accommodations reach the model, not just 3-4 with multiple chunks
+  const deduplicatedResults = (() => {
+    const seen = new Map<string, VectorSearchResult>()
+    for (const result of searchResults) {
+      // Get unique identifier: original_accommodation name or result id
+      const key = result.table === 'accommodation_units_public'
+        ? (result.metadata?.original_accommodation || result.name || result.id)
+        : result.id // For non-accommodations (policies, MUVA), use id
+
+      const existing = seen.get(key)
+      if (!existing || result.similarity > existing.similarity) {
+        seen.set(key, result)
+      }
+    }
+    return Array.from(seen.values()).sort((a, b) => b.similarity - a.similarity)
+  })()
+
+  console.log('[dev-chat-engine] Deduplicated:', searchResults.length, '→', deduplicatedResults.length, 'unique results')
+
   // Build search context
-  // Increased to 15 to provide Claude with all accommodations context
-  const searchContext = searchResults
+  const searchContext = deduplicatedResults
     .slice(0, 15)
     .map((result, index) => {
       const name = result.name || result.title || 'Unknown'
@@ -229,10 +264,19 @@ async function buildMarketingSystemPrompt(
         }
 
         // Capacity and configuration
-        if (meta.capacity || meta.bed_configuration) {
+        // capacity can be: number, or object {total, adults, children}
+        // bed_configuration can be: string, or array [{type: "..."}]
+        const capacityValue = typeof meta.capacity === 'object' && meta.capacity?.total
+          ? meta.capacity.total
+          : meta.capacity
+        const bedConfig = Array.isArray(meta.bed_configuration)
+          ? meta.bed_configuration.map((b: any) => b.type || b).join(', ')
+          : meta.bed_configuration
+
+        if (capacityValue || bedConfig) {
           details += `\n\n👥 CAPACIDAD:`
-          if (meta.capacity) details += `\n- Capacidad máxima: ${meta.capacity} personas`
-          if (meta.bed_configuration) details += `\n- Configuración: ${meta.bed_configuration}`
+          if (capacityValue) details += `\n- Capacidad máxima: ${capacityValue} personas`
+          if (bedConfig) details += `\n- Configuración: ${bedConfig}`
         }
 
         // Physical characteristics
@@ -245,29 +289,35 @@ async function buildMarketingSystemPrompt(
         }
 
         // Amenities (most important for marketing)
-        if (meta.unit_amenities) {
+        // Check multiple locations: result level, metadata.amenities, and metadata.unit_amenities
+        const amenitiesData = (result as any).amenities || meta.amenities || meta.unit_amenities
+        if (amenitiesData) {
           // Handle multiple formats: array of strings, array of objects, or comma-separated string
           let amenitiesList: string[] = []
-          if (Array.isArray(meta.unit_amenities)) {
-            amenitiesList = meta.unit_amenities.map((a: any) => {
+          if (Array.isArray(amenitiesData)) {
+            amenitiesList = amenitiesData.map((a: any) => {
               if (typeof a === 'string') return a.trim()
               if (a && typeof a === 'object' && a.name) return a.name.trim()
               return String(a).trim()
             }).slice(0, 8)
-          } else if (typeof meta.unit_amenities === 'string') {
-            amenitiesList = meta.unit_amenities.split(',').map((a: string) => a.trim()).slice(0, 8)
+          } else if (typeof amenitiesData === 'string') {
+            amenitiesList = amenitiesData.split(',').map((a: string) => a.trim()).slice(0, 8)
           }
           if (amenitiesList.length > 0) {
             details += `\n\n✨ AMENITIES:\n- ${amenitiesList.join('\n- ')}`
           }
         }
 
-        // Unique features (key selling points)
-        if (meta.unique_features) {
-          const features = Array.isArray(meta.unique_features)
-            ? meta.unique_features
-            : [meta.unique_features]
-          details += `\n\n⭐ DESTACADOS:\n- ${features.join('\n- ')}`
+        // Unique features / highlights (key selling points)
+        // Check both 'highlights' (from RPC) and 'unique_features' (legacy)
+        const highlightsData = meta.highlights || meta.unique_features
+        if (highlightsData && (Array.isArray(highlightsData) ? highlightsData.length > 0 : true)) {
+          const features = Array.isArray(highlightsData)
+            ? highlightsData
+            : [highlightsData]
+          if (features.length > 0 && features[0]) {
+            details += `\n\n⭐ DESTACADOS:\n- ${features.join('\n- ')}`
+          }
         }
 
         // Photos (important for visual context)
@@ -331,52 +381,14 @@ ${session.travel_intent.accommodation_type ? `- Tipo de alojamiento: ${session.t
 `
     : ''
 
-  return `Eres un asistente virtual de ventas para ${hotelName} en ${location}. Tu objetivo es ayudar a visitantes del sitio web a encontrar alojamiento perfecto y convertirlos en reservas.
-
-🎯 OBJETIVO: Conversión de visitante a reserva
-
-ESTILO DE COMUNICACIÓN:
-- Amigable, profesional, entusiasta
-- Marketing-focused (destaca beneficios y características únicas)
-- Usa emojis ocasionalmente para ambiente tropical (🌴, 🌊, ☀️)
-- Usa **negritas** solo para información clave (precios, nombres) en párrafos
-- NUNCA uses **negritas** dentro de títulos (##, ###) - los títulos ya son bold
-- Respuestas concisas pero informativas (3-5 oraciones máximo)
-- Incluye CTAs (calls-to-action) cuando sea apropiado
-- Enumera amenities con dash simple (-), una por línea
-
-INFORMACIÓN DISPONIBLE:
-- Catálogo COMPLETO de alojamientos (con precios y fotos)
-- Políticas del hotel (check-in, check-out, cancelación)
-- Información básica de turismo en San Andrés (atracciones)
-- Contexto histórico de conversaciones pasadas (si aplica)
-- La mayoría de los visitantes viaja en pareja, asume que buscan alojamiento para dos personas si no se especifica.
-
-RESTRICCIONES:
-- NO tengas acceso a información operacional interna
-- NO des información de otros hoteles/competidores
-- SIEMPRE menciona precios cuando estén disponibles
-- NO uses emojis de check/cross (✅/❌) ni en listas, ni enumeraciones, ni recomendaciones ni validaciones. Preferible usar uno que otro emoji inteligente y relacionado con el amenity o característica que se esté mencionando.
-- NO inventes información (si no sabes, di que no estás seguro y ofrece ayudar con otra cosa)
-
-RECONOCIMIENTO DE INTENCIÓN DE VIAJE:
-${intentSummary} // Fechas, huéspedes, tipo de alojamiento capturados
-
-RESULTADOS DE BÚSQUEDA:
-${searchContext} // Top 15 resultados con precios y similaridad
-
-CONTEXTO DE CONVERSACIONES PASADAS:
-${historicalContext} // Resúmenes y temas clave
-
-INSTRUCCIONES:
-1. Si identificas fechas/huéspedes, confirma y ofrece opciones relevantes
-2. Si hay URL de disponibilidad, MENCIONA que pueden "ver disponibilidad en tiempo real" y sugiérelo sutilmente
-3. Destaca características únicas (vista al mar, cocina completa, ubicación, etc.)
-4. Incluye precios cuando estén disponibles
-5. Si preguntan sobre turismo, da información básica y luego vuelve a alojamientos
-6. Siempre termina con pregunta o CTA para continuar conversación
-
-Responde de manera natural, útil y orientada a conversión.`
+  // Use the appropriate prompt based on search mode (hotel, agency, hybrid)
+  return getPromptForSearchMode(searchMode, {
+    hotelName,
+    location,
+    searchContext,
+    historicalContext,
+    intentSummary,
+  })
 }
 
 // ============================================================================
@@ -405,7 +417,7 @@ async function generateMarketingResponse(
   try {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5', // Sonnet 4.5 for marketing quality
-      max_tokens: 600,
+      max_tokens: 800,
       temperature: 0.3, // Slightly creative for marketing
       top_k: 10,
       stream: false, // Set to true for streaming (handled separately)
@@ -483,7 +495,7 @@ export async function* generateDevChatResponseStream(
 
     const stream = await client.messages.stream({
       model: 'claude-haiku-4-5',
-      max_tokens: 600,
+      max_tokens: 800,
       temperature: 0.3,
       top_k: 10,
       system: systemPrompt,

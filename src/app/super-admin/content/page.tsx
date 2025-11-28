@@ -2,15 +2,57 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { ContentUploader } from '@/components/SuperAdmin/ContentUploader';
 import { ContentTable } from '@/components/SuperAdmin/ContentTable';
-import { FileText, FolderOpen } from 'lucide-react';
+import { FileText, FolderOpen, Trash2, Loader2 } from 'lucide-react';
 
 export default function ContentManagementPage() {
   const [stats, setStats] = useState<{
     total: number;
     byCategory: Record<string, number>;
   }>({ total: 0, byCategory: {} });
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [tableKey, setTableKey] = useState(0);
+
+  const handleDeleteAll = async () => {
+    setIsDeleting(true);
+    try {
+      const token = localStorage.getItem('super_admin_token');
+      const response = await fetch('/api/super-admin/content/delete-all', {
+        method: 'DELETE',
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        console.log(`Deleted ${data.deletedCount} records`);
+        fetchStats();
+        setTableKey(prev => prev + 1); // Force table refresh
+      } else {
+        console.error('Delete failed:', data.error);
+        alert(`Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error('Error deleting all content:', error);
+      alert('Error deleting content');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const fetchStats = async () => {
     try {
@@ -34,11 +76,46 @@ export default function ContentManagementPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">MUVA Content Management</h1>
-        <p className="text-muted-foreground mt-1">
-          Upload and manage tourism content listings
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold">MUVA Content Management</h1>
+          <p className="text-muted-foreground mt-1">
+            Upload and manage tourism content listings
+          </p>
+        </div>
+
+        {stats.total > 0 && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" disabled={isDeleting}>
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
+                Delete All ({stats.total})
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete All Content?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete <strong>{stats.total}</strong> records from the MUVA content database.
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteAll}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Yes, Delete All
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -93,7 +170,7 @@ export default function ContentManagementPage() {
           <CardTitle>Existing Content</CardTitle>
         </CardHeader>
         <CardContent>
-          <ContentTable onRefresh={fetchStats} />
+          <ContentTable key={tableKey} onRefresh={fetchStats} />
         </CardContent>
       </Card>
     </div>

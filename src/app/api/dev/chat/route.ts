@@ -185,13 +185,21 @@ export async function POST(request: NextRequest) {
       console.log('[dev-chat-api] Session for stream:', sessionId)
 
       // Create public conversation record for analytics (new sessions only)
-      if (!effectiveSessionId) {
+      // Compare returned session_id with effectiveSessionId to detect NEW sessions
+      // (effectiveSessionId may exist from cookie, but if session expired/not found, new one is created)
+      const isNewSession = sessionId !== effectiveSessionId
+      console.log('[dev-chat-api] Session check:', {
+        effectiveSessionId,
+        sessionId,
+        isNewSession
+      })
+      if (isNewSession) {
         const { createServerClient } = await import('@/lib/supabase')
         const supabase = createServerClient()
         const { error: convError } = await supabase
           .from('guest_conversations')
           .insert({
-            tenant_id: tenant_id,
+            tenant_id: session.tenant_id, // Use resolved UUID from session, not raw slug
             conversation_type: 'public',
             guest_id: null,
             title: message.substring(0, 100),
@@ -270,13 +278,17 @@ export async function POST(request: NextRequest) {
     console.log(`[dev-chat-api] ✅ Response generated in ${responseTime}ms`)
 
     // Create public conversation record for analytics (new sessions only)
-    if (!effectiveSessionId && response.session_id) {
+    // Compare returned session_id with effectiveSessionId to detect NEW sessions
+    const isNewSessionLegacy = response.session_id !== effectiveSessionId
+    if (isNewSessionLegacy && response.session_id) {
       const { createServerClient } = await import('@/lib/supabase')
+      const { resolveTenantSchemaName } = await import('@/lib/tenant-resolver')
+      const resolvedTenantId = await resolveTenantSchemaName(tenant_id)
       const supabase = createServerClient()
       const { error: convError } = await supabase
         .from('guest_conversations')
         .insert({
-          tenant_id: tenant_id,
+          tenant_id: resolvedTenantId, // Use resolved UUID, not raw slug
           conversation_type: 'public',
           guest_id: null,
           title: message.substring(0, 100),

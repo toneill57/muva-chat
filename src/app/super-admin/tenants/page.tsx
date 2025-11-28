@@ -29,19 +29,6 @@ export default function TenantsPage() {
     fetchTenants();
   }, [filters, page, sort, order]);
 
-  // Auto-refresh every 30 seconds (when tab is visible)
-  useEffect(() => {
-    const POLL_INTERVAL = 30000; // 30 seconds
-
-    const interval = setInterval(() => {
-      // Only fetch if the tab is visible
-      if (document.visibilityState === 'visible') {
-        fetchTenants();
-      }
-    }, POLL_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, [filters, page, sort, order]);
 
   const fetchTenants = async () => {
     setLoading(true);
@@ -113,7 +100,12 @@ export default function TenantsPage() {
   const handleViewDetails = async (tenant: Tenant) => {
     try {
       // Fetch complete tenant details
-      const response = await fetch(`/api/super-admin/tenants/${tenant.tenant_id}`);
+      const token = localStorage.getItem('super_admin_token');
+      const response = await fetch(`/api/super-admin/tenants/${tenant.tenant_id}`, {
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch tenant details');
