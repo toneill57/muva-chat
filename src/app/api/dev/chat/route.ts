@@ -184,6 +184,26 @@ export async function POST(request: NextRequest) {
 
       console.log('[dev-chat-api] Session for stream:', sessionId)
 
+      // Create public conversation record for analytics (new sessions only)
+      if (!effectiveSessionId) {
+        const { createServerClient } = await import('@/lib/supabase')
+        const supabase = createServerClient()
+        const { error: convError } = await supabase
+          .from('guest_conversations')
+          .insert({
+            tenant_id: tenant_id,
+            conversation_type: 'public',
+            guest_id: null,
+            title: message.substring(0, 100),
+            anonymous_session_id: sessionId
+          })
+        if (convError) {
+          console.warn('[dev-chat-api] Failed to create conversation:', convError.message)
+        } else {
+          console.log('[dev-chat-api] 📝 Created public conversation for analytics')
+        }
+      }
+
       const encoder = new TextEncoder()
       const stream = new ReadableStream({
         async start(controller) {
@@ -248,6 +268,26 @@ export async function POST(request: NextRequest) {
 
     const responseTime = Date.now() - startTime
     console.log(`[dev-chat-api] ✅ Response generated in ${responseTime}ms`)
+
+    // Create public conversation record for analytics (new sessions only)
+    if (!effectiveSessionId && response.session_id) {
+      const { createServerClient } = await import('@/lib/supabase')
+      const supabase = createServerClient()
+      const { error: convError } = await supabase
+        .from('guest_conversations')
+        .insert({
+          tenant_id: tenant_id,
+          conversation_type: 'public',
+          guest_id: null,
+          title: message.substring(0, 100),
+          anonymous_session_id: response.session_id
+        })
+      if (convError) {
+        console.warn('[dev-chat-api] Failed to create conversation:', convError.message)
+      } else {
+        console.log('[dev-chat-api] 📝 Created public conversation for analytics')
+      }
+    }
 
     // Prepare response with cookie
     const nextResponse = NextResponse.json(
