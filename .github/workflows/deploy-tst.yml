@@ -168,10 +168,11 @@ jobs:
             git checkout -- . 2>/dev/null || true
             echo "✅ Local changes cleaned"
 
-            # Pull latest changes from tst branch
+            # Sync with remote (handles both normal merges and force pushes)
             echo ""
-            echo "Pulling latest changes from tst branch..."
-            git pull --ff-only origin tst
+            echo "Syncing with remote tst branch..."
+            git fetch origin tst
+            git reset --hard origin/tst
 
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"

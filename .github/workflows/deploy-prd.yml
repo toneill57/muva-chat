@@ -170,10 +170,11 @@ jobs:
             git checkout -- . 2>/dev/null || true
             echo "✅ Local changes cleaned"
 
-            # Pull latest changes from prd branch
+            # Sync with remote (handles both normal merges and force pushes)
             echo ""
-            echo "Pulling latest changes from prd branch..."
-            git pull --ff-only origin prd
+            echo "Syncing with remote prd branch..."
+            git fetch origin prd
+            git reset --hard origin/prd
 
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"
