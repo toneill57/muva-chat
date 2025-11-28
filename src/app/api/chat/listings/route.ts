@@ -568,7 +568,12 @@ export async function POST(request: NextRequest) {
         const prompt = getListingsPrompt(business_type, client_id)
 
         // Generate response with business-specific context
-        response = await generateChatResponse(question, context, 'listings')
+        response = await generateChatResponse(
+          question,
+          context,
+          'listings',
+          client_id || '00000000-0000-0000-0000-000000000002'  // Use client_id or special ID for all listings
+        )
         const claudeTime = Date.now() - claudeStart
         console.log(`[${timestamp}] ✅ Claude response generated - Time: ${claudeTime}ms`)
 
@@ -577,7 +582,12 @@ export async function POST(request: NextRequest) {
         console.log(`[${timestamp}] 🔄 Falling back to response without context`)
 
         try {
-          response = await generateChatResponse(question, '', 'listings')
+          response = await generateChatResponse(
+            question,
+            '',
+            'listings',
+            client_id || '00000000-0000-0000-0000-000000000002'  // Use client_id or special ID for all listings
+          )
         } catch (fallbackError) {
           console.error(`[${timestamp}] ❌ Fatal error in listings fallback response:`, fallbackError)
           throw fallbackError
@@ -587,7 +597,12 @@ export async function POST(request: NextRequest) {
       console.log(`[${timestamp}] 🤖 Generating listings response without context...`)
       const claudeStartNoContext = Date.now()
 
-      response = await generateChatResponse(question, '', 'listings')
+      response = await generateChatResponse(
+        question,
+        '',
+        'listings',
+        client_id || '00000000-0000-0000-0000-000000000002'  // Use client_id or special ID for all listings
+      )
       const claudeTime = Date.now() - claudeStartNoContext
       console.log(`[${timestamp}] ✅ Listings response generated - Time: ${claudeTime}ms`)
     }

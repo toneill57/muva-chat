@@ -295,7 +295,13 @@ export async function POST(request: NextRequest) {
         console.log(`[${timestamp}] 🤖 Generating Claude response for MUVA tourism...`)
 
         // Generate response with tourism-specific prompt
-        response = await generateChatResponse(question, context, 'tourism')
+        // Use special tenant_id for MUVA tourism content
+        response = await generateChatResponse(
+          question,
+          context,
+          'tourism',
+          '00000000-0000-0000-0000-000000000001'  // Special ID for MUVA Tourism
+        )
         const claudeTime = Date.now() - claudeStart
         console.log(`[${timestamp}] ✅ Claude response generated - Time: ${claudeTime}ms`)
 
@@ -304,7 +310,12 @@ export async function POST(request: NextRequest) {
         console.log(`[${timestamp}] 🔄 Falling back to response without context`)
 
         try {
-          response = await generateChatResponse(question, '', 'tourism')
+          response = await generateChatResponse(
+            question,
+            '',
+            'tourism',
+            '00000000-0000-0000-0000-000000000001'  // Special ID for MUVA Tourism
+          )
         } catch (fallbackError) {
           console.error(`[${timestamp}] ❌ Fatal error in MUVA fallback response:`, fallbackError)
           throw fallbackError
@@ -314,7 +325,12 @@ export async function POST(request: NextRequest) {
       console.log(`[${timestamp}] 🤖 Generating MUVA response without context...`)
       const claudeStartNoContext = Date.now()
 
-      response = await generateChatResponse(question, '', 'tourism')
+      response = await generateChatResponse(
+        question,
+        '',
+        'tourism',
+        '00000000-0000-0000-0000-000000000001'  // Special ID for MUVA Tourism
+      )
       const claudeTime = Date.now() - claudeStartNoContext
       console.log(`[${timestamp}] ✅ MUVA response generated - Time: ${claudeTime}ms`)
     }

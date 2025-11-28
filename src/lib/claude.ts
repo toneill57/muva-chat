@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { trackAIUsage } from './track-ai-usage'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -91,7 +92,9 @@ ${baseFormatInstructions}
 export async function generateChatResponse(
   question: string,
   context: string,
-  detectedDomain?: string
+  detectedDomain?: string,
+  tenantId?: string,
+  conversationId?: string
 ): Promise<string> {
   // 🧠 INTELLIGENT MODEL SELECTION - Use more powerful model for complex domains
   const isComplexDomain = detectedDomain === 'listings'
@@ -103,6 +106,9 @@ export async function generateChatResponse(
 
   const domain = detectedDomain || 'unified'
   const prompt = getDomainSpecificPrompt(domain, context, question)
+
+  // Track API call timing
+  const startTime = Date.now()
 
   const message = await anthropic.messages.create({
     model,
@@ -116,6 +122,25 @@ export async function generateChatResponse(
       }
     ]
   })
+
+  const latency = Date.now() - startTime
+
+  // Track AI usage if tenant_id is provided
+  if (tenantId && message.usage) {
+    // Fire and forget - don't block response
+    trackAIUsage({
+      tenantId,
+      conversationId,
+      model: message.model,
+      usage: {
+        input_tokens: message.usage.input_tokens,
+        output_tokens: message.usage.output_tokens
+      },
+      latency
+    }).catch(error => {
+      console.error('[claude] Failed to track AI usage:', error)
+    })
+  }
 
   if (message.content[0].type === 'text') {
     return message.content[0].text

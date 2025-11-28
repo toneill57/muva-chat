@@ -90,6 +90,56 @@ Este ID corresponde al proyecto MUVA original pre-migración (obsoleto desde Nov
 ssh -i ~/.ssh/muva_deploy root@195.200.6.216
 ```
 
+### MUVA Tourism Content - Embeddings
+
+**Script canónico:** `scripts/database/populate-embeddings.js`
+
+**⚠️ NUNCA crear scripts alternativos para MUVA content** - el script de producción ya existe (2,692 líneas).
+
+**Uso:**
+```bash
+# Archivo individual
+node scripts/database/populate-embeddings.js _assets/muva/listings/actividades/archivo.md
+
+# Directorio completo
+node scripts/database/populate-embeddings.js _assets/muva/listings/
+
+# Todos los archivos
+node scripts/database/populate-embeddings.js --all
+
+# Via package.json
+pnpm run populate-embeddings [archivo/directorio]
+
+# ⚠️ IMPORTANTE: Usar ruta ABSOLUTA si el script falla con rutas relativas
+node scripts/database/populate-embeddings.js /Users/oneill/Sites/apps/muva-chat/_assets/muva/listings/actividades/archivo.md
+```
+
+**Características:**
+- ✅ Extrae metadata completa (pricing, contact, location, features)
+- ✅ Batch processing de directorios
+- ✅ Routing dinámico según YAML frontmatter
+- ✅ Matryoshka embeddings (1024, 1536, 3072)
+- ✅ Pre-creación de accommodation units
+- ✅ 12+ funciones de extracción de templates
+
+**Documentación:**
+- `docs/content/MUVA_LISTINGS_GUIDE.md` - guía oficial de uso
+- `docs/content/MUVA_TEMPLATE_GUIDE.md` - estructura de templates
+- `docs/patterns/METADATA_EXTRACTION_FIX_PATTERN.md` - sistema de extracción
+
+**Tabla destino:** `public.muva_content`
+**Archivos fuente:** `_assets/muva/listings/`
+**Total archivos:** 40+ markdown files con YAML frontmatter v3.0
+
+**Proceso de búsqueda correcto (lección aprendida Nov 26, 2025):**
+1. ✅ Revisar `package.json` scripts primero
+2. ✅ Buscar en TODOS los subdirectorios (`scripts/**/*`)
+3. ✅ Incluir `.js` Y `.ts` en búsquedas (NO solo TypeScript)
+4. ✅ Verificar git history: `git log --all --full-history -- "*populate*"`
+5. ✅ Validar con usuario antes de crear scripts nuevos
+
+---
+
 ### Merge Workflow - GitHub API Only
 
 **CRÍTICO:** Cuando usuario solicite merge entre ramas, USAR GitHub API (NO git local)

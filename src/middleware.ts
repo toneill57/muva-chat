@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSubdomain, isValidSubdomain } from '@/lib/tenant-utils'
 import { createTimingContext, addTimingHeaders } from '@/lib/performance-logger'
+import { superAdminMiddleware } from '@/lib/middleware-super-admin'
 
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 100 // 100 requests per minute for MotoPress sync
@@ -69,6 +70,13 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // 🔒 SUPER ADMIN AUTHENTICATION
+  // Protect all /api/super-admin/* routes except /login
+  if (pathname.startsWith('/api/super-admin') && !pathname.includes('/login')) {
+    console.log('[middleware] Super admin route detected, applying authentication')
+    return superAdminMiddleware(request)
+  }
 
   // 📊 Start performance timing
   const timing = createTimingContext()

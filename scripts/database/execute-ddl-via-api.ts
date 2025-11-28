@@ -15,7 +15,7 @@
 
 import { readFileSync } from 'fs';
 
-const PROJECT_ID = 'ooaumjzaztmutltifhoq'; // Extract from SUPABASE_URL if needed
+const PROJECT_ID = 'zpyxgkvonrxbhvmkuzlt'; // Extract from SUPABASE_URL if needed
 
 async function executeDDL(sqlFilePath: string) {
   console.log(`🔧 Executing DDL from: ${sqlFilePath}\n`);

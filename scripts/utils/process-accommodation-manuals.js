@@ -9,7 +9,7 @@ import { glob } from 'glob'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const projectRoot = path.dirname(__dirname)
+const projectRoot = path.resolve(__dirname, '../..')
 
 // Load environment variables
 config({ path: path.join(projectRoot, '.env.local') })

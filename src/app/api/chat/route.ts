@@ -190,6 +190,71 @@ export async function POST(request: NextRequest) {
     // Check cache first (using semantic grouping)
     const cacheKey = `chat:${getSemanticCacheKey(question)}`
     const cached = getCached(cacheKey)
+
+    // Declare conversation ID in outer scope (needed for both cache hit and miss)
+    let dbConversationId: string | null = null
+
+    // Save public conversation to database (both cache hit and miss)
+    try {
+      // Extract response from cached or will be generated later
+      const responseText = cached ? (cached as any).response : null
+
+      // Only create conversation, don't save messages yet for cache hit
+      const conversationId = request.headers.get('x-conversation-id')
+      dbConversationId = conversationId
+
+      if (!dbConversationId) {
+        // Create new public conversation
+        const { data: newConv, error: convError } = await supabase
+          .from('guest_conversations')
+          .insert({
+            tenant_id: tenant.tenant_id,
+            conversation_type: 'public',
+            guest_id: null,
+            title: question.substring(0, 100),
+            anonymous_session_id: crypto.randomUUID(),
+            user_agent: request.headers.get('user-agent'),
+            referrer_url: request.headers.get('referer')
+          })
+          .select('id')
+          .single()
+
+        if (!convError && newConv) {
+          dbConversationId = newConv.id
+          console.log(`[${timestamp}] 📝 Created public conversation: ${dbConversationId}`)
+        } else {
+          console.error(`[${timestamp}] ⚠️  Failed to create conversation:`, convError?.message)
+        }
+      }
+
+      // Save messages if we have a response (cache hit) or conversation ID
+      if (dbConversationId && responseText) {
+        await supabase.from('chat_messages').insert([
+          {
+            conversation_id: dbConversationId,
+            tenant_id: tenant.tenant_id,
+            role: 'user',
+            content: question
+          },
+          {
+            conversation_id: dbConversationId,
+            tenant_id: tenant.tenant_id,
+            role: 'assistant',
+            content: responseText
+          }
+        ])
+
+        await supabase
+          .from('guest_conversations')
+          .update({ last_activity_at: new Date().toISOString() })
+          .eq('id', dbConversationId)
+
+        console.log(`[${timestamp}] 💾 Saved public conversation messages (cache hit)`)
+      }
+    } catch (saveError) {
+      console.error(`[${timestamp}] ⚠️  Error saving conversation:`, saveError)
+    }
+
     if (cached) {
       const responseTime = Date.now() - startTime
       console.log(`[${timestamp}] ✅ Semantic cache hit - Response time: ${responseTime}ms`)
@@ -263,8 +328,38 @@ export async function POST(request: NextRequest) {
         // Handle case: no documentation uploaded yet
         if (!relevantDocs || relevantDocs.length === 0) {
           console.log(`[${timestamp}] ℹ️ No documents found in tenant knowledge base`)
+
+          const noDocsResponse = "I don't have any documentation loaded yet. Please ask the administrator to upload relevant documents."
+
+          // Save messages before early return
+          if (dbConversationId) {
+            try {
+              await supabase.from('chat_messages').insert([
+                {
+                  conversation_id: dbConversationId,
+                  tenant_id: tenant.tenant_id,
+                  role: 'user',
+                  content: question
+                },
+                {
+                  conversation_id: dbConversationId,
+                  tenant_id: tenant.tenant_id,
+                  role: 'assistant',
+                  content: noDocsResponse
+                }
+              ])
+              await supabase
+                .from('guest_conversations')
+                .update({ last_activity_at: new Date().toISOString() })
+                .eq('id', dbConversationId)
+              console.log(`[${timestamp}] 💾 Saved public conversation messages (no docs)`)
+            } catch (saveError) {
+              console.error(`[${timestamp}] ⚠️  Error saving messages:`, saveError)
+            }
+          }
+
           return NextResponse.json({
-            response: "I don't have any documentation loaded yet. Please ask the administrator to upload relevant documents.",
+            response: noDocsResponse,
             context_used: false,
             question,
             performance: {
@@ -293,7 +388,12 @@ Context:
 ${context}`
 
         // Use Claude for response generation with custom system prompt
-        response = await generateChatResponse(question, context, 'tenant')
+        response = await generateChatResponse(
+          question,
+          context,
+          'tenant',
+          tenant.tenant_id  // Pass tenant_id for AI usage tracking
+        )
         const claudeTime = Date.now() - claudeStart
         console.log(`[${timestamp}] ✅ Response generated - Time: ${claudeTime}ms`)
 
@@ -303,7 +403,12 @@ ${context}`
 
         try {
           // Continuar sin contexto si hay error en la búsqueda
-          response = await generateChatResponse(question, '', 'unified')
+          response = await generateChatResponse(
+            question,
+            '',
+            'unified',
+            tenant.tenant_id  // Pass tenant_id for AI usage tracking
+          )
         } catch (fallbackError) {
           console.error(`[${timestamp}] ❌ Fatal error in fallback response:`, fallbackError)
           throw fallbackError
@@ -314,7 +419,12 @@ ${context}`
       const claudeStartNoContext = Date.now()
 
       // No context needed - generate response immediately
-      response = await generateChatResponse(question, '', 'unified')
+      response = await generateChatResponse(
+        question,
+        '',
+        'unified',
+        tenant.tenant_id  // Pass tenant_id for AI usage tracking
+      )
       const claudeTime = Date.now() - claudeStartNoContext
       console.log(`[${timestamp}] ✅ Response generated - Time: ${claudeTime}ms`)
     }
@@ -341,6 +451,35 @@ ${context}`
 
     // Save to semantic cache (1 hour TTL)
     setCached(cacheKey, result, 3600)
+
+    // Save messages to database for cache miss (new response)
+    if (dbConversationId && response) {
+      try {
+        await supabase.from('chat_messages').insert([
+          {
+            conversation_id: dbConversationId,
+            tenant_id: tenant.tenant_id,
+            role: 'user',
+            content: question
+          },
+          {
+            conversation_id: dbConversationId,
+            tenant_id: tenant.tenant_id,
+            role: 'assistant',
+            content: response
+          }
+        ])
+
+        await supabase
+          .from('guest_conversations')
+          .update({ last_activity_at: new Date().toISOString() })
+          .eq('id', dbConversationId)
+
+        console.log(`[${timestamp}] 💾 Saved public conversation messages (new response)`)
+      } catch (saveError) {
+        console.error(`[${timestamp}] ⚠️  Error saving messages for cache miss:`, saveError)
+      }
+    }
 
     console.log(`[${timestamp}] ✅ Request completed successfully - Total time: ${totalTime}ms`)
     console.log(`[${timestamp}] 💾 Saved to semantic cache`)
