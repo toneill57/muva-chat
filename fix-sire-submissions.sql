@@ -1,9 +1,11 @@
--- Migration: Create sire_submissions table for SIRE compliance tracking
--- Date: 2025-11-26
--- Phase: Super Admin Dashboard - FASE 9
+-- Fix sire_submissions table - drop and recreate cleanly
+-- This ensures a fresh start
+
+-- Drop existing table and policies
+DROP TABLE IF EXISTS public.sire_submissions CASCADE;
 
 -- Create sire_submissions table
-CREATE TABLE IF NOT EXISTS public.sire_submissions (
+CREATE TABLE public.sire_submissions (
   submission_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id uuid NOT NULL REFERENCES public.tenant_registry(tenant_id) ON DELETE CASCADE,
   submission_date timestamptz NOT NULL DEFAULT now(),
@@ -14,9 +16,9 @@ CREATE TABLE IF NOT EXISTS public.sire_submissions (
 );
 
 -- Add indexes for performance
-CREATE INDEX IF NOT EXISTS idx_sire_submissions_tenant_id ON public.sire_submissions(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_sire_submissions_submission_date ON public.sire_submissions(submission_date DESC);
-CREATE INDEX IF NOT EXISTS idx_sire_submissions_status ON public.sire_submissions(status);
+CREATE INDEX idx_sire_submissions_tenant_id ON public.sire_submissions(tenant_id);
+CREATE INDEX idx_sire_submissions_submission_date ON public.sire_submissions(submission_date DESC);
+CREATE INDEX idx_sire_submissions_status ON public.sire_submissions(status);
 
 -- Add RLS policies
 ALTER TABLE public.sire_submissions ENABLE ROW LEVEL SECURITY;
