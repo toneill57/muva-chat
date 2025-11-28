@@ -162,6 +162,14 @@ jobs:
             echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
             echo "Current commit: $(git log -1 --oneline)"
 
+            # Clean up local changes before pull (VPS may have modified files)
+            echo ""
+            echo "Cleaning up local changes..."
+            git stash --include-untracked || true
+            rm -f public/config/settings.json 2>/dev/null || true
+            git checkout -- . 2>/dev/null || true
+            echo "✅ Local changes cleaned"
+
             # Pull latest changes from prd branch
             echo ""
             echo "Pulling latest changes from prd branch..."

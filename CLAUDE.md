@@ -85,9 +85,49 @@ Este ID corresponde al proyecto MUVA original pre-migración (obsoleto desde Nov
 
 ## Development Setup
 
-### SSH Access to VPS
+### VPS Deployment & SSH Access
+
+**⚠️ CRÍTICO - NUNCA OLVIDAR:**
+
+| Ambiente | Host | Usuario | Directorio | PM2 Process |
+|----------|------|---------|------------|-------------|
+| **TST** | 195.200.6.216 | root | /var/www/muva-chat-tst | muva-chat-tst |
+| **PRD** | 195.200.6.216 | root | /var/www/muva-chat-prd | muva-chat-prd |
+
+**Autenticación SSH:**
+- **Método:** Solo clave pública (password NO funciona)
+- **Clave SSH:** Almacenada en GitHub Secrets (`TST_VPS_SSH_KEY`, `PRD_VPS_SSH_KEY`)
+- **Desde máquina local:** NO hay acceso directo (clave no está en ~/.ssh/)
+
+**Deploys via GitHub Actions:**
+Los workflows `.github/workflows/deploy-tst.yml` y `deploy-prd.yml` manejan:
+1. Build en GitHub Actions (no en VPS - sin recursos)
+2. Upload via SCP de `.next/`, `public/`, `package.json`, `pnpm-lock.yaml`
+3. SSH para git pull, pnpm install, pm2 restart
+
+**Si deploy falla por cambios locales en VPS:**
+Los workflows hacen `git stash --include-untracked` automáticamente antes de pull.
+
+**Re-ejecutar workflow fallido:**
 ```bash
-ssh -i ~/.ssh/muva_deploy root@195.200.6.216
+# Ver runs recientes
+gh run list --workflow=deploy-prd.yml
+
+# Re-ejecutar el último run fallido
+gh run rerun <run-id>
+
+# O disparar nuevo push a la rama
+git commit --allow-empty -m "chore: trigger deploy" && git push origin prd
+```
+
+**Monitoreo post-deploy:**
+```bash
+# Ver logs del workflow
+gh run view <run-id> --log
+
+# Health check
+curl -s https://muva.chat/api/health | jq
+curl -s https://staging.muva.chat/api/health | jq
 ```
 
 ### MUVA Tourism Content - Embeddings
