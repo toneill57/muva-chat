@@ -1,0 +1,96 @@
+name: VPS Remote Command Executor (TEMPORAL)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - tst
+          - prd
+        default: 'tst'
+      command:
+        description: 'Command to execute (e.g., "pm2 status", "ls -la /var/www")'
+        required: true
+        type: string
+      working_directory:
+        description: 'Working directory (optional)'
+        required: false
+        type: string
+        default: '/var/www'
+
+jobs:
+  execute-command:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.environment == 'prd' && 'production' || 'staging' }}
+
+    steps:
+      - name: Validate Command (Safety Check)
+        run: |
+          COMMAND="${{ github.event.inputs.command }}"
+
+          # Lista de comandos peligrosos (bloqueados)
+          DANGEROUS_PATTERNS="rm -rf|mkfs|dd if=|format|fdisk|parted|shutdown|reboot|init 0|init 6|halt|poweroff|:(){ :|:& };:"
+
+          for pattern in $DANGEROUS_PATTERNS; do
+            if echo "$COMMAND" | grep -qi "$pattern"; then
+              echo "❌ ERROR: Comando bloqueado por seguridad: $pattern"
+              echo "Comando rechazado: $COMMAND"
+              exit 1
+            fi
+          done
+
+          echo "✅ Comando validado: $COMMAND"
+
+      - name: Execute Command on VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ github.event.inputs.environment == 'prd' && secrets.PRD_VPS_HOST || secrets.TST_VPS_HOST }}
+          username: ${{ github.event.inputs.environment == 'prd' && secrets.PRD_VPS_USER || secrets.TST_VPS_USER }}
+          key: ${{ github.event.inputs.environment == 'prd' && secrets.PRD_VPS_SSH_KEY || secrets.TST_VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            ENV="${{ github.event.inputs.environment }}"
+            WORKDIR="${{ github.event.inputs.working_directory }}"
+            COMMAND="${{ github.event.inputs.command }}"
+
+            echo "================================================"
+            echo "🚀 VPS Command Execution - $ENV"
+            echo "================================================"
+            echo "Environment: $ENV"
+            echo "Working Directory: $WORKDIR"
+            echo "Command: $COMMAND"
+            echo "Triggered by: ${{ github.actor }}"
+            echo "Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+            echo "================================================"
+            echo ""
+
+            # Cambiar al directorio especificado
+            cd "$WORKDIR"
+            echo "✅ Changed to: $(pwd)"
+            echo ""
+
+            # Ejecutar comando
+            echo "📝 Executing command..."
+            echo "---"
+            eval "$COMMAND"
+            echo "---"
+            echo ""
+            echo "✅ Command completed successfully"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### VPS Command Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Command:** \`${{ github.event.inputs.command }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Working Directory:** ${{ github.event.inputs.working_directory }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ **REMINDER:** This is a temporary workflow for debugging. Remove after use." >> $GITHUB_STEP_SUMMARY

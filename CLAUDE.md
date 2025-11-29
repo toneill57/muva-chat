@@ -41,6 +41,54 @@ curl -s https://muva.chat/api/health | jq
 | TST | /var/www/muva-chat-tst | muva-chat-tst |
 | PRD | /var/www/muva-chat-prd | muva-chat-prd |
 
+### 🔧 VPS Remote Command Executor - MÉTODO DE EMERGENCIA
+
+**⚠️ POLÍTICA:** Ejecución de comandos en VPS SOLO con autorización explícita del usuario
+
+**Workflow:** `.github/workflows/vps-exec.yml`
+
+**Uso (vía GitHub Actions):**
+```bash
+# Listar workflows disponibles
+gh workflow list
+
+# Ejecutar comando en TST
+gh workflow run vps-exec.yml -f environment=tst -f command="pm2 status" -f working_directory="/var/www/muva-chat-tst"
+
+# Ejecutar comando en PRD (EXTREMA PRECAUCIÓN)
+gh workflow run vps-exec.yml -f environment=prd -f command="pm2 logs --lines 50" -f working_directory="/var/www/muva-chat-prd"
+
+# Ver logs del workflow
+gh run list --workflow=vps-exec.yml --limit=1
+gh run view <run-id> --log
+```
+
+**Comandos Bloqueados (Safety Check):**
+- `rm -rf`, `mkfs`, `dd if=`, `format`, `fdisk`, `parted`
+- `shutdown`, `reboot`, `init 0`, `init 6`, `halt`, `poweroff`
+- Fork bombs y comandos destructivos
+
+**Ejemplos de Uso Válido:**
+```bash
+# Verificar estado de PM2
+gh workflow run vps-exec.yml -f environment=tst -f command="pm2 status"
+
+# Ver logs de aplicación
+gh workflow run vps-exec.yml -f environment=tst -f command="pm2 logs muva-chat-tst --lines 100 --nostream"
+
+# Verificar espacio en disco
+gh workflow run vps-exec.yml -f environment=tst -f command="df -h"
+
+# Listar archivos de directorio
+gh workflow run vps-exec.yml -f environment=tst -f command="ls -la .next" -f working_directory="/var/www/muva-chat-tst"
+```
+
+**⚠️ IMPORTANTE:**
+- Este workflow es TEMPORAL para debugging
+- Requiere aprobación de GitHub Environment (`production` para PRD, `staging` para TST)
+- NO ejecutar comandos destructivos - el workflow los bloqueará
+- Siempre verificar el `working_directory` antes de ejecutar
+
 ---
 
 ## Project Context
@@ -73,6 +121,55 @@ curl -s https://muva.chat/api/health | jq
 - ✅ Migraciones aplican sobre rama `dev` de Supabase
 - ✅ Testing local contra rama `dev` de Supabase
 - ⚠️ **X NUNCA** queries directas a `tst` o `prd` sin autorización explícita
+
+### 🔑 Database Connection - MÉTODO DEFINITIVO
+
+**IMPORTANTE:** Cuando necesites conectarte a la base de datos, SIEMPRE usa este método:
+
+```bash
+# Query directo a Supabase DEV
+node .claude/db-query.js "SELECT * FROM v_tenant_stats LIMIT 3"
+
+# Listar tablas
+node .claude/db-query.js "SELECT tablename FROM pg_tables WHERE schemaname = 'public' LIMIT 10"
+```
+
+**Credenciales (ya configuradas en `.env.local` línea 48):**
+- **SUPABASE_ACCESS_TOKEN**: `sbp_32b777f1b90ca669a789023b6b0c0ba2e92974fa`
+- **Proyecto DEV**: `zpyxgkvonrxbhvmkuzlt`
+- **URL**: `https://zpyxgkvonrxbhvmkuzlt.supabase.co`
+
+**Script Helper:** `.claude/db-query.js` (creado Nov 29, 2025)
+
+### 🚨 Database Queries TST/PRD - REQUIERE AUTORIZACIÓN
+
+**⚠️ POLÍTICA:** Queries a TST/PRD SOLO con autorización explícita del usuario
+
+**USO DE EMERGENCIA:**
+
+```bash
+# TST (Testing/Staging)
+node .claude/db-query.js tst "SELECT * FROM tabla LIMIT 10"
+
+# PRD (Production) - EXTREMA PRECAUCIÓN
+node .claude/db-query.js prd "SELECT * FROM tabla LIMIT 5"
+```
+
+**Credenciales:**
+- **TST**: Proyecto `bddcvjoeoiekzfetvxoe` → staging.muva.chat
+- **PRD**: Proyecto `kprqghwdnaykxhostivv` → muva.chat
+- **ACCESS_TOKEN**: Compartido (mismo que DEV, línea 48 `.env.local`)
+
+**Restricciones Automáticas:**
+- ✅ Solo queries SELECT (read-only)
+- ❌ DELETE/UPDATE/DROP/TRUNCATE/ALTER/CREATE bloqueadas por código
+- ⚠️ Warnings visuales antes de ejecutar (colores amarillo/rojo)
+- ⏱️ Muestra duración de ejecución
+
+**⚠️ IMPORTANTE:**
+- Siempre pedir autorización explícita al usuario antes de queries TST/PRD
+- Usar LIMIT en queries para evitar sobrecarga
+- TST es para testing/debugging, PRD solo en emergencias críticas
 
 ---
 
