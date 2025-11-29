@@ -21,11 +21,15 @@ import path from 'path';
  * - filesDeleted: number
  */
 export async function DELETE(request: NextRequest) {
+  console.log('[content-delete] ========== DELETE REQUEST START ==========');
+
   // Verify super admin authentication
   const authResult = await superAdminMiddleware(request);
+  console.log('[content-delete] Auth result:', authResult.status);
 
   // If middleware returns a response (error), return it
   if (authResult instanceof NextResponse && authResult.status !== 200) {
+    console.log('[content-delete] Auth failed:', authResult.status);
     return authResult;
   }
 
@@ -43,6 +47,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     if (contentIds.length === 0) {
+      console.log('[content-delete] Missing ID parameter');
       return NextResponse.json(
         { error: 'Missing content ID parameter. Use ?id=xxx or ?ids=xxx,yyy,zzz' },
         { status: 400 }
@@ -53,6 +58,8 @@ export async function DELETE(request: NextRequest) {
     const isBatch = contentIds.length > 1;
 
     console.log(`[content-delete] Deleting ${contentIds.length} content item(s): ${contentIds.join(', ')}`);
+    console.log(`[content-delete] ENV check - SUPABASE_URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30)}...`);
+    console.log(`[content-delete] ENV check - SERVICE_ROLE_KEY exists: ${!!process.env.SUPABASE_SERVICE_ROLE_KEY}`);
 
     // Fetch all content items to get file paths
     const { data: contentItems, error: fetchError } = await supabase
@@ -62,10 +69,14 @@ export async function DELETE(request: NextRequest) {
 
     if (fetchError) {
       console.error(`[content-delete] Fetch error:`, fetchError);
+      console.error(`[content-delete] Fetch error code:`, fetchError.code);
+      console.error(`[content-delete] Fetch error details:`, fetchError.details);
+      console.error(`[content-delete] Fetch error hint:`, fetchError.hint);
       throw fetchError;
     }
 
     if (!contentItems || contentItems.length === 0) {
+      console.log('[content-delete] Content not found');
       return NextResponse.json(
         { error: 'Content not found' },
         { status: 404 }
@@ -75,6 +86,7 @@ export async function DELETE(request: NextRequest) {
     console.log(`[content-delete] Found ${contentItems.length} content item(s)`);
 
     // Delete from database
+    console.log('[content-delete] Attempting DELETE from database...');
     const { error: deleteError } = await supabase
       .from('muva_content')
       .delete()
@@ -82,6 +94,10 @@ export async function DELETE(request: NextRequest) {
 
     if (deleteError) {
       console.error(`[content-delete] Delete error:`, deleteError);
+      console.error(`[content-delete] Delete error code:`, deleteError.code);
+      console.error(`[content-delete] Delete error details:`, deleteError.details);
+      console.error(`[content-delete] Delete error hint:`, deleteError.hint);
+      console.error(`[content-delete] Delete error message:`, deleteError.message);
       throw deleteError;
     }
 
@@ -104,6 +120,9 @@ export async function DELETE(request: NextRequest) {
         }
       }
     }
+
+    console.log('[content-delete] ========== DELETE SUCCESS ==========');
+    console.log(`[content-delete] Deleted ${contentItems.length} DB records, ${filesDeleted} files`);
 
     return NextResponse.json({
       success: true,
