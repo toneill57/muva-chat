@@ -61,10 +61,7 @@ export interface ContentItem {
   id: string;
   title: string;
   category: string;
-  metadata: {
-    filename?: string;
-    [key: string]: any;
-  };
+  source_file?: string;
   embeddings_1024?: number[];
   embeddings_1536?: number[];
   embeddings_3072?: number[];
