@@ -123,9 +123,9 @@ function stringifyYaml(obj: Record<string, any>, indent: number = 0): string {
         }
       }
     } else {
-      // Quote strings that might need it
+      // Quote strings that might need it, or version field (must be string "3.0" not number)
       const needsQuotes = typeof value === 'string' &&
-        (value.includes(':') || value.includes('#') || value.includes('"'));
+        (value.includes(':') || value.includes('#') || value.includes('"') || key === 'version');
       const quotedValue = needsQuotes ? `"${value}"` : value;
       result += `${spaces}${key}: ${quotedValue}\n`;
     }
@@ -193,6 +193,13 @@ function processContentWithFrontmatter(
 
   // Merge: template as base, existing has priority
   const merged = existing ? deepMerge(template, existing) : template;
+
+  // CRITICAL: Force required fields (script validation requires these exact values)
+  merged.version = '3.0'; // Always 3.0 - required by populate-embeddings.js
+  merged.type = 'tourism'; // Always tourism for MUVA content
+  if (!merged.destination) merged.destination = {};
+  merged.destination.schema = 'public';
+  merged.destination.table = 'muva_content';
 
   // Ensure critical fields from category
   if (!merged.document) merged.document = {};
