@@ -73,6 +73,12 @@ export default function ContentManagementPage() {
     fetchStats();
   }, []);
 
+  // Handle successful upload - refresh both stats and table
+  const handleUploadSuccess = () => {
+    fetchStats();
+    setTableKey(prev => prev + 1); // Force table refresh
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -162,7 +168,7 @@ export default function ContentManagementPage() {
       </div>
 
       {/* Upload Section */}
-      <ContentUploader />
+      <ContentUploader onSuccess={handleUploadSuccess} />
 
       {/* Content Table */}
       <Card>
