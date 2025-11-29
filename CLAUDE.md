@@ -8,31 +8,19 @@ Guidance for Claude Code when working with this repository.
 
 **NO HAY ACCESO SSH LOCAL AL VPS.** La clave SSH está en GitHub Secrets, NO en ~/.ssh/
 
-### Workflow de Deploy (MEMORIZAR):
+### Workflow de Deploy (Ver sección "Merge Workflow" abajo para comandos completos)
 
-```bash
-# 1. Commit y push a dev
-git add . && git commit -m "mensaje" && git push origin dev
+**Proceso:**
+1. Commit y push a `dev`
+2. Crear PR `dev → tst` (auto-merge)
+3. Esperar deployment TST
+4. Crear PR `tst → prd` (requiere 1 approval)
+5. Esperar deployment PRD
+6. Verificar health: `curl -s https://muva.chat/api/health | jq`
 
-# 2. Sincronizar dev → tst (force push, bypassing PR)
-gh api repos/toneill57/muva-chat/git/refs/heads/tst -X PATCH -f sha=$(git rev-parse origin/dev) -F force=true
-
-# 3. Esperar workflow TST
-gh run watch $(gh run list --workflow=deploy-tst.yml --limit=1 --json databaseId -q '.[0].databaseId') --exit-status
-
-# 4. Sincronizar tst → prd
-gh api repos/toneill57/muva-chat/git/refs/heads/prd -X PATCH -f sha=$(git rev-parse origin/dev) -F force=true
-
-# 5. Esperar workflow PRD
-gh run watch $(gh run list --workflow=deploy-prd.yml --limit=1 --json databaseId -q '.[0].databaseId') --exit-status
-
-# 6. Verificar health
-curl -s https://muva.chat/api/health | jq
-```
-
-### Si deploy falla:
-- Los workflows ya incluyen `git stash` y `git reset --hard` automáticamente
-- Si aún falla, revisar logs: `gh run view <run-id> --log-failed`
+**Si deploy falla:**
+- Workflows incluyen `git stash` y `git reset --hard` automáticamente
+- Revisar logs: `gh run view <run-id> --log-failed`
 - **NUNCA** intentar SSH manual - no funciona desde local
 
 ### VPS Info (solo referencia, NO se puede acceder desde local):
@@ -98,8 +86,6 @@ gh workflow run vps-exec.yml -f environment=tst -f command="ls -la .next" -f wor
 - Multi-tenant architecture (subdomain-based)
 - Premium SIRE compliance (Colombian tourism regulatory reporting)
 - Stack: Next.js 15, TypeScript, Supabase, Claude AI
-
-**Current Projects:** Multi-tenant tourism platform with SIRE compliance
 
 **Chat Routes:**
 - `/with-me` - Public chat (anonymous, pre-booking)
@@ -172,6 +158,8 @@ node .claude/db-query.js prd "SELECT * FROM tabla LIMIT 5"
 - TST es para testing/debugging, PRD solo en emergencias críticas
 
 ---
+
+## Behavioral Guidelines
 
 ### 1. PRIORIZAR Sugerencias del Usuario
 Cuando el usuario sugiere una causa, INVESTIGARLA PRIMERO antes de proponer alternativas.
@@ -371,7 +359,20 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ---
 
-- Si estuvieras accediendo a un VPS por SSH nunca modifiques código ya que se rompe el patrón de trabajar con tres ambientes
-- El ambiente tst a veces puede ser referido como staging pero debes tener en cuenta que las ramas de supabase y de github se llaman tst
-- IMPORTANTE: Cualquier solicitud de modificar la base de datos tst o producción debe ser consultada al usuario para su confirmación
-**Last Updated:** November 16, 2025 (Three-Tier Migration Completed)
+## Important Reminders
+
+### VPS Access
+- **NUNCA modifiques código** si estuvieras accediendo al VPS por SSH - rompe el patrón three-tier
+- Usa el workflow `.github/workflows/vps-exec.yml` para comandos de emergencia
+
+### Nomenclatura
+- El ambiente **tst** puede ser referido como "staging" en conversaciones
+- Las ramas de Supabase y GitHub se llaman **tst** (NO staging)
+
+### Modificaciones a TST/PRD
+- **SIEMPRE** consultar al usuario antes de modificar bases de datos TST/PRD
+- Requiere autorización explícita (políticas de seguridad)
+
+---
+
+**Last Updated:** November 29, 2025 (Database & VPS Access Tools Added)
