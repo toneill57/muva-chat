@@ -318,7 +318,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
                     {item.title}
                   </TableCell>
                   <TableCell>
-                    {item.embeddings_1024?.length || 0}
+                    {item.total_chunks || 0}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}

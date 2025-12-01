@@ -62,9 +62,10 @@ export interface ContentItem {
   title: string;
   category: string;
   source_file?: string;
-  embeddings_1024?: number[];
-  embeddings_1536?: number[];
-  embeddings_3072?: number[];
+  total_chunks: number;        // Total number of chunks for this document
+  chunk_index: number;          // Index of this chunk
+  embedding?: number[];         // Main embedding vector
+  embedding_fast?: number[];    // Fast embedding vector
   created_at: string;
 }
 
