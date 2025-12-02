@@ -139,8 +139,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
     // Build query
     const supabase = createServerClient()
 
-    // Get current date in YYYY-MM-DD format
-    const today = new Date().toISOString().split('T')[0]
+    // Get current date and 2 months ago in YYYY-MM-DD format
+    const today = new Date()
+    const twoMonthsAgo = new Date(today)
+    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
+    const twoMonthsAgoStr = twoMonthsAgo.toISOString().split('T')[0]
 
     // Query reservations with accommodation units from hotels schema
     let query = supabase
@@ -182,9 +185,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
       .in('status', statusFilter)
       .in('booking_source', ['motopress', 'airbnb']) // Show MotoPress + Airbnb reservations
 
-    // Filter future reservations only
+    // Filter reservations from 2 months ago onwards (not just future)
     if (futureOnly) {
-      query = query.gte('check_in_date', today)
+      query = query.gte('check_in_date', twoMonthsAgoStr)
     }
 
     // Order by check-in date (nearest first)
@@ -234,11 +237,13 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
     // Get unique accommodation_unit_ids for cross-schema lookup
     const allAccommodations = Array.from(reservationAccommodationsMap.values()).flat()
+    console.log('[reservations-list] DEBUG allAccommodations sample:', allAccommodations.slice(0, 3))
     const accommodationUnitIds = [...new Set(
       allAccommodations
         .map((acc: any) => acc.accommodation_unit_id)
         .filter(Boolean)
     )]
+    console.log('[reservations-list] DEBUG unique accommodationUnitIds count:', accommodationUnitIds.length)
 
     const accommodationUnitsMap = new Map<string, any>()
 
@@ -247,7 +252,10 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
 
       const { data: unitsData, error: unitsError } = await supabase.rpc(
         'get_accommodation_units_by_ids',
-        { p_unit_ids: accommodationUnitIds }
+        {
+          p_unit_ids: accommodationUnitIds,
+          p_tenant_id: staffSession.tenant_id  // Multi-tenant security
+        }
       )
 
       if (unitsError) {
@@ -289,6 +297,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
       // Get accommodations for this reservation from junction table
       const reservationAccommodations = (reservationAccommodationsMap.get(res.id) || []).map((acc: any) => ({
         id: acc.id,
+        accommodation_unit_id: acc.accommodation_unit_id,
         motopress_accommodation_id: acc.motopress_accommodation_id,
         motopress_type_id: acc.motopress_type_id,
         room_rate: acc.room_rate,

@@ -14,7 +14,7 @@ export async function loginAsGuest(
   phoneLast4: string = testReservation.valid.phoneLast4
 ) {
   // Navigate to login page with tenant_id
-  await page.goto(`/guest-chat/${testReservation.valid.tenantId}`)
+  await page.goto(`/my-stay/${testReservation.valid.tenantId}`)
 
   // Fill in credentials
   await page.fill(selectors.login.checkInDateInput, checkInDate)
@@ -24,7 +24,7 @@ export async function loginAsGuest(
   await page.click(selectors.login.submitButton)
 
   // Wait for navigation to chat interface
-  await page.waitForURL(/\/guest-chat/, { timeout: timeouts.login })
+  await page.waitForURL(/\/my-stay/, { timeout: timeouts.login })
 
   // Verify we're on the chat page
   await expect(page.locator(selectors.chat.messageInput)).toBeVisible()

@@ -54,6 +54,27 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
 
     console.log('[sync-reservations] Starting sync for tenant:', tenant_id)
 
+    // 1.5. Verify that accommodations are synced first (PRE-SYNC VALIDATION)
+    const { data: accommodations, error: accommodationsError } = await supabase
+      .from('accommodation_units_public')
+      .select('unit_id')
+      .eq('tenant_id', tenant_id)
+      .ilike('name', '% - Overview')
+      .limit(1)
+
+    if (accommodationsError || !accommodations || accommodations.length === 0) {
+      console.error('[sync-reservations] ⚠️ No accommodations found - cannot sync reservations')
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Please sync accommodations FIRST before syncing reservations. Go to Accommodations → Integrations → MotoPress and sync your accommodations.'
+        },
+        { status: 400 }
+      )
+    }
+
+    console.log('[sync-reservations] ✅ Accommodations are synced - proceeding with reservation sync')
+
     // 2. Retrieve MotoPress credentials from integration_configs
     const { data: config, error: configError } = await supabase
       .from('integration_configs')
@@ -132,13 +153,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
 
     console.log(`[sync-reservations] Mapped ${mappedReservations.length} reservations`)
 
-    // 6. Upsert reservations into guest_reservations
+    // 5.5. Create lookup map: external_booking_id → original booking (for finding reserved_accommodations)
+    const bookingsMap = new Map(
+      bookings.map((booking: MotoPresBooking) => [booking.id.toString(), booking])
+    )
+
+    // 6. Upsert reservations into guest_reservations AND reservation_accommodations
     let created = 0
     let updated = 0
     let skipped = 0
     let errors = 0
 
     for (const reservation of mappedReservations) {
+      const originalBooking = bookingsMap.get(reservation.external_booking_id)
+
+      if (!originalBooking) {
+        console.error(`[sync-reservations] Cannot find original booking for external_booking_id=${reservation.external_booking_id}`)
+        errors++
+        continue
+      }
       try {
         // Check if reservation already exists by external_booking_id
         const { data: existing } = await supabase
@@ -163,18 +196,42 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
             errors++
           } else {
             updated++
+
+            // Delete old accommodations and insert new ones (handle room changes)
+            await supabase
+              .from('reservation_accommodations')
+              .delete()
+              .eq('reservation_id', existing.id)
+
+            // Save updated accommodations
+            await MotoPresBookingsMapper.saveReservationAccommodations(
+              existing.id,
+              originalBooking,
+              tenant_id,
+              supabase
+            )
           }
         } else {
-          // Insert new reservation
-          const { error: insertError } = await supabase
+          // Insert new reservation and get the ID
+          const { data: insertedReservation, error: insertError } = await supabase
             .from('guest_reservations')
             .insert(reservation)
+            .select('id')
+            .single()
 
-          if (insertError) {
+          if (insertError || !insertedReservation) {
             console.error(`[sync-reservations] Insert error for booking ${reservation.external_booking_id}:`, insertError)
             errors++
           } else {
             created++
+
+            // Save accommodations to junction table
+            await MotoPresBookingsMapper.saveReservationAccommodations(
+              insertedReservation.id,
+              originalBooking,
+              tenant_id,
+              supabase
+            )
           }
         }
       } catch (err) {

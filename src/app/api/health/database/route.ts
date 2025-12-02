@@ -120,11 +120,11 @@ async function checkRPCSearchPath(funcConfig: FunctionConfig): Promise<HealthChe
       FROM pg_proc p
       JOIN pg_namespace n ON p.pronamespace = n.oid
       WHERE n.nspname = 'public'
-        AND p.proname = $1;
+        AND p.proname = $1
     `;
 
-    let { data, error } = await supabase.rpc('exec_sql', {
-      sql: query.replace('$1', `'${funcConfig.name}'`),
+    let { data, error } = await supabase.rpc('execute_sql', {
+      query: query.replace('$1', `'${funcConfig.name}'`),
     });
 
     if (error) {
@@ -244,11 +244,11 @@ async function checkVectorOperator(): Promise<HealthCheck> {
   try {
     // Test if vector operator <=> is accessible
     const query = `
-      SELECT 1 - ('[0.1,0.2,0.3]'::vector(3) <=> '[0.1,0.2,0.3]'::vector(3)) AS similarity;
+      SELECT 1 - ('[0.1,0.2,0.3]'::vector(3) <=> '[0.1,0.2,0.3]'::vector(3)) AS similarity
     `;
 
-    const { data, error } = await supabase.rpc('exec_sql', {
-      sql: query,
+    const { data, error } = await supabase.rpc('execute_sql', {
+      query: query,
     });
 
     if (error) {

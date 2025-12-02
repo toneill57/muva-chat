@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateStaff, generateStaffToken } from '@/lib/staff-auth'
 import { resolveSubdomainToTenantId } from '@/lib/tenant-resolver'
+import { createServerClient } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -116,10 +117,19 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date()
     expiresAt.setHours(expiresAt.getHours() + 24)
 
+    // Fetch tenant slug for subdomain redirect
+    const supabase = createServerClient()
+    const { data: tenantData } = await supabase
+      .from('tenant_registry')
+      .select('slug')
+      .eq('tenant_id', session.tenant_id)
+      .single()
+
     console.log('[staff-login-api] Login successful:', {
       username: session.username,
       role: session.role,
       tenant_id: session.tenant_id,
+      tenant_slug: tenantData?.slug,
     })
 
     // Return success response
@@ -136,6 +146,7 @@ export async function POST(request: NextRequest) {
             permissions: session.permissions,
           },
           session_expires_at: expiresAt.toISOString(),
+          tenant_slug: tenantData?.slug,
         },
       },
       { status: 200 }

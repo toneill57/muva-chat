@@ -63,8 +63,8 @@ export default function AccommodationsDashboardPage() {
         throw new Error('No authentication token found')
       }
 
-      // Fetch reservations
-      const resResponse = await fetch('/api/reservations/list?future=true&status=active', {
+      // Fetch reservations (includes active, pending_payment, pending_admin)
+      const resResponse = await fetch('/api/reservations/list?future=true', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

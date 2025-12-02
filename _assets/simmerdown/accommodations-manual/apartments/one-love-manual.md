@@ -1,26 +1,3 @@
----
-version: "2.0"
-type: "guest_manual"
-destination:
-  schema: "hotels"
-  table: "guest_information"
-document:
-  title: "Manual Operativo - Apartamento One Love"
-  description: "Guía operativa completa para huéspedes del Apartamento One Love"
-  category: "manual"
-  subcategory: "accommodation_operations"
-  access_level: "guest_only"
-  language: "es"
-  status: "active"
-  tags: ["manual", "one_love", "apartamento", "instrucciones", "operativo"]
-  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay"]
-unit_reference:
-  unit_name: "One Love"
-  unit_type: "apartment"
-  unit_id: "one-love-apt"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
----
-
 # Manual Operativo - Apartamento One Love
 
 ¡Bienvenid@ a Simmer Down Guest House – Apartamento One Love!

@@ -16,6 +16,7 @@ export interface StaffLoginResponse {
   token: string;
   staff_info: StaffInfo;
   session_expires_at: string;
+  tenant_slug?: string; // Returned for subdomain redirect after login
 }
 
 export interface Conversation {

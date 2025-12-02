@@ -46,6 +46,7 @@ interface ReservationItem {
   // 🆕 UPDATED: Multiple accommodations per reservation (junction table)
   reservation_accommodations: Array<{
     id: string
+    accommodation_unit_id: string | null
     motopress_accommodation_id: number | null
     motopress_type_id: number | null
     room_rate: number | null
@@ -233,11 +234,54 @@ export default function ReservationsList() {
         }
 
         // Enrich reservations with tenant SIRE data
-        const enrichedReservations = data.data.reservations.map(res => ({
+        let enrichedReservations = data.data.reservations.map(res => ({
           ...res,
           tenant_hotel_code: hotelCode,
           tenant_city_code: cityCode,
         }))
+
+        // CLIENT-SIDE FIX: Fetch accommodation names via API endpoint
+        // This bypasses the broken RPC in the API endpoint
+        try {
+          // Collect all unique accommodation_unit_ids
+          const unitIds = new Set<string>()
+          enrichedReservations.forEach(res => {
+            res.reservation_accommodations?.forEach(acc => {
+              console.log('[DEBUG] acc:', acc)
+              if (acc.accommodation_unit_id) {
+                unitIds.add(acc.accommodation_unit_id)
+              }
+            })
+          })
+          console.log('[DEBUG] Total unit IDs found:', unitIds.size)
+
+          if (unitIds.size > 0) {
+            const response = await fetch(`/api/accommodations/names?ids=${Array.from(unitIds).join(',')}`)
+            const result = await response.json()
+
+            if (result.success && result.data) {
+              // Build lookup map
+              const unitsMap = new Map()
+              result.data.forEach((unit: any) => {
+                unitsMap.set(unit.id, unit)
+              })
+
+              // Enrich reservations with accommodation names
+              enrichedReservations = enrichedReservations.map(res => ({
+                ...res,
+                reservation_accommodations: res.reservation_accommodations?.map(acc => ({
+                  ...acc,
+                  accommodation_unit: acc.accommodation_unit_id
+                    ? unitsMap.get(acc.accommodation_unit_id) || acc.accommodation_unit
+                    : acc.accommodation_unit
+                }))
+              }))
+            }
+          }
+        } catch (err) {
+          console.error('[ReservationsList] Failed to fetch accommodation names:', err)
+          // Continue with data from API (will show "Sin nombre")
+        }
 
         setReservations(enrichedReservations)
         setTenantInfo({

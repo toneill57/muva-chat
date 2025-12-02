@@ -136,7 +136,7 @@ export async function loginAsGuest(
   page: Page,
   credentials: GuestCredentials
 ): Promise<void> {
-  await page.goto('/guest-chat');
+  await page.goto('/my-stay');
 
   await page.fill('input[name="check_in_date"]', credentials.check_in_date);
   await page.fill('input[name="phone_last_4"]', credentials.phone_last_4);
@@ -156,7 +156,7 @@ export async function loginAsGuestWithToken(
   const token = await generateTestToken(session);
 
   // Set token in localStorage
-  await page.goto('/guest-chat');
+  await page.goto('/my-stay');
   await page.evaluate((tokenValue) => {
     localStorage.setItem('guest_token', tokenValue);
   }, token);
@@ -277,7 +277,7 @@ export async function logout(page: Page): Promise<void> {
 
   if (count > 0) {
     await logoutButton.click();
-    // After logout, should show login form on same /guest-chat page
+    // After logout, should show login form on same /my-stay page
     await expect(page.locator('input[name="check_in_date"]')).toBeVisible({ timeout: 5000 });
   }
 }

@@ -94,15 +94,40 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
 
       console.log(`[Accommodations Units API] ✅ Found ${fallbackData.length} chunks (raw)`)
 
+      // Get mapping from unit name to hotels.accommodation_units.id
+      // Use RPC to access hotels schema (PostgREST can't access custom schemas)
+      const uniqueNames = [...new Set(
+        fallbackData
+          .map(chunk => chunk.metadata?.original_accommodation || chunk.name.split(' - ')[0])
+          .filter(Boolean)
+      )]
+
+      const { data: hotelsUnits } = await supabase.rpc('get_accommodation_units', {
+        p_hotel_id: null,
+        p_tenant_id: tenantId
+      })
+
+      // Create mapping: unit name -> hotels.accommodation_units.id
+      const nameToHotelsId = new Map(
+        (hotelsUnits || [])
+          .filter((u: any) => u.name && uniqueNames.includes(u.name))
+          .map((u: any) => [u.name, u.id])
+      )
+
+      console.log(`[Accommodations Units API] ✅ Mapped ${nameToHotelsId.size} unit names to hotels IDs:`, Array.from(nameToHotelsId.entries()).slice(0, 3))
+
       // Group chunks by original_accommodation to show only base units
       const groupedUnits = fallbackData.reduce((acc: any, chunk: any) => {
         const baseName = chunk.metadata?.original_accommodation || chunk.name
 
         if (!acc[baseName]) {
           // First chunk for this unit - use as base
+          const originalUnitId = nameToHotelsId.get(baseName) || null
+
           acc[baseName] = {
             ...chunk,
             id: chunk.unit_id,
+            original_unit_id: originalUnitId, // NEW: ID from hotels.accommodation_units
             name: baseName, // Clean name without " - Section" suffix
             unit_number: chunk.metadata?.display_order?.toString() || 'N/A',
 
@@ -163,6 +188,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
                 chunk.pricing.base_price,
                 chunk.pricing.base_price
               ] : [0, 0],
+              base_price_low_season: chunk.pricing?.base_price_low_season || chunk.pricing?.base_price || 0,
+              base_price_high_season: chunk.pricing?.base_price_high_season || chunk.pricing?.base_price || 0,
               // NEW: Price per person calculation
               price_per_person: chunk.pricing?.base_price && (typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null)
                 ? Math.round(chunk.pricing.base_price / (chunk.metadata.capacity.total || 1))
@@ -237,15 +264,38 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
 
     console.log(`[Accommodations Units API] ✅ Found ${unitsData?.length || 0} units`)
 
+    // Get mapping from unit name to hotels.accommodation_units.id (same as fallback)
+    const uniqueNames = [...new Set(
+      (unitsData || [])
+        .map((chunk: any) => chunk.metadata?.original_accommodation || chunk.name.split(' - ')[0])
+        .filter(Boolean)
+    )]
+
+    const { data: hotelsUnits } = await supabase.rpc('get_accommodation_units', {
+      p_hotel_id: null,
+      p_tenant_id: tenantId
+    })
+
+    const nameToHotelsId = new Map(
+      (hotelsUnits || [])
+        .filter((u: any) => u.name && uniqueNames.includes(u.name))
+        .map((u: any) => [u.name, u.id])
+    )
+
+    console.log(`[Accommodations Units API] ✅ Mapped ${nameToHotelsId.size} unit names to hotels IDs`)
+
     // Apply same transformations as fallback to ensure component compatibility
     const groupedUnits = (unitsData || []).reduce((acc: any, chunk: any) => {
       const baseName = chunk.metadata?.original_accommodation || chunk.name
 
       if (!acc[baseName]) {
         // First chunk for this unit - use as base
+        const originalUnitId = nameToHotelsId.get(baseName) || null
+
         acc[baseName] = {
           ...chunk,
           id: chunk.unit_id,
+          original_unit_id: originalUnitId, // NEW: ID from hotels.accommodation_units
           name: baseName,
           unit_number: chunk.metadata?.display_order?.toString() || 'N/A',
 
@@ -302,6 +352,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<UnitsRespo
               chunk.pricing.base_price,
               chunk.pricing.base_price
             ] : [0, 0],
+            base_price_low_season: chunk.pricing?.base_price_low_season || chunk.pricing?.base_price || 0,
+            base_price_high_season: chunk.pricing?.base_price_high_season || chunk.pricing?.base_price || 0,
             price_per_person: chunk.pricing?.base_price && (typeof chunk.metadata?.capacity === 'object' && chunk.metadata.capacity !== null)
               ? Math.round(chunk.pricing.base_price / (chunk.metadata.capacity.total || 1))
               : (chunk.pricing?.base_price && chunk.metadata?.capacity)

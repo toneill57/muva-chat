@@ -56,8 +56,13 @@ const nextConfig: NextConfig = {
         // Example: simmerdown.staging.localhost:3000/login -> localhost:3000/simmerdown/login
         // Example: simmerdown.dev.muva.chat/login -> muva.chat/simmerdown/login
         // Using afterFiles ensures Next.js internal routes (_next/*) are handled first
+        //
+        // IMPORTANT: API routes are EXCLUDED from this rewrite because:
+        // 1. API routes live in src/app/api/* (not src/app/[tenant]/api/*)
+        // 2. Middleware already injects x-tenant-subdomain header for tenant context
+        // 3. Rewriting /api/* to /[tenant]/api/* causes 404s (handler not found)
         {
-          source: '/:path*',
+          source: '/:path((?!api).*)*',  // Exclude /api/* routes using named capture with negative lookahead
           has: [
             {
               type: 'host',

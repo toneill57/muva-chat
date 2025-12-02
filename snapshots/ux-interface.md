@@ -3,49 +3,63 @@ title: "UX-Interface Agent Snapshot"
 description: "Snapshot especializado UI/UX para MUVA Chat - Componentes, Accesibilidad, Design System, Mobile-First"
 category: agent-snapshot
 agent: ux-interface
-last_updated: "2025-11-06"
-version: "2.1"
+last_updated: "2025-11-09"
+version: "2.2"
 ---
 
 # UX-Interface Agent Snapshot
 
 **Agent:** `@ux-interface`
 **Dominio:** Componentes React, Accesibilidad, Design System, Mobile-First, Performance UI
-**Última actualización:** 24 Octubre 2025
+**Última actualización:** 9 Noviembre 2025
 
 ---
 
-## 🎯 CURRENT PROJECT: Chat Core Stabilization (October 24, 2025)
+## 🎯 CURRENT PROJECT: Rediseño UX Página de Unidades de Alojamiento (November 9, 2025)
 
-**Status:** ⏸️ Standby - Awaiting FASE 3 E2E Testing
-**Priority:** 🟢 DEFERRED (FASE 3)
-**Your Role:** Support E2E testing validation (IF needed)
+**Status:** Planning Complete - Ready for FASE 1
 
-### Quick Context
+**My Responsibility:**
+- **FASE 1:** Crear vistas compactas (AccommodationUnitsCompactGrid + AccommodationUnitsTable + UnitViewToggle) - 3-4h
+- **FASE 2:** Crear página individual (`/units/[unitId]` + AccommodationUnitDetail component) - 4-5h
+- **FASE 3:** Implementar filtros, búsqueda y quick actions (UnitSearchBar, UnitFilters, UnitQuickActions) - 2-3h
+- **FASE 4:** Testing completo, performance optimizations, bug fixes - 2h
 
-**Problem:** Guest chat NO responde WiFi/Policies
-**Your Involvement:** Conditional - Only if UI/UX issues discovered during testing
-**Current Phase:** FASE 1 (SQL Diagnosis) - Backend-focused
+**Planning Files:**
+- `docs/accommodation-units-redesign/plan.md` - Complete architecture (700+ lines)
+- `docs/accommodation-units-redesign/TODO.md` - Tasks by phase (42 tasks across 4 phases)
+- `docs/accommodation-units-redesign/accommodation-units-redesign-prompt-workflow.md` - Ready prompts
 
-### Your Responsibilities (CONDITIONAL)
+**Key Files:**
+- **Create:** `src/components/Accommodation/AccommodationUnitsCompactGrid.tsx` - Grid compacto (FASE 1)
+- **Create:** `src/components/Accommodation/AccommodationUnitsTable.tsx` - Vista tabla (FASE 1)
+- **Create:** `src/components/Accommodation/UnitViewToggle.tsx` - Toggle Grid/Tabla (FASE 1)
+- **Create:** `src/app/[tenant]/accommodations/units/[unitId]/page.tsx` - Ruta dinámica (FASE 2)
+- **Create:** `src/components/Accommodation/AccommodationUnitDetail.tsx` - Página individual (FASE 2)
+- **Create:** `src/components/Accommodation/UnitSearchBar.tsx` - Búsqueda (FASE 3)
+- **Create:** `src/components/Accommodation/UnitFilters.tsx` - Panel filtros (FASE 3)
+- **Create:** `src/components/Accommodation/UnitQuickActions.tsx` - Quick actions (FASE 3)
+- **Modify:** `src/app/[tenant]/accommodations/units/page.tsx` - Integrar vistas (FASE 1)
+- **Reuse:** `src/components/Accommodation/AccommodationManualsSection.tsx` - Sin cambios
+- **Reuse:** `src/components/Accommodation/ManualAnalytics.tsx` - Sin cambios
 
-**IF FASE 3 E2E Testing discovers UI/UX issues:**
-- Validate component rendering in test scenarios
-- Verify accessibility (ARIA labels, keyboard navigation)
-- Check mobile viewport rendering
-- Ensure visual regression tests pass
+**Design Goals:**
+- Transformar cards gigantes (9 secciones) → vistas compactas (4-6 datos clave)
+- Navegación individual: Click unidad → `/units/[unitId]` con info completa
+- Toggle Grid/Tabla con persistencia localStorage
+- Filtros multi-criterio + búsqueda instantánea (<300ms debounce)
+- Performance: escalar a 80+ unidades sin degradación
+- Mobile-first: responsive design, tabla colapsa a cards en <768px
 
-**IF FASE 4 Code Consolidation affects UI:**
-- Review refactored components for UX consistency
-- Validate no visual regressions introduced
-- Test responsive behavior after consolidation
-
-### Success Criteria (IF Involved)
-
-- ✅ All E2E tests pass with visual validation
-- ✅ No ARIA/accessibility regressions
-- ✅ Mobile viewport tests pass
-- ✅ Lighthouse scores maintained (>90)
+**Workflow:**
+1. Read plan.md → TODO.md → accommodation-units-redesign-prompt-workflow.md
+2. Start with FASE 1: Prompts 1.1-1.4 (vistas compactas)
+3. Use corresponding prompt from workflow.md (copy-paste ready)
+4. Implement components following shadcn/ui + Tailwind patterns
+5. Test in `http://simmerdown.localhost:3001/accommodations/units`
+6. Document in `docs/accommodation-units-redesign/fase-{N}/`
+7. Mark tasks [x] in TODO.md ONLY after tests pass
+6. Document in docs/accommodation-manuals/fase-3/
 
 ### Dependencies
 

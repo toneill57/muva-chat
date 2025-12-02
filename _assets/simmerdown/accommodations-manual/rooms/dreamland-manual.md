@@ -1,26 +1,3 @@
----
-version: "2.0"
-type: "guest_manual"
-destination:
-  schema: "hotels"
-  table: "guest_information"
-document:
-  title: "Manual Operativo - Habitación Dreamland"
-  description: "Guía operativa completa para huéspedes de la Habitación Dreamland"
-  category: "manual"
-  subcategory: "accommodation_operations"
-  access_level: "guest_only"
-  language: "es"
-  status: "active"
-  tags: ["manual", "dreamland", "habitacion", "instrucciones", "operativo", "room"]
-  keywords: ["llegada", "claves", "wifi", "check-in", "ubicacion", "sarie_bay"]
-unit_reference:
-  unit_name: "Dreamland"
-  unit_type: "room"
-  unit_id: "dreamland-room"
-tenant_id: "b5c45f51-a333-4cdf-ba9d-ad0a17bf79bf"
----
-
 # Manual Operativo - Habitación Dreamland
 
 ¡Bienvenid@ a Simmer Down Guest House – Habitación Dreamland!

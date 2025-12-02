@@ -299,7 +299,7 @@ export class MotoPresDataMapper {
 
     return {
       tenant_id: tenantId,
-      motopress_type_id: meta.mphb_room_type_id,
+      motopress_type_id: meta.mphb_room_type_id || motoPresData.id,  // Fallback to post ID if meta field not present
       motopress_unit_id: motoPresData.id,
       accommodation_mphb_type: accommodationMphbType,
       name: title,
