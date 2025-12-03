@@ -1,9 +1,0 @@
-# Supabase CLI Configuration
-# See: https://supabase.com/docs/guides/cli/config
-
-[api]
-enabled = false
-
-[db]
-# Use root migrations directory instead of supabase/migrations
-migrations_dir = "../migrations"
