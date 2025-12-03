@@ -4,7 +4,7 @@ import { createServerClient } from '@/lib/supabase';
 /**
  * GET /api/super-admin/content/list
  *
- * List muva_content with pagination and filters
+ * List muva_content GROUPED BY source_file (documents, not chunks)
  *
  * Query params:
  * - category?: string (filter by category)
@@ -13,8 +13,8 @@ import { createServerClient } from '@/lib/supabase';
  * - limit?: number (default: 50)
  *
  * Returns:
- * - content: array of content items
- * - total: number (total count)
+ * - content: array of UNIQUE documents (grouped by source_file)
+ * - total: number (total unique documents)
  * - page: number
  * - limit: number
  * - totalPages: number
@@ -41,10 +41,11 @@ export async function GET(request: NextRequest) {
 
     console.log(`[content-list] Fetching content - page: ${page}, limit: ${limit}, category: ${category || 'all'}, search: ${search || 'none'}`);
 
-    // Build query
+    // Build query - get all chunks but we'll group them
+    // Select only necessary fields to reduce data transfer
     let query = supabase
       .from('muva_content')
-      .select('*', { count: 'exact' });
+      .select('id, source_file, title, category, total_chunks, created_at, chunk_index');
 
     // Aplicar filtros
     if (category) {
@@ -52,33 +53,72 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      // Buscar en title o metadata->filename
-      // Usar OR para buscar en múltiples campos
-      query = query.or(`title.ilike.%${search}%,metadata->>filename.ilike.%${search}%`);
+      // Buscar en title o source_file
+      query = query.or(`title.ilike.%${search}%,source_file.ilike.%${search}%`);
     }
 
     // Sort por created_at descendente (más recientes primero)
     query = query.order('created_at', { ascending: false });
 
-    // Pagination (offset-based)
-    const offset = (page - 1) * limit;
-    query = query.range(offset, offset + limit - 1);
-
-    const { data, error, count } = await query;
+    const { data, error } = await query;
 
     if (error) {
       console.error(`[content-list] Query error:`, error);
       throw error;
     }
 
-    console.log(`[content-list] Found ${count} total items, returning ${data?.length || 0} items`);
+    // Group by source_file to get unique documents
+    const documentMap = new Map<string, {
+      id: string;
+      source_file: string;
+      title: string;
+      category: string;
+      total_chunks: number;
+      created_at: string;
+      chunk_ids: string[];
+    }>();
+
+    for (const item of data || []) {
+      const key = item.source_file;
+      if (!documentMap.has(key)) {
+        documentMap.set(key, {
+          id: item.id, // Use first chunk's ID as document ID
+          source_file: item.source_file,
+          title: item.title,
+          category: item.category,
+          total_chunks: item.total_chunks || 1,
+          created_at: item.created_at,
+          chunk_ids: [item.id]
+        });
+      } else {
+        // Add chunk ID to existing document
+        const doc = documentMap.get(key)!;
+        doc.chunk_ids.push(item.id);
+        // Keep the most recent created_at
+        if (new Date(item.created_at) > new Date(doc.created_at)) {
+          doc.created_at = item.created_at;
+        }
+      }
+    }
+
+    // Convert to array and sort by created_at
+    const documents = Array.from(documentMap.values())
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    const total = documents.length;
+
+    // Apply pagination
+    const offset = (page - 1) * limit;
+    const paginatedDocuments = documents.slice(offset, offset + limit);
+
+    console.log(`[content-list] Found ${total} unique documents, returning ${paginatedDocuments.length} items`);
 
     return NextResponse.json({
-      content: data || [],
-      total: count || 0,
+      content: paginatedDocuments,
+      total,
       page,
       limit,
-      totalPages: Math.ceil((count || 0) / limit)
+      totalPages: Math.ceil(total / limit)
     });
 
   } catch (error: any) {
