@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "LAGUNA BIG POND"
-  description: "Refugio natural de babillas y aves con formación de agua semisalada en La Loma, San Andrés"
-
+  title: LAGUNA BIG POND
+  description: Refugio natural de babillas y aves con formación de agua semisalada en La Loma, San Andrés
   category: spots
   subcategory: nature_spots
-
   language: es
   version: "2.0"
   status: active
-
   tags: [nature, lagoon, wildlife, babillas, birdwatching, eco_tourism, laguna, fauna_silvestre, observacion_aves, ecoturismo, refugio_natural, agua_semisalada]
-
   keywords: [laguna big pond, big pond, babillas, cocodrilos, la loma, fauna, aves, agua semisalada, refugio natural, san andres]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:48:02.439Z"
 business:
   id: laguna-big-pond
   nombre: LAGUNA BIG POND
   categoria: Spot
-
   horario: "Lunes a Domingo 09:00 - 17:00"
   precio: "Entrada: $5,000 - $10,000 COP (consultar tarifa actualizada)"
-
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "La Loma"
-  subzona: "Laguna"
-
-  caracteristicas_zona: ["Zona cultural raizal", "Formación montañosa única", "Alta concentración de nativos", "Valor histórico y natural", "Ecosistema de laguna"]
-  landmarks_cercanos: ["Jardín Botánico", "Primera Iglesia Bautista", "La Loma"]
+  zona: La Loma
+  subzona: Laguna
+  caracteristicas_zona: "["Zona cultural raizal", "Formación montañosa única", "Alta concentración de nativos", "Valor histórico y natural", "Ecosistema de laguna"]"
+  landmarks_cercanos: "["Jardín Botánico", "Primera Iglesia Bautista", "La Loma"]"
 ---
 
 # LAGUNA BIG POND

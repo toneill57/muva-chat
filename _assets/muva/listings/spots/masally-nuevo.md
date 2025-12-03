@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "MASALLY NUEVO"
-  description: "Masally Nuevo es la ubicación más moderna y cómoda de esta marca local querida. Situado frente al mar del lado oeste de San Andrés, ofrece un espacio lindo y tranquilo donde disfrutar bebidas y comidas durante todo el día. Mejor infraestructura que el antiguo, perfecto para atardeceres espectaculares y días completos de playa."
+  title: MASALLY NUEVO
+  description: Masally Nuevo es la ubicación más moderna y cómoda de esta marca local querida. Situado frente al mar del lado oeste de San Andrés, ofrece un espacio lindo y tranquilo donde disfrutar bebidas y comidas durante todo el día. Mejor infraestructura que el antiguo, perfecto para atardeceres espectaculares y días completos de playa.
   category: spots
   subcategory: beach_restaurant
   language: es
@@ -14,17 +14,21 @@ document:
   status: active
   tags: [masally, beach restaurant, lado oeste, west side, atardeceres, sunset, comida playa, bebidas, chill spot, playa tranquila, new location, upgraded, vista mar, all day dining]
   keywords: [masally nuevo, masally san andres, restaurante playa, lado oeste isla, atardeceres san andres, comida bebidas mar, spot playero, nuevo masally]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:47:10.721Z"
 business:
   id: masally-nuevo
   nombre: MASALLY NUEVO
   categoria: Beach Restaurant
   tipo_establecimiento: Restaurante y Bar Playero
   horario: "10:00 AM - 8:00 PM"
-  precio: "$15,000 - $40,000"
-  ubicacion_especifica: "Lado oeste de la isla"
+  precio: $15,000 - $40,000
+  ubicacion_especifica: Lado oeste de la isla
   servicios_especiales: [comida completa, bebidas, atardeceres, infraestructura mejorada]
   ideal_para: [almuerzo, cena, atardeceres, dia completo playa, comida mar]
 ---
+
 # MASALLY NUEVO {#masally-nuevo}
 
 ## Descripción General {#descripcion}
@@ -95,4 +99,3 @@ El lado oeste de San Andrés ofrece los atardeceres más espectaculares de la is
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

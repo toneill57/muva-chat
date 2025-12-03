@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "ECO XTREME SAN ANDRÉS"
-  description: "Alquiler de vehículos y botes con enfoque eco-friendly para exploradores aventureros en San Andrés"
-
+  title: ECO XTREME SAN ANDRÉS
+  description: Alquiler de vehículos y botes con enfoque eco-friendly para exploradores aventureros en San Andrés
   category: rentals
   subcategory: vehicle_rentals
-
   language: es
   version: "2.0"
   status: active
-
   tags: [rentals, vehicles, cars, motorcycles, boats, pontoons, mulitas, eco_friendly, adventure, alquiler, vehiculos, motos, carros, botes, pontones, ecoturismo]
-
   keywords: [eco xtreme, eco-xtreme, alquiler, rental, moto, carro, mulitas, botes, ponton, san andres, adventure, eco friendly]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:43:41.191Z"
 business:
   id: eco-xtreme-san-andres
   nombre: ECO XTREME SAN ANDRÉS
   categoria: Alquiler
-
   horario: "Lunes a Domingo 09:00 - 18:00"
-  precio: "Desde $85,000 COP/día motos - $170,000 COP/día carros (consultar tarifas)"
-
+  precio: Desde $85,000 COP/día motos - $170,000 COP/día carros (consultar tarifas)
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "Centro"
+  zona: Centro
   subzona: null
-
-  caracteristicas_zona: ["Zona comercial", "Fácil acceso", "Enfoque aventurero"]
-  landmarks_cercanos: ["Centro de San Andrés", "Zona hotelera", "Muelles"]
+  caracteristicas_zona: "["Zona comercial", "Fácil acceso", "Enfoque aventurero"]"
+  landmarks_cercanos: "["Centro de San Andrés", "Zona hotelera", "Muelles"]"
 ---
 
 # ECO XTREME SAN ANDRÉS

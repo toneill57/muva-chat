@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "SOUTH BEAUTY"
-  description: "South Beauty, conocido como 'el spot de surf', es el lugar perfecto en San Andrés para aprender a surfear. Las pequeñas olas de este spot lo convierten en el sitio más seguro de la isla para principiantes. Beach bar completo donde puedes disfrutar la playa, tomar algo, comer, y tomar clases de surf con instructores locales. Ideal para iniciarse en el surf caribeño."
+  title: SOUTH BEAUTY
+  description: South Beauty, conocido como 'el spot de surf', es el lugar perfecto en San Andrés para aprender a surfear. Las pequeñas olas de este spot lo convierten en el sitio más seguro de la isla para principiantes. Beach bar completo donde puedes disfrutar la playa, tomar algo, comer, y tomar clases de surf con instructores locales. Ideal para iniciarse en el surf caribeño.
   category: activities
   subcategory: escuela_surf
   language: es
@@ -14,17 +14,21 @@ document:
   status: active
   tags: [surf, surfing, aprender surf, surf school, beginner surf, olas pequenas, small waves, surf spot, beach bar, clases surf, surf lessons, surf san andres, escuela surf, beginner friendly, safe surf]
   keywords: [south beauty, spot surf san andres, aprender surfear, clases surf, escuela surf, surf principiantes, olas pequenas, surf caribe, surfing san andres]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:45:53.342Z"
 business:
   id: south-beauty
   nombre: SOUTH BEAUTY
   categoria: Beach Bar / Escuela de Surf
   tipo_establecimiento: Surf Spot & Beach Bar
   horario: "10:00 AM - 6:00 PM"
-  precio: "$20,000 - $80,000 (clases) | $10,000 - $30,000 (comida/bebidas)"
-  telefono: "Consultar"
+  precio: $20,000 - $80,000 (clases) | $10,000 - $30,000 (comida/bebidas)
+  telefono: Consultar
   servicios_especiales: [clases surf, olas principiantes, beach bar, comida bebidas, tablas rental]
   ideal_para: [aprender surf, surf principiantes, dia de playa, clases deportes acuaticos]
 ---
+
 # SOUTH BEAUTY {#south-beauty}
 
 ## Descripción General {#descripcion}
@@ -110,4 +114,3 @@ Aunque San Andrés no es conocida como destino de surf de olas grandes, tiene va
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

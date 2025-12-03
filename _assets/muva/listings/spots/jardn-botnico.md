@@ -5,8 +5,8 @@ destination:
   schema: public
   table: muva_content
 document:
-  title: "JARDÍN BOTÁNICO DE SAN ANDRÉS"
-  description: "El Jardín Botánico de San Andrés es una reserva de biósfera que ofrece una forma única de conocer la isla. Descubre flores y plantas endémicas, aprende sobre tradiciones isleñas y los beneficios de plantas medicinales locales. Su mirador de 12 metros ofrece vistas panorámicas espectaculares, mientras exploras especies antiguas como helechos y pinos en este pulmón verde de la isla."
+  title: JARDÍN BOTÁNICO DE SAN ANDRÉS
+  description: El Jardín Botánico de San Andrés es una reserva de biósfera que ofrece una forma única de conocer la isla. Descubre flores y plantas endémicas, aprende sobre tradiciones isleñas y los beneficios de plantas medicinales locales. Su mirador de 12 metros ofrece vistas panorámicas espectaculares, mientras exploras especies antiguas como helechos y pinos en este pulmón verde de la isla.
   category: culture
   subcategory: parque_natural
   language: es
@@ -14,16 +14,20 @@ document:
   status: active
   tags: [jardin botanico, botanical garden, plantas endemicas, biodiversidad, mirador 12 metros, reserva biosfera, biosphere reserve, naturaleza, nature, flora nativa, medicinal plants, eco tourism, vista panoramica]
   keywords: [jardin botanico san andres, plantas endemicas, mirador san andres, reserva biosfera, naturaleza isla, flora nativa, turismo ecologico, vista panoramica]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:45:34.368Z"
 business:
   id: jardn-botnico
   nombre: JARDÍN BOTÁNICO DE SAN ANDRÉS
   categoria: Parque Natural / Atracción Cultural
   tipo_atraccion: Jardín Botánico y Mirador
   horario: "Mar-Sáb: 9:00 AM-12:00 PM y 2:00 PM-4:30 PM | Dom y festivos: 10:00 AM-12:00 PM y 2:00 PM-4:30 PM"
-  precio: "$5,000 - $15,000"
+  precio: $5,000 - $15,000
   servicios_especiales: [mirador 12 metros, plantas endemicas, tours guiados, reserva biosfera]
   ideal_para: [naturaleza, educacion ambiental, fotografia, vista panoramica, ecoturismo]
 ---
+
 # JARDÍN BOTÁNICO DE SAN ANDRÉS {#jardin-botanico}
 
 ## Descripción General {#descripcion}
@@ -96,4 +100,3 @@ San Andrés fue declarada Reserva de Biósfera Seaflower por UNESCO en 2000, la 
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "REGGAE ROOTS"
-  description: "Reggae Roots es la entrada más cercana a la famosa estatua subacuática de Poseidón en San Andrés. Este beach spot con ambiente rasta auténtico es perfecto para caretear (snorkel) y luego relajarte con bebidas mientras disfrutas de música reggae. Combina cultura rastafari con uno de los mejores puntos de snorkel de la isla."
+  title: REGGAE ROOTS
+  description: Reggae Roots es la entrada más cercana a la famosa estatua subacuática de Poseidón en San Andrés. Este beach spot con ambiente rasta auténtico es perfecto para caretear (snorkel) y luego relajarte con bebidas mientras disfrutas de música reggae. Combina cultura rastafari con uno de los mejores puntos de snorkel de la isla.
   category: spots
   subcategory: beach_bar_tematico
   language: es
@@ -14,16 +14,20 @@ document:
   status: active
   tags: [estatua poseidon, poseidon statue, reggae, rasta, ambiente rasta, rastafari, snorkel, caretear, underwater statue, reggae music, beach bar, cultura rastafari, raizal culture, estatua subacuatica]
   keywords: [reggae roots, estatua poseidon, poseidon san andres, snorkel poseidon, ambiente rasta, reggae san andres, estatua subacuatica, caretear, spot reggae]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:46:14.270Z"
 business:
   id: reggae-roots
   nombre: REGGAE ROOTS
   categoria: Beach Bar Temático
   tipo_establecimiento: Beach Bar Rasta / Zona Snorkel
   horario: "9:00 AM - 7:00 PM"
-  precio: "$8,000 - $25,000"
+  precio: $8,000 - $25,000
   servicios_especiales: [acceso estatua poseidon, ambiente rasta, musica reggae, snorkel]
   ideal_para: [snorkel poseidon, ambiente reggae, cultura rasta, bebidas playa, experiencia tematica]
 ---
+
 # REGGAE ROOTS {#reggae-roots}
 
 ## Descripción General {#descripcion}
@@ -100,4 +104,3 @@ El movimiento rastafari es parte importante de la cultura raizal de San Andrés.
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

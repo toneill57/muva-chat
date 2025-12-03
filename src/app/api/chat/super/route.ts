@@ -3,6 +3,19 @@ import { generateEmbedding } from '@/lib/openai'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
 import { trackAIUsage } from '@/lib/track-ai-usage'
+import {
+  getOrCreateSuperChatSession,
+  updateSuperChatSession,
+  buildConversationMessages,
+  type SuperChatSession,
+} from '@/lib/super-chat-session'
+
+// UUID validation regex
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+function isValidUUID(str: string): boolean {
+  return UUID_REGEX.test(str)
+}
 
 // Using nodejs runtime (edge runtime incompatible with OpenAI SDK)
 // export const runtime = 'edge'
@@ -120,6 +133,25 @@ export async function POST(request: NextRequest) {
 
     console.log(`[${timestamp}] Processing Super Chat message: "${message.substring(0, 100)}..."`)
 
+    // STEP 1: Get or create session for conversation memory
+    const sessionStart = Date.now()
+    let session: SuperChatSession
+    try {
+      const inputSessionId = session_id && isValidUUID(session_id) ? session_id : undefined
+      session = await getOrCreateSuperChatSession(inputSessionId)
+      console.log(`[${timestamp}] Session loaded in ${Date.now() - sessionStart}ms:`, session.session_id,
+        'with', session.conversation_history.length, 'messages')
+    } catch (sessionError) {
+      console.error(`[${timestamp}] Session error:`, sessionError)
+      // Continue without session memory if it fails
+      session = {
+        session_id: crypto.randomUUID(),
+        conversation_history: [],
+        created_at: new Date().toISOString(),
+        last_activity_at: new Date().toISOString(),
+      }
+    }
+
     // Generate embedding (Tier 1: 1024 dimensions for speed)
     const embeddingStart = Date.now()
     const queryEmbedding = await generateEmbedding(message, 1024)
@@ -190,23 +222,33 @@ ${r.content.substring(0, 500)}...`
     const anthropic = getAnthropicClient()
     const systemPrompt = SUPER_CHAT_PROMPT.replace('{context}', context || 'No hay contexto específico disponible.')
 
+    // Build conversation history for Claude (includes previous messages)
+    const conversationHistory = buildConversationMessages(session)
+    console.log(`[${timestamp}] Sending ${conversationHistory.length} history messages + new message to Claude`)
+
     // Create streaming response
     const encoder = new TextEncoder()
     const stream = new ReadableStream({
       async start(controller) {
         try {
           const claudeStartTime = Date.now()
+          let fullResponse = '' // Collect full response for saving
+
           const claudeStream = anthropic.messages.stream({
             model: 'claude-sonnet-4-20250514',
             max_tokens: 1024,
             system: systemPrompt,
-            messages: [{ role: 'user', content: message }]
+            messages: [
+              ...conversationHistory, // Include conversation history
+              { role: 'user', content: message }
+            ]
           })
 
           for await (const event of claudeStream) {
             if (event.type === 'content_block_delta') {
               const delta = event.delta as { type: string; text?: string }
               if (delta.type === 'text_delta' && delta.text) {
+                fullResponse += delta.text // Collect response
                 const data = JSON.stringify({ type: 'chunk', content: delta.text })
                 controller.enqueue(encoder.encode(`data: ${data}\n\n`))
               }
@@ -217,12 +259,16 @@ ${r.content.substring(0, 500)}...`
           const finalMessage = await claudeStream.finalMessage()
           const claudeLatency = Date.now() - claudeStartTime
 
+          // Save conversation to session (for memory)
+          updateSuperChatSession(session.session_id, message, fullResponse).catch(error => {
+            console.error('[super-chat] Failed to update session:', error)
+          })
+
           // Track AI usage for Super Chat (tenant_id is null for aggregated queries)
           if (finalMessage.usage) {
-            // Use special tenant_id for Super Chat
             trackAIUsage({
-              tenantId: '00000000-0000-0000-0000-000000000000', // Special ID for Super Chat
-              conversationId: session_id || `super-${Date.now()}`,
+              tenantId: null, // Super Chat has no tenant - uses null
+              conversationId: session.session_id, // Use actual session UUID
               model: finalMessage.model,
               usage: {
                 input_tokens: finalMessage.usage.input_tokens,
@@ -238,7 +284,7 @@ ${r.content.substring(0, 500)}...`
           const totalTime = Date.now() - startTime
           const doneData = JSON.stringify({
             type: 'done',
-            session_id: session_id || `super-${Date.now()}`,
+            session_id: session.session_id, // Return session ID for client to reuse
             sources,
             performance: {
               total_time_ms: totalTime,

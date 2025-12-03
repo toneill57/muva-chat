@@ -24,7 +24,7 @@ interface ContentUploaderProps {
 
 export function ContentUploader({ onSuccess }: ContentUploaderProps) {
   const [files, setFiles] = useState<FileItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('actividades');
+  const [selectedCategory, setSelectedCategory] = useState<string>('activities');
   const { toast } = useToast();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -182,7 +182,7 @@ export function ContentUploader({ onSuccess }: ContentUploaderProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="actividades">Actividades</SelectItem>
+              <SelectItem value="activities">Activities</SelectItem>
               <SelectItem value="accommodations">Accommodations</SelectItem>
               <SelectItem value="restaurants">Restaurants</SelectItem>
               <SelectItem value="rentals">Rentals</SelectItem>

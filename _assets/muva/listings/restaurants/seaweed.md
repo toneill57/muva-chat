@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "SEAWEED"
-  description: "Seaweed es un espacio hermoso lleno de decoración artística marina hecha por una artista de la isla. Este restaurante ofrece diferentes opciones gastronómicas en un ambiente único y acogedor, perfecto para almuerzos y cenas. Su decoración temática del mar y el arte local crean una experiencia visual y culinaria memorable."
+  title: SEAWEED
+  description: Seaweed es un espacio hermoso lleno de decoración artística marina hecha por una artista de la isla. Este restaurante ofrece diferentes opciones gastronómicas en un ambiente único y acogedor, perfecto para almuerzos y cenas. Su decoración temática del mar y el arte local crean una experiencia visual y culinaria memorable.
   category: restaurants
   subcategory: gastronomia_fusion
   language: es
@@ -14,17 +14,21 @@ document:
   status: active
   tags: [arte local, decoracion marina, ocean theme, fusion cuisine, almuerzo san andres, cena, dinner, local art, beach restaurant, ambiente acogedor, artistic venue]
   keywords: [seaweed, seaweed san andres, restaurante arte, decoracion marina, almuerzo cena, restaurante tematico, arte isla, comida variada]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:39:19.581Z"
 business:
   id: seaweed
   nombre: SEAWEED
   categoria: Restaurante
   tipo_gastronomia: Cocina Fusión / Variada
   horario: "12:30 PM - 10:30 PM"
-  precio: "$25,000 - $50,000"
-  contacto: "@seaweedsai"
+  precio: $25,000 - $50,000
+  contacto: @seaweedsai
   servicios_especiales: [decoracion artistica, ambiente tematico, arte local]
   ideal_para: [almuerzo, cena, experiencia artistica, fotos instagram]
 ---
+
 # SEAWEED {#seaweed}
 
 ## Descripción General {#descripcion}
@@ -88,4 +92,3 @@ Dedica unos minutos a recorrer el restaurante y apreciar los detalles de la deco
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

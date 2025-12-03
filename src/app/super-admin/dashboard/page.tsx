@@ -13,20 +13,6 @@ export default function SuperAdminDashboard() {
     loadMetrics();
   }, []);
 
-  // Auto-refresh metrics every 30 seconds (when tab is visible)
-  useEffect(() => {
-    const POLL_INTERVAL = 30000; // 30 seconds
-
-    const interval = setInterval(() => {
-      // Only fetch if the tab is visible
-      if (document.visibilityState === 'visible') {
-        loadMetrics();
-      }
-    }, POLL_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, [loadMetrics]);
-
   return (
     <div className="space-y-8">
       <div>

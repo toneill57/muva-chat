@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "DA BLACK ALMOND"
+  title: DA BLACK ALMOND
   description: "Servicio de alquiler de vehículos en San Andrés: carros, motos, pontones y mulitas con entrega flexible"
-
   category: rentals
   subcategory: vehicle_rentals
-
   language: es
   version: "2.0"
   status: active
-
   tags: [rentals, vehicles, cars, motorcycles, boats, pontoons, mulitas, golf_carts, alquiler, vehiculos, motos, carros, pontones, transportation]
-
   keywords: [da black almond, alquiler, rental, moto, carro, ponton, mulitas, golf cart, jaime herrera, transporte, san andres]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:44:33.618Z"
 business:
   id: da-black-almond
   nombre: DA BLACK ALMOND
   categoria: Alquiler
-
   horario: "Lunes a Domingo 08:00 - 22:00"
-  precio: "Desde $80,000 COP/día motos - $150,000 COP/día carros (consultar tarifas)"
-
-  contacto: "Jaime Herrera"
-  telefono: "+573001234567"
+  precio: Desde $80,000 COP/día motos - $150,000 COP/día carros (consultar tarifas)
+  contacto: Jaime Herrera
+  telefono: +573001234567
   website: null
-
-  zona: "Centro"
+  zona: Centro
   subzona: null
-
-  caracteristicas_zona: ["Zona comercial", "Fácil acceso", "Punto de entrega flexible"]
-  landmarks_cercanos: ["Centro de San Andrés", "Aeropuerto", "Zona hotelera"]
+  caracteristicas_zona: "["Zona comercial", "Fácil acceso", "Punto de entrega flexible"]"
+  landmarks_cercanos: "["Centro de San Andrés", "Aeropuerto", "Zona hotelera"]"
 ---
 
 # DA BLACK ALMOND

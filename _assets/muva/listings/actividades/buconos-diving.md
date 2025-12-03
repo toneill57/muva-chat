@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "BUCONOS DIVING"
-  description: "Escuela de buceo y apnea con 40 años de experiencia, preparación teórica online y hotel propio en zona tranquila"
-
+  title: BUCONOS DIVING
+  description: Escuela de buceo y apnea con 40 años de experiencia, preparación teórica online y hotel propio en zona tranquila
   category: activities
   subcategory: diving
-
   language: es
   version: "2.0"
   status: active
-
   tags: [diving, scuba, padi, cmas, freediving, apnea, courses, certification, shore_diving, buceo, apnea, certificacion, hotel_buceo, preparacion_online]
-
   keywords: [buconos-diving, buconos, familia salinas, buceo desde orilla, preparacion teorica, hotel buceo, cmas, padi, san andres]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:29:12.799Z"
 business:
   id: buconos-diving
   nombre: BUCONOS DIVING
   categoria: Actividad
-
   horario: "Lunes a Domingo 9:00 AM - 6:00 PM"
-  precio: "Consultar cursos y certificaciones en website"
-
-  contacto: "@buconosdiving"
-  telefono: "+57 320 967 9089"
+  precio: Consultar cursos y certificaciones en website
+  contacto: @buconosdiving
+  telefono: +57 320 967 9089
   website: "https://buconosdiving.com"
-
-  zona: "Zona residencial"
-  subzona: "30 min del aeropuerto"
-
-  caracteristicas_zona: ["Zona tranquila", "Área bella y calmada", "Perfecta para buceo desde orilla", "Alejada del centro turístico", "Vistas al océano", "Atardeceres espectaculares"]
-  landmarks_cercanos: ["30 minutos del aeropuerto", "30 minutos del centro"]
+  zona: Zona residencial
+  subzona: 30 min del aeropuerto
+  caracteristicas_zona: "["Zona tranquila", "Área bella y calmada", "Perfecta para buceo desde orilla", "Alejada del centro turístico", "Vistas al océano", "Atardeceres espectaculares"]"
+  landmarks_cercanos: "["30 minutos del aeropuerto", "30 minutos del centro"]"
 ---
 
 # BUCONOS DIVING

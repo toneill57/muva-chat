@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "CORAL CREPPES"
-  description: "Restaurante pionero en creppes en San Andrés con opciones dulces, saladas, saludables y sin gluten"
-
+  title: CORAL CREPPES
+  description: Restaurante pionero en creppes en San Andrés con opciones dulces, saladas, saludables y sin gluten
   category: restaurants
   subcategory: desserts
-
   language: es
   version: "2.0"
   status: active
-
   tags: [restaurant, crepes, desserts, sweet, gluten_free, healthy, custom, restaurante, crepas, postres, dulce, sin_gluten, saludable, personalizable]
-
   keywords: [coral creppes, creppes, crepes, san andres, dulce, salado, sin gluten, healthy, pionero, personalizable]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:40:12.985Z"
 business:
   id: coral-creppes
   nombre: CORAL CREPPES
   categoria: Restaurante
-
   horario: "Jueves a Domingo 18:00 - 22:30"
-  precio: "Creppes desde $15,000 - $25,000 COP"
-
+  precio: Creppes desde $15,000 - $25,000 COP
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "Centro"
+  zona: Centro
   subzona: null
-
-  caracteristicas_zona: ["Zona comercial", "Fácil acceso", "Ambiente nocturno"]
-  landmarks_cercanos: ["Peatonal de San Andrés", "Centro comercial", "Spratt Bight"]
+  caracteristicas_zona: "["Zona comercial", "Fácil acceso", "Ambiente nocturno"]"
+  landmarks_cercanos: "["Peatonal de San Andrés", "Centro comercial", "Spratt Bight"]"
 ---
 
 # CORAL CREPPES

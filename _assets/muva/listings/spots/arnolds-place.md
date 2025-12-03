@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "ARNOLD'S PLACE"
-  description: "Uno de los pocos lugares de entrada libre en El Paraíso, favorito de isleños con comida autóctona y buenos precios"
-
+  title: ARNOLD'S PLACE
+  description: Uno de los pocos lugares de entrada libre en El Paraíso, favorito de isleños con comida autóctona y buenos precios
   category: spots
   subcategory: beach_clubs
-
   language: es
   version: "2.0"
   status: active
-
   tags: [beach, beach_club, local_food, local_favorite, free_entry, authentic, islanders, playa, comida_local, entrada_libre, autoctona, islenos, el_paraiso]
-
   keywords: [arnolds-place, arnold's place, arnold place, placearnols, el paraiso, comida isleña, autoctona, san luis]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:49:57.863Z"
 business:
   id: arnolds-place
   nombre: ARNOLD'S PLACE
   categoria: Spot
-
   horario: "Lunes a Domingo 9:00 AM - 6:00 PM"
-  precio: "Entrada libre - Comida desde $20,000 COP"
-
-  contacto: "@placearnols"
-  telefono: "+573001234567"
+  precio: Entrada libre - Comida desde $20,000 COP
+  contacto: @placearnols
+  telefono: +573001234567
   website: "https://www.instagram.com/placearnols"
-
-  zona: "San Luis"
-  subzona: "El Paraíso"
-
-  caracteristicas_zona: ["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]
-  landmarks_cercanos: ["Calle El Radar", "Playa El Paraíso"]
+  zona: San Luis
+  subzona: El Paraíso
+  caracteristicas_zona: "["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]"
+  landmarks_cercanos: "["Calle El Radar", "Playa El Paraíso"]"
 ---
 
 # ARNOLD'S PLACE

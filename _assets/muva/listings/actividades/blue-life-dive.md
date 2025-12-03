@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "BLUE LIFE DIVE"
-  description: "Escuela de buceo profesional con certificaciones PADI y más de 25 años de experiencia, única en San Andrés que forma instructores"
-
+  title: BLUE LIFE DIVE
+  description: Escuela de buceo profesional con certificaciones PADI y más de 25 años de experiencia, única en San Andrés que forma instructores
   category: activities
   subcategory: diving
-
   language: es
   version: "2.0"
   status: active
-
   tags: [diving, scuba, padi, certification, dive_school, underwater, buceo, certificacion, centro_buceo, professional, instructor_training]
-
   keywords: [blue-life-dive, blue life dive, actividad, centro, padi, buceo, fabian garcia, course director, idc, instructor]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:30:15.219Z"
 business:
   id: blue-life-dive
   nombre: BLUE LIFE DIVE
   categoria: Actividad
-
-  horario: "Según reserva - Salidas diarias programadas"
+  horario: Según reserva - Salidas diarias programadas
   precio: "Minicurso: $230,000 COP. Certificaciones desde $400,000 COP"
-
-  contacto: "info@bluelifedive.com"
-  telefono: "+573174344015"
+  contacto: info@bluelifedive.com
+  telefono: +573174344015
   website: "https://www.bluelifedive.com"
-
-  zona: "Centro"
-  subzona: "Spratt Bight"
-
-  caracteristicas_zona: ["Zona comercial principal", "Alta concentración turística", "Vida nocturna y restaurantes", "Playa Spratt Bight", "Mayor concentración de personas"]
-  landmarks_cercanos: ["Playa Spratt Bight", "Peatonal", "Centro comercial New Point"]
+  zona: Centro
+  subzona: Spratt Bight
+  caracteristicas_zona: "["Zona comercial principal", "Alta concentración turística", "Vida nocturna y restaurantes", "Playa Spratt Bight", "Mayor concentración de personas"]"
+  landmarks_cercanos: "["Playa Spratt Bight", "Peatonal", "Centro comercial New Point"]"
 ---
 
 # BLUE LIFE DIVE
@@ -192,4 +184,3 @@ Cuando buceas con Blue Life, buceas con la familia que mejor conoce los arrecife
 Si San Andrés es tu destino para descubrir el mundo submarino, Blue Life Dive es tu mejor aliado para hacerlo de la manera correcta.
 
 *"Descubre el Caribe como nunca lo has visto: 25 años enseñando a respirar bajo el agua."*
-
