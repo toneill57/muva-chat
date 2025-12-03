@@ -1,0 +1,2 @@
+-- Historical migration (already applied)
+-- This file exists as a placeholder to match schema_migrations
