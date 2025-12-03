@@ -61,6 +61,7 @@ export default function ContentManagementPage() {
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
+        cache: 'no-store', // Force fresh data, never cache
       });
       const data = await response.json();
       setStats(data);
