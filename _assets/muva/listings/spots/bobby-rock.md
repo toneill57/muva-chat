@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "BOBBY ROCK"
-  description: "Club de playa exclusivo en el suroeste de la isla con bebidas caribeñas, comida isleña y atardeceres espectaculares"
-
+  title: BOBBY ROCK
+  description: Club de playa exclusivo en el suroeste de la isla con bebidas caribeñas, comida isleña y atardeceres espectaculares
   category: spots
   subcategory: beach_clubs
-
   language: es
   version: "2.0"
   status: active
-
   tags: [beach, beach_club, sunset, local_food, drinks, views, exclusive, atardecer, playa, comida_isleña, suroeste, cove, caribbean]
-
   keywords: [bobby-rock, bobby rock, booby rock, ocean club, suroeste, via circunvalar, cove, atardecer, formacion rocosa]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:48:59.644Z"
 business:
   id: bobby-rock
   nombre: BOBBY ROCK
   categoria: Spot
-
   horario: "Lunes a Domingo 9:00 AM - 7:00 PM"
-  precio: "Consumo desde $20,000 COP - Entrada consultar"
-
-  contacto: "@booby.rock"
-  telefono: "+573001234567"
+  precio: Consumo desde $20,000 COP - Entrada consultar
+  contacto: @booby.rock
+  telefono: +573001234567
   website: "https://www.instagram.com/booby.rock"
-
-  zona: "Cove"
-  subzona: "Vía Circunvalar"
-
-  caracteristicas_zona: ["Formación rocosa natural", "Costa suroeste", "Vistas al mar Caribe", "Zona exclusiva", "Privilegiada ubicación frente al mar"]
-  landmarks_cercanos: ["Boobie Rock (formación rocosa)", "Fisher Rock", "Tyler Rock", "Hoyo Soplador"]
+  zona: Cove
+  subzona: Vía Circunvalar
+  caracteristicas_zona: "["Formación rocosa natural", "Costa suroeste", "Vistas al mar Caribe", "Zona exclusiva", "Privilegiada ubicación frente al mar"]"
+  landmarks_cercanos: "["Boobie Rock (formación rocosa)", "Fisher Rock", "Tyler Rock", "Hoyo Soplador"]"
 ---
 
 # BOBBY ROCK

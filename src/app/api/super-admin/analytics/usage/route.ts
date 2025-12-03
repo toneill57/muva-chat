@@ -21,8 +21,8 @@ export async function GET(request: Request) {
 
     // Query conversations from last N days
     const { data: conversationsData, error: convError } = await supabase
-      .from('chat_conversations')
-      .select('created_at, user_id')
+      .from('guest_conversations')
+      .select('created_at, guest_id')
       .gte('created_at', startDate)
       .order('created_at');
 
@@ -40,8 +40,8 @@ export async function GET(request: Request) {
         usageByDay[date] = { date, conversations: 0, users: new Set() };
       }
       usageByDay[date].conversations++;
-      if (conv.user_id) {
-        usageByDay[date].users.add(conv.user_id);
+      if (conv.guest_id) {
+        usageByDay[date].users.add(conv.guest_id);
       }
     });
 

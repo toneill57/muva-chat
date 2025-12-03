@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "BANZAI SURF SCHOOL"
-  description: "Escuela de surf y paddle board en El Paraíso con instructores apasionados y clases para todos los niveles"
-
+  title: BANZAI SURF SCHOOL
+  description: Escuela de surf y paddle board en El Paraíso con instructores apasionados y clases para todos los niveles
   category: activities
   subcategory: surf
-
   language: es
   version: "3.0"
   status: active
-
   tags: [surf, surfing, lessons, waves, beach, beginner_friendly, paddleboard, clases_surf, principiantes, water_sports, olas, el_paraiso]
-
   keywords: [banzai, banzai surf school, surf, paddle board, el paraiso, clases surf, principiantes, san luis, atardecer]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:30:55.238Z"
 business:
   id: banzai-surf-school
   nombre: BANZAI SURF SCHOOL
   categoria: Actividad
-
-  horario: "Según reserva - Horario flexible"
+  horario: Según reserva - Horario flexible
   precio: "Clase privada surf (1-2 personas): $190,000 COP por persona"
-
-  contacto: "@banzaisurfschooladz"
-  telefono: "+573173751265"
+  contacto: @banzaisurfschooladz
+  telefono: +573173751265
   website: "https://banzaisurfschool.com.co/"
-
-  zona: "San Luis"
-  subzona: "El Paraíso"
-
-  caracteristicas_zona: ["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]
-  landmarks_cercanos: ["Calle El Radar", "Playa El Paraíso", "Muelle privado en El Cove"]
+  zona: San Luis
+  subzona: El Paraíso
+  caracteristicas_zona: "["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]"
+  landmarks_cercanos: "["Calle El Radar", "Playa El Paraíso", "Muelle privado en El Cove"]"
 ---
 
 # BANZAI SURF SCHOOL

@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "BUCEO CARIBE AZUL"
-  description: "Escuela de buceo enfocada en conservación y buceo adaptativo, fundada por activista ambiental Hugo Arboleda"
-
+  title: BUCEO CARIBE AZUL
+  description: Escuela de buceo enfocada en conservación y buceo adaptativo, fundada por activista ambiental Hugo Arboleda
   category: activities
   subcategory: diving
-
   language: es
   version: "2.0"
   status: active
-
   tags: [diving, scuba, padi, conservation, adaptive_diving, eco_friendly, underwater, kids_friendly, buceo, conservacion, inclusivo, adaptativo, sostenible, ocean_warrior]
-
   keywords: [buceo-caribe-azul, caribe azul, hugo arboleda, maria jose arboleda, buceo adaptativo, ocean warrior, conservacion, padi, san andres]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:29:45.052Z"
 business:
   id: buceo-caribe-azul
   nombre: BUCEO CARIBE AZUL
   categoria: Actividad
-
-  horario: "Todo el día - Horarios flexibles según reserva"
+  horario: Todo el día - Horarios flexibles según reserva
   precio: "Minicurso: $250,000 COP - Certificaciones varían"
-
-  contacto: "@buceocaribeazul"
-  telefono: "+57 317 635 9608"
+  contacto: @buceocaribeazul
+  telefono: +57 317 635 9608
   website: "https://www.instagram.com/buceocaribeazul"
-
-  zona: "Centro"
+  zona: Centro
   subzona: null
-
-  caracteristicas_zona: ["Zona comercial principal", "Alta concentración turística", "Vida nocturna y restaurantes", "Playa Spratt Bight", "Mayor concentración de personas"]
-  landmarks_cercanos: ["Playa Spratt Bight", "Centro comercial", "Peatonal"]
+  caracteristicas_zona: "["Zona comercial principal", "Alta concentración turística", "Vida nocturna y restaurantes", "Playa Spratt Bight", "Mayor concentración de personas"]"
+  landmarks_cercanos: "["Playa Spratt Bight", "Centro comercial", "Peatonal"]"
 ---
 
 # BUCEO CARIBE AZUL

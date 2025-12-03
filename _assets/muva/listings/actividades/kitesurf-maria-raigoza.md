@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "KITESURF CON MARIA RAIGOZA"
-  description: "Instructora pionera de kitesurf en San Andrés con más de 13 años de experiencia enseñando en uno de los spots menos conocidos pero excepcionales del Caribe"
-
+  title: KITESURF CON MARIA RAIGOZA
+  description: Instructora pionera de kitesurf en San Andrés con más de 13 años de experiencia enseñando en uno de los spots menos conocidos pero excepcionales del Caribe
   category: activities
   subcategory: wakeboard_kitesurf
-
   language: es
   version: "2.0"
   status: active
-
   tags: [kitesurf, kitesurfing, kite, extreme_sports, water_sports, wind, lessons, clases_kite, deportes_extremos, mar, aventura]
-
   keywords: [maria-raigoza, maria raigoza, kitesurf, kite, san andres, instructora, clases, amanecer, spot]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:27:07.131Z"
 business:
   id: maria-raigoza-kitesurf
   nombre: MARIA RAIGOZA KITESURF
   categoria: Actividad
-
-  horario: "Al amanecer - Horarios según condiciones de viento"
+  horario: Al amanecer - Horarios según condiciones de viento
   precio: "Clase 1 hora: $250,000 COP. Paquete 5 horas: $220,000 COP/hora ($1,100,000 total)"
-
-  contacto: "@maria_raigoza_kite"
-  telefono: "+573164453566"
+  contacto: @maria_raigoza_kite
+  telefono: +573164453566
   website: null
-
-  zona: "San Luis"
-  subzona: "Zona de viento óptima"
-
-  caracteristicas_zona: ["Condiciones de viento ideales", "Playa menos concurrida", "Spot auténtico de kitesurf", "Ambiente deportivo"]
-  landmarks_cercanos: ["San Luis", "Playas del este", "Zona de viento constante"]
+  zona: San Luis
+  subzona: Zona de viento óptima
+  caracteristicas_zona: "["Condiciones de viento ideales", "Playa menos concurrida", "Spot auténtico de kitesurf", "Ambiente deportivo"]"
+  landmarks_cercanos: "["San Luis", "Playas del este", "Zona de viento constante"]"
 ---
 
 # MARIA RAIGOZA KITESURF
@@ -180,4 +172,3 @@ Si quieres aprender kitesurf en el Caribe, María Raigoza te ofrece algo único:
 Aprender con María no es solo tomar clases: es descubrir un spot inigualable, conectar con una deportista apasionada, y vivir San Andrés desde una perspectiva que pocos turistas conocen. El kitesurf es desafiante, pero con María como guía, cada caída es aprendizaje y cada vuelo es pura libertad.
 
 *"San Andrés tiene un secreto: es uno de los mejores spots de kitesurf del Caribe, y María Raigoza es quien te lo muestra."*
-

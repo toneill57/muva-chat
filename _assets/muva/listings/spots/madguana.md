@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "MADGUANA"
-  description: "Madguana es un beach bar sencillo y chill en la playa de Rocky Cay, perfecto para disfrutar bebidas, frutas y comidas con vista espectacular al mar. Este spot playero ofrece ambiente relajado donde puedes alternar entre sentarte a la sombra, nadar en el mar cristalino y broncearte. Los jueves tiene ambiente especial con horario nocturno hasta medianoche."
+  title: MADGUANA
+  description: Madguana es un beach bar sencillo y chill en la playa de Rocky Cay, perfecto para disfrutar bebidas, frutas y comidas con vista espectacular al mar. Este spot playero ofrece ambiente relajado donde puedes alternar entre sentarte a la sombra, nadar en el mar cristalino y broncearte. Los jueves tiene ambiente especial con horario nocturno hasta medianoche.
   category: spots
   subcategory: beach_bar
   language: es
@@ -14,25 +14,28 @@ document:
   status: active
   tags: [rocky cay, beach bar, chill spot, san luis, playa tranquila, quiet beach, beachfront, comida playa, bebidas mar, jueves noche, thursday nights, snorkel spot, swimming]
   keywords: [madguana, rocky cay, beach bar san luis, playa san andres, spot playero, bebidas playa, comida mar, san luis san andres]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:47:43.051Z"
 business:
   id: madguana
   nombre: MADGUANA
   categoria: Beach Bar / Spot Playero
   tipo_establecimiento: Beach Bar Restaurante
   horario: "Lun-Mié/Vie-Dom: 10:00 AM - 6:00 PM | Jueves: 10:00 AM - 12:00 AM"
-  precio: "$15,000 - $35,000"
-  telefono: "Consultar"
-  zona: "San Luis"
-  subzona: "Rocky Cay"
-  proximidad_aeropuerto: "FAR"
-  zona_tipo: "casas isleñas coloridas"
-
-  caracteristicas_zona: ["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]
-  landmarks_cercanos: ["Barco encallado El Lido", "Cayo Rocky Cay"]
-  tipos_negocio_zona: ["actividades", "spots", "restaurantes"]
+  precio: $15,000 - $35,000
+  telefono: Consultar
+  zona: San Luis
+  subzona: Rocky Cay
+  proximidad_aeropuerto: FAR
+  zona_tipo: casas isleñas coloridas
+  caracteristicas_zona: "["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]"
+  landmarks_cercanos: "["Barco encallado El Lido", "Cayo Rocky Cay"]"
+  tipos_negocio_zona: "["actividades", "spots", "restaurantes"]"
   servicios_especiales: [frente a playa, ambiente chill, jueves especial, comida y bebidas]
   ideal_para: [dia de playa, comida mar, ambiente relajado, jueves social]
 ---
+
 # MADGUANA {#madguana}
 
 ## Descripción General {#descripcion}
@@ -123,4 +126,3 @@ Rocky Cay es una playa más tranquila y menos turística que las del centro. Las
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

@@ -21,7 +21,7 @@ export async function GET(request: Request) {
 
     // Query conversations from last N days
     const { data: conversations, error: convError } = await supabase
-      .from('chat_conversations')
+      .from('guest_conversations')
       .select('tenant_id')
       .gte('created_at', startDate);
 

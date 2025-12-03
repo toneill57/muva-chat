@@ -47,11 +47,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Count total MUVA content items
-    // (tourism content entries in muva_content table)
-    const { count: muvaContentCount, error: contentError } = await supabase
+    // Count unique MUVA content documents (not chunks)
+    // Each document has multiple chunks, so we count distinct source_file
+    const { data: contentData, error: contentError } = await supabase
       .from('muva_content')
-      .select('*', { count: 'exact', head: true })
+      .select('source_file')
+
+    // Count unique source files
+    const uniqueDocuments = contentError ? 0 : new Set(contentData?.map(d => d.source_file)).size
 
     if (contentError) {
       console.error('[api/super-admin/metrics] Error counting MUVA content:', contentError)
@@ -64,7 +67,7 @@ export async function GET(request: NextRequest) {
       active_tenants: metrics?.active_tenants || 0,
       total_conversations_30d: metrics?.total_conversations_30d || 0,
       active_users_30d: metrics?.active_users_30d || 0,
-      muva_content_count: muvaContentCount || 0,
+      muva_content_count: uniqueDocuments,
       last_updated: new Date().toISOString(),
     }
 

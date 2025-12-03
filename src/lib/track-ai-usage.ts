@@ -18,7 +18,7 @@ import { createServerClient } from '@/lib/supabase'
 // ============================================================================
 
 export interface AIUsageParams {
-  tenantId: string
+  tenantId: string | null // null for Super Chat (no tenant)
   conversationId?: string
   model: string
   usage: {

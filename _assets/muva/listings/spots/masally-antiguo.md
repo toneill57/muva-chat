@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "MASALLY ANTIGUO"
-  description: "Masally Antiguo es un beach spot tranquilo, sencillo y agradable frente al mar en San Andrés. Perfecto para caretear (snorkel) y disfrutar de bebidas refrescantes con vista al Caribe. Este es el spot original de Masally, con ambiente relajado y auténtico que lo ha hecho querido entre locales y visitantes."
+  title: MASALLY ANTIGUO
+  description: Masally Antiguo es un beach spot tranquilo, sencillo y agradable frente al mar en San Andrés. Perfecto para caretear (snorkel) y disfrutar de bebidas refrescantes con vista al Caribe. Este es el spot original de Masally, con ambiente relajado y auténtico que lo ha hecho querido entre locales y visitantes.
   category: spots
   subcategory: beach_bar
   language: es
@@ -14,16 +14,20 @@ document:
   status: active
   tags: [masally, beach spot, snorkel, caretear, bebidas mar, chill spot, playa tranquila, quiet beach, original location, beachfront, vista mar, sea view, swimming]
   keywords: [masally antiguo, masally san andres, spot playero, snorkel san andres, caretear, bebidas playa, lugar tranquilo, playa relajada]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:47:28.121Z"
 business:
   id: masally-antiguo
   nombre: MASALLY ANTIGUO
   categoria: Beach Spot
   tipo_establecimiento: Beach Bar / Zona de Snorkel
   horario: "10:00 AM - 6:00 PM"
-  precio: "$5,000 - $20,000"
+  precio: $5,000 - $20,000
   servicios_especiales: [snorkel, bebidas, frente al mar, ambiente tranquilo]
   ideal_para: [snorkel, dia de playa, bebidas mar, ambiente relajado]
 ---
+
 # MASALLY ANTIGUO {#masally-antiguo}
 
 ## Descripción General {#descripcion}
@@ -92,4 +96,3 @@ Trae tu equipo de snorkel si tienes, aunque puedes preguntar si rentan. El agua 
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

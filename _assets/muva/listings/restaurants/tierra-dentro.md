@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "TIERRA DENTRO"
-  description: "Restaurante especializado en cocina Nikkei que combina lo mejor del sushi y la gastronomía peruana en San Andrés. Tierradentro ofrece una experiencia gastronómica única con sushi adaptado al Caribe, mochis y platos fusión en un ambiente lindo y tranquilo. Renovado en 2024 con nueva administración que trajo innovación y frescura a la propuesta culinaria."
+  title: TIERRA DENTRO
+  description: Restaurante especializado en cocina Nikkei que combina lo mejor del sushi y la gastronomía peruana en San Andrés. Tierradentro ofrece una experiencia gastronómica única con sushi adaptado al Caribe, mochis y platos fusión en un ambiente lindo y tranquilo. Renovado en 2024 con nueva administración que trajo innovación y frescura a la propuesta culinaria.
   category: restaurants
   subcategory: gastronomia_nikkei
   language: es
@@ -14,18 +14,22 @@ document:
   status: active
   tags: [sushi san andres, cocina nikkei, fusion peruano japones, mochis, cena romantica, japanese peruvian, fine dining, sushi caribe, innovative cuisine, dinner spot, gastronomia fusion]
   keywords: [tierra-dentro, tierradentro, sushi san andres, cocina nikkei, restaurante peruano, comida japonesa, mochis, cena, fusion peruano japones]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:38:58.537Z"
 business:
   id: tierra-dentro
   nombre: TIERRA DENTRO
   categoria: Restaurante
   tipo_gastronomia: Cocina Nikkei (Fusión Peruana-Japonesa)
   horario: "Lunes a Domingo: 17:00 - 23:00"
-  precio: "$30,000 - $60,000"
-  telefono: "321 2662050"
-  contacto: "@tierradentrosai"
+  precio: $30,000 - $60,000
+  telefono: 321 2662050
+  contacto: @tierradentrosai
   servicios_especiales: [sushi adaptado, cocina fusion, mochis artesanales, ambiente tranquilo]
   ideal_para: [cena, ocasiones especiales, citas romanticas, experiencia gastronomica]
 ---
+
 # TIERRA DENTRO {#tierra-dentro}
 
 ## Descripción General {#descripcion}
@@ -100,4 +104,3 @@ La cocina Nikkei nace de la inmigración japonesa al Perú en el siglo XX, fusio
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "MARINO PARASAIL"
-  description: "Vuelos en paracaídas a 100 metros de altura con vistas espectaculares de San Andrés, 5 salidas diarias con equipo certificado"
-
+  title: MARINO PARASAIL
+  description: Vuelos en paracaídas a 100 metros de altura con vistas espectaculares de San Andrés, 5 salidas diarias con equipo certificado
   category: activities
   subcategory: parasailing
-
   language: es
   version: "2.0"
   status: active
-
   tags: [parasailing, parasail, parachute, aerial_view, adventure, flying, heights, views, paracaidas, aventura, vistas_aereas, bahia]
-
   keywords: [marino-parasail, marino parasail, parasail, paracaidas, vuelo, 100 metros, bahia, vistas, certificado]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:26:31.823Z"
 business:
   id: marino-parasail
   nombre: MARINO PARASAIL
   categoria: Actividad
-
   horario: "5 salidas diarias: 8:00, 9:00, 11:00, 14:00, 16:00 hrs"
-  precio: "$230,000 COP por persona (15 minutos de vuelo)"
-
-  contacto: "@marino_parasail"
-  telefono: "+573118837174"
+  precio: $230,000 COP por persona (15 minutos de vuelo)
+  contacto: @marino_parasail
+  telefono: +573118837174
   website: null
-
-  zona: "Centro"
-  subzona: "Bahía de San Andrés"
-
-  caracteristicas_zona: ["Salida desde bahía principal", "Vistas 360° de la isla", "Zona turística", "Fácil acceso"]
-  landmarks_cercanos: ["Bahía de San Andrés", "Playa Spratt Bight", "Centro turístico", "Muelle"]
+  zona: Centro
+  subzona: Bahía de San Andrés
+  caracteristicas_zona: "["Salida desde bahía principal", "Vistas 360° de la isla", "Zona turística", "Fácil acceso"]"
+  landmarks_cercanos: "["Bahía de San Andrés", "Playa Spratt Bight", "Centro turístico", "Muelle"]"
 ---
 
 # MARINO PARASAIL
@@ -177,4 +169,3 @@ Marino Parasail combina seguridad, experiencia y pasión por mostrar San Andrés
 Volar con Marino Parasail no es solo una foto bonita: es ver San Andrés desde una perspectiva que cambia tu comprensión de la isla, sentir la libertad del viento caribeño a 100 metros de altura, y crear un recuerdo que llevarás contigo mucho después de aterrizar.
 
 *"100 metros de altura, 15 minutos de libertad, recuerdos para toda la vida."*
-

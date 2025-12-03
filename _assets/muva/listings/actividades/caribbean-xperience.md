@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "CARIBBEAN XPERIENCE"
-  description: "Clases de wakeboard en San Luis para dominar las olas con tabla, cuerda y la fuerza de la embarcación"
-
+  title: CARIBBEAN XPERIENCE
+  description: Clases de wakeboard en San Luis para dominar las olas con tabla, cuerda y la fuerza de la embarcación
   category: activities
   subcategory: wakeboard_kitesurf
-
   language: es
   version: "2.0"
   status: active
-
   tags: [wakeboard, water_sports, extreme, adrenaline, lessons, san_luis, deportes_acuaticos, adrenalina, clases, wake]
-
   keywords: [caribbean-xperience, caribbean xperience, wakeboard, wake board, san luis, actividades, mar, clases]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:28:24.418Z"
 business:
   id: caribbean-xperience
   nombre: CARIBBEAN XPERIENCE
   categoria: Actividad
-
-  horario: "Según reserva - Horario flexible"
-  precio: "Desde $150,000 COP por persona"
-
+  horario: Según reserva - Horario flexible
+  precio: Desde $150,000 COP por persona
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "San Luis"
+  zona: San Luis
   subzona: null
-
-  caracteristicas_zona: ["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]
-  landmarks_cercanos: ["Playas de San Luis", "Zona residencial isleña", "El Paraíso"]
+  caracteristicas_zona: "["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]"
+  landmarks_cercanos: "["Playas de San Luis", "Zona residencial isleña", "El Paraíso"]"
 ---
 
 # CARIBBEAN XPERIENCE

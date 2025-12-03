@@ -5,8 +5,8 @@ destination:
   schema: public
   table: muva_content
 document:
-  title: "SEAWOLF"
-  description: "Agencia integral de turismo y alquileres en San Andrés. Seawolf ofrece tours acuáticos, actividades marinas y alquiler de vehículos (motos, carritos golf, bicicletas) en un solo lugar. Servicio premium con los mejores botes de la isla y flota de transporte completa. Tu solución todo-en-uno para aventuras y movilidad."
+  title: SEAWOLF
+  description: Agencia integral de turismo y alquileres en San Andrés. Seawolf ofrece tours acuáticos, actividades marinas y alquiler de vehículos (motos, carritos golf, bicicletas) en un solo lugar. Servicio premium con los mejores botes de la isla y flota de transporte completa. Tu solución todo-en-uno para aventuras y movilidad.
   category: activities
   subcategory: agencia_tours_alquileres
   language: es
@@ -14,22 +14,25 @@ document:
   status: active
   tags: [agencia-turismo, actividades-acuaticas, tours-organizados, alquiler-vehiculos, motos, carritos-golf, bicicletas, rental-agency, vehicle-rental, water-activities, one-stop-shop, servicio-premium, tours-mar, experiencias-personalizadas]
   keywords: [seawolf, seawolf san andres, agencia turismo, tours acuaticos, alquiler motos, alquiler carritos golf, rent bikes, actividades mar, paquetes turisticos, alquileres vehiculos, todo en uno]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:24:38.280Z"
 business:
   id: seawolf
-  nombre: "SEAWOLF"
-  categoria: "Agencia Integral"
-  subcategoria: "Tours, Actividades y Alquileres"
+  nombre: SEAWOLF
+  categoria: Agencia Integral
+  subcategoria: Tours, Actividades y Alquileres
   horario: "9:00 AM - 8:00 PM (todos los días)"
-  precio: "Variable según servicio/vehículo"
-  telefono: "310 7691953"
-  contacto: "@seawolfsai"
+  precio: Variable según servicio/vehículo
+  telefono: 310 7691953
+  contacto: @seawolfsai
   website: null
   zona: null
-  modalidad_atencion: "Atención directa y bajo reserva"
-  formas_pago: ["Efectivo", "Transferencia", "Tarjeta"]
-  idiomas: ["Español", "Inglés"]
+  modalidad_atencion: Atención directa y bajo reserva
+  formas_pago: "["Efectivo", "Transferencia", "Tarjeta"]"
+  idiomas: "["Español", "Inglés"]"
   lineas_negocio: [tours acuaticos, actividades marinas, alquiler vehiculos, alquiler equipos]
-  ventaja_principal: "Todo en un solo lugar - one stop shop"
+  ventaja_principal: Todo en un solo lugar - one stop shop
 ---
 
 # SEAWOLF

@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "MISS VIVI"
-  description: "Miss Vivi es un lugar emblemático y una joya escondida de San Andrés que solo abre los domingos. Esta heladería sencilla pero querida es parte de la memoria colectiva de quienes crecieron en la isla. Una tradición dominical que todos aman, perfecto para experimentar la auténtica cultura local fuera del circuito turístico."
+  title: MISS VIVI
+  description: Miss Vivi es un lugar emblemático y una joya escondida de San Andrés que solo abre los domingos. Esta heladería sencilla pero querida es parte de la memoria colectiva de quienes crecieron en la isla. Una tradición dominical que todos aman, perfecto para experimentar la auténtica cultura local fuera del circuito turístico.
   category: spots
   subcategory: heladeria_tradicional
   language: es
@@ -14,16 +14,20 @@ document:
   status: active
   tags: [heladeria, ice cream, solo domingos, sundays only, tradicion local, local tradition, joya escondida, hidden gem, emblematico, nostalgico, childhood memories, authentic, domingo familiar]
   keywords: [miss vivi, heladeria san andres, solo domingos, tradicion dominical, helado local, joya escondida, lugar emblematico, experiencia autentica]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:46:53.570Z"
 business:
   id: miss-vivi
   nombre: MISS VIVI
   categoria: Heladería Tradicional
   tipo_establecimiento: Heladería / Spot Cultural
   horario: "Solo Domingos: 9:00 AM - 5:00 PM"
-  precio: "$3,000 - $10,000"
+  precio: $3,000 - $10,000
   servicios_especiales: [solo domingos, helados caseros, tradicion local, experiencia nostalgica]
   ideal_para: [domingos familiares, experiencia local, helados, tradicion islena, nostalgia]
 ---
+
 # MISS VIVI {#miss-vivi}
 
 ## Descripción General {#descripcion}
@@ -92,4 +96,3 @@ Para muchos isleños, ir a Miss Vivi los domingos es parte del ritual familiar s
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

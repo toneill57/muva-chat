@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "BIG MAMA"
-  description: "Club de playa icónico en Cove con casitas artesanales, snorkeling, comida isleña y mejores atardeceres de San Andrés"
-
+  title: BIG MAMA
+  description: Club de playa icónico en Cove con casitas artesanales, snorkeling, comida isleña y mejores atardeceres de San Andrés
   category: spots
   subcategory: beach_clubs
-
   language: es
   version: "2.0"
   status: active
-
   tags: [beach, beach_club, snorkeling, sunset, local_food, views, atardecer, caretear, playa, cove, chill, diving, pet_friendly, reggae, hoyo_soplador]
-
   keywords: [big-mama, big mama, cove, km9, hoyo soplador, atardecer, snorkel, casitas, capitan mitchell, reggae bar]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:49:20.756Z"
 business:
   id: big-mama
   nombre: BIG MAMA
   categoria: Spot
-
   horario: "Lunes a Domingo 9:00 AM - 7:00 PM"
-  precio: "Consumo desde $15,000 COP - Snorkel/buceo consultar"
-
-  contacto: "@bigmama_km9"
-  telefono: "+573001234567"
+  precio: Consumo desde $15,000 COP - Snorkel/buceo consultar
+  contacto: @bigmama_km9
+  telefono: +573001234567
   website: "https://www.instagram.com/bigmama_km9"
-
-  zona: "Cove"
-  subzona: "Km 9"
-
-  caracteristicas_zona: ["Formación rocosa coralina", "Excelentes puntos de buceo", "Zona de snorkel y apnea", "Mejores atardeceres", "Zona muy tranquila", "Poco ruidosa", "Alojamientos turísticos"]
-  landmarks_cercanos: ["Letrero I Love SAI", "Hoyo Soplador", "Hotel Blue Cove"]
+  zona: Cove
+  subzona: Km 9
+  caracteristicas_zona: "["Formación rocosa coralina", "Excelentes puntos de buceo", "Zona de snorkel y apnea", "Mejores atardeceres", "Zona muy tranquila", "Poco ruidosa", "Alojamientos turísticos"]"
+  landmarks_cercanos: "["Letrero I Love SAI", "Hoyo Soplador", "Hotel Blue Cove"]"
 ---
 
 # BIG MAMA

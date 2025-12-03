@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "CARIBBEAN NIGTHS"
-  description: "Eventos musicales en vivo con artistas isleños en ambiente caribeño auténtico organizado por la leyenda del reggae Job Saas"
-
+  title: CARIBBEAN NIGTHS
+  description: Eventos musicales en vivo con artistas isleños en ambiente caribeño auténtico organizado por la leyenda del reggae Job Saas
   category: culture
   subcategory: cultural_events
-
   language: es
   version: "2.0"
   status: active
-
   tags: [culture, music, live_music, caribbean, reggae, artists, nightlife, cultura, musica_en_vivo, caribe, artistas]
-
   keywords: [caribbean-nigths, caribbean nights, job saas, kriol myuuzik, eventos, musica, reggae, viernes]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:53:35.297Z"
 business:
   id: caribbean-nigths
   nombre: CARIBBEAN NIGTHS
   categoria: Cultura
-
   horario: "Viernes 9:00 PM"
-  precio: "Entrada libre o bajo consumo"
-
-  contacto: "@caribbeannightsai"
-  telefono: "+573001234567"
+  precio: Entrada libre o bajo consumo
+  contacto: @caribbeannightsai
+  telefono: +573001234567
   website: null
-
-  zona: "Cove"
+  zona: Cove
   subzona: null
-
-  caracteristicas_zona: ["Zona residencial", "Ambiente local auténtico", "Experiencia cultural raizal"]
-  landmarks_cercanos: ["Centro de San Andrés", "Zona residencial isleña"]
+  caracteristicas_zona: "["Zona residencial", "Ambiente local auténtico", "Experiencia cultural raizal"]"
+  landmarks_cercanos: "["Centro de San Andrés", "Zona residencial isleña"]"
 ---
 
 # CARIBBEAN NIGTHS
