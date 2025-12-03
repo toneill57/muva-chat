@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 
+// Disable Next.js caching for this route - data must always be fresh
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/super-admin/content/stats
  *
