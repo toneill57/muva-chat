@@ -27,6 +27,7 @@
     "kill-port": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
     "kill-port:staging": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true",
     "lint": "eslint",
+    "migrations:sync": "bash .claude/sync-migrations.sh",
     "monitor": "node scripts/monitoring/system-monitor.js",
     "populate-embeddings": "node scripts/database/populate-embeddings.js",
     "pre-deploy": "pnpm run validate-env && pnpm run lint && pnpm run build",

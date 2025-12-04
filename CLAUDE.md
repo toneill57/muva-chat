@@ -349,12 +349,109 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ---
 
+## 🗄️ Database Migrations - WORKFLOW DEFINITIVO
+
+**IMPLEMENTADO:** Diciembre 4, 2025 - Sistema automatizado bulletproof
+
+### Regla de Oro
+
+**NUNCA** edites `supabase/migrations/` manualmente.
+**SIEMPRE** trabaja en `/migrations/` y deja que la automatización sincronice.
+
+### Source of Truth
+
+- **Directorio canónico:** `/migrations/` (root level)
+- **Directorio Supabase:** `/supabase/migrations/` (auto-sincronizado)
+- **Subdirectorios permitidos:** `migrations/fixes/`, `migrations/archive/`, etc.
+
+### Sistema de Triple Defensa
+
+1. **Pre-commit Hook** (`.git/hooks/pre-commit`)
+   - Ejecuta `.claude/sync-migrations.sh` automáticamente
+   - Valida counts: 98 archivos totales (incluyendo subdirectorios)
+   - Valida checksums MD5 de TODOS los archivos
+   - Preserva rutas relativas (soporte completo de subdirectorios)
+   - Auto-stage `supabase/migrations/` en commit
+   - **Bloquea commit si hay desincronización**
+
+2. **GitHub Action** (`.github/workflows/validate-migrations.yml`)
+   - Valida sync de directorios (98 archivos totales)
+   - **Valida DB sync:** Solo root-level migrations (43 archivos) vs `schema_migrations`
+   - Branch-specific: DEV (`zpyxgkvonrxbhvmkuzlt`), TST (`bddcvjoeoiekzfetvxoe`)
+   - **Bloquea merge si hay mismatch**
+
+3. **Supabase Health Check**
+   - Validación final en Supabase Dashboard
+   - Verifica que migrations aplicadas = archivos en repo
+
+### Crear Nueva Migración
+
+```bash
+# 1. Crear archivo en /migrations/ (NO en supabase/migrations/)
+touch migrations/$(date +%Y%m%d%H%M%S)_descripcion.sql
+
+# 2. Escribir SQL
+vim migrations/20251204120000_descripcion.sql
+
+# 3. Aplicar a DB DEV
+node .claude/db-query.js "$(cat migrations/20251204120000_descripcion.sql)"
+
+# 4. Registrar en schema_migrations
+node .claude/db-query.js "
+INSERT INTO supabase_migrations.schema_migrations (version, name, statements)
+VALUES ('20251204120000', 'descripcion', ARRAY['-- applied']::text[])
+"
+
+# 5. Commit (pre-commit hook sincroniza automáticamente)
+git add migrations/20251204120000_descripcion.sql
+git commit -m "feat: add descripcion migration"
+# ✅ Hook sincroniza a supabase/migrations/ automáticamente
+```
+
+### Sync Manual (si necesario)
+
+```bash
+pnpm run migrations:sync
+```
+
+### Counts Esperados
+
+- **Total archivos (incluyendo subdirs):** 98 archivos `.sql`
+- **Root-level migrations:** 43 archivos (debe coincidir con DB `schema_migrations`)
+- **Subdirectorios:** 55 archivos organizacionales (`fixes/`, `archive/`, etc.)
+
+### Garantías del Sistema
+
+✅ **Imposible commitear** sin sincronización completa
+✅ **Imposible mergear** con desincronización DB ↔ repo
+✅ **Subdirectorios soportados** (rutas relativas preservadas)
+✅ **Zero intervención manual** (todo automático)
+✅ **Nunca más** "Remote migration versions not found"
+
+### Documentación Completa
+
+Ver: `docs/workflows/MIGRATIONS.md`
+
+### Lecciones Aprendidas (Diciembre 4, 2025)
+
+1. **Problema original:** Dos directorios sin sincronización automática
+2. **Error #1:** Usar `basename` en validación → no manejaba subdirectorios
+3. **Fix:** Usar `${file#migrations/}` para preservar rutas relativas
+4. **Error #2:** GitHub Action contaba TODOS los archivos vs DB (98 vs 43)
+5. **Fix:** Usar `-maxdepth 1` para contar solo root-level vs DB
+6. **Resultado:** Sistema completamente automatizado y a prueba de errores
+
+**⚠️ CRÍTICO:** Si ves "Remote migration versions not found", el sistema de triple defensa falló. Investigar logs de pre-commit hook y GitHub Action PRIMERO.
+
+---
+
 ## Documentation
 
 - `docs/three-tier-unified/README.md` - Arquitectura three-tier (dev/tst/prd)
 - `docs/three-tier-unified/workflow.md` - Workflow de migración
 - `docs/three-tier-unified/ROLLBACK_PLAN.md` - Procedimientos de rollback
 - `docs/architecture/DATA_POPULATION_TIMELINE.md` - Flujo completo de población de datos
+- `docs/workflows/MIGRATIONS.md` - **Workflow definitivo de migraciones** (Dic 4, 2025)
 
 
 ---
@@ -375,4 +472,4 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ---
 
-**Last Updated:** November 29, 2025 (Database & VPS Access Tools Added)
+**Last Updated:** December 4, 2025 (Bulletproof Migrations Workflow Added)

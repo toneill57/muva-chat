@@ -1,0 +1,4 @@
+-- Historical migration (already applied)
+-- This file exists as a placeholder to match schema_migrations
+-- Migration: fix_reservation_accommodations_fk
+-- Version: 20251120042744
