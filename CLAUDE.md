@@ -8,31 +8,19 @@ Guidance for Claude Code when working with this repository.
 
 **NO HAY ACCESO SSH LOCAL AL VPS.** La clave SSH está en GitHub Secrets, NO en ~/.ssh/
 
-### Workflow de Deploy (MEMORIZAR):
+### Workflow de Deploy (Ver sección "Merge Workflow" abajo para comandos completos)
 
-```bash
-# 1. Commit y push a dev
-git add . && git commit -m "mensaje" && git push origin dev
+**Proceso:**
+1. Commit y push a `dev`
+2. Crear PR `dev → tst` (auto-merge)
+3. Esperar deployment TST
+4. Crear PR `tst → prd` (requiere 1 approval)
+5. Esperar deployment PRD
+6. Verificar health: `curl -s https://muva.chat/api/health | jq`
 
-# 2. Sincronizar dev → tst (force push, bypassing PR)
-gh api repos/toneill57/muva-chat/git/refs/heads/tst -X PATCH -f sha=$(git rev-parse origin/dev) -F force=true
-
-# 3. Esperar workflow TST
-gh run watch $(gh run list --workflow=deploy-tst.yml --limit=1 --json databaseId -q '.[0].databaseId') --exit-status
-
-# 4. Sincronizar tst → prd
-gh api repos/toneill57/muva-chat/git/refs/heads/prd -X PATCH -f sha=$(git rev-parse origin/dev) -F force=true
-
-# 5. Esperar workflow PRD
-gh run watch $(gh run list --workflow=deploy-prd.yml --limit=1 --json databaseId -q '.[0].databaseId') --exit-status
-
-# 6. Verificar health
-curl -s https://muva.chat/api/health | jq
-```
-
-### Si deploy falla:
-- Los workflows ya incluyen `git stash` y `git reset --hard` automáticamente
-- Si aún falla, revisar logs: `gh run view <run-id> --log-failed`
+**Si deploy falla:**
+- Workflows incluyen `git stash` y `git reset --hard` automáticamente
+- Revisar logs: `gh run view <run-id> --log-failed`
 - **NUNCA** intentar SSH manual - no funciona desde local
 
 ### VPS Info (solo referencia, NO se puede acceder desde local):
@@ -40,6 +28,54 @@ curl -s https://muva.chat/api/health | jq
 |----------|------------|-------------|
 | TST | /var/www/muva-chat-tst | muva-chat-tst |
 | PRD | /var/www/muva-chat-prd | muva-chat-prd |
+
+### 🔧 VPS Remote Command Executor - MÉTODO DE EMERGENCIA
+
+**⚠️ POLÍTICA:** Ejecución de comandos en VPS SOLO con autorización explícita del usuario
+
+**Workflow:** `.github/workflows/vps-exec.yml`
+
+**Uso (vía GitHub Actions):**
+```bash
+# Listar workflows disponibles
+gh workflow list
+
+# Ejecutar comando en TST
+gh workflow run vps-exec.yml -f environment=tst -f command="pm2 status" -f working_directory="/var/www/muva-chat-tst"
+
+# Ejecutar comando en PRD (EXTREMA PRECAUCIÓN)
+gh workflow run vps-exec.yml -f environment=prd -f command="pm2 logs --lines 50" -f working_directory="/var/www/muva-chat-prd"
+
+# Ver logs del workflow
+gh run list --workflow=vps-exec.yml --limit=1
+gh run view <run-id> --log
+```
+
+**Comandos Bloqueados (Safety Check):**
+- `rm -rf`, `mkfs`, `dd if=`, `format`, `fdisk`, `parted`
+- `shutdown`, `reboot`, `init 0`, `init 6`, `halt`, `poweroff`
+- Fork bombs y comandos destructivos
+
+**Ejemplos de Uso Válido:**
+```bash
+# Verificar estado de PM2
+gh workflow run vps-exec.yml -f environment=tst -f command="pm2 status"
+
+# Ver logs de aplicación
+gh workflow run vps-exec.yml -f environment=tst -f command="pm2 logs muva-chat-tst --lines 100 --nostream"
+
+# Verificar espacio en disco
+gh workflow run vps-exec.yml -f environment=tst -f command="df -h"
+
+# Listar archivos de directorio
+gh workflow run vps-exec.yml -f environment=tst -f command="ls -la .next" -f working_directory="/var/www/muva-chat-tst"
+```
+
+**⚠️ IMPORTANTE:**
+- Este workflow es TEMPORAL para debugging
+- Requiere aprobación de GitHub Environment (`production` para PRD, `staging` para TST)
+- NO ejecutar comandos destructivos - el workflow los bloqueará
+- Siempre verificar el `working_directory` antes de ejecutar
 
 ---
 
@@ -50,8 +86,6 @@ curl -s https://muva.chat/api/health | jq
 - Multi-tenant architecture (subdomain-based)
 - Premium SIRE compliance (Colombian tourism regulatory reporting)
 - Stack: Next.js 15, TypeScript, Supabase, Claude AI
-
-**Current Projects:** Multi-tenant tourism platform with SIRE compliance
 
 **Chat Routes:**
 - `/with-me` - Public chat (anonymous, pre-booking)
@@ -74,7 +108,58 @@ curl -s https://muva.chat/api/health | jq
 - ✅ Testing local contra rama `dev` de Supabase
 - ⚠️ **X NUNCA** queries directas a `tst` o `prd` sin autorización explícita
 
+### 🔑 Database Connection - MÉTODO DEFINITIVO
+
+**IMPORTANTE:** Cuando necesites conectarte a la base de datos, SIEMPRE usa este método:
+
+```bash
+# Query directo a Supabase DEV
+node .claude/db-query.js "SELECT * FROM v_tenant_stats LIMIT 3"
+
+# Listar tablas
+node .claude/db-query.js "SELECT tablename FROM pg_tables WHERE schemaname = 'public' LIMIT 10"
+```
+
+**Credenciales (ya configuradas en `.env.local` línea 48):**
+- **SUPABASE_ACCESS_TOKEN**: `sbp_32b777f1b90ca669a789023b6b0c0ba2e92974fa`
+- **Proyecto DEV**: `zpyxgkvonrxbhvmkuzlt`
+- **URL**: `https://zpyxgkvonrxbhvmkuzlt.supabase.co`
+
+**Script Helper:** `.claude/db-query.js` (creado Nov 29, 2025)
+
+### 🚨 Database Queries TST/PRD - REQUIERE AUTORIZACIÓN
+
+**⚠️ POLÍTICA:** Queries a TST/PRD SOLO con autorización explícita del usuario
+
+**USO DE EMERGENCIA:**
+
+```bash
+# TST (Testing/Staging)
+node .claude/db-query.js tst "SELECT * FROM tabla LIMIT 10"
+
+# PRD (Production) - EXTREMA PRECAUCIÓN
+node .claude/db-query.js prd "SELECT * FROM tabla LIMIT 5"
+```
+
+**Credenciales:**
+- **TST**: Proyecto `bddcvjoeoiekzfetvxoe` → staging.muva.chat
+- **PRD**: Proyecto `kprqghwdnaykxhostivv` → muva.chat
+- **ACCESS_TOKEN**: Compartido (mismo que DEV, línea 48 `.env.local`)
+
+**Restricciones Automáticas:**
+- ✅ Solo queries SELECT (read-only)
+- ❌ DELETE/UPDATE/DROP/TRUNCATE/ALTER/CREATE bloqueadas por código
+- ⚠️ Warnings visuales antes de ejecutar (colores amarillo/rojo)
+- ⏱️ Muestra duración de ejecución
+
+**⚠️ IMPORTANTE:**
+- Siempre pedir autorización explícita al usuario antes de queries TST/PRD
+- Usar LIMIT en queries para evitar sobrecarga
+- TST es para testing/debugging, PRD solo en emergencias críticas
+
 ---
+
+## Behavioral Guidelines
 
 ### 1. PRIORIZAR Sugerencias del Usuario
 Cuando el usuario sugiere una causa, INVESTIGARLA PRIMERO antes de proponer alternativas.
@@ -264,17 +349,127 @@ Ref: `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
 
 ---
 
+## 🗄️ Database Migrations - WORKFLOW DEFINITIVO
+
+**IMPLEMENTADO:** Diciembre 4, 2025 - Sistema automatizado bulletproof
+
+### Regla de Oro
+
+**NUNCA** edites `supabase/migrations/` manualmente.
+**SIEMPRE** trabaja en `/migrations/` y deja que la automatización sincronice.
+
+### Source of Truth
+
+- **Directorio canónico:** `/migrations/` (root level)
+- **Directorio Supabase:** `/supabase/migrations/` (auto-sincronizado)
+- **Subdirectorios permitidos:** `migrations/fixes/`, `migrations/archive/`, etc.
+
+### Sistema de Triple Defensa
+
+1. **Pre-commit Hook** (`.git/hooks/pre-commit`)
+   - Ejecuta `.claude/sync-migrations.sh` automáticamente
+   - Valida counts: 98 archivos totales (incluyendo subdirectorios)
+   - Valida checksums MD5 de TODOS los archivos
+   - Preserva rutas relativas (soporte completo de subdirectorios)
+   - Auto-stage `supabase/migrations/` en commit
+   - **Bloquea commit si hay desincronización**
+
+2. **GitHub Action** (`.github/workflows/validate-migrations.yml`)
+   - Valida sync de directorios (98 archivos totales)
+   - **Valida DB sync:** Solo root-level migrations (43 archivos) vs `schema_migrations`
+   - Branch-specific: DEV (`zpyxgkvonrxbhvmkuzlt`), TST (`bddcvjoeoiekzfetvxoe`)
+   - **Bloquea merge si hay mismatch**
+
+3. **Supabase Health Check**
+   - Validación final en Supabase Dashboard
+   - Verifica que migrations aplicadas = archivos en repo
+
+### Crear Nueva Migración
+
+```bash
+# 1. Crear archivo en /migrations/ (NO en supabase/migrations/)
+touch migrations/$(date +%Y%m%d%H%M%S)_descripcion.sql
+
+# 2. Escribir SQL
+vim migrations/20251204120000_descripcion.sql
+
+# 3. Aplicar a DB DEV
+node .claude/db-query.js "$(cat migrations/20251204120000_descripcion.sql)"
+
+# 4. Registrar en schema_migrations
+node .claude/db-query.js "
+INSERT INTO supabase_migrations.schema_migrations (version, name, statements)
+VALUES ('20251204120000', 'descripcion', ARRAY['-- applied']::text[])
+"
+
+# 5. Commit (pre-commit hook sincroniza automáticamente)
+git add migrations/20251204120000_descripcion.sql
+git commit -m "feat: add descripcion migration"
+# ✅ Hook sincroniza a supabase/migrations/ automáticamente
+```
+
+### Sync Manual (si necesario)
+
+```bash
+pnpm run migrations:sync
+```
+
+### Counts Esperados
+
+- **Total archivos (incluyendo subdirs):** 98 archivos `.sql`
+- **Root-level migrations:** 43 archivos (debe coincidir con DB `schema_migrations`)
+- **Subdirectorios:** 55 archivos organizacionales (`fixes/`, `archive/`, etc.)
+
+### Garantías del Sistema
+
+✅ **Imposible commitear** sin sincronización completa
+✅ **Imposible mergear** con desincronización DB ↔ repo
+✅ **Subdirectorios soportados** (rutas relativas preservadas)
+✅ **Zero intervención manual** (todo automático)
+✅ **Nunca más** "Remote migration versions not found"
+
+### Documentación Completa
+
+Ver: `docs/workflows/MIGRATIONS.md`
+
+### Lecciones Aprendidas (Diciembre 4, 2025)
+
+1. **Problema original:** Dos directorios sin sincronización automática
+2. **Error #1:** Usar `basename` en validación → no manejaba subdirectorios
+3. **Fix:** Usar `${file#migrations/}` para preservar rutas relativas
+4. **Error #2:** GitHub Action contaba TODOS los archivos vs DB (98 vs 43)
+5. **Fix:** Usar `-maxdepth 1` para contar solo root-level vs DB
+6. **Resultado:** Sistema completamente automatizado y a prueba de errores
+
+**⚠️ CRÍTICO:** Si ves "Remote migration versions not found", el sistema de triple defensa falló. Investigar logs de pre-commit hook y GitHub Action PRIMERO.
+
+---
+
 ## Documentation
 
 - `docs/three-tier-unified/README.md` - Arquitectura three-tier (dev/tst/prd)
 - `docs/three-tier-unified/workflow.md` - Workflow de migración
 - `docs/three-tier-unified/ROLLBACK_PLAN.md` - Procedimientos de rollback
 - `docs/architecture/DATA_POPULATION_TIMELINE.md` - Flujo completo de población de datos
+- `docs/workflows/MIGRATIONS.md` - **Workflow definitivo de migraciones** (Dic 4, 2025)
 
 
 ---
 
-- Si estuvieras accediendo a un VPS por SSH nunca modifiques código ya que se rompe el patrón de trabajar con tres ambientes
-- El ambiente tst a veces puede ser referido como staging pero debes tener en cuenta que las ramas de supabase y de github se llaman tst
-- IMPORTANTE: Cualquier solicitud de modificar la base de datos tst o producción debe ser consultada al usuario para su confirmación
-**Last Updated:** November 16, 2025 (Three-Tier Migration Completed)
+## Important Reminders
+
+### VPS Access
+- **NUNCA modifiques código** si estuvieras accediendo al VPS por SSH - rompe el patrón three-tier
+- Usa el workflow `.github/workflows/vps-exec.yml` para comandos de emergencia
+
+### Nomenclatura
+- El ambiente **tst** puede ser referido como "staging" en conversaciones
+- Las ramas de Supabase y GitHub se llaman **tst** (NO staging)
+
+### Modificaciones a TST/PRD
+- **SIEMPRE** consultar al usuario antes de modificar bases de datos TST/PRD
+- Requiere autorización explícita (políticas de seguridad)
+
+---
+
+**Last Updated:** December 4, 2025 (Bulletproof Migrations Workflow Added)

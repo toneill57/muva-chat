@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "CASA MUSEO ISLEÑA"
-  description: "Museo de arquitectura y cultura autóctona de San Andrés con objetos antiguos y tradiciones isleñas"
-
+  title: CASA MUSEO ISLEÑA
+  description: Museo de arquitectura y cultura autóctona de San Andrés con objetos antiguos y tradiciones isleñas
   category: culture
   subcategory: museums
-
   language: es
   version: "2.0"
   status: active
-
   tags: [museum, culture, history, architecture, local_culture, heritage, museo, cultura, historia, arquitectura, patrimonio, isleno]
-
   keywords: [casa museo, museo isleno, san andres, arquitectura, cultura, tradicional, costumbres, objetos antiguos, patrimonio]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:53:03.883Z"
 business:
   id: casa-museo
   nombre: CASA MUSEO ISLEÑA
   categoria: Cultura
-
   horario: "Lunes a Sábado 09:00 - 17:00, Domingos 09:00 - 18:00"
   precio: "Entrada: $5,000 - $10,000 COP (consultar)"
-
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "Centro"
+  zona: Centro
   subzona: null
-
-  caracteristicas_zona: ["Zona histórica", "Centro urbano", "Fácil acceso", "Área cultural"]
-  landmarks_cercanos: ["Primera Iglesia Bautista", "Centro comercial New Point", "Malecón"]
+  caracteristicas_zona: "["Zona histórica", "Centro urbano", "Fácil acceso", "Área cultural"]"
+  landmarks_cercanos: "["Primera Iglesia Bautista", "Centro comercial New Point", "Malecón"]"
 ---
 
 # CASA MUSEO ISLEÑA

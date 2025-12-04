@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "BALI SMOOTHIES"
-  description: "El lugar perfecto para quienes quieren salir a comer rico y saludable. Bali Smoothies es un restaurante especializado en smoothies, bowls, pancakes y otros antojos, todos libres de gluten, sin lactosa y deliciosos. Fundado en 2022 con la misión de ofrecer opciones saludables accesibles en un espacio acogedor que acepta mascotas."
+  title: BALI SMOOTHIES
+  description: El lugar perfecto para quienes quieren salir a comer rico y saludable. Bali Smoothies es un restaurante especializado en smoothies, bowls, pancakes y otros antojos, todos libres de gluten, sin lactosa y deliciosos. Fundado en 2022 con la misión de ofrecer opciones saludables accesibles en un espacio acogedor que acepta mascotas.
   category: restaurants
   subcategory: cafeteria_saludable
   language: es
@@ -14,18 +14,22 @@ document:
   status: active
   tags: [smoothies, bowls saludables, healthy food, desayuno san andres, brunch, gluten free, sin lactosa, lactose free, vegan options, pet friendly, breakfast]
   keywords: [bali-smoothies, bali smoothies, restaurante saludable san andres, smoothies san andres, desayuno saludable, comida sin gluten, bowls, pancakes, brunch san andres, restaurante pet friendly]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:40:42.069Z"
 business:
   id: bali-smoothies
   nombre: BALI SMOOTHIES
   categoria: Restaurante
   tipo_gastronomia: Comida Saludable
   horario: "7:30 - 11:30 y 15:30 - 19:30"
-  precio: "$10,000 - $20,000"
-  telefono: "301 6548965"
-  contacto: "@balismoothiessai"
+  precio: $10,000 - $20,000
+  telefono: 301 6548965
+  contacto: @balismoothiessai
   servicios_especiales: [sin gluten, sin lactosa, pet friendly, terraza]
   ideal_para: [desayuno, brunch, merienda, comida saludable]
 ---
+
 # BALI SMOOTHIES {#bali-smoothies}
 
 ## Descripción General {#descripcion}
@@ -91,4 +95,3 @@ Este lugar es único en la isla, con opciones increíbles a muy buen precio. El 
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

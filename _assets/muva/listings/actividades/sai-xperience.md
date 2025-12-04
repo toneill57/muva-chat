@@ -5,8 +5,8 @@ destination:
   schema: public
   table: muva_content
 document:
-  title: "SAI XPERIENCE"
-  description: "Escuela de deportes acuáticos extremos en San Andrés con más de 5 años de experiencia. Ofrecemos clases de kitesurf, paddle board y wakeboard con instructores certificados. Experiencias personalizadas para todos los niveles en el mar de 7 colores."
+  title: SAI XPERIENCE
+  description: Escuela de deportes acuáticos extremos en San Andrés con más de 5 años de experiencia. Ofrecemos clases de kitesurf, paddle board y wakeboard con instructores certificados. Experiencias personalizadas para todos los niveles en el mar de 7 colores.
   category: activities
   subcategory: deportes_acuaticos
   language: es
@@ -14,23 +14,26 @@ document:
   status: active
   tags: [kitesurf, paddle-board, wakeboard, deportes-acuaticos, deportes-extremos, water-sports, clases-deportivas, actividades-aventura, kiteboarding, escuela-deportes, instructores-certificados, experiencias-personalizadas, san-andres-activities]
   keywords: [sai xperience, kitesurf san andres, paddle board san andres, wakeboard san andres, deportes acuaticos, clases kite, escuela deportes acuaticos, actividades extremas, instructores certificados]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:25:19.273Z"
 business:
   id: sai-xperience
-  nombre: "SAI XPERIENCE"
-  categoria: "Actividad"
-  subcategoria: "Escuela de Deportes Acuáticos"
-  horario: "Según reserva (flexible, depende de condiciones)"
+  nombre: SAI XPERIENCE
+  categoria: Actividad
+  subcategoria: Escuela de Deportes Acuáticos
+  horario: Según reserva (flexible, depende de condiciones)
   precio: "Kitesurf: $250,000 COP/hora | Paddle Board: $200,000 COP | Wakeboard: $280,000 COP"
-  telefono: "317 522 44 51"
-  contacto: "@saixperiencecol"
+  telefono: 317 522 44 51
+  contacto: @saixperiencecol
   website: null
   zona: null
-  modalidad_atencion: "Clases privadas y grupales bajo reserva personalizada"
-  formas_pago: ["Efectivo", "Transferencia"]
-  idiomas: ["Español", "Inglés"]
+  modalidad_atencion: Clases privadas y grupales bajo reserva personalizada
+  formas_pago: "["Efectivo", "Transferencia"]"
+  idiomas: "["Español", "Inglés"]"
   servicios_ofrecidos: [kitesurf, paddle board, wakeboard]
-  nivel_experiencia: "Principiantes a avanzados"
-  incluye_general: ["Equipo completo", "Instrucción certificada", "Seguros", "Guía profesional"]
+  nivel_experiencia: Principiantes a avanzados
+  incluye_general: "["Equipo completo", "Instrucción certificada", "Seguros", "Guía profesional"]"
 ---
 
 # SAI XPERIENCE

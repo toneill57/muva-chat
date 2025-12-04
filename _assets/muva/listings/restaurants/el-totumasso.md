@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "EL TOTUMASSO"
-  description: "Joya escondida en el centro de San Andrés, secreto de locales para almuerzos grandes, ricos y económicos"
-
+  title: EL TOTUMASSO
+  description: Joya escondida en el centro de San Andrés, secreto de locales para almuerzos grandes, ricos y económicos
   category: restaurants
   subcategory: gastronomia_local
-
   language: es
   version: "2.0"
   status: active
-
   tags: [restaurant, local_food, budget_friendly, lunch, hidden_gem, authentic, large_portions, restaurante, comida_local, economico, almuerzo, secreto_local, autentico]
-
   keywords: [el totumasso, totumasso, almuerzo, comida local, barato, centro, secreto locales, grande, economico, san andres]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:39:35.426Z"
 business:
   id: el-totumasso
   nombre: EL TOTUMASSO
   categoria: Restaurante
-
   horario: "Lunes a Domingo 12:00 - 15:00 (solo almuerzo)"
-  precio: "Almuerzo completo desde $12,000 - $18,000 COP"
-
+  precio: Almuerzo completo desde $12,000 - $18,000 COP
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "Centro"
-  subzona: "Calles interiores del centro"
-
-  caracteristicas_zona: ["Zona comercial principal", "Alta concentración turística", "Vida nocturna y restaurantes", "Playa Spratt Bight", "Calles interiores menos transitadas"]
-  landmarks_cercanos: ["Playa Spratt Bight", "Centro comercial New Point", "Peatonal de San Andrés"]
+  zona: Centro
+  subzona: Calles interiores del centro
+  caracteristicas_zona: "["Zona comercial principal", "Alta concentración turística", "Vida nocturna y restaurantes", "Playa Spratt Bight", "Calles interiores menos transitadas"]"
+  landmarks_cercanos: "["Playa Spratt Bight", "Centro comercial New Point", "Peatonal de San Andrés"]"
 ---
 
 # EL TOTUMASSO

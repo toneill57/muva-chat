@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "BENGUE'S PLACE"
-  description: "El lugar emblemático para disfrutar un agua de coco fría frente a la playa de Los Charquitos en San Andrés. Bengue's Place es un spot icónico de la isla, perfecto para refrescarse mientras disfrutas de vistas espectaculares al mar Caribe. Un clásico que no te puedes perder en tu visita a la isla."
+  title: BENGUE'S PLACE
+  description: El lugar emblemático para disfrutar un agua de coco fría frente a la playa de Los Charquitos en San Andrés. Bengue's Place es un spot icónico de la isla, perfecto para refrescarse mientras disfrutas de vistas espectaculares al mar Caribe. Un clásico que no te puedes perder en tu visita a la isla.
   category: spots
   subcategory: beach_bar
   language: es
@@ -14,17 +14,21 @@ document:
   status: active
   tags: [agua de coco, coconut water, playa charquitos, beach spot, iconic place, local landmark, sea view, beachfront, refreshments, chill spot, emblematico]
   keywords: [bengues place, bengue's place, charquitos, agua de coco san andres, spot playero, playa san andres, bebidas playa, lugar emblematico]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:49:44.177Z"
 business:
   id: bengues-place-33
   nombre: BENGUE'S PLACE
   categoria: Spot Playero
   tipo_establecimiento: Beach Bar
   horario: "9:00 AM - 6:00 PM"
-  precio: "$3,000 - $10,000"
-  ubicacion_especifica: "Frente a playa Los Charquitos"
+  precio: $3,000 - $10,000
+  ubicacion_especifica: Frente a playa Los Charquitos
   servicios_especiales: [agua de coco, bebidas frias, vista al mar, sombra]
   ideal_para: [refrescarse, vista mar, descanso playa, experiencia local]
 ---
+
 # BENGUE'S PLACE {#bengues-place}
 
 ## Descripción General {#descripcion}
@@ -92,4 +96,3 @@ Combina tu visita a Bengue's Place con un día completo en Los Charquitos. La pl
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

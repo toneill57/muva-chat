@@ -57,20 +57,6 @@ export default function TenantQuickTable() {
     fetchTenants();
   }, []);
 
-  // Auto-refresh every 30 seconds (when tab is visible)
-  useEffect(() => {
-    const POLL_INTERVAL = 30000; // 30 seconds
-
-    const interval = setInterval(() => {
-      // Only fetch if the tab is visible
-      if (document.visibilityState === 'visible') {
-        fetchTenants();
-      }
-    }, POLL_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const formatLastActivity = (lastActivity: string | null) => {
     if (!lastActivity) return 'No activity';
     try {

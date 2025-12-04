@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "HANS DIVE SHOP"
-  description: "Centro de buceo profesional frente al museo de estatuas submarinas, con minicursos y certificaciones PADI"
-
+  title: HANS DIVE SHOP
+  description: Centro de buceo profesional frente al museo de estatuas submarinas, con minicursos y certificaciones PADI
   category: activities
   subcategory: diving
-
   language: es
   version: "2.0"
   status: active
-
   tags: [diving, scuba, dive_school, underwater_museum, beginner_friendly, certification, padi, buceo, centro_buceo, museo_submarino, principiantes, certificacion]
-
   keywords: [hans dive shop, hans schenk, buceo, dive shop, museo estatuas, big mama, minicurso, certificacion, padi, san andres, $160000]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:27:40.902Z"
 business:
   id: hans-dive-shop
   nombre: HANS DIVE SHOP
   categoria: Actividad
-
-  horario: "Consultar por teléfono/email - Horarios flexibles según reservas"
+  horario: Consultar por teléfono/email - Horarios flexibles según reservas
   precio: "Minicurso: $160,000 COP - Certificaciones desde $450,000 COP"
-
-  contacto: "hansdiveshop@gmail.com"
-  telefono: "+57 320 926 0935 / +57 324 560 4878"
+  contacto: hansdiveshop@gmail.com
+  telefono: +57 320 926 0935 / +57 324 560 4878
   website: null
-
-  zona: "Centro"
-  subzona: "Frente a museo de estatuas submarinas"
-
-  caracteristicas_zona: ["Zona comercial principal", "Alta concentración turística", "Playa Spratt Bight", "Acceso directo al mar", "Museo de estatuas submarinas"]
-  landmarks_cercanos: ["Playa Spratt Bight", "Museo de estatuas submarinas Big Mama", "Centro comercial", "Zona hotelera"]
+  zona: Centro
+  subzona: Frente a museo de estatuas submarinas
+  caracteristicas_zona: "["Zona comercial principal", "Alta concentración turística", "Playa Spratt Bight", "Acceso directo al mar", "Museo de estatuas submarinas"]"
+  landmarks_cercanos: "["Playa Spratt Bight", "Museo de estatuas submarinas Big Mama", "Centro comercial", "Zona hotelera"]"
 ---
 
 # HANS DIVE SHOP

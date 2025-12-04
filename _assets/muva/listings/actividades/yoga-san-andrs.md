@@ -5,8 +5,8 @@ destination:
   schema: public
   table: muva_content
 document:
-  title: "YOGA SAN ANDRÉS - Clases Frente al Mar"
-  description: "Clases de yoga frente al mar Caribe en San Andrés. Practica acroyoga, hatha y vinyasa con vista al océano. Sesiones lunes, miércoles y viernes creadas por Sara Arango para conectar cuerpo, mente y naturaleza isleña."
+  title: YOGA SAN ANDRÉS - Clases Frente al Mar
+  description: Clases de yoga frente al mar Caribe en San Andrés. Practica acroyoga, hatha y vinyasa con vista al océano. Sesiones lunes, miércoles y viernes creadas por Sara Arango para conectar cuerpo, mente y naturaleza isleña.
   category: activities
   subcategory: bienestar_yoga
   language: es
@@ -14,25 +14,28 @@ document:
   status: active
   tags: [yoga-playa, bienestar-wellness, acroyoga, yoga-mar, clases-yoga, mindfulness-caribe, experiencia-holistica, deporte-suave, yoga-san-andres]
   keywords: [yoga san andres, clases yoga playa, acroyoga caribe, bienestar mar, yoga frente al mar, sara arango yoga]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:23:37.610Z"
 business:
   id: yoga-san-andrs
-  nombre: "YOGA SAN ANDRÉS"
-  categoria: "Actividad"
-  subcategoria: "Bienestar y Yoga"
+  nombre: YOGA SAN ANDRÉS
+  categoria: Actividad
+  subcategoria: Bienestar y Yoga
   horario: "Lunes, miércoles y viernes a las 9:30 h"
-  precio: "$90,000 COP"
+  precio: $90,000 COP
   telefono: null
-  contacto: "@yoga.sanandres"
+  contacto: @yoga.sanandres
   website: null
   zona: null
-  modalidad_atencion: "Clases grupales programadas"
-  formas_pago: ["Efectivo", "Transferencia"]
-  idiomas: ["Español", "Inglés"]
-  nivel_experiencia: "Todos los niveles"
-  duracion_clase: "60-75 minutos aproximadamente"
-  tipo_yoga: ["Hatha", "Vinyasa", "Acroyoga"]
-  incluye: ["Mat de yoga", "Sesión frente al mar", "Instrucción personalizada"]
-  instructora: "Sara Arango"
+  modalidad_atencion: Clases grupales programadas
+  formas_pago: "["Efectivo", "Transferencia"]"
+  idiomas: "["Español", "Inglés"]"
+  nivel_experiencia: Todos los niveles
+  duracion_clase: 60-75 minutos aproximadamente
+  tipo_yoga: "["Hatha", "Vinyasa", "Acroyoga"]"
+  incluye: "["Mat de yoga", "Sesión frente al mar", "Instrucción personalizada"]"
+  instructora: Sara Arango
 ---
 
 # YOGA SAN ANDRÉS - Clases Frente al Mar

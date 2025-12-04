@@ -95,6 +95,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
+        cache: 'no-store', // Force fresh data, never cache
       });
       const data = await response.json();
 
@@ -124,7 +125,16 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
 
     try {
       const token = localStorage.getItem('super_admin_token');
-      const response = await fetch(`/api/super-admin/content/delete?id=${deleteId}`, {
+      // Find the document to delete and use source_file
+      const docToDelete = content.find(c => c.id === deleteId);
+      const sourceFile = docToDelete?.source_file;
+
+      // Use source_file for delete to ensure all chunks are removed
+      const deleteParam = sourceFile
+        ? `source_file=${encodeURIComponent(sourceFile)}`
+        : `id=${deleteId}`;
+
+      const response = await fetch(`/api/super-admin/content/delete?${deleteParam}`, {
         method: 'DELETE',
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
@@ -134,7 +144,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
       if (response.ok) {
         toast({
           title: 'Success',
-          description: 'Content deleted successfully'
+          description: 'Document deleted successfully'
         });
         fetchContent();
         onRefresh();
@@ -146,7 +156,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
       console.error('Delete error:', error);
       toast({
         title: 'Error',
-        description: error.message || 'Failed to delete content',
+        description: error.message || 'Failed to delete document',
         variant: 'destructive'
       });
     } finally {
@@ -161,8 +171,19 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
 
     try {
       const token = localStorage.getItem('super_admin_token');
-      const idsParam = Array.from(selectedIds).join(',');
-      const response = await fetch(`/api/super-admin/content/delete?ids=${idsParam}`, {
+
+      // Get source_files for selected documents
+      const selectedDocs = content.filter(c => selectedIds.has(c.id));
+      const sourceFiles = selectedDocs
+        .map(d => d.source_file)
+        .filter((f): f is string => !!f);
+
+      // Use source_files for batch delete to ensure all chunks are removed
+      const deleteParam = sourceFiles.length > 0
+        ? `source_files=${sourceFiles.map(f => encodeURIComponent(f)).join(',')}`
+        : `ids=${Array.from(selectedIds).join(',')}`;
+
+      const response = await fetch(`/api/super-admin/content/delete?${deleteParam}`, {
         method: 'DELETE',
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
@@ -174,7 +195,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
       if (response.ok && data.success) {
         toast({
           title: 'Success',
-          description: `${data.deletedCount} item(s) deleted successfully`
+          description: `${data.documentsDeleted || data.deletedCount} document(s) deleted successfully`
         });
         clearSelection();
         fetchContent();
@@ -186,7 +207,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
       console.error('Batch delete error:', error);
       toast({
         title: 'Error',
-        description: error.message || 'Failed to delete selected content',
+        description: error.message || 'Failed to delete selected documents',
         variant: 'destructive'
       });
     } finally {
@@ -318,7 +339,7 @@ export function ContentTable({ onRefresh }: ContentTableProps) {
                     {item.title}
                   </TableCell>
                   <TableCell>
-                    {item.embeddings_1024?.length || 0}
+                    {item.total_chunks || 0}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}

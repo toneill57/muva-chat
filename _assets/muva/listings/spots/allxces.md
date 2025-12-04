@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "ALLXCES"
-  description: "Único spot de entrada libre en Rocky Cay con empanadas de camarón y ambiente frente a la playa"
-
+  title: ALLXCES
+  description: Único spot de entrada libre en Rocky Cay con empanadas de camarón y ambiente frente a la playa
   category: spots
   subcategory: beach_clubs
-
   language: es
   version: "2.0"
   status: active
-
   tags: [beach, beach_club, local_food, chill, low_cost, free_entry, playa, caretear, comida_local, entrada_libre, rocky_cay]
-
   keywords: [allxces, all xces, rocky cay, empanadas, camaron, entrada libre, san luis]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:50:26.551Z"
 business:
   id: allxces
   nombre: ALLXCES
   categoria: Spot
-
   horario: "Lunes a Domingo 9:00 AM - 7:00 PM"
-  precio: "Entrada libre - Consumo desde $15,000 COP"
-
+  precio: Entrada libre - Consumo desde $15,000 COP
   contacto: null
-  telefono: "+573001234567"
+  telefono: +573001234567
   website: null
-
-  zona: "San Luis"
-  subzona: "Rocky Cay"
-
-  caracteristicas_zona: ["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]
-  landmarks_cercanos: ["Barco encallado El Lido", "Cayo Rocky Cay"]
+  zona: San Luis
+  subzona: Rocky Cay
+  caracteristicas_zona: "["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]"
+  landmarks_cercanos: "["Barco encallado El Lido", "Cayo Rocky Cay"]"
 ---
 
 # ALLXCES

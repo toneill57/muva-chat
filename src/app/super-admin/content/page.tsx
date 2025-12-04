@@ -61,6 +61,7 @@ export default function ContentManagementPage() {
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
+        cache: 'no-store', // Force fresh data, never cache
       });
       const data = await response.json();
       setStats(data);
@@ -72,6 +73,12 @@ export default function ContentManagementPage() {
   useEffect(() => {
     fetchStats();
   }, []);
+
+  // Handle successful upload - refresh both stats and table
+  const handleUploadSuccess = () => {
+    fetchStats();
+    setTableKey(prev => prev + 1); // Force table refresh
+  };
 
   return (
     <div className="space-y-6">
@@ -119,7 +126,7 @@ export default function ContentManagementPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Listings</CardTitle>
@@ -132,11 +139,11 @@ export default function ContentManagementPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Actividades</CardTitle>
+            <CardTitle className="text-sm font-medium">Activities</CardTitle>
             <FolderOpen className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.byCategory.actividades || 0}</div>
+            <div className="text-2xl font-bold">{stats.byCategory.activities || 0}</div>
           </CardContent>
         </Card>
 
@@ -159,10 +166,30 @@ export default function ContentManagementPage() {
             <div className="text-2xl font-bold">{stats.byCategory.restaurants || 0}</div>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Spots</CardTitle>
+            <FolderOpen className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.byCategory.spots || 0}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Culture</CardTitle>
+            <FolderOpen className="h-4 w-4 text-yellow-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.byCategory.culture || 0}</div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Upload Section */}
-      <ContentUploader />
+      <ContentUploader onSuccess={handleUploadSuccess} />
 
       {/* Content Table */}
       <Card>

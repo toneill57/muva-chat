@@ -1,43 +1,35 @@
 ---
 version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "RICHIE PARASAIL"
-  description: "Empresa pionera de parasailing en San Andrés con más de 50,000 vuelos realizados, fundada por Ricardo Castaño con el legendario bote SunDay"
-
+  title: RICHIE PARASAIL
+  description: Empresa pionera de parasailing en San Andrés con más de 50,000 vuelos realizados, fundada por Ricardo Castaño con el legendario bote SunDay
   category: activities
   subcategory: parasailing
-
   language: es
   version: "2.0"
   status: active
-
   tags: [parasailing, parasail, parachute, aerial_view, adventure, flying, pioneer, views, paracaidas, aventura, vistas_aereas, sunday, pionero]
-
   keywords: [richie-parasail, richie parasail, ricardo castano, parasail, paracaidas, sunday, pionero, 50000 vuelos]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T16:25:55.462Z"
 business:
   id: richie-parasail
   nombre: RICHIE PARASAIL
   categoria: Actividad
-
   horario: "4 salidas diarias: 9:00, 11:00, 14:00, 16:00 hrs"
-  precio: "$230,000 COP por persona (15 minutos de vuelo)"
-
-  contacto: "@richieparasail"
-  telefono: "+573001234567"
+  precio: $230,000 COP por persona (15 minutos de vuelo)
+  contacto: @richieparasail
+  telefono: +573001234567
   website: null
-
-  zona: "Centro"
-  subzona: "Bahía de San Andrés"
-
-  caracteristicas_zona: ["Bahía principal", "Zona turística central", "Fácil acceso", "Vistas panorámicas"]
-  landmarks_cercanos: ["Bahía de San Andrés", "Playa Spratt Bight", "Centro comercial", "Muelle turístico"]
+  zona: Centro
+  subzona: Bahía de San Andrés
+  caracteristicas_zona: "["Bahía principal", "Zona turística central", "Fácil acceso", "Vistas panorámicas"]"
+  landmarks_cercanos: "["Bahía de San Andrés", "Playa Spratt Bight", "Centro comercial", "Muelle turístico"]"
 ---
 
 # RICHIE PARASAIL
@@ -184,4 +176,3 @@ Richie Parasail no es solo otra empresa de parasailing: es la empresa que trajo 
 La diferencia está en la trayectoria: mientras otros llegaron después, Richie Parasail lleva más de 10 años dominando los cielos de San Andrés. Cada vuelo es respaldado por miles de vuelos anteriores, por una familia comprometida con la seguridad, y por el legado del "SunDay" que marcó el inicio de una nueva era en el turismo de San Andrés.
 
 *"Más de 50,000 personas han confiado en nosotros para volar. Ahora es tu turno."*
-

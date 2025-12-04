@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "ONE LOVE (TOM HOOKER)"
-  description: "One Love es el único restaurante en la playa del extremo sur de San Andrés (Tom Hooker, zona Cove). Ubicado en una playa muy tranquila con piscina natural perfecta para niños y quienes tienen miedo al oleaje. Ofrece comida con vista hermosa, sillas y sombra cómoda. Ideal para familias buscando tranquilidad y los mejores atardeceres de la isla en zona poco ruidosa."
+  title: ONE LOVE (TOM HOOKER)
+  description: One Love es el único restaurante en la playa del extremo sur de San Andrés (Tom Hooker, zona Cove). Ubicado en una playa muy tranquila con piscina natural perfecta para niños y quienes tienen miedo al oleaje. Ofrece comida con vista hermosa, sillas y sombra cómoda. Ideal para familias buscando tranquilidad y los mejores atardeceres de la isla en zona poco ruidosa.
   category: spots
   subcategory: beach_restaurant
   language: es
@@ -14,23 +14,26 @@ document:
   status: active
   tags: [tom hooker, cove, sur isla, south island, playa tranquila, quiet beach, piscina natural, natural pool, family friendly, niños, kids safe, atardeceres, sunsets, formacion coralina, snorkel zone]
   keywords: [one love, tom hooker, sur san andres, playa tranquila, piscina natural, restaurante sur, cove, atardeceres san andres, familia ninos, playa segura]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:46:32.662Z"
 business:
   id: one-love-tom-hooker
   nombre: ONE LOVE (TOM HOOKER)
   categoria: Beach Restaurant
   tipo_establecimiento: Restaurante Playero
   horario: "9:00 AM - 5:00 PM"
-  precio: "$15,000 - $35,000"
-  zona: "Cove"
-  subzona: "Tom Hooker"
-  proximidad_aeropuerto: "MEDIUM"
-  zona_tipo: "formación rocosa coralina"
-
-  caracteristicas_zona: ["Formación rocosa coralina", "Excelentes puntos de buceo", "Zona de snorkel y apnea", "Mejores atardeceres", "Zona muy tranquila", "Poco ruidosa", "Alojamientos turísticos"]
-  tipos_negocio_zona: ["alojamientos", "casas de nativos"]
+  precio: $15,000 - $35,000
+  zona: Cove
+  subzona: Tom Hooker
+  proximidad_aeropuerto: MEDIUM
+  zona_tipo: formación rocosa coralina
+  caracteristicas_zona: "["Formación rocosa coralina", "Excelentes puntos de buceo", "Zona de snorkel y apnea", "Mejores atardeceres", "Zona muy tranquila", "Poco ruidosa", "Alojamientos turísticos"]"
+  tipos_negocio_zona: "["alojamientos", "casas de nativos"]"
   servicios_especiales: [piscina natural, playa segura ninos, unico restaurante zona, vista espectacular]
   ideal_para: [familias con ninos, playa tranquila, atardeceres, comida vista mar, zona tranquila]
 ---
+
 # ONE LOVE (TOM HOOKER) {#one-love}
 
 ## Descripción General {#descripcion}
@@ -115,4 +118,3 @@ Tom Hooker es la zona más sur de San Andrés, parte del área conocida como Cov
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-

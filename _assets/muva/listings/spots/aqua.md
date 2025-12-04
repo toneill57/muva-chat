@@ -1,43 +1,35 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
-
 destination:
   schema: public
   table: muva_content
-
 document:
-  title: "AQUA BEACH CLUB"
-  description: "Beach club y restaurante en Cocoplum Bay con loungers, bar completo y vistas a Rocky Cay"
-
+  title: AQUA BEACH CLUB
+  description: Beach club y restaurante en Cocoplum Bay con loungers, bar completo y vistas a Rocky Cay
   category: spots
   subcategory: beach_clubs
-
   language: es
   version: "2.0"
   status: active
-
   tags: [beach, beach_club, restaurant, food, drinks, seafood, loungers, views, playa, restaurante, comida, mariscos, atardecer, cocoplum]
-
   keywords: [aqua, aqua beach club, cocoplum, rocky cay, beach club, san luis]
-
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:50:14.654Z"
 business:
   id: aqua-beach-club
   nombre: AQUA BEACH CLUB
   categoria: Spot
-
   horario: "Lunes a Domingo 10:30 AM - 6:00 PM"
-  precio: "Día de playa desde $80,000 COP - Consultar menú"
-
-  contacto: "@aquabeachclub"
-  telefono: "+573001234567"
+  precio: Día de playa desde $80,000 COP - Consultar menú
+  contacto: @aquabeachclub
+  telefono: +573001234567
   website: "https://www.instagram.com/aquabeachclub"
-
-  zona: "San Luis"
-  subzona: "Cocoplum Bay"
-
-  caracteristicas_zona: ["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]
-  landmarks_cercanos: ["Barco encallado El Lido", "Cayo Rocky Cay", "Playa Cocoplum"]
+  zona: San Luis
+  subzona: Cocoplum Bay
+  caracteristicas_zona: "["Casas isleñas coloridas", "Zona residencial nativa", "Playas menos concurridas", "Hospedajes turísticos", "Variedad de playas", "Diferentes niveles de oleaje"]"
+  landmarks_cercanos: "["Barco encallado El Lido", "Cayo Rocky Cay", "Playa Cocoplum"]"
 ---
 
 # AQUA BEACH CLUB

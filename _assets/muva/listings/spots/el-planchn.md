@@ -1,12 +1,12 @@
 ---
-version: "2.0"
+version: "3.0"
 type: tourism
 destination:
   schema: public
   table: muva_content
 document:
-  title: "EL PLANCHÓN"
-  description: "Lugar escondido en el sur de San Andrés, conocido por los locales como punto de reunión frente al mar. El Planchón es un espacio abierto y natural donde amigos se reúnen a compartir y disfrutar vistas espectaculares del Caribe. Un sitio con historia peculiar que quedó como espacio comunitario después de problemas ambientales en su construcción."
+  title: EL PLANCHÓN
+  description: Lugar escondido en el sur de San Andrés, conocido por los locales como punto de reunión frente al mar. El Planchón es un espacio abierto y natural donde amigos se reúnen a compartir y disfrutar vistas espectaculares del Caribe. Un sitio con historia peculiar que quedó como espacio comunitario después de problemas ambientales en su construcción.
   category: spots
   subcategory: mirador_natural
   language: es
@@ -14,17 +14,21 @@ document:
   status: active
   tags: [secreto local, local hangout, hidden spot, sur isla, vista mar, ocean view, free spot, lugar escondido, comunidad, south island, natural spot]
   keywords: [el planchon, planchon san andres, secreto local, sur isla, lugar escondido, spot local, vista mar, espacio natural]
+metadata:
+  created_via: super_admin_upload
+  uploaded_at: "2025-12-03T20:48:43.677Z"
 business:
   id: el-planchn
   nombre: EL PLANCHÓN
   categoria: Mirador Natural
   tipo_lugar: Espacio Abierto Comunitario
-  horario: "24/7 - Espacio abierto sin horarios"
-  precio: "Gratis"
-  ubicacion_especifica: "Sur de la isla"
+  horario: 24/7 - Espacio abierto sin horarios
+  precio: Gratis
+  ubicacion_especifica: Sur de la isla
   servicios_especiales: [vista mar, espacio natural, gratis, lugar local]
   ideal_para: [vista panoramica, reuniones amigos, experiencia local, fotografia]
 ---
+
 # EL PLANCHÓN {#el-planchon}
 
 ## Descripción General {#descripcion}
@@ -99,4 +103,3 @@ Pregunta a locales cómo llegar - no hay señalización turística. Trae tus pro
 ---
 
 **Última actualización**: 2025-09-30 | **Versión**: 2.0
-
