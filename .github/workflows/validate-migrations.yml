@@ -43,7 +43,7 @@ jobs:
           SUPABASE_PROJECT_ID: zpyxgkvonrxbhvmkuzlt
         run: |
           DB_COUNT=$(node .claude/db-query.js "SELECT COUNT(*) as count FROM supabase_migrations.schema_migrations" | grep -oE '"count":\s*[0-9]+' | grep -oE '[0-9]+')
-          REPO_COUNT=$(find supabase/migrations -name "*.sql" -type f | wc -l)
+          REPO_COUNT=$(find supabase/migrations -maxdepth 1 -name "*.sql" -type f | wc -l)
 
           echo "Database migrations: $DB_COUNT"
           echo "Repository files: $REPO_COUNT"
@@ -63,7 +63,7 @@ jobs:
           SUPABASE_PROJECT_ID: bddcvjoeoiekzfetvxoe
         run: |
           DB_COUNT=$(node .claude/db-query.js tst "SELECT COUNT(*) as count FROM supabase_migrations.schema_migrations" | grep -oE '"count":\s*[0-9]+' | grep -oE '[0-9]+')
-          REPO_COUNT=$(find supabase/migrations -name "*.sql" -type f | wc -l)
+          REPO_COUNT=$(find supabase/migrations -maxdepth 1 -name "*.sql" -type f | wc -l)
 
           echo "Database migrations: $DB_COUNT"
           echo "Repository files: $REPO_COUNT"
