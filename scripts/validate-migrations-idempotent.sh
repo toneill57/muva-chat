@@ -40,7 +40,7 @@ echo "$FILES_WITH_POLICIES" | while read -r file; do
 done
 
 echo ""
-echo "🔍 Validando que tengan DROP POLICY IF EXISTS..."
+echo "🔍 Validando CREATE POLICY con DROP POLICY IF EXISTS..."
 
 # Validar cada archivo
 for file in $FILES_WITH_POLICIES; do
@@ -62,6 +62,34 @@ for file in $FILES_WITH_POLICIES; do
 done
 
 echo ""
+echo "🔍 Validando CREATE VIEW con DROP VIEW IF EXISTS..."
+
+# Buscar archivos que crean vistas
+FILES_WITH_VIEWS=$(grep -l "CREATE.*VIEW" "$MIGRATIONS_DIR"/*.sql 2>/dev/null || true)
+
+if [ -n "$FILES_WITH_VIEWS" ]; then
+  echo "📋 Archivos con CREATE VIEW encontrados:"
+  echo "$FILES_WITH_VIEWS" | while read -r file; do
+    echo "   - $file"
+  done
+
+  for file in $FILES_WITH_VIEWS; do
+    # Detectar CREATE OR REPLACE VIEW (puede causar errores de rename)
+    REPLACE_VIEW_COUNT=$(grep -c "CREATE OR REPLACE VIEW" "$file" || true)
+    if [ "$REPLACE_VIEW_COUNT" -gt 0 ]; then
+      echo ""
+      echo "📄 $file"
+      echo "   ⚠️  WARNING: Usa CREATE OR REPLACE VIEW ($REPLACE_VIEW_COUNT veces)"
+      echo "   ⚠️  Esto puede fallar si cambia nombres de columnas en PRD"
+      echo "   💡 RECOMENDACIÓN: Usar DROP VIEW IF EXISTS + CREATE VIEW"
+      ERRORS=$((ERRORS + 1))
+    fi
+  done
+else
+  echo "✅ No se encontraron archivos con CREATE VIEW"
+fi
+
+echo ""
 echo "================================================"
 
 if [ $ERRORS -eq 0 ]; then
@@ -69,12 +97,16 @@ if [ $ERRORS -eq 0 ]; then
   echo "================================================"
   exit 0
 else
-  echo "❌ Se encontraron $ERRORS migración(es) NO idempotente(s)"
+  echo "❌ Se encontraron $ERRORS problema(s) de idempotencia"
   echo "================================================"
   echo ""
-  echo "SOLUCIÓN:"
-  echo "Para cada CREATE POLICY, agrega antes:"
-  echo "DROP POLICY IF EXISTS \"nombre_de_la_policy\" ON tabla;"
+  echo "SOLUCIONES:"
+  echo "1. Para CREATE POLICY:"
+  echo "   DROP POLICY IF EXISTS \"nombre\" ON tabla;"
+  echo ""
+  echo "2. Para CREATE VIEW (si cambia columnas):"
+  echo "   DROP VIEW IF EXISTS nombre CASCADE;"
+  echo "   CREATE VIEW nombre AS ..."
   echo ""
   exit 1
 fi
