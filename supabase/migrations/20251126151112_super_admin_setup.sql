@@ -24,11 +24,13 @@ CREATE INDEX IF NOT EXISTS idx_super_admin_active ON public.super_admin_users(is
 ALTER TABLE public.super_admin_users ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Super admins can view all
+DROP POLICY IF EXISTS "Super admins can view all" ON public.super_admin_users;
 CREATE POLICY "Super admins can view all"
   ON public.super_admin_users FOR SELECT
   USING (true);
 
 -- Policy: Super admins can update themselves
+DROP POLICY IF EXISTS "Super admins can update themselves" ON public.super_admin_users;
 CREATE POLICY "Super admins can update themselves"
   ON public.super_admin_users FOR UPDATE
   USING (true);

@@ -30,11 +30,13 @@ CREATE INDEX IF NOT EXISTS idx_audit_log_composite ON public.super_admin_audit_l
 ALTER TABLE public.super_admin_audit_log ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Super admins can view all audit logs
+DROP POLICY IF EXISTS "Super admins can view all audit logs" ON public.super_admin_audit_log;
 CREATE POLICY "Super admins can view all audit logs"
   ON public.super_admin_audit_log FOR SELECT
   USING (true);
 
 -- Policy: Super admins can insert audit logs
+DROP POLICY IF EXISTS "Super admins can insert audit logs" ON public.super_admin_audit_log;
 CREATE POLICY "Super admins can insert audit logs"
   ON public.super_admin_audit_log FOR INSERT
   WITH CHECK (true);
