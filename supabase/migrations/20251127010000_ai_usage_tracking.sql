@@ -44,11 +44,13 @@ GROUP BY tenant_id, DATE(created_at), model;
 ALTER TABLE public.ai_usage_logs ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Super admins can view all AI usage
+DROP POLICY IF EXISTS "Super admins can view all AI usage" ON public.ai_usage_logs;
 CREATE POLICY "Super admins can view all AI usage"
   ON public.ai_usage_logs FOR SELECT
   USING (true);
 
 -- Policy: System can insert AI usage logs
+DROP POLICY IF EXISTS "System can insert AI usage logs" ON public.ai_usage_logs;
 CREATE POLICY "System can insert AI usage logs"
   ON public.ai_usage_logs FOR INSERT
   WITH CHECK (true);
