@@ -44,8 +44,9 @@ echo "🔍 Validando CREATE POLICY con DROP POLICY IF EXISTS..."
 
 # Validar cada archivo
 for file in $FILES_WITH_POLICIES; do
-  POLICY_COUNT=$(grep -c "CREATE POLICY" "$file" || true)
-  DROP_COUNT=$(grep -c "DROP POLICY IF EXISTS" "$file" || true)
+  # Ignorar líneas comentadas con --
+  POLICY_COUNT=$(grep -v "^[[:space:]]*--" "$file" | grep -c "CREATE POLICY" || true)
+  DROP_COUNT=$(grep -v "^[[:space:]]*--" "$file" | grep -c "DROP POLICY IF EXISTS" || true)
 
   echo ""
   echo "📄 $file"
@@ -102,8 +103,8 @@ if [ -n "$FILES_WITH_CONSTRAINTS" ]; then
   done
 
   for file in $FILES_WITH_CONSTRAINTS; do
-    ADD_COUNT=$(grep -c "ADD CONSTRAINT" "$file" || true)
-    DROP_CONSTRAINT_COUNT=$(grep -c "DROP CONSTRAINT IF EXISTS" "$file" || true)
+    ADD_COUNT=$(grep -v "^[[:space:]]*--" "$file" | grep -c "ADD CONSTRAINT" || true)
+    DROP_CONSTRAINT_COUNT=$(grep -v "^[[:space:]]*--" "$file" | grep -c "DROP CONSTRAINT IF EXISTS" || true)
 
     echo ""
     echo "📄 $file"
