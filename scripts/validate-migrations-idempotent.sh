@@ -90,6 +90,39 @@ else
 fi
 
 echo ""
+echo "🔍 Validando ADD CONSTRAINT con DROP CONSTRAINT IF EXISTS..."
+
+# Buscar archivos con ADD CONSTRAINT
+FILES_WITH_CONSTRAINTS=$(grep -l "ADD CONSTRAINT" "$MIGRATIONS_DIR"/*.sql 2>/dev/null || true)
+
+if [ -n "$FILES_WITH_CONSTRAINTS" ]; then
+  echo "📋 Archivos con ADD CONSTRAINT encontrados:"
+  echo "$FILES_WITH_CONSTRAINTS" | while read -r file; do
+    echo "   - $file"
+  done
+
+  for file in $FILES_WITH_CONSTRAINTS; do
+    ADD_COUNT=$(grep -c "ADD CONSTRAINT" "$file" || true)
+    DROP_CONSTRAINT_COUNT=$(grep -c "DROP CONSTRAINT IF EXISTS" "$file" || true)
+
+    echo ""
+    echo "📄 $file"
+    echo "   ADD CONSTRAINT: $ADD_COUNT"
+    echo "   DROP CONSTRAINT IF EXISTS: $DROP_CONSTRAINT_COUNT"
+
+    if [ "$ADD_COUNT" -ne "$DROP_CONSTRAINT_COUNT" ]; then
+      echo "   ❌ ERROR: ADD CONSTRAINT sin DROP previo"
+      echo "   ⚠️  Fallará si constraint ya existe en PRD"
+      ERRORS=$((ERRORS + 1))
+    else
+      echo "   ✅ OK: Constraints idempotentes"
+    fi
+  done
+else
+  echo "✅ No se encontraron archivos con ADD CONSTRAINT"
+fi
+
+echo ""
 echo "================================================"
 
 if [ $ERRORS -eq 0 ]; then
@@ -107,6 +140,10 @@ else
   echo "2. Para CREATE VIEW (si cambia columnas):"
   echo "   DROP VIEW IF EXISTS nombre CASCADE;"
   echo "   CREATE VIEW nombre AS ..."
+  echo ""
+  echo "3. Para ADD CONSTRAINT:"
+  echo "   ALTER TABLE tabla DROP CONSTRAINT IF EXISTS nombre;"
+  echo "   ALTER TABLE tabla ADD CONSTRAINT nombre CHECK (...);"
   echo ""
   exit 1
 fi
