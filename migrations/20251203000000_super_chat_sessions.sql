@@ -23,6 +23,7 @@ CREATE INDEX IF NOT EXISTS idx_super_chat_sessions_last_activity
 ALTER TABLE super_chat_sessions ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Allow all operations via service role (backend only)
+DROP POLICY IF EXISTS "Service role full access" ON super_chat_sessions;
 CREATE POLICY "Service role full access" ON super_chat_sessions
   FOR ALL
   USING (true)

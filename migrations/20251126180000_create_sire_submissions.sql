@@ -22,6 +22,7 @@ CREATE INDEX IF NOT EXISTS idx_sire_submissions_status ON public.sire_submission
 ALTER TABLE public.sire_submissions ENABLE ROW LEVEL SECURITY;
 
 -- Super admin can view all submissions
+DROP POLICY IF EXISTS "super_admin_view_all_submissions" ON public.sire_submissions;
 CREATE POLICY "super_admin_view_all_submissions"
   ON public.sire_submissions
   FOR SELECT

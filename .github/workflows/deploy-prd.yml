@@ -42,6 +42,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate Migrations are Idempotent (CRITICAL GATE)
+        id: validate_migrations
+        run: |
+          echo "🔍 Validando que TODAS las migraciones sean idempotentes..."
+          chmod +x scripts/validate-migrations-idempotent.sh
+          ./scripts/validate-migrations-idempotent.sh
+        continue-on-error: false
+
       # TODO: Re-enable after creating validate-rpc-functions.ts script
       # - name: Validate RPC Functions (Pre-Deploy Gate)
       #   id: validate_rpc
