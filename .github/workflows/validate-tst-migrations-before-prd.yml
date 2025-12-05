@@ -1,0 +1,79 @@
+name: Validate TST Migrations Before PRD
+
+on:
+  pull_request:
+    branches: [prd]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate-tst-migrations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Count migration files in repo
+        id: count_files
+        run: |
+          MIGRATION_COUNT=$(find migrations -maxdepth 1 -name "*.sql" -type f | wc -l)
+          echo "migration_count=$MIGRATION_COUNT" >> $GITHUB_OUTPUT
+          echo "📂 Found $MIGRATION_COUNT migration files in repo"
+
+      - name: Check TST migrations applied
+        id: check_tst
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          TST_PROJECT_ID: bddcvjoeoiekzfetvxoe
+        run: |
+          APPLIED_COUNT=$(curl -s -X POST "https://api.supabase.com/v1/projects/${TST_PROJECT_ID}/database/query" \
+            -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{"query": "SELECT COUNT(*) as count FROM supabase_migrations.schema_migrations"}' \
+            | jq -r '.[0].count')
+
+          echo "applied_count=$APPLIED_COUNT" >> $GITHUB_OUTPUT
+          echo "✅ TST has $APPLIED_COUNT migrations applied"
+
+      - name: Validate migration sync
+        env:
+          REPO_COUNT: ${{ steps.count_files.outputs.migration_count }}
+          TST_COUNT: ${{ steps.check_tst.outputs.applied_count }}
+        run: |
+          echo "================================================"
+          echo "🔍 VALIDANDO SINCRONIZACIÓN DE MIGRACIONES"
+          echo "================================================"
+          echo ""
+          echo "📂 Migraciones en repo: $REPO_COUNT"
+          echo "✅ Migraciones en TST:  $TST_COUNT"
+          echo ""
+
+          if [ "$REPO_COUNT" -ne "$TST_COUNT" ]; then
+            DIFF=$((REPO_COUNT - TST_COUNT))
+            echo "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌"
+            echo "❌ MERGE A PRD BLOQUEADO"
+            echo "❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌"
+            echo ""
+            echo "⚠️  HAY $DIFF MIGRACIÓN(ES) NO APLICADA(S) EN TST"
+            echo ""
+            echo "SOLUCIÓN:"
+            echo "1. Espera a que el deployment de TST complete"
+            echo "2. Verifica que todas las migraciones se aplicaron correctamente"
+            echo "3. Re-intenta el merge a PRD"
+            echo ""
+            echo "NUNCA mergees a PRD si TST no tiene TODAS las migraciones"
+            echo ""
+            exit 1
+          fi
+
+          echo "================================================"
+          echo "✅ TODAS LAS MIGRACIONES ESTÁN EN TST"
+          echo "================================================"
+          echo ""
+          echo "Safe to merge to PRD 🚀"
