@@ -26,7 +26,8 @@ CREATE INDEX IF NOT EXISTS idx_ai_usage_conversation ON public.ai_usage_logs(con
 CREATE INDEX IF NOT EXISTS idx_ai_usage_model ON public.ai_usage_logs(model);
 
 -- Vista agregada: AI Usage Stats
-CREATE OR REPLACE VIEW public.v_ai_usage_stats AS
+DROP VIEW IF EXISTS public.v_ai_usage_stats CASCADE;
+CREATE VIEW public.v_ai_usage_stats AS
 SELECT
   tenant_id,
   DATE(created_at) as usage_date,
