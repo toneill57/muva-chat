@@ -93,40 +93,16 @@ jobs:
           strip_components: 0
           overwrite: true
 
-      # TODO: Re-enable if needed
-      # - name: Install PostgreSQL Client
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y postgresql-client
-
-      # - name: Backup Production Database
-      #   id: backup
-      #   run: pnpm dlx tsx scripts/backup-prd-db.ts
-      #   env:
-      #     SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-      #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
-      #     GITHUB_SHA: ${{ github.sha }}
-      #   continue-on-error: false
-
-      # - name: Upload Backup to Artifacts
-      #   if: steps.backup.outcome == 'success'
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: prd-backup-${{ github.sha }}
-      #     path: backups/prd-*.sql.gz
-      #     retention-days: 30
-
-      # - name: Apply Supabase Migrations
-      #   id: migrations
-      #   run: pnpm dlx tsx scripts/apply-migrations-prd.ts
-      #   env:
-      #     SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-      #     SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
-      #     SUPABASE_DB_PASSWORD_PRD: ${{ secrets.PRD_SUPABASE_DB_PASSWORD }}
-      #   continue-on-error: true
+      - name: Apply Supabase Migrations
+        id: migrations
+        run: pnpm dlx tsx scripts/apply-migrations-prd.ts
+        env:
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        continue-on-error: false
 
       - name: Deploy to VPS Production
-        # if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
+        if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
         id: deploy
         uses: appleboy/ssh-action@v1.0.0
         env:
