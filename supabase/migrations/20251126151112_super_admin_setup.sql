@@ -40,7 +40,8 @@ CREATE POLICY "Super admins can update themselves"
 -- ================================================
 
 -- Vista: Platform Metrics (métricas globales)
-CREATE OR REPLACE VIEW v_platform_metrics AS
+DROP VIEW IF EXISTS v_platform_metrics CASCADE;
+CREATE VIEW v_platform_metrics AS
 SELECT
   (SELECT COUNT(*) FROM tenant_registry WHERE is_active = true) as active_tenants,
   (SELECT COUNT(*) FROM tenant_registry) as total_tenants,
@@ -50,7 +51,8 @@ SELECT
   now() as snapshot_at;
 
 -- Vista: Tenant Stats (estadísticas por tenant)
-CREATE OR REPLACE VIEW v_tenant_stats AS
+DROP VIEW IF EXISTS v_tenant_stats CASCADE;
+CREATE VIEW v_tenant_stats AS
 SELECT
   t.tenant_id,
   t.subdomain,
