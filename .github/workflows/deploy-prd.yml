@@ -96,6 +96,7 @@ jobs:
           host: ${{ secrets.PRD_VPS_HOST }}
           username: ${{ secrets.PRD_VPS_USER }}
           key: ${{ secrets.PRD_VPS_SSH_KEY }}
+          port: 2244
           source: ".next,public,package.json,pnpm-lock.yaml"
           target: "/var/www/muva-chat-prd/"
           strip_components: 0
@@ -121,6 +122,7 @@ jobs:
           host: ${{ secrets.PRD_VPS_HOST }}
           username: ${{ secrets.PRD_VPS_USER }}
           key: ${{ secrets.PRD_VPS_SSH_KEY }}
+          port: 2244
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
             set -e  # Exit immediately on any error
