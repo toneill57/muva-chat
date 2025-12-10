@@ -51,6 +51,7 @@ jobs:
           host: ${{ github.event.inputs.environment == 'prd' && secrets.PRD_VPS_HOST || secrets.TST_VPS_HOST }}
           username: ${{ github.event.inputs.environment == 'prd' && secrets.PRD_VPS_USER || secrets.TST_VPS_USER }}
           key: ${{ github.event.inputs.environment == 'prd' && secrets.PRD_VPS_SSH_KEY || secrets.TST_VPS_SSH_KEY }}
+          port: 2244
           script: |
             set -e
 
