@@ -10,7 +10,7 @@
   },
   "scripts": {
     "benchmark-detailed": "node scripts/detailed-benchmark.js",
-    "build": "next build --turbopack",
+    "build": "next build",
     "clean": "rm -rf .next node_modules/.cache data/temp logs/*.log && echo '✅ Cache limpiado'",
     "clean:deep": "pnpm run clean && rm -rf node_modules && echo '✅ Reinstalando dependencias...' && pnpm install",
     "clear-database": "node scripts/clear-database.js",
