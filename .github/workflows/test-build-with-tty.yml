@@ -1,0 +1,62 @@
+name: Test Build with TTY
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build with TTY emulation
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        with:
+          host: ${{ secrets.PROD_VPS_HOST }}
+          username: ${{ secrets.PROD_VPS_USER }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          port: 2244
+          command_timeout: 15m
+          envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
+          script: |
+            cd /var/www/muva-chat-prd
+
+            echo "=== Creating .env.local ==="
+            {
+              echo "# Supabase - PRODUCTION DATABASE (ooaumjzaztmutltifhoq)"
+              echo "NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co"
+              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk"
+              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc"
+              echo ""
+              echo "# AI APIs"
+              echo "OPENAI_API_KEY=$OPENAI_API_KEY"
+              echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
+              echo ""
+              echo "# JWT (PRODUCTION SPECIFIC)"
+              echo "JWT_SECRET_KEY=LGqZ/SgchZzT8Oee99uPP5FljEewJFC+2pUSEzEAc6firJoKk2JBxWNicAf7Hm6aZ25pTZDQE7nWaSfC/Ndidg=="
+              echo ""
+              echo "# Node Environment"
+              echo "NODE_ENV=production"
+            } > .env.local
+
+            echo ""
+            echo "=== Verifying .env.local exists ==="
+            ls -la .env.local
+            echo "Size: $(wc -l < .env.local) lines"
+
+            echo ""
+            echo "=== TEST 1: Build with script -c (TTY emulation) ==="
+            script -q -c "pnpm run build" /dev/null 2>&1 || echo "Build with script failed"
+
+            echo ""
+            echo "=== TEST 2: Build with unbuffer ==="
+            which unbuffer && unbuffer pnpm run build 2>&1 || echo "unbuffer not available or build failed"
+
+            echo ""
+            echo "=== TEST 3: Build with timeout and verbose ==="
+            timeout 120 pnpm run build 2>&1 || echo "Build timed out or failed"
+
+            echo ""
+            echo "=== TEST 4: Check if .next was created ==="
+            ls -la .next/ 2>/dev/null && echo ".next directory exists" || echo "No .next directory"
