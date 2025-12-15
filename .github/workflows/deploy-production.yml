@@ -75,123 +75,26 @@ jobs:
           port: 2244
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
-            set -e  # Exit immediately on any error
-
-            echo "================================================"
-            echo "🚀 MUVA Chat PRODUCTION Deployment - Starting"
-            echo "================================================"
-
-            # Change to production directory
             cd /var/www/muva-chat-prd
-            echo "✅ Current directory: $(pwd)"
 
-            # Validate it's a git repository
-            if [ ! -d ".git" ]; then
-              echo "❌ ERROR: Not a git repository"
-              echo "Current directory: $(pwd)"
-              exit 1
-            fi
-            echo "✅ Git repository verified"
-
-            # Show current git status before pull
-            echo ""
-            echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-            echo "Current commit: $(git log -1 --oneline)"
-
-            # Fetch and reset to main branch (force production to match main exactly)
-            echo ""
-            echo "Fetching latest changes from main branch..."
+            # Pull latest code
             git fetch origin main
-
-            echo "Resetting to origin/main (discarding any local changes)..."
             git reset --hard origin/main
 
-            # Show new commit
-            echo "New commit: $(git log -1 --oneline)"
+            # Create .env.local
+            cat > .env.local << 'EOF'
+            NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk"
+            SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc"
+            OPENAI_API_KEY=$OPENAI_API_KEY
+            ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
+            JWT_SECRET_KEY=LGqZ/SgchZzT8Oee99uPP5FljEewJFC+2pUSEzEAc6firJoKk2JBxWNicAf7Hm6aZ25pTZDQE7nWaSfC/Ndidg==
+            NODE_ENV=production
+            EOF
 
-            # Fix ecosystem config for Node 20 (CommonJS vs ES modules)
-            echo ""
-            echo "Fixing ecosystem config..."
-            if [ -f "ecosystem.config.js" ]; then
-              mv ecosystem.config.js ecosystem.config.cjs
-              echo "✅ Renamed ecosystem.config.js to .cjs"
-            fi
-
-            # Validate package.json exists
-            if [ ! -f "package.json" ]; then
-              echo "❌ ERROR: package.json not found in $(pwd)"
-              echo "Directory contents:"
-              ls -la
-              exit 1
-            fi
-            echo "✅ package.json found"
-
-            # Create production environment file from GitHub Secrets
-            echo ""
-            echo "Creating .env.local from GitHub Secrets..."
-            {
-              echo "# Supabase - PRODUCTION DATABASE (ooaumjzaztmutltifhoq)"
-              echo "NEXT_PUBLIC_SUPABASE_URL=https://ooaumjzaztmutltifhoq.supabase.co"
-              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4NTQyMDksImV4cCI6MjA3MjQzMDIwOX0.HapBSfCjxBuUijFQvQIgu8Y44YI3OPL6Gr45RKTw-Fk"
-              echo "SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXVtanphenRtdXRsdGlmaG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Njg1NDIwOSwiZXhwIjoyMDcyNDMwMjA5fQ.ngQSR4E9UHWLcbDAhi0QJy3ffriuV2bi4rGxyHy8Eoc"
-              echo ""
-              echo "# AI APIs"
-              echo "OPENAI_API_KEY=$OPENAI_API_KEY"
-              echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
-              echo ""
-              echo "# JWT (PRODUCTION SPECIFIC)"
-              echo "JWT_SECRET_KEY=LGqZ/SgchZzT8Oee99uPP5FljEewJFC+2pUSEzEAc6firJoKk2JBxWNicAf7Hm6aZ25pTZDQE7nWaSfC/Ndidg=="
-              echo ""
-              echo "# Node Environment"
-              echo "NODE_ENV=production"
-            } > .env.local
-            echo "✅ Environment configured for production"
-
-            # Stop PM2 before build (prevents process interference)
-            echo ""
-            echo "Stopping PM2 processes..."
-            pm2 stop all || true
-
-            # Clean build cache first
-            echo ""
-            echo "Cleaning build cache..."
-            rm -rf .next
-            echo "✅ Build cache cleaned"
-
-            # Force reinstall dependencies (rebuilds native modules for Node 20)
-            echo ""
-            echo "Force reinstalling dependencies..."
-            rm -rf node_modules
-            pnpm install --frozen-lockfile
-            echo "✅ Dependencies reinstalled"
-
-            # Build application
-            echo ""
-            echo "Building application..."
-            pnpm run build
-            echo "✅ Build completed"
-
-            # Validate RPC Functions on VPS (post-deploy)
-            echo ""
-            echo "Validating RPC functions..."
-            pnpm run validate:rpc -- --env=production || echo "⚠️  RPC validation warning (non-blocking)"
-
-            # Restart PM2 process with correct config
-            echo ""
-            echo "Restarting PM2 process..."
-            pm2 delete muva-chat-prd 2>/dev/null || true
-            pm2 start ecosystem.config.cjs
-            pm2 save
-            echo "✅ PM2 process restarted"
-
-            echo ""
-            echo "Current PM2 status:"
-            pm2 list
-
-            echo ""
-            echo "================================================"
-            echo "✅ PRODUCTION Deployment completed successfully"
-            echo "================================================"
+            # Run deployment script
+            chmod +x scripts/deploy-to-vps.sh
+            bash scripts/deploy-to-vps.sh
 
       - name: Wait for application startup
         if: steps.deploy.outcome == 'success'
