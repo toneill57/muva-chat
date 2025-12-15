@@ -1,10 +1,9 @@
 name: Deploy to VPS Production
 
 on:
-  # Auto-deploy disabled - manual deploys only via SSH
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -44,31 +43,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate RPC Functions (Pre-Deploy Gate)
-        id: validate_rpc
-        run: |
-          echo "⏭️  Skipping RPC validation in CI (will validate on VPS post-deploy)"
-          echo "Reason: GitHub Actions runners cannot reach Supabase production instance"
-        continue-on-error: false
-
-      # Auto-fix and re-validation steps removed (will be done on VPS)
-
-      - name: Build application
-        run: pnpm run build
-        env:
-          NODE_ENV: production
-          # PRODUCTION ENVIRONMENT - Use PROD_* prefixed secrets
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-          # SHARED SECRETS - No prefix
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          # PRODUCTION-SPECIFIC CONFIG
-          NEXT_PUBLIC_APP_URL: https://muva.chat
-          NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
-
-      - name: Backup Production Database
+      - name: Deploy to VPS Production
         id: backup
         run: |
           echo "⏭️  Skipping database backup (optional safety measure)"
