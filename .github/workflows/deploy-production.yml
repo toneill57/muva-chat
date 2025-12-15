@@ -139,30 +139,7 @@ jobs:
             } > .env.local
             echo "✅ Environment configured for production"
 
-            # Install dependencies
-            echo ""
-            echo "Installing dependencies..."
-            pnpm install --frozen-lockfile
-            echo "✅ Dependencies installed"
-
-            # Clean build cache
-            echo ""
-            echo "Cleaning build cache..."
-            rm -rf .next
-            echo "✅ Build cache cleaned"
-
-            # Build application
-            echo ""
-            echo "Building application..."
-            pnpm run build
-            echo "✅ Build completed"
-
-            # Validate RPC Functions on VPS (post-deploy)
-            echo ""
-            echo "Validating RPC functions..."
-            pnpm run validate:rpc -- --env=production || echo "⚠️  RPC validation warning (non-blocking)"
-
-            # Reload PM2 process
+            # Reload PM2 process (no build - use existing)
             echo ""
             echo "Reloading PM2 process (muva-chat-prd)..."
             pm2 restart muva-chat-prd
