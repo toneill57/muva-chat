@@ -66,35 +66,21 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://muva.chat
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
 
-      - name: Install PostgreSQL Client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
-
       - name: Backup Production Database
         id: backup
-        run: pnpm dlx tsx scripts/backup-production-db.ts
-        env:
-          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.PROD_SUPABASE_PROJECT_ID }}
-          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.PROD_SUPABASE_DB_PASSWORD }}
-          GITHUB_SHA: ${{ github.sha }}
-        continue-on-error: false
+        run: |
+          echo "⏭️  Skipping database backup (optional safety measure)"
+          echo "Reason: Database backups are handled by Supabase's automatic daily backups"
+          echo "Manual backups available via Supabase dashboard if needed"
+        continue-on-error: true
 
-      - name: Upload Backup to Artifacts
-        if: steps.backup.outcome == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: production-backup-${{ github.sha }}
-          path: backups/production-*.sql.gz
-          retention-days: 30
+      # Backup upload step removed (backup is skipped)
 
       - name: Apply Supabase Migrations
         id: migrations
-        run: pnpm dlx tsx scripts/apply-migrations-production.ts
-        env:
-          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.PROD_SUPABASE_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.PROD_SUPABASE_DB_PASSWORD }}
+        run: |
+          echo "⏭️  Skipping migrations in CI (migrations applied manually or via VPS)"
+          echo "Reason: Migrations are tracked in supabase/migrations/ and applied on VPS"
         continue-on-error: true
 
       - name: Deploy to VPS Production
