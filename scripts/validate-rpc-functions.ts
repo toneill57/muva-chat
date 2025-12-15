@@ -79,7 +79,14 @@ const getEnvVars = (environment: string) => {
       url: process.env.STAGING_SUPABASE_URL!,
       key: process.env.STAGING_SUPABASE_SERVICE_ROLE_KEY!,
     };
+  } else if (environment === 'production') {
+    // Support both PROD_ prefix (CI/CD) and standard names (local)
+    return {
+      url: process.env.PROD_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      key: process.env.PROD_SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    };
   } else {
+    // Dev environment
     return {
       url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
       key: process.env.SUPABASE_SERVICE_ROLE_KEY!,
