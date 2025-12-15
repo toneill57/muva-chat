@@ -32,7 +32,7 @@
     "populate-embeddings": "node scripts/populate-embeddings.js",
     "pre-deploy": "pnpm run validate-env && pnpm run lint && pnpm run build",
     "prebuild": "pnpm dlx tsx scripts/build-welcome-message.ts",
-    "postinstall": "node scripts/check-node-version.js",
+    "postinstall": "node scripts/check-node-version.cjs",
     "remap:manual-ids": "tsx scripts/smart-remap-manual-ids.ts",
     "setup-pgvector": "node scripts/setup-vector-function.js",
     "start": "next start",
