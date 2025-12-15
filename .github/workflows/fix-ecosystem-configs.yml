@@ -1,0 +1,52 @@
+name: Fix Ecosystem Configs for Node 20
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rename ecosystem configs to .cjs
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PROD_VPS_HOST }}
+          username: ${{ secrets.PROD_VPS_USER }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          port: 2244
+          script: |
+            echo "=== Fixing production ecosystem config ==="
+            cd /var/www/muva-chat-prd
+            if [ -f ecosystem.config.js ]; then
+              mv ecosystem.config.js ecosystem.config.cjs
+              echo "✅ Renamed to ecosystem.config.cjs"
+            else
+              echo "⚠️  No ecosystem.config.js found"
+            fi
+
+            echo ""
+            echo "=== Fixing staging ecosystem config ==="
+            cd /var/www/muva-chat-tst
+            if [ -f ecosystem.config.js ]; then
+              mv ecosystem.config.js ecosystem.config.cjs
+              echo "✅ Renamed to ecosystem.config.cjs"
+            else
+              echo "⚠️  No ecosystem.config.js found"
+            fi
+
+            echo ""
+            echo "=== Restarting PM2 with fixed configs ==="
+            pm2 delete all
+            pm2 kill
+
+            cd /var/www/muva-chat-prd
+            pm2 start ecosystem.config.cjs
+            pm2 save
+
+            cd /var/www/muva-chat-tst
+            pm2 start ecosystem.config.cjs
+            pm2 save
+
+            echo ""
+            echo "=== PM2 Status ==="
+            pm2 list
