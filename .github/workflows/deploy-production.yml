@@ -147,6 +147,11 @@ jobs:
             } > .env.local
             echo "✅ Environment configured for production"
 
+            # Stop PM2 before build (prevents process interference)
+            echo ""
+            echo "Stopping PM2 processes..."
+            pm2 stop all || true
+
             # Clean build cache first
             echo ""
             echo "Cleaning build cache..."
