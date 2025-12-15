@@ -122,103 +122,36 @@ jobs:
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
           key: ${{ secrets.STAGING_VPS_SSH_KEY }}
+          port: 2244
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
-            set -e  # Exit immediately on any error
-
-            echo "================================================"
-            echo "🚀 MUVA Chat STAGING Deployment - Starting"
-            echo "================================================"
-
-            # Change to staging directory
             cd /var/www/muva-chat-staging
-            echo "✅ Current directory: $(pwd)"
 
-            # Validate it's a git repository
-            if [ ! -d ".git" ]; then
-              echo "❌ ERROR: Not a git repository"
-              echo "Current directory: $(pwd)"
-              exit 1
-            fi
-            echo "✅ Git repository verified"
+            # Pull latest code using fetch + hard reset (avoids fast-forward issues)
+            git fetch origin staging
+            git reset --hard origin/staging
 
-            # Show current git status before pull
-            echo ""
-            echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-            echo "Current commit: $(git log -1 --oneline)"
+            # Create .env.local from GitHub Secrets
+            cat > .env.local << 'EOF'
+            # Supabase - STAGING DATABASE (hoaiwcueleiemeplrurv)
+            NEXT_PUBLIC_SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }}
+            NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+            SUPABASE_SERVICE_ROLE_KEY=${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
 
-            # Pull latest changes from staging branch
-            echo ""
-            echo "Pulling latest changes from staging branch..."
-            git pull --ff-only origin staging
+            # AI APIs
+            OPENAI_API_KEY=$OPENAI_API_KEY
+            ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY
 
-            # Show new commit
-            echo "New commit: $(git log -1 --oneline)"
+            # JWT
+            JWT_SECRET_KEY=${{ secrets.STAGING_JWT_SECRET }}
 
-            # Validate package.json exists
-            if [ ! -f "package.json" ]; then
-              echo "❌ ERROR: package.json not found in $(pwd)"
-              echo "Directory contents:"
-              ls -la
-              exit 1
-            fi
-            echo "✅ package.json found"
+            # Node Environment
+            NODE_ENV=production
+            EOF
 
-            # Create staging environment file from GitHub Secrets
-            echo ""
-            echo "Creating .env.local from GitHub Secrets..."
-            {
-              echo "# Supabase - STAGING DATABASE (hoaiwcueleiemeplrurv)"
-              echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.STAGING_SUPABASE_URL }}"
-              echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.STAGING_SUPABASE_ANON_KEY }}"
-              echo "SUPABASE_SERVICE_ROLE_KEY=${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}"
-              echo ""
-              echo "# AI APIs"
-              echo "OPENAI_API_KEY=$OPENAI_API_KEY"
-              echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
-              echo ""
-              echo "# JWT"
-              echo "JWT_SECRET_KEY=${{ secrets.STAGING_JWT_SECRET }}"
-              echo ""
-              echo "# Node Environment"
-              echo "NODE_ENV=production"
-            } > .env.local
-            echo "✅ Environment configured for staging"
-
-            # Install dependencies
-            echo ""
-            echo "Installing dependencies..."
-            pnpm install --frozen-lockfile
-            echo "✅ Dependencies installed"
-
-            # Clean build cache
-            echo ""
-            echo "Cleaning build cache..."
-            rm -rf .next
-            echo "✅ Build cache cleaned"
-
-            # Build application
-            echo ""
-            echo "Building application..."
-            pnpm run build
-            echo "✅ Build completed"
-
-            # Reload PM2 process
-            echo ""
-            echo "Reloading PM2 process (muva-chat-staging)..."
-            pm2 restart muva-chat-staging
-            pm2 save
-            echo "✅ PM2 reloaded"
-
-            # Show PM2 status
-            echo ""
-            echo "PM2 Status:"
-            pm2 status muva-chat-staging
-
-            echo ""
-            echo "================================================"
-            echo "✅ STAGING Deployment completed successfully"
-            echo "================================================"
+            # Run deployment script
+            chmod +x scripts/deploy-to-vps-staging.sh
+            bash scripts/deploy-to-vps-staging.sh
 
       - name: Health Check (Post-Deploy via SSH)
         if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
@@ -254,6 +187,7 @@ jobs:
           host: ${{ secrets.STAGING_VPS_HOST }}
           username: ${{ secrets.STAGING_VPS_USER }}
           key: ${{ secrets.STAGING_VPS_SSH_KEY }}
+          port: 2244
           script: |
             set -e
 
@@ -266,12 +200,19 @@ jobs:
             # Show current commit
             echo "Failed commit: $(git log -1 --oneline)"
 
-            # Reset to previous commit
+            # Fetch and reset to previous commit
+            git fetch origin staging
             git reset --hard HEAD~1
 
             echo "Rolled back to: $(git log -1 --oneline)"
 
+            # Fix ecosystem config
+            if [ -f "ecosystem.config.js" ]; then
+              mv ecosystem.config.js ecosystem.config.cjs
+            fi
+
             # Reinstall dependencies (in case package.json changed)
+            rm -rf .next
             pnpm install --frozen-lockfile
 
             # Rebuild
