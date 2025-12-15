@@ -1,0 +1,51 @@
+name: Install Node 20 LTS on VPS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Node 20 LTS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PROD_VPS_HOST }}
+          username: ${{ secrets.PROD_VPS_USER }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          port: 2244
+          command_timeout: 10m
+          script: |
+            echo "=== Removing Node 22 ==="
+            apt-get remove -y nodejs || true
+
+            echo ""
+            echo "=== Installing Node 20 LTS from NodeSource ==="
+            curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+            apt-get install -y nodejs
+
+            echo ""
+            echo "=== Verifying installation ==="
+            node --version
+            npm --version
+
+            echo ""
+            echo "=== Installing pnpm globally ==="
+            npm install -g pnpm@10.20.0
+
+            echo ""
+            echo "=== Verifying pnpm ==="
+            pnpm --version
+
+            echo ""
+            echo "=== Rebuilding node_modules with Node 20 ==="
+            cd /var/www/muva-chat-prd
+            rm -rf node_modules .next
+            pnpm install --frozen-lockfile
+
+            echo ""
+            echo "=== Testing build with Node 20 ==="
+            pnpm run build
+
+            echo ""
+            echo "=== SUCCESS! Build works with Node 20 ==="
