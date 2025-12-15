@@ -21,7 +21,7 @@ module.exports = {
       name: 'muva-chat',
       script: 'npm',
       args: 'start',
-      cwd: '/var/www/muva-chat',
+      cwd: '/var/www/muva-chat-prd',
       instances: 1,
       exec_mode: 'cluster',
 
