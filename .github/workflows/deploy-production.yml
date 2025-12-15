@@ -162,12 +162,15 @@ jobs:
             echo "Validating RPC functions..."
             pnpm run validate:rpc -- --env=production || echo "⚠️  RPC validation warning (non-blocking)"
 
-            # PLACEHOLDER: PM2 restart will be updated with correct process name
+            # Restart PM2 process
             echo ""
-            echo "Checking PM2 processes..."
+            echo "Restarting PM2 process..."
+            pm2 restart muva-chat-prd
+            echo "✅ PM2 process restarted"
+
+            echo ""
+            echo "Current PM2 status:"
             pm2 list
-            echo ""
-            echo "⚠️  PM2 restart step needs correct process name - check VPS first"
 
             echo ""
             echo "================================================"
@@ -198,9 +201,9 @@ jobs:
           echo ""
           echo "Manual rollback available via VPS if needed:"
           echo "  ssh -p 2244 root@195.200.6.216"
-          echo "  cd /var/www/muva-chat"
+          echo "  cd /var/www/muva-chat-prd"
           echo "  git reset --hard HEAD~1"
-          echo "  pnpm install && pnpm run build && pm2 restart muva-chat"
+          echo "  pnpm install && pnpm run build && pm2 restart muva-chat-prd"
           echo ""
 
       # Automatic rollback removed - manual rollback via SSH if needed
@@ -213,8 +216,8 @@ jobs:
           echo "🎉 PRODUCTION DEPLOYMENT SUCCESSFUL"
           echo "================================================"
           echo "📦 Environment: PRODUCTION"
-          echo "📂 VPS Path: /var/www/muva-chat"
-          echo "🔧 PM2 Process: muva-chat"
+          echo "📂 VPS Path: /var/www/muva-chat-prd"
+          echo "🔧 PM2 Process: muva-chat-prd"
           echo "🌐 URL: https://muva.chat"
           echo "💾 Backup: Available in artifacts"
           echo "================================================"
@@ -231,6 +234,6 @@ jobs:
           echo ""
           echo "🔧 Manual rollback if needed:"
           echo "   ssh -p 2244 root@195.200.6.216"
-          echo "   cd /var/www/muva-chat && git reset --hard HEAD~1"
-          echo "   pnpm install && pnpm run build && pm2 restart muva-chat"
+          echo "   cd /var/www/muva-chat-prd && git reset --hard HEAD~1"
+          echo "   pnpm install && pnpm run build && pm2 restart muva-chat-prd"
           echo "================================================"
