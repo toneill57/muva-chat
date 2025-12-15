@@ -212,89 +212,22 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
         continue-on-error: true
 
-      - name: Rollback on Failure
-        if: |
-          failure() ||
-          steps.migrations.outcome == 'failure' ||
-          steps.deploy.outcome == 'failure' ||
-          steps.health_check.outcome == 'failure'
+      - name: Log Deployment Failure
+        if: failure()
         run: |
           echo ""
           echo "================================================"
-          echo "⚠️  PRODUCTION DEPLOYMENT FAILED - INITIATING ROLLBACK"
+          echo "⚠️  PRODUCTION DEPLOYMENT FAILED"
           echo "================================================"
           echo ""
-
-          # Rollback migration records (using production script)
-          pnpm dlx tsx scripts/rollback-production.ts --steps=1
-        env:
-          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.PROD_SUPABASE_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.PROD_SUPABASE_DB_PASSWORD }}
-
-      - name: Rollback VPS Deployment
-        if: |
-          failure() ||
-          steps.migrations.outcome == 'failure' ||
-          steps.deploy.outcome == 'failure' ||
-          steps.health_check.outcome == 'failure'
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.PROD_VPS_HOST }}
-          username: ${{ secrets.PROD_VPS_USER }}
-          key: ${{ secrets.PROD_VPS_SSH_KEY }}
-          script: |
-            set -e
-
-            echo "================================================"
-            echo "🔄 ROLLBACK - Reverting to previous version"
-            echo "================================================"
-
-            cd /var/www/muva-chat
-
-            # Show current commit
-            echo "Failed commit: $(git log -1 --oneline)"
-
-            # Reset to previous commit
-            git reset --hard HEAD~1
-
-            echo "Rolled back to: $(git log -1 --oneline)"
-
-            # Reinstall dependencies (in case package.json changed)
-            pnpm install --frozen-lockfile
-
-            # Rebuild
-            pnpm run build
-
-            # Reload PM2
-            pm2 restart muva-chat
-            pm2 save
-
-            # Wait and verify
-            sleep 10
-
-            echo ""
-            echo "PM2 Status after rollback:"
-            pm2 status muva-chat
-
-            echo ""
-            echo "================================================"
-            echo "✅ Rollback completed"
-            echo "================================================"
-
-      - name: Restore Database from Backup (Manual Trigger Only)
-        if: failure() && github.event_name == 'workflow_dispatch'
-        run: |
+          echo "Manual rollback available via VPS if needed:"
+          echo "  ssh -p 2244 root@195.200.6.216"
+          echo "  cd /var/www/muva-chat"
+          echo "  git reset --hard HEAD~1"
+          echo "  pnpm install && pnpm run build && pm2 restart muva-chat"
           echo ""
-          echo "================================================"
-          echo "💾 Restoring database from backup"
-          echo "================================================"
-          echo ""
-          pnpm dlx tsx scripts/rollback-production.ts --restore-db
-        env:
-          SUPABASE_PRODUCTION_PROJECT_ID: ${{ secrets.PROD_SUPABASE_PROJECT_ID }}
-          SUPABASE_SERVICE_ROLE_KEY_PRODUCTION: ${{ secrets.PROD_SUPABASE_SERVICE_ROLE_KEY }}
-          SUPABASE_DB_PASSWORD_PRODUCTION: ${{ secrets.PROD_SUPABASE_DB_PASSWORD }}
+
+      # Automatic rollback removed - manual rollback via SSH if needed
 
       - name: Notify Success
         if: success()
@@ -318,9 +251,10 @@ jobs:
           echo "❌ PRODUCTION DEPLOYMENT FAILED"
           echo "================================================"
           echo "📦 Environment: PRODUCTION"
-          echo "⚠️  Rollback was executed"
-          echo "💾 Database backup available in artifacts"
           echo "📋 Check logs above for details"
           echo ""
-          echo "🚨 CRITICAL: Manual review required"
+          echo "🔧 Manual rollback if needed:"
+          echo "   ssh -p 2244 root@195.200.6.216"
+          echo "   cd /var/www/muva-chat && git reset --hard HEAD~1"
+          echo "   pnpm install && pnpm run build && pm2 restart muva-chat"
           echo "================================================"
