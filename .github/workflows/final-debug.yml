@@ -1,0 +1,44 @@
+name: Final Debug - Compare Working vs Failing
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compare working vs failing scenarios
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        with:
+          host: ${{ secrets.PROD_VPS_HOST }}
+          username: ${{ secrets.PROD_VPS_USER }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          port: 2244
+          command_timeout: 20m
+          envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
+          script: |
+            cd /var/www/muva-chat-prd
+
+            echo "=== CHECK 1: Verify Node version ==="
+            node --version
+            which node
+
+            echo ""
+            echo "=== CHECK 2: Try next build directly (without pnpm) ==="
+            ./node_modules/.bin/next build 2>&1
+
+            echo ""
+            echo "=== If that failed, CHECK 3: Try with strace to see system calls ==="
+            timeout 10 strace -e trace=open,openat,stat ./node_modules/.bin/next build 2>&1 | head -100 || echo "Strace failed or timed out"
+
+            echo ""
+            echo "=== CHECK 4: Verify next binary is executable and correct ==="
+            file ./node_modules/.bin/next
+            head -5 ./node_modules/.bin/next
+
+            echo ""
+            echo "=== CHECK 5: Check if there are any errors in package manager ==="
+            pnpm why next
