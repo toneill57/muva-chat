@@ -32,8 +32,15 @@ jobs:
         run: |
           COMMAND="${{ github.event.inputs.command }}"
 
-          # Lista de comandos peligrosos (bloqueados)
-          DANGEROUS_PATTERNS="rm -rf|mkfs|dd if=|format|fdisk|parted|shutdown|reboot|init 0|init 6|halt|poweroff|:(){ :|:& };:"
+          # Bloquear rm -rf específicamente (pero permitir rm -f)
+          if echo "$COMMAND" | grep -qE "rm\s+(-[a-z]*r[a-z]*f|--recursive|--force.*--recursive)"; then
+            echo "❌ ERROR: Comando bloqueado por seguridad: rm -rf"
+            echo "Comando rechazado: $COMMAND"
+            exit 1
+          fi
+
+          # Lista de otros comandos peligrosos (bloqueados)
+          DANGEROUS_PATTERNS="mkfs|dd if=|format|fdisk|parted|shutdown|reboot|init 0|init 6|halt|poweroff|:(){ :|:& };:"
 
           for pattern in $DANGEROUS_PATTERNS; do
             if echo "$COMMAND" | grep -qi "$pattern"; then
