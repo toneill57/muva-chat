@@ -158,11 +158,12 @@ jobs:
             rm -rf .next
             echo "✅ Build cache cleaned"
 
-            # Install/update dependencies (will rebuild native modules if needed)
+            # Force reinstall dependencies (rebuilds native modules for Node 20)
             echo ""
-            echo "Installing dependencies..."
+            echo "Force reinstalling dependencies..."
+            rm -rf node_modules
             pnpm install --frozen-lockfile
-            echo "✅ Dependencies installed"
+            echo "✅ Dependencies reinstalled"
 
             # Build application
             echo ""
