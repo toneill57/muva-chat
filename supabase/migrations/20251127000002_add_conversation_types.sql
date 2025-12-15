@@ -15,6 +15,8 @@ ALTER TABLE public.guest_conversations
 
 -- Step 3: Add constraint: authenticated conversations MUST have guest_id
 ALTER TABLE public.guest_conversations
+  DROP CONSTRAINT IF EXISTS guest_id_required_for_authenticated;
+ALTER TABLE public.guest_conversations
   ADD CONSTRAINT guest_id_required_for_authenticated
   CHECK (
     (conversation_type = 'authenticated' AND guest_id IS NOT NULL) OR

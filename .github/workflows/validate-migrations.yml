@@ -3,8 +3,6 @@ name: Validate Migrations Sync
 on:
   pull_request:
     branches: [dev, tst, prd]
-  push:
-    branches: [dev, tst, prd]
 
 jobs:
   validate:
@@ -34,7 +32,7 @@ jobs:
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/tst' || github.ref == 'refs/heads/prd'
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '24.5.0'
 
       - name: Validate database sync (DEV)
         if: github.ref == 'refs/heads/dev'
