@@ -1,0 +1,76 @@
+name: Fix Ports AUTOMATIC (ONE TIME)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fix-ports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fix Staging Ports
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.TST_VPS_HOST }}
+          username: ${{ secrets.TST_VPS_USER }}
+          key: ${{ secrets.TST_VPS_SSH_KEY }}
+          port: 2244
+          script: |
+            cd /var/www/muva-chat-tst
+            cp ecosystem.config.js ecosystem.config.js.backup-$(date +%Y%m%d) || true
+            cat > ecosystem.config.js << 'EOF'
+            module.exports = {
+              apps: [{
+                name: 'muva-chat-tst',
+                script: 'npm',
+                args: 'start',
+                cwd: '/var/www/muva-chat-tst',
+                instances: 1,
+                exec_mode: 'cluster',
+                env: {
+                  NODE_ENV: 'production',
+                  PORT: 3001,
+                  HOSTNAME: '127.0.0.1'
+                }
+              }]
+            };
+            EOF
+            pm2 delete muva-chat-tst 2>/dev/null || true
+            pm2 start ecosystem.config.js
+            pm2 save
+            echo "✅ Staging port fixed"
+            netstat -tlnp | grep 3001
+
+      - name: Fix Production Ports
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PROD_VPS_HOST }}
+          username: ${{ secrets.PROD_VPS_USER }}
+          key: ${{ secrets.PROD_VPS_SSH_KEY }}
+          port: 2244
+          script: |
+            cd /var/www/muva-chat-prd
+            cp ecosystem.config.js ecosystem.config.js.backup-$(date +%Y%m%d) || true
+            cat > ecosystem.config.js << 'EOF'
+            module.exports = {
+              apps: [{
+                name: 'muva-chat-prd',
+                script: 'npm',
+                args: 'start',
+                cwd: '/var/www/muva-chat-prd',
+                instances: 1,
+                exec_mode: 'cluster',
+                env: {
+                  NODE_ENV: 'production',
+                  PORT: 3000,
+                  HOSTNAME: '127.0.0.1'
+                }
+              }]
+            };
+            EOF
+            pm2 delete muva-chat-prd 2>/dev/null || true
+            pm2 start ecosystem.config.js
+            pm2 save
+            echo "✅ Production port fixed"
+            netstat -tlnp | grep 3000
