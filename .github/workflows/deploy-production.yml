@@ -105,7 +105,7 @@ jobs:
             echo "================================================"
 
             # Change to production directory
-            cd /var/www/muva-chat
+            cd /var/www/muva-chat-prd
             echo "✅ Current directory: $(pwd)"
 
             # Validate it's a git repository
@@ -184,15 +184,15 @@ jobs:
 
             # Reload PM2 process
             echo ""
-            echo "Reloading PM2 process (muva-chat)..."
-            pm2 restart muva-chat
+            echo "Reloading PM2 process (muva-chat-prd)..."
+            pm2 restart muva-chat-prd
             pm2 save
             echo "✅ PM2 reloaded"
 
             # Show PM2 status
             echo ""
             echo "PM2 Status:"
-            pm2 status muva-chat
+            pm2 status muva-chat-prd
 
             echo ""
             echo "================================================"
