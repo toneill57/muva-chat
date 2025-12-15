@@ -121,10 +121,13 @@ jobs:
             echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
             echo "Current commit: $(git log -1 --oneline)"
 
-            # Pull latest changes from main branch
+            # Fetch and reset to main branch (force production to match main exactly)
             echo ""
-            echo "Pulling latest changes from main branch..."
-            git pull --ff-only origin main
+            echo "Fetching latest changes from main branch..."
+            git fetch origin main
+
+            echo "Resetting to origin/main (discarding any local changes)..."
+            git reset --hard origin/main
 
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"
