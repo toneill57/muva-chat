@@ -147,13 +147,13 @@ jobs:
             } > .env.local
             echo "✅ Environment configured for production"
 
-            # Clean node_modules and build cache (critical after Node version changes)
+            # Clean build cache first
             echo ""
-            echo "Cleaning node_modules and build cache..."
-            rm -rf node_modules .next
-            echo "✅ Clean completed"
+            echo "Cleaning build cache..."
+            rm -rf .next
+            echo "✅ Build cache cleaned"
 
-            # Install dependencies
+            # Install/update dependencies (will rebuild native modules if needed)
             echo ""
             echo "Installing dependencies..."
             pnpm install --frozen-lockfile
