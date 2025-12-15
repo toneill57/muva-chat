@@ -198,7 +198,7 @@ jobs:
             # Install dependencies
             echo ""
             echo "Installing dependencies..."
-            pnpm install --frozen-lockfile
+            CI=true pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
             # Note: Build is done in GitHub Actions and uploaded via SCP
