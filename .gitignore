@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# API configuration files with tokens
+hostinger.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
