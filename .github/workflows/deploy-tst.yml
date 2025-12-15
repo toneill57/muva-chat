@@ -126,7 +126,7 @@ jobs:
         with:
           # TST VPS CREDENTIALS - Use SSH Key Authentication
           host: ${{ secrets.TST_VPS_HOST }}
-          username: ${{ secrets.TST_VPS_USER }}
+          username: root
           key: ${{ secrets.TST_VPS_SSH_KEY }}
           port: 2244
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
@@ -236,7 +236,7 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TST_SUPABASE_SERVICE_ROLE_KEY }}
         with:
           host: ${{ secrets.TST_VPS_HOST }}
-          username: ${{ secrets.TST_VPS_USER }}
+          username: root
           key: ${{ secrets.TST_VPS_SSH_KEY }}
           port: 2244
           envs: SUPABASE_TST_PROJECT_ID,SUPABASE_SERVICE_ROLE_KEY
