@@ -109,6 +109,14 @@ jobs:
             # Show new commit
             echo "New commit: $(git log -1 --oneline)"
 
+            # Fix ecosystem config for Node 20 (CommonJS vs ES modules)
+            echo ""
+            echo "Fixing ecosystem config..."
+            if [ -f "ecosystem.config.js" ]; then
+              mv ecosystem.config.js ecosystem.config.cjs
+              echo "✅ Renamed ecosystem.config.js to .cjs"
+            fi
+
             # Validate package.json exists
             if [ ! -f "package.json" ]; then
               echo "❌ ERROR: package.json not found in $(pwd)"
@@ -162,10 +170,12 @@ jobs:
             echo "Validating RPC functions..."
             pnpm run validate:rpc -- --env=production || echo "⚠️  RPC validation warning (non-blocking)"
 
-            # Restart PM2 process
+            # Restart PM2 process with correct config
             echo ""
             echo "Restarting PM2 process..."
-            pm2 restart muva-chat-prd
+            pm2 delete muva-chat-prd 2>/dev/null || true
+            pm2 start ecosystem.config.cjs
+            pm2 save
             echo "✅ PM2 process restarted"
 
             echo ""
