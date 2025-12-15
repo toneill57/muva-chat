@@ -29,11 +29,15 @@ tcp   0  0  127.0.0.1:3001  0.0.0.0:*  LISTEN  12346/node
 
 ## Solución Preparada
 
-El script `scripts/vps-fix-port-binding.sh` ya está listo y hace:
+Scripts separados por ambiente para máxima seguridad:
 
-1. ✅ Backup de ecosystem.config.js
-2. ✅ Agrega `HOSTNAME: '127.0.0.1'` a ambos ambientes
-3. ✅ Reinicia PM2 con nueva configuración
+**Staging:** `scripts/vps-fix-port-binding-tst.sh`
+**Production:** `scripts/vps-fix-port-binding-prd.sh`
+
+Cada script hace:
+1. ✅ Backup timestamped de ecosystem.config.js
+2. ✅ Agrega `HOSTNAME: '127.0.0.1'` solo a su ambiente
+3. ✅ Reinicia solo su proceso PM2
 4. ✅ Verifica que el binding esté correcto
 
 ---
@@ -55,8 +59,8 @@ El script `scripts/vps-fix-port-binding.sh` ya está listo y hace:
 3. **Configurar el workflow:**
    ```
    Environment: tst (staging primero para probar)
-   Command: bash /var/www/muva-chat-tst/scripts/vps-fix-port-binding.sh
-   Working Directory: /var/www
+   Command: bash scripts/vps-fix-port-binding-tst.sh
+   Working Directory: /var/www/muva-chat-tst
    ```
 
 4. **Verificar resultados:**
@@ -66,8 +70,8 @@ El script `scripts/vps-fix-port-binding.sh` ya está listo y hace:
 5. **Repetir para producción:**
    ```
    Environment: prd
-   Command: bash /var/www/muva-chat-prd/scripts/vps-fix-port-binding.sh
-   Working Directory: /var/www
+   Command: bash scripts/vps-fix-port-binding-prd.sh
+   Working Directory: /var/www/muva-chat-prd
    ```
 
 ---
@@ -80,9 +84,13 @@ Si tienes acceso SSH directo al VPS:
 # Conectar al VPS (puerto 2244)
 ssh -p 2244 root@195.200.6.216
 
-# Ejecutar script
+# Staging
+cd /var/www/muva-chat-tst
+bash scripts/vps-fix-port-binding-tst.sh
+
+# Production (después de verificar staging)
 cd /var/www/muva-chat-prd
-bash scripts/vps-fix-port-binding.sh
+bash scripts/vps-fix-port-binding-prd.sh
 
 # Verificar
 netstat -tlnp | grep -E ':3000|:3001'
@@ -157,8 +165,18 @@ module.exports = {
 
 ## Referencias
 
-- Script: `scripts/vps-fix-port-binding.sh`
+- Script Staging: `scripts/vps-fix-port-binding-tst.sh`
+- Script Production: `scripts/vps-fix-port-binding-prd.sh`
 - Incident Response: `docs/security/INCIDENT-RESPONSE-SUMMARY.md`
 - VPS Workflow: `.github/workflows/vps-exec.yml`
 
 **Próxima Revisión:** Después de ejecutar el fix
+
+---
+
+## Changelog
+
+**2025-12-15:** Split script into environment-specific versions
+- Safer execution (no accidental cross-environment changes)
+- Independent PM2 restarts
+- Clearer logging
