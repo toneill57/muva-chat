@@ -19,8 +19,8 @@ module.exports = {
     // =========================================================================
     {
       name: 'muva-chat-prd',
-      script: 'npm',
-      args: 'start',
+      script: './node_modules/.bin/next',
+      args: 'start --port 3000',
       cwd: '/var/www/muva-chat-prd',
       instances: 1,
       exec_mode: 'cluster',
@@ -56,8 +56,8 @@ module.exports = {
     // =========================================================================
     {
       name: 'muva-chat-tst',
-      script: 'npm',
-      args: 'start -- --port 3001',
+      script: './node_modules/.bin/next',
+      args: 'start --port 3001',
       cwd: '/var/www/muva-chat-tst',
       instances: 1,
       exec_mode: 'cluster',
