@@ -204,10 +204,17 @@ jobs:
             # Note: Build is done in GitHub Actions and uploaded via SCP
             # No build step needed here - saves VPS resources
 
-            # PM2 restart removed - manual intervention required
+            # Reload PM2 process
             echo ""
-            echo "⚠️  PM2 restart skipped - requires manual setup"
-            echo "Run manually: pm2 restart muva-chat-prd"
+            echo "Reloading PM2 process (muva-chat-prd)..."
+            pm2 restart muva-chat-prd
+            pm2 save
+            echo "✅ PM2 reloaded"
+
+            # Show PM2 status
+            echo ""
+            echo "PM2 Status:"
+            pm2 status muva-chat-prd
 
             echo ""
             echo "================================================"
