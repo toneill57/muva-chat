@@ -248,7 +248,7 @@ jobs:
             sleep 10
 
             echo "Running health check on localhost:3001..."
-            TST_URL="http://localhost:3001" pnpm dlx tsx scripts/health-check-tst.ts
+            TST_URL="http://localhost:3001" pnpm dlx tsx scripts/verify-tst-health.ts
         continue-on-error: true
 
       # TODO: Re-enable rollback after stabilizing deployments
