@@ -43,6 +43,12 @@ module.exports = {
       out_file: './logs/pm2-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
+      log_type: 'json',
+
+      // Graceful shutdown
+      kill_timeout: 5000,
+      wait_ready: true,
+      listen_timeout: 10000,
 
       // Environment
       env: {
@@ -63,10 +69,10 @@ module.exports = {
       exec_mode: 'cluster',
 
       // Memory Management
-      // Staging heap usage: 312.78 MB (65.14% of 480.12 MB)
-      // Lower limit than production as staging typically has less load
-      max_memory_restart: '400M',
-      node_args: '--max-old-space-size=350',
+      // Updated: Heap usage observed at 93% (14.58MB/15.60MB) - increasing limit
+      // Actual memory usage: ~65MB RAM, but heap needs room for spikes
+      max_memory_restart: '450M',
+      node_args: '--max-old-space-size=400',
 
       // Restart Management
       // Same throttling as production
@@ -80,6 +86,12 @@ module.exports = {
       out_file: './logs/pm2-out.log',
       log_date_format: 'YYYY-MM-DD HH:mm:ss Z',
       merge_logs: true,
+      log_type: 'json',
+
+      // Graceful shutdown
+      kill_timeout: 5000,
+      wait_ready: true,
+      listen_timeout: 10000,
 
       // Environment
       env: {
