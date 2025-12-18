@@ -10,12 +10,14 @@ Workflows detallados para las 6 FASES del proyecto SIRE Auto-Submission.
 |---------|------|---------|----------|--------|
 | `FASE-1-workflow.md` | Enhanced Conversational Capture | 6 (1.1-1.6) | 8h | ✅ Completo |
 | `FASE-2-workflow.md` | Document Upload + OCR Extraction | 7 (2.1-2.7) | 10h | ✅ Completo |
-| `FASE-3-workflow.md` | Real SIRE Integration | 7 (3.1-3.7) | 12h | ✅ Completo |
+| `FASE-3-workflow.md` | **TXT File Generation** | 6 (3.1-3.6) | 7h | ✅ Completo |
 | `FASE-4-workflow.md` | Submission Workflow & Queue | 7 (4.1-4.7) | 8h | ✅ Completo |
 | `FASE-5-workflow.md` | Staff Admin Dashboard | 6 (5.1-5.6) | 10h | ✅ Completo |
 | `FASE-6-workflow.md` | Testing & Documentation | 7 (6.1-6.7) | 6h | ✅ Completo |
 
-**Total:** 6 archivos, 40 prompts, 54 horas estimadas
+**Total:** 6 archivos, 39 prompts, 49 horas estimadas
+
+**Nota:** FASE 3 reformulada de "Real SIRE Integration" a "TXT File Generation" (Puppeteer automation postponed a FASE FUTURA)
 
 ---
 
@@ -38,7 +40,7 @@ Cada prompt tiene delimitadores 🔽 y 🔼 que indican exactamente qué copiar:
 ### 3. Progreso Tracking
 
 Cada prompt incluye:
-- **Progreso General:** N/41 tareas completadas (%)
+- **Progreso General:** N/39 tareas completadas (%)
 - **Progreso FASE X:** M/T tareas completadas (%)
 - **Estado Actual:** Lista de logros previos
 
@@ -70,14 +72,13 @@ Todos los prompts tienen una sección de verificación que:
 - [x] 2.6: Create database migration for document uploads (0.5h)
 - [x] 2.7: Integrate document upload into chat interface (1h)
 
-### FASE 3: Real SIRE Integration (12h)
-- [x] 3.1: Research SIRE portal UI and selectors (2h)
-- [x] 3.2: Implement SIRE credentials management (1.5h)
-- [x] 3.3: Update sire-automation.ts with real selectors (4h)
-- [x] 3.4: Create database migration for SIRE credentials (1h)
-- [x] 3.5: Update SIRE submit API endpoint (2h)
-- [x] 3.6: Create manual test submission script (1h)
-- [x] 3.7: End-to-end manual testing (0.5h)
+### FASE 3: TXT File Generation (7h)
+- [x] 3.1: Implement TXT file generator (1.5h)
+- [x] 3.2: Create TXT export API endpoint (1h)
+- [x] 3.3: Implement pre-generation validation (1h)
+- [x] 3.4: Create sire_exports tracking table (0.5h)
+- [x] 3.5: Add download TXT button to UI (2h)
+- [x] 3.6: Testing TXT format compliance (1h)
 
 ### FASE 4: Submission Workflow & Queue (8h)
 - [x] 4.1: Decide queue system (Bull vs Inngest) (0.5h)
@@ -105,9 +106,9 @@ Todos los prompts tienen una sección de verificación que:
 - [x] 6.6: Create rollout plan (0.5h)
 - [x] 6.7: Performance and security testing (0.5h)
 
-**Total:** 40/41 tareas (98%) - 54 horas estimadas
+**Total:** 39 tareas - 49 horas estimadas
 
-*(Tarea 41: Actualización final de documentación)*
+**Nota:** Puppeteer automation (FASE FUTURA) no incluida en el conteo (7 tareas adicionales, 12h)
 
 ---
 
@@ -135,17 +136,18 @@ Todos los prompts tienen una sección de verificación que:
 ## 📝 Notas Importantes
 
 1. **Progreso Counters:**
-   - FASE 1 Start: 0/41 (0%) → End: 6/41 (15%)
-   - FASE 2 Start: 6/41 (15%) → End: 13/41 (32%)
-   - FASE 3 Start: 13/41 (32%) → End: 20/41 (49%)
-   - FASE 4 Start: 20/41 (49%) → End: 27/41 (66%)
-   - FASE 5 Start: 27/41 (66%) → End: 33/41 (80%)
-   - FASE 6 Start: 33/41 (80%) → End: 40/41 (98%)
+   - FASE 1 Start: 0/39 (0%) → End: 6/39 (15%)
+   - FASE 2 Start: 6/39 (15%) → End: 13/39 (33%)
+   - FASE 3 Start: 13/39 (33%) → End: 19/39 (49%)
+   - FASE 4 Start: 19/39 (49%) → End: 26/39 (67%)
+   - FASE 5 Start: 26/39 (67%) → End: 32/39 (82%)
+   - FASE 6 Start: 32/39 (82%) → End: 39/39 (100%)
 
 2. **Agentes Especializados:**
-   - `@agent-backend-developer` - Backend, APIs, Puppeteer
+   - `@agent-backend-developer` - Backend, APIs, TXT generation, queue system
    - `@agent-ux-interface` - React components, UI
    - `@agent-database-agent` - SQL migrations
+   - `@agent-deploy-agent` - Deployment testing
 
 3. **Formato de Código:**
    - FASES 1-3: Código completo con ejemplos detallados
@@ -159,20 +161,28 @@ Al completar las 6 FASES tendrás:
 
 **30+ archivos nuevos:**
 - 6+ React components
-- 10+ API endpoints
-- 6+ SQL migrations
-- 8+ helper libraries
+- 8+ API endpoints
+- 4 SQL migrations
+- 6+ helper libraries
 - E2E tests
 
-**Sistema completo funcionando:**
+**Sistema MVP completo funcionando:**
 - ✅ Captura conversacional automática (13 campos SIRE)
 - ✅ OCR de documentos con Claude Vision (>85% accuracy)
-- ✅ Envío real a portal SIRE (Puppeteer automation)
+- ✅ Generación de archivos TXT formato oficial SIRE
 - ✅ Queue system con retry logic y dead-letter queue
 - ✅ Admin dashboard completo con metrics y filtros
 - ✅ E2E testing + documentación completa
 
+**Flujo Final:**
+1. Guest completa datos vía chat o sube pasaporte (OCR automático)
+2. Sistema genera archivo TXT con formato oficial SIRE
+3. Staff descarga TXT y sube manualmente al portal SIRE (o automático vía queue)
+4. Dashboard muestra status y métricas en tiempo real
+
 **Listo para pilot** con 1-3 hoteles según `PILOT_CHECKLIST.md`
+
+**FASE FUTURA:** Automation de upload vía Puppeteer (opcional, después de validar MVP)
 
 ---
 

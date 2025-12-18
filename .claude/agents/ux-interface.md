@@ -54,8 +54,8 @@ I'm a specialized UI/UX agent that autonomously manages all interface modificati
 ## Technical Stack
 
 **Frontend Framework:**
-- React 19 + TypeScript
-- Next.js 15 (App Router)
+- React 19.2.3 + TypeScript
+- Next.js 15.5.9 (App Router)
 - Client and Server Components
 
 **Styling:**

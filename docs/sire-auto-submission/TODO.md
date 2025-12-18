@@ -147,80 +147,73 @@
 
 ---
 
-## FASE 3: Real SIRE Integration 🔧
+## FASE 3: TXT File Generation 📄
 
-### 3.1 Research SIRE portal UI and selectors
-- [ ] Investigar portal SIRE y documentar selectors (estimate: 2h)
-  - Acceder a portal SIRE de test
-  - Documentar login flow (username, password fields)
-  - Documentar form navigation (steps, tabs)
-  - Documentar field selectors (13 campos)
-  - Documentar submit button + confirmation page
-  - Files: `docs/sire-auto-submission/SIRE_PORTAL_GUIDE.md`
+### 3.1 Implement TXT file generator
+- [ ] Crear generador de archivos TXT con formato oficial SIRE (estimate: 1.5h)
+  - Function generateSIRETxt(reservations[]) → string
+  - Tab-delimited format (13 campos por línea)
+  - Un archivo = múltiples huéspedes (1 línea por guest)
+  - Formato: codigo_hotel\tcodigo_ciudad\ttipo_doc\tnumero_id\t...
+  - Sin headers (primera línea = primer huésped)
+  - Encoding UTF-8 sin BOM, line endings CRLF
+  - Files: `src/lib/sire/sire-txt-generator.ts`
   - Agent: **@agent-backend-developer**
-  - Test: Manual - screenshots del portal
+  - Test: `pnpm test src/lib/sire/sire-txt-generator.test.ts`
 
-### 3.2 Implement SIRE credentials management
-- [ ] Desarrollar credential encryption/decryption (estimate: 1.5h)
-  - Encrypt function (plaintext → encrypted)
-  - Decrypt function (encrypted → plaintext)
-  - Use Node crypto library (AES-256-GCM)
-  - Environment variable para encryption key
-  - Files: `src/lib/sire/sire-credentials.ts`
+### 3.2 Create TXT export API endpoint
+- [ ] Implementar endpoint para exportar TXT (estimate: 1h)
+  - POST /api/sire/export-txt
+  - Input: { tenant_id, start_date, end_date, reservation_ids? }
+  - Call generateSIRETxt()
+  - Save to Supabase Storage
+  - Track export en sire_exports table
+  - Return download URL
+  - Files: `src/app/api/sire/export-txt/route.ts`
   - Agent: **@agent-backend-developer**
-  - Test: `pnpm test src/lib/sire/sire-credentials.test.ts`
+  - Test: `curl -X POST localhost:3000/api/sire/export-txt -d '{"tenant_id":"xyz"}'`
 
-### 3.3 Update sire-automation.ts with real selectors
-- [ ] Actualizar Puppeteer automation con selectors reales (estimate: 4h)
-  - Update login() - real username/password fields
-  - Update navigateToRegistrationForm() - real navigation
-  - Update fillSIREForm() - 13 campos con selectors reales
-  - Update submitForm() - real submit button
-  - Update captureConfirmation() - real confirmation number selector
-  - Screenshot capture en cada paso
-  - Files: `src/lib/sire/sire-automation.ts`
+### 3.3 Implement pre-generation validation
+- [ ] Desarrollar validación pre-exportación (estimate: 1h)
+  - Function validateSIREData(reservation) → ValidationResult
+  - Verificar 13 campos completos y no null
+  - Validar códigos SIRE (NO ISO)
+  - Validar formatos de fecha (DD/MM/YYYY)
+  - Validar longitudes de campos
+  - Return warnings/errors por reservación
+  - Files: `src/lib/sire/sire-validation.ts`
   - Agent: **@agent-backend-developer**
-  - Test: `node scripts/sire/test-submission.ts`
+  - Test: `pnpm test src/lib/sire/sire-validation.test.ts`
 
-### 3.4 Create database migration for SIRE credentials
-- [ ] Crear migrations para credentials + submission logs (estimate: 1h)
-  - ALTER tenant_registry: sire_username, sire_password_encrypted, sire_auto_submit_enabled, sire_submission_mode
-  - CREATE sire_submission_logs: id, reservation_id, tenant_id, submission_data, sire_response, confirmation_number, screenshot_url, status, error_message, retry_count
-  - Indexes: reservation_id, status, tenant_id + submitted_at
-  - RLS policies
-  - Files: `migrations/20251204_add_sire_credentials.sql`
+### 3.4 Create sire_exports tracking table
+- [ ] Crear migration para tracking de exports (estimate: 0.5h)
+  - CREATE sire_exports: id, tenant_id, export_date, file_name, file_url, guest_count, reservation_ids, status, created_by
+  - Indexes: tenant_id, export_date DESC
+  - RLS policies (tenant isolation)
+  - Files: `migrations/20251218_add_sire_exports.sql`
   - Agent: **@agent-database-agent**
-  - Test: `node .claude/db-query.js "SELECT * FROM sire_submission_logs LIMIT 1"`
+  - Test: `node .claude/db-query.js "SELECT * FROM sire_exports LIMIT 1"`
 
-### 3.5 Update SIRE submit API endpoint
-- [ ] Reemplazar MOCK mode con real submission (estimate: 2h)
-  - Remove MOCK logic de /api/compliance/submit
-  - Call sire-automation.submitToSIRE()
-  - Handle Puppeteer errors
-  - Save to sire_submission_logs
-  - Return real confirmation number
-  - Files: `src/app/api/sire/submit/route.ts`
-  - Agent: **@agent-backend-developer**
-  - Test: `curl -X POST localhost:3000/api/sire/submit -d '{"reservation_id":"xxx"}'`
+### 3.5 Add download TXT button to UI
+- [ ] Crear componente de exportación TXT en admin (estimate: 2h)
+  - Button "Exportar TXT SIRE" en admin dashboard
+  - Date range picker (from/to)
+  - Preview de guests a incluir (count + validation status)
+  - Trigger export API
+  - Download generado automáticamente
+  - Files: `src/components/Admin/SireTxtExport.tsx`
+  - Agent: **@agent-ux-interface**
+  - Test: Manual - exportar TXT con 10 guests
 
-### 3.6 Create manual test submission script
-- [ ] Desarrollar script de testing manual (estimate: 1h)
-  - Script que lee reservation_id de argv
-  - Llama a submitToSIRE()
-  - Muestra screenshot path
-  - Muestra confirmation number
-  - Files: `scripts/sire/test-submission.ts`
+### 3.6 Testing TXT format compliance
+- [ ] Validar formato TXT contra spec oficial (estimate: 1h)
+  - Generate TXT con 20 guests de diferentes países
+  - Verificar delimitadores (tabs, no spaces)
+  - Verificar orden de campos (13 en secuencia correcta)
+  - Verificar códigos SIRE (NO ISO)
+  - Abrir en Excel/editor para verificar formato visual
   - Agent: **@agent-backend-developer**
-  - Test: `node scripts/sire/test-submission.ts <reservation_id>`
-
-### 3.7 End-to-end manual testing
-- [ ] Testing manual con 1 guest real (estimate: 0.5h)
-  - Submit 1 guest con datos reales a SIRE test environment
-  - Verificar confirmation number capturado
-  - Verificar screenshot guardado
-  - Verificar datos en sire_submission_logs
-  - Agent: **@agent-backend-developer**
-  - Test: Manual verification
+  - Test: Manual - verificación visual + unit tests
 
 ---
 
@@ -434,24 +427,43 @@
 
 ## 📊 PROGRESO
 
-**Total Tasks:** 41
-**Completed:** 0/41 (0%)
+**Total Tasks:** 39
+**Completed:** 0/39 (0%)
 
 **Por Fase:**
 - FASE 1: 0/6 tareas (0%)
 - FASE 2: 0/7 tareas (0%)
-- FASE 3: 0/7 tareas (0%)
+- FASE 3: 0/6 tareas (0%) ← TXT File Generation
 - FASE 4: 0/7 tareas (0%)
 - FASE 5: 0/6 tareas (0%)
 - FASE 6: 0/7 tareas (0%)
 
 **Por Agente:**
-- @agent-backend-developer: 0/26 tareas (63%)
-- @agent-ux-interface: 0/8 tareas (20%)
-- @agent-database-agent: 0/4 tareas (10%)
-- @agent-deploy-agent: 0/0 tareas (pendiente FASE 3/6)
+- @agent-backend-developer: 0/24 tareas (61.5%)
+- @agent-ux-interface: 0/9 tareas (23.1%)
+- @agent-database-agent: 0/4 tareas (10.3%)
+- @agent-deploy-agent: 0/2 tareas (5.1%)
+
+**Nota:** Puppeteer automation (upload de TXT al portal SIRE) fue postponed a FASE FUTURA (7 tareas adicionales, 12h estimadas)
 
 ---
 
-**Última actualización:** Diciembre 4, 2025
+## 🔮 FASE FUTURA (POSTPONED): Puppeteer File Upload Automation
+
+**Estado:** Postponed hasta validar captura + TXT generation con 3+ hoteles
+
+**Tareas pendientes para fase futura:**
+1. Research SIRE portal UI and selectors (2h)
+2. Implement SIRE credentials management (1.5h)
+3. Update sire-automation.ts with real selectors (4h)
+4. Create database migration for SIRE credentials (1h)
+5. Update SIRE submit API endpoint (2h)
+6. Create manual test submission script (1h)
+7. End-to-end manual testing (0.5h)
+
+**Total:** 7 tareas adicionales (12h estimadas)
+
+---
+
+**Última actualización:** Diciembre 18, 2025
 **Próximo paso:** Ejecutar FASE 1, Tarea 1.1 - Create conversational prompts system
