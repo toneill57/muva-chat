@@ -194,14 +194,15 @@ jobs:
             } > .env.local
             echo "✅ Environment configured"
 
-            # Clean install dependencies (fix corrupted binaries)
-            echo "Cleaning node_modules and pnpm cache..."
+            # Nuclear clean install (fix persistently corrupted binaries)
+            echo "Nuclear cleaning node_modules and pnpm store..."
             rm -rf node_modules
-            pnpm store prune || true
-            echo "✅ Cleaned"
+            rm -rf ~/.local/share/pnpm/store || true
+            rm -rf ~/.pnpm-store || true
+            echo "✅ Store completely cleared"
 
-            echo "Installing dependencies (clean install)..."
-            CI=true pnpm install --frozen-lockfile --force
+            echo "Installing dependencies (completely clean install)..."
+            CI=true pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
             # Hard restart PM2 (delete + start to clear any cached state)
