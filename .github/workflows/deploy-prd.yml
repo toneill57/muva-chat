@@ -90,7 +90,51 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://muva.chat
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: muva.chat
 
-      - name: Upload build artifacts to VPS
+      - name: Apply Supabase Migrations
+        id: migrations
+        run: pnpm dlx tsx scripts/apply-migrations-prd.ts
+        env:
+          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        continue-on-error: false
+
+      - name: Sync Git Repository (PRD)
+        if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRD_VPS_HOST }}
+          username: ${{ secrets.PRD_VPS_USER }}
+          key: ${{ secrets.PRD_VPS_SSH_KEY }}
+          port: 2244
+          script: |
+            set -e
+            echo "================================================"
+            echo "🔄 Git Sync - PRD"
+            echo "================================================"
+
+            cd /var/www/muva-chat-prd
+
+            # Validate git repository
+            if [ ! -d ".git" ]; then
+              echo "❌ ERROR: Not a git repository"
+              exit 1
+            fi
+
+            # Show current state
+            echo "Current commit: $(git log -1 --oneline)"
+
+            # Clean and sync
+            git stash --include-untracked || true
+            rm -f public/config/settings.json 2>/dev/null || true
+            git checkout -- . 2>/dev/null || true
+            git fetch origin prd
+            git reset --hard origin/prd
+
+            echo "New commit: $(git log -1 --oneline)"
+            echo "✅ Git sync completed"
+
+      - name: Upload Build Artifacts (PRD)
+        if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.PRD_VPS_HOST }}
@@ -102,14 +146,6 @@ jobs:
           strip_components: 0
           overwrite: true
 
-      - name: Apply Supabase Migrations
-        id: migrations
-        run: pnpm dlx tsx scripts/apply-migrations-prd.ts
-        env:
-          SUPABASE_PRD_PROJECT_ID: ${{ secrets.PRD_SUPABASE_PROJECT_ID }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        continue-on-error: false
-
       - name: Deploy to VPS Production
         if: steps.migrations.outcome == 'success' || steps.migrations.outcome == 'skipped'
         id: deploy
@@ -118,65 +154,28 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
-          # PRD VPS CREDENTIALS - Use SSH Key Authentication
           host: ${{ secrets.PRD_VPS_HOST }}
           username: ${{ secrets.PRD_VPS_USER }}
           key: ${{ secrets.PRD_VPS_SSH_KEY }}
           port: 2244
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
-            set -e  # Exit immediately on any error
-
+            set -e
             echo "================================================"
-            echo "🚀 MUVA Chat PRD Deployment - Starting"
+            echo "🚀 MUVA Chat PRD Deployment - Final Steps"
             echo "================================================"
 
-            # Change to prd directory
             cd /var/www/muva-chat-prd
-            echo "✅ Current directory: $(pwd)"
-
-            # Validate it's a git repository
-            if [ ! -d ".git" ]; then
-              echo "❌ ERROR: Not a git repository"
-              echo "Current directory: $(pwd)"
-              exit 1
-            fi
-            echo "✅ Git repository verified"
-
-            # Show current git status before pull
-            echo ""
-            echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-            echo "Current commit: $(git log -1 --oneline)"
-
-            # Clean up local changes before pull (VPS may have modified files)
-            echo ""
-            echo "Cleaning up local changes..."
-            git stash --include-untracked || true
-            rm -f public/config/settings.json 2>/dev/null || true
-            git checkout -- . 2>/dev/null || true
-            echo "✅ Local changes cleaned"
-
-            # Sync with remote (handles both normal merges and force pushes)
-            echo ""
-            echo "Syncing with remote prd branch..."
-            git fetch origin prd
-            git reset --hard origin/prd
-
-            # Show new commit
-            echo "New commit: $(git log -1 --oneline)"
 
             # Validate package.json exists
             if [ ! -f "package.json" ]; then
-              echo "❌ ERROR: package.json not found in $(pwd)"
-              echo "Directory contents:"
+              echo "❌ ERROR: package.json not found"
               ls -la
               exit 1
             fi
-            echo "✅ package.json found"
 
-            # Create prd environment file from GitHub Secrets
-            echo ""
-            echo "Creating .env.local from GitHub Secrets..."
+            # Create environment file
+            echo "Creating .env.local..."
             {
               echo "# Supabase - PRD DATABASE (kprqghwdnaykxhostivv)"
               echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.PRD_SUPABASE_URL }}"
@@ -193,27 +192,20 @@ jobs:
               echo "# Node Environment"
               echo "NODE_ENV=production"
             } > .env.local
-            echo "✅ Environment configured for prd"
+            echo "✅ Environment configured"
 
             # Install dependencies
-            echo ""
             echo "Installing dependencies..."
             CI=true pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
-            # Note: Build is done in GitHub Actions and uploaded via SCP
-            # No build step needed here - saves VPS resources
-
-            # Reload PM2 process
-            echo ""
-            echo "Reloading PM2 process (muva-chat-prd)..."
+            # Reload PM2
+            echo "Reloading PM2 (muva-chat-prd)..."
             pm2 restart muva-chat-prd
             pm2 save
             echo "✅ PM2 reloaded"
 
-            # Show PM2 status
-            echo ""
-            echo "PM2 Status:"
+            # Show status
             pm2 status muva-chat-prd
 
             echo ""
