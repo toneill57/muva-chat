@@ -32,6 +32,10 @@ import ComplianceReminder from '@/components/Compliance/ComplianceReminder'
 import ComplianceConfirmation from '@/components/Compliance/ComplianceConfirmation'
 import ComplianceSuccess from '@/components/Compliance/ComplianceSuccess'
 import { TenantChatAvatar } from './TenantChatAvatar'
+import { SireProgressBar } from '@/components/Compliance/SireProgressBar'
+import { useSireProgressiveDisclosure } from '@/hooks/useSireProgressiveDisclosure'
+import { getNextFieldToAsk } from '@/lib/sire/progressive-disclosure'
+import { getQuestionForField } from '@/lib/sire/conversational-prompts'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
 
 interface Conversation {
@@ -66,12 +70,54 @@ interface TopicSuggestion {
 }
 
 /**
+ * Field labels for SIRE conversational messages
+ * Maps field names to human-readable labels in Spanish
+ */
+const FIELD_LABELS_MAP: Record<string, string> = {
+  identification_number: 'documento',
+  first_surname: 'primer apellido',
+  second_surname: 'segundo apellido',
+  names: 'nombres',
+  nationality_code: 'nacionalidad',
+  birth_date: 'fecha de nacimiento',
+  origin_place: 'lugar de procedencia',
+  destination_place: 'lugar de destino'
+}
+
+/**
+ * Document type codes to human-readable names
+ * Maps SIRE document type codes to display names for confirmations
+ */
+const DOCUMENT_TYPE_NAMES: Record<string, string> = {
+  '3': 'Pasaporte',
+  '5': 'Cédula de Extranjería',
+  '46': 'Carné Diplomático',
+  '10': 'Documento Extranjero (Mercosur/CAN)'
+}
+
+/**
+ * Helper: Converts YYYY-MM-DD date format to DD/MM/YYYY for SIRE
+ */
+function formatDateForSIRE(dateString: string): string {
+  const [year, month, day] = dateString.split('-')
+  return `${day}/${month}/${year}`
+}
+
+/**
  * GuestChatInterface Component
  *
  * Complete conversational chat interface for guests
  * Features: Message history, entity tracking, follow-up suggestions, auto-scroll, responsive design
  */
-export function GuestChatInterface({ session, token, tenant, onLogout }: GuestChatInterfaceProps) {
+export function GuestChatInterface({
+  session,
+  token,
+  tenant,
+  onLogout,
+}: GuestChatInterfaceProps) {
+  // Mode state - dynamically controlled (can be switched from 'general' to 'sire')
+  const [mode, setMode] = useState<'general' | 'sire'>('general')
+
   const [messages, setMessages] = useState<GuestChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -117,6 +163,9 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hasLoadedConversations = useRef(false)  // Prevent double execution in React Strict Mode
 
+  // SIRE Progressive Disclosure - ALWAYS call hook (Rules of Hooks)
+  const sireDisclosure = useSireProgressiveDisclosure()
+
   // Load conversations on mount
   useEffect(() => {
     // Prevent double execution in React Strict Mode (development)
@@ -131,6 +180,18 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
   // Load chat history when active conversation changes
   useEffect(() => {
     if (activeConversationId) {
+      // Skip loadChatHistory if it's a SIRE conversation with welcome message already created
+      // This prevents race condition where welcome message gets overwritten
+      const sireConversation = conversations.find(c => c.id === activeConversationId)
+      const isSIREMode = sireConversation?.title === '📋 Registro SIRE'
+      const hasMessages = messages.length > 0
+
+      if (isSIREMode && hasMessages) {
+        // SIRE conversation with welcome message already in state
+        // Skip loadChatHistory to avoid overwriting it
+        return
+      }
+
       loadChatHistory()
     }
   }, [activeConversationId])
@@ -361,6 +422,13 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
   const handleSelectConversation = (conversationId: string) => {
     setActiveConversationId(conversationId)
 
+    // Check if switching to SIRE conversation
+    const selectedConversation = conversations.find(c => c.id === conversationId)
+    const isSireConversation = selectedConversation?.title?.includes('SIRE')
+
+    // Update mode based on conversation type
+    setMode(isSireConversation ? 'sire' : 'general')
+
     // Clear current state
     setMessages([])
     setTrackedEntities(new Map())
@@ -402,6 +470,103 @@ export function GuestChatInterface({ session, token, tenant, onLogout }: GuestCh
     } catch (err) {
       console.error('Error deleting conversation:', err)
       setError('No se pudo eliminar la conversación')
+    }
+  }
+
+  /**
+   * Starts SIRE conversational mode
+   * Creates dedicated SIRE conversation and activates progressive disclosure
+   * Called from ComplianceReminder "Iniciar registro" button
+   */
+  const handleStartSIREMode = async () => {
+    try {
+      // 1. Fetch tenant configuration FIRST
+      const tenantConfigResponse = await fetch('/api/guest/tenant-config', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!tenantConfigResponse.ok) {
+        throw new Error('No se pudo obtener configuración del hotel')
+      }
+
+      const tenantConfig = await tenantConfigResponse.json()
+      const hotelCode = tenantConfig.hotel_code      // NIT del tenant
+      const cityCode = tenantConfig.city_code        // SIRE city code
+
+      // 2. Create new SIRE conversation
+      const response = await fetch('/api/guest/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: '📋 Registro SIRE',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al crear conversación SIRE')
+      }
+
+      const data = await response.json()
+      const sireConversation = data.conversation
+
+      // 3. Activate SIRE conversation
+      setActiveConversationId(sireConversation.id)
+      setConversations((prev) => [
+        {
+          id: sireConversation.id,
+          title: sireConversation.title,
+          last_message: null,
+          updated_at: sireConversation.updated_at
+        },
+        ...prev
+      ])
+
+      // 4. Clear state
+      setMessages([])
+      setTrackedEntities(new Map())
+      setFollowUpSuggestions([])
+
+      // 5. Initialize auto-filled fields with real tenant data
+      sireDisclosure.updateField('hotel_code', hotelCode)     // NIT del tenant
+      sireDisclosure.updateField('city_code', cityCode)       // Ciudad del tenant
+      sireDisclosure.updateField('movement_type', 'E')        // E = Entrada
+      sireDisclosure.updateField('movement_date', formatDateForSIRE(session.check_in))
+
+      // 6. Pre-create SIRE welcome message with first question
+      const firstField = getNextFieldToAsk({
+        hotel_code: hotelCode,
+        city_code: cityCode,
+        movement_type: 'E',
+        movement_date: formatDateForSIRE(session.check_in)
+      })
+
+      const firstQuestion = getQuestionForField(firstField || 'document_type_code', {
+        language: 'es'
+      })
+
+      const welcomeMessage: GuestChatMessage = {
+        id: `sire-welcome-${Date.now()}`,
+        role: 'assistant',
+        content: `¡Bienvenido! Voy a ayudarte a completar tu registro de entrada a Colombia. Son solo unas pocas preguntas.\n\n${firstQuestion}`,
+        timestamp: new Date(),
+      }
+
+      setMessages([welcomeMessage])
+
+      // 7. Activate SIRE mode (after initialization)
+      setMode('sire')
+
+      // 8. Close sidebar on mobile
+      setIsSidebarOpen(false)
+
+    } catch (err) {
+      console.error('Error starting SIRE mode:', err)
+      setError('No se pudo iniciar el registro SIRE. Intenta de nuevo.')
     }
   }
 
@@ -526,6 +691,103 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       return
     }
 
+    // SIRE MODE: Validar y capturar campo actual
+    if (mode === 'sire' && sireDisclosure.currentField) {
+      const validation = sireDisclosure.validateCurrentField(textToSend)
+
+      // Clear input immediately for better UX
+      setInput('')
+
+      // Add user message to UI
+      const userMessage: GuestChatMessage = {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        content: textToSend,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, userMessage])
+
+      if (!validation.valid) {
+        // Mensaje de error conversacional
+        const errorMessage: GuestChatMessage = {
+          id: `error-${Date.now()}`,
+          role: 'assistant',
+          content: `Lo siento, ${validation.error}\n\nPor favor intenta de nuevo con el formato correcto.`,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, errorMessage])
+        return // NO enviar mensaje al API, solo validar localmente
+      }
+
+      // Validación exitosa: actualizar SIRE data
+      // CRÍTICO: Usar ?? para preservar string vacío '' (ej: second_surname skip)
+      sireDisclosure.updateField(
+        sireDisclosure.currentField,
+        validation.normalized ?? textToSend
+      )
+
+      // Guardar metadata adicional (ej: nationality_text para nationality_code)
+      if (validation.metadata?.nationality_text) {
+        sireDisclosure.updateField(
+          'nationality_text',
+          validation.metadata.nationality_text
+        )
+      }
+
+      // Mensaje de confirmación conversacional (diferente para skip vs valor normal)
+      const confirmMessage: GuestChatMessage = {
+        id: `confirm-${Date.now()}`,
+        role: 'assistant',
+        content: validation.skipped
+          ? `✅ Entendido, campo omitido.`  // Mensaje para skip
+          : sireDisclosure.currentField === 'document_type_code'
+            ? `✅ Perfecto, Tipo de documento: **${DOCUMENT_TYPE_NAMES[validation.normalized!] || validation.normalized}** guardado.`  // Mensaje para tipo de documento
+            : sireDisclosure.currentField === 'nationality_code'
+              ? `✅ Perfecto, **${validation.metadata?.nationality_text || validation.normalized}** guardado.`  // Mensaje para nacionalidad
+              : `✅ Perfecto, **${validation.normalized ?? textToSend}** guardado.`,  // Mensaje normal (usar ?? para preservar '')
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, confirmMessage])
+
+      // Si hay más campos, preguntar el siguiente
+      if (!sireDisclosure.isComplete) {
+        const nextField = getNextFieldToAsk({
+          ...sireDisclosure.sireData,
+          [sireDisclosure.currentField]: validation.normalized ?? textToSend,
+        })
+
+        if (nextField) {
+          const nextQuestion = getQuestionForField(nextField, {
+            language: 'es',
+            previousData: sireDisclosure.sireData,
+          })
+
+          const questionMessage: GuestChatMessage = {
+            id: `question-${Date.now()}`,
+            role: 'assistant',
+            content: nextQuestion,
+            timestamp: new Date(),
+          }
+          setMessages((prev) => [...prev, questionMessage])
+        }
+      } else {
+        // Todos los campos completados - mensaje celebratorio
+        const completeMessage: GuestChatMessage = {
+          id: `complete-${Date.now()}`,
+          role: 'assistant',
+          content: '🎉 ¡Excelente! Todos los datos han sido capturados correctamente.\n\nAhora voy a procesar tu registro ante las autoridades colombianas...',
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, completeMessage])
+
+        // TODO (Tarea 1.6 pendiente): Auto-enviar datos a API
+        // await submitSIREData(sireDisclosure.sireData)
+      }
+
+      return // NO continuar con lógica normal de chat
+    }
+
+    // MODO GENERAL: Lógica existente (NO MODIFICAR)
     // Clear input immediately for better UX
     setInput('')
     setError(null)
@@ -945,22 +1207,22 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
   }
 
   return (
-    <div className="flex min-h-dvh bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="flex h-dvh bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
       <aside
         className={`
           fixed lg:relative z-[70] lg:z-0
-          w-80 h-full
+          w-80 h-dvh
           transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           bg-white border-r border-slate-200 shadow-lg lg:shadow-none
         `}
       >
-        <div className="h-full flex flex-col pt-20">
+        <div className="h-full flex flex-col">
           {/* ComplianceReminder banner */}
-          <div className="flex-shrink-0 p-4">
+          <div className="flex-shrink-0 p-4 pt-20">
             <ComplianceReminder
-              onStart={() => setShowComplianceModal(true)}
+              onStart={handleStartSIREMode}
               reservation={{
                 document_type: null,
                 document_number: null,
@@ -1216,6 +1478,19 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         </div>
         </header>
 
+        {/* SIRE Progress Bar - NUEVO */}
+        {mode === 'sire' && (
+          <div className="flex-shrink-0 px-4 py-3 border-b bg-white">
+            <div className="max-w-4xl mx-auto">
+              <SireProgressBar
+                completedFields={sireDisclosure.completedFields}
+                totalFields={9}
+                currentField={sireDisclosure.currentField || undefined}
+                errors={sireDisclosure.errors}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Messages Area */}
         <div

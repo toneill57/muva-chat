@@ -22,8 +22,9 @@ Implementar el **core del proyecto MUVA Chat**: captura automática de los 13 ca
 - ✅ Captura conversacional de 13 campos vía chat en lenguaje natural
 - ✅ Upload de documentos (pasaporte, visa) con OCR/Vision API para extracción automática
 - ✅ Validación completa según reglas oficiales SIRE (códigos, formatos, rangos)
-- ✅ Envío automático al sistema SIRE de Migración Colombia (Puppeteer automation)
+- ✅ Generación de archivos TXT con formato oficial SIRE (para upload manual o automático)
 - ✅ Dashboard de monitoreo para staff (status, re-envíos, exportación TXT)
+- ⏸️ **Postponed a FASE FUTURA**: Puppeteer automation para upload automático de TXT al portal SIRE
 - ⚠️ **Proof of Concept**: Validación con 1-3 hoteles piloto antes de escalar
 
 ---
@@ -255,77 +256,61 @@ CREATE INDEX idx_sire_document_uploads_status ON sire_document_uploads(status);
 
 ---
 
-### FASE 3: Real SIRE Integration (12h)
+### FASE 3: TXT File Generation (7h)
 
-**Objetivo:** Completar integración con sistema oficial SIRE de Migración Colombia mediante Puppeteer automation.
+**Objetivo:** Implementar generador de archivos TXT con formato oficial SIRE para exportación manual o automática.
+
+**Contexto Importante:**
+- SIRE NO tiene API moderna - sistema legacy del gobierno colombiano
+- Upload se hace mediante archivo TXT con formato específico (delimitado por tabs)
+- Un archivo TXT puede contener múltiples huéspedes (1 línea = 1 huésped)
+- Formato: `codigo_hotel\tcodigo_ciudad\ttipo_doc\tnumero_id\tcodigo_nacionalidad\tprimer_apellido\tsegundo_apellido\tnombres\ttipo_movimiento\tfecha_movimiento\tlugar_procedencia\tlugar_destino\tfecha_nacimiento`
 
 **Entregables:**
-- SIRE portal selectors (real, no placeholder)
-- Credential management per tenant
-- Submission flow completo (login → form fill → submit → capture confirmation)
-- Screenshot/audit trail
-- Error handling robusto
-
-**Archivos a modificar:**
-- `src/lib/sire/sire-automation.ts` - Actualizar con selectors reales
-  - Investigar SIRE portal UI (username, password, form fields)
-  - Implementar login flow
-  - Implementar form navigation
-  - Implementar field filling (13 campos)
-  - Implementar submit + confirmation capture
+- Generador de TXT con formato oficial SIRE
+- Validación pre-generación (13 campos completos)
+- API endpoint para exportación TXT
+- Tracking de exports en base de datos
+- UI para download manual del TXT
 
 **Archivos a crear:**
-- `src/lib/sire/sire-credentials.ts` - Credential encryption/decryption
-- `scripts/sire/test-submission.ts` - Script manual para testing
-- `docs/sire-auto-submission/SIRE_PORTAL_GUIDE.md` - Documentación de UI SIRE
+- `src/lib/sire/sire-txt-generator.ts` - Generador de archivo TXT
+- `src/app/api/sire/export-txt/route.ts` - API endpoint para exportar TXT
+- `src/lib/sire/sire-validation.ts` - Validación pre-exportación
+- `src/components/Admin/SireTxtExport.tsx` - UI para download TXT
 
 **Database Migration:**
 ```sql
--- migrations/20251204_add_sire_credentials.sql
-ALTER TABLE tenant_registry
-ADD COLUMN sire_username VARCHAR(100),
-ADD COLUMN sire_password_encrypted TEXT, -- Encrypted with crypto
-ADD COLUMN sire_auto_submit_enabled BOOLEAN DEFAULT false,
-ADD COLUMN sire_submission_mode VARCHAR(20) DEFAULT 'manual'; -- 'manual', 'realtime', 'scheduled'
-
-CREATE TABLE sire_submission_logs (
+-- migrations/20251204_add_sire_exports.sql
+CREATE TABLE sire_exports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  reservation_id UUID REFERENCES guest_reservations(id) ON DELETE CASCADE,
   tenant_id VARCHAR NOT NULL,
-  submission_data JSONB NOT NULL, -- 13 campos enviados
-  sire_response JSONB, -- Response del sistema SIRE
-  confirmation_number VARCHAR(50), -- Número oficial
-  screenshot_url TEXT, -- Screenshot de confirmación
-  status VARCHAR(20) NOT NULL, -- 'pending', 'submitted', 'confirmed', 'failed'
-  error_message TEXT,
-  retry_count INTEGER DEFAULT 0,
-  submitted_at TIMESTAMPTZ,
-  confirmed_at TIMESTAMPTZ,
+  export_date DATE NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  file_url TEXT,
+  guest_count INTEGER NOT NULL,
+  reservation_ids UUID[] NOT NULL,
+  status VARCHAR(20) DEFAULT 'generated', -- 'generated', 'downloaded', 'uploaded'
+  created_by UUID REFERENCES auth.users(id),
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX idx_sire_submission_logs_reservation ON sire_submission_logs(reservation_id);
-CREATE INDEX idx_sire_submission_logs_status ON sire_submission_logs(status);
-CREATE INDEX idx_sire_submission_logs_tenant_date ON sire_submission_logs(tenant_id, submitted_at DESC);
+CREATE INDEX idx_sire_exports_tenant ON sire_exports(tenant_id);
+CREATE INDEX idx_sire_exports_date ON sire_exports(export_date DESC);
 ```
 
-**API Endpoint:**
-- `POST /api/sire/submit` - Reemplazar MOCK mode con real submission
-  - Input: `{ reservation_id, tenant_id }`
-  - Output: `{ success, confirmation_number, screenshot_url }`
-
 **Testing:**
-- Manual: Submit 1 guest real a SIRE (con credenciales de test)
-- Error handling: Simular network failures, SIRE downtime
-- Retry logic: Verificar 3 reintentos con backoff
-- Screenshot: Verificar captura de confirmación
+- Unit tests: TXT format validation (delimiters, field order)
+- Integration: Generate TXT con 10 guests, verificar formato
+- Manual: Download TXT y verificar apertura en Excel/editor
+- Compliance: Validar contra spec oficial SIRE
 
 **Success Criteria:**
-- ✅ Puppeteer conecta a SIRE portal real
-- ✅ Login exitoso con credenciales tenant
-- ✅ 13 campos se llenan correctamente
-- ✅ Submit exitoso + confirmation number capturado
-- ✅ Screenshot guardado como audit trail
+- ✅ TXT generado con formato correcto (tabs, sin headers)
+- ✅ Validación rechaza guests con campos incompletos
+- ✅ Códigos SIRE correctos (NO códigos ISO)
+- ✅ Fechas en formato DD/MM/YYYY
+- ✅ Staff puede download TXT para upload manual al portal
 
 ---
 
@@ -540,13 +525,13 @@ GROUP BY tenant_id;
 
 ## 🤖 AGENTES REQUERIDOS
 
-### 1. **@agent-backend-developer** (Principal - 35h)
-**Responsabilidad:** APIs, business logic, SIRE integration, queue system
+### 1. **@agent-backend-developer** (Principal - 30h)
+**Responsabilidad:** APIs, business logic, TXT generation, queue system
 
 **Tareas:**
 - FASE 1: Enhanced conversational capture (API routes, entity extraction)
 - FASE 2: Document OCR endpoints, field extraction logic
-- FASE 3: Real SIRE integration (Puppeteer automation)
+- FASE 3: TXT file generation (SIRE official format)
 - FASE 4: Queue system implementation (Bull/Inngest)
 - FASE 5: Admin API endpoints (guests list, metrics, re-submit, export)
 - FASE 6: E2E testing, API documentation
@@ -556,30 +541,32 @@ GROUP BY tenant_id;
 - `src/lib/sire/progressive-disclosure.ts`
 - `src/lib/sire/document-ocr.ts`
 - `src/lib/sire/field-extraction.ts`
-- `src/lib/sire/sire-automation.ts` (update)
-- `src/lib/sire/sire-credentials.ts`
+- `src/lib/sire/sire-txt-generator.ts` (FASE 3)
+- `src/lib/sire/sire-validation.ts` (FASE 3)
 - `src/lib/queue/sire-submission-queue.ts`
 - `src/lib/queue/sire-submission-worker.ts`
 - `src/app/api/guest/chat/route.ts` (update)
 - `src/app/api/sire/extract-document/route.ts`
-- `src/app/api/sire/submit/route.ts` (update)
+- `src/app/api/sire/export-txt/route.ts` (FASE 3)
 - `src/app/api/sire/queue/**/*`
 - `src/app/api/sire/admin/**/*`
 
 ---
 
-### 2. **@agent-ux-interface** (Secundario - 18h)
+### 2. **@agent-ux-interface** (Secundario - 20h)
 **Responsabilidad:** UI components, chat interface, admin dashboard
 
 **Tareas:**
 - FASE 1: SIRE progress bar component
 - FASE 2: Document upload component, preview modal
+- FASE 3: TXT export button/component
 - FASE 5: Admin dashboard, guest list, metrics cards, filters
 
 **Archivos:**
 - `src/components/Compliance/SireProgressBar.tsx`
 - `src/components/Compliance/DocumentUpload.tsx`
 - `src/components/Compliance/DocumentPreview.tsx`
+- `src/components/Admin/SireTxtExport.tsx` (FASE 3)
 - `src/components/Chat/GuestChatInterface.tsx` (update)
 - `src/app/admin/sire/page.tsx`
 - `src/components/Admin/SireGuestList.tsx`
@@ -588,29 +575,29 @@ GROUP BY tenant_id;
 
 ---
 
-### 3. **@agent-database-agent** (Soporte - 5h)
+### 3. **@agent-database-agent** (Soporte - 4h)
 **Responsabilidad:** Database migrations, views, RLS policies
 
 **Tareas:**
 - FASE 2: Migration para `sire_document_uploads`
-- FASE 3: Migration para SIRE credentials + submission logs
-- FASE 4: Migration para submission queue
+- FASE 3: Migration para `sire_exports` (tracking de archivos TXT generados)
+- FASE 4: Migration para `sire_submission_queue`
 - FASE 5: Views para admin dashboard
 
 **Archivos:**
-- `migrations/20251204_add_document_uploads.sql`
-- `migrations/20251204_add_sire_credentials.sql`
-- `migrations/20251204_add_submission_queue.sql`
-- `migrations/20251204_add_sire_admin_views.sql`
+- `migrations/20251218_add_document_uploads.sql`
+- `migrations/20251218_add_sire_exports.sql`
+- `migrations/20251218_add_submission_queue.sql`
+- `migrations/20251218_add_sire_admin_views.sql`
 
 ---
 
-### 4. **@agent-deploy-agent** (Soporte - 3h)
-**Responsabilidad:** Deployment, VPS setup para Puppeteer
+### 4. **@agent-deploy-agent** (Soporte - 1h)
+**Responsabilidad:** Deployment testing
 
 **Tareas:**
-- FASE 3: Setup Puppeteer runtime en VPS (TST/PRD)
 - FASE 6: Deploy pilot a TST, luego PRD
+- FASE FUTURA: Setup Puppeteer runtime en VPS (si se implementa automation)
 
 **Archivos:**
 - Ninguno (infrastructure setup)
@@ -628,8 +615,8 @@ GROUP BY tenant_id;
 │   │   │   ├── progressive-disclosure.ts     [FASE 1] NEW
 │   │   │   ├── document-ocr.ts               [FASE 2] NEW
 │   │   │   ├── field-extraction.ts           [FASE 2] NEW
-│   │   │   ├── sire-credentials.ts           [FASE 3] NEW
-│   │   │   ├── sire-automation.ts            [FASE 3] UPDATE
+│   │   │   ├── sire-txt-generator.ts         [FASE 3] NEW
+│   │   │   ├── sire-validation.ts            [FASE 3] NEW
 │   │   │   ├── sire-catalogs.ts              [EXISTS]
 │   │   │   └── field-mappers.ts              [EXISTS]
 │   │   ├── queue/
@@ -648,6 +635,7 @@ GROUP BY tenant_id;
 │   │   ├── Chat/
 │   │   │   └── GuestChatInterface.tsx        [UPDATE]
 │   │   └── Admin/
+│   │       ├── SireTxtExport.tsx             [FASE 3] NEW
 │   │       ├── SireGuestList.tsx             [FASE 5] NEW
 │   │       ├── SireMetrics.tsx               [FASE 5] NEW
 │   │       └── SireFilters.tsx               [FASE 5] NEW
@@ -657,7 +645,7 @@ GROUP BY tenant_id;
 │       │   │   └── chat/route.ts             [UPDATE]
 │       │   └── sire/
 │       │       ├── extract-document/route.ts [FASE 2] NEW
-│       │       ├── submit/route.ts           [FASE 3] UPDATE
+│       │       ├── export-txt/route.ts       [FASE 3] NEW
 │       │       ├── queue/
 │       │       │   ├── add/route.ts          [FASE 4] NEW
 │       │       │   └── status/[jobId]/route.ts [FASE 4] NEW
@@ -669,14 +657,16 @@ GROUP BY tenant_id;
 │       └── admin/
 │           └── sire/page.tsx                 [FASE 5] NEW
 ├── migrations/
-│   ├── 20251204_add_document_uploads.sql     [FASE 2] NEW
-│   ├── 20251204_add_sire_credentials.sql     [FASE 3] NEW
-│   ├── 20251204_add_submission_queue.sql     [FASE 4] NEW
-│   └── 20251204_add_sire_admin_views.sql     [FASE 5] NEW
+│   ├── 20251218_add_document_uploads.sql     [FASE 2] NEW
+│   ├── 20251218_add_sire_exports.sql         [FASE 3] NEW
+│   ├── 20251218_add_submission_queue.sql     [FASE 4] NEW
+│   └── 20251218_add_sire_admin_views.sql     [FASE 5] NEW
 ├── tests/
 │   ├── unit/
 │   │   ├── progressive-disclosure.test.ts    [FASE 1] NEW
 │   │   ├── field-extraction.test.ts          [FASE 2] NEW
+│   │   ├── sire-txt-generator.test.ts        [FASE 3] NEW
+│   │   ├── sire-validation.test.ts           [FASE 3] NEW
 │   │   └── sire-submission-queue.test.ts     [FASE 4] NEW
 │   ├── integration/
 │   │   ├── sire-chat-flow.test.ts            [FASE 1] NEW
@@ -684,9 +674,6 @@ GROUP BY tenant_id;
 │   └── e2e/
 │       ├── sire-guest-flow.spec.ts           [FASE 6] NEW
 │       └── sire-admin-flow.spec.ts           [FASE 6] NEW
-├── scripts/
-│   └── sire/
-│       └── test-submission.ts                [FASE 3] NEW
 └── docs/
     └── sire-auto-submission/
         ├── fase-1/
@@ -735,11 +722,12 @@ GROUP BY tenant_id;
 - `destination_city_code` (Campo 12): Ciudad/país de DESTINO después del hotel
 - Estos son INDEPENDIENTES (ej: ciudadano USA, procedencia Bogotá, destino Cartagena)
 
-**Puppeteer en VPS**
-- NO ejecutar Puppeteer en Vercel (timeouts, recursos limitados)
-- Ejecutar en VPS (TST/PRD) con Chrome headless
-- Usar workflow `.github/workflows/vps-exec.yml` para debugging
-- Screenshots obligatorios para audit trail
+**TXT File Format (CRÍTICO)**
+- Delimitador: TAB (`\t`) entre campos
+- Sin headers (primera línea = primer huésped)
+- Un archivo puede tener múltiples huéspedes (1 línea = 1 guest)
+- Encoding: UTF-8 sin BOM
+- Line endings: Windows CRLF (`\r\n`) recomendado
 
 **Queue System**
 - Considerar Bull (Redis-based) o Inngest (serverless)
@@ -764,12 +752,85 @@ GROUP BY tenant_id;
 - SIRE submission: <10s
 - Dashboard load: <1s con 100+ guests
 
-**Fallback Strategy**
-- Si SIRE auto-submission falla → Export TXT manual
-- Staff puede descargar TXT y subir manualmente al portal SIRE
-- TXT format: fixed-width columns, pipes separators (ver spec oficial)
+**Upload Manual al Portal SIRE**
+- Staff descarga TXT generado desde admin dashboard
+- Staff se loguea manualmente al portal SIRE
+- Staff sube archivo TXT mediante interfaz web del portal
+- Portal SIRE procesa archivo y devuelve confirmation number
 
 ---
 
-**Última actualización:** Diciembre 4, 2025
-**Próximo paso:** Generar TODO.md con tareas detalladas por fase
+## 🔮 FASE FUTURA (OPCIONAL): Puppeteer File Upload Automation
+
+**Estado:** Postponed - Implementar DESPUÉS de validar que captura + TXT generation funcionan correctamente
+
+**Objetivo:** Automatizar el upload de archivos TXT al portal SIRE mediante Puppeteer (navegación web automatizada).
+
+**Por qué postponer:**
+- Primero validar que el flujo manual funciona (captura → TXT → upload manual)
+- Evitar complejidad innecesaria en MVP
+- Puppeteer requiere infraestructura adicional (VPS con Chrome headless)
+- Portal SIRE puede cambiar (selectors se rompen)
+
+**Scope cuando se implemente:**
+- Login automatizado al portal SIRE con credenciales por tenant
+- Navegación al formulario de upload
+- Upload del archivo TXT generado
+- Captura de confirmation number
+- Screenshot para audit trail
+- Error handling robusto (portal caído, credenciales incorrectas)
+
+**Archivos a crear (futuro):**
+- `src/lib/sire/sire-automation.ts` - Puppeteer automation
+- `src/lib/sire/sire-credentials.ts` - Credential encryption
+- `scripts/sire/test-submission.ts` - Script de testing manual
+- `docs/sire-auto-submission/SIRE_PORTAL_GUIDE.md` - Documentación de selectors
+
+**Infraestructura requerida:**
+- VPS con Chrome headless (NO ejecutar en Vercel - timeouts)
+- Redis para job queue (Bull)
+- Retry logic con exponential backoff
+- Dead-letter queue para errores permanentes
+
+**Consideraciones:**
+- Portal SIRE es sistema legacy gubernamental (puede ser inestable)
+- Selectors pueden cambiar sin previo aviso
+- Captchas pueden aparecer (requerir intervención manual)
+- Rate limiting del portal desconocido
+
+**Decisión:** Implementar solo cuando el flujo manual esté validado con 3+ hoteles en producción.
+
+---
+
+---
+
+## 📊 RESUMEN EJECUTIVO
+
+**Fases Activas:** 6 fases (FASE 1-6)
+**Total Tareas:** 39 tareas
+**Duración Estimada:** 49 horas
+**Estado:** Listo para desarrollo
+
+**Alcance MVP:**
+- ✅ Captura conversacional de 13 campos SIRE (FASE 1)
+- ✅ OCR de documentos con Claude Vision (FASE 2)
+- ✅ Generación de archivos TXT formato oficial SIRE (FASE 3)
+- ✅ Queue system con retry logic (FASE 4)
+- ✅ Admin dashboard completo (FASE 5)
+- ✅ Testing E2E y documentación (FASE 6)
+
+**Fase Futura (Postponed):**
+- Puppeteer automation para upload de TXT al portal SIRE
+- Se implementará DESPUÉS de validar MVP con 3+ hoteles en producción
+- Estimación: 7 tareas adicionales, 12h
+
+**Desglose por Agente:**
+- @agent-backend-developer: 24 tareas (30h)
+- @agent-ux-interface: 9 tareas (20h)
+- @agent-database-agent: 4 tareas (4h)
+- @agent-deploy-agent: 2 tareas (1h)
+
+---
+
+**Última actualización:** Diciembre 18, 2025
+**Próximo paso:** Ejecutar FASE 1 - Enhanced Conversational Capture

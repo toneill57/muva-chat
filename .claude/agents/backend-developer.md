@@ -89,7 +89,7 @@ I'm a specialized backend development agent for MUVA Chat's Next.js + TypeScript
 ## Technical Stack
 
 **Backend Framework:**
-- Next.js 15 (App Router) + TypeScript
+- Next.js 15.5.9 (App Router) + TypeScript
 - Node.js runtime
 - Server-side rendering and API routes
 

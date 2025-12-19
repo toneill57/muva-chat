@@ -127,9 +127,13 @@ interface DocumentContent {
 
 /**
  * Generate conversational response with full context awareness
+ *
+ * @param context - Conversational context with query, history, guest info
+ * @param customSystemPrompt - Optional custom system prompt (for SIRE mode, etc.)
  */
 export async function generateConversationalResponse(
-  context: ConversationalContext
+  context: ConversationalContext,
+  customSystemPrompt?: string
 ): Promise<ConversationalResponse> {
   const startTime = Date.now()
 
@@ -167,7 +171,7 @@ export async function generateConversationalResponse(
       vectorResults: enrichedResults,
     }
 
-    const response = await generateResponseWithClaude(fullContext, enhancedQuery)
+    const response = await generateResponseWithClaude(fullContext, enhancedQuery, customSystemPrompt)
     console.log(`[Chat Engine] Generated response (${response.length} chars)`)
 
     // STEP 6: Extract entities from current conversation
@@ -529,10 +533,15 @@ async function retrieveFullDocument(sourceFile: string, table: string): Promise<
 
 /**
  * Generate natural language response using Claude Sonnet 3.5
+ *
+ * @param context - Conversational context with query, history, guest info
+ * @param enhancedQuery - Enhanced query with entities
+ * @param customSystemPrompt - Optional custom system prompt (overrides default if provided)
  */
 async function generateResponseWithClaude(
   context: ConversationalContext,
-  enhancedQuery: EnhancedQuery
+  enhancedQuery: EnhancedQuery,
+  customSystemPrompt?: string
 ): Promise<string> {
   const startTime = Date.now()
 
@@ -590,8 +599,8 @@ async function generateResponseWithClaude(
         }).join(', ')}`
       : ''
 
-    // System prompt with dynamic security restrictions
-    const systemPrompt = `Eres un asistente virtual para huéspedes de hoteles en San Andrés, Colombia.
+    // Use custom system prompt if provided (for SIRE mode, etc.), otherwise use default
+    const systemPrompt = customSystemPrompt || `Eres un asistente virtual para huéspedes de hoteles en San Andrés, Colombia.
 
 CONTEXTO DEL HUÉSPED:
 - Nombre: ${context.guestInfo.guest_name}

@@ -85,7 +85,7 @@ gh workflow run vps-exec.yml -f environment=tst -f command="ls -la .next" -f wor
 - AI-powered guest communication for hotels/tourism businesses
 - Multi-tenant architecture (subdomain-based)
 - Premium SIRE compliance (Colombian tourism regulatory reporting)
-- Stack: Next.js 15, TypeScript, Supabase, Claude AI
+- Stack: Next.js 15.5.9, TypeScript, Supabase, Claude AI
 
 **Chat Routes:**
 - `/with-me` - Public chat (anonymous, pre-booking)

@@ -931,3 +931,369 @@ export async function updateReservationWithComplianceData(
     throw error;
   }
 }
+
+// ============================================================================
+// ENTITY EXTRACTION SYSTEM (FASE 1 - Tarea 1.5)
+// ============================================================================
+
+/**
+ * Resultado de extracción de entidad con confidence scoring
+ */
+export interface EntityExtractionResult<T = any> {
+  value: T | null;
+  confidence: number; // 0.00 - 1.00
+  normalized?: T; // Valor normalizado (opcional)
+}
+
+/**
+ * Extrae una entidad SIRE de un mensaje conversacional
+ *
+ * @param message - Mensaje del usuario (respuesta conversacional)
+ * @param fieldName - Campo SIRE a extraer
+ * @param context - Contexto adicional (opcional)
+ * @returns Resultado de extracción con confidence
+ *
+ * @example
+ * extractSIREEntity("Mi pasaporte es AB-123456", "identification_number")
+ * // Returns: { value: "AB123456", confidence: 0.95, normalized: "AB123456" }
+ */
+export function extractSIREEntity(
+  message: string,
+  fieldName: string,
+  context?: Record<string, any>
+): EntityExtractionResult {
+  const trimmed = message.trim();
+
+  switch (fieldName) {
+    case 'identification_number':
+      return extractIdentificationNumber(trimmed);
+
+    case 'first_surname':
+    case 'names':
+      return extractNameComponent(trimmed, fieldName as 'first_surname' | 'names');
+
+    case 'nationality_code':
+      return extractNationality(trimmed);
+
+    case 'birth_date':
+      return extractBirthDate(trimmed);
+
+    case 'origin_place':
+    case 'destination_place':
+      return extractLocation(trimmed, context);
+
+    default:
+      return { value: null, confidence: 0 };
+  }
+}
+
+/**
+ * Extrae y normaliza número de identificación (pasaporte/cédula)
+ * Remueve guiones, espacios y caracteres especiales
+ */
+function extractIdentificationNumber(message: string): EntityExtractionResult<string> {
+  // Buscar pattern de pasaporte en el mensaje PRIMERO (antes de normalizar)
+  // Pattern: 1-2 letras seguidas de 6-9 dígitos (permite guiones/espacios entre)
+  const passportPattern = /([A-Z]{1,2}[-\s]?[0-9]{6,9})/i;
+  const match = message.match(passportPattern);
+
+  if (match) {
+    // Remover guiones y espacios del match
+    const normalized = match[1].toUpperCase().replace(/[-\s]/g, '');
+    return {
+      value: normalized,
+      confidence: 0.95,
+      normalized
+    };
+  }
+
+  // Fallback: remover guiones, espacios y caracteres especiales del mensaje completo
+  const normalized = message.toUpperCase().replace(/[-\s]/g, '');
+
+  // Validar longitud (6-15 caracteres alfanuméricos)
+  if (/^[A-Z0-9]{6,15}$/.test(normalized)) {
+    return {
+      value: normalized,
+      confidence: 0.85,
+      normalized
+    };
+  }
+
+  return { value: null, confidence: 0 };
+}
+
+/**
+ * Extrae componentes de nombre (primer apellido, segundo apellido, nombres)
+ * Intenta inferir estructura desde nombre completo
+ */
+function extractNameComponent(
+  message: string,
+  component: 'first_surname' | 'names'
+): EntityExtractionResult<string> {
+  const words = message.trim().split(/\s+/).filter(w => w.length > 0);
+
+  if (words.length === 0) {
+    return { value: null, confidence: 0 };
+  }
+
+  // Si solo hay 1 palabra, asumimos que es el componente solicitado
+  if (words.length === 1) {
+    return {
+      value: words[0],
+      confidence: 0.70
+    };
+  }
+
+  // Si hay 2 palabras:
+  // - first_surname: última palabra
+  // - names: primera palabra
+  if (words.length === 2) {
+    const value = component === 'first_surname' ? words[1] : words[0];
+    return {
+      value,
+      confidence: 0.80
+    };
+  }
+
+  // Si hay 3+ palabras:
+  // - first_surname: penúltima palabra
+  // - names: todas excepto las 2 últimas
+  if (component === 'first_surname') {
+    return {
+      value: words[words.length - 2],
+      confidence: 0.85
+    };
+  } else {
+    return {
+      value: words.slice(0, -2).join(' '),
+      confidence: 0.85
+    };
+  }
+}
+
+/**
+ * Extrae nacionalidad y mapea a código SIRE oficial
+ * Usa getSIRECountryCode() de sire-catalogs.ts
+ */
+function extractNationality(message: string): EntityExtractionResult<string> {
+  const normalized = message.toLowerCase().trim();
+
+  // Mapeo de variaciones comunes a nombres oficiales
+  const aliases: Record<string, string> = {
+    'usa': 'Estados Unidos',
+    'eeuu': 'Estados Unidos',
+    'ee.uu.': 'Estados Unidos',
+    'estados unidos de américa': 'Estados Unidos',
+    'united states': 'Estados Unidos',
+    'american': 'Estados Unidos',
+    'americano': 'Estados Unidos',
+    'estadounidense': 'Estados Unidos',
+    'uk': 'Reino Unido',
+    'england': 'Reino Unido',
+    'britain': 'Reino Unido',
+    'great britain': 'Reino Unido',
+    'inglés': 'Reino Unido',
+    'británico': 'Reino Unido',
+    'colombiano': 'Colombia',
+    'colombian': 'Colombia',
+  };
+
+  // Buscar en aliases
+  for (const [alias, countryName] of Object.entries(aliases)) {
+    if (normalized.includes(alias)) {
+      const code = getSIRECountryCode(countryName);
+      if (code) {
+        return {
+          value: code,
+          confidence: 0.90,
+          normalized: code
+        };
+      }
+    }
+  }
+
+  // Buscar directamente en catálogos SIRE
+  // Intentar con el mensaje original capitalizado
+  const capitalized = message.charAt(0).toUpperCase() + message.slice(1).toLowerCase();
+  const code = getSIRECountryCode(capitalized);
+
+  if (code) {
+    return {
+      value: code,
+      confidence: 0.95,
+      normalized: code
+    };
+  }
+
+  return { value: null, confidence: 0 };
+}
+
+/**
+ * Extrae y normaliza fecha de nacimiento
+ * Soporta formatos: DD/MM/YYYY, "25 de marzo de 1985", "March 25, 1985"
+ */
+function extractBirthDate(message: string): EntityExtractionResult<string> {
+  // Pattern 1: DD/MM/YYYY
+  const ddmmyyyyPattern = /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/;
+  const match1 = message.match(ddmmyyyyPattern);
+
+  if (match1) {
+    const day = match1[1].padStart(2, '0');
+    const month = match1[2].padStart(2, '0');
+    const year = match1[3];
+    const normalized = `${day}/${month}/${year}`;
+
+    // Validar fecha válida
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    if (!isNaN(date.getTime()) && date <= new Date()) {
+      return {
+        value: normalized,
+        confidence: 0.95,
+        normalized
+      };
+    }
+  }
+
+  // Pattern 2: "25 de marzo de 1985" (español)
+  const spanishMonths: Record<string, string> = {
+    'enero': '01', 'febrero': '02', 'marzo': '03', 'abril': '04',
+    'mayo': '05', 'junio': '06', 'julio': '07', 'agosto': '08',
+    'septiembre': '09', 'octubre': '10', 'noviembre': '11', 'diciembre': '12'
+  };
+
+  const spanishPattern = /(\d{1,2})\s+de\s+(\w+)\s+de\s+(\d{4})/i;
+  const match2 = message.match(spanishPattern);
+
+  if (match2) {
+    const day = match2[1].padStart(2, '0');
+    const monthName = match2[2].toLowerCase();
+    const year = match2[3];
+    const month = spanishMonths[monthName];
+
+    if (month) {
+      const normalized = `${day}/${month}/${year}`;
+      return {
+        value: normalized,
+        confidence: 0.95,
+        normalized
+      };
+    }
+  }
+
+  // Pattern 3: "March 25, 1985" (inglés)
+  const englishMonths: Record<string, string> = {
+    'january': '01', 'february': '02', 'march': '03', 'april': '04',
+    'may': '05', 'june': '06', 'july': '07', 'august': '08',
+    'september': '09', 'october': '10', 'november': '11', 'december': '12'
+  };
+
+  const englishPattern = /(\w+)\s+(\d{1,2}),?\s+(\d{4})/i;
+  const match3 = message.match(englishPattern);
+
+  if (match3) {
+    const monthName = match3[1].toLowerCase();
+    const day = match3[2].padStart(2, '0');
+    const year = match3[3];
+    const month = englishMonths[monthName];
+
+    if (month) {
+      const normalized = `${day}/${month}/${year}`;
+      return {
+        value: normalized,
+        confidence: 0.95,
+        normalized
+      };
+    }
+  }
+
+  return { value: null, confidence: 0 };
+}
+
+/**
+ * Extrae lugar (procedencia/destino) y mapea a código SIRE o DIVIPOLA
+ * Intenta primero ciudades colombianas, luego países
+ */
+function extractLocation(
+  message: string,
+  context?: Record<string, any>
+): EntityExtractionResult<string> {
+  const normalized = message.trim();
+
+  // Primero: Buscar aliases comunes de países (ANTES de catálogos para evitar falsos positivos)
+  const aliases: Record<string, string> = {
+    'usa': 'Estados Unidos',
+    'eeuu': 'Estados Unidos',
+    'ee.uu.': 'Estados Unidos',
+    'united states': 'Estados Unidos',
+    'estados unidos': 'Estados Unidos',
+    'uk': 'Reino Unido',
+    'england': 'Reino Unido',
+  };
+
+  const lowerMessage = message.toLowerCase().trim();
+
+  // Verificar si el mensaje COMPLETO es un alias (match exacto)
+  if (aliases[lowerMessage]) {
+    const code = getSIRECountryCode(aliases[lowerMessage]);
+    if (code) {
+      return {
+        value: code,
+        confidence: 0.90,
+        normalized: code
+      };
+    }
+  }
+
+  // Extraer la ciudad/país del contexto del mensaje
+  // Patterns comunes: "Vengo de X", "Voy a X", "desde X", solo "X"
+  const locationPatterns = [
+    /(?:vengo de|desde|procedencia|origin)\s+([a-záéíóúñü\s]+)/i,
+    /(?:voy a|destino|destination|going to)\s+([a-záéíóúñü\s]+)/i,
+  ];
+
+  let locationName = normalized;
+
+  for (const pattern of locationPatterns) {
+    const match = message.match(pattern);
+    if (match) {
+      locationName = match[1].trim();
+      break;
+    }
+  }
+
+  // Intentar primero con ciudades DIVIPOLA (colombianas)
+  const cityCode = getDIVIPOLACityCode(locationName);
+  if (cityCode) {
+    return {
+      value: cityCode,
+      confidence: 0.90,
+      normalized: cityCode
+    };
+  }
+
+  // Si no es ciudad colombiana, intentar con países
+  const countryCode = getSIRECountryCode(locationName);
+  if (countryCode) {
+    return {
+      value: countryCode,
+      confidence: 0.85,
+      normalized: countryCode
+    };
+  }
+
+  // Buscar aliases dentro del mensaje (match parcial)
+  for (const [alias, countryName] of Object.entries(aliases)) {
+    if (lowerMessage.includes(alias)) {
+      const code = getSIRECountryCode(countryName);
+      if (code) {
+        return {
+          value: code,
+          confidence: 0.80,
+          normalized: code
+        };
+      }
+    }
+  }
+
+  return { value: null, confidence: 0 };
+}
