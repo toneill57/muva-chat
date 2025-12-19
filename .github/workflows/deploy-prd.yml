@@ -207,7 +207,7 @@ jobs:
             # Hard restart PM2 (delete + start to clear any cached state)
             echo "Hard restarting PM2 (muva-chat-prd)..."
             pm2 delete muva-chat-prd || true
-            pm2 start ecosystem.config.js --only muva-chat-prd
+            pm2 start ecosystem.config.cjs --only muva-chat-prd
             pm2 save
             echo "✅ PM2 restarted"
 
