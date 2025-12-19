@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
         // 2. Middleware already injects x-tenant-subdomain header for tenant context
         // 3. Rewriting /api/* to /[tenant]/api/* causes 404s (handler not found)
         {
-          source: '/:path((?!api).*)*',  // Exclude /api/* routes using named capture with negative lookahead
+          source: '/:path((?!api|_next).*)*',  // Exclude /api/* and /_next/* routes using named capture with negative lookahead
           has: [
             {
               type: 'host',
