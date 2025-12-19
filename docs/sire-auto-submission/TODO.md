@@ -9,7 +9,7 @@
 ## FASE 1: Enhanced Conversational Capture 🎯
 
 ### 1.1 Create conversational prompts system
-- [ ] Implementar system prompts especializados para captura SIRE (estimate: 2h)
+- [x] Implementar system prompts especializados para captura SIRE (estimate: 2h) ✅
   - System prompt base con contexto de 13 campos SIRE
   - Question templates por tipo de campo (nombre, documento, nacionalidad, fechas)
   - Multi-idioma (español, inglés)
@@ -17,9 +17,10 @@
   - Files: `src/lib/sire/conversational-prompts.ts`
   - Agent: **@agent-backend-developer**
   - Test: `pnpm test src/lib/sire/conversational-prompts.test.ts`
+  - **Completado:** Diciembre 18, 2025 - 627 líneas implementadas + documentación completa
 
 ### 1.2 Implement progressive disclosure logic
-- [ ] Desarrollar lógica de progressive disclosure (estimate: 2h)
+- [x] Desarrollar lógica de progressive disclosure (estimate: 2h) ✅
   - Función `getNextFieldToAsk(currentData)` - determina próximo campo
   - Priorización inteligente (documento → nombre → nacionalidad → fechas)
   - Skip logic (campos auto-deducibles del check-in)
@@ -27,9 +28,10 @@
   - Files: `src/lib/sire/progressive-disclosure.ts`
   - Agent: **@agent-backend-developer**
   - Test: `pnpm test tests/unit/progressive-disclosure.test.ts`
+  - **Completado:** Diciembre 18, 2025 - 697 líneas + validación incremental con normalización
 
 ### 1.3 Build SIRE progress bar component
-- [ ] Crear componente de progress indicator (estimate: 1.5h)
+- [x] Crear componente de progress indicator (estimate: 1.5h) ✅
   - Progress bar 13/13 campos con tooltips
   - Visual indicators por campo (✅ complete, ⏳ pending, ❌ error)
   - Animación smooth de progreso
@@ -37,9 +39,10 @@
   - Files: `src/components/Compliance/SireProgressBar.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Manual - verificar en localhost:3000/my-stay
+  - **Completado:** Diciembre 18, 2025 - Componente con 4 estados visuales + responsive design + página de test
 
 ### 1.4 Integrate SIRE mode into GuestChatInterface
-- [ ] Modificar chat interface para modo SIRE (estimate: 2h)
+- [x] Modificar chat interface para modo SIRE (estimate: 2h) ✅
   - Agregar prop `mode: 'general' | 'sire'`
   - Integrar SireProgressBar en header
   - Hook para progressive disclosure
@@ -47,9 +50,10 @@
   - Files: `src/components/Chat/GuestChatInterface.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Manual - captura conversacional de 3 guest profiles
+  - **Completado:** Diciembre 18, 2025 - Hook useSireProgressiveDisclosure + integración completa en chat interface (+242 líneas)
 
 ### 1.5 Enhance entity extraction for SIRE
-- [ ] Mejorar entity extraction en compliance-chat-engine (estimate: 1.5h)
+- [x] Mejorar entity extraction en compliance-chat-engine (estimate: 1.5h) ✅
   - Extract nombres compuestos (primer apellido, segundo apellido, nombres)
   - Extract fechas en español ("veinticinco de marzo de mil novecientos ochenta y cinco")
   - Extract países en lenguaje natural ("Estados Unidos" → nationality_code 249)
@@ -57,6 +61,7 @@
   - Files: `src/lib/compliance-chat-engine.ts`
   - Agent: **@agent-backend-developer**
   - Test: `pnpm test tests/integration/sire-chat-flow.test.ts`
+  - **Completado:** Diciembre 18, 2025 - Sistema de extracción con 6 funciones + confidence scoring + 10/10 tests PASSED (+815 líneas)
 
 ### 1.6 Update chat API with SIRE system prompt
 - [ ] Modificar API route para incluir SIRE prompt (estimate: 1h)
@@ -67,6 +72,17 @@
   - Files: `src/app/api/guest/chat/route.ts`
   - Agent: **@agent-backend-developer**
   - Test: `curl -X POST localhost:3000/api/guest/chat -d '{"mode":"sire"}'`
+
+### 1.7 Connect SIRE start button to progressive disclosure flow
+- [ ] Integrar botón "Iniciar registro" con modo SIRE (estimate: 1h)
+  - Cambiar `mode` de prop a state en GuestChatInterface
+  - Crear handler `handleStartSIREMode()` que active modo SIRE
+  - Crear nueva conversación SIRE dedicada al iniciar
+  - Actualizar ComplianceReminder para llamar handler correcto
+  - Mostrar SIRE progress bar cuando modo activo
+  - Files: `src/components/Chat/GuestChatInterface.tsx`, `src/components/Compliance/ComplianceReminder.tsx`
+  - Agent: **@agent-ux-interface**
+  - Test: Manual - click botón "Iniciar registro" → modo SIRE activo
 
 ---
 
@@ -427,11 +443,11 @@
 
 ## 📊 PROGRESO
 
-**Total Tasks:** 39
-**Completed:** 0/39 (0%)
+**Total Tasks:** 40
+**Completed:** 5/40 (12.5%)
 
 **Por Fase:**
-- FASE 1: 0/6 tareas (0%)
+- FASE 1: 5/7 tareas (71.4%) ← EN PROGRESO
 - FASE 2: 0/7 tareas (0%)
 - FASE 3: 0/6 tareas (0%) ← TXT File Generation
 - FASE 4: 0/7 tareas (0%)
@@ -439,10 +455,10 @@
 - FASE 6: 0/7 tareas (0%)
 
 **Por Agente:**
-- @agent-backend-developer: 0/24 tareas (61.5%)
-- @agent-ux-interface: 0/9 tareas (23.1%)
-- @agent-database-agent: 0/4 tareas (10.3%)
-- @agent-deploy-agent: 0/2 tareas (5.1%)
+- @agent-backend-developer: 3/24 tareas completadas (12.5%)
+- @agent-ux-interface: 2/10 tareas completadas (20.0%)
+- @agent-database-agent: 0/4 tareas (0%)
+- @agent-deploy-agent: 0/2 tareas (0%)
 
 **Nota:** Puppeteer automation (upload de TXT al portal SIRE) fue postponed a FASE FUTURA (7 tareas adicionales, 12h estimadas)
 
@@ -466,4 +482,4 @@
 ---
 
 **Última actualización:** Diciembre 18, 2025
-**Próximo paso:** Ejecutar FASE 1, Tarea 1.1 - Create conversational prompts system
+**Próximo paso:** Ejecutar FASE 1, Tarea 1.7 - Connect SIRE Start Button (estimate: 1h) - **ÚLTIMA TAREA DE FASE 1**

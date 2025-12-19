@@ -100,6 +100,7 @@ export interface GuestChatInterfaceProps {
   token: string
   tenant?: Tenant | null
   onLogout: () => void
+  // mode is now internal state, not a prop (dynamic activation via ComplianceReminder)
 }
 
 export interface EntityBadgeProps {

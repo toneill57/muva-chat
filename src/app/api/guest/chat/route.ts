@@ -7,6 +7,9 @@ import {
 } from '@/lib/conversational-chat-engine'
 import { createServerClient } from '@/lib/supabase'
 import { compactConversationIfNeeded } from '@/lib/guest-conversation-memory'
+import { SIRE_SYSTEM_PROMPT, getQuestionForField } from '@/lib/sire/conversational-prompts'
+import { getNextFieldToAsk } from '@/lib/sire/progressive-disclosure'
+import { extractSIREEntity } from '@/lib/compliance-chat-engine'
 
 // Rate limiting configuration
 const RATE_LIMIT = {
@@ -91,7 +94,7 @@ export async function POST(request: NextRequest) {
     }
 
     // === PARSE REQUEST ===
-    const { message, conversation_id } = await request.json()
+    const { message, conversation_id, mode, sireData } = await request.json()
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return NextResponse.json(
@@ -99,6 +102,10 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Detect SIRE mode
+    const isSIREMode = mode === 'sire'
+    console.log(`[Guest Chat] Mode: ${mode || 'normal'}${isSIREMode ? ' (SIRE compliance)' : ''}`)
 
     // Validate message length
     if (message.length > 1000) {
@@ -182,6 +189,70 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Guest Chat] Loaded ${history.length} previous messages`)
 
+    // === SIRE MODE: PROGRESSIVE DISCLOSURE + ENTITY EXTRACTION ===
+    let extractedData: Record<string, any> = {}
+    let nextField: string | null = null
+    let sireContext = ''
+
+    if (isSIREMode) {
+      console.log('[Guest Chat] SIRE mode enabled - applying progressive disclosure')
+
+      // Determinar próximo campo a preguntar
+      nextField = getNextFieldToAsk(sireData || {})
+
+      if (nextField) {
+        console.log(`[Guest Chat] Next SIRE field to capture: ${nextField}`)
+
+        // Generar pregunta sugerida para el próximo campo
+        const question = getQuestionForField(nextField, {
+          language: 'es', // TODO: detect user language from session
+          previousData: sireData
+        })
+
+        // Construir contexto adicional para Claude
+        sireContext = `
+
+⚠️ CONTEXTO DE CAPTURA SIRE:
+
+PRÓXIMO CAMPO A CAPTURAR: ${nextField}
+PREGUNTA SUGERIDA: "${question}"
+
+Usa esta pregunta como guía para mantener la conversación natural y dirigida.
+Si el usuario ya proporcionó el dato en su mensaje, extráelo y valídalo antes de preguntar.
+`
+
+        // Intentar extraer entidad del mensaje actual
+        const extraction = extractSIREEntity(message, nextField, sireData)
+
+        if (extraction.confidence > 0.7) {
+          console.log(`[Guest Chat] Entity extracted from message:`, {
+            field: nextField,
+            value: extraction.value,
+            confidence: extraction.confidence
+          })
+
+          extractedData = {
+            [nextField]: extraction.normalized || extraction.value
+          }
+
+          // Determinar siguiente campo después de este
+          const updatedSIREData = { ...sireData, ...extractedData }
+          nextField = getNextFieldToAsk(updatedSIREData)
+
+          console.log(`[Guest Chat] Updated SIRE data, next field: ${nextField || 'COMPLETE'}`)
+        }
+      } else {
+        console.log('[Guest Chat] All SIRE fields captured - ready for confirmation')
+        sireContext = `
+
+✅ CONTEXTO DE CAPTURA SIRE:
+
+Todos los campos SIRE han sido capturados.
+Proporciona un resumen de los datos y solicita confirmación final del huésped.
+`
+      }
+    }
+
     // === GENERATE CONVERSATIONAL RESPONSE ===
     const context: ConversationalContext = {
       query: message,
@@ -190,7 +261,10 @@ export async function POST(request: NextRequest) {
       vectorResults: [], // Will be populated by the engine
     }
 
-    const conversationalResponse = await generateConversationalResponse(context)
+    const conversationalResponse = await generateConversationalResponse(
+      context,
+      isSIREMode ? SIRE_SYSTEM_PROMPT + sireContext : undefined
+    )
 
     console.log(`[Guest Chat] Response generated (${conversationalResponse.response.length} chars, confidence: ${conversationalResponse.confidence.toFixed(2)})`)
 
@@ -258,7 +332,7 @@ export async function POST(request: NextRequest) {
     console.log(`[Guest Chat] ✅ Request completed in ${totalTime}ms`)
 
     // === RETURN RESPONSE ===
-    return NextResponse.json({
+    const responsePayload: any = {
       success: true,
       response: conversationalResponse.response,
       entities: conversationalResponse.entities,
@@ -270,7 +344,24 @@ export async function POST(request: NextRequest) {
         guestName: session.guest_name,
         conversationId: targetConversationId,
       },
-    })
+    }
+
+    // Include SIRE-specific data if in SIRE mode
+    if (isSIREMode) {
+      responsePayload.sire = {
+        extractedData,
+        nextField,
+        isComplete: nextField === null
+      }
+
+      console.log('[Guest Chat] SIRE response data:', {
+        extractedFields: Object.keys(extractedData),
+        nextField: nextField || 'COMPLETE',
+        isComplete: nextField === null
+      })
+    }
+
+    return NextResponse.json(responsePayload)
   } catch (error) {
     console.error('[Guest Chat] Unexpected error:', error)
 
@@ -305,6 +396,8 @@ export async function GET() {
       body: {
         message: 'string (required, max 1000 chars)',
         conversation_id: 'string (optional, UUID of target conversation - defaults to session conversation)',
+        mode: 'string (optional, "sire" for SIRE compliance mode)',
+        sireData: 'object (optional, partial SIRE data for progressive disclosure)',
       },
     },
     response: {
@@ -319,6 +412,11 @@ export async function GET() {
         guestName: 'string',
         conversationId: 'string',
       },
+      sire: {
+        extractedData: 'object (SIRE fields extracted from message - only in SIRE mode)',
+        nextField: 'string | null (next SIRE field to capture - only in SIRE mode)',
+        isComplete: 'boolean (all SIRE fields captured - only in SIRE mode)',
+      },
     },
     features: [
       'JWT authentication',
@@ -328,6 +426,8 @@ export async function GET() {
       'Follow-up suggestions',
       'Full conversation history',
       'Persistent chat storage',
+      'SIRE compliance mode with progressive disclosure',
+      'Automatic entity extraction (confidence > 0.7)',
     ],
   })
 }
