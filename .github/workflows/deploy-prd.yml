@@ -287,6 +287,42 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY_PRD: ${{ secrets.PRD_SUPABASE_SERVICE_ROLE_KEY }}
         continue-on-error: true
 
+      - name: Validate CSS Assets (Post-Deploy)
+        if: steps.deploy.outcome == 'success'
+        id: css_check
+        run: |
+          echo "Validating CSS assets are accessible..."
+
+          # Get CSS files referenced by the page
+          CSS_FILES=$(curl -s "https://muva.chat/" | grep -oE '_next/static/chunks/[a-zA-Z0-9]+\.css' | sort -u)
+
+          if [ -z "$CSS_FILES" ]; then
+            echo "WARNING: No CSS files found in page HTML"
+            exit 0
+          fi
+
+          FAILED=0
+          for css in $CSS_FILES; do
+            STATUS=$(curl -sI "https://muva.chat/$css" | grep "HTTP" | awk '{print $2}')
+            if [ "$STATUS" = "200" ]; then
+              echo "  $css: HTTP $STATUS"
+            else
+              echo "  $css: HTTP $STATUS (FAILED)"
+              FAILED=$((FAILED + 1))
+            fi
+          done
+
+          if [ $FAILED -gt 0 ]; then
+            echo ""
+            echo "ERROR: $FAILED CSS file(s) returned non-200 status"
+            echo "This may indicate zombie process issues or routing problems"
+            exit 1
+          fi
+
+          echo ""
+          echo "All CSS files are accessible"
+        continue-on-error: true
+
       # TODO: Re-enable if migrations are enabled
       # - name: Rollback on Failure
       #   if: |

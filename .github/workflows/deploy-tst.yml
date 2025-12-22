@@ -277,7 +277,6 @@ jobs:
             echo "================================================"
 
       - name: Health Check (Post-Deploy via SSH)
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         id: health_check
         uses: appleboy/ssh-action@v1.0.0
         env:
@@ -298,6 +297,41 @@ jobs:
 
             echo "Running health check on localhost:3001..."
             TST_URL="http://localhost:3001" pnpm dlx tsx scripts/verify-tst-health.ts
+        continue-on-error: true
+
+      - name: Validate CSS Assets (Post-Deploy)
+        id: css_check
+        run: |
+          echo "Validating CSS assets are accessible..."
+
+          # Get CSS files referenced by the page
+          CSS_FILES=$(curl -s "https://simmerdown.staging.muva.chat/" | grep -oE '_next/static/chunks/[a-zA-Z0-9]+\.css' | sort -u)
+
+          if [ -z "$CSS_FILES" ]; then
+            echo "WARNING: No CSS files found in page HTML"
+            exit 0
+          fi
+
+          FAILED=0
+          for css in $CSS_FILES; do
+            STATUS=$(curl -sI "https://simmerdown.staging.muva.chat/$css" | grep "HTTP" | awk '{print $2}')
+            if [ "$STATUS" = "200" ]; then
+              echo "  $css: HTTP $STATUS"
+            else
+              echo "  $css: HTTP $STATUS (FAILED)"
+              FAILED=$((FAILED + 1))
+            fi
+          done
+
+          if [ $FAILED -gt 0 ]; then
+            echo ""
+            echo "ERROR: $FAILED CSS file(s) returned non-200 status"
+            echo "This may indicate zombie process issues or routing problems"
+            exit 1
+          fi
+
+          echo ""
+          echo "All CSS files are accessible"
         continue-on-error: true
 
       # TODO: Re-enable rollback after stabilizing deployments
