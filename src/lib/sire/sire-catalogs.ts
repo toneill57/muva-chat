@@ -97,6 +97,23 @@ export function getSIRECountryCode(countryName: string): string | null {
 }
 
 /**
+ * Get country name from SIRE code (reverse lookup)
+ *
+ * @param code - SIRE country code (e.g., "169", "249")
+ * @returns Country name in Spanish (e.g., "COLOMBIA", "ESTADOS UNIDOS") or null
+ *
+ * @example
+ * getSIRECountryName("169") // "COLOMBIA"
+ * getSIRECountryName("249") // "ESTADOS UNIDOS"
+ * getSIRECountryName("245") // "ESPAÑA"
+ * getSIRECountryName("999") // null (not found)
+ */
+export function getSIRECountryName(code: string): string | null {
+  const country = countryCatalog.find(c => c.codigo === code)
+  return country ? country.nombre : null
+}
+
+/**
  * Get DIVIPOLA city code from city name (Colombian cities only)
  *
  * Uses fuzzy search to handle:

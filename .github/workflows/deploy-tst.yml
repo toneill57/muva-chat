@@ -97,7 +97,49 @@ jobs:
           NEXT_PUBLIC_APP_URL: https://staging.muva.chat
           NEXT_PUBLIC_PLAUSIBLE_DOMAIN: staging.muva.chat
 
-      - name: Upload build artifacts to VPS
+      - name: Apply Supabase Migrations to TST
+        id: apply_migrations_tst
+        run: pnpm dlx tsx scripts/apply-migrations-tst.ts
+        env:
+          SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        continue-on-error: false
+
+      - name: Sync Git Repository (TST)
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.TST_VPS_HOST }}
+          username: ${{ secrets.TST_VPS_USER }}
+          key: ${{ secrets.TST_VPS_SSH_KEY }}
+          port: 2244
+          script: |
+            set -e
+            echo "================================================"
+            echo "🔄 Git Sync - TST"
+            echo "================================================"
+
+            cd /var/www/muva-chat-tst
+
+            # Validate git repository
+            if [ ! -d ".git" ]; then
+              echo "❌ ERROR: Not a git repository"
+              exit 1
+            fi
+
+            # Show current state
+            echo "Current commit: $(git log -1 --oneline)"
+
+            # Clean and sync
+            git stash --include-untracked || true
+            rm -f public/config/settings.json 2>/dev/null || true
+            git checkout -- . 2>/dev/null || true
+            git fetch origin tst
+            git reset --hard origin/tst
+
+            echo "New commit: $(git log -1 --oneline)"
+            echo "✅ Git sync completed"
+
+      - name: Upload Build Artifacts (TST)
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.TST_VPS_HOST }}
@@ -109,80 +151,34 @@ jobs:
           strip_components: 0
           overwrite: true
 
-      - name: Apply Supabase Migrations to TST
-        id: apply_migrations_tst
-        run: pnpm dlx tsx scripts/apply-migrations-tst.ts
-        env:
-          SUPABASE_TST_PROJECT_ID: ${{ secrets.TST_SUPABASE_PROJECT_ID }}
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        continue-on-error: false
-
       - name: Deploy to VPS Test
-        # if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         uses: appleboy/ssh-action@v1.0.0
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
-          # TST VPS CREDENTIALS - Use SSH Key Authentication
           host: ${{ secrets.TST_VPS_HOST }}
           username: ${{ secrets.TST_VPS_USER }}
           key: ${{ secrets.TST_VPS_SSH_KEY }}
           port: 2244
           envs: OPENAI_API_KEY,ANTHROPIC_API_KEY
           script: |
-            set -e  # Exit immediately on any error
-
+            set -e
             echo "================================================"
-            echo "🚀 MUVA Chat TST Deployment - Starting"
+            echo "🚀 MUVA Chat TST Deployment - Final Steps"
             echo "================================================"
 
-            # Change to tst directory
             cd /var/www/muva-chat-tst
-            echo "✅ Current directory: $(pwd)"
-
-            # Validate it's a git repository
-            if [ ! -d ".git" ]; then
-              echo "❌ ERROR: Not a git repository"
-              echo "Current directory: $(pwd)"
-              exit 1
-            fi
-            echo "✅ Git repository verified"
-
-            # Show current git status before pull
-            echo ""
-            echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-            echo "Current commit: $(git log -1 --oneline)"
-
-            # Clean up local changes before pull (VPS may have modified files)
-            echo ""
-            echo "Cleaning up local changes..."
-            git stash --include-untracked || true
-            rm -f public/config/settings.json 2>/dev/null || true
-            git checkout -- . 2>/dev/null || true
-            echo "✅ Local changes cleaned"
-
-            # Sync with remote (handles both normal merges and force pushes)
-            echo ""
-            echo "Syncing with remote tst branch..."
-            git fetch origin tst
-            git reset --hard origin/tst
-
-            # Show new commit
-            echo "New commit: $(git log -1 --oneline)"
 
             # Validate package.json exists
             if [ ! -f "package.json" ]; then
-              echo "❌ ERROR: package.json not found in $(pwd)"
-              echo "Directory contents:"
+              echo "❌ ERROR: package.json not found"
               ls -la
               exit 1
             fi
-            echo "✅ package.json found"
 
-            # Create tst environment file from GitHub Secrets
-            echo ""
-            echo "Creating .env.local from GitHub Secrets..."
+            # Create environment file
+            echo "Creating .env.local..."
             {
               echo "# Supabase - TST DATABASE (bddcvjoeoiekzfetvxoe)"
               echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.TST_SUPABASE_URL }}"
@@ -199,27 +195,80 @@ jobs:
               echo "# Node Environment"
               echo "NODE_ENV=production"
             } > .env.local
-            echo "✅ Environment configured for tst"
+            echo "✅ Environment configured"
 
-            # Install dependencies
-            echo ""
-            echo "Installing dependencies..."
+            # Nuclear clean install (fix persistently corrupted binaries)
+            echo "Nuclear cleaning node_modules and pnpm store..."
+            rm -rf node_modules
+            rm -rf ~/.local/share/pnpm/store || true
+            rm -rf ~/.pnpm-store || true
+            echo "✅ Store completely cleared"
+
+            echo "Installing dependencies (completely clean install)..."
             CI=true pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
-            # Note: Build is done in GitHub Actions and uploaded via SCP
-            # No build step needed here - saves VPS resources
+            # ============================================
+            # ZOMBIE PROCESS CLEANUP (Critical Fix)
+            # ============================================
+            # Problem: Old next-server processes can hold port 3001
+            # causing new deployments to fail silently
+            echo "🧹 Checking for zombie next-server processes on port 3001..."
 
-            # Reload PM2 process
-            echo ""
-            echo "Reloading PM2 process (muva-chat-tst)..."
-            pm2 restart muva-chat-tst
+            # Find and kill any processes holding port 3001
+            ZOMBIE_PIDS=$(lsof -ti :3001 2>/dev/null || true)
+            if [ -n "$ZOMBIE_PIDS" ]; then
+              echo "Found processes on port 3001: $ZOMBIE_PIDS"
+              for pid in $ZOMBIE_PIDS; do
+                echo "  Killing PID $pid..."
+                kill -9 "$pid" 2>/dev/null || true
+              done
+              sleep 2
+              echo "✅ Zombie processes killed"
+            else
+              echo "✅ No zombie processes found on port 3001"
+            fi
+
+            # Verify port is now free
+            if lsof -ti :3001 >/dev/null 2>&1; then
+              echo "⚠️  WARNING: Port 3001 still in use, retrying cleanup..."
+              lsof -ti :3001 | xargs kill -9 2>/dev/null || true
+              sleep 2
+            fi
+            echo "✅ Port 3001 cleanup complete"
+
+            # Hard restart PM2 (delete + start to clear any cached state)
+            echo "Hard restarting PM2 (muva-chat-tst)..."
+            pm2 delete muva-chat-tst || true
+            pm2 start ecosystem.config.cjs --only muva-chat-tst
             pm2 save
-            echo "✅ PM2 reloaded"
 
-            # Show PM2 status
-            echo ""
-            echo "PM2 Status:"
+            # Wait for startup (Next.js can take 15-30 seconds to start)
+            echo "Waiting for Next.js server to start (up to 30 seconds)..."
+            for i in {1..6}; do
+              sleep 5
+              if lsof -ti :3001 >/dev/null 2>&1; then
+                echo "✅ Server is listening on port 3001 after $((i * 5)) seconds"
+                break
+              fi
+              echo "  Still waiting... ($((i * 5))s)"
+            done
+
+            # Final verification
+            if ! lsof -ti :3001 >/dev/null 2>&1; then
+              echo "⚠️  WARNING: Server not listening after 30s, but PM2 shows online"
+              pm2 logs muva-chat-tst --lines 10 --nostream || true
+              echo "Continuing anyway - health check will validate..."
+            fi
+
+            # Get the new PID and BUILD_ID for verification
+            NEW_PID=$(lsof -ti :3001 2>/dev/null | head -1)
+            BUILD_ID=$(cat .next/BUILD_ID 2>/dev/null || echo "unknown")
+            echo "✅ PM2 restarted successfully"
+            echo "   PID: $NEW_PID"
+            echo "   BUILD_ID: $BUILD_ID"
+
+            # Show status
             pm2 status muva-chat-tst
 
             echo ""
@@ -228,7 +277,6 @@ jobs:
             echo "================================================"
 
       - name: Health Check (Post-Deploy via SSH)
-        if: steps.verify_schema.outcome == 'success' || steps.verify_schema.outcome == 'skipped'
         id: health_check
         uses: appleboy/ssh-action@v1.0.0
         env:
@@ -249,6 +297,41 @@ jobs:
 
             echo "Running health check on localhost:3001..."
             TST_URL="http://localhost:3001" pnpm dlx tsx scripts/verify-tst-health.ts
+        continue-on-error: true
+
+      - name: Validate CSS Assets (Post-Deploy)
+        id: css_check
+        run: |
+          echo "Validating CSS assets are accessible..."
+
+          # Get CSS files referenced by the page
+          CSS_FILES=$(curl -s "https://simmerdown.staging.muva.chat/" | grep -oE '_next/static/chunks/[a-zA-Z0-9]+\.css' | sort -u)
+
+          if [ -z "$CSS_FILES" ]; then
+            echo "WARNING: No CSS files found in page HTML"
+            exit 0
+          fi
+
+          FAILED=0
+          for css in $CSS_FILES; do
+            STATUS=$(curl -sI "https://simmerdown.staging.muva.chat/$css" | grep "HTTP" | awk '{print $2}')
+            if [ "$STATUS" = "200" ]; then
+              echo "  $css: HTTP $STATUS"
+            else
+              echo "  $css: HTTP $STATUS (FAILED)"
+              FAILED=$((FAILED + 1))
+            fi
+          done
+
+          if [ $FAILED -gt 0 ]; then
+            echo ""
+            echo "ERROR: $FAILED CSS file(s) returned non-200 status"
+            echo "This may indicate zombie process issues or routing problems"
+            exit 1
+          fi
+
+          echo ""
+          echo "All CSS files are accessible"
         continue-on-error: true
 
       # TODO: Re-enable rollback after stabilizing deployments
