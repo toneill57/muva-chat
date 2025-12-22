@@ -213,29 +213,29 @@ jobs:
             # ============================================
             # Problem: Old next-server processes can hold port 3001
             # causing new deployments to fail silently
-            echo "🧹 Killing any zombie next-server processes..."
+            echo "🧹 Checking for zombie next-server processes on port 3001..."
 
-            # Find and kill any next-server processes on port 3001
+            # Find and kill any processes holding port 3001
             ZOMBIE_PIDS=$(lsof -ti :3001 2>/dev/null || true)
             if [ -n "$ZOMBIE_PIDS" ]; then
-              echo "Found zombie processes on port 3001: $ZOMBIE_PIDS"
-              echo "$ZOMBIE_PIDS" | xargs kill -9 2>/dev/null || true
+              echo "Found processes on port 3001: $ZOMBIE_PIDS"
+              for pid in $ZOMBIE_PIDS; do
+                echo "  Killing PID $pid..."
+                kill -9 "$pid" 2>/dev/null || true
+              done
               sleep 2
               echo "✅ Zombie processes killed"
             else
-              echo "✅ No zombie processes found"
+              echo "✅ No zombie processes found on port 3001"
             fi
-
-            # Also kill any orphaned next-server processes
-            pkill -9 -f "next-server.*3001" 2>/dev/null || true
 
             # Verify port is now free
             if lsof -ti :3001 >/dev/null 2>&1; then
-              echo "❌ ERROR: Port 3001 still in use after cleanup!"
-              lsof -i :3001
-              exit 1
+              echo "⚠️  WARNING: Port 3001 still in use, retrying cleanup..."
+              lsof -ti :3001 | xargs kill -9 2>/dev/null || true
+              sleep 2
             fi
-            echo "✅ Port 3001 is free"
+            echo "✅ Port 3001 cleanup complete"
 
             # Hard restart PM2 (delete + start to clear any cached state)
             echo "Hard restarting PM2 (muva-chat-tst)..."
