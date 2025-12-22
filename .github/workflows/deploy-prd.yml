@@ -205,12 +205,58 @@ jobs:
             CI=true pnpm install --frozen-lockfile
             echo "✅ Dependencies installed"
 
+            # ============================================
+            # ZOMBIE PROCESS CLEANUP (Critical Fix)
+            # ============================================
+            # Problem: Old next-server processes can hold port 3000
+            # causing new deployments to fail silently
+            echo "🧹 Killing any zombie next-server processes..."
+
+            # Find and kill any next-server processes on port 3000
+            ZOMBIE_PIDS=$(lsof -ti :3000 2>/dev/null || true)
+            if [ -n "$ZOMBIE_PIDS" ]; then
+              echo "Found zombie processes on port 3000: $ZOMBIE_PIDS"
+              echo "$ZOMBIE_PIDS" | xargs kill -9 2>/dev/null || true
+              sleep 2
+              echo "✅ Zombie processes killed"
+            else
+              echo "✅ No zombie processes found"
+            fi
+
+            # Also kill any orphaned next-server processes
+            pkill -9 -f "next-server.*3000" 2>/dev/null || true
+
+            # Verify port is now free
+            if lsof -ti :3000 >/dev/null 2>&1; then
+              echo "❌ ERROR: Port 3000 still in use after cleanup!"
+              lsof -i :3000
+              exit 1
+            fi
+            echo "✅ Port 3000 is free"
+
             # Hard restart PM2 (delete + start to clear any cached state)
             echo "Hard restarting PM2 (muva-chat-prd)..."
             pm2 delete muva-chat-prd || true
             pm2 start ecosystem.config.cjs --only muva-chat-prd
             pm2 save
-            echo "✅ PM2 restarted"
+
+            # Wait for startup
+            echo "Waiting for Next.js server to start..."
+            sleep 5
+
+            # Verify new process is bound to port
+            if ! lsof -ti :3000 >/dev/null 2>&1; then
+              echo "❌ ERROR: PM2 started but nothing is listening on port 3000!"
+              pm2 logs muva-chat-prd --lines 20 --nostream
+              exit 1
+            fi
+
+            # Get the new PID and BUILD_ID for verification
+            NEW_PID=$(lsof -ti :3000 2>/dev/null | head -1)
+            BUILD_ID=$(cat .next/BUILD_ID 2>/dev/null || echo "unknown")
+            echo "✅ PM2 restarted successfully"
+            echo "   PID: $NEW_PID"
+            echo "   BUILD_ID: $BUILD_ID"
 
             # Show status
             pm2 status muva-chat-prd
