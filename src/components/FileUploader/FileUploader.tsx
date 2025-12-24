@@ -136,8 +136,8 @@ export function FileUploader() {
   }
 
   const downloadTemplate = () => {
-    const templateContent = `TIPO_DOC\tNUMERO_DOC\tPRIMER_NOMBRE\tSEGUNDO_NOMBRE\tPRIMER_APELLIDO\tSEGUNDO_APELLIDO\tFECHA_NACIMIENTO\tPAIS_NACIMIENTO\tSEXO\tCIUDAD_HOSPEDAJE\tFECHA_INGRESO_PAIS\tFECHA_SALIDA_PAIS\tOBSERVACIONES
-3\t12345678\tJOHN\tMICHAEL\tDOE\tSMITH\t01/01/1990\tUSA\tM\tBOGOTA\t15/09/2024\t20/09/2024\tEJEMPLO`
+    const templateContent = `CODIGO_HOTEL\tCODIGO_CIUDAD\tTIPO_DOC\tNUMERO_DOC\tCODIGO_NACIONALIDAD\tPRIMER_APELLIDO\tSEGUNDO_APELLIDO\tNOMBRES\tTIPO_MOVIMIENTO\tFECHA_MOVIMIENTO\tLUGAR_PROCEDENCIA\tLUGAR_DESTINO\tFECHA_NACIMIENTO
+7706\t88001\t3\tAB1234567\t249\tSMITH\t\tJOHN MICHAEL\tE\t15/09/2024\t249\t88001\t01/01/1990`
 
     const blob = new Blob([templateContent], { type: 'text/plain;charset=utf-8' })
     const url = URL.createObjectURL(blob)
@@ -464,8 +464,8 @@ export function FileUploader() {
               <div>
                 <span className="font-medium">Campos obligatorios (13 total):</span>
                 <p className="text-gray-600">
-                  Tipo documento, número, nombres, apellidos, fecha nacimiento, país, sexo,
-                  ciudad hospedaje, fechas de ingreso/salida, observaciones
+                  Código hotel, código ciudad, tipo documento, número, código nacionalidad,
+                  apellidos, nombres, tipo movimiento, fecha movimiento, lugar procedencia/destino, fecha nacimiento
                 </p>
               </div>
               <div>
