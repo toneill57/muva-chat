@@ -510,44 +510,44 @@ export function validateField(
         }
       }
 
-      // Determinar si debemos usar DIVIPOLA (colombiano) o SIRE país (extranjero)
-      const isColombian = currentData?.nationality_code === '169'
-
       // Si ya es un código (numérico de 2-5 dígitos), asumirlo válido
       if (/^\d{2,5}$/.test(trimmed)) {
         return { valid: true, normalized: trimmed }
       }
 
-      // Convertir nombre de ciudad/país a código
+      // Intentar convertir nombre a código
+      // Prioridad: DIVIPOLA primero (ciudad colombiana), luego SIRE país
       let placeCode: string | null = null
       let placeName = trimmed
 
-      if (isColombian) {
-        // Colombiano: buscar código DIVIPOLA
-        placeCode = getDIVIPOLACityCode(trimmed)
+      // INTENTO 1: Buscar como ciudad colombiana (DIVIPOLA)
+      placeCode = getDIVIPOLACityCode(trimmed)
 
-        if (!placeCode) {
-          return {
-            valid: false,
-            error: 'No encontré esa ciudad colombiana. ¿Podrías verificar el nombre? (Ejemplo: "Bogotá", "Medellín", "Cali")'
-          }
-        }
-      } else {
-        // Extranjero: buscar código SIRE país
-        placeCode = getSIRECountryCode(trimmed)
-
-        if (!placeCode) {
-          return {
-            valid: false,
-            error: 'No encontré ese país. ¿Podrías verificar el nombre? (Ejemplo: "Estados Unidos", "Brasil", "España")'
-          }
+      if (placeCode) {
+        console.log('[validateField] Match found as Colombian city:', { input: trimmed, code: placeCode })
+        return {
+          valid: true,
+          normalized: placeCode,
+          metadata: { place_name: placeName, place_type: 'colombian_city' }
         }
       }
 
+      // INTENTO 2: Buscar como país extranjero (SIRE)
+      placeCode = getSIRECountryCode(trimmed)
+
+      if (placeCode) {
+        console.log('[validateField] Match found as foreign country:', { input: trimmed, code: placeCode })
+        return {
+          valid: true,
+          normalized: placeCode,
+          metadata: { place_name: placeName, place_type: 'foreign_country' }
+        }
+      }
+
+      // NO ENCONTRADO en ningún catálogo
       return {
-        valid: true,
-        normalized: placeCode,
-        metadata: { place_name: placeName }
+        valid: false,
+        error: 'No encontré ese lugar. Intenta con: una ciudad colombiana (ej: "Bogotá", "Medellín") o un país (ej: "Estados Unidos", "Brasil")'
       }
     }
 

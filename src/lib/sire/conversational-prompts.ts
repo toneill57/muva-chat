@@ -411,38 +411,38 @@ Reply with the number (1, 2, 3, or 4)`,
 
   // Origen/Destino
   origin: {
-    es: '¿De dónde vienes? ¿Cuál fue tu última ubicación antes de llegar al hotel?',
-    en: 'Where are you coming from? What was your last location before arriving at the hotel?',
+    es: '¿De qué ciudad de aeropuerto vienes? (la ciudad de donde salió tu último vuelo antes de llegar aquí)',
+    en: 'Which airport city are you coming from? (the city where your last flight departed before arriving here)',
   },
 
   origin_place: {
-    es: '¿De dónde vienes? ¿Cuál fue tu última ubicación antes de llegar?',
-    en: 'Where are you coming from? What was your last location before arriving?',
+    es: '¿De qué ciudad de aeropuerto vienes? (la ciudad de donde salió tu último vuelo)',
+    en: 'Which airport city are you coming from? (the city where your last flight departed)',
   },
 
   origin_colombian_city: {
-    es: '¿De qué ciudad de Colombia vienes?',
-    en: 'Which Colombian city are you coming from?',
+    es: '¿De qué ciudad de Colombia vienes? (ciudad del aeropuerto de tu último vuelo)',
+    en: 'Which Colombian city are you coming from? (airport city of your last flight)',
   },
 
   origin_country: {
-    es: '¿De qué país vienes?',
-    en: 'Which country are you coming from?',
+    es: '¿De qué país vienes? (país de tu último aeropuerto antes de llegar)',
+    en: 'Which country are you coming from? (country of your last airport before arriving)',
   },
 
   destination: {
-    es: '¿A dónde vas después de tu estadía aquí?',
-    en: 'Where are you going after your stay here?',
+    es: '¿A qué ciudad de aeropuerto vas después de tu estadía? (ciudad de tu próximo vuelo)',
+    en: 'Which airport city are you going to after your stay? (city of your next flight)',
   },
 
   destination_place: {
-    es: '¿A dónde vas después de tu estadía aquí?',
-    en: 'Where are you going after your stay here?',
+    es: '¿A qué ciudad de aeropuerto vas después de tu estadía? (ciudad de tu próximo vuelo)',
+    en: 'Which airport city are you going to after your stay? (city of your next flight)',
   },
 
   destination_colombian_city: {
-    es: '¿A qué ciudad de Colombia te diriges después?',
-    en: 'Which Colombian city are you heading to next?',
+    es: '¿A qué ciudad de Colombia vas? (ciudad del aeropuerto de tu próximo vuelo)',
+    en: 'Which Colombian city are you going to? (airport city of your next flight)',
   },
 
   destination_country: {
