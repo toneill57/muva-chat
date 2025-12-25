@@ -50,6 +50,18 @@ interface SuccessResponse {
     warnings: string[]
   }
   processing_time_ms: number
+  requires_confirmation?: boolean // NUEVO: Indica si se requiere confirmación del usuario
+  conflict_details?: {
+    existing: {
+      names: string | null
+      surname: string | null
+    }
+    extracted: {
+      names: string
+      surname: string
+    }
+  }
+  saved_to_db: boolean // NUEVO: Indica si los datos fueron guardados a DB
 }
 
 interface ErrorResponse {
@@ -60,6 +72,26 @@ interface ErrorResponse {
 }
 
 type Response = SuccessResponse | ErrorResponse
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Normaliza texto para comparación de nombres
+ * - Convierte a minúsculas
+ * - Remueve acentos y diacríticos
+ * - Remueve caracteres no alfabéticos
+ * - Permite detectar "Juan García" === "JUAN GARCIA" === "juan garcia"
+ */
+function normalizeForComparison(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remover acentos
+    .replace(/[^a-z]/g, '') // Solo letras (remove espacios, números, símbolos)
+}
+
 
 // ============================================================================
 // POST Handler
@@ -110,6 +142,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Response>
     // === VALIDATE QUERY PARAMS ===
     const url = new URL(request.url)
     const reservationId = url.searchParams.get('reservation_id')
+    const guestOrder = parseInt(url.searchParams.get('guest_order') || '1')
 
     if (!reservationId) {
       return NextResponse.json(
@@ -297,10 +330,78 @@ export async function POST(request: NextRequest): Promise<NextResponse<Response>
       warnings: validation.warnings.length,
     })
 
+    // === LOAD EXISTING GUEST DATA FOR CONFLICT DETECTION ===
+    console.log('[sire/extract-document] Loading existing guest data for conflict detection...')
+
+    const { data: existingReservation } = await supabase
+      .from('guest_reservations')
+      .select('guest_name, given_names, first_surname')
+      .eq('id', reservationId)
+      .single()
+
+    // Determinar si se requiere confirmación del usuario
+    let requiresConfirmation = false
+    let conflictDetails: {
+      existing: {
+        names: string | null
+        surname: string | null
+      }
+      extracted: {
+        names: string
+        surname: string
+      }
+    } | undefined = undefined
+
+    if (existingReservation) {
+      // Caso 1: guest_name = "Guest" (Airbnb) → NO requiere confirmación
+      const isAirbnbGuest = existingReservation.guest_name === 'Guest'
+
+      // Caso 2: Datos previos existen Y difieren del pasaporte → SÍ requiere confirmación
+      const hasExistingNames = existingReservation.given_names || existingReservation.first_surname
+
+      if (!isAirbnbGuest && hasExistingNames) {
+        // Comparar nombres normalizados (ignorar case, acentos, espacios)
+        const normalizedExisting = normalizeForComparison(
+          `${existingReservation.given_names || ''} ${existingReservation.first_surname || ''}`
+        )
+        const normalizedExtracted = normalizeForComparison(
+          `${extractedData.sireData.nombres || ''} ${extractedData.sireData.primer_apellido || ''}`
+        )
+
+        if (normalizedExisting !== normalizedExtracted) {
+          requiresConfirmation = true
+          conflictDetails = {
+            existing: {
+              names: existingReservation.given_names,
+              surname: existingReservation.first_surname
+            },
+            extracted: {
+              names: extractedData.sireData.nombres || '',
+              surname: extractedData.sireData.primer_apellido || ''
+            }
+          }
+
+          console.log('[sire/extract-document] ⚠️ Name conflict detected:', {
+            existing: normalizedExisting,
+            extracted: normalizedExtracted,
+            requires_confirmation: true
+          })
+        } else {
+          console.log('[sire/extract-document] ✅ Names match (normalized), no confirmation needed')
+        }
+      } else {
+        console.log('[sire/extract-document] ✅ Airbnb guest or no existing data, no confirmation needed')
+      }
+    }
+
     // === SAVE EXTRACTED DATA TO GUEST_RESERVATIONS ===
     // Automatically populate SIRE fields from extracted document data
     // Map Spanish field names (conversational) to English column names (database)
-    console.log('[sire/extract-document] Saving extracted data to guest_reservations...')
+    // ONLY save if confirmation is NOT required
+    let savedToDb = false
+
+    if (!requiresConfirmation) {
+      console.log('[sire/extract-document] Saving extracted data to guest_reservations...')
     try {
       const dbData: Record<string, any> = {}
 
@@ -321,6 +422,19 @@ export async function POST(request: NextRequest): Promise<NextResponse<Response>
         }
       }
 
+      // === SYNC guest_name FROM EXTRACTED DATA ===
+      // Construir nombre completo para guest_name (mantiene coherencia en logs)
+      const fullName = [
+        extractedData.sireData.nombres,
+        extractedData.sireData.primer_apellido,
+        extractedData.sireData.segundo_apellido
+      ].filter(Boolean).join(' ').toUpperCase()
+
+      if (fullName) {
+        dbData.guest_name = fullName
+        console.log('[sire/extract-document] Syncing guest_name:', fullName)
+      }
+
       const { error: updateError } = await supabase
         .from('guest_reservations')
         .update(dbData)
@@ -329,10 +443,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<Response>
       if (updateError) {
         console.error('[sire/extract-document] Failed to save to guest_reservations:', updateError)
       } else {
+        savedToDb = true
         console.log('[sire/extract-document] ✅ SIRE data saved to guest_reservations:', Object.keys(dbData))
       }
     } catch (saveError) {
       console.error('[sire/extract-document] Error saving to guest_reservations:', saveError)
+    }
+    } else {
+      console.log('[sire/extract-document] ⏸️ Skipping DB save - user confirmation required')
     }
 
     // === OPTIONAL: SAVE TO DATABASE ===
@@ -390,6 +508,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<Response>
           warnings: validation.warnings,
         },
         processing_time_ms: processingTimeMs,
+        // NUEVO: Flags de confirmación de sobrescritura
+        requires_confirmation: requiresConfirmation,
+        conflict_details: conflictDetails,
+        saved_to_db: savedToDb,
       },
       { status: 200 }
     )
