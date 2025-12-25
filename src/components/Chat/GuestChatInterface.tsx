@@ -840,7 +840,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       return // NO continuar con lógica normal de chat
     }
 
-    // MODO GENERAL: Lógica existente (NO MODIFICAR)
+    // MODO GENERAL: Lógica existente
     // Clear input immediately for better UX
     setInput('')
     setError(null)
@@ -857,16 +857,26 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     setMessages((prev) => [...prev, userMessage])
 
     try {
+      // IMPORTANTE: Si estamos en modo SIRE, SIEMPRE enviar los datos capturados
+      // Esto asegura que el backend sepa qué campos ya están completados
+      const requestBody: any = {
+        message: textToSend,
+        conversation_id: activeConversationId,
+      }
+
+      // Si estamos en modo SIRE, incluir los datos capturados
+      if (mode === 'sire') {
+        requestBody.mode = 'sire'
+        requestBody.sireData = sireDisclosure.sireData
+      }
+
       const response = await fetch('/api/guest/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          message: textToSend,
-          conversation_id: activeConversationId,
-        }),
+        body: JSON.stringify(requestBody),
       })
 
       if (!response.ok) {
