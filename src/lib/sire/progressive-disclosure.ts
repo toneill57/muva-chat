@@ -368,17 +368,17 @@ export function validateField(
       return { valid: true, normalized }
 
     case 'first_surname':
-      // Max 45 chars, solo letras y espacios (con acentos/Ñ permitidos)
+      // Max 45 chars, letras, espacios, apóstrofes y guiones (para nombres como O'Neill, Jean-Claude)
       if (trimmed.length > 45) {
         return {
           valid: false,
           error: 'Primer apellido no puede exceder 45 caracteres'
         }
       }
-      if (!/^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$/.test(trimmed)) {
+      if (!/^[A-Za-zÀ-ÿ\u00f1\u00d1\s'\-]+$/.test(trimmed)) {
         return {
           valid: false,
-          error: 'Primer apellido solo puede contener letras (sin números ni caracteres especiales)'
+          error: 'Primer apellido solo puede contener letras, apóstrofes y guiones (ej: O\'Neill, Jean-Claude)'
         }
       }
       return { valid: true, normalized: trimmed }
@@ -406,26 +406,26 @@ export function validateField(
           error: 'Segundo apellido no puede exceder 45 caracteres'
         }
       }
-      if (!/^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$/.test(trimmed)) {
+      if (!/^[A-Za-zÀ-ÿ\u00f1\u00d1\s'\-]+$/.test(trimmed)) {
         return {
           valid: false,
-          error: 'Segundo apellido solo puede contener letras (sin números ni caracteres especiales)'
+          error: 'Segundo apellido solo puede contener letras, apóstrofes y guiones (ej: O\'Neill, Jean-Claude)'
         }
       }
       return { valid: true, normalized: trimmed }
 
     case 'names':
-      // Max 60 chars, solo letras y espacios (con acentos/Ñ permitidos)
+      // Max 60 chars, letras, espacios, apóstrofes y guiones (para nombres como Jean-Paul, Mary-Anne)
       if (trimmed.length > 60) {
         return {
           valid: false,
           error: 'Nombres no pueden exceder 60 caracteres'
         }
       }
-      if (!/^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$/.test(trimmed)) {
+      if (!/^[A-Za-zÀ-ÿ\u00f1\u00d1\s'\-]+$/.test(trimmed)) {
         return {
           valid: false,
-          error: 'Nombres solo pueden contener letras (sin números ni caracteres especiales)'
+          error: 'Nombres solo pueden contener letras, apóstrofes y guiones (ej: Jean-Paul, Mary-Anne)'
         }
       }
       return { valid: true, normalized: trimmed }
