@@ -156,9 +156,28 @@ Generate `TODO.md` organized by phases:
 ```markdown
 # TODO - {Project Name}
 
+## 📍 CONTEXTO ACTUAL
+<!-- ⚠️ ACTUALIZAR esta sección CADA VEZ que se completan tareas -->
+
 **Proyecto:** {Name}
-**Fecha:** {Date}
-**Plan:** Ver `plan.md` para contexto completo
+**Última actualización:** {Date}
+**Fase actual:** FASE 1 - {Name}
+
+### Estado del Sistema
+<!-- Listar lo que ya funciona - agregar items al completar tareas -->
+- ✅ {What exists/works}
+- 🔜 {Next objective} (FASE 1)
+
+### Archivos Clave
+<!-- Los archivos más importantes para entender el proyecto -->
+- `path/to/key-file.ts` → {Description}
+- `path/to/another.tsx` → {Description}
+
+### Stack
+- {Technology 1}
+- {Technology 2}
+
+**Plan completo:** Ver `plan.md` para arquitectura y especificaciones
 
 ---
 
@@ -205,15 +224,16 @@ Generate `TODO.md` organized by phases:
 ---
 
 ## 📊 PROGRESO
+<!-- ⚠️ ACTUALIZAR contadores al completar tareas -->
 
 **Total Tasks:** {X}
 **Completed:** 0/{X} (0%)
 
 **Por Fase:**
-- FASE 1: 0/{Y} tareas
-- FASE 2: 0/{Z} tareas
-- FASE 3: 0/{W} tareas
-- FASE 4: 0/{V} tareas
+- FASE 1: 0/{Y} tareas (0%) ← EN PROGRESO
+- FASE 2: 0/{Z} tareas (0%)
+- FASE 3: 0/{W} tareas (0%)
+- FASE 4: 0/{V} tareas (0%)
 
 ---
 
@@ -229,6 +249,19 @@ Generate `TODO.md` organized by phases:
 - Use @mentions in workflow prompts
 - Include test commands
 - Use emojis for phases: 🎯 ⚙️ ✨ 🎨 or similar
+
+**CRITICAL - Dynamic Context Updates:**
+When marking tasks as complete, ALWAYS also update:
+1. **📍 CONTEXTO ACTUAL** section:
+   - Add new ✅ item for what was completed
+   - Update "Fase actual" if moving to next phase
+   - Update "Última actualización" date
+2. **📊 PROGRESO** section:
+   - Update task counters
+   - Move "← EN PROGRESO" to next phase if completed
+   - Add "✅ COMPLETADA" to finished phases
+
+This ensures TODO.md serves as the **Single Source of Truth** for project context.
 
 ### Step 4: Create {project-name}-prompt-workflow.md
 Generate prompts file with SPECIFIC project name (e.g., `mobile-first-prompt-workflow.md`):
@@ -248,28 +281,18 @@ Generate prompts file with SPECIFIC project name (e.g., `mobile-first-prompt-wor
 
 ---
 
-## 🎯 Contexto General (Usar SIEMPRE primero en nuevas conversaciones)
+## 🎯 Contexto General (Usar en nuevas conversaciones)
+
+**NOTA:** El contexto completo del proyecto está en la sección "📍 CONTEXTO ACTUAL" de TODO.md.
+Para nuevas conversaciones, simplemente leer TODO.md proporciona todo el contexto necesario.
 
 ```
-CONTEXTO DEL PROYECTO: {Project Name}
-
-Estoy trabajando en el proyecto "{Project Name}" para {brief objective}.
-
-ARCHIVOS CLAVE:
-- plan.md → Plan completo del proyecto (X líneas)
-- TODO.md → Tareas organizadas por fases
-- {reference-file.tsx} → {Description}
-
-OBJETIVO:
-{1-2 sentence objective}
-
-STACK:
-- {Technology 1}
-- {Technology 2}
-
-ESTADO ACTUAL:
-- ✅ {What exists}
-- 🔜 {What we're building}
+Lee el archivo TODO.md de este proyecto.
+La sección "📍 CONTEXTO ACTUAL" contiene:
+- Estado del sistema (qué funciona)
+- Próximos objetivos
+- Archivos clave
+- Stack tecnológico
 
 Por favor, confirma que entiendes el contexto antes de continuar.
 ```
@@ -484,9 +507,18 @@ Una vez completadas todas las tareas anteriores, pregúntame:
    ```markdown
    ### {X.Y}: {Task Name}
    - [x] {Task description from TODO.md} (estimate: {time})
+     - **Completado:** {Date} - {Brief achievement note}
    ```
 
-2. **[OPCIONAL - Solo si completa una FASE entera]**
+2. **Actualizar "📍 CONTEXTO ACTUAL"** - Agregar logro al Estado del Sistema:
+   ```markdown
+   ### Estado del Sistema
+   - ✅ {Previous achievements}
+   - ✅ {New achievement from this task} ← NUEVO
+   - 🔜 {Next objective}
+   ```
+
+3. **[Si completa una FASE entera]**
    **Actualizar TODO.md** - Actualizar contador de progreso:
    Cambiar de:
    ```markdown
@@ -497,7 +529,7 @@ Una vez completadas todas las tareas anteriores, pregúntame:
    **Completed:** N+1/{Total} ({X+Y}%)
    ```
 
-3. **Informarme del progreso:**
+4. **Informarme del progreso:**
    "✅ Tarea {X.Y} completada y marcada en TODO.md
 
    **Progreso FASE {X}:** {M}/{N} tareas completadas ({Z}%)

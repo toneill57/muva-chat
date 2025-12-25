@@ -1,19 +1,63 @@
 # TODO - SIRE Auto-Submission
 
+## 📍 CONTEXTO ACTUAL
+<!-- Actualizar esta sección cada vez que se completan tareas -->
+
 **Proyecto:** SIRE Auto-Submission & Conversational Data Capture
-**Fecha:** Diciembre 4, 2025
-**Plan:** Ver `/Users/oneill/.claude/plans/swift-exploring-gadget.md` para contexto completo
+**Última actualización:** Diciembre 24, 2025
+**Fase actual:** FASE 4 - Submission Workflow & Queue
+
+### Estado del Sistema
+- ✅ Endpoint /my-stay funcionando (auth, chat, file upload)
+- ✅ System prompts SIRE implementados (627 líneas)
+- ✅ Progressive disclosure con validación incremental (697 líneas)
+- ✅ SIRE progress bar component (4 estados visuales + responsive)
+- ✅ Entity extraction mejorado (6 funciones + confidence scoring)
+- ✅ Chat API con modo SIRE (extractedData, nextField, isComplete)
+- ✅ Botón "Iniciar registro" conectado a progressive disclosure
+- ✅ Document OCR con Claude Vision (583 líneas, retry logic, exponential backoff)
+- ✅ Field extraction OCR→SIRE (650 líneas, 34 tests, 7 funciones)
+- ✅ Document Upload Component (drag & drop, preview, validation)
+- ✅ Document Preview Modal (332 líneas, zoom, edit mode, confidence colors)
+- ✅ OCR API Endpoint (358 líneas, Guest JWT auth, Supabase Storage)
+- ✅ Database migration sire_document_uploads (5 indexes, 3 RLS policies, trigger)
+- ✅ Chat interface integrado (auto-fill 7 campos, flujo completo)
+- ✅ Storage bucket `sire-documents` (público, RLS policies, 10MB limit)
+- ✅ **FLUJO E2E VERIFICADO:** Upload → Storage → OCR → Preview → Auto-fill ✅
+- ✅ **FASE 3 COMPLETADA:** TXT Generator + Validation + Export Tracking + UI + Tests ✅
+- ✅ TXT Generator (sire-txt-generator.ts, 272 líneas, 29 tests passing)
+- ✅ Pre-generation validation (sire-validation.ts, 1,125 líneas, 50+ tests)
+- ✅ Export tracking (sire_exports table + auto-insert con SHA-256 hash)
+- ✅ Download UI (SIRETXTDownloader component, 305 líneas, 3 filter modes)
+
+### Archivos Clave
+- `src/lib/sire/conversational-prompts.ts` → System prompts SIRE
+- `src/lib/sire/progressive-disclosure.ts` → Lógica de campos
+- `src/components/Compliance/SireProgressBar.tsx` → UI de progreso
+- `src/app/api/guest/chat/route.ts` → API con modo SIRE
+- `src/components/Chat/GuestChatInterface.tsx` → Chat interface con document upload
+- `src/lib/sire/document-ocr.ts` → Claude Vision OCR
+- `src/lib/sire/field-extraction.ts` → OCR→SIRE mapping
+- `src/components/Compliance/DocumentUpload.tsx` → Drag & drop upload
+- `src/components/Compliance/DocumentPreview.tsx` → Preview modal con edit mode
+- `src/app/api/sire/extract-document/route.ts` → OCR API endpoint
+- `migrations/20251205155250_add_sire_document_uploads.sql` → Database schema
+
+### Stack
+- Next.js 15.5.9 + React 19.2.3 + TypeScript
+- Claude AI SDK (chat + vision OCR)
+- Supabase (PostgreSQL)
 
 ---
 
-## FASE 1: Enhanced Conversational Capture 🎯
+## FASE 1: Enhanced Conversational Capture 🎯 ✅ COMPLETADA
 
 ### 1.1 Create conversational prompts system
 - [x] Implementar system prompts especializados para captura SIRE (estimate: 2h) ✅
   - System prompt base con contexto de 13 campos SIRE
   - Question templates por tipo de campo (nombre, documento, nacionalidad, fechas)
   - Multi-idioma (español, inglés)
-  - Context-aware prompts (si nacionalidad=Colombia, skip visa questions)
+  - Context-aware prompts (colombianos vs extranjeros)
   - Files: `src/lib/sire/conversational-prompts.ts`
   - Agent: **@agent-backend-developer**
   - Test: `pnpm test src/lib/sire/conversational-prompts.test.ts`
@@ -64,7 +108,7 @@
   - **Completado:** Diciembre 18, 2025 - Sistema de extracción con 6 funciones + confidence scoring + 10/10 tests PASSED (+815 líneas)
 
 ### 1.6 Update chat API with SIRE system prompt
-- [ ] Modificar API route para incluir SIRE prompt (estimate: 1h)
+- [x] Modificar API route para incluir SIRE prompt (estimate: 1h) ✅
   - Detectar modo SIRE (flag en request)
   - Usar `conversational-prompts.ts` system prompt
   - Incluir progressive disclosure en context
@@ -72,9 +116,10 @@
   - Files: `src/app/api/guest/chat/route.ts`
   - Agent: **@agent-backend-developer**
   - Test: `curl -X POST localhost:3000/api/guest/chat -d '{"mode":"sire"}'`
+  - **Completado:** Diciembre 2025 - mode === 'sire' detection, returns extractedData, nextField, isComplete
 
 ### 1.7 Connect SIRE start button to progressive disclosure flow
-- [ ] Integrar botón "Iniciar registro" con modo SIRE (estimate: 1h)
+- [x] Integrar botón "Iniciar registro" con modo SIRE (estimate: 1h) ✅
   - Cambiar `mode` de prop a state en GuestChatInterface
   - Crear handler `handleStartSIREMode()` que active modo SIRE
   - Crear nueva conversación SIRE dedicada al iniciar
@@ -83,13 +128,14 @@
   - Files: `src/components/Chat/GuestChatInterface.tsx`, `src/components/Compliance/ComplianceReminder.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Manual - click botón "Iniciar registro" → modo SIRE activo
+  - **Completado:** Diciembre 2025 - handleStartSIREMode() + onStart prop en ComplianceReminder
 
 ---
 
-## FASE 2: Document Upload + OCR Extraction ⚙️
+## FASE 2: Document Upload + OCR Extraction ✅ COMPLETADA
 
 ### 2.1 Create document upload component
-- [ ] Implementar drag & drop upload component (estimate: 2h)
+- [x] Implementar drag & drop upload component (estimate: 2h) ✅
   - Drag & drop area con visual feedback
   - File type validation (jpg, png, pdf - max 10MB)
   - Preview thumbnail
@@ -98,9 +144,10 @@
   - Files: `src/components/Compliance/DocumentUpload.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Manual - upload 5 sample passports
+  - **Completado:** Diciembre 23, 2025 - 7.4K líneas + ThumbnailPreview + tipos compartidos
 
 ### 2.2 Implement Claude Vision OCR integration
-- [ ] Integrar Claude Vision API para OCR (estimate: 3h)
+- [x] Integrar Claude Vision API para OCR (estimate: 3h) ✅
   - API call a Claude Vision con prompt especializado
   - Prompt engineering: "Extract passport fields: full name, passport number, nationality, birth date, expiry date"
   - Error handling (API failures, rate limits)
@@ -108,9 +155,10 @@
   - Files: `src/lib/sire/document-ocr.ts`
   - Agent: **@agent-backend-developer**
   - Test: `pnpm test tests/integration/document-ocr.test.ts`
+  - **Completado:** Diciembre 23, 2025 - 583 líneas + extractPassportData/extractVisaData + retry exponential backoff
 
 ### 2.3 Build field extraction and mapping
-- [ ] Desarrollar field extraction logic (estimate: 2h)
+- [x] Desarrollar field extraction logic (estimate: 2h) ✅
   - Parse OCR response → SIRE campos
   - Name splitting (full name → primer apellido, segundo apellido, nombres)
   - Country mapping (text → SIRE code)
@@ -119,9 +167,10 @@
   - Files: `src/lib/sire/field-extraction.ts`
   - Agent: **@agent-backend-developer**
   - Test: `pnpm test tests/unit/field-extraction.test.ts`
+  - **Completado:** Diciembre 23, 2025 - 650+ líneas + 34 tests + validación completa
 
 ### 2.4 Create document preview modal
-- [ ] Implementar preview modal con extracted fields (estimate: 2h)
+- [x] Implementar preview modal con extracted fields (estimate: 2h) ✅
   - Image preview con zoom
   - Extracted fields table con highlighting
   - Confidence indicators (color-coded: green >0.90, yellow 0.70-0.90, red <0.70)
@@ -130,44 +179,60 @@
   - Files: `src/components/Compliance/DocumentPreview.tsx`
   - Agent: **@agent-ux-interface**
   - Test: Manual - upload passport, verificar preview
+  - **Completado:** Diciembre 23, 2025 - 332 líneas + FieldRow component + zoom + edit mode
 
 ### 2.5 Create OCR API endpoint
-- [ ] Implementar API endpoint para OCR (estimate: 1.5h)
-  - POST /api/sire/extract-document
-  - Input: file upload (multipart/form-data)
-  - Call document-ocr.ts
-  - Save to sire_document_uploads table
-  - Return extracted fields + confidence
+- [x] Implementar API endpoint para OCR (estimate: 1.5h) ✅
+  - POST /api/sire/extract-document?reservation_id=xxx
+  - Input: file upload (multipart/form-data, files[])
+  - Guest JWT authentication (cookie or Authorization header)
+  - Upload to Supabase Storage bucket `sire-documents`
+  - Call document-ocr.ts + field-extraction.ts
+  - Return extracted fields + confidence + file_url
   - Files: `src/app/api/sire/extract-document/route.ts`
   - Agent: **@agent-backend-developer**
-  - Test: `curl -X POST -F "file=@passport.jpg" localhost:3000/api/sire/extract-document`
+  - Test: `curl -X POST -F "files[]=@passport.jpg" localhost:3000/api/sire/extract-document?reservation_id=xxx`
+  - **Completado:** Diciembre 23, 2025 - 400+ líneas + Guest JWT auth + Storage upload
+  - **Fix aplicado:** Dic 23 - Cambio de Supabase Auth → Guest JWT token
 
 ### 2.6 Create database migration for document uploads
-- [ ] Crear migration sire_document_uploads (estimate: 0.5h)
+- [x] Crear migration sire_document_uploads (estimate: 0.5h) ✅
   - Table: id, reservation_id, tenant_id, document_type, file_url, ocr_result, extracted_fields, confidence_score, status
   - Indexes: reservation_id, status
   - RLS policies: tenant isolation
-  - Files: `migrations/20251204_add_document_uploads.sql`
+  - Files: `migrations/20251205155250_add_sire_document_uploads.sql`
   - Agent: **@agent-database-agent**
   - Test: `node .claude/db-query.js "SELECT * FROM sire_document_uploads LIMIT 1"`
+  - **Completado:** Diciembre 5, 2025 - Tabla aplicada con FK, 5 indexes, 3 RLS policies, trigger
 
 ### 2.7 Integrate document upload into chat interface
-- [ ] Agregar document upload flow a GuestChatInterface (estimate: 1h)
-  - Button "Subir Pasaporte" en chat
-  - Open DocumentUpload modal
-  - Show DocumentPreview after OCR
-  - Auto-fill campos en chat con extracted data
-  - Files: `src/components/Chat/GuestChatInterface.tsx`, `src/lib/guest-chat-types.ts`
+- [x] Agregar document upload flow a GuestChatInterface (estimate: 1h) ✅
+  - Button "Subir Pasaporte" en chat (solo visible en modo SIRE)
+  - Open DocumentUpload modal con reservationId prop
+  - API call con files[] + reservation_id
+  - Show DocumentPreview after OCR success
+  - Auto-fill campos SIRE en chat con extracted data
+  - Files: `src/components/Chat/GuestChatInterface.tsx`, `src/components/Compliance/DocumentUpload.tsx`
   - Agent: **@agent-ux-interface**
-  - Test: Manual - flujo completo upload → OCR → auto-fill
+  - Test: Manual - flujo completo upload → OCR → preview → auto-fill
+  - **Completado:** Diciembre 23, 2025 - Handlers integrados + auto-fill 7 campos
+  - **Fixes aplicados:** Dic 23 - className multiline fix, reservationId prop, files[] field name
+
+### 2.8 Storage bucket setup (infraestructura)
+- [x] Crear bucket Supabase Storage para documentos (estimate: 0.25h) ✅
+  - Bucket: `sire-documents` (público)
+  - Límite: 10MB por archivo
+  - MIME types: image/jpeg, image/png, image/gif, image/webp
+  - RLS policies: INSERT y SELECT para bucket
+  - **Completado:** Diciembre 23, 2025 - Bucket creado vía SQL + políticas RLS
 
 ---
 
 ## FASE 3: TXT File Generation 📄
 
 ### 3.1 Implement TXT file generator
-- [ ] Crear generador de archivos TXT con formato oficial SIRE (estimate: 1.5h)
-  - Function generateSIRETxt(reservations[]) → string
+- [x] Crear generador de archivos TXT con formato oficial SIRE (estimate: 1.5h) ✅
+  - Function generateSIRETXT(guests[], tenantId) → SIRETXTResult
   - Tab-delimited format (13 campos por línea)
   - Un archivo = múltiples huéspedes (1 línea por guest)
   - Formato: codigo_hotel\tcodigo_ciudad\ttipo_doc\tnumero_id\t...
@@ -175,61 +240,71 @@
   - Encoding UTF-8 sin BOM, line endings CRLF
   - Files: `src/lib/sire/sire-txt-generator.ts`
   - Agent: **@agent-backend-developer**
-  - Test: `pnpm test src/lib/sire/sire-txt-generator.test.ts`
+  - Test: `pnpm test src/lib/sire/__tests__/sire-txt-generator.test.ts`
+  - **Completado:** Diciembre 23, 2025 - 24 tests passing, interfaces SIREGuestData + SIRETXTResult + TenantSIREInfo
 
 ### 3.2 Create TXT export API endpoint
-- [ ] Implementar endpoint para exportar TXT (estimate: 1h)
-  - POST /api/sire/export-txt
-  - Input: { tenant_id, start_date, end_date, reservation_ids? }
-  - Call generateSIRETxt()
-  - Save to Supabase Storage
-  - Track export en sire_exports table
-  - Return download URL
-  - Files: `src/app/api/sire/export-txt/route.ts`
+- [x] Implementar endpoint para exportar TXT (estimate: 1h) ✅
+  - POST /api/sire/generate-txt
+  - Input: { tenant_id, date?, date_from?, date_to?, movement_type? }
+  - Call generateSIRETXT() from sire-txt-generator.ts
+  - Filtrado por fecha/rango y tipo movimiento (E/S/both)
+  - Auto-exclusión de colombianos (código 169)
+  - Return TXT content + filename + excluded list
+  - Files: `src/app/api/sire/generate-txt/route.ts`
   - Agent: **@agent-backend-developer**
-  - Test: `curl -X POST localhost:3000/api/sire/export-txt -d '{"tenant_id":"xyz"}'`
+  - Test: `curl -X POST localhost:3000/api/sire/generate-txt -d '{"tenant_id":"xyz"}'`
+  - **Completado:** Diciembre 23, 2025 - 1,408 líneas (API + docs + tests + UI component)
 
 ### 3.3 Implement pre-generation validation
-- [ ] Desarrollar validación pre-exportación (estimate: 1h)
-  - Function validateSIREData(reservation) → ValidationResult
+- [x] Desarrollar validación pre-exportación (estimate: 1h) ✅
+  - Function validateForSIRE(reservation) → ValidationResult
   - Verificar 13 campos completos y no null
-  - Validar códigos SIRE (NO ISO)
-  - Validar formatos de fecha (DD/MM/YYYY)
-  - Validar longitudes de campos
-  - Return warnings/errors por reservación
-  - Files: `src/lib/sire/sire-validation.ts`
+  - Validar códigos SIRE (NO ISO) - solo 3, 5, 10, 46
+  - Validar formatos de fecha (DD/MM/YYYY estricto)
+  - Validar longitudes de campos + caracteres permitidos
+  - Return errors/warnings/fieldStatus por reservación
+  - Files: `src/lib/sire/sire-validation.ts` (1,125 líneas)
   - Agent: **@agent-backend-developer**
-  - Test: `pnpm test src/lib/sire/sire-validation.test.ts`
+  - Test: `pnpm test src/lib/sire/sire-validation.test.ts` (50+ tests passing)
+  - **Completado:** Diciembre 23, 2025 - Validación exhaustiva + tests de edge cases
 
 ### 3.4 Create sire_exports tracking table
-- [ ] Crear migration para tracking de exports (estimate: 0.5h)
-  - CREATE sire_exports: id, tenant_id, export_date, file_name, file_url, guest_count, reservation_ids, status, created_by
-  - Indexes: tenant_id, export_date DESC
+- [x] Crear migration y lógica de tracking (estimate: 0.5h) ✅
+  - CREATE sire_exports: id, tenant_id, export_date, date_range_from/to, guest_count, txt_filename, txt_content_hash (SHA-256), file_size_bytes, status, etc.
+  - Junction table sire_export_guests (trackea guests incluidos por export)
+  - Indexes: tenant_id+export_date DESC, status, content_hash
   - RLS policies (tenant isolation)
-  - Files: `migrations/20251218_add_sire_exports.sql`
-  - Agent: **@agent-database-agent**
-  - Test: `node .claude/db-query.js "SELECT * FROM sire_exports LIMIT 1"`
+  - INSERT automático en /api/sire/generate-txt después de generar TXT
+  - Files: `migrations/20251205190955_add_sire_exports.sql`, `src/app/api/sire/generate-txt/route.ts`
+  - Agent: **@agent-backend-developer**
+  - Test: `node .claude/db-query.js "SELECT * FROM sire_exports ORDER BY created_at DESC LIMIT 3"`
+  - **Completado:** Diciembre 24, 2025 - Migration + INSERT logic implementado
 
 ### 3.5 Add download TXT button to UI
-- [ ] Crear componente de exportación TXT en admin (estimate: 2h)
-  - Button "Exportar TXT SIRE" en admin dashboard
-  - Date range picker (from/to)
-  - Preview de guests a incluir (count + validation status)
-  - Trigger export API
-  - Download generado automáticamente
-  - Files: `src/components/Admin/SireTxtExport.tsx`
+- [x] Crear componente de exportación TXT (estimate: 2h) ✅
+  - Component SIRETXTDownloader con date range picker
+  - 3 modos de filtro: all dates, single date, date range
+  - Selector de tipo de movimiento (E/S/both)
+  - Trigger export API /api/sire/generate-txt
+  - Auto-descarga del TXT generado (si guest_count > 0)
+  - Display de excluded guests con razones
+  - Files: `src/components/Compliance/SIRETXTDownloader.tsx` (305 líneas)
   - Agent: **@agent-ux-interface**
-  - Test: Manual - exportar TXT con 10 guests
+  - Test: Manual - exportar TXT con date range
+  - **Completado:** Diciembre 23, 2025 - UI con mejoras sobre spec original (3 modos de filtro vs 1)
 
 ### 3.6 Testing TXT format compliance
-- [ ] Validar formato TXT contra spec oficial (estimate: 1h)
-  - Generate TXT con 20 guests de diferentes países
-  - Verificar delimitadores (tabs, no spaces)
-  - Verificar orden de campos (13 en secuencia correcta)
-  - Verificar códigos SIRE (NO ISO)
-  - Abrir en Excel/editor para verificar formato visual
+- [x] Validar formato TXT contra spec oficial (estimate: 1h) ✅
+  - Tests de formato TAB-delimited (13 campos, sin otros delimitadores)
+  - Tests de CRLF line endings, uppercase names, DD/MM/YYYY regex estricto
+  - Tests de UTF-8 con acentos (García → GARCÍA)
+  - Test de ejemplo oficial SIRE (match exacto)
+  - Test de códigos SIRE vs ISO (249 vs 840 para USA)
+  - Files: `src/lib/sire/__tests__/sire-txt-generator.test.ts` (29 tests passing)
   - Agent: **@agent-backend-developer**
-  - Test: Manual - verificación visual + unit tests
+  - Test: `pnpm test src/lib/sire/__tests__/sire-txt-generator.test.ts` (100% passing)
+  - **Completado:** Diciembre 24, 2025 - 29 tests (24 originales + 5 críticos nuevos)
 
 ---
 
@@ -443,21 +518,21 @@
 
 ## 📊 PROGRESO
 
-**Total Tasks:** 40
-**Completed:** 5/40 (12.5%)
+**Total Tasks:** 41
+**Completed:** 17/41 (41.5%)
 
 **Por Fase:**
-- FASE 1: 5/7 tareas (71.4%) ← EN PROGRESO
-- FASE 2: 0/7 tareas (0%)
-- FASE 3: 0/6 tareas (0%) ← TXT File Generation
+- FASE 1: 7/7 tareas (100%) ✅ COMPLETADA
+- FASE 2: 8/8 tareas (100%) ✅ COMPLETADA (incluye 2.8 Storage bucket)
+- FASE 3: 2/6 tareas (33%) ← EN PROGRESO
 - FASE 4: 0/7 tareas (0%)
 - FASE 5: 0/6 tareas (0%)
 - FASE 6: 0/7 tareas (0%)
 
 **Por Agente:**
-- @agent-backend-developer: 3/24 tareas completadas (12.5%)
-- @agent-ux-interface: 2/10 tareas completadas (20.0%)
-- @agent-database-agent: 0/4 tareas (0%)
+- @agent-backend-developer: 12/25 tareas completadas (48.0%)
+- @agent-ux-interface: 6/10 tareas completadas (60.0%)
+- @agent-database-agent: 2/5 tareas (40.0%)
 - @agent-deploy-agent: 0/2 tareas (0%)
 
 **Nota:** Puppeteer automation (upload de TXT al portal SIRE) fue postponed a FASE FUTURA (7 tareas adicionales, 12h estimadas)
@@ -481,5 +556,31 @@
 
 ---
 
-**Última actualización:** Diciembre 18, 2025
-**Próximo paso:** Ejecutar FASE 1, Tarea 1.7 - Connect SIRE Start Button (estimate: 1h) - **ÚLTIMA TAREA DE FASE 1**
+**Última actualización:** Diciembre 23, 2025
+**Próximo paso:** FASE 3, Tarea 3.3 - Implement pre-generation validation (estimate: 1h)
+
+### ✨ FASE 2 COMPLETADA (8/8 tareas):
+- [x] 2.1: Document upload component ✅
+- [x] 2.2: Claude Vision OCR integration ✅
+- [x] 2.3: Field extraction and mapping ✅
+- [x] 2.4: Document preview modal ✅
+- [x] 2.5: OCR API endpoint (Guest JWT auth) ✅
+- [x] 2.6: Database migration for document uploads ✅
+- [x] 2.7: Integrate document upload into chat interface ✅
+- [x] 2.8: Storage bucket setup (sire-documents) ✅
+
+### 🔧 Fixes aplicados (Dic 23, 2025):
+- Auth: Supabase Auth → Guest JWT token (cookie/header)
+- Form: `files` → `files[]` field name
+- Props: `reservationId` agregado a DocumentUpload
+- Syntax: className multiline → single line
+- Storage: Bucket `sire-documents` creado + RLS policies
+- Bucket: Cambiado a público para URLs accesibles
+
+### Resumen FASE 3:
+- [x] 3.1: Implement TXT file generator ✅
+- [x] 3.2: Create TXT export API endpoint ✅
+- [ ] 3.3: Implement pre-generation validation ← SIGUIENTE
+- [ ] 3.4: Create sire_exports tracking table
+- [ ] 3.5: Add download TXT button to UI
+- [ ] 3.6: Testing TXT format compliance

@@ -4,11 +4,12 @@ Sistema de captura conversacional de datos para SIRE (Migración Colombia).
 
 ## Archivos del Sistema
 
-| Archivo | Propósito |
-|---------|-----------|
-| `sire-catalogs.ts` | Códigos oficiales SIRE (250 países, 1122 ciudades) + helpers de búsqueda fuzzy |
-| `field-mappers.ts` | Mappers conversational ↔ SIRE (dos capas) + validaciones |
-| `conversational-prompts.ts` | Prompts especializados para captura conversacional (multi-idioma) |
+| Archivo | Propósito | Status |
+|---------|-----------|--------|
+| `sire-catalogs.ts` | Códigos oficiales SIRE (250 países, 1122 ciudades) + helpers de búsqueda fuzzy | ✅ Producción |
+| `field-mappers.ts` | Mappers conversational ↔ SIRE (dos capas) + validaciones | ✅ Producción |
+| `conversational-prompts.ts` | Prompts especializados para captura conversacional (multi-idioma) | ✅ Producción |
+| `document-ocr.ts` | Claude Vision OCR para extraer datos de pasaportes/visas (9-7 campos) | ✅ Implementado |
 
 ## Flujo de Captura (Dos Capas)
 
@@ -23,15 +24,24 @@ interface SIREConversationalData {
   // ... otros campos
 }
 
-// Capa 2: 13 campos oficiales SIRE
+// Capa 2: 13 campos oficiales SIRE (11 validados + 2 auto-filled)
 interface SIREData {
+  // Campos validados (11):
   codigo_hotel: "7706"
   codigo_ciudad: "88001"
-  codigo_nacionalidad: "249"  // USA (SIRE code, NOT ISO 840)
+  tipo_documento: "3"
   numero_identificacion: "AB1234567"
+  codigo_nacionalidad: "249"  // USA (SIRE code, NOT ISO 840)
   primer_apellido: "SMITH"
+  segundo_apellido: ""  // optional
   nombres: "JOHN MICHAEL"
-  // ... otros campos
+  fecha_nacimiento: "15/05/1985"
+  tipo_movimiento: "E"  // E=Entrada, S=Salida
+  fecha_movimiento: "23/12/2025"
+
+  // Campos auto-filled en TXT (2):
+  lugar_procedencia: "249"  // origin country code
+  lugar_destino: "88001"    // destination city code
 }
 ```
 
@@ -265,10 +275,63 @@ if (isDataComplete(capturedData as SIREConversationalData)) {
 - Brasil = 105 (NOT ISO 076)
 - Ver `src/lib/sire/sire-catalogs.ts` para catálogo completo
 
+## Document OCR Integration (NEW - Dec 23, 2025)
+
+### Uso Básico
+
+```typescript
+import { extractPassportData } from '@/lib/sire/document-ocr'
+
+// Leer imagen de pasaporte
+const imageBuffer = fs.readFileSync('passport.jpg')
+const result = await extractPassportData(imageBuffer, 'image/jpeg')
+
+if (result.success) {
+  console.log('Confidence:', result.confidence) // 0.89 (89%)
+  console.log('Nombre:', result.structuredData?.fullName)
+  console.log('Pasaporte:', result.structuredData?.passportNumber)
+  console.log('Nacionalidad:', result.structuredData?.nationality)
+}
+```
+
+### Campos Extraídos
+
+**Pasaporte (9 campos):**
+- fullName, passportNumber, nationality
+- birthDate, expiryDate, issueDate (formato DD/MM/YYYY)
+- sex (M/F/X), placeOfBirth, issuingAuthority
+
+**Visa (7 campos):**
+- visaType, visaNumber, nationality
+- issueDate, expiryDate (formato DD/MM/YYYY)
+- entriesAllowed (Single/Multiple), issuingCountry
+
+### Características
+
+- ✅ Retry logic con exponential backoff (3 intentos)
+- ✅ Confidence scoring (0.00-1.00)
+- ✅ Error handling robusto (OCRError class)
+- ✅ Auto document type detection
+- ✅ Soporta JPEG, PNG, WebP, GIF
+
+### Testing
+
+```bash
+# Script de prueba
+pnpm dlx tsx scripts/sire/test-document-ocr.ts
+```
+
+### Documentación Completa
+
+`docs/sire-auto-submission/DOCUMENT_OCR_INTEGRATION.md`
+
+---
+
 ## Documentación
 
 - **Códigos oficiales SIRE:** `docs/features/sire-compliance/CODIGOS_OFICIALES.md`
 - **Diferencias SIRE vs ISO:** `docs/features/sire-compliance/CODIGOS_SIRE_VS_ISO.md`
+- **OCR Integration:** `docs/sire-auto-submission/DOCUMENT_OCR_INTEGRATION.md` (NUEVO)
 - **Catálogo de países:** `_assets/sire/codigos-pais.json` (250 países)
 - **Catálogo de ciudades:** `_assets/sire/ciudades-colombia.json` (1122 ciudades)
 

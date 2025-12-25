@@ -14,7 +14,8 @@ import {
   Menu,
   X,
   Hotel,
-  MessageSquare
+  MessageSquare,
+  FileCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -25,6 +26,7 @@ const menuItems = [
   { name: 'Branding', href: '/branding', icon: Palette, roles: ['admin', 'owner'] },
   { name: 'Content', href: '/content', icon: FileText, roles: ['admin', 'owner'] },
   { name: 'Analytics', href: '/analytics', icon: BarChart, roles: ['admin', 'owner'] },
+  { name: 'SIRE', href: '/sire', icon: FileCheck, roles: ['admin', 'owner', 'staff'] },
   { name: 'Chat', href: '/chat', icon: MessageSquare, roles: ['admin', 'owner', 'staff'] },
   { name: 'Settings', href: '/settings', icon: Settings, roles: ['admin', 'owner'] },
 ];

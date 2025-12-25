@@ -75,7 +75,7 @@ export interface QuestionContext {
  * - Capturar 13 campos obligatorios de manera conversacional
  * - Validar cada campo antes de continuar
  * - Usar progressive disclosure (máximo 5 preguntas)
- * - Aplicar lógica context-aware (ej: si nacionalidad=Colombia, no preguntar visa)
+ * - Aplicar lógica context-aware (ej: colombianos vs extranjeros)
  * - Formatear datos según especificaciones SIRE
  *
  * IMPORTANTE: Los códigos SIRE NO son ISO 3166-1 (USA=249, NO 840)
@@ -145,7 +145,6 @@ Capturar 13 campos obligatorios de manera natural, amigable y eficiente, sin hac
 
 ### Context-Aware Logic
 - Si nacionalidad = Colombia ("169"):
-  - NO preguntar sobre visa (no aplica)
   - Preguntar por ciudad colombiana en origen/destino (código DIVIPOLA)
 - Si nacionalidad ≠ Colombia:
   - Usar código SIRE país para origen/destino

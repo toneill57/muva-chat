@@ -22,6 +22,7 @@ import {
   CheckCircle2,
   XCircle,
   Lightbulb,
+  FileUp,
 } from "lucide-react"
 import ReactMarkdown from 'react-markdown'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -37,6 +38,10 @@ import { useSireProgressiveDisclosure } from '@/hooks/useSireProgressiveDisclosu
 import { getNextFieldToAsk } from '@/lib/sire/progressive-disclosure'
 import { getQuestionForField } from '@/lib/sire/conversational-prompts'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
+import { DocumentUpload } from '@/components/Compliance/DocumentUpload'
+import { DocumentPreview } from '@/components/Compliance/DocumentPreview'
+import type { FieldExtractionResult } from '@/lib/sire/field-extraction'
+import type { DocumentExtractionResult } from '@/components/Compliance/types'
 
 interface Conversation {
   id: string
@@ -134,6 +139,13 @@ export function GuestChatInterface({
 
   // Topic suggestion state (FASE 2.6 - Conversation Intelligence)
   const [topicSuggestion, setTopicSuggestion] = useState<TopicSuggestion | null>(null)
+
+  // Document upload state (FASE 2 - SIRE Auto-Submission)
+  const [showDocumentUpload, setShowDocumentUpload] = useState(false)
+  const [documentPreview, setDocumentPreview] = useState<{
+    imageUrl: string
+    extractedData: FieldExtractionResult
+  } | null>(null)
 
   // File upload state
   const [fileUpload, setFileUpload] = useState<FileUploadState>({
@@ -734,6 +746,32 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         )
       }
 
+      // === GUARDAR EN BASE DE DATOS INCREMENTALMENTE ===
+      // Enviar el campo actualizado al backend para guardar en guest_reservations
+      const updatedSireData = {
+        ...sireDisclosure.sireData,
+        [sireDisclosure.currentField]: validation.normalized ?? textToSend
+      }
+
+      try {
+        await fetch('/api/guest/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            message: textToSend,
+            conversation_id: activeConversationId,
+            mode: 'sire',
+            sireData: updatedSireData,
+          }),
+        })
+      } catch (err) {
+        console.error('[SIRE] Failed to save field to database:', err)
+        // No mostrar error al usuario, el campo ya está guardado localmente
+      }
+
       // Mensaje de confirmación conversacional (diferente para skip vs valor normal)
       const confirmMessage: GuestChatMessage = {
         id: `confirm-${Date.now()}`,
@@ -1206,6 +1244,55 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     }))
   }
 
+  // Document Upload Handlers (FASE 2 - SIRE Auto-Submission)
+  const handleDocumentUploadComplete = async (result: DocumentExtractionResult) => {
+    if (!result.success || !result.extracted_data || !result.file_url) {
+      console.error('OCR failed:', result.error || 'Missing extracted data')
+      return
+    }
+
+    // Close upload modal, show preview
+    setShowDocumentUpload(false)
+    setDocumentPreview({
+      imageUrl: result.file_url,
+      extractedData: result.extracted_data
+    })
+  }
+
+  const handleDocumentConfirm = (data: FieldExtractionResult) => {
+    // Auto-fill SIRE data
+    if (data.sireData.nombres) {
+      sireDisclosure.updateField('names', data.sireData.nombres)
+    }
+    if (data.sireData.primer_apellido) {
+      sireDisclosure.updateField('first_surname', data.sireData.primer_apellido)
+    }
+    if (data.sireData.segundo_apellido) {
+      sireDisclosure.updateField('second_surname', data.sireData.segundo_apellido || '')
+    }
+    if (data.sireData.documento_numero) {
+      sireDisclosure.updateField('identification_number', data.sireData.documento_numero)
+    }
+    if (data.sireData.codigo_nacionalidad) {
+      sireDisclosure.updateField('nationality_code', data.sireData.codigo_nacionalidad)
+    }
+    if (data.sireData.fecha_nacimiento) {
+      sireDisclosure.updateField('birth_date', data.sireData.fecha_nacimiento)
+    }
+    if (data.sireData.tipo_documento) {
+      sireDisclosure.updateField('document_type_code', data.sireData.tipo_documento)
+    }
+
+    // Close preview
+    setDocumentPreview(null)
+
+    // Send a user message indicating document was uploaded
+    // This triggers the chat API to continue the conversation
+    const documentUploadMessage = `He subido mi documento. Los datos extraídos son:\n- Nombres: ${data.sireData.nombres || 'N/A'}\n- Apellidos: ${data.sireData.primer_apellido || ''} ${data.sireData.segundo_apellido || ''}\n- Documento: ${data.sireData.documento_numero || 'N/A'}\n- Nacionalidad: ${data.sireData.codigo_nacionalidad || 'N/A'}\n- Fecha de nacimiento: ${data.sireData.fecha_nacimiento || 'N/A'}`
+
+    handleSendMessage(documentUploadMessage)
+  }
+
   return (
     <div className="flex h-dvh bg-gradient-to-br from-blue-50 via-white to-blue-50">
       {/* Sidebar (Desktop: always visible, Mobile: drawer overlay) */}
@@ -1665,6 +1752,19 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         {/* Input Area */}
         <div className="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg" style={{ paddingBottom: '0.75rem' }}>
         <div className="max-w-4xl mx-auto px-4 py-3">
+          {/* Document Upload Button (only in SIRE mode) */}
+          {mode === 'sire' && (
+            <div className="mb-3">
+              <button
+                onClick={() => setShowDocumentUpload(true)}
+                className="w-full px-4 py-3 border-2 border-dashed border-blue-300 text-blue-600 rounded-lg font-medium hover:bg-blue-50 hover:border-blue-400 transition-colors flex items-center justify-center gap-2"
+              >
+                <FileUp className="w-5 h-5" />
+                Subir Pasaporte (Autocompletar Campos)
+              </button>
+            </div>
+          )}
+
           <div className="flex gap-2 items-end">
             {/* Hidden file input */}
             <input
@@ -1741,6 +1841,30 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
               localStorage.setItem('compliance_reminder_dismissed', 'true')
             }
           }}
+        />
+      )}
+
+      {/* Document Upload Modal */}
+      {showDocumentUpload && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+            <DocumentUpload
+              onUploadComplete={handleDocumentUploadComplete}
+              onCancel={() => setShowDocumentUpload(false)}
+              maxSizeMB={10}
+              reservationId={session.reservation_id}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Document Preview Modal */}
+      {documentPreview && (
+        <DocumentPreview
+          imageUrl={documentPreview.imageUrl}
+          extractedData={documentPreview.extractedData}
+          onConfirm={handleDocumentConfirm}
+          onCancel={() => setDocumentPreview(null)}
         />
       )}
 

@@ -109,7 +109,7 @@ Implementar el **core del proyecto MUVA Chat**: captura automática de los 13 ca
 
 **Conversational Intelligence**
 - Progressive disclosure (no abrumar con 13 preguntas a la vez)
-- Context-aware (si nacionalidad = Colombia, skip visa questions)
+- Context-aware (colombianos vs extranjeros para origen/destino)
 - Multi-idioma (español, inglés)
 - Entity extraction mejorada (nombres, fechas, países en lenguaje natural)
 
