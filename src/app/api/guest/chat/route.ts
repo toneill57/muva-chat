@@ -375,6 +375,73 @@ PREGUNTA SUGERIDA: "${question}"
         }
       } else {
         console.log('[Guest Chat] All SIRE fields captured - ready for confirmation')
+
+        // === SAVE COMPLETE DATA TO DATABASE ===
+        // When all fields are captured, save final data
+        console.log('[Guest Chat] Saving complete SIRE data to database...')
+        try {
+          const dbData: Record<string, any> = {}
+
+          // Names
+          if (mergedSireData.nombres) dbData.given_names = mergedSireData.nombres
+          if (mergedSireData.names) dbData.given_names = mergedSireData.names
+
+          // First surname
+          if (mergedSireData.primer_apellido) dbData.first_surname = mergedSireData.primer_apellido
+          if (mergedSireData.first_surname) dbData.first_surname = mergedSireData.first_surname
+
+          // Second surname
+          if (mergedSireData.segundo_apellido !== undefined) dbData.second_surname = mergedSireData.segundo_apellido || null
+          if (mergedSireData.second_surname !== undefined) dbData.second_surname = mergedSireData.second_surname || null
+
+          // Document type
+          if (mergedSireData.tipo_documento) dbData.document_type = mergedSireData.tipo_documento
+          if (mergedSireData.document_type_code) dbData.document_type = mergedSireData.document_type_code
+
+          // Document number
+          if (mergedSireData.documento_numero) dbData.document_number = mergedSireData.documento_numero
+          if (mergedSireData.identification_number) dbData.document_number = mergedSireData.identification_number
+
+          // Nationality
+          if (mergedSireData.codigo_nacionalidad) dbData.nationality_code = mergedSireData.codigo_nacionalidad
+          if (mergedSireData.nationality_code) dbData.nationality_code = mergedSireData.nationality_code
+
+          // Origin place
+          if (mergedSireData.lugar_procedencia) dbData.origin_city_code = mergedSireData.lugar_procedencia
+          if (mergedSireData.origin_place) dbData.origin_city_code = mergedSireData.origin_place
+
+          // Destination place
+          if (mergedSireData.lugar_destino) dbData.destination_city_code = mergedSireData.lugar_destino
+          if (mergedSireData.destination_place) dbData.destination_city_code = mergedSireData.destination_place
+
+          // Birth date
+          if (mergedSireData.fecha_nacimiento) {
+            const parts = mergedSireData.fecha_nacimiento.split('/')
+            if (parts.length === 3) {
+              dbData.birth_date = `${parts[2]}-${parts[1]}-${parts[0]}`
+            }
+          }
+          if (mergedSireData.birth_date) {
+            const parts = mergedSireData.birth_date.split('/')
+            if (parts.length === 3) {
+              dbData.birth_date = `${parts[2]}-${parts[1]}-${parts[0]}`
+            }
+          }
+
+          const { error: updateError } = await supabase
+            .from('guest_reservations')
+            .update(dbData)
+            .eq('id', session.reservation_id)
+
+          if (updateError) {
+            console.error('[Guest Chat] Failed to save complete SIRE data:', updateError)
+          } else {
+            console.log(`[Guest Chat] ✅ Complete SIRE data saved:`, Object.keys(dbData))
+          }
+        } catch (saveError) {
+          console.error('[Guest Chat] Error saving complete SIRE data:', saveError)
+        }
+
         sireContext = `
 
 ✅ CONTEXTO DE CAPTURA SIRE:
