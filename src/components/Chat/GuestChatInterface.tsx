@@ -1291,35 +1291,58 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
   }
 
   const handleDocumentConfirm = (data: FieldExtractionResult) => {
-    // Auto-fill SIRE data
-    if (data.sireData.nombres) {
-      sireDisclosure.updateField('names', data.sireData.nombres)
+    // Auto-fill SIRE data from document
+
+    // Type of document (ALWAYS - critical for progressive disclosure)
+    if (data.sireData.tipo_documento) {
+      sireDisclosure.updateField('document_type_code', data.sireData.tipo_documento)
     }
-    if (data.sireData.primer_apellido) {
-      sireDisclosure.updateField('first_surname', data.sireData.primer_apellido)
-    }
-    if (data.sireData.segundo_apellido) {
-      sireDisclosure.updateField('second_surname', data.sireData.segundo_apellido || '')
-    }
+
+    // Document number
     if (data.sireData.documento_numero) {
       sireDisclosure.updateField('identification_number', data.sireData.documento_numero)
     }
+
+    // First surname
+    if (data.sireData.primer_apellido) {
+      sireDisclosure.updateField('first_surname', data.sireData.primer_apellido)
+    }
+
+    // Second surname - ALWAYS update, even if empty (mark as skipped)
+    // This prevents the system from asking for it again
+    sireDisclosure.updateField('second_surname', data.sireData.segundo_apellido || '')
+
+    // Names
+    if (data.sireData.nombres) {
+      sireDisclosure.updateField('names', data.sireData.nombres)
+    }
+
+    // Nationality
     if (data.sireData.codigo_nacionalidad) {
       sireDisclosure.updateField('nationality_code', data.sireData.codigo_nacionalidad)
     }
+
+    // Birth date
     if (data.sireData.fecha_nacimiento) {
       sireDisclosure.updateField('birth_date', data.sireData.fecha_nacimiento)
-    }
-    if (data.sireData.tipo_documento) {
-      sireDisclosure.updateField('document_type_code', data.sireData.tipo_documento)
     }
 
     // Close preview
     setDocumentPreview(null)
 
-    // Send a user message indicating document was uploaded
-    // This triggers the chat API to continue the conversation
-    const documentUploadMessage = `He subido mi documento. Los datos extraídos son:\n- Nombres: ${data.sireData.nombres || 'N/A'}\n- Apellidos: ${data.sireData.primer_apellido || ''} ${data.sireData.segundo_apellido || ''}\n- Documento: ${data.sireData.documento_numero || 'N/A'}\n- Nacionalidad: ${data.sireData.codigo_nacionalidad || 'N/A'}\n- Fecha de nacimiento: ${data.sireData.fecha_nacimiento || 'N/A'}`
+    // Build a clear status message
+    const completedFields = []
+    if (data.sireData.tipo_documento) completedFields.push('tipo de documento')
+    if (data.sireData.documento_numero) completedFields.push('número de documento')
+    if (data.sireData.primer_apellido) completedFields.push('primer apellido')
+    if (data.sireData.nombres) completedFields.push('nombres')
+    if (data.sireData.codigo_nacionalidad) completedFields.push('nacionalidad')
+    if (data.sireData.fecha_nacimiento) completedFields.push('fecha de nacimiento')
+
+    // Send a clear message indicating what was captured
+    const documentUploadMessage = data.sireData.segundo_apellido
+      ? `Perfecto. He registrado los datos de tu documento: ${completedFields.join(', ')}.`
+      : `Perfecto. He registrado los datos de tu documento: ${completedFields.join(', ')}. Nota: No se detectó segundo apellido en el documento.`
 
     handleSendMessage(documentUploadMessage)
   }

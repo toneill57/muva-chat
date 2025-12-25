@@ -244,15 +244,27 @@ export async function POST(request: NextRequest) {
         })
 
         // Construir contexto adicional para Claude
+        // Listar campos ya completados para que el LLM los skipee
+        const completedFields = Object.entries(mergedSireData)
+          .filter(([key, value]) => value !== undefined && value !== null && value !== '')
+          .map(([key, value]) => `  - ${key}: "${value}"`)
+          .join('\n')
+
         sireContext = `
 
 ⚠️ CONTEXTO DE CAPTURA SIRE:
 
+CAMPOS YA COMPLETADOS (NO PREGUNTAR):
+${completedFields || '  (ninguno)'}
+
 PRÓXIMO CAMPO A CAPTURAR: ${nextField}
 PREGUNTA SUGERIDA: "${question}"
 
-Usa esta pregunta como guía para mantener la conversación natural y dirigida.
-Si el usuario ya proporcionó el dato en su mensaje, extráelo y valídalo antes de preguntar.
+**IMPORTANTE:**
+- NO preguntes por campos que ya están en la lista de completados
+- Si el usuario menciona un dato que ya está completado, reconócelo y continúa al siguiente campo
+- Mantén la conversación natural y dirigida
+- Si el usuario ya proporcionó el dato en su mensaje, extráelo y valídalo antes de preguntar
 `
 
         // Intentar extraer entidad del mensaje actual
