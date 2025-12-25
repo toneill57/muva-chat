@@ -711,7 +711,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     return 'other'
   }
 
-  const handleSendMessage = async (messageText?: string) => {
+  const handleSendMessage = async (messageText?: string, overrideSireData?: Record<string, string>) => {
     const textToSend = messageText || input.trim()
 
     if (!textToSend || isLoading) {
@@ -867,7 +867,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       // Si estamos en modo SIRE, incluir los datos capturados
       if (mode === 'sire') {
         requestBody.mode = 'sire'
-        requestBody.sireData = sireDisclosure.sireData
+        // Use overrideSireData if provided (e.g., from document upload), otherwise use state
+        requestBody.sireData = overrideSireData || sireDisclosure.sireData
       }
 
       const response = await fetch('/api/guest/chat', {
@@ -1303,37 +1304,47 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
   const handleDocumentConfirm = (data: FieldExtractionResult) => {
     // Auto-fill SIRE data from document
 
+    // Build complete SIRE data object IMMEDIATELY (to avoid React state timing issues)
+    const extractedSireData: Record<string, string> = {}
+
     // Type of document (ALWAYS - critical for progressive disclosure)
     if (data.sireData.tipo_documento) {
+      extractedSireData.document_type_code = data.sireData.tipo_documento
       sireDisclosure.updateField('document_type_code', data.sireData.tipo_documento)
     }
 
     // Document number
     if (data.sireData.documento_numero) {
+      extractedSireData.identification_number = data.sireData.documento_numero
       sireDisclosure.updateField('identification_number', data.sireData.documento_numero)
     }
 
     // First surname
     if (data.sireData.primer_apellido) {
+      extractedSireData.first_surname = data.sireData.primer_apellido
       sireDisclosure.updateField('first_surname', data.sireData.primer_apellido)
     }
 
     // Second surname - ALWAYS update, even if empty (mark as skipped)
     // This prevents the system from asking for it again
+    extractedSireData.second_surname = data.sireData.segundo_apellido || ''
     sireDisclosure.updateField('second_surname', data.sireData.segundo_apellido || '')
 
     // Names
     if (data.sireData.nombres) {
+      extractedSireData.names = data.sireData.nombres
       sireDisclosure.updateField('names', data.sireData.nombres)
     }
 
     // Nationality
     if (data.sireData.codigo_nacionalidad) {
+      extractedSireData.nationality_code = data.sireData.codigo_nacionalidad
       sireDisclosure.updateField('nationality_code', data.sireData.codigo_nacionalidad)
     }
 
     // Birth date
     if (data.sireData.fecha_nacimiento) {
+      extractedSireData.birth_date = data.sireData.fecha_nacimiento
       sireDisclosure.updateField('birth_date', data.sireData.fecha_nacimiento)
     }
 
@@ -1354,7 +1365,10 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       ? `Perfecto. He registrado los datos de tu documento: ${completedFields.join(', ')}.`
       : `Perfecto. He registrado los datos de tu documento: ${completedFields.join(', ')}. Nota: No se detectó segundo apellido en el documento.`
 
-    handleSendMessage(documentUploadMessage)
+    // Pass extracted data IMMEDIATELY to avoid React state timing issues
+    // Merge with existing sireData (in case user already entered some fields manually)
+    const completeDataForBackend = { ...sireDisclosure.sireData, ...extractedSireData }
+    handleSendMessage(documentUploadMessage, completeDataForBackend)
   }
 
   const handleConflictDecision = async (decision: 'use_document' | 'keep_existing') => {
