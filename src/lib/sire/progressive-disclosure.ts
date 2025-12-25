@@ -23,7 +23,7 @@
  */
 
 import { SIREConversationalData } from './conversational-prompts'
-import { getSIRECountryCode, getSIRECountryName } from './sire-catalogs'
+import { getSIRECountryCode, getSIRECountryName, getDIVIPOLACityCode } from './sire-catalogs'
 
 // ============================================================================
 // TYPES
@@ -323,7 +323,8 @@ function detectSkipIntent(input: string, fieldName: string): boolean {
  */
 export function validateField(
   fieldName: string,
-  value: string
+  value: string,
+  currentData?: Partial<SIREConversationalData>
 ): ValidationResult {
   // Trim whitespace
   const trimmed = value.trim()
@@ -500,7 +501,7 @@ export function validateField(
       return { valid: true, normalized: trimmed }
 
     case 'origin_place':
-    case 'destination_place':
+    case 'destination_place': {
       // Min 2 chars
       if (trimmed.length < 2) {
         return {
@@ -508,7 +509,47 @@ export function validateField(
           error: 'Lugar debe tener al menos 2 caracteres'
         }
       }
-      return { valid: true, normalized: trimmed }
+
+      // Determinar si debemos usar DIVIPOLA (colombiano) o SIRE país (extranjero)
+      const isColombian = currentData?.nationality_code === '169'
+
+      // Si ya es un código (numérico de 2-5 dígitos), asumirlo válido
+      if (/^\d{2,5}$/.test(trimmed)) {
+        return { valid: true, normalized: trimmed }
+      }
+
+      // Convertir nombre de ciudad/país a código
+      let placeCode: string | null = null
+      let placeName = trimmed
+
+      if (isColombian) {
+        // Colombiano: buscar código DIVIPOLA
+        placeCode = getDIVIPOLACityCode(trimmed)
+
+        if (!placeCode) {
+          return {
+            valid: false,
+            error: 'No encontré esa ciudad colombiana. ¿Podrías verificar el nombre? (Ejemplo: "Bogotá", "Medellín", "Cali")'
+          }
+        }
+      } else {
+        // Extranjero: buscar código SIRE país
+        placeCode = getSIRECountryCode(trimmed)
+
+        if (!placeCode) {
+          return {
+            valid: false,
+            error: 'No encontré ese país. ¿Podrías verificar el nombre? (Ejemplo: "Estados Unidos", "Brasil", "España")'
+          }
+        }
+      }
+
+      return {
+        valid: true,
+        normalized: placeCode,
+        metadata: { place_name: placeName }
+      }
+    }
 
     case 'nationality_code': {
       // Aceptar tanto texto ("Colombia", "Estados Unidos") como códigos ("169", "249")

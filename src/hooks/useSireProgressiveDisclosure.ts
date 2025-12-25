@@ -127,8 +127,8 @@ export function useSireProgressiveDisclosure(): UseSireProgressiveDisclosureRetu
    */
   const updateField = useCallback(
     (fieldName: string, value: string) => {
-      // Validar antes de guardar
-      const validation = validateField(fieldName, value)
+      // Validar antes de guardar (pasar currentData para context-aware validation)
+      const validation = validateField(fieldName, value, sireData)
 
       if (validation.valid) {
         // Guardar valor normalizado (usar ?? para preservar string vacío '')
@@ -156,7 +156,7 @@ export function useSireProgressiveDisclosure(): UseSireProgressiveDisclosureRetu
         }))
       }
     },
-    [completedFields]
+    [completedFields, sireData]
   )
 
   /**
@@ -183,9 +183,9 @@ export function useSireProgressiveDisclosure(): UseSireProgressiveDisclosureRetu
         }
       }
 
-      return validateField(currentField, value)
+      return validateField(currentField, value, sireData)
     },
-    [currentField]
+    [currentField, sireData]
   )
 
   return {
