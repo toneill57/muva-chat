@@ -23,6 +23,19 @@ export interface DocumentExtractionResult {
   error?: string;
   code?: string;
   details?: string;
+  // FASE 1 - Conditional Overwrite
+  requires_confirmation?: boolean;
+  conflict_details?: {
+    existing: {
+      names: string | null;
+      surname: string | null;
+    };
+    extracted: {
+      names: string;
+      surname: string;
+    };
+  };
+  saved_to_db?: boolean;
 }
 
 export interface SireField {

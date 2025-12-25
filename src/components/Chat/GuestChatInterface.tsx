@@ -40,6 +40,7 @@ import { getQuestionForField } from '@/lib/sire/conversational-prompts'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
 import { DocumentUpload } from '@/components/Compliance/DocumentUpload'
 import { DocumentPreview } from '@/components/Compliance/DocumentPreview'
+import { DocumentConflictModal } from '@/components/Compliance/DocumentConflictModal'
 import type { FieldExtractionResult } from '@/lib/sire/field-extraction'
 import type { DocumentExtractionResult } from '@/components/Compliance/types'
 
@@ -145,6 +146,20 @@ export function GuestChatInterface({
   const [documentPreview, setDocumentPreview] = useState<{
     imageUrl: string
     extractedData: FieldExtractionResult
+  } | null>(null)
+
+  // Conflict modal state (FASE 1 - Conditional Overwrite)
+  const [conflictModal, setConflictModal] = useState<{
+    existing: {
+      names: string | null
+      surname: string | null
+    }
+    extracted: {
+      names: string
+      surname: string
+    }
+    extractedData: FieldExtractionResult
+    fileUrl: string
   } | null>(null)
 
   // File upload state
@@ -1251,8 +1266,24 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       return
     }
 
-    // Close upload modal, show preview
+    // Close upload modal
     setShowDocumentUpload(false)
+
+    // Check if there's a conflict that requires user confirmation
+    if (result.requires_confirmation && result.conflict_details) {
+      console.log('[GuestChatInterface] Conflict detected, showing modal:', result.conflict_details)
+
+      // Show conflict modal instead of preview
+      setConflictModal({
+        existing: result.conflict_details.existing,
+        extracted: result.conflict_details.extracted,
+        extractedData: result.extracted_data,
+        fileUrl: result.file_url
+      })
+      return
+    }
+
+    // No conflict, proceed directly to preview
     setDocumentPreview({
       imageUrl: result.file_url,
       extractedData: result.extracted_data
@@ -1291,6 +1322,54 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     const documentUploadMessage = `He subido mi documento. Los datos extraídos son:\n- Nombres: ${data.sireData.nombres || 'N/A'}\n- Apellidos: ${data.sireData.primer_apellido || ''} ${data.sireData.segundo_apellido || ''}\n- Documento: ${data.sireData.documento_numero || 'N/A'}\n- Nacionalidad: ${data.sireData.codigo_nacionalidad || 'N/A'}\n- Fecha de nacimiento: ${data.sireData.fecha_nacimiento || 'N/A'}`
 
     handleSendMessage(documentUploadMessage)
+  }
+
+  const handleConflictDecision = async (decision: 'use_document' | 'keep_existing') => {
+    if (!conflictModal) return
+
+    console.log('[GuestChatInterface] User decision:', decision)
+
+    try {
+      // Call confirmation endpoint
+      const response = await fetch('/api/sire/confirm-document', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          reservation_id: session.reservation_id,
+          extracted_data: conflictModal.extractedData,
+          user_decision: decision,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!result.success) {
+        console.error('[GuestChatInterface] Confirmation failed:', result.error)
+        // TODO: Show error to user
+        return
+      }
+
+      console.log('[GuestChatInterface] Confirmation saved:', result)
+
+      // Close conflict modal
+      setConflictModal(null)
+
+      // If user chose to use document data, show preview
+      if (decision === 'use_document') {
+        setDocumentPreview({
+          imageUrl: conflictModal.fileUrl,
+          extractedData: conflictModal.extractedData
+        })
+      }
+      // If user chose to keep existing data, just close the modal (do nothing)
+
+    } catch (error) {
+      console.error('[GuestChatInterface] Error confirming document:', error)
+      // TODO: Show error to user
+    }
   }
 
   return (
@@ -1865,6 +1944,16 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           extractedData={documentPreview.extractedData}
           onConfirm={handleDocumentConfirm}
           onCancel={() => setDocumentPreview(null)}
+        />
+      )}
+
+      {/* Document Conflict Modal (FASE 1 - Conditional Overwrite) */}
+      {conflictModal && (
+        <DocumentConflictModal
+          existing={conflictModal.existing}
+          extracted={conflictModal.extracted}
+          onConfirm={handleConflictDecision}
+          onCancel={() => setConflictModal(null)}
         />
       )}
 
