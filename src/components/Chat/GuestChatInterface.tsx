@@ -711,7 +711,11 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     return 'other'
   }
 
-  const handleSendMessage = async (messageText?: string, overrideSireData?: Record<string, string>) => {
+  const handleSendMessage = async (
+    messageText?: string,
+    overrideSireData?: Record<string, string>,
+    skipValidation: boolean = false
+  ) => {
     const textToSend = messageText || input.trim()
 
     if (!textToSend || isLoading) {
@@ -719,7 +723,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     }
 
     // SIRE MODE: Validar y capturar campo actual
-    if (mode === 'sire' && sireDisclosure.currentField) {
+    // SKIP validation when called from document upload (skipValidation = true)
+    if (mode === 'sire' && sireDisclosure.currentField && !skipValidation) {
       const validation = sireDisclosure.validateCurrentField(textToSend)
 
       // Clear input immediately for better UX
@@ -1368,7 +1373,8 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     // Pass extracted data IMMEDIATELY to avoid React state timing issues
     // Merge with existing sireData (in case user already entered some fields manually)
     const completeDataForBackend = { ...sireDisclosure.sireData, ...extractedSireData }
-    handleSendMessage(documentUploadMessage, completeDataForBackend)
+    // skipValidation = true to bypass SIRE field validation (this is an informational message, not a user response)
+    handleSendMessage(documentUploadMessage, completeDataForBackend, true)
   }
 
   const handleConflictDecision = async (decision: 'use_document' | 'keep_existing') => {
