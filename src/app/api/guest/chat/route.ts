@@ -261,10 +261,12 @@ PRÓXIMO CAMPO A CAPTURAR: ${nextField}
 PREGUNTA SUGERIDA: "${question}"
 
 **IMPORTANTE:**
+- USA LA PREGUNTA SUGERIDA EXACTAMENTE como está escrita arriba
+- Pregunta UN SOLO CAMPO a la vez (progressive disclosure estricto)
+- NUNCA agrupes múltiples campos en una sola pregunta
 - NO preguntes por campos que ya están en la lista de completados
 - Si el usuario menciona un dato que ya está completado, reconócelo y continúa al siguiente campo
 - Mantén la conversación natural y dirigida
-- Si el usuario ya proporcionó el dato en su mensaje, extráelo y valídalo antes de preguntar
 `
 
         // Intentar extraer entidad del mensaje actual
