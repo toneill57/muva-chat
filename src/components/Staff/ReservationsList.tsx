@@ -27,6 +27,7 @@ import {
   AlertOctagon,
 } from 'lucide-react'
 import UnifiedReservationCard from '@/components/reservations/UnifiedReservationCard'
+import { supabaseAuth } from '@/lib/supabase-auth'
 
 // ============================================================================
 // Types
@@ -213,13 +214,8 @@ export default function ReservationsList() {
         let cityCode: string | null = null
 
         try {
-          const { createClient } = await import('@supabase/supabase-js')
-          const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-          )
-
-          const { data: tenantData } = await supabase
+          // Use singleton Supabase client to avoid multiple GoTrueClient instances
+          const { data: tenantData } = await supabaseAuth
             .from('tenant_registry')
             .select('features')
             .eq('tenant_id', data.data.tenant_info.tenant_id)

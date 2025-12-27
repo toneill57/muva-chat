@@ -52,7 +52,7 @@ interface ReservationListItem {
   external_booking_id: string | null
   booking_notes: string | null
 
-  // 🆕 NEW: SIRE Compliance Fields (FASE 2) - 9 campos oficiales
+  // 🆕 NEW: SIRE Compliance Fields (FASE 2) - 13 campos oficiales
   document_type: string | null              // '3'=Pasaporte, '5'=Cédula, '10'=PEP, '46'=Diplomático
   document_number: string | null            // Alfanumérico 6-15 chars sin guiones
   birth_date: string | null                 // YYYY-MM-DD format
@@ -62,6 +62,8 @@ interface ReservationListItem {
   nationality_code: string | null           // Código SIRE (249=USA, 169=COL) - NO ISO
   origin_city_code: string | null           // Ciudad/país procedencia (DIVIPOLA o SIRE)
   destination_city_code: string | null      // Ciudad/país destino (DIVIPOLA o SIRE)
+  hotel_sire_code: string | null            // Código NIT del hotel (sin dígito verificación)
+  hotel_city_code: string | null            // Código DIVIPOLA ciudad del hotel
 
   created_at: string
   updated_at: string
@@ -178,6 +180,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         nationality_code,
         origin_city_code,
         destination_city_code,
+        hotel_sire_code,
+        hotel_city_code,
         created_at,
         updated_at
       `)
@@ -331,7 +335,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         external_booking_id: res.external_booking_id,
         booking_notes: res.booking_notes,
 
-        // 🆕 NEW: SIRE Compliance Fields (FASE 2) - 9 campos oficiales
+        // 🆕 NEW: SIRE Compliance Fields (FASE 2) - 13 campos oficiales
         document_type: res.document_type,
         document_number: res.document_number,
         birth_date: res.birth_date,
@@ -341,6 +345,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         nationality_code: res.nationality_code,
         origin_city_code: res.origin_city_code,
         destination_city_code: res.destination_city_code,
+        hotel_sire_code: res.hotel_sire_code,
+        hotel_city_code: res.hotel_city_code,
 
         created_at: res.created_at,
         updated_at: res.updated_at,

@@ -264,8 +264,8 @@ export function mapReservationToSIRE(
     nombres: reservation.given_names,
     tipo_movimiento: movementType,
     fecha_movimiento: formatDateToSIRE(movementDate),
-    lugar_procedencia: reservation.origin_country_code || reservation.nationality_code,
-    lugar_destino: reservation.destination_country_code || tenantInfo.hotel_city_code,
+    lugar_procedencia: reservation.origin_city_code || reservation.nationality_code,
+    lugar_destino: reservation.destination_city_code || tenantInfo.hotel_city_code,
     fecha_nacimiento: formatDateToSIRE(reservation.birth_date),
   };
 }

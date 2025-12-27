@@ -21,7 +21,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { verifyGuestToken, extractTokenFromHeader, GuestAuthErrors } from '@/lib/guest-auth'
-import { extractPassportData, extractVisaData, OCRError } from '@/lib/sire/document-ocr'
+import { extractPassportData, extractPassportDataFromUrl, extractVisaData, OCRError } from '@/lib/sire/document-ocr'
 import { mapPassportToSIRE, validateExtractedFields, type FieldExtractionResult } from '@/lib/sire/field-extraction'
 
 // ============================================================================
@@ -260,8 +260,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Response>
 
     let ocrResult
     try {
-      // Default to passport extraction (most common document type)
-      ocrResult = await extractPassportData(fileBuffer, file.type)
+      // Use URL-based extraction (avoids base64 5MB limit)
+      ocrResult = await extractPassportDataFromUrl(fileUrl)
     } catch (error) {
       if (error instanceof OCRError) {
         console.error('[sire/extract-document] OCR error:', error.message)

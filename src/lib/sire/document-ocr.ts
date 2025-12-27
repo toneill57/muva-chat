@@ -44,6 +44,7 @@ export interface OCRResult {
 }
 
 export interface PassportData {
+  documentType: string | null;  // Type as printed: "PASSPORT", "DIPLOMATIC PASSPORT", "CEDULA DE EXTRANJERIA", etc.
   fullName: string | null;
   passportNumber: string | null;
   nationality: string | null;
@@ -133,6 +134,7 @@ const PASSPORT_OCR_PROMPT = `
 Analyze this passport/ID document image and extract the following fields in JSON format:
 
 {
+  "documentType": "Type of document as printed on the document (e.g., PASSPORT, DIPLOMATIC PASSPORT, PASAPORTE, PASAPORTE DIPLOMATICO, CEDULA DE EXTRANJERIA, ID CARD)",
   "fullName": "Full name as it appears (SURNAME, Given Names)",
   "passportNumber": "Passport/document number",
   "nationality": "Nationality (country name in English)",
@@ -156,6 +158,7 @@ IMPORTANT EXTRACTION RULES:
 
 EXAMPLE OUTPUT:
 {
+  "documentType": "PASSPORT",
   "fullName": "GARCIA, MARIA ELENA",
   "passportNumber": "AB1234567",
   "nationality": "Colombia",
@@ -319,7 +322,7 @@ export async function extractPassportData(
       structuredData = parsed;
 
       // Calculate confidence based on filled fields
-      const totalFields = 9; // All fields in PassportData
+      const totalFields = 10; // All fields in PassportData (including documentType)
       const filledFields = Object.values(structuredData).filter(v => v !== null && v !== '').length;
       confidence = filledFields / totalFields;
 
@@ -353,6 +356,129 @@ export async function extractPassportData(
     }
 
     // Wrap unknown errors
+    return {
+      success: false,
+      extractedText: '',
+      structuredData: null,
+      confidence: 0,
+      processingTimeMs,
+      error: error instanceof Error ? error.message : 'Unknown OCR error'
+    };
+  }
+}
+
+/**
+ * Extracts structured data from a passport image using URL (avoids base64 5MB limit)
+ *
+ * @param imageUrl - Public URL of the image
+ * @returns OCR result with extracted passport data
+ */
+export async function extractPassportDataFromUrl(
+  imageUrl: string
+): Promise<OCRResult> {
+  const startTime = Date.now();
+
+  try {
+    console.log('[document-ocr] Using URL mode for OCR:', imageUrl);
+
+    // Call Claude Vision API with URL source
+    const response = await withRetry(async () => {
+      try {
+        return await anthropic.messages.create({
+          model: VISION_MODEL,
+          max_tokens: 1024,
+          messages: [{
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: {
+                  type: 'url',
+                  url: imageUrl
+                }
+              },
+              {
+                type: 'text',
+                text: PASSPORT_OCR_PROMPT
+              }
+            ]
+          }]
+        });
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+        // Check for rate limiting
+        if (errorMessage.includes('rate_limit') || errorMessage.includes('429')) {
+          throw new OCRError('API rate limit exceeded', 'RATE_LIMIT', true);
+        }
+
+        // API request failed
+        throw new OCRError(
+          `API request failed: ${error instanceof Error ? `${(error as any).status || 'unknown'} ${errorMessage}` : 'Unknown error'}`,
+          'API_ERROR',
+          false
+        );
+      }
+    });
+
+    // Extract text from response
+    const extractedText = response.content
+      .filter((block): block is Anthropic.TextBlock => block.type === 'text')
+      .map(block => block.text)
+      .join('\n');
+
+    console.log('[document-ocr] Raw OCR response (URL mode):', extractedText.substring(0, 500));
+
+    // Parse structured data
+    let structuredData: PassportData | null = null;
+    let confidence = 0;
+
+    try {
+      // Clean the response - remove markdown code blocks if present
+      let jsonStr = extractedText.trim();
+      if (jsonStr.startsWith('```json')) {
+        jsonStr = jsonStr.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (jsonStr.startsWith('```')) {
+        jsonStr = jsonStr.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
+
+      // Parse JSON
+      const parsed = JSON.parse(jsonStr) as PassportData;
+      structuredData = parsed;
+
+      // Calculate confidence based on filled fields
+      const totalFields = 10;
+      const filledFields = Object.values(structuredData).filter(v => v !== null && v !== '').length;
+      confidence = filledFields / totalFields;
+
+      console.log(`[document-ocr] Passport extraction (URL): ${filledFields}/${totalFields} fields (${(confidence * 100).toFixed(0)}% confidence)`);
+
+    } catch (parseError) {
+      console.error('[document-ocr] JSON parsing error:', parseError);
+      throw new OCRError(
+        `Failed to parse OCR response: ${parseError instanceof Error ? parseError.message : 'Unknown parse error'}`,
+        'PARSE_ERROR',
+        false
+      );
+    }
+
+    const processingTimeMs = Date.now() - startTime;
+
+    return {
+      success: structuredData !== null,
+      extractedText,
+      structuredData,
+      confidence,
+      processingTimeMs
+    };
+
+  } catch (error) {
+    const processingTimeMs = Date.now() - startTime;
+
+    if (error instanceof OCRError) {
+      throw error;
+    }
+
     return {
       success: false,
       extractedText: '',

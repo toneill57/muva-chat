@@ -51,7 +51,7 @@ interface AirbnbReservation {
   currency?: string
   description?: string
 
-  // SIRE Compliance Fields (9 campos de huésped)
+  // SIRE Compliance Fields (13 campos SIRE)
   document_type?: string
   document_number?: string
   first_surname?: string
@@ -61,6 +61,8 @@ interface AirbnbReservation {
   nationality_code?: string
   origin_city_code?: string
   destination_city_code?: string
+  hotel_sire_code?: string   // Código NIT del hotel
+  hotel_city_code?: string   // Código DIVIPOLA ciudad del hotel
 
   // Sync Metadata
   ics_dtstamp?: string
@@ -120,29 +122,37 @@ function formatRelativeTime(dateString: string): string {
 }
 
 function calculateSireCompleteness(reservation: AirbnbReservation): { completed: number; total: number } {
-  const sireFields = [
-    // Fechas (SIEMPRE existen en las reservas)
-    reservation.start_date,            // 1. Fecha de llegada
-    reservation.end_date,              // 2. Fecha de salida
-
-    // Identificación personal
+  // Los 13 campos obligatorios para SIRE (Migración Colombia)
+  // Nota: second_surname es opcional (se deja en blanco si no aplica) - siempre cuenta como completo
+  const requiredFields = [
+    // Identificación personal (5 campos requeridos + 1 opcional)
+    reservation.document_type,         // 1. Tipo de documento
+    reservation.document_number,       // 2. Número de documento
     reservation.first_surname,         // 3. Primer apellido
-    reservation.second_surname,        // 4. Segundo apellido (cuenta aunque sea opcional)
-    reservation.given_names,           // 5. Nombres
-    reservation.document_type,         // 6. Tipo de documento
-    reservation.document_number,       // 7. Número de documento
-    reservation.nationality_code,      // 8. Nacionalidad
+    // second_surname es opcional - no se cuenta aquí
+    reservation.given_names,           // 4. Nombres
+    reservation.birth_date,            // 5. Fecha de nacimiento
 
-    // Datos adicionales
-    reservation.birth_date,            // 9. Fecha de nacimiento
-    reservation.guest_email,           // 10. Email
-    reservation.guest_phone,           // 11. Teléfono
-    reservation.origin_city_code,      // 12. Ciudad/País de origen
-    reservation.destination_city_code, // 13. Ciudad/País de destino
+    // Datos de viaje (3 campos)
+    reservation.nationality_code,      // 6. Nacionalidad
+    reservation.origin_city_code,      // 7. Ciudad/País de procedencia
+    reservation.destination_city_code, // 8. Ciudad/País de destino
+
+    // Datos del hotel (2 campos - auto-generados)
+    reservation.hotel_sire_code,       // 9. Código NIT del hotel
+    reservation.hotel_city_code,       // 10. Código DIVIPOLA ciudad hotel
+
+    // Movimiento (2 campos - auto-generados de fechas)
+    reservation.start_date,            // 11. Fecha de entrada (movimiento E)
+    reservation.end_date,              // 12. Fecha de salida (movimiento S)
   ]
 
-  const completed = sireFields.filter(field => field && field.trim() !== '').length
-  return { completed, total: 13 } // 13 campos SIRE en total
+  // Contar campos requeridos llenos (12 campos)
+  const requiredCompleted = requiredFields.filter(field => field && String(field).trim() !== '').length
+
+  // second_surname siempre cuenta como 1 (es opcional pero válido para SIRE)
+  // Total = 12 requeridos + 1 opcional = 13
+  return { completed: requiredCompleted + 1, total: 13 }
 }
 
 function getEventTypeBadge(eventType: string) {

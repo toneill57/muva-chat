@@ -39,9 +39,11 @@ export interface UseSireProgressiveDisclosureReturn {
   currentField: string | null
   errors: Record<string, string>
   updateField: (fieldName: string, value: string) => void
+  setAllFields: (fields: Partial<SIREConversationalData>) => void
   validateCurrentField: (value: string) => ValidationResult
   isComplete: boolean
   missingFields: string[]
+  reset: (keepAutoFilled?: Partial<SIREConversationalData>) => void
 }
 
 // ============================================================================
@@ -188,14 +190,80 @@ export function useSireProgressiveDisclosure(): UseSireProgressiveDisclosureRetu
     [currentField, sireData]
   )
 
+  /**
+   * Actualizar múltiples campos de una vez (evita issues de React batching)
+   *
+   * Usa esta función después de document upload para asegurar que
+   * todos los campos se actualicen en un solo render cycle.
+   *
+   * @param fields - Objeto con los campos a actualizar
+   *
+   * @example
+   * sireDisclosure.setAllFields({
+   *   document_type_code: '3',
+   *   identification_number: 'AB123456',
+   *   first_surname: 'GARCIA',
+   *   names: 'JUAN',
+   *   nationality_code: '169',
+   *   birth_date: '25/09/1982'
+   * })
+   */
+  const setAllFields = useCallback((fields: Partial<SIREConversationalData>) => {
+    setSireData(prev => ({
+      ...prev,
+      ...fields
+    }))
+
+    // Update completed fields list
+    const newCompletedFields = Object.keys(fields).filter(key => {
+      const value = fields[key as keyof SIREConversationalData]
+      // Include field if it has a value OR if it's second_surname with empty string (skipped)
+      return value !== undefined && value !== null && (value !== '' || key === 'second_surname')
+    })
+
+    setCompletedFields(prev => {
+      const combined = new Set([...prev, ...newCompletedFields])
+      return Array.from(combined)
+    })
+
+    // Clear errors for updated fields
+    setErrors(prev => {
+      const newErrors = { ...prev }
+      Object.keys(fields).forEach(key => delete newErrors[key])
+      return newErrors
+    })
+  }, [])
+
+  /**
+   * Reiniciar estado para registrar un nuevo huésped
+   *
+   * @param keepAutoFilled - Campos auto-llenados a preservar (hotel_code, city_code, movement_type, movement_date)
+   *
+   * @example
+   * // Reset for new guest, keeping hotel/city info
+   * sireDisclosure.reset({
+   *   hotel_code: hotelCode,
+   *   city_code: cityCode,
+   *   movement_type: 'E',
+   *   movement_date: checkInDate
+   * })
+   */
+  const reset = useCallback((keepAutoFilled?: Partial<SIREConversationalData>) => {
+    setSireData(keepAutoFilled || {})
+    setCompletedFields([])
+    setErrors({})
+  }, [])
+
   return {
     sireData,
     completedFields,
     currentField,
     errors,
     updateField,
+    setAllFields,
     validateCurrentField,
     isComplete,
     missingFields,
+    reset,
   }
 }

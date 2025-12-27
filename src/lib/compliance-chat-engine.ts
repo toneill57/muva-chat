@@ -321,7 +321,7 @@ This means: American guest flew FROM Bogotá TO San Andrés (hotel), and will fl
 
     // Validate pais_texto (must be in official list)
     if (data.pais_texto) {
-      // TODO: Check against SIRE_COUNTRY_CODES when available
+      // TODO: Check against getSIRECountryCode() from sire-catalogs.ts
       validated.pais_texto = data.pais_texto.trim();
     }
 

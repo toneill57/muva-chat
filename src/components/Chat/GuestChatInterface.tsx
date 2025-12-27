@@ -193,6 +193,12 @@ export function GuestChatInterface({
   // SIRE Progressive Disclosure - ALWAYS call hook (Rules of Hooks)
   const sireDisclosure = useSireProgressiveDisclosure()
 
+  // Multi-guest tracking for SIRE
+  const [guestOrder, setGuestOrder] = useState(1)
+  const [awaitingAdditionalGuestResponse, setAwaitingAdditionalGuestResponse] = useState(false)
+  // Use ref for synchronous access (React state updates are async)
+  const awaitingAdditionalGuestRef = useRef(false)
+
   // Load conversations on mount
   useEffect(() => {
     // Prevent double execution in React Strict Mode (development)
@@ -522,7 +528,21 @@ export function GuestChatInterface({
       const hotelCode = tenantConfig.hotel_code      // NIT del tenant
       const cityCode = tenantConfig.city_code        // SIRE city code
 
-      // 2. Create new SIRE conversation
+      // 2. Fetch existing SIRE data from reservation (CRITICAL for sync)
+      const reservationResponse = await fetch('/api/guest/reservation-sire-data', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      let existingSireData: Record<string, string> = {}
+      if (reservationResponse.ok) {
+        const reservationData = await reservationResponse.json()
+        existingSireData = reservationData.sireData || {}
+        console.log('[SIRE] Loaded existing data from DB:', Object.keys(existingSireData))
+      }
+
+      // 3. Create new SIRE conversation
       const response = await fetch('/api/guest/conversations', {
         method: 'POST',
         headers: {
@@ -541,7 +561,7 @@ export function GuestChatInterface({
       const data = await response.json()
       const sireConversation = data.conversation
 
-      // 3. Activate SIRE conversation
+      // 4. Activate SIRE conversation
       setActiveConversationId(sireConversation.id)
       setConversations((prev) => [
         {
@@ -553,24 +573,26 @@ export function GuestChatInterface({
         ...prev
       ])
 
-      // 4. Clear state
+      // 5. Clear state
       setMessages([])
       setTrackedEntities(new Map())
       setFollowUpSuggestions([])
 
-      // 5. Initialize auto-filled fields with real tenant data
-      sireDisclosure.updateField('hotel_code', hotelCode)     // NIT del tenant
-      sireDisclosure.updateField('city_code', cityCode)       // Ciudad del tenant
-      sireDisclosure.updateField('movement_type', 'E')        // E = Entrada
-      sireDisclosure.updateField('movement_date', formatDateForSIRE(session.check_in))
-
-      // 6. Pre-create SIRE welcome message with first question
-      const firstField = getNextFieldToAsk({
+      // 6. Initialize with auto-filled fields + existing SIRE data from DB
+      const initialData: Record<string, string> = {
         hotel_code: hotelCode,
         city_code: cityCode,
         movement_type: 'E',
-        movement_date: formatDateForSIRE(session.check_in)
-      })
+        movement_date: formatDateForSIRE(session.check_in),
+        // Merge existing SIRE data from DB (if any)
+        ...existingSireData
+      }
+
+      // Use setAllFields to update all at once (avoids React batching issues)
+      sireDisclosure.setAllFields(initialData)
+
+      // 7. Pre-create SIRE welcome message with first question
+      const firstField = getNextFieldToAsk(initialData)
 
       const firstQuestion = getQuestionForField(firstField || 'document_type_code', {
         language: 'es'
@@ -585,10 +607,10 @@ export function GuestChatInterface({
 
       setMessages([welcomeMessage])
 
-      // 7. Activate SIRE mode (after initialization)
+      // 8. Activate SIRE mode (after initialization)
       setMode('sire')
 
-      // 8. Close sidebar on mobile
+      // 9. Close sidebar on mobile
       setIsSidebarOpen(false)
 
     } catch (err) {
@@ -722,6 +744,90 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       return
     }
 
+    // SIRE MODE: Check if user wants to register another guest
+    // Use ref for synchronous check (React state updates are async)
+    console.log('[SIRE] ========== handleSendMessage called ==========')
+    console.log('[SIRE] Message:', textToSend)
+    console.log('[SIRE] Mode:', mode)
+    console.log('[SIRE] awaitingRef.current:', awaitingAdditionalGuestRef.current)
+    console.log('[SIRE] awaitingState:', awaitingAdditionalGuestResponse)
+    console.log('[SIRE] currentField:', sireDisclosure.currentField)
+    console.log('[SIRE] isComplete:', sireDisclosure.isComplete)
+
+    if (mode === 'sire' && awaitingAdditionalGuestRef.current) {
+      const lowerText = textToSend.toLowerCase().trim()
+      const affirmativeResponses = ['sí', 'si', 'yes', 'otro', 'siguiente', 'claro', 'ok', 'vale', 'bueno']
+      const isAffirmative = affirmativeResponses.some(r => lowerText.includes(r))
+
+      console.log('[SIRE] Additional guest check:', { lowerText, isAffirmative })
+
+      // Clear input immediately for better UX
+      setInput('')
+
+      // Add user message to UI
+      const userMessage: GuestChatMessage = {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        content: textToSend,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, userMessage])
+
+      if (isAffirmative) {
+        // User wants to register another guest
+        awaitingAdditionalGuestRef.current = false
+        setAwaitingAdditionalGuestResponse(false)
+        setGuestOrder((prev) => prev + 1)
+
+        // Reset SIRE disclosure keeping auto-filled fields
+        sireDisclosure.reset({
+          hotel_code: sireDisclosure.sireData.hotel_code,
+          city_code: sireDisclosure.sireData.city_code,
+          movement_type: sireDisclosure.sireData.movement_type,
+          movement_date: sireDisclosure.sireData.movement_date,
+        })
+
+        // Get first question for new guest
+        const firstField = getNextFieldToAsk({
+          hotel_code: sireDisclosure.sireData.hotel_code,
+          city_code: sireDisclosure.sireData.city_code,
+          movement_type: sireDisclosure.sireData.movement_type,
+          movement_date: sireDisclosure.sireData.movement_date,
+        })
+
+        const firstQuestion = getQuestionForField(firstField || 'document_type_code', {
+          language: 'es'
+        })
+
+        const newGuestMessage: GuestChatMessage = {
+          id: `new-guest-${Date.now()}`,
+          role: 'assistant',
+          content: `¡Perfecto! Vamos a registrar al huésped #${guestOrder + 1}.\n\n${firstQuestion}`,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, newGuestMessage])
+
+        return
+      } else {
+        // User doesn't want to register another guest
+        awaitingAdditionalGuestRef.current = false
+        setAwaitingAdditionalGuestResponse(false)
+
+        const doneMessage: GuestChatMessage = {
+          id: `done-${Date.now()}`,
+          role: 'assistant',
+          content: `¡Entendido! El registro SIRE ha quedado completado.\n\nSi tienes alguna otra pregunta sobre tu estadía, no dudes en escribirme. ¡Que tengas una excelente experiencia! 🌴`,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, doneMessage])
+
+        // Switch back to general mode
+        setMode('general')
+
+        return
+      }
+    }
+
     // SIRE MODE: Validar y capturar campo actual
     // SKIP validation when called from document upload (skipValidation = true)
     if (mode === 'sire' && sireDisclosure.currentField && !skipValidation) {
@@ -807,39 +913,59 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
       }
       setMessages((prev) => [...prev, confirmMessage])
 
-      // Si hay más campos, preguntar el siguiente
-      if (!sireDisclosure.isComplete) {
-        const nextField = getNextFieldToAsk({
-          ...sireDisclosure.sireData,
-          [sireDisclosure.currentField]: validation.normalized ?? textToSend,
+      // Calcular si hay más campos con los datos actualizados
+      const updatedSireDataForCheck = {
+        ...sireDisclosure.sireData,
+        [sireDisclosure.currentField]: validation.normalized ?? textToSend,
+      }
+      const nextField = getNextFieldToAsk(updatedSireDataForCheck)
+
+      if (nextField) {
+        // Aún hay campos por preguntar
+        const nextQuestion = getQuestionForField(nextField, {
+          language: 'es',
+          previousData: sireDisclosure.sireData,
         })
 
-        if (nextField) {
-          const nextQuestion = getQuestionForField(nextField, {
-            language: 'es',
-            previousData: sireDisclosure.sireData,
-          })
-
-          const questionMessage: GuestChatMessage = {
-            id: `question-${Date.now()}`,
-            role: 'assistant',
-            content: nextQuestion,
-            timestamp: new Date(),
-          }
-          setMessages((prev) => [...prev, questionMessage])
+        const questionMessage: GuestChatMessage = {
+          id: `question-${Date.now()}`,
+          role: 'assistant',
+          content: nextQuestion,
+          timestamp: new Date(),
         }
+        setMessages((prev) => [...prev, questionMessage])
       } else {
-        // Todos los campos completados - mensaje celebratorio
+        // ¡Todos los campos completados! - mensaje celebratorio
+        console.log('[SIRE] ========== ALL FIELDS COMPLETE ==========')
+        console.log('[SIRE] Entering completion block, nextField is null')
+
+        const guestName = updatedSireDataForCheck.names && updatedSireDataForCheck.first_surname
+          ? `${updatedSireDataForCheck.names} ${updatedSireDataForCheck.first_surname}`
+          : 'el huésped'
+
         const completeMessage: GuestChatMessage = {
           id: `complete-${Date.now()}`,
           role: 'assistant',
-          content: '🎉 ¡Excelente! Todos los datos han sido capturados correctamente.\n\nAhora voy a procesar tu registro ante las autoridades colombianas...',
+          content: `✅ **¡Registro SIRE Completado!**
+
+Los datos de **${guestName}** han sido registrados exitosamente.
+
+🎉 Tu información ha sido guardada y será reportada a las autoridades colombianas según la normativa vigente.
+
+---
+
+**¿Hay otro huésped en esta reserva que necesite registrar sus datos?**
+
+Si es así, por favor responde "Sí" para iniciar el registro del siguiente huésped. De lo contrario, puedes cerrar esta conversación o escribir cualquier otra consulta.`,
           timestamp: new Date(),
         }
         setMessages((prev) => [...prev, completeMessage])
 
-        // TODO (Tarea 1.6 pendiente): Auto-enviar datos a API
-        // await submitSIREData(sireDisclosure.sireData)
+        // Set flag IMMEDIATELY (before any async operations)
+        // This ensures user can respond "si" even while API call is in progress
+        awaitingAdditionalGuestRef.current = true
+        setAwaitingAdditionalGuestResponse(true)
+        console.log('[SIRE] ========== WAITING FOR ADDITIONAL GUEST RESPONSE ==========')
       }
 
       return // NO continuar con lógica normal de chat
@@ -1306,52 +1432,48 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     })
   }
 
-  const handleDocumentConfirm = (data: FieldExtractionResult) => {
+  const handleDocumentConfirm = async (data: FieldExtractionResult) => {
     // Auto-fill SIRE data from document
 
-    // Build complete SIRE data object IMMEDIATELY (to avoid React state timing issues)
-    const extractedSireData: Record<string, string> = {}
+    // Build complete SIRE data object
+    const extractedSireData: Partial<typeof sireDisclosure.sireData> = {}
 
     // Type of document (ALWAYS - critical for progressive disclosure)
     if (data.sireData.tipo_documento) {
       extractedSireData.document_type_code = data.sireData.tipo_documento
-      sireDisclosure.updateField('document_type_code', data.sireData.tipo_documento)
     }
 
     // Document number
     if (data.sireData.documento_numero) {
       extractedSireData.identification_number = data.sireData.documento_numero
-      sireDisclosure.updateField('identification_number', data.sireData.documento_numero)
     }
 
     // First surname
     if (data.sireData.primer_apellido) {
       extractedSireData.first_surname = data.sireData.primer_apellido
-      sireDisclosure.updateField('first_surname', data.sireData.primer_apellido)
     }
 
     // Second surname - ALWAYS update, even if empty (mark as skipped)
     // This prevents the system from asking for it again
     extractedSireData.second_surname = data.sireData.segundo_apellido || ''
-    sireDisclosure.updateField('second_surname', data.sireData.segundo_apellido || '')
 
     // Names
     if (data.sireData.nombres) {
       extractedSireData.names = data.sireData.nombres
-      sireDisclosure.updateField('names', data.sireData.nombres)
     }
 
     // Nationality
     if (data.sireData.codigo_nacionalidad) {
       extractedSireData.nationality_code = data.sireData.codigo_nacionalidad
-      sireDisclosure.updateField('nationality_code', data.sireData.codigo_nacionalidad)
     }
 
     // Birth date
     if (data.sireData.fecha_nacimiento) {
       extractedSireData.birth_date = data.sireData.fecha_nacimiento
-      sireDisclosure.updateField('birth_date', data.sireData.fecha_nacimiento)
     }
+
+    // Update all fields in a single state update (avoids React batching issues)
+    sireDisclosure.setAllFields(extractedSireData)
 
     // Close preview
     setDocumentPreview(null)
@@ -1365,16 +1487,69 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
     if (data.sireData.codigo_nacionalidad) completedFields.push('nacionalidad')
     if (data.sireData.fecha_nacimiento) completedFields.push('fecha de nacimiento')
 
-    // Send a clear message indicating what was captured
+    // Build confirmation message
     const documentUploadMessage = data.sireData.segundo_apellido
       ? `Perfecto. He registrado los datos de tu documento: ${completedFields.join(', ')}.`
       : `Perfecto. He registrado los datos de tu documento: ${completedFields.join(', ')}. Nota: No se detectó segundo apellido en el documento.`
 
-    // Pass extracted data IMMEDIATELY to avoid React state timing issues
-    // Merge with existing sireData (in case user already entered some fields manually)
-    const completeDataForBackend = { ...sireDisclosure.sireData, ...extractedSireData }
-    // skipValidation = true to bypass SIRE field validation (this is an informational message, not a user response)
-    handleSendMessage(documentUploadMessage, completeDataForBackend, true)
+    // Add confirmation message to chat (locally, NO API call)
+    const confirmationMessage: GuestChatMessage = {
+      id: `doc-confirm-${Date.now()}`,
+      role: 'assistant',
+      content: documentUploadMessage,
+      timestamp: new Date(),
+    }
+    setMessages((prev) => [...prev, confirmationMessage])
+
+    // Calculate next field AFTER document extraction
+    const mergedData = { ...sireDisclosure.sireData, ...extractedSireData }
+    const nextFieldAfterDocument = getNextFieldToAsk(mergedData)
+
+    console.log('[SIRE] Document confirmed. Next field:', nextFieldAfterDocument)
+    console.log('[SIRE] Merged data keys:', Object.keys(mergedData))
+
+    // If there's a next field, ask for it (locally, NO API call)
+    if (nextFieldAfterDocument) {
+      const nextQuestion = getQuestionForField(nextFieldAfterDocument, {
+        language: 'es',
+        previousData: mergedData,
+      })
+
+      const questionMessage: GuestChatMessage = {
+        id: `question-${Date.now()}`,
+        role: 'assistant',
+        content: nextQuestion,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, questionMessage])
+    } else {
+      // All fields complete - show completion message
+      const guestName = mergedData.names && mergedData.first_surname
+        ? `${mergedData.names} ${mergedData.first_surname}`
+        : 'el huésped'
+
+      const completeMessage: GuestChatMessage = {
+        id: `complete-${Date.now()}`,
+        role: 'assistant',
+        content: `✅ **¡Registro SIRE Completado!**
+
+Los datos de **${guestName}** han sido registrados exitosamente.
+
+🎉 Tu información ha sido guardada y será reportada a las autoridades colombianas según la normativa vigente.
+
+---
+
+**¿Hay otro huésped en esta reserva que necesite registrar sus datos?**
+
+Si es así, por favor responde "Sí" para iniciar el registro del siguiente huésped. De lo contrario, puedes cerrar esta conversación o escribir cualquier otra consulta.`,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, completeMessage])
+
+      // Set flag for additional guest response
+      awaitingAdditionalGuestRef.current = true
+      setAwaitingAdditionalGuestResponse(true)
+    }
   }
 
   const handleConflictDecision = async (decision: 'use_document' | 'keep_existing') => {

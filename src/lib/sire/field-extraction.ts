@@ -131,9 +131,14 @@ export function mapPassportToSIRE(
   }
 
   // 2. Passport number → documento_numero
+  // Normalize: remove dots, dashes, spaces (e.g., "94.921.109" → "94921109")
   if (passportData.passportNumber) {
-    sireData.documento_numero = passportData.passportNumber.replace(/[-\s]/g, '');
-    sireData.tipo_documento = detectDocumentType(passportData.passportNumber);
+    sireData.documento_numero = passportData.passportNumber.replace(/[-.\s]/g, '').toUpperCase();
+    // Use OCR-detected document type, fallback to number-based detection
+    sireData.tipo_documento = mapDocumentTypeToSIRE(
+      passportData.documentType,
+      passportData.passportNumber
+    );
     confidence.documento = 0.95;
   } else {
     errors.push('Número de pasaporte no encontrado');
@@ -191,6 +196,86 @@ export function mapPassportToSIRE(
  * splitFullName("GARCIA LOPEZ, MARIA ELENA")
  * // Returns: { success: true, primerApellido: "GARCIA", segundoApellido: "LOPEZ", nombres: "MARIA ELENA", confidence: 0.92 }
  */
+/**
+ * Merge compound surname prefixes that were separated by spaces
+ *
+ * Handles cases where apostrophes are replaced with spaces:
+ * - "O NEILL" → "O'NEILL"
+ * - "D ANGELO" → "D'ANGELO"
+ * - "MC DONALD" → "MCDONALD"
+ *
+ * Also handles multi-word surname prefixes:
+ * - "VAN DER BERG" → keeps as compound
+ * - "DE LA CRUZ" → keeps as compound
+ *
+ * @param words - Array of surname words
+ * @returns Array with compound surnames merged
+ */
+function mergeCompoundSurnames(words: string[]): string[] {
+  if (words.length < 2) return words;
+
+  const result: string[] = [];
+  let i = 0;
+
+  // Prefixes that should be merged with apostrophe (single letter)
+  const apostrophePrefixes = ['O', 'D'];
+
+  // Prefixes that should be merged without apostrophe
+  const mergePrefixes = ['MC', 'MAC'];
+
+  // Prefixes that form compound surnames (keep as separate words in the surname)
+  const compoundPrefixes = ['VAN', 'VON', 'DE', 'DEL', 'LA', 'LOS', 'LAS', 'DI', 'DA', 'DU', 'LE'];
+
+  while (i < words.length) {
+    const word = words[i];
+    const nextWord = words[i + 1];
+
+    if (nextWord) {
+      // Check for apostrophe prefixes (O, D)
+      if (apostrophePrefixes.includes(word) && nextWord.length > 1) {
+        // Merge with apostrophe: "O" + "NEILL" → "O'NEILL"
+        result.push(`${word}'${nextWord}`);
+        i += 2;
+        continue;
+      }
+
+      // Check for merge prefixes (MC, MAC)
+      if (mergePrefixes.includes(word)) {
+        // Merge without space: "MC" + "DONALD" → "MCDONALD"
+        result.push(`${word}${nextWord}`);
+        i += 2;
+        continue;
+      }
+
+      // Check for compound prefixes - these stay as part of multi-word surname
+      // but we don't split them further
+      if (compoundPrefixes.includes(word)) {
+        // Keep collecting words that are part of the compound
+        let compound = word;
+        i++;
+        while (i < words.length) {
+          const next = words[i];
+          if (compoundPrefixes.includes(next)) {
+            compound += ' ' + next;
+            i++;
+          } else {
+            compound += ' ' + next;
+            i++;
+            break;
+          }
+        }
+        result.push(compound);
+        continue;
+      }
+    }
+
+    result.push(word);
+    i++;
+  }
+
+  return result;
+}
+
 export function splitFullName(fullName: string): NameExtractionResult {
   if (!fullName || fullName.trim().length === 0) {
     return { success: false, confidence: 0 };
@@ -202,7 +287,9 @@ export function splitFullName(fullName: string): NameExtractionResult {
   const commaSplit = cleaned.split(',').map(s => s.trim());
 
   if (commaSplit.length === 2 && commaSplit[0] && commaSplit[1]) {
-    const surnames = commaSplit[0].split(/\s+/).filter(s => s.length > 0);
+    // Split surnames and merge compound prefixes
+    const rawSurnames = commaSplit[0].split(/\s+/).filter(s => s.length > 0);
+    const surnames = mergeCompoundSurnames(rawSurnames);
     const givenNames = commaSplit[1].trim();
 
     if (surnames.length >= 2) {
@@ -525,6 +612,75 @@ export function detectDocumentType(documentNumber: string): string {
   return '3';
 }
 
+/**
+ * Map OCR-detected document type to SIRE code
+ *
+ * Uses the document type label extracted by OCR (e.g., "PASSPORT", "DIPLOMATIC PASSPORT")
+ * to determine the correct SIRE document type code.
+ *
+ * Falls back to number-based detection if OCR didn't extract the type.
+ *
+ * @param ocrDocumentType - Document type as extracted by OCR
+ * @param documentNumber - Fallback: document number for format-based detection
+ * @returns SIRE document type code ('3', '5', '46', etc.)
+ *
+ * @example
+ * mapDocumentTypeToSIRE('PASSPORT', '125451855')       // Returns: '3'
+ * mapDocumentTypeToSIRE('DIPLOMATIC PASSPORT', 'D123') // Returns: '46'
+ * mapDocumentTypeToSIRE(null, 'AB123456')              // Returns: '3' (fallback)
+ */
+export function mapDocumentTypeToSIRE(
+  ocrDocumentType: string | null,
+  documentNumber: string
+): string {
+  console.log('[mapDocumentTypeToSIRE] Input:', { ocrDocumentType, documentNumber });
+
+  if (ocrDocumentType) {
+    const normalized = ocrDocumentType.toUpperCase().trim();
+    console.log('[mapDocumentTypeToSIRE] Normalized:', normalized);
+
+    // Diplomatic passport - MUST contain "DIPLOMATIC" + "PASSPORT" together
+    // or Spanish equivalent. This avoids false positives from "OFFICIAL" text.
+    const isDiplomatic = (normalized.includes('DIPLOMATIC') && normalized.includes('PASSPORT')) ||
+        (normalized.includes('DIPLOMATICO') && normalized.includes('PASAPORTE')) ||
+        normalized === 'DIPLOMATIC PASSPORT' ||
+        normalized === 'PASAPORTE DIPLOMATICO' ||
+        normalized === 'PASAPORTE DIPLOMÁTICO';
+
+    console.log('[mapDocumentTypeToSIRE] isDiplomatic check:', {
+      hasDiplomatic: normalized.includes('DIPLOMATIC'),
+      hasPassport: normalized.includes('PASSPORT'),
+      isDiplomatic
+    });
+
+    if (isDiplomatic) {
+      console.log('[mapDocumentTypeToSIRE] => Returning 46 (Diplomatic)');
+      return '46';
+    }
+
+    // Regular passport (check AFTER diplomatic to avoid false negatives)
+    if (normalized.includes('PASSPORT') || normalized.includes('PASAPORTE') ||
+        normalized.includes('PASSEPORT')) {
+      return '3';
+    }
+
+    // Cédula de Extranjería
+    if (normalized.includes('CEDULA') || normalized.includes('CÉDULA') ||
+        normalized.includes('EXTRANJERIA') || normalized.includes('EXTRANJERÍA')) {
+      return '5';
+    }
+
+    // ID Card - treat as passport for foreigners (SIRE is for foreigners)
+    if (normalized.includes('ID CARD') || normalized.includes('IDENTITY') ||
+        normalized.includes('IDENTIDAD')) {
+      return '3';
+    }
+  }
+
+  // Fallback to number-based detection
+  return detectDocumentType(documentNumber);
+}
+
 // ============================================================================
 // DATE NORMALIZATION
 // ============================================================================
@@ -628,7 +784,7 @@ export function validateExtractedFields(
 
   // Documento número: 5-20 chars alphanumeric
   if (sireData.documento_numero) {
-    const cleaned = sireData.documento_numero.replace(/[-\s]/g, '');
+    const cleaned = sireData.documento_numero.replace(/[-.\s]/g, '');
     if (!/^[A-Z0-9]{5,20}$/i.test(cleaned)) {
       errors.push('Número de documento inválido (debe ser 5-20 caracteres alfanuméricos)');
     }
@@ -726,6 +882,7 @@ export default {
   splitFullName,
   mapNationalityToSIRE,
   detectDocumentType,
+  mapDocumentTypeToSIRE,
   normalizeDateFormat,
   validateExtractedFields,
   calculateOverallConfidence

@@ -100,9 +100,9 @@ interface UnifiedReservation {
   last_seen_at?: string | null
   sync_generation?: string | null
 
-  // Tenant Data (for automatic SIRE fields)
-  tenant_hotel_code?: string | null
-  tenant_city_code?: string | null
+  // SIRE Hotel Data (auto-generated from tenant config)
+  hotel_sire_code?: string | null   // Código NIT del hotel (sin dígito verificación)
+  hotel_city_code?: string | null   // Código DIVIPOLA ciudad del hotel
 
   // Timestamps
   created_at: string
@@ -183,29 +183,37 @@ function getDaysUntil(dateStr: string): number {
 }
 
 function calculateSireCompleteness(reservation: UnifiedReservation): { completed: number; total: number } {
-  const sireFields = [
-    // Fechas (SIEMPRE existen en las reservas)
-    reservation.check_in_date,         // 1. Fecha de llegada
-    reservation.check_out_date,        // 2. Fecha de salida
-
-    // Identificación personal
+  // Los 13 campos obligatorios para SIRE (Migración Colombia)
+  // Nota: second_surname es opcional (se deja en blanco si no aplica) - siempre cuenta como completo
+  const requiredFields = [
+    // Identificación personal (5 campos requeridos + 1 opcional)
+    reservation.document_type,         // 1. Tipo de documento
+    reservation.document_number,       // 2. Número de documento
     reservation.first_surname,         // 3. Primer apellido
-    reservation.second_surname,        // 4. Segundo apellido
-    reservation.given_names,           // 5. Nombres
-    reservation.document_type,         // 6. Tipo de documento
-    reservation.document_number,       // 7. Número de documento
-    reservation.nationality_code,      // 8. Nacionalidad
+    // second_surname es opcional - no se cuenta aquí
+    reservation.given_names,           // 4. Nombres
+    reservation.birth_date,            // 5. Fecha de nacimiento
 
-    // Datos adicionales
-    reservation.birth_date,            // 9. Fecha de nacimiento
-    reservation.guest_email,           // 10. Email
-    reservation.phone_full,            // 11. Teléfono completo
-    reservation.origin_city_code,      // 12. Ciudad/País de origen
-    reservation.destination_city_code, // 13. Ciudad/País de destino
+    // Datos de viaje (3 campos)
+    reservation.nationality_code,      // 6. Nacionalidad
+    reservation.origin_city_code,      // 7. Ciudad/País de procedencia
+    reservation.destination_city_code, // 8. Ciudad/País de destino
+
+    // Datos del hotel (2 campos - auto-generados)
+    reservation.hotel_sire_code,       // 9. Código NIT del hotel
+    reservation.hotel_city_code,       // 10. Código DIVIPOLA ciudad hotel
+
+    // Movimiento (2 campos - auto-generados de fechas)
+    reservation.check_in_date,         // 11. Fecha de entrada (movimiento E)
+    reservation.check_out_date,        // 12. Fecha de salida (movimiento S)
   ]
 
-  const completed = sireFields.filter(field => field && String(field).trim() !== '').length
-  return { completed, total: 13 }
+  // Contar campos requeridos llenos (12 campos)
+  const requiredCompleted = requiredFields.filter(field => field && String(field).trim() !== '').length
+
+  // second_surname siempre cuenta como 1 (es opcional pero válido para SIRE)
+  // Total = 12 requeridos + 1 opcional = 13
+  return { completed: requiredCompleted + 1, total: 13 }
 }
 
 function getUrgencyColor(daysUntil: number): string {
@@ -742,16 +750,16 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
               {/* Código Hotel */}
               <div className="flex items-start gap-2 text-sm">
                 <span className="text-gray-600 min-w-[140px]">Código Hotel:</span>
-                <span className={`font-medium ${reservation.tenant_hotel_code ? 'text-gray-900' : 'text-orange-600'}`}>
-                  {reservation.tenant_hotel_code || 'No configurado'}
+                <span className={`font-medium ${reservation.hotel_sire_code ? 'text-gray-900' : 'text-orange-600'}`}>
+                  {reservation.hotel_sire_code || 'No configurado'}
                 </span>
               </div>
 
               {/* Código Ciudad */}
               <div className="flex items-start gap-2 text-sm">
                 <span className="text-gray-600 min-w-[140px]">Código Ciudad:</span>
-                <span className={`font-medium ${reservation.tenant_city_code ? 'text-gray-900' : 'text-orange-600'}`}>
-                  {reservation.tenant_city_code || 'No configurado'}
+                <span className={`font-medium ${reservation.hotel_city_code ? 'text-gray-900' : 'text-orange-600'}`}>
+                  {reservation.hotel_city_code || 'No configurado'}
                 </span>
                 <span className="text-xs text-gray-500">(ubicación del hotel)</span>
               </div>
