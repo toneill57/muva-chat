@@ -29,6 +29,20 @@ import { getStatusDisplay, type ReservationStatus } from '@/types/reservations'
 // INTERFACE UNIFICADA
 // ============================================================================
 
+interface Guest {
+  guest_order: number
+  given_names: string | null
+  first_surname: string | null
+  second_surname: string | null
+  document_type: string | null
+  document_number: string | null
+  nationality_code: string | null
+  birth_date: string | null
+  origin_city_code: string | null
+  destination_city_code: string | null
+  sire_complete: boolean
+}
+
 interface UnifiedReservation {
   // Basic Identification
   id: string
@@ -59,6 +73,8 @@ interface UnifiedReservation {
   adults?: number
   children?: number
   total_guests?: number
+  guests?: Guest[]
+  registered_guests?: number
 
   // SIRE Compliance Fields (9 campos)
   document_type?: string | null
@@ -75,9 +91,8 @@ interface UnifiedReservation {
   total_price?: number | null
   currency?: string
 
-  // Notes & Description
+  // Notes
   booking_notes?: string | null
-  description?: string | null
 
   // Property/Accommodation
   property_name?: string
@@ -119,19 +134,29 @@ interface UnifiedReservationCardProps {
 // HELPER FUNCTIONS
 // ============================================================================
 
-function parseReservationCode(description?: string | null): string | null {
-  if (!description) return null
-  // Clean escaped quotes if they exist (MotoPress/Airbnb data comes with escaped quotes)
-  const cleanDesc = description.replace(/^"(.+)"$/, '$1').replace(/\\"/g, '"')
-  const match = cleanDesc.match(/details\/([A-Z0-9]+)/)
+function parseReservationCode(notes?: string | null): string | null {
+  if (!notes) return null
+  // Clean quotes at start/end (multiline-safe) and escaped quotes
+  const cleanNotes = notes.replace(/^"+|"+$/g, '').replace(/\\"/g, '"')
+  const match = cleanNotes.match(/details\/([A-Z0-9]+)/)
   return match ? match[1] : null
 }
 
-function parsePhoneLast4(description?: string | null): string | null {
-  if (!description) return null
-  // Clean escaped quotes if they exist (MotoPress/Airbnb data comes with escaped quotes)
-  const cleanDesc = description.replace(/^"(.+)"$/, '$1').replace(/\\"/g, '"')
-  const match = cleanDesc.match(/Last 4 Digits\): (\d{4})/)
+function parsePhoneLast4(notes?: string | null): string | null {
+  if (!notes) return null
+  // Clean quotes at start/end (multiline-safe) and escaped quotes
+  const cleanNotes = notes.replace(/^"+|"+$/g, '').replace(/\\"/g, '"')
+
+  console.log('[parsePhoneLast4] DEBUG:', {
+    original: notes.substring(0, 200),
+    cleaned: cleanNotes.substring(0, 200),
+    searchingFor: 'Last 4 Digits): XXXX'
+  })
+
+  const match = cleanNotes.match(/Last 4 Digits\): (\d{4})/)
+
+  console.log('[parsePhoneLast4] Match result:', match)
+
   return match ? match[1] : null
 }
 
@@ -325,6 +350,57 @@ function isNewReservation(createdAt: string): boolean {
 }
 
 // ============================================================================
+// COMPANIONS LIST COMPONENT
+// ============================================================================
+
+function CompanionsList({ guests }: { guests: Guest[] }) {
+  if (guests.length === 0) {
+    return (
+      <p className="text-sm text-gray-500 italic py-4 text-center">
+        No hay acompañantes registrados
+      </p>
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      {guests.map((guest) => (
+        <div
+          key={guest.guest_order}
+          className="p-3 bg-gray-50 rounded-lg border border-gray-200"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-medium text-gray-900">
+              {guest.given_names || 'Sin nombre'} {guest.first_surname || ''}
+              {guest.second_surname ? ` ${guest.second_surname}` : ''}
+            </span>
+            {guest.sire_complete ? (
+              <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                SIRE Completo
+              </span>
+            ) : (
+              <span className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
+                SIRE Pendiente
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+            <div>
+              <span className="text-gray-400">Doc:</span>{' '}
+              {guest.document_type || 'N/A'} {guest.document_number || ''}
+            </div>
+            <div>
+              <span className="text-gray-400">Nacionalidad:</span>{' '}
+              {guest.nationality_code || 'N/A'}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ============================================================================
 // MAIN COMPONENT
 // ============================================================================
 
@@ -334,6 +410,7 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
   const [showDetails, setShowDetails] = useState(false)
   const [showAutoData, setShowAutoData] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [activeTab, setActiveTab] = useState<'titular' | 'companions'>('titular')
 
   // Get status display configuration
   const statusDisplay = getStatusDisplay(reservation.status as ReservationStatus)
@@ -343,8 +420,8 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
   const checkOutDate = reservation.check_out_date || reservation.end_date || ''
 
   // Parse fields from description (Airbnb)
-  const reservationCode = parseReservationCode(reservation.description) || reservation.reservation_code
-  const phoneLast4Parsed = parsePhoneLast4(reservation.description) || reservation.phone_last_4 || reservation.guest_phone_last4
+  const reservationCode = parseReservationCode(reservation.booking_notes) || reservation.reservation_code
+  const phoneLast4 = reservation.phone_last_4 || reservation.guest_phone_last4 || parsePhoneLast4(reservation.booking_notes)
   const reservationURL = buildAirbnbURL(reservationCode)
 
   // Calculate values
@@ -361,10 +438,27 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
   const isNew = isNewReservation(reservation.created_at)
 
   // Detect if this is a calendar block instead of a real reservation
-  const isCalendarBlock =
-    (!reservationCode && reservation.guest_name === 'Guest') ||
-    (!reservationCode && phoneLast4Parsed === '0000') ||
-    (reservation.event_type && ['block', 'maintenance', 'parent_block'].includes(reservation.event_type))
+  // Priority 1: Explicit calendar blocks (event_type)
+  const isExplicitBlock = !!(reservation.event_type && ['block', 'maintenance', 'parent_block'].includes(reservation.event_type))
+
+  // Priority 2: Real guest data (email, SIRE data, phone, or non-generic name)
+  const hasRealGuestData = !!(
+    reservation.guest_email ||
+    reservation.document_number ||
+    reservation.first_surname ||
+    reservation.given_names ||
+    reservation.phone_last_4 ||  // ← FIX: If has phone for login, it's a real guest
+    (reservation.guest_name && reservation.guest_name !== 'Guest')
+  )
+
+  // Only mark as calendar block if:
+  // - Explicit block type, OR
+  // - No real guest data AND suspicious indicators (generic name, no reservation code)
+  const isCalendarBlock = isExplicitBlock || (
+    !hasRealGuestData &&
+    !reservationCode &&
+    reservation.guest_name === 'Guest'
+  )
 
   // Guest display name
   const guestDisplayName = reservation.guest_name ||
@@ -377,6 +471,11 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
   const displayGivenNames = reservation.given_names || parsedNames.parsedFirstName || 'No disponible aún'
   const displayFirstSurname = reservation.first_surname || parsedNames.parsedLastName || 'No disponible aún'
   const displaySecondSurname = reservation.second_surname || 'No disponible aún'
+
+  // Guest registration status
+  const totalGuests = reservation.total_guests || reservation.adults || 1
+  const registeredGuests = reservation.registered_guests || 0
+  const allGuestsRegistered = registeredGuests >= totalGuests
 
   // Handle delete action
   const handleDelete = async () => {
@@ -402,10 +501,10 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
         ? 'bg-gray-50 border-gray-300 opacity-75'
         : `${statusDisplay.bgColor} ${statusDisplay.borderColor}`
     } ${isNew ? 'ring-2 ring-green-100' : ''}`}>
-      <div className="p-6">
+      <div className="p-4">
         {/* New Badge */}
         {isNew && (
-          <div className="mb-3">
+          <div className="mb-2">
             <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full border border-green-200">
               <BadgeCheck className="w-3 h-3 mr-1" />
               Nueva (últimas 24h)
@@ -414,19 +513,19 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
         )}
 
         {/* Header: Guest Name + Badges */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <User className="w-5 h-5 text-blue-600" />
-              <h3 className={`text-lg font-semibold ${isCalendarBlock ? 'text-gray-500 italic' : 'text-slate-900'}`}>
+            <div className="flex items-center gap-2 mb-1.5">
+              <User className="w-4 h-4 text-blue-600" />
+              <h3 className={`text-base font-semibold ${isCalendarBlock ? 'text-gray-500 italic' : 'text-slate-900'}`}>
                 {isCalendarBlock ? '🔒 Bloqueo de Sincronización' : guestDisplayName}
               </h3>
             </div>
 
             {/* Código de Reserva - Mejorado para Airbnb */}
             {reservationCode && !isCalendarBlock && (
-              <div className="ml-7 mt-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-pink-50 border border-pink-200 rounded-lg">
+              <div className="ml-5 mt-1.5">
+                <div className="inline-flex items-center gap-2 px-2 py-1 bg-pink-50 border border-pink-200 rounded-lg">
                   <span className="text-xs font-semibold text-pink-700">
                     {source === 'airbnb' ? 'Código Airbnb:' : 'Código:'}
                   </span>
@@ -450,7 +549,7 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
 
             {/* Calendar Block Information */}
             {isCalendarBlock && (
-              <div className="ml-7 mt-2">
+              <div className="ml-5 mt-1.5">
                 <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded-lg border border-gray-200">
                   <p className="font-medium mb-1">ℹ️ Sincronización de Calendario</p>
                   <p>Este bloqueo se genera automáticamente cuando Airbnb sincroniza:</p>
@@ -493,6 +592,18 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
               {sireProgressBadge.label}
             </div>
 
+            {/* Guests Registration Badge */}
+            {totalGuests > 0 && (
+              <div className={`px-3 py-1 rounded-full text-xs font-semibold border flex items-center gap-1 ${
+                allGuestsRegistered
+                  ? 'bg-green-100 text-green-800 border-green-200'
+                  : 'bg-yellow-100 text-yellow-800 border-yellow-200'
+              }`}>
+                <Users className="w-3 h-3" />
+                {registeredGuests}/{totalGuests} huéspedes
+              </div>
+            )}
+
             {/* Delete Button (only for pending reservations) */}
             {statusDisplay.canDelete && onDelete && (
               <button
@@ -519,9 +630,9 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
 
         {/* Accommodation */}
         {(reservation.property_name || reservation.reservation_accommodations) && (
-          <div className="mb-4 pb-4 border-b border-slate-200">
+          <div className="mb-3 pb-3 border-b border-slate-200">
             <div className="flex items-start gap-2">
-              <Home className="w-5 h-5 text-emerald-600 mt-0.5" />
+              <Home className="w-4 h-4 text-emerald-600 mt-0.5" />
               <div>
                 {reservation.property_name && (
                   <p className="text-sm font-semibold text-emerald-900">{reservation.property_name}</p>
@@ -538,86 +649,124 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
         )}
 
         {/* Main Info Grid */}
-        <div className="space-y-3 mb-4">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-3">
           {/* Dates */}
           <div className="flex items-start gap-2">
-            <Calendar className="w-5 h-5 text-slate-400 mt-0.5" />
+            <Calendar className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-sm font-medium text-slate-700">
                 {formatDate(checkInDate)} - {formatDate(checkOutDate)}
               </p>
-              <p className="text-xs text-slate-500">
-                {nights} noche{nights !== 1 ? 's' : ''}
-                {(reservation.check_in_time || reservation.check_out_time) && (
-                  <> • {reservation.check_in_time || '—'} - {reservation.check_out_time || '—'}</>
-                )}
-              </p>
+              <p className="text-xs text-slate-500">{nights} noche{nights !== 1 ? 's' : ''}</p>
             </div>
           </div>
-
-          {/* Email */}
-          <div className="flex items-start gap-2">
-            <Mail className="w-5 h-5 text-slate-400 mt-0.5" />
-            <div>
-              <p className={`text-sm font-medium ${reservation.guest_email ? 'text-slate-700' : 'text-gray-400 italic'}`}>
-                {reservation.guest_email || 'No disponible aún'}
-              </p>
-              <p className="text-xs text-slate-500">Email</p>
-            </div>
-          </div>
-
-          {/* Phone - Mejorado para mostrar últimos 4 dígitos */}
-          {!isCalendarBlock && (
-            <div className="flex items-start gap-2">
-              <Phone className="w-5 h-5 text-slate-400 mt-0.5" />
-              <div>
-                <p className={`text-sm font-medium ${reservation.phone_full || phoneLast4Parsed ? 'text-slate-700' : 'text-gray-400 italic'}`}>
-                  {reservation.phone_full || (phoneLast4Parsed ? `***-${phoneLast4Parsed}` : 'No disponible aún')}
-                </p>
-                <p className="text-xs text-slate-500">
-                  Teléfono{phoneLast4Parsed ? ` (últimos 4: ${phoneLast4Parsed})` : ''}
-                </p>
-              </div>
-            </div>
-          )}
 
           {/* Guests */}
           <div className="flex items-start gap-2">
-            <Users className="w-5 h-5 text-slate-400 mt-0.5" />
+            <Users className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
             <div>
               <p className={`text-sm font-medium ${reservation.adults || reservation.children ? 'text-slate-700' : 'text-gray-400 italic'}`}>
                 {reservation.adults || reservation.children ? (
                   <>
-                    {reservation.adults || 0} adulto{(reservation.adults || 0) !== 1 ? 's' : ''}
+                    {reservation.adults || 1} adulto{(reservation.adults || 1) !== 1 ? 's' : ''}
                     {reservation.children && reservation.children > 0 && `, ${reservation.children} niño${reservation.children !== 1 ? 's' : ''}`}
                   </>
-                ) : 'No disponible aún'}
+                ) : 'No disponible'}
               </p>
               <p className="text-xs text-slate-500">Huéspedes</p>
             </div>
           </div>
 
+          {/* Phone - Muestra teléfono completo o últimos 4 dígitos para login */}
+          {!isCalendarBlock && (
+            <div className="flex items-start gap-2">
+              <Phone className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+              <div>
+                {reservation.phone_full ? (
+                  <>
+                    <p className="text-sm font-medium text-slate-700">{reservation.phone_full}</p>
+                    <p className="text-xs text-slate-500">Últimos 4 dígitos: {phoneLast4 || reservation.phone_full.slice(-4)}</p>
+                  </>
+                ) : phoneLast4 ? (
+                  <>
+                    <p className="text-sm font-medium text-slate-700">{phoneLast4}</p>
+                    <p className="text-xs text-slate-500">Últimos 4 dígitos (login)</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm font-medium text-gray-400 italic">No disponible</p>
+                    <p className="text-xs text-slate-500">Teléfono</p>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Price */}
           <div className="flex items-start gap-2">
-            <DollarSign className="w-5 h-5 text-slate-400 mt-0.5" />
+            <DollarSign className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
             <div>
               <p className={`text-sm font-medium ${reservation.total_price ? 'text-slate-700' : 'text-gray-400 italic'}`}>
                 {formatPrice(reservation.total_price, reservation.currency)}
               </p>
-              <p className="text-xs text-slate-500">Precio total</p>
+              <p className="text-xs text-slate-500">Total</p>
+            </div>
+          </div>
+
+          {/* Email - Full width on second row */}
+          <div className="col-span-2 flex items-start gap-2">
+            <Mail className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className={`text-sm font-medium truncate ${reservation.guest_email ? 'text-slate-700' : 'text-gray-400 italic'}`}>
+                {reservation.guest_email || 'No disponible'}
+              </p>
+              <p className="text-xs text-slate-500">Email</p>
             </div>
           </div>
         </div>
 
+        {/* Guest Tabs (only show if there are companions) */}
+        {reservation.guests && reservation.guests.length > 1 && (
+          <div className="border-t border-slate-200 pt-4 mb-4">
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => setActiveTab('titular')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === 'titular'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Titular
+              </button>
+              <button
+                onClick={() => setActiveTab('companions')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === 'companions'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                Acompañantes ({reservation.guests.length - 1})
+              </button>
+            </div>
+
+            {/* Tab Content - CompanionsList */}
+            {activeTab === 'companions' && (
+              <CompanionsList guests={reservation.guests?.filter(g => g.guest_order > 1) || []} />
+            )}
+          </div>
+        )}
+
         {/* SIRE Data Section (Expandable) */}
-        <div className="border-t border-slate-200 pt-4">
+        <div className="border-t border-slate-200 pt-3">
           <button
             onClick={() => setShowSireData(!showSireData)}
-            className="w-full flex items-center justify-between py-2 px-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between py-1.5 px-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <div className="flex items-center gap-2">
               <FileText className="w-4 h-4 text-gray-600" />
-              <span className="font-medium text-gray-900">Datos para Compliance SIRE</span>
+              <span className="text-sm font-medium text-gray-900">Datos para Compliance SIRE</span>
               {sireProgress.completed === sireProgress.total ? (
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
               ) : (
@@ -625,9 +774,9 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
               )}
             </div>
             {showSireData ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </button>
 
@@ -728,20 +877,20 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
         </div>
 
         {/* Automatic SIRE Data Section (Expandable) */}
-        <div className="mt-4 pt-4 border-t border-slate-200">
+        <div className="mt-3 pt-3 border-t border-slate-200">
           <button
             onClick={() => setShowAutoData(!showAutoData)}
-            className="w-full flex items-center justify-between py-2 px-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between py-1.5 px-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
           >
             <div className="flex items-center gap-2">
               <BadgeCheck className="w-4 h-4 text-gray-600" />
-              <span className="font-medium text-gray-900">Datos Automáticos SIRE</span>
+              <span className="text-sm font-medium text-gray-900">Datos Automáticos SIRE</span>
               <span className="text-xs text-gray-500">(generados por el sistema)</span>
             </div>
             {showAutoData ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </button>
 
@@ -811,17 +960,17 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
         </div>
 
         {/* Additional Details (Expandable) */}
-        {(reservation.external_booking_id || reservation.booking_notes || reservation.description) && (
-          <div className="mt-4 pt-4 border-t border-slate-200">
+        {(reservation.external_booking_id || reservation.booking_notes) && (
+          <div className="mt-3 pt-3 border-t border-slate-200">
             <button
               onClick={() => setShowDetails(!showDetails)}
-              className="w-full flex items-center justify-between py-2 px-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+              className="w-full flex items-center justify-between py-1.5 px-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <span className="font-medium text-gray-700 text-sm">Detalles adicionales</span>
+              <span className="text-sm font-medium text-gray-700">Detalles adicionales</span>
               {showDetails ? (
-                <ChevronUp className="w-5 h-5 text-gray-400" />
+                <ChevronUp className="w-4 h-4 text-gray-400" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-gray-400" />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               )}
             </button>
 
@@ -839,12 +988,6 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
                     <p className="text-slate-700 whitespace-pre-wrap">{reservation.booking_notes}</p>
                   </div>
                 )}
-                {reservation.description && (
-                  <div>
-                    <p className="text-xs text-slate-500 mb-1">Descripción</p>
-                    <p className="text-slate-700 whitespace-pre-wrap">{reservation.description}</p>
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -852,19 +995,19 @@ export default function UnifiedReservationCard({ reservation, onDelete }: Unifie
 
         {/* Technical Metadata (Expandable) */}
         {(reservation.external_uid || reservation.ics_dtstamp || reservation.first_seen_at) && (
-          <div className="mt-4 pt-4 border-t border-slate-200">
+          <div className="mt-3 pt-3 border-t border-slate-200">
             <button
               onClick={() => setShowMetadata(!showMetadata)}
-              className="w-full flex items-center justify-between py-2 px-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+              className="w-full flex items-center justify-between py-1.5 px-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-gray-600" />
-                <span className="font-medium text-gray-700 text-sm">Metadatos Técnicos</span>
+                <span className="text-sm font-medium text-gray-700">Metadatos Técnicos</span>
               </div>
               {showMetadata ? (
-                <ChevronUp className="w-5 h-5 text-gray-400" />
+                <ChevronUp className="w-4 h-4 text-gray-400" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-gray-400" />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               )}
             </button>
 
