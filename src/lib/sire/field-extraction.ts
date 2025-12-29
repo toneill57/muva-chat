@@ -372,8 +372,10 @@ export function mapNationalityToSIRE(nationality: string): NationalityMappingRes
   const normalized = nationality.toLowerCase().trim();
 
   // Common nationality aliases → SIRE codes
+  // IMPORTANT: All codes verified against official SIRE catalog (_assets/sire/codigos-pais.json)
+  // Last audit: December 29, 2025
   const aliases: Record<string, string> = {
-    // English names
+    // English names - USA (249 = ESTADOS UNIDOS) ✓
     'united states': '249',
     'united states of america': '249',
     'usa': '249',
@@ -381,112 +383,367 @@ export function mapNationalityToSIRE(nationality: string): NationalityMappingRes
     'america': '249',
     'american': '249',
 
+    // Colombia (169 = COLOMBIA) ✓
     'colombia': '169',
     'colombian': '169',
     'col': '169',
 
-    'spain': '217',
-    'spanish': '217',
-    'españa': '217',
-    'esp': '217',
+    // Spain (245 = ESPAÑA) - FIXED from 217
+    'spain': '245',
+    'spanish': '245',
+    'españa': '245',
+    'esp': '245',
 
-    'mexico': '155',
-    'mexican': '155',
-    'méxico': '155',
-    'mex': '155',
+    // Mexico (493 = MEXICO) - FIXED from 155
+    'mexico': '493',
+    'mexican': '493',
+    'méxico': '493',
+    'mex': '493',
 
-    'brazil': '147',
-    'brazilian': '147',
-    'brasil': '147',
-    'bra': '147',
+    // Brazil (105 = BRASIL) - FIXED from 147
+    'brazil': '105',
+    'brazilian': '105',
+    'brasil': '105',
+    'bra': '105',
 
-    'argentina': '141',
-    'argentinian': '141',
-    'arg': '141',
+    // Argentina (63 = ARGENTINA) - FIXED from 141 (was CAMBOYA!)
+    'argentina': '63',
+    'argentinian': '63',
+    'arg': '63',
 
-    'canada': '148',
-    'canadian': '148',
-    'can': '148',
+    // Canada (149 = CANADA) - FIXED from 148
+    'canada': '149',
+    'canadian': '149',
+    'can': '149',
 
-    'united kingdom': '248',
-    'uk': '248',
-    'great britain': '248',
-    'british': '248',
-    'gbr': '248',
+    // United Kingdom (628 = REINO UNIDO) - FIXED from 248 (was ESLOVENIA!)
+    'united kingdom': '628',
+    'uk': '628',
+    'great britain': '628',
+    'british': '628',
+    'gbr': '628',
+    'england': '628',
+    'english': '628',
+    'scotland': '628',
+    'scottish': '628',
+    'wales': '628',
+    'welsh': '628',
+    'northern ireland': '628',
 
-    'france': '178',
-    'french': '178',
-    'fra': '178',
+    // France (275 = FRANCIA) - FIXED from 178 (was ISLAS COCOS!)
+    'france': '275',
+    'french': '275',
+    'fra': '275',
+    'française': '275',
 
-    'germany': '179',
-    'german': '179',
-    'deutschland': '179',
-    'deu': '179',
-    'ger': '179',
+    // Germany (23 = ALEMANIA) - FIXED from 179
+    'germany': '23',
+    'german': '23',
+    'deutschland': '23',
+    'deu': '23',
+    'ger': '23',
 
-    'italy': '192',
-    'italian': '192',
-    'italia': '192',
-    'ita': '192',
+    // Italy (386 = ITALIA) - FIXED from 192
+    'italy': '386',
+    'italian': '386',
+    'italia': '386',
+    'ita': '386',
 
-    'chile': '158',
-    'chilean': '158',
-    'chl': '158',
+    // Chile (211 = CHILE) - FIXED from 158
+    'chile': '211',
+    'chilean': '211',
+    'chl': '211',
 
-    'peru': '202',
-    'peruvian': '202',
-    'perú': '202',
-    'per': '202',
+    // Peru (589 = PERU) - FIXED from 202
+    'peru': '589',
+    'peruvian': '589',
+    'perú': '589',
+    'per': '589',
 
-    'ecuador': '174',
-    'ecuadorian': '174',
-    'ecu': '174',
+    // Ecuador (239 = ECUADOR) - FIXED from 174
+    'ecuador': '239',
+    'ecuadorian': '239',
+    'ecu': '239',
 
-    'venezuela': '254',
-    'venezuelan': '254',
-    'ven': '254',
+    // Venezuela (850 = VENEZUELA) - FIXED from 254
+    'venezuela': '850',
+    'venezuelan': '850',
+    'ven': '850',
 
-    'panama': '200',
-    'panamanian': '200',
-    'pan': '200',
+    // Panama (580 = PANAMA) - FIXED from 200 (was ISLAS ULTRAMARINAS USA!)
+    'panama': '580',
+    'panamanian': '580',
+    'pan': '580',
+    'panamá': '580',
 
-    'costa rica': '165',
-    'costa rican': '165',
-    'cri': '165',
+    // Costa Rica (196 = COSTA RICA) - FIXED from 165
+    'costa rica': '196',
+    'costa rican': '196',
+    'cri': '196',
+    'costarricense': '196',
 
-    'netherlands': '199',
-    'dutch': '199',
-    'holland': '199',
-    'nld': '199',
+    // Netherlands (573 = PAISES BAJOS) - FIXED from 199 (was CUBA!)
+    'netherlands': '573',
+    'dutch': '573',
+    'holland': '573',
+    'nld': '573',
+    'the netherlands': '573',
+    'países bajos': '573',
+    'holanda': '573',
 
-    'australia': '143',
-    'australian': '143',
-    'aus': '143',
+    // Australia (69 = AUSTRALIA) - FIXED from 143 (was ANTARTIDA!)
+    'australia': '69',
+    'australian': '69',
+    'aus': '69',
 
-    'japan': '193',
-    'japanese': '193',
-    'jpn': '193',
+    // Japan (399 = JAPON) - FIXED from 193 (was COSTA DE MARFIL!)
+    'japan': '399',
+    'japanese': '399',
+    'jpn': '399',
+    'japón': '399',
 
-    'china': '159',
-    'chinese': '159',
-    'chn': '159',
+    // China (215 = CHINA) - FIXED from 159
+    'china': '215',
+    'chinese': '215',
+    'chn': '215',
 
-    'south korea': '164',
-    'korean': '164',
-    'korea': '164',
-    'kor': '164',
+    // South Korea (190 = COREA DEL SUR) - FIXED from 164
+    'south korea': '190',
+    'korean': '190',
+    'korea': '190',
+    'kor': '190',
+    'republic of korea': '190',
+    'corea': '190',
+    'corea del sur': '190',
 
-    'switzerland': '228',
-    'swiss': '228',
-    'che': '228',
+    // Switzerland (767 = SUIZA) - FIXED from 228
+    'switzerland': '767',
+    'swiss': '767',
+    'che': '767',
+    'suiza': '767',
 
-    'portugal': '205',
-    'portuguese': '205',
-    'prt': '205',
+    // Portugal (607 = PORTUGAL) - FIXED from 205
+    'portugal': '607',
+    'portuguese': '607',
+    'prt': '607',
 
-    'russia': '210',
-    'russian': '210',
-    'rus': '210'
+    // Russia (673 = RUSIA) - FIXED from 210
+    'russia': '673',
+    'russian': '673',
+    'rus': '673',
+    'rusia': '673',
+
+    // Additional common countries for tourism
+    // Ireland (375 = IRLANDA)
+    'ireland': '375',
+    'irish': '375',
+    'irl': '375',
+    'irlanda': '375',
+
+    // Belgium (87 = BELGICA)
+    'belgium': '87',
+    'belgian': '87',
+    'bel': '87',
+    'bélgica': '87',
+
+    // Austria (72 = AUSTRIA)
+    'austria': '72',
+    'austrian': '72',
+    'aut': '72',
+
+    // Sweden (764 = SUECIA)
+    'sweden': '764',
+    'swedish': '764',
+    'swe': '764',
+    'suecia': '764',
+
+    // Norway (538 = NORUEGA)
+    'norway': '538',
+    'norwegian': '538',
+    'nor': '538',
+    'noruega': '538',
+
+    // Denmark (232 = DINAMARCA)
+    'denmark': '232',
+    'danish': '232',
+    'dnk': '232',
+    'dinamarca': '232',
+
+    // Finland (271 = FINLANDIA)
+    'finland': '271',
+    'finnish': '271',
+    'fin': '271',
+    'finlandia': '271',
+
+    // Poland (603 = POLONIA)
+    'poland': '603',
+    'polish': '603',
+    'pol': '603',
+    'polonia': '603',
+
+    // Greece (301 = GRECIA)
+    'greece': '301',
+    'greek': '301',
+    'grc': '301',
+    'grecia': '301',
+
+    // Czech Republic (207 = REPUBLICA CHECA)
+    'czech republic': '207',
+    'czech': '207',
+    'czechia': '207',
+    'cze': '207',
+    'república checa': '207',
+
+    // Hungary (355 = HUNGRIA)
+    'hungary': '355',
+    'hungarian': '355',
+    'hun': '355',
+    'hungría': '355',
+
+    // Israel (383 = ISRAEL)
+    'israel': '383',
+    'israeli': '383',
+    'isr': '383',
+
+    // Turkey (827 = TURQUIA)
+    'turkey': '827',
+    'turkish': '827',
+    'tur': '827',
+    'turquía': '827',
+
+    // India (361 = INDIA)
+    'india': '361',
+    'indian': '361',
+    'ind': '361',
+
+    // South Africa (756 = SUDAFRICA)
+    'south africa': '756',
+    'south african': '756',
+    'zaf': '756',
+    'sudáfrica': '756',
+
+    // New Zealand (540 = NUEVA ZELANDA)
+    'new zealand': '540',
+    'new zealander': '540',
+    'nzl': '540',
+    'nueva zelanda': '540',
+
+    // Singapore (741 = SINGAPUR)
+    'singapore': '741',
+    'singaporean': '741',
+    'sgp': '741',
+    'singapur': '741',
+
+    // Thailand (776 = TAILANDIA)
+    'thailand': '776',
+    'thai': '776',
+    'tha': '776',
+    'tailandia': '776',
+
+    // Philippines (267 = FILIPINAS)
+    'philippines': '267',
+    'filipino': '267',
+    'phl': '267',
+    'filipinas': '267',
+
+    // Indonesia (365 = INDONESIA)
+    'indonesia': '365',
+    'indonesian': '365',
+    'idn': '365',
+
+    // Malaysia (455 = MALASIA)
+    'malaysia': '455',
+    'malaysian': '455',
+    'mys': '455',
+    'malasia': '455',
+
+    // UAE (244 = EMIRATOS ARABES UNIDOS)
+    'united arab emirates': '244',
+    'uae': '244',
+    'emirati': '244',
+    'emiratos árabes unidos': '244',
+
+    // Egypt (240 = EGIPTO)
+    'egypt': '240',
+    'egyptian': '240',
+    'egy': '240',
+    'egipto': '240',
+
+    // Ukraine (830 = UCRANIA)
+    'ukraine': '830',
+    'ukrainian': '830',
+    'ukr': '830',
+    'ucrania': '830',
+
+    // Romania (670 = RUMANIA)
+    'romania': '670',
+    'romanian': '670',
+    'rou': '670',
+    'rumania': '670',
+    'rumanía': '670',
+
+    // Cuba (199 = CUBA)
+    'cuba': '199',
+    'cuban': '199',
+    'cub': '199',
+
+    // Dominican Republic (647 = REPUBLICA DOMINICANA)
+    'dominican republic': '647',
+    'dominican': '647',
+    'dom': '647',
+    'república dominicana': '647',
+
+    // Puerto Rico (611 = PUERTO RICO)
+    'puerto rico': '611',
+    'puerto rican': '611',
+    'pri': '611',
+
+    // Guatemala (317 = GUATEMALA)
+    'guatemala': '317',
+    'guatemalan': '317',
+    'gtm': '317',
+
+    // Honduras (345 = HONDURAS)
+    'honduras': '345',
+    'honduran': '345',
+    'hnd': '345',
+
+    // El Salvador (242 = EL SALVADOR)
+    'el salvador': '242',
+    'salvadoran': '242',
+    'slv': '242',
+
+    // Nicaragua (521 = NICARAGUA)
+    'nicaragua': '521',
+    'nicaraguan': '521',
+    'nic': '521',
+
+    // Bolivia (97 = BOLIVIA)
+    'bolivia': '97',
+    'bolivian': '97',
+    'bol': '97',
+
+    // Paraguay (586 = PARAGUAY)
+    'paraguay': '586',
+    'paraguayan': '586',
+    'pry': '586',
+
+    // Uruguay (845 = URUGUAY)
+    'uruguay': '845',
+    'uruguayan': '845',
+    'ury': '845',
+
+    // Slovenia (248 = ESLOVENIA) - Note: this is the actual Slovenia
+    'slovenia': '248',
+    'slovenian': '248',
+    'svn': '248',
+    'eslovenia': '248',
+
+    // Croatia (198 = CROACIA)
+    'croatia': '198',
+    'croatian': '198',
+    'hrv': '198',
+    'croacia': '198'
   };
 
   // Check aliases first (exact match)
