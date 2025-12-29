@@ -691,10 +691,10 @@ describe('SIRE Validation Module', () => {
         primer_apellido: "O'Connor",
         nombres: "Siobhán",
         fecha_nacimiento: '01/01/1990',
-        nacionalidad: '248', // UK
+        nacionalidad: '628', // UK - FIXED: was 248 (ESLOVENIA)
         tipo_movimiento: 'E',
         fecha_movimiento: '23/12/2025',
-        lugar_procedencia: '248',
+        lugar_procedencia: '628', // UK - FIXED: was 248
         lugar_destino: '169'
       };
 

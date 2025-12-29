@@ -84,13 +84,13 @@ describe('Field Extraction - Nationality Mapping', () => {
     const result = mapNationalityToSIRE('SPAIN');
 
     expect(result.success).toBe(true);
-    expect(result.code).toBe('217');
+    expect(result.code).toBe('245'); // FIXED: Spain = 245 (was 217)
   });
 
   test('should handle country code aliases', () => {
     expect(mapNationalityToSIRE('USA').code).toBe('249');
-    expect(mapNationalityToSIRE('UK').code).toBe('248');
-    expect(mapNationalityToSIRE('ESP').code).toBe('217');
+    expect(mapNationalityToSIRE('UK').code).toBe('628'); // FIXED: UK = 628 (was 248 = ESLOVENIA)
+    expect(mapNationalityToSIRE('ESP').code).toBe('245'); // FIXED: Spain = 245 (was 217)
   });
 
   test('should fail for unknown countries', () => {

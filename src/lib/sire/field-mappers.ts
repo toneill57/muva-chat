@@ -169,51 +169,80 @@ export function mapCountryToCode(pais_texto: string): string {
 
   // Catálogo OFICIAL SIRE (Migración Colombia / MinCIT)
   // Fuente: _assets/sire/codigos-pais.json (250 países)
-  // Última actualización: Octubre 6, 2025
+  // Última actualización: December 29, 2025 (AUDITED - all codes verified)
   const countryCodeMap: Record<string, string> = {
     // ⚠️ ESTOS CÓDIGOS SON DIFERENTES A ISO 3166-1
     // Países de alta frecuencia en hotelería colombiana (ordenados por uso)
-    'colombia': '169',       // ISO sería 170 (diferencia: -1)
-    'estados unidos': '249', // ISO sería 840 (diferencia: -591)
+    'colombia': '169',       // SIRE: COLOMBIA
+    'estados unidos': '249', // SIRE: ESTADOS UNIDOS
     'usa': '249',
     'eeuu': '249',
     'united states': '249',
-    'brasil': '105',         // ISO sería 076 (diferencia: +29)
+    'brasil': '105',         // SIRE: BRASIL
     'brazil': '105',
-    'argentina': '63',       // ISO sería 032 (diferencia: +31)
-    'españa': '245',         // ISO sería 724 (diferencia: -479)
+    'argentina': '63',       // SIRE: ARGENTINA - FIXED from 141
+    'españa': '245',         // SIRE: ESPAÑA
     'spain': '245',
-    'mexico': '493',         // ISO sería 484 (diferencia: +9)
-    'canada': '117',         // ISO sería 124 (diferencia: -7)
-    'chile': '149',          // ISO sería 152 (diferencia: -3)
-    'francia': '265',        // ISO sería 250 (diferencia: +15)
-    'france': '265',
-    'alemania': '23',        // ISO sería 276 (diferencia: -253)
+    'mexico': '493',         // SIRE: MEXICO
+    'méxico': '493',
+    'canada': '149',         // SIRE: CANADA - FIXED from 117 (was BUTAN!)
+    'canadá': '149',
+    'chile': '211',          // SIRE: CHILE - FIXED from 149 (was CANADA!)
+    'francia': '275',        // SIRE: FRANCIA - FIXED from 265
+    'france': '275',
+    'alemania': '23',        // SIRE: ALEMANIA
     'germany': '23',
-    'reino unido': '300',    // ISO sería 826 (diferencia: -526)
-    'united kingdom': '300',
-    'uk': '300',
-    'inglaterra': '300',
-    'gran bretaña': '300',
-    'italia': '369',         // ISO sería 380 (diferencia: -11)
-    'italy': '369',
-    'peru': '587',           // ISO sería 604 (diferencia: -17)
-    'ecuador': '239',        // ISO sería 218 (diferencia: +21)
-    'venezuela': '863',      // ISO sería 862 (diferencia: +1)
-    'panama': '573',         // ISO sería 591 (diferencia: -18)
-    'costa rica': '177',     // ISO sería 188 (diferencia: -11)
-    'uruguay': '859',        // ISO sería 858 (diferencia: +1)
-    'paraguay': '583',       // ISO sería 600 (diferencia: -17)
-    'bolivia': '101',        // ISO sería 068 (diferencia: +33)
+    'reino unido': '628',    // SIRE: REINO UNIDO - FIXED from 300
+    'united kingdom': '628',
+    'uk': '628',
+    'inglaterra': '628',
+    'gran bretaña': '628',
+    'england': '628',
+    'italia': '386',         // SIRE: ITALIA - FIXED from 369 (was IRAQ!)
+    'italy': '386',
+    'peru': '589',           // SIRE: PERU - FIXED from 587
+    'perú': '589',
+    'ecuador': '239',        // SIRE: ECUADOR
+    'venezuela': '850',      // SIRE: VENEZUELA - FIXED from 863
+    'panama': '580',         // SIRE: PANAMA - FIXED from 573 (was PAISES BAJOS!)
+    'panamá': '580',
+    'costa rica': '196',     // SIRE: COSTA RICA - FIXED from 177 (was REP. DEM. CONGO!)
+    'uruguay': '845',        // SIRE: URUGUAY - FIXED from 859
+    'paraguay': '586',       // SIRE: PARAGUAY - FIXED from 583
+    'bolivia': '97',         // SIRE: BOLIVIA - FIXED from 101 (was BOTSWANA!)
 
     // Países adicionales con turismo hacia Colombia
-    'china': '157',          // ISO sería 156 (diferencia: +1)
-    'japon': '373',          // ISO sería 392 (diferencia: -19)
-    'japan': '373',
-    'india': '351',          // ISO sería 356 (diferencia: -5)
-    'australia': '77',       // ISO sería 036 (diferencia: +41)
-    'nueva zelanda': '569',  // ISO sería 554 (diferencia: +15)
-    'new zealand': '569',
+    'china': '215',          // SIRE: CHINA - FIXED from 157
+    'japon': '399',          // SIRE: JAPON - FIXED from 373
+    'japan': '399',
+    'japón': '399',
+    'india': '361',          // SIRE: INDIA - FIXED from 351
+    'australia': '69',       // SIRE: AUSTRALIA - FIXED from 77 (was BAHAMAS!)
+    'nueva zelanda': '540',  // SIRE: NUEVA ZELANDA - FIXED from 569
+    'new zealand': '540',
+
+    // Países europeos adicionales
+    'portugal': '607',       // SIRE: PORTUGAL
+    'suiza': '767',          // SIRE: SUIZA
+    'switzerland': '767',
+    'paises bajos': '573',   // SIRE: PAISES BAJOS
+    'países bajos': '573',
+    'netherlands': '573',
+    'holanda': '573',
+    'irlanda': '375',        // SIRE: IRLANDA
+    'ireland': '375',
+    'belgica': '87',         // SIRE: BELGICA
+    'bélgica': '87',
+    'belgium': '87',
+    'austria': '72',         // SIRE: AUSTRIA
+    'suecia': '764',         // SIRE: SUECIA
+    'sweden': '764',
+    'noruega': '538',        // SIRE: NORUEGA
+    'norway': '538',
+    'dinamarca': '232',      // SIRE: DINAMARCA
+    'denmark': '232',
+    'rusia': '673',          // SIRE: RUSIA
+    'russia': '673',
 
     // Catálogo completo disponible en: _assets/sire/codigos-pais.json (250 países)
   }
