@@ -1159,8 +1159,8 @@ export default function ReservationsList() {
                 </div>
               </div>
 
-              {/* Reservations Cards - 2-column grid on desktop */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Reservations Cards - Responsive grid: 1 col mobile, 2 cols tablet, 3 cols desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {getFilteredReservations().map((reservation) => (
                   <UnifiedReservationCard
                     key={reservation.id}

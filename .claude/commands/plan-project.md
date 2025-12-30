@@ -2,20 +2,192 @@ You are a project planner that manages the COMPLETE lifecycle of software projec
 
 # WORKFLOW
 
+## ORDEN DE CREACIÓN (OBLIGATORIO)
+
+Cada proyecto debe crear archivos en este orden:
+
+```
+1. CONTEXTO.md  → Exploración técnica (qué existe, DB, APIs, flujos)
+2. plan.md      → Arquitectura y visión (fases, agentes, criterios)
+3. TODO.md      → Tareas con progreso (checkboxes, estimados)
+4. FASE-*.md    → Prompts ejecutables (uno por fase si >6 prompts)
+```
+
+**Regla de referencias:**
+- plan.md → referencia CONTEXTO.md
+- TODO.md → referencia plan.md
+- FASE-*.md → referencia TODO.md
+
+---
+
 ## PHASE 0: PLANNING (Before any code)
 
 When a user asks to plan a new project or feature, follow these steps in order:
 
-### Step 1: Understand the Goal
-Ask the user:
-1. What do you want to build/improve?
-2. What's the current state?
-3. What's the desired end state?
-4. Any constraints or requirements?
-5. Which agents should be involved?
-6. What should the project folder be called (for docs)?
+### Step 0: Explore Codebase (NUEVO - OBLIGATORIO)
 
-### Step 2: Create plan.md
+**ANTES de hacer preguntas al usuario**, explorar el código relevante:
+
+1. **Identificar archivos relacionados al tema:**
+   - Buscar con Glob/Grep por keywords del proyecto
+   - Leer archivos clave identificados
+
+2. **Revisar base de datos:**
+   - Listar tablas relevantes (`mcp__supabase__list_tables`)
+   - Revisar esquemas de tablas clave
+
+3. **Entender flujo actual:**
+   - Identificar APIs existentes
+   - Mapear componentes UI involucrados
+
+4. **Documentar hallazgos:**
+   ```markdown
+   ## Exploración Inicial
+
+   ### Lo que YA existe:
+   - Tabla `X` con columnas: a, b, c
+   - API `/api/endpoint` hace Y
+   - Componente `Component.tsx` maneja Z
+
+   ### Lo que FALTA:
+   - No hay tabla para W
+   - API no soporta parámetro Q
+   - UI no muestra información R
+   ```
+
+**Output:** Resumen de hallazgos para informar las preguntas del Step 1
+
+---
+
+### Step 1: Understand the Goal (EXPANDIDO)
+
+Preguntar al usuario:
+
+**Preguntas básicas:**
+1. ¿Qué quieres construir/mejorar?
+2. ¿Cuál es el estado actual?
+3. ¿Cuál es el estado deseado?
+4. ¿Hay restricciones o requisitos específicos?
+5. ¿Qué agentes deberían estar involucrados?
+6. ¿Cómo se llamará la carpeta del proyecto (para docs)?
+
+**Preguntas técnicas (NUEVAS):**
+7. ¿Hay tablas de DB que deba revisar? ¿Cuáles?
+8. ¿Hay APIs existentes que se modifiquen? ¿Cuáles?
+9. ¿El proyecto tiene dependencias entre fases o pueden ejecutarse en paralelo?
+10. ¿Prefieres archivos de prompts separados por fase o un solo archivo?
+
+**IMPORTANTE:** Mostrar hallazgos del Step 0 ANTES de hacer preguntas para que el usuario pueda confirmar/corregir entendimiento.
+
+---
+
+### Step 2: Create CONTEXTO.md (NUEVO)
+
+Crear ANTES de plan.md con exploración técnica detallada:
+
+```markdown
+# CONTEXTO.md - {Project Name}
+
+## Objetivo
+{Qué se quiere lograr - 2-3 oraciones claras}
+
+---
+
+## Estado Actual (Exploración)
+
+### Base de Datos
+| Tabla | Columnas Clave | Propósito |
+|-------|----------------|-----------|
+| `tabla_1` | id, campo_a, campo_b | Descripción |
+| `tabla_2` | id, fk_tabla_1, campo_c | Descripción |
+
+### APIs Existentes
+| Endpoint | Método | Propósito | Modificar? |
+|----------|--------|-----------|------------|
+| `/api/endpoint1` | GET | Descripción | Sí/No |
+| `/api/endpoint2` | POST | Descripción | Sí/No |
+
+### Componentes UI
+| Archivo | Propósito | Modificar? |
+|---------|-----------|------------|
+| `Component.tsx` | Descripción | Sí/No |
+
+---
+
+## Flujo de Datos
+
+### Actual
+```
+Usuario → Componente → API → DB (tabla_1)
+                            ↓
+                         Respuesta
+```
+
+### Deseado
+```
+Usuario → Componente → API → DB (tabla_1 + tabla_2)
+                            ↓
+                         Respuesta enriquecida
+```
+
+---
+
+## Archivos Clave
+
+| Archivo | Propósito | Fase |
+|---------|-----------|------|
+| `src/path/to/file1.ts` | API principal | 1 |
+| `src/path/to/file2.tsx` | Componente UI | 2 |
+| `src/path/to/file3.ts` | Utilidades | 3 |
+
+---
+
+## Dependencias Entre Fases
+
+```
+FASE 1 (Backend) ──┬──→ FASE 2 (Frontend)
+                   │
+                   └──→ FASE 3 (UI) ──→ FASE 4 (Export)
+
+FASE 3 puede ejecutarse en PARALELO con FASE 2
+```
+
+| Fase | Depende de | Puede paralelizar con |
+|------|------------|----------------------|
+| 1 | Ninguna | - |
+| 2 | 1 | 3 |
+| 3 | 1 | 2 |
+| 4 | 1 | - |
+
+---
+
+## Esquema DB Relevante
+
+```sql
+-- Tabla existente
+CREATE TABLE tabla_existente (
+  id UUID PRIMARY KEY,
+  campo_a TEXT,
+  campo_b INTEGER
+);
+
+-- Tabla a usar/modificar
+CREATE TABLE tabla_objetivo (
+  id UUID PRIMARY KEY,
+  fk_existente UUID REFERENCES tabla_existente(id),
+  campo_nuevo TEXT
+);
+```
+
+---
+
+**Última actualización:** {Date}
+```
+
+---
+
+### Step 3: Create plan.md
+
 Generate comprehensive `plan.md` with:
 
 ```markdown
@@ -24,6 +196,8 @@ Generate comprehensive `plan.md` with:
 **Proyecto:** {Name}
 **Fecha Inicio:** {Date}
 **Estado:** 📋 Planificación
+
+**Contexto técnico:** Ver `CONTEXTO.md` para detalles de DB, APIs y flujos.
 
 ---
 
@@ -76,6 +250,8 @@ Generate comprehensive `plan.md` with:
 
 ### FASE 1: {Name} (Xh)
 **Objetivo:** {What this phase achieves}
+**Dependencias:** Ninguna / FASE X completada
+**Puede paralelizar con:** FASE Y / Ninguna
 
 **Entregables:**
 - {Deliverable 1}
@@ -131,9 +307,12 @@ Generate comprehensive `plan.md` with:
 │   └── {files to create}
 └── docs/
     └── {project-name}/
-        ├── fase-1/
-        ├── fase-2/
-        └── fase-N/
+        ├── CONTEXTO.md
+        ├── plan.md
+        ├── TODO.md
+        ├── FASE-1-{name}.md
+        ├── FASE-2-{name}.md
+        └── FASE-N-{name}.md
 ```
 
 ---
@@ -147,10 +326,13 @@ Generate comprehensive `plan.md` with:
 ---
 
 **Última actualización:** {Date}
-**Próximo paso:** Actualizar TODO.md con tareas específicas
+**Próximo paso:** Ver FASE-1-{name}.md
 ```
 
-### Step 3: Create TODO.md
+---
+
+### Step 4: Create TODO.md
+
 Generate `TODO.md` organized by phases:
 
 ```markdown
@@ -168,6 +350,10 @@ Generate `TODO.md` organized by phases:
 - ✅ {What exists/works}
 - 🔜 {Next objective} (FASE 1)
 
+### Limitaciones Actuales
+- ❌ {Current limitation 1}
+- ❌ {Current limitation 2}
+
 ### Archivos Clave
 <!-- Los archivos más importantes para entender el proyecto -->
 - `path/to/key-file.ts` → {Description}
@@ -177,6 +363,7 @@ Generate `TODO.md` organized by phases:
 - {Technology 1}
 - {Technology 2}
 
+**Contexto técnico:** Ver `CONTEXTO.md`
 **Plan completo:** Ver `plan.md` para arquitectura y especificaciones
 
 ---
@@ -263,21 +450,38 @@ When marking tasks as complete, ALWAYS also update:
 
 This ensures TODO.md serves as the **Single Source of Truth** for project context.
 
-### Step 4: Create {project-name}-prompt-workflow.md
-Generate prompts file with SPECIFIC project name (e.g., `mobile-first-prompt-workflow.md`):
+---
 
-**CRITICAL:** Each prompt MUST include:
-1. 🔽 Copy delimiters (start/end)
-2. 📊 Progress context (all previous phases)
-3. 🔍 Post-execution verification
-4. 📝 TODO.md update instructions
-5. ➡️ Next step guidance
+### Step 5: Create Prompt Files (ADAPTATIVO)
+
+**REGLA DE DECISIÓN:**
+
+```
+SI proyecto tiene ≤6 prompts totales:
+  → Crear UN archivo: `{project-name}-prompt-workflow.md`
+
+SI proyecto tiene >6 prompts totales:
+  → Crear archivos SEPARADOS por fase:
+     - `FASE-1-{nombre-descriptivo}.md`
+     - `FASE-2-{nombre-descriptivo}.md`
+     - etc.
+```
+
+**Ventajas de archivos separados:**
+- Más fácil de navegar
+- Menos scroll
+- Cada fase es autocontenida
+- Mejor para proyectos grandes
+
+---
+
+#### Template para archivo ÚNICO (≤6 prompts):
 
 ```markdown
 # PROMPTS WORKFLOW - {Project Name}
 
 **Proyecto:** {Name}
-**Archivos de referencia:** `plan.md` + `TODO.md`
+**Archivos de referencia:** `CONTEXTO.md` + `plan.md` + `TODO.md`
 
 ---
 
@@ -301,7 +505,36 @@ Por favor, confirma que entiendes el contexto antes de continuar.
 
 ## FASE 1: {Name} (Xh)
 
-### Prompt 1.1: {Task Name}
+{Include all prompts for this phase}
+
+---
+
+## FASE 2: {Name} (Xh)
+
+{Include all prompts for this phase}
+
+---
+
+**Última actualización:** {Date}
+```
+
+---
+
+#### Template para archivos SEPARADOS (>6 prompts):
+
+Cada archivo `FASE-X-{nombre}.md`:
+
+```markdown
+# FASE {X}: {Nombre Descriptivo}
+
+**Agente:** @agent-{agent-name}
+**Tareas:** {N}
+**Tiempo estimado:** {Xh Ymin}
+**Dependencias:** {Ninguna / FASE X completada}
+
+---
+
+## Prompt {X}.1: {Task Name}
 
 **Agente:** `@agent-{agent-name}`
 
@@ -312,16 +545,16 @@ Por favor, confirma que entiendes el contexto antes de continuar.
 
 ---
 
-🔽 **COPIAR DESDE AQUÍ (Prompt 1.1)**
+🔽 **COPIAR DESDE AQUÍ (Prompt {X}.1)**
 
 **📊 Contexto de Progreso:**
 
-**Progreso General:** 0/{Total} tareas completadas (0%)
+**Progreso General:** {P}/{Total} tareas completadas ({W}%)
 
-FASE 1 - {Name} (Progreso: 0/{N})
-- [ ] 1.1: {Task name} ← ESTAMOS AQUÍ
-- [ ] 1.2: {Task name}
-- [ ] 1.N: {Task name}
+FASE {X} - {Name} (Progreso: 0/{N})
+- [ ] {X}.1: {Task name} ← ESTAMOS AQUÍ
+- [ ] {X}.2: {Task name}
+- [ ] {X}.N: {Task name}
 
 **Estado Actual:**
 - {Achievement 1 or baseline} ✓
@@ -358,225 +591,129 @@ FASE 1 - {Name} (Progreso: 0/{N})
 
 Una vez completadas todas las tareas anteriores, pregúntame:
 
-"¿Consideras satisfactoria la ejecución del Prompt 1.1 ({Task Name})?
+"¿Consideras satisfactoria la ejecución del Prompt {X}.1 ({Task Name})?
 - {Criterion 1} ✓
 - {Criterion 2} ✓
 - {Criterion 3} ✓"
 
 **Si mi respuesta es "Sí" o "Aprobado":**
 
-1. **Actualizar TODO.md** - Marcar tarea 1.1 como completada:
+1. **Actualizar TODO.md** - Marcar tarea {X}.1 como completada:
    ```markdown
-   ### 1.1: {Task Name}
+   ### {X}.1: {Task Name}
    - [x] {Task description from TODO.md} (estimate: {time})
    ```
 
-2. **Informarme del progreso:**
-   "✅ Tarea 1.1 completada y marcada en TODO.md
+2. **Actualizar "📍 CONTEXTO ACTUAL"** - Agregar logro:
+   ```markdown
+   ### Estado del Sistema
+   - ✅ {New achievement from this task} ← NUEVO
+   ```
 
-   **Progreso FASE 1:** 1/{N} tareas completadas ({X}%)
-   - [x] 1.1: {Task name} ✓
-   - [ ] 1.2: {Task name}
-   - [ ] 1.N: {Task name}
+3. **Informarme del progreso:**
+   "✅ Tarea {X}.1 completada y marcada en TODO.md
 
-   **Progreso General:** 1/{Total} tareas completadas ({X}%)
+   **Progreso FASE {X}:** 1/{N} tareas completadas ({Z}%)
+   - [x] {X}.1: {Task name} ✓
+   - [ ] {X}.2: {Task name}
 
-   **Siguiente paso:** Prompt 1.2 - {Next task name} ({time})
-   Ver workflow.md línea {line number}"
+   **Progreso General:** {P}/{Total} tareas completadas ({W}%)
+
+   **Siguiente paso:** Prompt {X}.2 - {Next task name} ({time})"
 
 **Si mi respuesta es "No" o tengo observaciones:**
 - Preguntar qué necesita ajustarse
 - NO marcar como completado
 - Iterar hasta aprobación
 
-🔼 **COPIAR HASTA AQUÍ (Prompt 1.1)**
+🔼 **COPIAR HASTA AQUÍ (Prompt {X}.1)**
 
 ---
 
-### Prompt 1.2: {Task Name}
+## Prompt {X}.2: {Task Name}
 
-**Agente:** `@agent-{agent-name}`
-
-**PREREQUISITO:** Prompt 1.1 completado
-
-**Contexto:**
-{Brief context of what this prompt achieves}
+{Repeat structure...}
 
 ---
 
-🔽 **COPIAR DESDE AQUÍ (Prompt 1.2)**
+## Checklist FASE {X}
 
-**📊 Contexto de Progreso:**
+- [ ] {X}.1 {Task name}
+- [ ] {X}.2 {Task name}
+- [ ] {X}.N {Task name}
 
-**Progreso General:** 1/{Total} tareas completadas ({X}%)
-
-FASE 1 - {Name} (Progreso: 1/{N})
-- [x] 1.1: {Task name} ✓ COMPLETADO
-- [ ] 1.2: {Task name} ← ESTAMOS AQUÍ
-- [ ] 1.N: {Task name}
-
-**Estado Actual:**
-- {Achievement from 1.1} ✓
-- Listo para {goal of this prompt}
-
----
-
-**Tareas:**
-
-{Follow same structure as Prompt 1.1}
-
-**Entregables:**
-- {Deliverable 1}
-
-**Criterios de Éxito:**
-- ✅ {Success criterion 1}
-
-**Estimado:** {total time}
-
----
-
-**🔍 Verificación Post-Ejecución:**
-
-{Follow same verification pattern as Prompt 1.1}
-
-🔼 **COPIAR HASTA AQUÍ (Prompt 1.2)**
-
----
-
-## FASE 2: {Name} (Xh)
-
-{Repeat structure - each prompt MUST have delimiters, progress context, and verification}
-
----
-
-## 📋 DOCUMENTACIÓN FINAL
-
-### Prompt: Documentar FASE {N}
-
-```
-He completado FASE {N}. Necesito:
-
-1. Crear documentación en docs/{project-name}/fase-{N}/
-2. Incluir:
-   - IMPLEMENTATION.md (qué se hizo)
-   - CHANGES.md (archivos creados/modificados)
-   - TESTS.md (tests corridos y resultados)
-   - ISSUES.md (problemas si los hay)
-3. Actualizar TODO.md marcando con [x] solo las tareas testeadas
-4. Mostrar resumen de progreso
+**Anterior:** `FASE-{X-1}-{nombre}.md`
+**Siguiente:** `FASE-{X+1}-{nombre}.md`
 ```
 
 ---
 
-**Última actualización:** {Date}
-```
-
-**RULES for workflow prompts:**
+**RULES for prompt files:**
 - Use specific project name in filename
 - Start each prompt with `@{agent-name}`
 - **MANDATORY:** Include 🔽 🔼 copy delimiters on EVERY prompt
 - **MANDATORY:** Include 📊 Progress context showing all completed phases
 - **MANDATORY:** Include 🔍 Post-execution verification with user approval
 - **MANDATORY:** Include TODO.md update instructions
-- **MANDATORY:** Include next step guidance with line numbers
+- **MANDATORY:** Include next step guidance
 - Self-contained prompts (prerequisite, context, tasks, deliverables, success criteria)
 - Include file paths and line numbers
 - Copy-paste ready format
 - Include context-setting prompt for new conversations
 - Each prompt must show cumulative progress (X/Total tasks completed)
 
-### Step 4.5: Verification Pattern Template
+---
 
-**CRITICAL:** Every prompt in workflow.md MUST include this exact verification pattern:
+### Step 6: Coherence Verification (NUEVO - OBLIGATORIO)
+
+**Antes de pedir aprobación al usuario, verificar:**
 
 ```markdown
----
+## ✅ Checklist de Coherencia
 
-**🔍 Verificación Post-Ejecución:**
+### Estructura
+- [ ] CONTEXTO.md existe y tiene esquema DB
+- [ ] plan.md referencia CONTEXTO.md
+- [ ] TODO.md tiene todas las tareas de plan.md
+- [ ] Archivos FASE-*.md cubren todas las tareas de TODO.md
 
-Una vez completadas todas las tareas anteriores, pregúntame:
+### Conteo
+- [ ] Número de tareas en TODO.md = Número de prompts en FASE-*.md
+- [ ] Total de tareas: {X} (verificar suma de todas las fases)
 
-"¿Consideras satisfactoria la ejecución del Prompt {X.Y} ({Task Name})?
-- {Criterion 1} ✓
-- {Criterion 2} ✓
-- {Criterion 3} ✓"
+### Consistencia
+- [ ] Agentes asignados son consistentes entre TODO.md y FASE-*.md
+- [ ] Archivos a modificar están en plan.md, TODO.md Y FASE-*.md
+- [ ] Dependencias entre fases documentadas en CONTEXTO.md y plan.md
+- [ ] Estimados de tiempo son realistas (no >2h por tarea)
 
-**Si mi respuesta es "Sí" o "Aprobado":**
+### Formato de Prompts
+- [ ] Todos los prompts tienen delimitadores 🔽/🔼
+- [ ] Todos los prompts tienen 📊 Contexto de Progreso
+- [ ] Todos los prompts tienen 🔍 Verificación Post-Ejecución
+- [ ] Todos los prompts tienen instrucciones de actualización TODO.md
+- [ ] Todos los prompts tienen siguiente paso
 
-1. **Actualizar TODO.md** - Marcar tarea {X.Y} como completada:
-   ```markdown
-   ### {X.Y}: {Task Name}
-   - [x] {Task description from TODO.md} (estimate: {time})
-     - **Completado:** {Date} - {Brief achievement note}
-   ```
-
-2. **Actualizar "📍 CONTEXTO ACTUAL"** - Agregar logro al Estado del Sistema:
-   ```markdown
-   ### Estado del Sistema
-   - ✅ {Previous achievements}
-   - ✅ {New achievement from this task} ← NUEVO
-   - 🔜 {Next objective}
-   ```
-
-3. **[Si completa una FASE entera]**
-   **Actualizar TODO.md** - Actualizar contador de progreso:
-   Cambiar de:
-   ```markdown
-   **Completed:** N/{Total} ({X}%)
-   ```
-   A:
-   ```markdown
-   **Completed:** N+1/{Total} ({X+Y}%)
-   ```
-
-4. **Informarme del progreso:**
-   "✅ Tarea {X.Y} completada y marcada en TODO.md
-
-   **Progreso FASE {X}:** {M}/{N} tareas completadas ({Z}%)
-   - [x] {X.1}: {Task} ✓
-   - [x] {X.Y}: {Task} ✓
-   - [ ] {X.Z}: {Next task}
-
-   **Progreso General:** {P}/{Total} tareas completadas ({W}%)
-
-   **Siguiente paso:** [Nombre del siguiente prompt]
-   Prompt {X.Z}: {Name} ({time})
-   Ver workflow.md línea {line number}"
-
-   **[Si completa FASE entera, agregar]:**
-   "✅ FASE {X} COMPLETADA - Todas las tareas marcadas en TODO.md
-
-   **✨ Logros FASE {X}:**
-   - {Key achievement 1}
-   - {Key achievement 2}
-   - {Key achievement 3}
-
-   **Siguiente paso:** FASE {X+1} - {Next phase name}"
-
-**Si mi respuesta es "No" o tengo observaciones:**
-- Preguntar qué necesita ajustarse
-- NO marcar como completado
-- Iterar hasta aprobación
+### Navegación
+- [ ] Cada FASE-*.md tiene links a anterior/siguiente
+- [ ] Cada FASE-*.md tiene checklist al final
 ```
 
-**Key Points:**
-- Verification MUST ask user for approval
-- TODO.md updates only happen AFTER user approval
-- Progress counters must be accurate (calculate N/Total and percentages)
-- Next step must include line number in workflow.md
-- Special celebration message when completing entire FASE
-- User can reject and iterate until satisfied
+**SI alguna verificación falla → Corregir ANTES de pedir aprobación**
 
 ---
 
-### Step 5: Identify Required Agents
+### Step 7: Identify Required Agents
+
 List which specialized agents are needed:
 - **@agent-ux-interface**: UI/UX, components, styling, animations
 - **@agent-backend-developer**: API endpoints, business logic, database
 - **@agent-database-agent**: Migrations, monitoring, RLS policies
 - **@agent-deploy-agent**: Commits, VPS deployment, verification
 
-### Step 6: Update Specialized Agent Snapshots
+---
+
+### Step 8: Update Specialized Agent Snapshots
 
 For each agent involved in the project, update their **snapshot** (NOT agent config):
 
@@ -609,9 +746,10 @@ status: "active"
 - FASE 3: {What this agent does}
 
 **Planning Files:**
-- `plan.md` - Complete architecture (X lines)
-- `TODO.md` - Tasks by phase (Y lines)
-- `{project}-prompt-workflow.md` - Ready prompts (Z lines)
+- `CONTEXTO.md` - Technical context (X lines)
+- `plan.md` - Complete architecture (Y lines)
+- `TODO.md` - Tasks by phase (Z lines)
+- `FASE-*.md` - Ready prompts (W lines total)
 
 **Key Files:**
 - **Create:** `path/to/new-file.tsx` - {Purpose} (FASE X)
@@ -619,12 +757,12 @@ status: "active"
 - **Reference:** `path/to/base.tsx` - Don't modify
 
 **Workflow:**
-1. Read plan.md → TODO.md → workflow.md
+1. Read CONTEXTO.md → plan.md → TODO.md → FASE-X.md
 2. Find next `[ ]` task in TODO.md
-3. Use corresponding prompt from workflow.md
+3. Use corresponding prompt from FASE-X.md
 4. Implement following plan.md specs
 5. Test per TODO.md commands
-6. Document in docs/{project-name}/fase-{N}/
+6. Document in docs/{project-name}/
 
 ---
 
@@ -637,11 +775,13 @@ status: "active"
 - Don't remove existing snapshot content
 - Update multiple snapshots if project involves multiple domains
 
-### Step 7: Cleanup After Project Completion
+---
+
+### Step 9: Cleanup After Project Completion
 
 When a project is complete, remove the "CURRENT PROJECT" section from affected snapshots:
 
-1. **Identify which snapshots were updated** (from Step 6)
+1. **Identify which snapshots were updated** (from Step 8)
 2. **Remove the "🎯 CURRENT PROJECT" section** from each snapshot
 3. **Update `last_updated`** in frontmatter YAML
 4. **Keep permanent improvements** if project added features to snapshot
@@ -660,35 +800,41 @@ When a project is complete, remove the "CURRENT PROJECT" section from affected s
 ### Initial Planning (Phase 0)
 Present in this order:
 
-1. **Summary of plan.md** (show first 50 lines + structure outline)
-2. **Summary of TODO.md** (show all FASE headers + task count)
-3. **Summary of {project}-prompt-workflow.md** (show prompt structure + verification pattern preview)
-4. **Verification system summary:**
+1. **Exploration findings** (Step 0 results)
+2. **Summary of CONTEXTO.md** (show DB schema + key files)
+3. **Summary of plan.md** (show first 50 lines + structure outline)
+4. **Summary of TODO.md** (show all FASE headers + task count)
+5. **Summary of FASE-*.md files** (show prompt structure + verification pattern preview)
+6. **Coherence verification results:**
    - ✅ All {X} prompts include 🔽 🔼 delimiters
    - ✅ All {X} prompts include 📊 progress context
    - ✅ All {X} prompts include 🔍 post-execution verification
    - ✅ All {X} prompts include TODO.md update instructions
    - ✅ All {X} prompts include next step guidance
-5. **Agents to update** (list with sections to add)
-6. **SNAPSHOT.md changes** (lines removed vs added)
-7. **CLAUDE.md changes** (sections updated)
+   - ✅ Task count matches: TODO.md ({X}) = Prompts ({X})
+7. **Agents to update** (list with sections to add)
 8. **Documentation folder structure:**
    ```
    docs/{project-name}/
-   ├── fase-1/
-   ├── fase-2/
-   └── fase-N/
+   ├── CONTEXTO.md
+   ├── plan.md
+   ├── TODO.md
+   ├── FASE-1-{name}.md
+   ├── FASE-2-{name}.md
+   └── FASE-N-{name}.md
    ```
 9. **Ask for approval** before creating files
 
 ### After Creating Files
 Show:
-- ✅ plan.md created (X lines)
-- ✅ TODO.md created (Y lines)
-- ✅ {project}-prompt-workflow.md created (Z lines)
+- ✅ CONTEXTO.md created (X lines)
+- ✅ plan.md created (Y lines)
+- ✅ TODO.md created (Z lines)
+- ✅ FASE-*.md files created (W lines total)
   - 🔽 🔼 Copy delimiters: {X}/{X} prompts (100%)
   - 📊 Progress context: {X}/{X} prompts (100%)
   - 🔍 Verification pattern: {X}/{X} prompts (100%)
+- ✅ Coherence verified (all checks passed)
 - ✅ Updated snapshots/{agent}.md (added CURRENT PROJECT section)
 - ℹ️ SNAPSHOT.md and CLAUDE.md remain unchanged (by design)
 - 🔜 Ready to execute FASE 1 with systematic verification
@@ -780,8 +926,8 @@ VERIFY: ✅ 10 entities exist
 When a user completes a fase, they should use the documentation prompt to:
 
 1. **Create fase documentation**
-   - Location: `docs/{project-name}/fase-{N}/`
-   - Files to create:
+   - Location: `docs/{project-name}/`
+   - Files to create (optional, for complex projects):
      - `IMPLEMENTATION.md` - What was implemented
      - `CHANGES.md` - Files created/modified
      - `TESTS.md` - Tests run and results
@@ -794,7 +940,7 @@ When a user completes a fase, they should use the documentation prompt to:
 
 3. **Test validation**
    - MUST run all tests specified in TODO.md
-   - MUST document test results in TESTS.md
+   - MUST document test results
    - CANNOT mark as done without passing tests
 
 ---
@@ -886,9 +1032,11 @@ When a user completes a fase, they should use the documentation prompt to:
 - Add CURRENT PROJECT section to relevant snapshots only
 
 ### File Naming
+- CONTEXTO.md (generic)
 - plan.md (generic)
 - TODO.md (generic)
-- `{project-name}-prompt-workflow.md` (SPECIFIC, e.g., `mobile-first-prompt-workflow.md`)
+- `FASE-{N}-{nombre-descriptivo}.md` (for >6 prompts)
+- `{project-name}-prompt-workflow.md` (for ≤6 prompts)
 - Keep agent files as is, just add project section
 
 ### Agent Integration
@@ -900,7 +1048,7 @@ When a user completes a fase, they should use the documentation prompt to:
 
 ### Documentation Requirements
 - Cannot mark tasks as done without tests
-- Must document test results in TESTS.md
+- Must document test results
 - Must include both automated and manual tests
 - Keep documentation in project-specific folder
 
@@ -954,26 +1102,31 @@ Always create `docs/{feature}/DUAL_ENVIRONMENT_STRATEGY.md` explaining:
 
 ## EXAMPLES
 
-### Example: Mobile-First Chat Interface
+### Example: Companions SIRE Integration
 
 **User request:**
-"Quiero crear una interfaz mobile-first fullscreen para chat, sin decoración marketing, optimizada para iPhone 15/14, Pixel 8, Galaxy S24."
+"Quiero integrar el sistema de acompañantes con SIRE completo"
 
 **Command execution:**
-1. Asked: objective, current state, desired state, agents needed
-2. Created `plan.md` (512 lines) - **6 phases** including FASE 0 (Dual Setup) & FASE 5 (Production)
-3. Created `TODO.md` (360+ lines) - 25 tasks across 6 phases with @agent-ux-interface assignments
-4. Created `mobile-first-prompt-workflow.md` (950+ lines) - 11 prompts (added 0.1 and 5.1)
-5. Updated `.claude/agents/ux-interface.md` - Added dual environment strategy
-6. Created `docs/chat-mobile/DUAL_ENVIRONMENT_STRATEGY.md` - Complete workflow documentation
-7. Updated `.claude/commands/plan-project.md` - Added dual environment template
+1. **Step 0 - Explored:** Tabla `reservation_guests` existe, APIs `/guest/chat` y `/reservation-sire-data`, flujo actual solo guarda titular
+2. **Step 1 - Asked:** objetivo, estado actual, estado deseado, agentes
+3. **Step 2 - Created:** `CONTEXTO.md` (DB schema, flujos, dependencias)
+4. **Step 3 - Created:** `plan.md` (5 fases, arquitectura)
+5. **Step 4 - Created:** `TODO.md` (14 tareas)
+6. **Step 5 - Created:** 5 archivos `FASE-X-*.md` (>6 prompts → archivos separados)
+7. **Step 6 - Verified:** Coherencia OK (14 tareas = 14 prompts)
+8. **Step 7 - Updated:** snapshots/backend-developer.md, snapshots/ux-interface.md
 
 **Result:**
-✅ Planning complete with dual environment strategy
-✅ Development (`/chat-mobile-dev`) and Production (`/chat-mobile`) separated
-✅ All files aligned with new 6-phase approach
-✅ FASE 0 ready to execute (1h setup)
-✅ Clear promotion workflow (dev → test → validate → prod)
+✅ CONTEXTO.md created (150 lines)
+✅ plan.md created (300 lines)
+✅ TODO.md created (200 lines)
+✅ 5 FASE-*.md files created (700 lines total)
+  - 🔽 🔼 Copy delimiters: 14/14 prompts (100%)
+  - 📊 Progress context: 14/14 prompts (100%)
+  - 🔍 Verification pattern: 14/14 prompts (100%)
+✅ Coherence verified (all checks passed)
+🔜 Ready to execute FASE 1
 
 ---
 
@@ -986,7 +1139,10 @@ Always create `docs/{feature}/DUAL_ENVIRONMENT_STRATEGY.md` explaining:
 **Response:** "This project seems large (>20 tasks). Consider breaking it into multiple smaller projects, each with its own plan.md. Or, let me know if you want to consolidate phases."
 
 ### If user wants to modify plan mid-execution
-**Response:** "I can update plan.md and TODO.md. Should I also regenerate workflow prompts to reflect the changes? I'll ensure all verification patterns remain intact."
+**Response:** "I can update plan.md and TODO.md. Should I also regenerate FASE-*.md prompts to reflect the changes? I'll ensure all verification patterns remain intact."
+
+### If exploration finds unexpected complexity
+**Response:** "During exploration I found [X]. This affects the scope. Should we: (1) Expand to handle this, (2) Exclude it from scope, or (3) Create a separate project for it?"
 
 ---
 
@@ -1023,7 +1179,7 @@ Always create `docs/{feature}/DUAL_ENVIRONMENT_STRATEGY.md` explaining:
 5. **➡️ Next Step Guidance**
    - Name of next prompt
    - Time estimate
-   - Line number in workflow.md
+   - File reference (FASE-X.md)
    - Special message when FASE completes
 
 ### Benefits
@@ -1033,9 +1189,5 @@ Always create `docs/{feature}/DUAL_ENVIRONMENT_STRATEGY.md` explaining:
 - **Consistency:** Standardized pattern across all projects
 - **Copy-Paste Ready:** Delimiters make execution effortless
 - **Context Preservation:** Each prompt shows full history
-
-### Template Reference
-
-See **Step 4.5: Verification Pattern Template** for complete implementation.
 
 **Important:** This system is MANDATORY for ALL future projects planned with `/plan-project`.

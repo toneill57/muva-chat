@@ -1,5 +1,11 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 
+// SIRE Configuration from tenant
+export interface SireConfig {
+  hotel_code: string | null
+  city_code: string | null
+}
+
 // MotoPress Booking Interface (from API response)
 export interface MotoPresBooking {
   id: number
@@ -146,7 +152,8 @@ export class MotoPresBookingsMapper {
   static async mapToGuestReservation(
     booking: MotoPresBooking,
     tenantId: string,
-    supabase: SupabaseClient
+    supabase: SupabaseClient,
+    sireConfig: SireConfig = { hotel_code: null, city_code: null }
   ): Promise<GuestReservation> {
     // 1. Detect if this is an Airbnb booking
     const isAirbnb = (booking.ical_description || '').includes('airbnb.com')
@@ -226,7 +233,7 @@ export class MotoPresBookingsMapper {
       booking_source: isAirbnb ? 'mphb-airbnb' : 'motopress',  // Detect Airbnb via MotoPress vs direct MotoPress
       external_booking_id: booking.id.toString(),
       booking_notes: booking.ical_description || null,
-      // SIRE compliance fields (null for MotoPress sync - can be filled by guest later)
+      // SIRE compliance fields - hotel codes from tenant config, guest data filled later
       document_type: null,
       document_number: null,
       birth_date: null,
@@ -236,8 +243,8 @@ export class MotoPresBookingsMapper {
       nationality_code: null,
       origin_city_code: null,
       destination_city_code: null,
-      hotel_sire_code: null,
-      hotel_city_code: null,
+      hotel_sire_code: sireConfig.hotel_code,
+      hotel_city_code: sireConfig.city_code,
       movement_type: null,
       movement_date: null
     }
@@ -249,13 +256,14 @@ export class MotoPresBookingsMapper {
   static async mapBulkBookings(
     bookings: MotoPresBooking[],
     tenantId: string,
-    supabase: SupabaseClient
+    supabase: SupabaseClient,
+    sireConfig: SireConfig = { hotel_code: null, city_code: null }
   ): Promise<GuestReservation[]> {
     const mapped: GuestReservation[] = []
 
     for (const booking of bookings) {
       try {
-        const reservation = await this.mapToGuestReservation(booking, tenantId, supabase)
+        const reservation = await this.mapToGuestReservation(booking, tenantId, supabase, sireConfig)
         mapped.push(reservation)
       } catch (error) {
         console.error(`[MotoPresBookingsMapper] Failed to map booking ${booking.id}:`, error)
@@ -311,7 +319,8 @@ export class MotoPresBookingsMapper {
   static async mapToGuestReservationWithEmbed(
     booking: any, // Using 'any' because _embedded structure varies
     tenantId: string,
-    supabase: SupabaseClient
+    supabase: SupabaseClient,
+    sireConfig: SireConfig = { hotel_code: null, city_code: null }
   ): Promise<GuestReservation> {
     // 1. Detect if this is an Airbnb booking
     const isAirbnb = (booking.ical_description || '').includes('airbnb.com')
@@ -401,7 +410,7 @@ export class MotoPresBookingsMapper {
       booking_source: isAirbnb ? 'mphb-airbnb' : 'motopress',  // Detect Airbnb via MotoPress vs direct MotoPress
       external_booking_id: booking.id?.toString() || '',
       booking_notes: bookingNotes,
-      // SIRE compliance fields (null for MotoPress sync - can be filled by guest later)
+      // SIRE compliance fields - hotel codes from tenant config, guest data filled later
       document_type: null,
       document_number: null,
       birth_date: null,
@@ -411,8 +420,8 @@ export class MotoPresBookingsMapper {
       nationality_code: null,
       origin_city_code: null,
       destination_city_code: null,
-      hotel_sire_code: null,
-      hotel_city_code: null,
+      hotel_sire_code: sireConfig.hotel_code,
+      hotel_city_code: sireConfig.city_code,
       movement_type: null,
       movement_date: null
     }
@@ -425,7 +434,8 @@ export class MotoPresBookingsMapper {
   static async mapBulkBookingsWithEmbed(
     bookings: any[],
     tenantId: string,
-    supabase: SupabaseClient
+    supabase: SupabaseClient,
+    sireConfig: SireConfig = { hotel_code: null, city_code: null }
   ): Promise<{
     reservations: GuestReservation[];
     icsImports: any[];
@@ -488,7 +498,7 @@ export class MotoPresBookingsMapper {
         // Process ALL future reservations (direct MotoPress + ICS imports from Airbnb)
         const bookingType = booking.imported === true ? 'ICS import (Airbnb)' : 'direct MotoPress'
         console.log(`[mapper] ✅ Mapping ${bookingType} booking ${booking.id}: status=${booking.status}, check_in=${booking.check_in_date}`)
-        const reservation = await this.mapToGuestReservationWithEmbed(booking, tenantId, supabase)
+        const reservation = await this.mapToGuestReservationWithEmbed(booking, tenantId, supabase, sireConfig)
         mapped.push(reservation)
         console.log(`[mapper] ✅ Mapped successfully: ${reservation.guest_name}`)
       } catch (error) {

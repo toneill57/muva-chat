@@ -45,6 +45,133 @@ function checkRateLimit(conversationId: string): boolean {
 }
 
 /**
+ * Upserts guest SIRE data to reservation_guests table
+ * For guest_order=1, also updates guest_reservations for backwards compatibility
+ */
+async function upsertGuestSireData(
+  supabase: any,
+  reservationId: string,
+  tenantId: string,
+  guestOrder: number,
+  sireData: Record<string, any>
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // DEBUG: Log exactly what we receive
+    console.log('[SIRE-DEBUG] upsertGuestSireData called with:', {
+      guestOrder,
+      document_type_code_received: sireData.document_type_code,
+      tipo_documento_received: sireData.tipo_documento,
+      sireDataKeys: Object.keys(sireData),
+    })
+
+    const dbData: Record<string, any> = {
+      reservation_id: reservationId,
+      tenant_id: tenantId,
+      guest_order: guestOrder,
+      is_primary_guest: guestOrder === 1,
+    }
+
+    // Map SIRE fields from frontend naming to DB columns
+    // Support both English and Spanish field names
+    if (sireData.names || sireData.nombres) {
+      dbData.given_names = sireData.names || sireData.nombres
+    }
+    if (sireData.first_surname || sireData.primer_apellido) {
+      dbData.first_surname = sireData.first_surname || sireData.primer_apellido
+    }
+    if (sireData.second_surname !== undefined || sireData.segundo_apellido !== undefined) {
+      dbData.second_surname = (sireData.second_surname ?? sireData.segundo_apellido ?? '')
+    }
+    if (sireData.document_type_code || sireData.tipo_documento) {
+      dbData.document_type = sireData.document_type_code || sireData.tipo_documento
+      console.log('[SIRE-DEBUG] Setting document_type to:', dbData.document_type)
+    }
+    if (sireData.identification_number || sireData.documento_numero) {
+      dbData.document_number = sireData.identification_number || sireData.documento_numero
+    }
+    if (sireData.nationality_code || sireData.codigo_nacionalidad) {
+      dbData.nationality_code = sireData.nationality_code || sireData.codigo_nacionalidad
+    }
+
+    // Convert birth_date from DD/MM/YYYY to YYYY-MM-DD
+    // Support both English and Spanish field names
+    const birthDateValue = sireData.birth_date || sireData.fecha_nacimiento
+    if (birthDateValue) {
+      if (birthDateValue.includes('/')) {
+        const [d, m, y] = birthDateValue.split('/')
+        dbData.birth_date = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`
+      } else {
+        dbData.birth_date = birthDateValue
+      }
+    }
+
+    // Origin and destination places
+    if (sireData.origin_place || sireData.lugar_procedencia) {
+      dbData.origin_city_code = sireData.origin_place || sireData.lugar_procedencia
+    }
+    if (sireData.destination_place || sireData.lugar_destino) {
+      dbData.destination_city_code = sireData.destination_place || sireData.lugar_destino
+    }
+
+    // Calculate sire_status based on required fields
+    const requiredFields = ['document_type', 'document_number', 'first_surname', 'given_names',
+                            'nationality_code', 'birth_date', 'origin_city_code', 'destination_city_code']
+    const hasAllRequired = requiredFields.every(f => dbData[f])
+    dbData.sire_status = hasAllRequired ? 'complete' : 'pending'
+
+    console.log(`[Guest Chat] Upserting guest ${guestOrder} to reservation_guests:`, Object.keys(dbData))
+
+    // Upsert to reservation_guests
+    const { error: upsertError } = await supabase
+      .from('reservation_guests')
+      .upsert(dbData, {
+        onConflict: 'reservation_id,guest_order',
+        ignoreDuplicates: false
+      })
+
+    if (upsertError) {
+      console.error('[Guest Chat] Failed to upsert reservation_guests:', upsertError)
+      return { success: false, error: upsertError.message }
+    }
+
+    console.log(`[Guest Chat] Successfully upserted guest ${guestOrder} (status: ${dbData.sire_status})`)
+
+    // For guest_order=1 (titular), also update guest_reservations for backwards compatibility
+    if (guestOrder === 1) {
+      const guestResData: Record<string, any> = {}
+      if (dbData.given_names) guestResData.given_names = dbData.given_names
+      if (dbData.first_surname) guestResData.first_surname = dbData.first_surname
+      if (dbData.second_surname !== undefined) guestResData.second_surname = dbData.second_surname
+      if (dbData.document_type) guestResData.document_type = dbData.document_type
+      if (dbData.document_number) guestResData.document_number = dbData.document_number
+      if (dbData.nationality_code) guestResData.nationality_code = dbData.nationality_code
+      if (dbData.birth_date) guestResData.birth_date = dbData.birth_date
+      if (dbData.origin_city_code) guestResData.origin_city_code = dbData.origin_city_code
+      if (dbData.destination_city_code) guestResData.destination_city_code = dbData.destination_city_code
+
+      if (Object.keys(guestResData).length > 0) {
+        const { error: updateError } = await supabase
+          .from('guest_reservations')
+          .update(guestResData)
+          .eq('id', reservationId)
+
+        if (updateError) {
+          console.warn('[Guest Chat] Failed to update guest_reservations (backwards compat):', updateError)
+          // Don't fail the whole operation, just log warning
+        } else {
+          console.log('[Guest Chat] Also updated guest_reservations for backwards compatibility')
+        }
+      }
+    }
+
+    return { success: true }
+  } catch (err) {
+    console.error('[Guest Chat] Error in upsertGuestSireData:', err)
+    return { success: false, error: String(err) }
+  }
+}
+
+/**
  * POST /api/guest/chat
  *
  * Main endpoint for guest conversational chat
@@ -94,7 +221,7 @@ export async function POST(request: NextRequest) {
     }
 
     // === PARSE REQUEST ===
-    const { message, conversation_id, mode, sireData } = await request.json()
+    const { message, conversation_id, mode, sireData, guest_order = 1 } = await request.json()
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return NextResponse.json(
@@ -103,9 +230,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate guest_order
+    if (typeof guest_order !== 'number' || guest_order < 1 || !Number.isInteger(guest_order)) {
+      return NextResponse.json(
+        { error: 'guest_order must be a positive integer' },
+        { status: 400 }
+      )
+    }
+    console.log(`[Guest Chat] Guest order: ${guest_order}`)
+
     // Detect SIRE mode
     const isSIREMode = mode === 'sire'
     console.log(`[Guest Chat] Mode: ${mode || 'normal'}${isSIREMode ? ' (SIRE compliance)' : ''}`)
+
+    // DEBUG: Log sireData received from frontend
+    if (isSIREMode && sireData) {
+      console.log('[SIRE-DEBUG] Frontend sent sireData:', {
+        document_type_code: sireData.document_type_code,
+        identification_number: sireData.identification_number,
+        allKeys: Object.keys(sireData),
+      })
+    }
 
     // Validate message length
     if (message.length > 1000) {
@@ -198,34 +343,66 @@ export async function POST(request: NextRequest) {
       console.log('[Guest Chat] SIRE mode enabled - applying progressive disclosure')
 
       // === LOAD EXISTING SIRE DATA FROM DATABASE ===
-      // This ensures we don't ask for fields already captured via document upload
-      const { data: reservationData } = await supabase
-        .from('guest_reservations')
-        .select('given_names, first_surname, second_surname, document_type, document_number, nationality_code, birth_date, origin_city_code, destination_city_code')
-        .eq('id', session.reservation_id)
-        .single()
-
-      // Convert DB columns (English) to progressive disclosure field names (English)
+      // CRITICAL: Load from correct table based on guest_order
+      // - guest_order=1 (titular): Load from guest_reservations (backwards compatibility)
+      // - guest_order>1 (companions): Load from reservation_guests
       const existingSireData: Record<string, any> = {}
-      if (reservationData) {
-        // Map DB columns to progressive disclosure field names
-        if (reservationData.given_names) existingSireData.names = reservationData.given_names
-        if (reservationData.first_surname) existingSireData.first_surname = reservationData.first_surname
-        if (reservationData.second_surname !== null) existingSireData.second_surname = reservationData.second_surname || ''
-        if (reservationData.document_type) existingSireData.document_type_code = reservationData.document_type
-        if (reservationData.document_number) existingSireData.identification_number = reservationData.document_number
-        if (reservationData.nationality_code) existingSireData.nationality_code = reservationData.nationality_code
-        if (reservationData.birth_date) {
-          // Convert YYYY-MM-DD to DD/MM/YYYY
-          const parts = reservationData.birth_date.split('-')
-          if (parts.length === 3) {
-            existingSireData.birth_date = `${parts[2]}/${parts[1]}/${parts[0]}`
-          }
-        }
-        if (reservationData.origin_city_code) existingSireData.origin_place = reservationData.origin_city_code
-        if (reservationData.destination_city_code) existingSireData.destination_place = reservationData.destination_city_code
 
-        console.log('[Guest Chat] Loaded existing SIRE data from DB:', Object.keys(existingSireData))
+      if (guest_order === 1) {
+        // Titular: load from guest_reservations
+        const { data: reservationData } = await supabase
+          .from('guest_reservations')
+          .select('given_names, first_surname, second_surname, document_type, document_number, nationality_code, birth_date, origin_city_code, destination_city_code')
+          .eq('id', session.reservation_id)
+          .single()
+
+        if (reservationData) {
+          if (reservationData.given_names) existingSireData.names = reservationData.given_names
+          if (reservationData.first_surname) existingSireData.first_surname = reservationData.first_surname
+          if (reservationData.second_surname !== null) existingSireData.second_surname = reservationData.second_surname || ''
+          if (reservationData.document_type) existingSireData.document_type_code = reservationData.document_type
+          if (reservationData.document_number) existingSireData.identification_number = reservationData.document_number
+          if (reservationData.nationality_code) existingSireData.nationality_code = reservationData.nationality_code
+          if (reservationData.birth_date) {
+            const parts = reservationData.birth_date.split('-')
+            if (parts.length === 3) {
+              existingSireData.birth_date = `${parts[2]}/${parts[1]}/${parts[0]}`
+            }
+          }
+          if (reservationData.origin_city_code) existingSireData.origin_place = reservationData.origin_city_code
+          if (reservationData.destination_city_code) existingSireData.destination_place = reservationData.destination_city_code
+        }
+      } else {
+        // Companions (guest_order > 1): load from reservation_guests
+        const { data: guestData } = await supabase
+          .from('reservation_guests')
+          .select('given_names, first_surname, second_surname, document_type, document_number, nationality_code, birth_date, origin_city_code, destination_city_code')
+          .eq('reservation_id', session.reservation_id)
+          .eq('guest_order', guest_order)
+          .single()
+
+        if (guestData) {
+          if (guestData.given_names) existingSireData.names = guestData.given_names
+          if (guestData.first_surname) existingSireData.first_surname = guestData.first_surname
+          if (guestData.second_surname !== null) existingSireData.second_surname = guestData.second_surname || ''
+          if (guestData.document_type) existingSireData.document_type_code = guestData.document_type
+          if (guestData.document_number) existingSireData.identification_number = guestData.document_number
+          if (guestData.nationality_code) existingSireData.nationality_code = guestData.nationality_code
+          if (guestData.birth_date) {
+            const parts = guestData.birth_date.split('-')
+            if (parts.length === 3) {
+              existingSireData.birth_date = `${parts[2]}/${parts[1]}/${parts[0]}`
+            }
+          }
+          if (guestData.origin_city_code) existingSireData.origin_place = guestData.origin_city_code
+          if (guestData.destination_city_code) existingSireData.destination_place = guestData.destination_city_code
+        }
+      }
+
+      if (Object.keys(existingSireData).length > 0) {
+        console.log(`[Guest Chat] Loaded existing SIRE data from DB (guest_order=${guest_order}):`, Object.keys(existingSireData))
+      } else {
+        console.log(`[Guest Chat] No existing SIRE data in DB for guest_order=${guest_order}`)
       }
 
       // Merge existing data with incoming data from frontend (frontend data takes precedence)
@@ -269,7 +446,7 @@ PREGUNTA SUGERIDA: "${question}"
 - Mantén la conversación natural y dirigida
 `
 
-        // Intentar extraer entidad del mensaje actual
+        // Intentar extraer entidad del mensaje actual (for additional validation)
         const extraction = extractSIREEntity(message, nextField, mergedSireData)
 
         if (extraction.confidence > 0.7) {
@@ -282,177 +459,61 @@ PREGUNTA SUGERIDA: "${question}"
           extractedData = {
             [nextField]: extraction.normalized || extraction.value
           }
+        }
 
-          // Determinar siguiente campo después de este
-          const updatedSIREData = { ...sireData, ...extractedData }
-          nextField = getNextFieldToAsk(updatedSIREData)
+        // === SAVE TO DATABASE (INCREMENTAL) ===
+        // CRITICAL FIX: ALWAYS save frontend sireData, not just when extractSIREEntity succeeds
+        // The frontend already validates all fields - trust that validation
+        // This fixes the bug where document_type_code wasn't being saved because
+        // extractSIREEntity doesn't handle that field type
+        const dataToSave = { ...sireData, ...extractedData }
 
-          console.log(`[Guest Chat] Updated SIRE data, next field: ${nextField || 'COMPLETE'}`)
-
-          // === SAVE TO DATABASE (INCREMENTAL) ===
-          // CRITICAL: Only save the EXTRACTED field, not all frontend data
-          // This prevents overwriting existing data with stale frontend values
+        // Only save if we have meaningful data from frontend
+        if (sireData && Object.keys(sireData).length > 0) {
           console.log('[Guest Chat] Saving SIRE data to database (incremental)...')
-          try {
-            const dbData: Record<string, any> = {}
-            const extractedFieldName = Object.keys(extractedData)[0]
-            const extractedValue = extractedData[extractedFieldName]
+          console.log('[SIRE-DEBUG] dataToSave:', {
+            document_type_code: dataToSave.document_type_code,
+            identification_number: dataToSave.identification_number,
+            keys: Object.keys(dataToSave),
+          })
 
-            // Map extracted field to database column
-            switch (extractedFieldName) {
-              case 'names':
-              case 'nombres':
-                dbData.given_names = extractedValue
-                break
-              case 'first_surname':
-              case 'primer_apellido':
-                dbData.first_surname = extractedValue
-                break
-              case 'second_surname':
-              case 'segundo_apellido':
-                dbData.second_surname = extractedValue || null
-                break
-              case 'document_type_code':
-              case 'tipo_documento':
-                // Only update if not already set in DB (OCR takes precedence)
-                if (!reservationData?.document_type) {
-                  dbData.document_type = extractedValue
-                }
-                break
-              case 'identification_number':
-              case 'documento_numero':
-                // Only update if not already set in DB
-                if (!reservationData?.document_number) {
-                  dbData.document_number = extractedValue
-                }
-                break
-              case 'nationality_code':
-              case 'codigo_nacionalidad':
-                dbData.nationality_code = extractedValue
-                break
-              case 'birth_date':
-              case 'fecha_nacimiento':
-                // Convert from DD/MM/YYYY to YYYY-MM-DD
-                if (extractedValue) {
-                  const parts = extractedValue.split('/')
-                  if (parts.length === 3) {
-                    dbData.birth_date = `${parts[2]}-${parts[1]}-${parts[0]}`
-                  }
-                }
-                break
-              case 'origin_place':
-              case 'pais_procedencia':
-                dbData.origin_city_code = extractedValue
-                break
-              case 'destination_place':
-              case 'ciudad_destino':
-                dbData.destination_city_code = extractedValue
-                break
-              case 'movement_type':
-              case 'tipo_movimiento':
-                dbData.movement_type = extractedValue === 'Entrada' ? 'E' : extractedValue
-                break
-              case 'movement_date':
-              case 'fecha_movimiento':
-                if (extractedValue) {
-                  const parts = extractedValue.split('/')
-                  if (parts.length === 3) {
-                    dbData.movement_date = `${parts[2]}-${parts[1]}-${parts[0]}`
-                  }
-                }
-                break
-              default:
-                console.log(`[Guest Chat] Unknown field to save: ${extractedFieldName}`)
-            }
+          const saveResult = await upsertGuestSireData(
+            supabase,
+            session.reservation_id,
+            session.tenant_id,
+            guest_order,
+            dataToSave
+          )
 
-            if (Object.keys(dbData).length > 0) {
-              const { error: updateError } = await supabase
-                .from('guest_reservations')
-                .update(dbData)
-                .eq('id', session.reservation_id)
-
-              if (updateError) {
-                console.error('[Guest Chat] Failed to save SIRE data:', updateError)
-              } else {
-                console.log(`[Guest Chat] ✅ SIRE field saved: ${extractedFieldName} ->`, Object.keys(dbData))
-              }
-            }
-          } catch (saveError) {
-            console.error('[Guest Chat] Error saving SIRE data:', saveError)
+          if (!saveResult.success) {
+            console.error('[Guest Chat] Failed to save SIRE data:', saveResult.error)
+          } else {
+            console.log(`[Guest Chat] ✅ SIRE field saved via upsertGuestSireData`)
           }
         }
+
+        // Determinar siguiente campo después de guardar
+        const updatedSIREData = { ...mergedSireData, ...extractedData }
+        nextField = getNextFieldToAsk(updatedSIREData)
+        console.log(`[Guest Chat] Updated SIRE data, next field: ${nextField || 'COMPLETE'}`)
       } else {
         console.log('[Guest Chat] All SIRE fields captured - ready for confirmation')
 
         // === SAVE COMPLETE DATA TO DATABASE ===
-        // When all fields are captured, save final data
+        // When all fields are captured, save final data using upsertGuestSireData
         console.log('[Guest Chat] Saving complete SIRE data to database...')
-        try {
-          const dbData: Record<string, any> = {}
+        const saveResult = await upsertGuestSireData(
+          supabase,
+          session.reservation_id,
+          session.tenant_id,
+          guest_order,
+          mergedSireData
+        )
 
-          // Names
-          if (mergedSireData.nombres) dbData.given_names = mergedSireData.nombres
-          if (mergedSireData.names) dbData.given_names = mergedSireData.names
-
-          // First surname
-          if (mergedSireData.primer_apellido) dbData.first_surname = mergedSireData.primer_apellido
-          if (mergedSireData.first_surname) dbData.first_surname = mergedSireData.first_surname
-
-          // Second surname
-          if (mergedSireData.segundo_apellido !== undefined) dbData.second_surname = mergedSireData.segundo_apellido || null
-          if (mergedSireData.second_surname !== undefined) dbData.second_surname = mergedSireData.second_surname || null
-
-          // Document type - ONLY update if not already set in DB
-          // (OCR sets this correctly, don't let frontend overwrite with stale value)
-          if (!reservationData?.document_type) {
-            if (mergedSireData.tipo_documento) dbData.document_type = mergedSireData.tipo_documento
-            if (mergedSireData.document_type_code) dbData.document_type = mergedSireData.document_type_code
-          }
-
-          // Document number - ONLY update if not already set in DB
-          if (!reservationData?.document_number) {
-            if (mergedSireData.documento_numero) dbData.document_number = mergedSireData.documento_numero
-            if (mergedSireData.identification_number) dbData.document_number = mergedSireData.identification_number
-          }
-
-          // Nationality
-          if (mergedSireData.codigo_nacionalidad) dbData.nationality_code = mergedSireData.codigo_nacionalidad
-          if (mergedSireData.nationality_code) dbData.nationality_code = mergedSireData.nationality_code
-
-          // Origin place
-          if (mergedSireData.lugar_procedencia) dbData.origin_city_code = mergedSireData.lugar_procedencia
-          if (mergedSireData.origin_place) dbData.origin_city_code = mergedSireData.origin_place
-
-          // Destination place
-          if (mergedSireData.lugar_destino) dbData.destination_city_code = mergedSireData.lugar_destino
-          if (mergedSireData.destination_place) dbData.destination_city_code = mergedSireData.destination_place
-
-          // Birth date
-          if (mergedSireData.fecha_nacimiento) {
-            const parts = mergedSireData.fecha_nacimiento.split('/')
-            if (parts.length === 3) {
-              dbData.birth_date = `${parts[2]}-${parts[1]}-${parts[0]}`
-            }
-          }
-          if (mergedSireData.birth_date) {
-            const parts = mergedSireData.birth_date.split('/')
-            if (parts.length === 3) {
-              dbData.birth_date = `${parts[2]}-${parts[1]}-${parts[0]}`
-            }
-          }
-
-          const { error: updateError } = await supabase
-            .from('guest_reservations')
-            .update(dbData)
-            .eq('id', session.reservation_id)
-
-          if (updateError) {
-            console.error('[Guest Chat] Failed to save complete SIRE data:', updateError)
-          } else {
-            console.log(`[Guest Chat] ✅ Complete SIRE data saved:`, Object.keys(dbData))
-          }
-        } catch (saveError) {
-          console.error('[Guest Chat] Error saving complete SIRE data:', saveError)
+        if (!saveResult.success) {
+          console.error('[Guest Chat] Failed to save complete SIRE data:', saveResult.error)
+        } else {
+          console.log(`[Guest Chat] ✅ Complete SIRE data saved via upsertGuestSireData`)
         }
 
         sireContext = `
@@ -610,6 +671,7 @@ export async function GET() {
         conversation_id: 'string (optional, UUID of target conversation - defaults to session conversation)',
         mode: 'string (optional, "sire" for SIRE compliance mode)',
         sireData: 'object (optional, partial SIRE data for progressive disclosure)',
+        guest_order: 'number (optional, default 1, positive integer identifying guest: 1=titular, 2+=companion)',
       },
     },
     response: {

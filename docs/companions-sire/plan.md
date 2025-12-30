@@ -2,7 +2,7 @@
 
 **Proyecto:** Companions SIRE Integration
 **Fecha Inicio:** 2025-12-26
-**Estado:** 📋 Planificación
+**Estado:** 🚀 Listo para Implementación
 
 ---
 
@@ -189,6 +189,27 @@ Integrar el sistema de acompañantes con el flujo SIRE completo:
 
 ---
 
+### FASE 6: Mejoras UX y Validación (2.5h)
+**Objetivo:** Agregar mejoras de experiencia de usuario y validaciones de negocio
+
+**Entregables:**
+- Badge "X/Y huéspedes registrados" en tarjetas de staff
+- Copiar datos del titular para acompañantes (nacionalidad, origen, destino)
+- Historial de exports SIRE con estados visuales (Generado → Subido → Confirmado)
+
+**Archivos a modificar:**
+- `src/app/api/reservations/list/route.ts` - Agregar expected_guests, registered_guests
+- `src/components/reservations/UnifiedReservationCard.tsx` - Badge progreso
+- `src/components/Chat/GuestChatInterface.tsx` - Copiar datos titular
+- `src/app/[tenant]/sire/page.tsx` - Estados visuales y acciones
+
+**Testing:**
+- Reserva 2 adults + 1 child → badge "0/3 huéspedes"
+- Completar titular → pregunta si copiar datos para huésped #2
+- Export generado → botón "Marcar subido" → botón "Confirmar"
+
+---
+
 ## ✅ CRITERIOS DE ÉXITO
 
 ### Funcionalidad
@@ -205,6 +226,9 @@ Integrar el sistema de acompañantes con el flujo SIRE completo:
 - [ ] Tarjetas más compactas y legibles
 - [ ] Tabs intuitivos para navegación
 - [ ] Progreso SIRE claro por huésped
+- [ ] Badge "X/Y huéspedes" visible en cada tarjeta
+- [ ] Familias registran acompañantes más rápido (copiar datos)
+- [ ] Staff puede trackear estado de archivos SIRE subidos
 
 ---
 
@@ -263,9 +287,15 @@ Integrar el sistema de acompañantes con el flujo SIRE completo:
 │           └── sire-txt-generator.ts      # REVISAR (FASE 5)
 └── docs/
     └── companions-sire/
+        ├── CONTEXTO.md                    # Contexto técnico
         ├── plan.md                        # Este archivo
-        ├── TODO.md                        # Tareas detalladas
-        └── companions-sire-prompt-workflow.md # Prompts
+        ├── TODO.md                        # Tareas y progreso
+        ├── FASE-1-backend-guardar.md      # Prompts FASE 1
+        ├── FASE-2-frontend-guest-order.md # Prompts FASE 2
+        ├── FASE-3-ui-tarjetas-compactas.md # Prompts FASE 3
+        ├── FASE-4-ui-tab-acompanantes.md  # Prompts FASE 4
+        ├── FASE-5-sire-export-multi.md    # Prompts FASE 5
+        └── FASE-6-mejoras-ux-validacion.md # Prompts FASE 6
 ```
 
 ---
@@ -299,5 +329,5 @@ SIRE Export:
 
 ---
 
-**Última actualización:** 2025-12-26
-**Próximo paso:** Crear TODO.md con tareas específicas
+**Última actualización:** 2025-12-28
+**Próximo paso:** Ejecutar FASE 1 - Ver `FASE-1-backend-guardar.md`

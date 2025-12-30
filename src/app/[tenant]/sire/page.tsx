@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import { useTenant } from '@/contexts/TenantContext';
 import SIRETXTDownloader from '@/components/Compliance/SIRETXTDownloader';
 import { createClient } from '@supabase/supabase-js';
-import { FileDown, Calendar, Users, Clock } from 'lucide-react';
+import { FileDown, Calendar, Users, Clock, Upload, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface SIREExport {
   id: string;
@@ -25,14 +25,71 @@ interface SIREExport {
   txt_content: string | null;
   file_size_bytes: number;
   status: string;
+  uploaded_at: string | null;
+  confirmed_at: string | null;
+  sire_reference: string | null;
   created_at: string;
 }
+
+type ExportStatus = 'generated' | 'uploaded' | 'confirmed' | 'error';
+
+const ExportStatusBadge = ({ status, uploadedAt, confirmedAt }: {
+  status: string;
+  uploadedAt?: string | null;
+  confirmedAt?: string | null;
+}) => {
+  // Determinar estado real basado en campos
+  let displayStatus: ExportStatus = status as ExportStatus;
+  if (confirmedAt) displayStatus = 'confirmed';
+  else if (uploadedAt) displayStatus = 'uploaded';
+
+  const config: Record<ExportStatus, {
+    label: string;
+    bg: string;
+    icon: React.ReactNode;
+  }> = {
+    generated: {
+      label: 'Generado',
+      bg: 'bg-blue-100 text-blue-800',
+      icon: <FileDown className="w-3 h-3" />,
+    },
+    uploaded: {
+      label: 'Subido a SIRE',
+      bg: 'bg-yellow-100 text-yellow-800',
+      icon: <Upload className="w-3 h-3" />,
+    },
+    confirmed: {
+      label: 'Confirmado',
+      bg: 'bg-green-100 text-green-800',
+      icon: <CheckCircle className="w-3 h-3" />,
+    },
+    error: {
+      label: 'Error',
+      bg: 'bg-red-100 text-red-800',
+      icon: <AlertCircle className="w-3 h-3" />,
+    },
+  };
+
+  const { label, bg, icon } = config[displayStatus] || config.generated;
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${bg}`}>
+      {icon}
+      {label}
+    </span>
+  );
+};
 
 export default function SIREPage() {
   const { tenant } = useTenant();
   const [exports, setExports] = useState<SIREExport[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Modal states for confirmation
+  const [showReferenceModal, setShowReferenceModal] = useState(false);
+  const [pendingConfirmId, setPendingConfirmId] = useState<string | null>(null);
+  const [sireReference, setSireReference] = useState('');
 
   useEffect(() => {
     loadExports();
@@ -106,6 +163,60 @@ export default function SIREPage() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const updateExportStatus = async (
+    exportId: string,
+    action: 'uploaded' | 'confirmed',
+    sireRef?: string
+  ) => {
+    try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+
+      const updateData: Record<string, any> = {
+        status: action,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (action === 'uploaded') {
+        updateData.uploaded_at = new Date().toISOString();
+      } else if (action === 'confirmed') {
+        updateData.confirmed_at = new Date().toISOString();
+        if (sireRef) {
+          updateData.sire_reference = sireRef;
+        }
+      }
+
+      const { error: updateError } = await supabase
+        .from('sire_exports')
+        .update(updateData)
+        .eq('id', exportId);
+
+      if (updateError) throw updateError;
+
+      // Reload exports list
+      await loadExports();
+    } catch (err) {
+      console.error('[SIRE] Error updating status:', err);
+      alert('Error al actualizar estado');
+    }
+  };
+
+  const handleConfirmClick = (exportId: string) => {
+    setPendingConfirmId(exportId);
+    setSireReference('');
+    setShowReferenceModal(true);
+  };
+
+  const submitConfirmation = async () => {
+    if (pendingConfirmId) {
+      await updateExportStatus(pendingConfirmId, 'confirmed', sireReference || undefined);
+      setShowReferenceModal(false);
+      setPendingConfirmId(null);
+    }
   };
 
   return (
@@ -209,24 +320,52 @@ export default function SIREPage() {
 
                     {/* Right: Actions and Status */}
                     <div className="ml-4 flex flex-col items-end gap-2">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        exp.status === 'generated'
-                          ? 'bg-green-100 text-green-800'
-                          : exp.status === 'uploaded'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {exp.status}
-                      </span>
-                      {exp.txt_content && (
-                        <button
-                          onClick={() => downloadExistingTXT(exp.txt_content!, exp.txt_filename)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
-                        >
-                          <FileDown className="h-4 w-4" />
-                          Download
-                        </button>
+                      <ExportStatusBadge
+                        status={exp.status}
+                        uploadedAt={exp.uploaded_at}
+                        confirmedAt={exp.confirmed_at}
+                      />
+                      {exp.sire_reference && (
+                        <div className="text-xs text-gray-600">
+                          <span className="font-medium">Ref:</span> {exp.sire_reference}
+                        </div>
                       )}
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-2">
+                        {/* Download TXT */}
+                        {exp.txt_content && (
+                          <button
+                            onClick={() => downloadExistingTXT(exp.txt_content!, exp.txt_filename)}
+                            className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+                            title="Descargar TXT"
+                          >
+                            <FileDown className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        {/* Mark as Uploaded - show only if generated and not uploaded yet */}
+                        {exp.status === 'generated' && !exp.uploaded_at && (
+                          <button
+                            onClick={() => updateExportStatus(exp.id, 'uploaded')}
+                            className="p-1.5 text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 rounded transition-colors"
+                            title="Marcar como subido a SIRE"
+                          >
+                            <Upload className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        {/* Mark as Confirmed - show only if uploaded and not confirmed yet */}
+                        {exp.uploaded_at && !exp.confirmed_at && (
+                          <button
+                            onClick={() => handleConfirmClick(exp.id)}
+                            className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded transition-colors"
+                            title="Marcar como confirmado"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -235,6 +374,40 @@ export default function SIREPage() {
           )}
         </div>
       </div>
+
+      {/* Modal for SIRE Reference */}
+      {showReferenceModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Confirmar Export SIRE</h3>
+            <p className="text-gray-600 mb-4">
+              Ingresa el número de referencia que SIRE asignó al archivo (opcional):
+            </p>
+            <input
+              type="text"
+              value={sireReference}
+              onChange={(e) => setSireReference(e.target.value)}
+              placeholder="Ej: SIRE-2025-123456"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+              autoFocus
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowReferenceModal(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={submitConfirmation}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

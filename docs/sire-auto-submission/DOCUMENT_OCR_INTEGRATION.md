@@ -377,10 +377,7 @@ Required in `.env.local`:
 ANTHROPIC_API_KEY=sk-ant-api03-xxx
 ```
 
-Current key in `.env.local` (line 36):
-```bash
-ANTHROPIC_API_KEY=sk-ant-api03-REDACTED
-```
+**Note:** The API key is stored in `.env.local` (not committed to git).
 
 ---
 

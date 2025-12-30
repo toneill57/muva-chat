@@ -15,7 +15,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
-import { MotoPresBookingsMapper, type MotoPresBooking } from '@/lib/integrations/motopress/bookings-mapper'
+import { MotoPresBookingsMapper, type MotoPresBooking, type SireConfig } from '@/lib/integrations/motopress/bookings-mapper'
 import { getDecryptedMotoPresCredentials } from '@/lib/integrations/motopress/credentials-helper'
 
 // Allow up to 60 seconds for sync operations (pagination + API delays)
@@ -54,7 +54,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
 
     console.log('[sync-reservations] Starting sync for tenant:', tenant_id)
 
-    // 2. Retrieve MotoPress credentials from integration_configs
+    // 2. Get SIRE codes from tenant registry
+    const { data: tenantData } = await supabase
+      .from('tenant_registry')
+      .select('features')
+      .eq('tenant_id', tenant_id)
+      .single()
+
+    const sireConfig: SireConfig = {
+      hotel_code: typeof tenantData?.features?.sire_hotel_code === 'string'
+        ? tenantData.features.sire_hotel_code
+        : null,
+      city_code: typeof tenantData?.features?.sire_city_code === 'string'
+        ? tenantData.features.sire_city_code
+        : null
+    }
+
+    console.log('[sync-reservations] SIRE config:', sireConfig)
+
+    // 3. Retrieve MotoPress credentials from integration_configs
     const { data: config, error: configError } = await supabase
       .from('integration_configs')
       .select('config_data, is_active')
@@ -123,16 +141,22 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
     const bookings = (response.data || []) as MotoPresBooking[]
     console.log(`[sync-reservations] Fetched ${bookings.length} bookings from MotoPress`)
 
-    // 5. Map bookings to GuestReservation format
+    // 6. Map bookings to GuestReservation format (with SIRE codes)
     const mappedReservations = await MotoPresBookingsMapper.mapBulkBookings(
       bookings,
       tenant_id,
-      supabase
+      supabase,
+      sireConfig
     )
 
     console.log(`[sync-reservations] Mapped ${mappedReservations.length} reservations`)
 
-    // 6. Upsert reservations into guest_reservations
+    // Create lookup map: external_booking_id → original booking (for finding reserved_accommodations)
+    const bookingsMap = new Map(
+      bookings.map((booking: MotoPresBooking) => [booking.id.toString(), booking])
+    )
+
+    // 6. Upsert reservations into guest_reservations AND reservation_accommodations
     let created = 0
     let updated = 0
     let skipped = 0
@@ -140,6 +164,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
 
     for (const reservation of mappedReservations) {
       try {
+        // Get original booking for accommodation data
+        const originalBooking = bookingsMap.get(reservation.external_booking_id)
+
         // Check if reservation already exists by external_booking_id
         const { data: existing } = await supabase
           .from('guest_reservations')
@@ -149,11 +176,30 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
           .single()
 
         if (existing) {
-          // Update existing reservation
+          // Update existing reservation - EXCLUDE SIRE guest data fields to preserve user-entered data
+          // Only update MotoPress-sourced fields, not SIRE compliance fields filled by guest
+          const {
+            // Exclude SIRE guest-provided fields (preserve user data)
+            guest_name, // Don't overwrite if user already filled passport
+            document_type,
+            document_number,
+            birth_date,
+            first_surname,
+            second_surname,
+            given_names,
+            nationality_code,
+            origin_city_code,
+            destination_city_code,
+            movement_type,
+            movement_date,
+            // Keep hotel codes from tenant config
+            ...syncSafeFields
+          } = reservation
+
           const { error: updateError } = await supabase
             .from('guest_reservations')
             .update({
-              ...reservation,
+              ...syncSafeFields,
               updated_at: new Date().toISOString()
             })
             .eq('id', existing.id)
@@ -163,18 +209,46 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncReser
             errors++
           } else {
             updated++
+
+            // Delete old accommodations and insert new ones (handle room changes)
+            await supabase
+              .from('reservation_accommodations')
+              .delete()
+              .eq('reservation_id', existing.id)
+
+            // Save updated accommodations
+            if (originalBooking) {
+              await MotoPresBookingsMapper.saveReservationAccommodations(
+                existing.id,
+                originalBooking,
+                tenant_id,
+                supabase
+              )
+            }
           }
         } else {
-          // Insert new reservation
-          const { error: insertError } = await supabase
+          // Insert new reservation and get the ID
+          const { data: insertedReservation, error: insertError } = await supabase
             .from('guest_reservations')
             .insert(reservation)
+            .select('id')
+            .single()
 
-          if (insertError) {
+          if (insertError || !insertedReservation) {
             console.error(`[sync-reservations] Insert error for booking ${reservation.external_booking_id}:`, insertError)
             errors++
           } else {
             created++
+
+            // Save accommodations to junction table
+            if (originalBooking) {
+              await MotoPresBookingsMapper.saveReservationAccommodations(
+                insertedReservation.id,
+                originalBooking,
+                tenant_id,
+                supabase
+              )
+            }
           }
         }
       } catch (err) {

@@ -13,6 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import bcrypt from 'bcryptjs'
+import { extractHotelCodeFromNIT } from '@/lib/sire/nit-utils'
 
 // ============================================================================
 // Types
@@ -31,6 +32,7 @@ interface SignupRequest {
   // Contacto
   phone: string
   address: string
+  hotel_city_code: string  // DIVIPOLA code for SIRE compliance
 
   // Credenciales admin
   admin_username: string
@@ -224,6 +226,16 @@ export async function POST(req: NextRequest) {
 
     const schema_name = `tenant_${body.subdomain.replace(/-/g, '_')}`
 
+    // Extract SIRE codes from NIT and city
+    const sireHotelCode = extractHotelCodeFromNIT(body.nit)
+    const sireCityCode = body.hotel_city_code || null
+
+    console.log('[signup] SIRE codes extracted:', {
+      nit: body.nit,
+      sireHotelCode,
+      sireCityCode
+    })
+
     const { data: tenant, error: tenantError } = await supabase
       .from('tenant_registry')
       .insert({
@@ -244,8 +256,8 @@ export async function POST(req: NextRequest) {
           search_mode: 'hotel',                    // Default: Hotel Mode
           muva_match_count: 0,                     // MUVA disabled by default
           accommodation_search_enabled: true,      // Accommodations enabled
-          sire_city_code: null,
-          sire_hotel_code: null
+          sire_city_code: sireCityCode,            // DIVIPOLA code from city dropdown
+          sire_hotel_code: sireHotelCode           // NIT without verification digit
         },
         email: body.email,
         phone: body.phone,

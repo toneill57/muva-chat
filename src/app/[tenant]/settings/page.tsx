@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
-import { Save, Info } from 'lucide-react';
+import { Save, Info, CheckCircle, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,6 +14,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useTenant } from '@/contexts/TenantContext';
+import { CitySelect } from '@/components/forms/CitySelect';
+import { extractHotelCodeFromNIT } from '@/lib/sire/nit-utils';
 
 interface SocialMediaLinks {
   facebook: string;
@@ -35,6 +37,7 @@ export default function SettingsPage() {
     address: '',
     phone: '',
     email: '',
+    nit: '',
     social_media_links: {
       facebook: '',
       instagram: '',
@@ -45,7 +48,11 @@ export default function SettingsPage() {
     seo_meta_description: '',
     seo_keywords: [] as string[],
     search_mode: 'hotel' as SearchMode,
-    muva_match_count: 0
+    muva_match_count: 0,
+    // SIRE Compliance fields
+    sire_hotel_code: '',
+    sire_city_code: '',
+    sire_city_name: ''
   });
 
   const [keywordsInput, setKeywordsInput] = useState('');
@@ -70,6 +77,7 @@ export default function SettingsPage() {
         address: tenant.address || '',
         phone: tenant.phone || '',
         email: tenant.email || '',
+        nit: tenant.nit || '',
         social_media_links: {
           facebook: tenant.social_media_links?.facebook || '',
           instagram: tenant.social_media_links?.instagram || '',
@@ -80,7 +88,11 @@ export default function SettingsPage() {
         seo_meta_description: tenant.seo_meta_description || '',
         seo_keywords: tenant.seo_keywords || [],
         search_mode: (tenant.features?.search_mode as SearchMode) || 'hotel',
-        muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0
+        muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0,
+        // SIRE Compliance fields from features (ensure string type)
+        sire_hotel_code: typeof tenant.features?.sire_hotel_code === 'string' ? tenant.features.sire_hotel_code : '',
+        sire_city_code: typeof tenant.features?.sire_city_code === 'string' ? tenant.features.sire_city_code : '',
+        sire_city_name: '' // Will be populated by CitySelect
       };
 
       console.log('[Settings] Setting formData to:', {
@@ -112,7 +124,10 @@ export default function SettingsPage() {
             ...tenant?.features,
             search_mode: formData.search_mode,
             muva_match_count: formData.muva_match_count,
-            accommodation_search_enabled: true // Always enabled for now
+            accommodation_search_enabled: true, // Always enabled for now
+            // SIRE Compliance codes
+            sire_hotel_code: formData.sire_hotel_code || null,
+            sire_city_code: formData.sire_city_code || null
           }
         })
       });
@@ -408,6 +423,80 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* SIRE Compliance Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>SIRE Compliance Configuration</CardTitle>
+          <CardDescription>
+            Required for Migración Colombia tourism reporting
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="sire-hotel-code">Hotel Code (NIT)</Label>
+              <Input
+                id="sire-hotel-code"
+                value={formData.sire_hotel_code}
+                onChange={(e) => setFormData({ ...formData, sire_hotel_code: e.target.value })}
+                placeholder="900222791"
+                className="mt-1"
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                NIT without verification digit
+              </p>
+              {formData.nit && !formData.sire_hotel_code && (
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="px-0 h-auto text-blue-600"
+                  onClick={() => {
+                    const extracted = extractHotelCodeFromNIT(formData.nit);
+                    setFormData({ ...formData, sire_hotel_code: extracted });
+                  }}
+                >
+                  Extract from NIT ({formData.nit})
+                </Button>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="sire-city-code">Hotel City</Label>
+              <CitySelect
+                value={formData.sire_city_code}
+                onChange={(code, name) => {
+                  setFormData({
+                    ...formData,
+                    sire_city_code: code,
+                    sire_city_name: name
+                  });
+                }}
+              />
+              <p className="text-sm text-gray-500 mt-1">
+                DIVIPOLA code for SIRE reports
+              </p>
+            </div>
+          </div>
+
+          {/* SIRE Status Indicator */}
+          {formData.sire_hotel_code && formData.sire_city_code ? (
+            <Alert className="border-green-200 bg-green-50">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-800">
+                SIRE configuration complete. Guests will be included in TXT exports.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <Alert className="border-amber-200 bg-amber-50">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+              <AlertDescription className="text-amber-800">
+                Missing configuration. Guests will appear as &quot;Excluded&quot; in SIRE exports until both fields are set.
+              </AlertDescription>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+
       {/* SEO Section */}
       <Card>
         <CardHeader>
@@ -475,6 +564,7 @@ export default function SettingsPage() {
                 address: tenant.address || '',
                 phone: tenant.phone || '',
                 email: tenant.email || '',
+                nit: tenant.nit || '',
                 social_media_links: {
                   facebook: tenant.social_media_links?.facebook || '',
                   instagram: tenant.social_media_links?.instagram || '',
@@ -485,7 +575,10 @@ export default function SettingsPage() {
                 seo_meta_description: tenant.seo_meta_description || '',
                 seo_keywords: tenant.seo_keywords || [],
                 search_mode: (tenant.features?.search_mode as SearchMode) || 'hotel',
-                muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0
+                muva_match_count: typeof tenant.features?.muva_match_count === 'number' ? tenant.features.muva_match_count : 0,
+                sire_hotel_code: typeof tenant.features?.sire_hotel_code === 'string' ? tenant.features.sire_hotel_code : '',
+                sire_city_code: typeof tenant.features?.sire_city_code === 'string' ? tenant.features.sire_city_code : '',
+                sire_city_name: ''
               });
               setKeywordsInput((tenant.seo_keywords || []).join(', '));
             }

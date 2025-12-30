@@ -37,6 +37,7 @@ import { SireProgressBar } from '@/components/Compliance/SireProgressBar'
 import { useSireProgressiveDisclosure } from '@/hooks/useSireProgressiveDisclosure'
 import { getNextFieldToAsk } from '@/lib/sire/progressive-disclosure'
 import { getQuestionForField } from '@/lib/sire/conversational-prompts'
+import { getSIRECountryName } from '@/lib/sire/sire-catalogs'
 import type { GuestChatInterfaceProps, GuestChatMessage, TrackedEntity } from '@/lib/guest-chat-types'
 import { DocumentUpload } from '@/components/Compliance/DocumentUpload'
 import { DocumentPreview } from '@/components/Compliance/DocumentPreview'
@@ -198,6 +199,17 @@ export function GuestChatInterface({
   const [awaitingAdditionalGuestResponse, setAwaitingAdditionalGuestResponse] = useState(false)
   // Use ref for synchronous access (React state updates are async)
   const awaitingAdditionalGuestRef = useRef(false)
+
+  // Primary guest data for copying to companions
+  const primaryGuestDataRef = useRef<{
+    nationality_code?: string;
+    origin_city_code?: string;
+    destination_city_code?: string;
+  }>({})
+
+  // State for waiting for copy data response
+  const [awaitingCopyDataResponse, setAwaitingCopyDataResponse] = useState(false)
+  const awaitingCopyDataRef = useRef(false)
 
   // Load conversations on mount
   useEffect(() => {
@@ -529,11 +541,14 @@ export function GuestChatInterface({
       const cityCode = tenantConfig.city_code        // SIRE city code
 
       // 2. Fetch existing SIRE data from reservation (CRITICAL for sync)
-      const reservationResponse = await fetch('/api/guest/reservation-sire-data', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const reservationResponse = await fetch(
+        `/api/guest/reservation-sire-data?guest_order=${guestOrder}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
       let existingSireData: Record<string, string> = {}
       if (reservationResponse.ok) {
@@ -616,6 +631,54 @@ export function GuestChatInterface({
     } catch (err) {
       console.error('Error starting SIRE mode:', err)
       setError('No se pudo iniciar el registro SIRE. Intenta de nuevo.')
+    }
+  }
+
+  /**
+   * Loads existing SIRE data for the current guest (used when resuming registration)
+   */
+  const loadGuestSireData = async (guestOrderToLoad: number) => {
+    try {
+      const response = await fetch(
+        `/api/guest/reservation-sire-data?guest_order=${guestOrderToLoad}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.sireData && Object.keys(data.sireData).length > 0) {
+          console.log(`[SIRE] Loaded existing data for guest ${guestOrderToLoad}:`, Object.keys(data.sireData))
+
+          // CRITICAL FIX: Only load fields that are NOT already in current state
+          // This prevents overwriting values the user just entered in this session
+          const currentData = sireDisclosure.sireData
+          const dataToMerge: Record<string, string> = {}
+
+          for (const [key, value] of Object.entries(data.sireData)) {
+            const currentValue = currentData[key as keyof typeof currentData]
+            // Only load from DB if field is empty in current state
+            if (!currentValue || currentValue === '') {
+              dataToMerge[key] = value as string
+            } else {
+              console.log(`[SIRE] Skipping DB value for ${key}: keeping current value "${currentValue}" instead of DB value "${value}"`)
+            }
+          }
+
+          if (Object.keys(dataToMerge).length > 0) {
+            console.log(`[SIRE] Merging ${Object.keys(dataToMerge).length} fields from DB:`, Object.keys(dataToMerge))
+            sireDisclosure.setAllFields({
+              ...sireDisclosure.sireData,
+              ...dataToMerge
+            })
+          }
+        }
+      }
+    } catch (err) {
+      console.error('[SIRE] Failed to load guest data:', err)
     }
   }
 
@@ -777,8 +840,36 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         // User wants to register another guest
         awaitingAdditionalGuestRef.current = false
         setAwaitingAdditionalGuestResponse(false)
-        setGuestOrder((prev) => prev + 1)
+        const newGuestOrder = guestOrder + 1
+        setGuestOrder(newGuestOrder)
 
+        // Check if we have primary guest data to copy
+        const hasDataToCopy = primaryGuestDataRef.current.nationality_code
+
+        if (hasDataToCopy) {
+          // Ask if user wants to copy data from primary guest
+          awaitingCopyDataRef.current = true
+          setAwaitingCopyDataResponse(true)
+
+          const nationalityName = getSIRECountryName(primaryGuestDataRef.current.nationality_code!) || primaryGuestDataRef.current.nationality_code
+
+          const copyQuestion = `¡Perfecto! Vamos a registrar al huésped #${newGuestOrder}.\n\n` +
+            `El huésped anterior tiene nacionalidad **${nationalityName}**. ` +
+            `¿El huésped #${newGuestOrder} tiene la misma nacionalidad y lugar de origen?\n\n` +
+            `Responde **"Sí"** para copiar estos datos, o **"No"** para ingresar datos diferentes.`
+
+          const copyQuestionMessage: GuestChatMessage = {
+            id: `copy-question-${Date.now()}`,
+            role: 'assistant',
+            content: copyQuestion,
+            timestamp: new Date(),
+          }
+          setMessages((prev) => [...prev, copyQuestionMessage])
+
+          return
+        }
+
+        // No data to copy, proceed with normal flow
         // Reset SIRE disclosure keeping auto-filled fields
         sireDisclosure.reset({
           hotel_code: sireDisclosure.sireData.hotel_code,
@@ -786,6 +877,9 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
           movement_type: sireDisclosure.sireData.movement_type,
           movement_date: sireDisclosure.sireData.movement_date,
         })
+
+        // Try to load existing data for this guest (if resuming)
+        await loadGuestSireData(newGuestOrder)
 
         // Get first question for new guest
         const firstField = getNextFieldToAsk({
@@ -802,7 +896,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         const newGuestMessage: GuestChatMessage = {
           id: `new-guest-${Date.now()}`,
           role: 'assistant',
-          content: `¡Perfecto! Vamos a registrar al huésped #${guestOrder + 1}.\n\n${firstQuestion}`,
+          content: `¡Perfecto! Vamos a registrar al huésped #${newGuestOrder}.\n\n${firstQuestion}`,
           timestamp: new Date(),
         }
         setMessages((prev) => [...prev, newGuestMessage])
@@ -826,6 +920,107 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
 
         return
       }
+    }
+
+    // SIRE MODE: Handle copy data response
+    if (mode === 'sire' && awaitingCopyDataRef.current) {
+      const lowerText = textToSend.toLowerCase().trim()
+      const affirmativeResponses = ['sí', 'si', 'yes', 'claro', 'ok', 'vale', 'bueno', 'dale']
+      const isAffirmative = affirmativeResponses.some(r => lowerText.includes(r))
+
+      console.log('[SIRE] Copy data response:', { lowerText, isAffirmative })
+
+      // Clear input and flags
+      setInput('')
+      awaitingCopyDataRef.current = false
+      setAwaitingCopyDataResponse(false)
+
+      // Add user message to UI
+      const userMessage: GuestChatMessage = {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        content: textToSend,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, userMessage])
+
+      // Capture auto-filled fields BEFORE reset (React state is async)
+      const autoFilledFields = {
+        hotel_code: sireDisclosure.sireData.hotel_code,
+        city_code: sireDisclosure.sireData.city_code,
+        movement_type: sireDisclosure.sireData.movement_type,
+        movement_date: sireDisclosure.sireData.movement_date,
+      }
+
+      // Reset SIRE disclosure keeping auto-filled fields
+      sireDisclosure.reset(autoFilledFields)
+
+      // Build merged data for next field calculation (React state update is async)
+      // This ensures getNextFieldToAsk sees the correct data immediately
+      let mergedData: Record<string, string | undefined> = { ...autoFilledFields }
+
+      if (isAffirmative) {
+        // Copy data from primary guest - merge with auto-filled fields
+        mergedData = {
+          ...autoFilledFields,
+          nationality_code: primaryGuestDataRef.current.nationality_code,
+          origin_place: primaryGuestDataRef.current.origin_city_code,
+          destination_place: primaryGuestDataRef.current.destination_city_code,
+        }
+
+        // Update React state (async, but we use mergedData for immediate calculation)
+        sireDisclosure.setAllFields(mergedData)
+
+        const copiedMsg = `✓ Datos copiados. Ahora solo necesito los datos personales del huésped #${guestOrder}.`
+        const copiedMessage: GuestChatMessage = {
+          id: `copied-${Date.now()}`,
+          role: 'assistant',
+          content: copiedMsg,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, copiedMessage])
+
+        console.log('[SIRE] Copied data from primary guest:', {
+          nationality_code: primaryGuestDataRef.current.nationality_code,
+          origin_place: primaryGuestDataRef.current.origin_city_code,
+          destination_place: primaryGuestDataRef.current.destination_city_code,
+        })
+        console.log('[SIRE] mergedData for next field calculation:', mergedData)
+      } else {
+        // User wants to enter different data
+        const differentDataMsg = `Entendido. Vamos a ingresar los datos completos del huésped #${guestOrder}.`
+        const differentMessage: GuestChatMessage = {
+          id: `different-${Date.now()}`,
+          role: 'assistant',
+          content: differentDataMsg,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, differentMessage])
+      }
+
+      // Try to load existing data for this guest (if resuming)
+      await loadGuestSireData(guestOrder)
+
+      // Continue with first question
+      // CRITICAL: Use mergedData (not sireDisclosure.sireData) because React state is async
+      const nextField = getNextFieldToAsk(mergedData)
+      console.log('[SIRE] Next field after copy decision:', nextField)
+      console.log('[SIRE] Fields in mergedData:', Object.keys(mergedData).filter(k => mergedData[k]))
+
+      if (nextField) {
+        const question = getQuestionForField(nextField, {
+          language: 'es',
+        })
+        const questionMessage: GuestChatMessage = {
+          id: `question-${Date.now()}`,
+          role: 'assistant',
+          content: question,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, questionMessage])
+      }
+
+      return
     }
 
     // SIRE MODE: Validar y capturar campo actual
@@ -891,6 +1086,7 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
             conversation_id: activeConversationId,
             mode: 'sire',
             sireData: updatedSireData,
+            guest_order: guestOrder,
           }),
         })
       } catch (err) {
@@ -938,6 +1134,16 @@ Bienvenido a tu asistente personal. Puedo ayudarte con:
         // ¡Todos los campos completados! - mensaje celebratorio
         console.log('[SIRE] ========== ALL FIELDS COMPLETE ==========')
         console.log('[SIRE] Entering completion block, nextField is null')
+
+        // Save primary guest data for copying to companions (only for guest #1)
+        if (guestOrder === 1) {
+          primaryGuestDataRef.current = {
+            nationality_code: updatedSireDataForCheck.nationality_code,
+            origin_city_code: updatedSireDataForCheck.origin_place,
+            destination_city_code: updatedSireDataForCheck.destination_place,
+          }
+          console.log('[SIRE] Saved primary guest data for copying:', primaryGuestDataRef.current)
+        }
 
         const guestName = updatedSireDataForCheck.names && updatedSireDataForCheck.first_surname
           ? `${updatedSireDataForCheck.names} ${updatedSireDataForCheck.first_surname}`
@@ -995,11 +1201,12 @@ Si es así, por favor responde "Sí" para iniciar el registro del siguiente hué
         conversation_id: activeConversationId,
       }
 
-      // Si estamos en modo SIRE, incluir los datos capturados
+      // Si estamos en modo SIRE, incluir los datos capturados Y guest_order
       if (mode === 'sire') {
         requestBody.mode = 'sire'
         // Use overrideSireData if provided (e.g., from document upload), otherwise use state
         requestBody.sireData = overrideSireData || sireDisclosure.sireData
+        requestBody.guest_order = guestOrder
       }
 
       const response = await fetch('/api/guest/chat', {

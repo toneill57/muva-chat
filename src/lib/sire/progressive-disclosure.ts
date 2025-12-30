@@ -331,19 +331,29 @@ export function validateField(
 
   switch (fieldName) {
     case 'document_type_code':
-      // Mapear números 1-4 a códigos SIRE oficiales
+      // Códigos SIRE válidos (formato final)
+      const validDocumentCodes = ['3', '5', '46', '10']
+
+      // CRITICAL: Si el valor YA es un código SIRE válido, retornar inmediatamente
+      // Esto evita el bug de doble conversión donde '3' (ya convertido de '1')
+      // se re-mapeaba a '46' porque existía '3': '46' en el mapa
+      if (validDocumentCodes.includes(trimmed)) {
+        return { valid: true, normalized: trimmed }
+      }
+
+      // Mapear números 1-4 a códigos SIRE oficiales (solo para input del usuario)
       const documentTypeMap: Record<string, string> = {
         '1': '3',   // Pasaporte → Código 3
         '2': '5',   // Cédula Extranjería → Código 5
+        // NOTA: '3' y '4' del usuario se mapean a códigos diferentes
+        // '3' como INPUT del usuario = Carné Diplomático → Código 46
+        // '3' como CÓDIGO ya convertido = Pasaporte (no re-mapear)
         '3': '46',  // Carné Diplomático → Código 46
         '4': '10'   // Documento Extranjero (Mercosur/CAN) → Código 10
       }
 
       // Si el usuario envió 1-4, convertir a código SIRE
       const mappedCode = documentTypeMap[trimmed] || trimmed
-
-      // Validar código final (solo 3, 5, 46, 10 son válidos según Manual SIRE)
-      const validDocumentCodes = ['3', '5', '46', '10']
 
       if (!validDocumentCodes.includes(mappedCode)) {
         return {

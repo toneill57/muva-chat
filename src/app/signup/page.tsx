@@ -13,6 +13,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { CitySelect } from '@/components/forms/CitySelect'
 
 // ============================================================================
 // Types
@@ -33,6 +34,8 @@ interface FormData {
   email: string
   phone: string
   address: string
+  hotel_city_code: string  // DIVIPOLA code for SIRE compliance
+  hotel_city_name: string  // Display name for confirmation
 
   // Step 4: Usuario Admin
   admin_username: string
@@ -61,6 +64,8 @@ export default function SignupPage() {
     email: '',
     phone: '',
     address: '',
+    hotel_city_code: '',
+    hotel_city_name: '',
     admin_username: '',
     admin_password: '',
     admin_full_name: ''
@@ -141,6 +146,7 @@ export default function SignupPage() {
       }
       if (!formData.phone.trim()) newErrors.phone = 'Requerido'
       if (!formData.address.trim()) newErrors.address = 'Requerido'
+      if (!formData.hotel_city_code) newErrors.hotel_city_code = 'Selecciona la ciudad del hotel'
     }
 
     if (step === 4) {
@@ -409,6 +415,36 @@ export default function SignupPage() {
                 <p className="mt-1 text-sm text-red-600">{errors.address}</p>
               )}
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ciudad del Hotel * <span className="text-gray-500 text-xs">(para reportes SIRE)</span>
+              </label>
+              <CitySelect
+                value={formData.hotel_city_code}
+                onChange={(code, name) => {
+                  setFormData(prev => ({
+                    ...prev,
+                    hotel_city_code: code,
+                    hotel_city_name: name
+                  }))
+                  if (errors.hotel_city_code) {
+                    setErrors(prev => {
+                      const newErrors = { ...prev }
+                      delete newErrors.hotel_city_code
+                      return newErrors
+                    })
+                  }
+                }}
+                error={errors.hotel_city_code}
+              />
+              {errors.hotel_city_code && (
+                <p className="mt-1 text-sm text-red-600">{errors.hotel_city_code}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                Requerido para cumplimiento con Migración Colombia
+              </p>
+            </div>
           </div>
         )
 
@@ -492,6 +528,7 @@ export default function SignupPage() {
                 <p className="text-gray-700"><strong>Email:</strong> {formData.email}</p>
                 <p className="text-gray-700"><strong>Teléfono:</strong> {formData.phone}</p>
                 <p className="text-gray-700"><strong>Dirección:</strong> {formData.address}</p>
+                <p className="text-gray-700"><strong>Ciudad (SIRE):</strong> {formData.hotel_city_name || 'No seleccionada'}</p>
               </div>
 
               <div className="border-t pt-4">

@@ -205,6 +205,14 @@ Este ID corresponde al proyecto MUVA original pre-migración (obsoleto desde Nov
 - **TST:** `bddcvjoeoiekzfetvxoe` (rama tst/staging)
 - **PRD:** `kprqghwdnaykxhostivv` (rama prd/production)
 
+### 11. Preguntas con Opciones - Usar AskUserQuestion
+Cuando una pregunta tiene respuestas predefinidas (opciones A, B, C...):
+- ✅ SIEMPRE usar `AskUserQuestion` tool con opciones seleccionables
+- ✅ El usuario puede hacer clic en lugar de escribir
+- ❌ NUNCA escribir "¿Prefieres A o B?" esperando respuesta de texto
+
+**Cuándo SÍ usar texto libre:** Preguntas que requieren respuesta abierta (nombres, rutas, descripciones personalizadas)
+
 ---
 
 ## Development Setup

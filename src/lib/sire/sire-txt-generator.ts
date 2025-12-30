@@ -173,6 +173,141 @@ export function generateSIRETXT(
 // ============================================================================
 
 /**
+ * Guest data from reservation_guests table (with JOIN to guest_reservations)
+ */
+export interface ReservationGuestData {
+  guest_order: number;
+  given_names: string | null;
+  first_surname: string | null;
+  second_surname: string | null;
+  document_type: string | null;
+  document_number: string | null;
+  nationality_code: string | null;
+  birth_date: string | null;
+  origin_city_code: string | null;
+  destination_city_code: string | null;
+}
+
+/**
+ * Reservation metadata from guest_reservations table
+ */
+export interface ReservationMetadata {
+  id: string;
+  check_in_date: string;
+  check_out_date: string;
+  hotel_sire_code: string;
+  hotel_city_code: string;
+}
+
+/**
+ * Map reservation_guests data to SIREGuestData
+ *
+ * Converts guest data from reservation_guests table (with reservation JOIN)
+ * to SIRE format. This function is optimized for multi-guest support where
+ * each reservation can have multiple guests.
+ *
+ * Required fields in guest object:
+ * - document_type (SIRE code: 3=Pasaporte, 5=Cédula Ext, etc.)
+ * - document_number
+ * - nationality_code (SIRE country code, NOT ISO)
+ * - first_surname
+ * - given_names
+ * - birth_date (Date or YYYY-MM-DD string)
+ *
+ * Required fields in reservation object:
+ * - hotel_sire_code (from tenant configuration)
+ * - hotel_city_code (from tenant configuration)
+ * - check_in_date (for movementType='E')
+ * - check_out_date (for movementType='S')
+ *
+ * Optional fields:
+ * - second_surname (can be empty string)
+ * - origin_city_code (defaults to nationality_code)
+ * - destination_city_code (defaults to hotel_city_code)
+ *
+ * @param guest - Guest data from reservation_guests table
+ * @param reservation - Reservation metadata from guest_reservations table
+ * @param movementType - 'E' for check-in, 'S' for check-out
+ * @returns SIREGuestData or null if missing required fields
+ *
+ * @example
+ * const guest = {
+ *   guest_order: 1,
+ *   document_type: '3',
+ *   document_number: 'AB1234567',
+ *   nationality_code: '249',
+ *   first_surname: 'Smith',
+ *   second_surname: 'Johnson',
+ *   given_names: 'John Michael',
+ *   birth_date: '1985-03-25',
+ *   origin_city_code: '249',
+ *   destination_city_code: '88001'
+ * };
+ * const reservation = {
+ *   id: '123',
+ *   hotel_sire_code: '12345',
+ *   hotel_city_code: '88001',
+ *   check_in_date: '2025-10-15',
+ *   check_out_date: '2025-10-20'
+ * };
+ * const sireData = mapGuestToSIRE(guest, reservation, 'E');
+ * // Returns SIREGuestData with all 13 fields
+ */
+export function mapGuestToSIRE(
+  guest: ReservationGuestData,
+  reservation: ReservationMetadata,
+  movementType: 'E' | 'S'
+): SIREGuestData | null {
+  // Validate required fields from guest
+  if (!guest.document_number || !guest.first_surname || !guest.given_names) {
+    console.warn(`[sire-txt-generator] Guest ${guest.guest_order} missing required fields:`, {
+      hasDocNumber: !!guest.document_number,
+      hasFirstSurname: !!guest.first_surname,
+      hasGivenNames: !!guest.given_names
+    });
+    return null;
+  }
+
+  if (!guest.document_type || !guest.nationality_code || !guest.birth_date) {
+    console.warn(`[sire-txt-generator] Guest ${guest.guest_order} missing SIRE required fields:`, {
+      hasDocType: !!guest.document_type,
+      hasNationality: !!guest.nationality_code,
+      hasBirthDate: !!guest.birth_date
+    });
+    return null;
+  }
+
+  // Determine movement date based on type
+  const movementDate = movementType === 'E'
+    ? reservation.check_in_date
+    : reservation.check_out_date;
+
+  if (!movementDate) {
+    console.warn(
+      `[sire-txt-generator] Guest ${guest.guest_order}: Missing ${movementType === 'E' ? 'check_in_date' : 'check_out_date'} ` +
+      `for reservation ${reservation.id}`
+    );
+    return null;
+  }
+
+  return {
+    codigo_hotel: reservation.hotel_sire_code,
+    codigo_ciudad: reservation.hotel_city_code,
+    tipo_documento: guest.document_type,
+    numero_identificacion: guest.document_number,
+    codigo_nacionalidad: guest.nationality_code,
+    primer_apellido: guest.first_surname,
+    segundo_apellido: guest.second_surname || '',
+    nombres: guest.given_names,
+    tipo_movimiento: movementType,
+    fecha_movimiento: formatDateToSIRE(movementDate),
+    lugar_procedencia: guest.origin_city_code || guest.nationality_code,
+    lugar_destino: guest.destination_city_code || reservation.hotel_city_code,
+    fecha_nacimiento: formatDateToSIRE(guest.birth_date),
+  };
+}
+
+/**
  * Map guest_reservations row to SIREGuestData
  *
  * Converts database row from `guest_reservations` table to SIRE format.

@@ -1,6 +1,6 @@
 # Acompañantes SIRE - Contexto del Proyecto
 
-**Ultima actualizacion:** 2025-12-27
+**Ultima actualizacion:** 2025-12-28
 
 ---
 
@@ -93,8 +93,9 @@ Contiene datos de la reserva + campos SIRE del titular (backwards compatibility)
 | 3 | UI Staff - Tarjetas Compactas | 2 | @agent-ux-interface |
 | 4 | UI Staff - Tab Acompañantes | 4 | Mixto |
 | 5 | SIRE Export Multi-Huesped | 3 | @agent-backend-developer |
+| 6 | Mejoras UX y Validación | 5 | Mixto |
 
-**Total: 14 tareas**
+**Total: 19 tareas**
 
 ---
 
@@ -132,3 +133,4 @@ SIRE Export:
 - `FASE-3-ui-tarjetas-compactas.md` - Prompts Fase 3
 - `FASE-4-ui-tab-acompanantes.md` - Prompts Fase 4
 - `FASE-5-sire-export-multi.md` - Prompts Fase 5
+- `FASE-6-mejoras-ux-validacion.md` - Prompts Fase 6 (UX + Validación)

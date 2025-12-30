@@ -20,7 +20,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 import { MotoPresClient } from '@/lib/integrations/motopress/client'
 import { MotoPresSyncManager } from '@/lib/integrations/motopress/sync-manager'
-import { MotoPresBookingsMapper } from '@/lib/integrations/motopress/bookings-mapper'
+import { MotoPresBookingsMapper, type SireConfig } from '@/lib/integrations/motopress/bookings-mapper'
 import { getDecryptedMotoPresCredentials } from '@/lib/integrations/motopress/credentials-helper'
 import { verifyStaffToken } from '@/lib/staff-auth'
 
@@ -118,7 +118,25 @@ export async function GET(request: NextRequest) {
       console.log('[sync-all] Starting complete sync for tenant:', tenant_id)
       await sendEvent({ type: 'progress', message: 'Starting sync...' })
 
-      // 1. Retrieve MotoPress credentials from integration_configs
+      // 1. Get SIRE codes from tenant registry
+      const { data: tenantData } = await supabase
+        .from('tenant_registry')
+        .select('features')
+        .eq('tenant_id', tenant_id)
+        .single()
+
+      const sireConfig: SireConfig = {
+        hotel_code: typeof tenantData?.features?.sire_hotel_code === 'string'
+          ? tenantData.features.sire_hotel_code
+          : null,
+        city_code: typeof tenantData?.features?.sire_city_code === 'string'
+          ? tenantData.features.sire_city_code
+          : null
+      }
+
+      console.log('[sync-all] SIRE config:', sireConfig)
+
+      // 2. Retrieve MotoPress credentials from integration_configs
       const { data: config, error: configError } = await supabase
         .from('integration_configs')
         .select('config_data, is_active')
@@ -293,12 +311,13 @@ export async function GET(request: NextRequest) {
         message: `Fetched ${bookings.length} bookings. Processing...`
       })
 
-      // 4. Map bookings to GuestReservation format (with _embedded data)
+      // 4. Map bookings to GuestReservation format (with _embedded data and SIRE codes)
       const { reservations: mappedReservations, icsImports, pastExcluded, statusExcluded, icsExcluded } =
         await MotoPresBookingsMapper.mapBulkBookingsWithEmbed(
           bookings,
           tenant_id,
-          supabase
+          supabase,
+          sireConfig
         )
 
       console.log(`[sync-all] Mapped ${mappedReservations.length} reservations (includes Airbnb + MotoPress), excluded ${pastExcluded} past/future, ${statusExcluded} cancelled, ${icsExcluded} blocks`)
@@ -348,11 +367,30 @@ export async function GET(request: NextRequest) {
             .single()
 
           if (existing) {
-            // Update existing reservation
+            // Update existing reservation - EXCLUDE SIRE guest data fields to preserve user-entered data
+            // Only update MotoPress-sourced fields, not SIRE compliance fields filled by guest
+            const {
+              // Exclude SIRE guest-provided fields (preserve user data)
+              guest_name, // Don't overwrite if user already filled passport
+              document_type,
+              document_number,
+              birth_date,
+              first_surname,
+              second_surname,
+              given_names,
+              nationality_code,
+              origin_city_code,
+              destination_city_code,
+              movement_type,
+              movement_date,
+              // Keep hotel codes from tenant config
+              ...syncSafeFields
+            } = reservation
+
             const { error: updateError } = await supabase
               .from('guest_reservations')
               .update({
-                ...reservation,
+                ...syncSafeFields,
                 updated_at: new Date().toISOString()
               })
               .eq('id', existing.id)

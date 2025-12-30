@@ -4,11 +4,17 @@
  * POST /api/sire/generate-txt
  *
  * Generates SIRE-compliant TXT files for batch upload to Migración Colombia portal.
- * Filters reservations by date, movement type, and excludes Colombian nationals.
+ * Reads ALL guests from reservation_guests table (supports multiple guests per reservation).
+ * Filters by date, movement type, and excludes Colombian nationals.
  *
  * IMPORTANT: When movement_type='both', generates TWO records per guest:
  * - One E (Entrada) record with check_in_date
  * - One S (Salida) record with check_out_date
+ *
+ * MULTI-GUEST SUPPORT:
+ * - Reads from reservation_guests table (not guest_reservations)
+ * - Includes ALL guests (primary + companions) from each reservation
+ * - Each guest generates their own SIRE records
  *
  * Request Body:
  * {
@@ -25,7 +31,14 @@
  *   success: true,
  *   txt_content: string,         // TXT file content (tab-delimited)
  *   filename: string,            // Suggested filename
- *   guest_count: number,         // Number of guests included
+ *   line_count: number,          // Total lines in TXT file
+ *   guest_count: number,         // Number of unique guests
+ *   reservation_count: number,   // Number of unique reservations
+ *   breakdown: {
+ *     entry_lines: number,       // Number of E (Entrada) lines
+ *     exit_lines: number,        // Number of S (Salida) lines
+ *     formula: string            // Explanation of line count calculation
+ *   },
  *   excluded_count: number,      // Number of guests excluded
  *   excluded: Array<{            // Details of excluded guests
  *     reservation_id: string,
@@ -40,7 +53,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
-import { generateSIRETXT, mapReservationToSIRE, SIREGuestData, TenantSIREInfo } from '@/lib/sire/sire-txt-generator';
+import { generateSIRETXT, mapGuestToSIRE, SIREGuestData } from '@/lib/sire/sire-txt-generator';
 import { createHash } from 'crypto';
 
 // ============================================================================
@@ -93,15 +106,27 @@ export async function POST(req: NextRequest) {
     const supabase = createServerClient();
 
     // ========================================================================
-    // QUERY RESERVATIONS
+    // QUERY RESERVATION GUESTS
     // ========================================================================
 
-    // Build query
+    // Build query to get ALL guests from reservation_guests with their reservation data
     let query = supabase
-      .from('guest_reservations')
-      .select('*')
-      .eq('tenant_id', tenant_id)
-      .neq('nationality_code', COLOMBIA_SIRE_CODE); // Exclude Colombians
+      .from('reservation_guests')
+      .select(`
+        *,
+        reservation:guest_reservations!inner(
+          id,
+          tenant_id,
+          check_in_date,
+          check_out_date,
+          hotel_sire_code,
+          hotel_city_code,
+          status
+        )
+      `)
+      .eq('reservation.tenant_id', tenant_id)
+      .neq('nationality_code', COLOMBIA_SIRE_CODE) // Exclude Colombians
+      .in('reservation.status', ['active', 'confirmed', 'pending_payment']);
 
     // Date filtering logic:
     // - test_mode or movement_type='both': Filter by check_in_date OR check_out_date range
@@ -109,10 +134,9 @@ export async function POST(req: NextRequest) {
     // - movement_type='S': Filter by check_out_date
     if (test_mode || movement_type === 'both') {
       // For both events, we filter by check_in_date OR check_out_date being in range
-      // Note: This is a simplified approach - in production you'd want more precise filtering
       if (date) {
         // Single date: include if check_in or check_out matches
-        query = query.or(`check_in_date.eq.${date},check_out_date.eq.${date}`);
+        query = query.or(`reservation.check_in_date.eq.${date},reservation.check_out_date.eq.${date}`);
       } else if (date_from || date_to) {
         // Range: include if either date falls within range
         // For simplicity, we'll query all and filter in code
@@ -120,21 +144,21 @@ export async function POST(req: NextRequest) {
       }
     } else if (movement_type === 'E') {
       if (date) {
-        query = query.eq('check_in_date', date);
+        query = query.eq('reservation.check_in_date', date);
       } else if (date_from || date_to) {
-        if (date_from) query = query.gte('check_in_date', date_from);
-        if (date_to) query = query.lte('check_in_date', date_to);
+        if (date_from) query = query.gte('reservation.check_in_date', date_from);
+        if (date_to) query = query.lte('reservation.check_in_date', date_to);
       }
     } else if (movement_type === 'S') {
       if (date) {
-        query = query.eq('check_out_date', date);
+        query = query.eq('reservation.check_out_date', date);
       } else if (date_from || date_to) {
-        if (date_from) query = query.gte('check_out_date', date_from);
-        if (date_to) query = query.lte('check_out_date', date_to);
+        if (date_from) query = query.gte('reservation.check_out_date', date_from);
+        if (date_to) query = query.lte('reservation.check_out_date', date_to);
       }
     }
 
-    const { data: reservations, error: resError } = await query;
+    const { data: guests, error: resError } = await query;
 
     if (resError) {
       console.error('[api/sire/generate-txt] Query error:', resError);
@@ -144,7 +168,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!reservations || reservations.length === 0) {
+    if (!guests || guests.length === 0) {
       return NextResponse.json({
         success: true,
         txt_content: '',
@@ -153,12 +177,12 @@ export async function POST(req: NextRequest) {
         excluded_count: 0,
         excluded: [],
         generated_at: new Date().toISOString(),
-        message: 'No foreign guest reservations found for the specified criteria'
+        message: 'No foreign guests found for the specified criteria'
       });
     }
 
     // ========================================================================
-    // PROCESS RESERVATIONS
+    // PROCESS GUESTS
     // ========================================================================
 
     const sireGuests: SIREGuestData[] = [];
@@ -167,33 +191,30 @@ export async function POST(req: NextRequest) {
     // Determine if we should generate both E and S events
     const generateBothEvents = test_mode || movement_type === 'both';
 
-    for (const reservation of reservations) {
+    for (const guest of guests) {
+      // Extract reservation data from the JOIN
+      const reservation = guest.reservation;
+
       // Validate that reservation has hotel codes
       if (!reservation.hotel_sire_code || !reservation.hotel_city_code) {
         excluded.push({
           reservation_id: reservation.id,
-          guest_name: reservation.given_names ? `${reservation.given_names} ${reservation.first_surname}` : 'Unknown',
+          guest_name: guest.given_names ? `${guest.given_names} ${guest.first_surname}` : 'Unknown',
           reason: 'Missing hotel_sire_code or hotel_city_code'
         });
         continue;
       }
 
-      // Build tenant info from reservation fields
-      const tenantInfo: TenantSIREInfo = {
-        hotel_sire_code: reservation.hotel_sire_code,
-        hotel_city_code: reservation.hotel_city_code
-      };
-
-      const guestName = reservation.given_names
-        ? `${reservation.given_names} ${reservation.first_surname}`
+      const guestName = guest.given_names
+        ? `${guest.given_names} ${guest.first_surname}`
         : 'Unknown';
 
       if (generateBothEvents) {
         // Generate BOTH E (check-in) and S (check-out) events for this guest
 
-        // Generate E (Entrada) event with check_in_date
+        // Generate E (Entrada) event
         if (reservation.check_in_date) {
-          const sireDataE = mapReservationToSIRE(reservation, tenantInfo, 'E');
+          const sireDataE = mapGuestToSIRE(guest, reservation, 'E');
           if (sireDataE) {
             sireGuests.push(sireDataE);
           } else {
@@ -205,9 +226,9 @@ export async function POST(req: NextRequest) {
           }
         }
 
-        // Generate S (Salida) event with check_out_date
+        // Generate S (Salida) event
         if (reservation.check_out_date) {
-          const sireDataS = mapReservationToSIRE(reservation, tenantInfo, 'S');
+          const sireDataS = mapGuestToSIRE(guest, reservation, 'S');
           if (sireDataS) {
             sireGuests.push(sireDataS);
           } else {
@@ -220,8 +241,7 @@ export async function POST(req: NextRequest) {
         }
       } else {
         // Single event mode - use the specified movement_type
-        const eventType = movement_type as 'E' | 'S';
-        const sireData = mapReservationToSIRE(reservation, tenantInfo, eventType);
+        const sireData = mapGuestToSIRE(guest, reservation, movement_type as 'E' | 'S');
 
         if (sireData) {
           sireGuests.push(sireData);
@@ -240,6 +260,24 @@ export async function POST(req: NextRequest) {
     // ========================================================================
 
     const result = generateSIRETXT(sireGuests, tenant_id);
+
+    // ========================================================================
+    // CALCULATE STATISTICS
+    // ========================================================================
+
+    // Count unique guests (by document number + surname)
+    const uniqueGuests = new Set(
+      sireGuests.map(g => `${g.numero_identificacion}-${g.primer_apellido}`)
+    );
+
+    // Count unique reservations
+    const uniqueReservationIds = new Set(
+      guests.map((g: any) => g.reservation.id)
+    );
+
+    // Count entry and exit lines
+    const entryCount = sireGuests.filter(g => g.tipo_movimiento === 'E').length;
+    const exitCount = sireGuests.filter(g => g.tipo_movimiento === 'S').length;
 
     // ========================================================================
     // TRACK EXPORT IN DATABASE
@@ -265,7 +303,8 @@ export async function POST(req: NextRequest) {
             date_range_from: date_from || date || null,
             date_range_to: date_to || date || null,
             movement_type: movement_type === 'both' ? null : movement_type,
-            guest_count: result.lineCount,
+            guest_count: uniqueGuests.size,
+            reservation_count: uniqueReservationIds.size,
             excluded_count: excluded.length,
             line_count: result.lineCount,
             txt_filename: result.filename,
@@ -289,9 +328,23 @@ export async function POST(req: NextRequest) {
       success: true,
       txt_content: result.content,
       filename: result.filename,
-      guest_count: result.lineCount,
+
+      // Counts
+      line_count: result.lineCount,
+      guest_count: uniqueGuests.size,
+      reservation_count: uniqueReservationIds.size,
+
+      // Breakdown
+      breakdown: {
+        entry_lines: entryCount,
+        exit_lines: exitCount,
+        formula: `${uniqueGuests.size} guests x ${movement_type === 'both' ? '2 events' : '1 event'} = ${result.lineCount} lines`
+      },
+
+      // Exclusions
       excluded_count: excluded.length,
       excluded: excluded,
+
       generated_at: new Date().toISOString()
     });
 

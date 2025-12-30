@@ -14,6 +14,20 @@ import { verifyStaffToken, extractTokenFromHeader, StaffAuthErrors } from '@/lib
 // Types
 // ============================================================================
 
+interface ReservationGuest {
+  guest_order: number
+  given_names: string | null
+  first_surname: string | null
+  second_surname: string | null
+  document_type: string | null
+  document_number: string | null
+  nationality_code: string | null
+  birth_date: string | null
+  origin_city_code: string | null
+  destination_city_code: string | null
+  sire_complete: boolean  // calculated field
+}
+
 interface ReservationListItem {
   id: string
   tenant_id: string
@@ -64,6 +78,11 @@ interface ReservationListItem {
   destination_city_code: string | null      // Ciudad/país destino (DIVIPOLA o SIRE)
   hotel_sire_code: string | null            // Código NIT del hotel (sin dígito verificación)
   hotel_city_code: string | null            // Código DIVIPOLA ciudad del hotel
+
+  // 🆕 NEW: Guest companions array (FASE 4)
+  guests: ReservationGuest[]
+  total_guests: number
+  registered_guests: number
 
   created_at: string
   updated_at: string
@@ -214,6 +233,52 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
     // Get reservation IDs for junction table lookup
     const reservationIds = (reservationsData || []).map((r: any) => r.id)
 
+    // Get all guests for these reservations
+    const guestsMap = new Map<string, ReservationGuest[]>()
+
+    if (reservationIds.length > 0) {
+      const { data: guestsData, error: guestsError } = await supabase
+        .from('reservation_guests')
+        .select('reservation_id, guest_order, given_names, first_surname, second_surname, document_type, document_number, nationality_code, birth_date, origin_city_code, destination_city_code')
+        .in('reservation_id', reservationIds)
+        .order('guest_order', { ascending: true })
+
+      if (!guestsError && guestsData) {
+        guestsData.forEach((guest: any) => {
+          if (!guestsMap.has(guest.reservation_id)) {
+            guestsMap.set(guest.reservation_id, [])
+          }
+
+          // Calculate if SIRE is complete for this guest
+          const sireComplete = !!(
+            guest.document_type &&
+            guest.document_number &&
+            guest.first_surname &&
+            guest.given_names &&
+            guest.birth_date &&
+            guest.nationality_code &&
+            guest.origin_city_code &&
+            guest.destination_city_code
+          )
+
+          guestsMap.get(guest.reservation_id)!.push({
+            guest_order: guest.guest_order,
+            given_names: guest.given_names,
+            first_surname: guest.first_surname,
+            second_surname: guest.second_surname,
+            document_type: guest.document_type,
+            document_number: guest.document_number,
+            nationality_code: guest.nationality_code,
+            birth_date: guest.birth_date,
+            origin_city_code: guest.origin_city_code,
+            destination_city_code: guest.destination_city_code,
+            sire_complete: sireComplete
+          })
+        })
+        console.log('[reservations-list] Loaded guests for', guestsMap.size, 'reservations')
+      }
+    }
+
     // Fetch reservation_accommodations data
     const reservationAccommodationsMap = new Map<string, any[]>()
 
@@ -310,6 +375,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
           : null
       }))
 
+      // Get guests for this reservation
+      const guests = guestsMap.get(res.id) || []
+      const totalGuests = res.adults || 1  // Expected from booking
+      const registeredGuests = guests.filter(g => g.sire_complete).length
+
       return {
         id: res.id,
         tenant_id: res.tenant_id,
@@ -347,6 +417,11 @@ export async function GET(request: NextRequest): Promise<NextResponse<Reservatio
         destination_city_code: res.destination_city_code,
         hotel_sire_code: res.hotel_sire_code,
         hotel_city_code: res.hotel_city_code,
+
+        // 🆕 NEW: Guest companions array (FASE 4)
+        guests,
+        total_guests: totalGuests,
+        registered_guests: registeredGuests,
 
         created_at: res.created_at,
         updated_at: res.updated_at,
